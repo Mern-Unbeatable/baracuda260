@@ -10,6 +10,7 @@ export const ROUTES = {
   CONTACT: '/contact',
   COMPETITIONS: '/competitions',
   GALLERY: '/gallery',
+  GALLERY_DETAIL: '/gallery/details',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',

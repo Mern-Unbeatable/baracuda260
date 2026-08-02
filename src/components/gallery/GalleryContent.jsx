@@ -427,33 +427,36 @@ const GalleryContent = memo(() => {
 
               <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {PHOTOS.map((photo) => (
-                  <article
+                  <AppLink
                     key={photo.key || photo.title + photo.badge}
-                    className="overflow-hidden rounded-[12px] border border-black/10 bg-white"
+                    href={ROUTES.GALLERY_DETAIL}
+                    className="block overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
                   >
-                    <div className="relative h-[220px] sm:h-[252px]">
-                      <img
-                        src={photo.image}
-                        alt={photo.title}
-                        width={368}
-                        height={252}
-                        className="h-full w-full object-cover"
-                      />
-                      <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
-                        {photo.badge}
-                      </span>
-                    </div>
-                    <div className="p-4">
-                      <h2 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h2>
-                      <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
-                        <span>{photo.author}</span>
-                        <span className="inline-flex items-center gap-1.5">
-                          <ImgIcon src={ASSETS.heart} size={24} />
-                          {photo.votes}
+                    <article>
+                      <div className="relative h-[220px] sm:h-[252px]">
+                        <img
+                          src={photo.image}
+                          alt={photo.title}
+                          width={368}
+                          height={252}
+                          className="h-full w-full object-cover"
+                        />
+                        <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
+                          {photo.badge}
                         </span>
                       </div>
-                    </div>
-                  </article>
+                      <div className="p-4">
+                        <h2 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h2>
+                        <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
+                          <span>{photo.author}</span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <ImgIcon src={ASSETS.heart} size={24} />
+                            {photo.votes}
+                          </span>
+                        </div>
+                      </div>
+                    </article>
+                  </AppLink>
                 ))}
               </div>
 
