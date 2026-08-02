@@ -107,6 +107,8 @@ const COMPETITIONS = [
   },
 ];
 
+//this is the home page content
+
 const STEPS = [
   {
     num: '01',
