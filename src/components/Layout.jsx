@@ -7,6 +7,8 @@ const NAV_LINKS = [
   { to: ROUTES.HOME, label: 'Home', end: true },
   { to: ROUTES.COMPETITIONS, label: 'Competitions' },
   { to: ROUTES.GALLERY, label: 'Gallery' },
+  { to: ROUTES.LEADERBOARD, label: 'Leaderboard' },
+  { to: ROUTES.WINNERS, label: 'Winners' },
   { to: ROUTES.ABOUT, label: 'About' },
   { to: ROUTES.CONTACT, label: 'Contact' },
 ];
