@@ -16,6 +16,7 @@ export const ROUTES = {
   GALLERY_TWELVE_DETAIL: '/gallery/zodiac/:id',
   PHOTOGRAPHER_PROFILE: '/photographer',
   LEADERBOARD: '/leaderboard',
+  WINNERS: '/winners',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
@@ -36,7 +37,7 @@ export const SITE_NAV_LINKS = [
   { label: 'Competitions', href: ROUTES.COMPETITIONS },
   { label: 'Gallery', href: ROUTES.GALLERY },
   { label: 'Leaderboard', href: ROUTES.LEADERBOARD },
-  { label: 'Winners', href: '#' },
+  { label: 'Winners', href: ROUTES.WINNERS },
   { label: 'About', href: ROUTES.ABOUT },
   { label: 'Contact', href: ROUTES.CONTACT },
 ];
