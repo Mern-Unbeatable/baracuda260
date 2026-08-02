@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { to: ROUTES.LEADERBOARD, label: 'Leaderboard' },
   { to: ROUTES.WINNERS, label: 'Winners' },
   { to: ROUTES.ABOUT, label: 'About' },
-  { to: ROUTES.CONTACT, label: 'Contact' },
 ];
 
 const navLinkClass = ({ isActive }) =>

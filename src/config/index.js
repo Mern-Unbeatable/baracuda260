@@ -39,7 +39,6 @@ export const SITE_NAV_LINKS = [
   { label: 'Leaderboard', href: ROUTES.LEADERBOARD },
   { label: 'Winners', href: ROUTES.WINNERS },
   { label: 'About', href: ROUTES.ABOUT },
-  { label: 'Contact', href: ROUTES.CONTACT },
 ];
 
 export const API_CONFIG = {

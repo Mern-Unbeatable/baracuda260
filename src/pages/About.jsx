@@ -4,9 +4,10 @@ import AboutContent from '../components/about/AboutContent';
 
 const About = memo(() => {
   useSEO({
-    title: 'About Us',
-    description: 'Learn more about our mission and values',
-    keywords: ['about', 'mission', 'values'],
+    title: 'About My12Photos',
+    description:
+      'Discover a global photography community where creativity is celebrated, stories are shared, and talented photographers compete for monthly recognition and cash prizes.',
+    keywords: ['about', 'My12Photos', 'photography competitions', 'community'],
   });
 
   return <AboutContent />;
