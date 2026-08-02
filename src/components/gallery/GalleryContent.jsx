@@ -1,9 +1,20 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES, SITE_NAV_LINKS } from '../../config';
 import { GALLERY_PHOTOS, galleryDetailPath } from '../../data/galleryPhotos';
 
 const A = '/assets/home';
+
+const normalize = (value = '') => value.toLowerCase().replace(/[-–—]/g, ' ').replace(/\s+/g, ' ').trim();
+
+const matchesAlbumType = (badge, albumType) => {
+  const b = normalize(badge);
+  const t = normalize(albumType);
+  if (t.includes('12')) return b.includes('12') && b.includes('zodiac');
+  if (t.includes('6')) return b.includes('6') && b.includes('story');
+  if (t.includes('single')) return b.includes('single');
+  return b === t;
+};
 
 const AppLink = memo(({ href = '#', children, ...props }) => {
   if (!href || href === '#' || /^https?:\/\//.test(href)) {
@@ -49,8 +60,10 @@ const ANNOUNCEMENT =
 const ALBUM_TYPES = [
   'Single Photo',
   '6 Photo Story',
-  '12 photos - full Zodiac Story',
+  '12 photos - Full Zodiac Story',
 ];
+
+const PAGE_SIZE = 9;
 
 const CATEGORIES = [
   'Nature',
@@ -173,11 +186,31 @@ const GalleryContent = memo(() => {
     };
   }, []);
 
-  const toggle = (list, setList, value) => {
+  const toggle = (setList, value) => {
     setList((prev) =>
       prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value],
     );
+    setPage(1);
   };
+
+  const filteredPhotos = useMemo(() => {
+    return PHOTOS.filter((photo) => {
+      const albumOk =
+        albumTypes.length === 0 ||
+        albumTypes.some((type) => matchesAlbumType(photo.badge, type));
+      const categoryOk =
+        categories.length === 0 || categories.includes(photo.category);
+      return albumOk && categoryOk;
+    });
+  }, [albumTypes, categories]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredPhotos.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pagedPhotos = filteredPhotos.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+  const pageNumbers = Array.from({ length: Math.min(totalPages, 3) }, (_, i) => i + 1);
 
   return (
     <div className="site-page-root gallery-page-root w-full overflow-x-hidden bg-white">
@@ -331,13 +364,13 @@ const GalleryContent = memo(() => {
                   title="Album Type"
                   options={ALBUM_TYPES}
                   selected={albumTypes}
-                  onToggle={(value) => toggle(albumTypes, setAlbumTypes, value)}
+                  onToggle={(value) => toggle(setAlbumTypes, value)}
                 />
                 <FilterGroup
                   title="Category"
                   options={CATEGORIES}
                   selected={categories}
-                  onToggle={(value) => toggle(categories, setCategories, value)}
+                  onToggle={(value) => toggle(setCategories, value)}
                 />
               </div>
             </aside>
@@ -353,40 +386,49 @@ const GalleryContent = memo(() => {
                 </h1>
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {PHOTOS.map((photo) => (
-                  <AppLink
-                    key={photo.id}
-                    href={galleryDetailPath(photo.id)}
-                    className="block overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
-                  >
-                    <article>
-                      <div className="relative h-[220px] sm:h-[252px]">
-                        <img
-                          src={photo.image}
-                          alt={photo.title}
-                          width={368}
-                          height={252}
-                          className="h-full w-full object-cover"
-                        />
-                        <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
-                          {photo.badge}
-                        </span>
-                      </div>
-                      <div className="p-4">
-                        <h2 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h2>
-                        <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
-                          <span>{photo.author}</span>
-                          <span className="inline-flex items-center gap-1.5">
-                            <ImgIcon src={ASSETS.heart} size={24} />
-                            {photo.votes}
+              {pagedPhotos.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-black/15 px-6 py-16 text-center">
+                  <p className="text-[18px] font-bold text-[#0d0d14]">No photos match</p>
+                  <p className="mt-2 text-[14px] text-[#6b7280]">
+                    Clear or change Album Type / Category filters to see more results.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                  {pagedPhotos.map((photo) => (
+                    <AppLink
+                      key={photo.id}
+                      href={galleryDetailPath(photo.id)}
+                      className="block overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
+                    >
+                      <article>
+                        <div className="relative h-[220px] sm:h-[252px]">
+                          <img
+                            src={photo.image}
+                            alt={photo.title}
+                            width={368}
+                            height={252}
+                            className="h-full w-full object-cover"
+                          />
+                          <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
+                            {photo.badge}
                           </span>
                         </div>
-                      </div>
-                    </article>
-                  </AppLink>
-                ))}
-              </div>
+                        <div className="p-4">
+                          <h2 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h2>
+                          <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
+                            <span>{photo.author}</span>
+                            <span className="inline-flex items-center gap-1.5">
+                              <ImgIcon src={ASSETS.heart} size={24} />
+                              {photo.votes}
+                            </span>
+                          </div>
+                        </div>
+                      </article>
+                    </AppLink>
+                  ))}
+                </div>
+              )}
 
               {/* Pagination */}
               <div className="mt-9 flex flex-wrap items-center justify-center gap-[5px]">
@@ -406,13 +448,13 @@ const GalleryContent = memo(() => {
                 >
                   <ImgIcon src={ASSETS.pagePrev} size={14} />
                 </button>
-                {[1, 2, 3].map((n) => (
+                {pageNumbers.map((n) => (
                   <button
                     key={n}
                     type="button"
                     onClick={() => setPage(n)}
                     className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
-                      page === n
+                      currentPage === n
                         ? 'bg-[#ee1c25] text-white'
                         : 'border border-[#e5e7eb] text-[#0d0d14]'
                     }`}
@@ -420,22 +462,26 @@ const GalleryContent = memo(() => {
                     {n}
                   </button>
                 ))}
-                <span className="px-1 text-[14px] text-[#6b7280]">…</span>
-                <button
-                  type="button"
-                  onClick={() => setPage(10)}
-                  className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
-                    page === 10
-                      ? 'bg-[#ee1c25] text-white'
-                      : 'border border-[#e5e7eb] text-[#0d0d14]'
-                  }`}
-                >
-                  10
-                </button>
+                {totalPages > 3 && (
+                  <>
+                    <span className="px-1 text-[14px] text-[#6b7280]">…</span>
+                    <button
+                      type="button"
+                      onClick={() => setPage(totalPages)}
+                      className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
+                        currentPage === totalPages
+                          ? 'bg-[#ee1c25] text-white'
+                          : 'border border-[#e5e7eb] text-[#0d0d14]'
+                      }`}
+                    >
+                      {totalPages}
+                    </button>
+                  </>
+                )}
                 <button
                   type="button"
                   aria-label="Next page"
-                  onClick={() => setPage((p) => Math.min(10, p + 1))}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
                 >
                   <ImgIcon src={ASSETS.pageNext} size={14} />
@@ -443,7 +489,7 @@ const GalleryContent = memo(() => {
                 <button
                   type="button"
                   aria-label="Last page"
-                  onClick={() => setPage(10)}
+                  onClick={() => setPage(totalPages)}
                   className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
                 >
                   <span className="inline-flex scale-x-[-1]">
