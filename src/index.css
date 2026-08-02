@@ -1,0 +1,59 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+  --primary-text-color: #373737;
+  --primary-text-heading-color: #0c0c0c;
+  --secondary-text-color: #ffffff;
+  --ternary-text-color: #525252;
+  --button-bg: #2b6a0a;
+}
+
+@keyframes nav-arrow {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+@layer utility {
+  .animate-nav-arrow {
+    animation: nav-arrow 1.2s ease-in-out infinite;
+  }
+}
+
+/* ── Chat bubble backgrounds ─────────────────────────────────────────────── */
+.bg-bubble-received {
+  background-color: #e8e8e8;
+}
+
+.bg-bubble-sent {
+  background-color: #d1d5db;
+}
+
+/* ── Chat scrollbar ──────────────────────────────────────────────────────── */
+.scrollbar-light {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
+}
+
+.scrollbar-light::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-light::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb {
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+}
+
+/* ── Poppins font utility ─────────────────────────────────────────────────── */
+.font-poppins {
+  font-family: "Poppins", sans-serif;
+}

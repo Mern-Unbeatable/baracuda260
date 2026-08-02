@@ -1,0 +1,8 @@
+node_modules
+dist
+
+# Environment files (contain secrets — never commit)
+.env
+.env.development
+.env.production
+
