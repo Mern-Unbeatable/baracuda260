@@ -1,9 +1,11 @@
 import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ImgIcon, Shell } from '../site';
 import { ABOUT_ASSETS } from './aboutAssets';
 import { ABOUT_STEPS } from './aboutData';
 
 const AboutHowItWorks = memo(() => {
+  const { t } = useTranslation();
   const [activeId, setActiveId] = useState(ABOUT_STEPS[0].id);
   const active = ABOUT_STEPS.find((step) => step.id === activeId) || ABOUT_STEPS[0];
 
@@ -20,14 +22,13 @@ const AboutHowItWorks = memo(() => {
       <Shell>
         <div className="mx-auto mb-10 max-w-[694px] text-center xl:mb-14">
           <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#4048cd]">
-            How Competitions Work
+            {t('about.howItWorks.eyebrow')}
           </p>
           <h2 className="mt-3.5 text-[32px] font-extrabold text-[#0d0d14] sm:text-[40px] xl:text-[48px]">
-            How Our Competitions Work
+            {t('about.howItWorks.title')}
           </h2>
           <p className="mt-3.5 text-[16px] leading-normal text-[#6b7280] sm:text-[20px]">
-            Follow our simple, streamlined timeline to submit your art, gather votes, and claim
-            monthly recognition. Click each step below to learn more!
+            {t('about.howItWorks.subtitle')}
           </p>
         </div>
 
@@ -51,10 +52,10 @@ const AboutHowItWorks = memo(() => {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-[20px] font-extrabold text-[#0d0d14] sm:text-[24px]">
-                      {step.title}
+                      {t(step.titleKey)}
                     </span>
                     <span className="mt-2 block text-[16px] text-[#6b7280] sm:text-[20px]">
-                      {step.summary}
+                      {t(step.summaryKey)}
                     </span>
                   </span>
                 </button>
@@ -71,19 +72,22 @@ const AboutHowItWorks = memo(() => {
                   </span>
                   <div>
                     <p className="text-[16px] text-[#fd9c00]">
-                      Step {active.id} of {ABOUT_STEPS.length}
+                      {t('about.howItWorks.stepOf', {
+                        current: active.id,
+                        total: ABOUT_STEPS.length,
+                      })}
                     </p>
                     <p className="mt-2 text-[20px] font-bold text-[#111827] sm:text-[24px]">
-                      {active.title}
+                      {t(active.titleKey)}
                     </p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-4">
                   <p className="text-[16px] font-semibold text-[#3b3b3c] sm:text-[20px]">
-                    {active.detailTitle}
+                    {t(active.detailTitleKey)}
                   </p>
                   <p className="text-[16px] leading-normal text-[#606266] sm:text-[20px]">
-                    {active.detailBody}
+                    {t(active.detailBodyKey)}
                   </p>
                 </div>
               </div>
@@ -91,13 +95,13 @@ const AboutHowItWorks = memo(() => {
               <div>
                 <div className="h-px w-full bg-black/10" />
                 <div className="mt-4 flex items-center justify-between gap-4">
-                  <p className="text-[14px] text-[#606266]">Active Competition Mode</p>
+                  <p className="text-[14px] text-[#606266]">{t('about.howItWorks.activeMode')}</p>
                   <button
                     type="button"
                     onClick={goNext}
                     className="inline-flex items-center gap-1.5 text-[14px] text-[#4048cd]"
                   >
-                    Next Step
+                    {t('about.howItWorks.nextStep')}
                     <span className="inline-flex size-6 rotate-90 items-center justify-center">
                       <ImgIcon src={ABOUT_ASSETS.arrowNext} size={24} />
                     </span>

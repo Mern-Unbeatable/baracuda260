@@ -1,4 +1,5 @@
 import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { COMPETITION_CARDS, COMPETITION_STEPS } from '../../data/competitionsMarketing';
@@ -51,6 +52,12 @@ const ASSETS = {
 };
 
 const FILTERS = ['Single Photo', '6 Photo story', '12 photos - full Zodiac Story'];
+
+const FILTER_LABEL_KEYS = {
+  'Single Photo': 'common.singlePhoto',
+  '6 Photo story': 'common.sixPhotoStory',
+  '12 photos - full Zodiac Story': 'common.twelveZodiac',
+};
 
 const SHOWCASE = [
   {
@@ -175,7 +182,7 @@ const WINNERS = [
     medal: '🥇',
     name: 'Emma Kowalska',
     work: 'Silence at Dusk',
-    votes: '3,210 votes',
+    votesCount: '3,210',
     prize: '$300',
     image: ASSETS.winnerEmma,
   },
@@ -183,7 +190,7 @@ const WINNERS = [
     medal: '🥈',
     name: 'David Nowak',
     work: 'Urban Rivers',
-    votes: '2,891 votes',
+    votesCount: '2,891',
     prize: '$150',
     image: ASSETS.winnerDavid,
   },
@@ -191,7 +198,7 @@ const WINNERS = [
     medal: '🥉',
     name: 'Marie Blanche',
     work: 'Salt Flats Journey',
-    votes: '2,654 votes',
+    votesCount: '2,654',
     prize: '$50',
     image: ASSETS.winnerMarie,
   },
@@ -200,33 +207,33 @@ const WINNERS = [
 const FEATURES = [
   {
     icon: ASSETS.trophy,
-    title: 'Monthly Cash Prizes',
-    text: 'Real money paid via PayPal to top 3 finishers every month.',
+    titleKey: 'home.features.prizesTitle',
+    textKey: 'home.features.prizesText',
   },
   {
     icon: ASSETS.users,
-    title: 'Community Voting',
-    text: 'Transparent peer voting — every registered user can participate.',
+    titleKey: 'home.features.votingTitle',
+    textKey: 'home.features.votingText',
   },
   {
     icon: ASSETS.formats,
-    title: '3 Competition Formats',
-    text: 'Single photo, story albums, and zodiac series for every style.',
+    titleKey: 'home.features.formatsTitle',
+    textKey: 'home.features.formatsText',
   },
   {
     icon: ASSETS.star,
-    title: 'Hall of Fame',
-    text: 'Past winners permanently featured in our winners archive.',
+    titleKey: 'home.features.hallTitle',
+    textKey: 'home.features.hallText',
   },
   {
     icon: ASSETS.free,
-    title: 'Always Free',
-    text: 'Zero entry fees. Participation is and always will be free.',
+    titleKey: 'home.features.freeTitle',
+    textKey: 'home.features.freeText',
   },
   {
     icon: ASSETS.globe,
-    title: 'Global Community',
-    text: 'Photographers from over 40 countries competing each month.',
+    titleKey: 'home.features.globalTitle',
+    textKey: 'home.features.globalText',
   },
 ];
 
@@ -257,10 +264,19 @@ const TESTIMONIALS = [
   },
 ];
 
+const STATS = [
+  { value: '14,820+', labelKey: 'home.stats.photographers' },
+  { value: '89,450+', labelKey: 'home.stats.photos' },
+  { value: '342,100+', labelKey: 'home.stats.votes' },
+  { value: '120×', labelKey: 'home.stats.prizes' },
+];
+
 const HomeContent = memo(() => {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState(FILTERS[0]);
 
   const photos = filter === FILTERS[0] ? SHOWCASE : SHOWCASE.filter((p) => p.filter === filter);
+
   return (
     <SitePageLayout
       activeHref={ROUTES.HOME}
@@ -274,18 +290,13 @@ const HomeContent = memo(() => {
       <section className="bg-[#1b1e56] py-10 xl:py-12">
         <Shell>
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-6">
-            {[
-              ['14,820+', 'Registered Photographers'],
-              ['89,450+', 'Photos Submitted'],
-              ['342,100+', 'Votes Cast'],
-              ['120×', 'Cash Prizes Awarded'],
-            ].map(([value, label]) => (
-              <div key={label} className="text-center">
+            {STATS.map(({ value, labelKey }) => (
+              <div key={labelKey} className="text-center">
                 <p className="text-[32px] font-extrabold leading-none text-white sm:text-[40px] xl:text-[48px]">
                   {value}
                 </p>
                 <p className="mt-4 text-[14px] font-medium tracking-wide text-white/70 sm:text-[16px]">
-                  {label}
+                  {t(labelKey)}
                 </p>
               </div>
             ))}
@@ -298,25 +309,25 @@ const HomeContent = memo(() => {
         <Shell>
           <div className="mx-auto mb-11 max-w-[682px] text-center">
             <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-              Active Competitions
+              {t('home.competitions.eyebrow')}
             </p>
             <h2 className="mt-5 text-[32px] font-extrabold leading-tight text-[#0d0d14] sm:text-[40px] xl:text-[48px] xl:leading-[48px]">
-              Choose Your Album Type
+              {t('home.competitions.title')}
             </h2>
             <p className="mt-2.5 text-[16px] leading-[1.45] text-[#6b7280] sm:text-[20px] sm:leading-[29.25px]">
-              Three competition album type. One goal: show your talent and win a prize.
+              {t('home.competitions.subtitle')}
             </p>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {COMPETITION_CARDS.map((card) => (
               <article
-                key={card.title}
+                key={card.titleKey}
                 className="relative flex h-full flex-col justify-between rounded-[20px] border border-black/16 bg-white p-6 sm:p-8"
               >
                 {card.popular && (
                   <span className="absolute left-1/2 top-[-12px] -translate-x-1/2 rounded-full bg-[#4048cd] px-3 py-1 text-[10px] font-extrabold tracking-[0.5px] text-white">
-                    MOST POPULAR
+                    {t('common.mostPopular')}
                   </span>
                 )}
                 <div className="flex flex-col gap-4">
@@ -326,20 +337,20 @@ const HomeContent = memo(() => {
                   <div className="flex flex-col gap-6">
                     <div className="flex flex-col gap-4">
                       <h3 className="text-[24px] font-semibold capitalize leading-7 text-[#0d0d14] sm:text-[32px]">
-                        {card.title}
+                        {t(card.titleKey)}
                       </h3>
                       <p className="text-[16px] leading-normal text-[#6b7280]">
-                        {card.description}
+                        {t(card.descriptionKey)}
                       </p>
                     </div>
                     <ul className="flex flex-col gap-2.5">
-                      {card.features.map((feature) => (
+                      {card.featureKeys.map((featureKey) => (
                         <li
-                          key={feature}
+                          key={featureKey}
                           className="flex items-center gap-2 text-[14px] text-[#111827]"
                         >
                           <ImgIcon src={card.check} size={13} />
-                          {feature}
+                          {t(featureKey)}
                         </li>
                       ))}
                     </ul>
@@ -348,14 +359,14 @@ const HomeContent = memo(() => {
                     <span className="text-[28px] font-semibold text-[#4048cd] sm:text-[32px]">
                       {card.prize}
                     </span>
-                    /prize money
+                    {t('common.prizeMoney')}
                   </p>
                 </div>
                 <a
                   href="#"
                   className="mt-6 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white"
                 >
-                  Enter Now
+                  {t('common.enterNow')}
                   <ImgIcon src={ASSETS.arrow} size={16} />
                 </a>
               </article>
@@ -370,15 +381,15 @@ const HomeContent = memo(() => {
           <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
             <div className="max-w-[576px]">
               <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-                How It Works
+                {t('home.howItWorks.eyebrow')}
               </p>
               <h2 className="mt-2.5 text-[36px] font-extrabold leading-[1.1] text-[#0d0d14] sm:text-[48px] sm:leading-[48px]">
-                From Photo to Prize
+                {t('home.howItWorks.titleLine1')}
                 <br />
-                in 4 Steps
+                {t('home.howItWorks.titleLine2')}
               </h2>
               <p className="mt-2.5 text-[16px] leading-[1.45] text-[#6b7280] sm:text-[20px] sm:leading-[29.25px]">
-                A simple, transparent process. Join thousands of photographers who have already won.
+                {t('home.howItWorks.subtitle')}
               </p>
             </div>
 
@@ -395,9 +406,11 @@ const HomeContent = memo(() => {
                   </div>
                   <div className="pb-8">
                     <h3 className="text-[20px] font-extrabold leading-6 text-[#0d0d14]">
-                      {step.title}
+                      {t(step.titleKey)}
                     </h3>
-                    <p className="mt-1.5 text-[16px] leading-normal text-[#6b7280]">{step.text}</p>
+                    <p className="mt-1.5 text-[16px] leading-normal text-[#6b7280]">
+                      {t(step.textKey)}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -412,10 +425,10 @@ const HomeContent = memo(() => {
           <div className="mb-8 flex flex-col gap-6 lg:mb-[52px] lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
-                Community Work
+                {t('home.showcase.eyebrow')}
               </p>
               <h2 className="mt-2 text-[36px] font-extrabold text-[#0d0d14] sm:text-[48px] sm:leading-[66px]">
-                Photo Showcase
+                {t('home.showcase.title')}
               </h2>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-1">
@@ -428,7 +441,7 @@ const HomeContent = memo(() => {
                     filter === item ? 'bg-[#4048cd] text-white' : 'bg-[#f3f4f6] text-[#6b7280]'
                   }`}
                 >
-                  {item}
+                  {t(FILTER_LABEL_KEYS[item])}
                 </button>
               ))}
             </div>
@@ -471,7 +484,7 @@ const HomeContent = memo(() => {
               href={ROUTES.GALLERY}
               className="inline-flex items-center gap-2 rounded-full bg-[#ee1c25] px-8 py-3.5 text-[16px] font-bold text-white"
             >
-              View Full Gallery
+              {t('home.showcase.viewFullGallery')}
               <ImgIcon src={ASSETS.arrowGallery} size={16} />
             </AppLink>
           </div>
@@ -484,18 +497,18 @@ const HomeContent = memo(() => {
           <div className="mb-11 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-[12px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-                Leaderboard
+                {t('home.leaderboard.eyebrow')}
               </p>
               <h2 className="mt-3 text-[36px] font-extrabold text-[#0d0d14] sm:text-[48px] sm:leading-[48px]">
-                Top Photographers
+                {t('home.leaderboard.title')}
               </h2>
-              <p className="mt-2 text-[16px] text-[#6b7280]">July 2026 — Live standings</p>
+              <p className="mt-2 text-[16px] text-[#6b7280]">{t('home.leaderboard.liveStandings')}</p>
             </div>
             <a
               href="#"
               className="inline-flex items-center gap-2 text-[14px] font-bold text-[#e31837]"
             >
-              Full leaderboard
+              {t('home.leaderboard.fullLeaderboard')}
               <ImgIcon src={ASSETS.arrowRed} size={16} />
             </a>
           </div>
@@ -506,7 +519,7 @@ const HomeContent = memo(() => {
                 emoji: '🥈',
                 name: 'Piotr',
                 city: 'Warsaw',
-                votes: '4,203 votes',
+                votesCount: '4,203',
                 avatar: ASSETS.avatarPiotr,
                 size: 64,
                 border: 'border-[#e5e7eb]',
@@ -515,7 +528,7 @@ const HomeContent = memo(() => {
                 emoji: '🥇',
                 name: 'Anna',
                 city: 'Kraków',
-                votes: '4,821 votes',
+                votesCount: '4,821',
                 avatar: ASSETS.avatarAnna,
                 size: 80,
                 border: 'border-[#fdc700]',
@@ -525,7 +538,7 @@ const HomeContent = memo(() => {
                 emoji: '🥉',
                 name: 'Marta',
                 city: 'Wrocław',
-                votes: '3,981 votes',
+                votesCount: '3,981',
                 avatar: ASSETS.avatarMarta,
                 size: 56,
                 border: 'border-[#fee685]',
@@ -554,7 +567,9 @@ const HomeContent = memo(() => {
                   {p.name}
                 </p>
                 <p className="text-[12px] text-[#6b7280]">{p.city}</p>
-                <p className="mt-1 text-[14px] font-bold text-[#e31837]">{p.votes}</p>
+                <p className="mt-1 text-[14px] font-bold text-[#e31837]">
+                  {t('home.winners.votesLabel', { count: p.votesCount })}
+                </p>
               </div>
             ))}
           </div>
@@ -563,11 +578,11 @@ const HomeContent = memo(() => {
             <table className="min-w-[720px] w-full text-left">
               <thead className="bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
                 <tr className="border-b border-black/20">
-                  <th className="px-6 py-4">#</th>
-                  <th className="px-6 py-4">Photographer</th>
-                  <th className="px-6 py-4">City</th>
-                  <th className="px-6 py-4 text-right">Votes</th>
-                  <th className="px-6 py-4 text-right">Points</th>
+                  <th className="px-6 py-4">{t('common.rank')}</th>
+                  <th className="px-6 py-4">{t('common.photographer')}</th>
+                  <th className="px-6 py-4">{t('common.city')}</th>
+                  <th className="px-6 py-4 text-right">{t('common.votes')}</th>
+                  <th className="px-6 py-4 text-right">{t('common.points')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -615,14 +630,12 @@ const HomeContent = memo(() => {
           <div className="rounded-[20px] bg-[#4048cd] px-4 py-16 sm:px-8 sm:py-20 xl:px-6">
             <div className="mx-auto max-w-[896px]">
               <p className="text-center text-[11px] font-bold uppercase tracking-[1.65px] text-white">
-                May 2026
+                {t('home.winners.monthLabel')}
               </p>
               <h2 className="mt-3 text-center text-[32px] font-extrabold tracking-[-0.9px] text-white sm:text-[36px]">
-                Monthly Winners
+                {t('home.winners.title')}
               </h2>
-              <p className="mt-2 text-center text-[16px] text-white">
-                Congratulations to our May 2026 champions
-              </p>
+              <p className="mt-2 text-center text-[16px] text-white">{t('home.winners.subtitle')}</p>
 
               <div className="mt-12 grid gap-5 md:grid-cols-3">
                 {WINNERS.map((w) => (
@@ -640,14 +653,16 @@ const HomeContent = memo(() => {
                     />
                     <h3 className="mt-3 text-[18px] font-extrabold">{w.name}</h3>
                     <p className="text-[14px]">{w.work}</p>
-                    <p className="mt-1 text-[12px]">{w.votes}</p>
+                    <p className="mt-1 text-[12px]">
+                      {t('home.winners.votesLabel', { count: w.votesCount })}
+                    </p>
                     <p className="mt-4 text-[24px] font-extrabold">{w.prize}</p>
-                    <p className="mb-4 text-[12px]">Cash prize via PayPal</p>
+                    <p className="mb-4 text-[12px]">{t('home.winners.cashPrize')}</p>
                     <a
                       href="#"
                       className="inline-flex h-[34px] w-full items-center justify-center rounded-[14px] border border-white/20 bg-white/8 text-[12px] font-bold"
                     >
-                      View Album
+                      {t('home.winners.viewAlbum')}
                     </a>
                   </article>
                 ))}
@@ -655,7 +670,7 @@ const HomeContent = memo(() => {
 
               <div className="mt-8 text-center">
                 <a href="#" className="text-[14px] font-semibold text-white">
-                  View all previous winners →
+                  {t('home.winners.viewAll')}
                 </a>
               </div>
             </div>
@@ -668,23 +683,23 @@ const HomeContent = memo(() => {
         <Shell>
           <div className="mb-11 max-w-[290px]">
             <p className="text-[16px] font-bold uppercase tracking-[1.65px] text-[#3f51b5]">
-              The Platform
+              {t('home.features.eyebrow')}
             </p>
             <h2 className="mt-[18px] text-[36px] font-extrabold tracking-[-0.9px] text-[#111827]">
-              Why My12Photos
+              {t('home.features.title')}
             </h2>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {FEATURES.map((f) => (
-              <article key={f.title} className="rounded-2xl border border-black/17 p-[25px]">
+              <article key={f.titleKey} className="rounded-2xl border border-black/17 p-[25px]">
                 <div className="mb-2.5 flex size-10 items-center justify-center rounded-[14px] bg-[#eef2ff]">
                   <ImgIcon src={f.icon} size={18} />
                 </div>
                 <h3 className="text-[24px] font-extrabold leading-[27px] text-[#111827]">
-                  {f.title}
+                  {t(f.titleKey)}
                 </h3>
                 <p className="mt-2.5 max-w-[324px] text-[16px] leading-[22.75px] text-[#6b7280]">
-                  {f.text}
+                  {t(f.textKey)}
                 </p>
               </article>
             ))}
@@ -697,41 +712,41 @@ const HomeContent = memo(() => {
         <Shell>
           <div className="mb-11 text-center">
             <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-              Testimonials
+              {t('home.testimonials.eyebrow')}
             </p>
             <h2 className="mt-3 text-[32px] font-extrabold tracking-[-0.96px] text-[#0d0d14] sm:text-[48px]">
-              What Photographers Say
+              {t('home.testimonials.title')}
             </h2>
           </div>
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
+            {TESTIMONIALS.map((item) => (
               <article
-                key={t.name}
+                key={item.name}
                 className="flex flex-col rounded-2xl border border-black/8 bg-white p-8"
               >
                 <div className="mb-3 flex gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <ImgIcon
                       key={i}
-                      src={i < Math.floor(t.stars) ? ASSETS.starFull : ASSETS.starHalf}
+                      src={i < Math.floor(item.stars) ? ASSETS.starFull : ASSETS.starHalf}
                       size={16}
                     />
                   ))}
                 </div>
                 <p className="flex-1 text-[14px] leading-[22.75px] text-[#0d0d14]">
-                  &ldquo;{t.quote}&rdquo;
+                  &ldquo;{item.quote}&rdquo;
                 </p>
                 <div className="mt-6 flex items-center gap-3">
                   <img
-                    src={t.avatar}
+                    src={item.avatar}
                     alt=""
                     width={40}
                     height={40}
                     className="size-10 rounded-full object-cover"
                   />
                   <div>
-                    <p className="text-[14px] font-bold text-[#0d0d14]">{t.name}</p>
-                    <p className="text-[12px] text-[#6b7280]">{t.role}</p>
+                    <p className="text-[14px] font-bold text-[#0d0d14]">{item.name}</p>
+                    <p className="text-[12px] text-[#6b7280]">{item.role}</p>
                   </div>
                 </div>
               </article>

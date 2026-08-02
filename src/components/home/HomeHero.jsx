@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { AppLink } from '../site';
 
@@ -15,6 +16,7 @@ export const HOME_HERO_SLIDES = [
 ];
 
 const HomeHero = memo(() => {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
   const slideCount = HOME_HERO_SLIDES.length;
 
@@ -46,14 +48,13 @@ const HomeHero = memo(() => {
           <div className="flex flex-col gap-3">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-[17px] py-[7px]">
               <span className="size-2 rounded-full bg-[#05df72]" />
-              <span className="text-sm font-semibold text-white">Competitions live — July 2026</span>
+              <span className="text-sm font-semibold text-white">{t('home.hero.badge')}</span>
             </div>
             <h1 className="text-[36px] font-extrabold uppercase leading-[1.15] tracking-[-1.44px] text-white sm:text-[48px] xl:text-[64px] xl:leading-[77.76px]">
-              12 Photos - Full Zodiac Story
+              {t('home.hero.title')}
             </h1>
             <p className="max-w-[720px] text-[16px] leading-[1.6] text-white sm:text-[20px] sm:leading-[32.5px]">
-              Join over 12,000 photographers. Free competitions, community voting, cash prizes every
-              month.
+              {t('home.hero.subtitle')}
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
@@ -61,13 +62,13 @@ const HomeHero = memo(() => {
               href="#"
               className="inline-flex items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
             >
-              Join a Competition
+              {t('home.hero.ctaJoin')}
             </a>
             <AppLink
               href={ROUTES.GALLERY}
               className="inline-flex items-center justify-center rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
             >
-              Explore Gallery
+              {t('home.hero.ctaGallery')}
             </AppLink>
           </div>
         </div>
@@ -76,7 +77,7 @@ const HomeHero = memo(() => {
       <div
         className="absolute bottom-[50px] left-1/2 flex -translate-x-1/2 items-center gap-[7px]"
         role="tablist"
-        aria-label="Hero slides"
+        aria-label={t('common.heroSlides')}
       >
         {HOME_HERO_SLIDES.map((src, index) => {
           const active = index === activeIndex;
@@ -86,7 +87,7 @@ const HomeHero = memo(() => {
               type="button"
               role="tab"
               aria-selected={active}
-              aria-label={`Show slide ${index + 1}`}
+              aria-label={t('common.showSlide', { n: index + 1 })}
               onClick={() => setActiveIndex(index)}
               className={`size-3.5 rounded-full transition ${
                 active ? 'bg-white' : 'bg-white/50 hover:bg-white/80'

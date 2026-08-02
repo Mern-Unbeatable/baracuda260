@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { ImgIcon, Shell, SitePageLayout, useMonthMenu } from '../site';
 
@@ -19,6 +20,13 @@ const ASSETS = {
 };
 
 const FILTER_TABS = ['All Entries', 'Single Photo', '6 Photos', '12 photos - full Zodiac Story'];
+
+const FILTER_TAB_LABEL_KEYS = {
+  'All Entries': 'common.allEntries',
+  'Single Photo': 'common.singlePhoto',
+  '6 Photos': 'common.sixPhotos',
+  '12 photos - full Zodiac Story': 'common.twelveZodiac',
+};
 
 const MONTHS = [
   'January',
@@ -185,6 +193,7 @@ const WinnerCard = memo(({ item }) => (
 WinnerCard.displayName = 'WinnerCard';
 
 const WinnersContent = memo(() => {
+  const { t } = useTranslation();
   const [filterTab, setFilterTab] = useState('All Entries');
   const {
     month,
@@ -203,6 +212,7 @@ const WinnersContent = memo(() => {
       return albumOk && monthOk;
     });
   }, [filterTab, month]);
+
   return (
     <SitePageLayout
       activeHref={ROUTES.WINNERS}
@@ -216,11 +226,9 @@ const WinnersContent = memo(() => {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="max-w-[720px]">
               <h1 className="text-[32px] font-extrabold leading-tight text-[#0d0d14] sm:text-[40px] sm:leading-[48px] xl:text-[48px]">
-                Complete Winners Archive
+                {t('winners.title')}
               </h1>
-              <p className="mt-4 text-[16px] leading-6 text-[#6b7280]">
-                Review past legendary lens achievements, themes, and winning statistics.
-              </p>
+              <p className="mt-4 text-[16px] leading-6 text-[#6b7280]">{t('winners.subtitle')}</p>
             </div>
 
             <div className="relative shrink-0 self-start" ref={monthRef}>
@@ -232,7 +240,7 @@ const WinnersContent = memo(() => {
                 className="inline-flex items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222]"
               >
                 <ImgIcon src={ASSETS.calendar} size={13} />
-                <span>{month}</span>
+                <span>{t(`common.months.${month}`)}</span>
                 <span
                   className={`inline-flex transition ${monthOpen ? 'rotate-180' : ''}`}
                   aria-hidden="true"
@@ -244,7 +252,7 @@ const WinnersContent = memo(() => {
               {monthOpen && (
                 <ul
                   role="listbox"
-                  aria-label="Select month"
+                  aria-label={t('common.selectMonth')}
                   className="absolute right-0 z-30 mt-2 max-h-64 w-[180px] overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
                 >
                   {MONTHS.map((name) => {
@@ -264,7 +272,7 @@ const WinnersContent = memo(() => {
                           }`}
                         >
                           <ImgIcon src={ASSETS.calendar} size={12} />
-                          {name}
+                          {t(`common.months.${name}`)}
                         </button>
                       </li>
                     );
@@ -277,7 +285,7 @@ const WinnersContent = memo(() => {
           <div className="mt-6 flex flex-col gap-4 lg:mt-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="inline-flex items-center gap-2.5 text-[16px] font-medium text-[#222]">
               <ImgIcon src={ASSETS.calendar} size={13} />
-              <span>HISTORIC RECORDS: {filteredWinners.length} ITEMS</span>
+              <span>{t('winners.historicRecords', { count: filteredWinners.length })}</span>
             </div>
 
             <div className="flex flex-wrap items-center gap-2 sm:gap-4">
@@ -294,7 +302,7 @@ const WinnersContent = memo(() => {
                         : 'bg-[#f2f2f2] text-[#6b7280] hover:text-[#0d0d14]'
                     } ${tab.startsWith('12') && !active ? 'text-[#0d0d14]' : ''}`}
                   >
-                    {tab}
+                    {t(FILTER_TAB_LABEL_KEYS[tab])}
                   </button>
                 );
               })}
@@ -303,10 +311,8 @@ const WinnersContent = memo(() => {
 
           {filteredWinners.length === 0 ? (
             <div className="mt-11 rounded-xl border border-dashed border-black/15 px-6 py-16 text-center">
-              <p className="text-[18px] font-bold text-[#0d0d14]">No winners found</p>
-              <p className="mt-2 text-[14px] text-[#6b7280]">
-                Try another album type or month to see more historic records.
-              </p>
+              <p className="text-[18px] font-bold text-[#0d0d14]">{t('winners.emptyTitle')}</p>
+              <p className="mt-2 text-[14px] text-[#6b7280]">{t('winners.emptyBody')}</p>
             </div>
           ) : (
             <div className="mt-11 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">

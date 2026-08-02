@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ImgIcon, Shell } from '../site';
 import { ABOUT_ASSETS } from './aboutAssets';
 
@@ -20,36 +21,26 @@ const MissionVisionCard = memo(({ title, children, highlight }) => (
 ));
 MissionVisionCard.displayName = 'MissionVisionCard';
 
-const AboutMissionVision = memo(() => (
-  <section className="bg-white pb-16 sm:pb-20 xl:pb-[100px]">
-    <Shell>
-      <div className="grid gap-5 lg:grid-cols-2">
-        <MissionVisionCard
-          title="Our Mission"
-          highlight="Fair Play, Transparent Voting & High Engagement"
-        >
-          <p>
-            Our mission is to inspire creativity by providing a modern, fair, and engaging
-            photography competition platform where every photographer has an equal opportunity to be
-            recognized.
-          </p>
-          <p>
-            We aim to make photography competitions simple, transparent, and enjoyable while
-            rewarding participants for their passion and creativity.
-          </p>
-        </MissionVisionCard>
+const AboutMissionVision = memo(() => {
+  const { t } = useTranslation();
 
-        <MissionVisionCard title="Our Vision" highlight="Connecting Photographers Worldwide">
-          <p>
-            We aspire to become one of the world&apos;s leading online photography competition
-            platforms, connecting photographers from around the globe and building a vibrant
-            community driven by creativity, recognition, and continuous participation.
-          </p>
-        </MissionVisionCard>
-      </div>
-    </Shell>
-  </section>
-));
+  return (
+    <section className="bg-white pb-16 sm:pb-20 xl:pb-[100px]">
+      <Shell>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <MissionVisionCard title={t('about.mission.title')} highlight={t('about.mission.highlight')}>
+            <p>{t('about.mission.p1')}</p>
+            <p>{t('about.mission.p2')}</p>
+          </MissionVisionCard>
+
+          <MissionVisionCard title={t('about.vision.title')} highlight={t('about.vision.highlight')}>
+            <p>{t('about.vision.p1')}</p>
+          </MissionVisionCard>
+        </div>
+      </Shell>
+    </section>
+  );
+});
 
 AboutMissionVision.displayName = 'AboutMissionVision';
 

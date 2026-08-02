@@ -45,5 +45,259 @@
     "terms": "Terms of Service",
     "cookies": "Cookies",
     "rights": "© {{year}} My12Photos. All rights reserved."
+  },
+  "common": {
+    "singlePhoto": "Single Photo",
+    "sixPhotos": "6 Photos",
+    "sixPhotoStory": "6 Photo story",
+    "sixPhotosStory": "6-Photos Story",
+    "twelveZodiac": "12 photos - full Zodiac Story",
+    "allEntries": "All Entries",
+    "mostPopular": "MOST POPULAR",
+    "prizeMoney": "/prize money",
+    "enterNow": "Enter Now",
+    "selectMonth": "Select month",
+    "heroSlides": "Hero slides",
+    "showSlide": "Show slide {{n}}",
+    "votes": "Votes",
+    "points": "Points",
+    "photographer": "Photographer",
+    "city": "City",
+    "rank": "#",
+    "months": {
+      "January": "January",
+      "February": "February",
+      "March": "March",
+      "April": "April",
+      "May": "May",
+      "June": "June",
+      "July": "July",
+      "August": "August",
+      "September": "September",
+      "October": "October",
+      "November": "November",
+      "December": "December"
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Competitions live — July 2026",
+      "title": "12 Photos - Full Zodiac Story",
+      "subtitle": "Join over 12,000 photographers. Free competitions, community voting, cash prizes every month.",
+      "ctaJoin": "Join a Competition",
+      "ctaGallery": "Explore Gallery"
+    },
+    "stats": {
+      "photographers": "Registered Photographers",
+      "photos": "Photos Submitted",
+      "votes": "Votes Cast",
+      "prizes": "Cash Prizes Awarded"
+    },
+    "competitions": {
+      "eyebrow": "Active Competitions",
+      "title": "Choose Your Album Type",
+      "subtitle": "Three competition album type. One goal: show your talent and win a prize."
+    },
+    "howItWorks": {
+      "eyebrow": "How It Works",
+      "titleLine1": "From Photo to Prize",
+      "titleLine2": "in 4 Steps",
+      "subtitle": "A simple, transparent process. Join thousands of photographers who have already won."
+    },
+    "showcase": {
+      "eyebrow": "Community Work",
+      "title": "Photo Showcase",
+      "viewFullGallery": "View Full Gallery"
+    },
+    "leaderboard": {
+      "eyebrow": "Leaderboard",
+      "title": "Top Photographers",
+      "liveStandings": "July 2026 — Live standings",
+      "fullLeaderboard": "Full leaderboard"
+    },
+    "winners": {
+      "monthLabel": "May 2026",
+      "title": "Monthly Winners",
+      "subtitle": "Congratulations to our May 2026 champions",
+      "cashPrize": "Cash prize via PayPal",
+      "viewAlbum": "View Album",
+      "viewAll": "View all previous winners →",
+      "votesLabel": "{{count}} votes"
+    },
+    "features": {
+      "eyebrow": "The Platform",
+      "title": "Why My12Photos",
+      "prizesTitle": "Monthly Cash Prizes",
+      "prizesText": "Real money paid via PayPal to top 3 finishers every month.",
+      "votingTitle": "Community Voting",
+      "votingText": "Transparent peer voting — every registered user can participate.",
+      "formatsTitle": "3 Competition Formats",
+      "formatsText": "Single photo, story albums, and zodiac series for every style.",
+      "hallTitle": "Hall of Fame",
+      "hallText": "Past winners permanently featured in our winners archive.",
+      "freeTitle": "Always Free",
+      "freeText": "Zero entry fees. Participation is and always will be free.",
+      "globalTitle": "Global Community",
+      "globalText": "Photographers from over 40 countries competing each month."
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "What Photographers Say"
+    }
+  },
+  "competitionsPage": {
+    "cards": {
+      "singleTitle": "Single Photo",
+      "singleDesc": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story — judged by the community.",
+      "singleF0": "Monthly competition",
+      "singleF1": "Public community voting",
+      "singleF2": "Top 3 win cash prizes",
+      "sixTitle": "6-Photos Story",
+      "sixDesc": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
+      "sixF0": "Sequential storytelling",
+      "sixF1": "Community votes",
+      "sixF2": "Best story wins",
+      "twelveTitle": "12 photos - full Zodiac Story",
+      "twelveDesc": "Create a complete zodiac-themed visual journey across twelve stunning images — our grandest format.",
+      "twelveF0": "12-sign visual arc",
+      "twelveF1": "Zodiac-order display",
+      "twelveF2": "Grand prize category"
+    },
+    "steps": {
+      "1title": "Create an Account",
+      "1text": "Sign up for free in seconds. No fees, no hidden costs — ever.",
+      "2title": "Submit Your Photos",
+      "2text": "Choose a competition category and upload your best work before the deadline.",
+      "3title": "Earn Votes",
+      "3text": "The photography community votes for their favourites. The more votes, the higher your rank.",
+      "4title": "Claim Your Prize",
+      "4text": "Winners receive cash prizes via PayPal. Fast, transparent, and reliable."
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Empowering Creative Visuals",
+      "title": "About My12Photos",
+      "subtitle": "Discover a global photography community where creativity is celebrated, stories are shared, and talented photographers compete for monthly recognition and cash prizes.",
+      "ctaJoin": "Join Now",
+      "ctaLearn": "Learn How It Works"
+    },
+    "stats": {
+      "zodiacThemes": "Zodiac Themes",
+      "monthlyPrizes": "Monthly Prizes",
+      "votersEngaged": "Voters Engaged"
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "My12Photos was created with a simple idea—to give photographers of every skill level a place to showcase their creativity, tell visual stories, and gain recognition. Unlike traditional photo-sharing platforms, My12Photos brings photographers together through exciting monthly competitions, transparent voting, and a supportive global community.",
+      "p2": "Whether you're capturing breathtaking landscapes, unforgettable moments, or creative storytelling through albums, our platform helps your work reach a wider audience.",
+      "quote": "Every photographer should have a fair stage to present their visual timeline. We designed My12Photos as that global amphitheater."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "p1": "Our mission is to inspire creativity by providing a modern, fair, and engaging photography competition platform where every photographer has an equal opportunity to be recognized.",
+      "p2": "We aim to make photography competitions simple, transparent, and enjoyable while rewarding participants for their passion and creativity.",
+      "highlight": "Fair Play, Transparent Voting & High Engagement"
+    },
+    "vision": {
+      "title": "Our Vision",
+      "p1": "We aspire to become one of the world's leading online photography competition platforms, connecting photographers from around the globe and building a vibrant community driven by creativity, recognition, and continuous participation.",
+      "highlight": "Connecting Photographers Worldwide"
+    },
+    "howItWorks": {
+      "eyebrow": "How Competitions Work",
+      "title": "How Our Competitions Work",
+      "subtitle": "Follow our simple, streamlined timeline to submit your art, gather votes, and claim monthly recognition. Click each step below to learn more!",
+      "stepOf": "Step {{current}} of {{total}}",
+      "activeMode": "Active Competition Mode",
+      "nextStep": "Next Step",
+      "s1title": "Create Your Account",
+      "s1summary": "Sign up for free and complete your profile.",
+      "s1detailTitle": "Sign up for free and complete your profile.",
+      "s1detailBody": "Set up your personal gallery, link your photography socials, and tell the community about your artistic style.",
+      "s2title": "Choose Your Competition",
+      "s2summary": "Select one of our competition categories.",
+      "s2detailTitle": "Pick the album format that fits your story.",
+      "s2detailBody": "Enter Single Photo, 6-Photo Story, or the full 12-photo Zodiac Album — each with its own prizes and monthly theme.",
+      "s3title": "Upload Your Work",
+      "s3summary": "Submit your best photographs before the monthly deadline.",
+      "s3detailTitle": "Submit before the monthly deadline.",
+      "s3detailBody": "Upload high-quality images that match the competition rules. You can refine captions and sequence until submissions close.",
+      "s4title": "Receive Community Votes",
+      "s4summary": "Your submission becomes available for public voting.",
+      "s4detailTitle": "Earn votes from photographers worldwide.",
+      "s4detailBody": "Once live in the gallery, your work is open for transparent community voting throughout the competition window.",
+      "s5title": "Win Monthly Prizes",
+      "s5summary": "Top-ranked photographers receive recognition, awards, and prizes.",
+      "s5detailTitle": "Claim recognition and cash prizes.",
+      "s5detailBody": "Top-ranked photographers receive recognition, awards, and monthly cash prizes — with winners featured across the platform."
+    },
+    "community": {
+      "title": "Our Community",
+      "body": "Our growing community consists of photographers, storytellers, hobbyists, and photography enthusiasts from around the world. Members can explore inspiring galleries, discover talented artists, participate in competitions, and celebrate each month's winners together.",
+      "belief": "We believe every photograph tells a story, and every story deserves an audience.",
+      "exchangeTitle": "Global Exchange",
+      "exchangeText": "Connect with visual minds across 150+ countries.",
+      "critiqueTitle": "Empathetic Critique",
+      "critiqueText": "Acquire helpful reviews and votes from peers."
+    },
+    "cta": {
+      "eyebrow": "No Fee to Register",
+      "title": "Ready to Share Your Photography With the World?",
+      "subtitle": "Join thousands of photographers competing every month. Upload your best work, receive community votes, and become our next monthly winner.",
+      "registerFree": "Register Free"
+    }
+  },
+  "gallery": {
+    "eyebrow": "Community Work",
+    "title": "Photo Showcase",
+    "filters": "Filters",
+    "hideFilters": "Hide Filters",
+    "albumType": "Album Type",
+    "category": "Category",
+    "emptyTitle": "No photos match",
+    "emptyBody": "Clear or change Album Type / Category filters to see more results.",
+    "firstPage": "First page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "lastPage": "Last page"
+  },
+  "galleryDetail": {
+    "download": "Download",
+    "votesReceived": "VOTES RECEIVED",
+    "viewsCounted": "VIEWS COUNTED",
+    "castVote": "Cast Your Vote",
+    "photographerLabel": "Photographer",
+    "photographerProfile": "Photographer Profile",
+    "comments": "Comments",
+    "verified": "Verified",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Write your comment",
+    "postComment": "Post a comment",
+    "submit": "Submit",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo"
+  },
+  "leaderboard": {
+    "title": "Top Photographers",
+    "liveStandings": "{{month}} {{year}} — Live standings"
+  },
+  "winners": {
+    "title": "Complete Winners Archive",
+    "subtitle": "Review past legendary lens achievements, themes, and winning statistics.",
+    "historicRecords": "HISTORIC RECORDS: {{count}} ITEMS",
+    "emptyTitle": "No winners found",
+    "emptyBody": "Try another album type or month to see more historic records."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with us",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again."
   }
 }

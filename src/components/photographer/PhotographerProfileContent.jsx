@@ -1,4 +1,5 @@
 import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { GALLERY_PHOTOS, galleryDetailPath } from '../../data/galleryPhotos';
 
@@ -35,6 +36,7 @@ const displayBadge = (badge = '') => {
 };
 
 const PhotographerProfileContent = memo(() => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
 
   const totalPages = Math.max(1, Math.ceil(GALLERY_PHOTOS.length / PAGE_SIZE));
@@ -114,20 +116,20 @@ const PhotographerProfileContent = memo(() => {
             <div className="mt-9 flex flex-wrap items-center justify-center gap-[5px]">
               <button
                 type="button"
-                aria-label="First page"
-                onClick={() => setPage(1)}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
-              >
-                <ImgIcon src={ASSETS.pageFirst} size={14} />
-              </button>
-              <button
-                type="button"
-                aria-label="Previous page"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
-              >
-                <ImgIcon src={ASSETS.pagePrev} size={14} />
-              </button>
+                  aria-label={t('gallery.firstPage')}
+                  onClick={() => setPage(1)}
+                  className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
+                >
+                  <ImgIcon src={ASSETS.pageFirst} size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label={t('gallery.previousPage')}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
+                >
+                  <ImgIcon src={ASSETS.pagePrev} size={14} />
+                </button>
               {pageNumbers.map((n) => (
                 <button
                   key={n}
@@ -162,18 +164,18 @@ const PhotographerProfileContent = memo(() => {
               )}
               <button
                 type="button"
-                aria-label="Next page"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
-              >
-                <ImgIcon src={ASSETS.pageNext} size={14} />
-              </button>
-              <button
-                type="button"
-                aria-label="Last page"
-                onClick={() => setPage(totalPages)}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
-              >
+                  aria-label={t('gallery.nextPage')}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
+                >
+                  <ImgIcon src={ASSETS.pageNext} size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label={t('gallery.lastPage')}
+                  onClick={() => setPage(totalPages)}
+                  className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
+                >
                 <span className="inline-flex scale-x-[-1]">
                   <ImgIcon src={ASSETS.pageFirst} size={14} />
                 </span>

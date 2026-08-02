@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { GALLERY_PHOTOS, galleryDetailPath } from '../../data/galleryPhotos';
@@ -35,6 +36,12 @@ const ASSETS = {
 
 const ALBUM_TYPES = ['Single Photo', '6 Photo Story', '12 photos - Full Zodiac Story'];
 
+const ALBUM_TYPE_LABEL_KEYS = {
+  'Single Photo': 'common.singlePhoto',
+  '6 Photo Story': 'common.sixPhotosStory',
+  '12 photos - Full Zodiac Story': 'common.twelveZodiac',
+};
+
 const PAGE_SIZE = 9;
 
 const CATEGORIES = [
@@ -56,7 +63,7 @@ const CATEGORIES = [
 
 const PHOTOS = GALLERY_PHOTOS;
 
-const FilterGroup = memo(({ title, options, selected, onToggle }) => (
+const FilterGroup = memo(({ title, options, selected, onToggle, getLabel }) => (
   <div>
     <h3 className="text-[18px] font-bold leading-6 text-[#0d0d14] sm:text-[20px]">{title}</h3>
     <ul className="mt-4 flex flex-col gap-4">
@@ -83,7 +90,7 @@ const FilterGroup = memo(({ title, options, selected, onToggle }) => (
                   />
                 )}
               </span>
-              <span>{option}</span>
+              <span>{getLabel ? getLabel(option) : option}</span>
             </label>
           </li>
         );
@@ -94,6 +101,7 @@ const FilterGroup = memo(({ title, options, selected, onToggle }) => (
 FilterGroup.displayName = 'FilterGroup';
 
 const GalleryContent = memo(() => {
+  const { t } = useTranslation();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [albumTypes, setAlbumTypes] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -119,6 +127,7 @@ const GalleryContent = memo(() => {
   const currentPage = Math.min(page, totalPages);
   const pagedPhotos = filteredPhotos.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const pageNumbers = Array.from({ length: Math.min(totalPages, 3) }, (_, i) => i + 1);
+
   return (
     <SitePageLayout
       activeHref={ROUTES.GALLERY}
@@ -132,16 +141,16 @@ const GalleryContent = memo(() => {
           <div className="mb-6 flex items-center justify-between lg:hidden">
             <div>
               <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
-                Community Work
+                {t('gallery.eyebrow')}
               </p>
-              <h1 className="mt-1 text-[32px] font-extrabold text-[#0d0d14]">Photo Showcase</h1>
+              <h1 className="mt-1 text-[32px] font-extrabold text-[#0d0d14]">{t('gallery.title')}</h1>
             </div>
             <button
               type="button"
               onClick={() => setFiltersOpen((v) => !v)}
               className="rounded-full border border-black/15 px-4 py-2 text-sm font-semibold text-[#0d0d14]"
             >
-              {filtersOpen ? 'Hide Filters' : 'Filters'}
+              {filtersOpen ? t('gallery.hideFilters') : t('gallery.filters')}
             </button>
           </div>
 
@@ -152,13 +161,14 @@ const GalleryContent = memo(() => {
             >
               <div className="flex flex-col gap-10">
                 <FilterGroup
-                  title="Album Type"
+                  title={t('gallery.albumType')}
                   options={ALBUM_TYPES}
                   selected={albumTypes}
                   onToggle={(value) => toggle(setAlbumTypes, value)}
+                  getLabel={(value) => t(ALBUM_TYPE_LABEL_KEYS[value])}
                 />
                 <FilterGroup
-                  title="Category"
+                  title={t('gallery.category')}
                   options={CATEGORIES}
                   selected={categories}
                   onToggle={(value) => toggle(setCategories, value)}
@@ -170,19 +180,17 @@ const GalleryContent = memo(() => {
             <div className="min-w-0 flex-1">
               <div className="mb-8 hidden lg:block">
                 <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
-                  Community Work
+                  {t('gallery.eyebrow')}
                 </p>
                 <h1 className="mt-2 text-[48px] font-extrabold leading-[66px] text-[#0d0d14]">
-                  Photo Showcase
+                  {t('gallery.title')}
                 </h1>
               </div>
 
               {pagedPhotos.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-black/15 px-6 py-16 text-center">
-                  <p className="text-[18px] font-bold text-[#0d0d14]">No photos match</p>
-                  <p className="mt-2 text-[14px] text-[#6b7280]">
-                    Clear or change Album Type / Category filters to see more results.
-                  </p>
+                  <p className="text-[18px] font-bold text-[#0d0d14]">{t('gallery.emptyTitle')}</p>
+                  <p className="mt-2 text-[14px] text-[#6b7280]">{t('gallery.emptyBody')}</p>
                 </div>
               ) : (
                 <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -225,7 +233,7 @@ const GalleryContent = memo(() => {
               <div className="mt-9 flex flex-wrap items-center justify-center gap-[5px]">
                 <button
                   type="button"
-                  aria-label="First page"
+                  aria-label={t('gallery.firstPage')}
                   onClick={() => setPage(1)}
                   className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
                 >
@@ -233,7 +241,7 @@ const GalleryContent = memo(() => {
                 </button>
                 <button
                   type="button"
-                  aria-label="Previous page"
+                  aria-label={t('gallery.previousPage')}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
                 >
@@ -271,7 +279,7 @@ const GalleryContent = memo(() => {
                 )}
                 <button
                   type="button"
-                  aria-label="Next page"
+                  aria-label={t('gallery.nextPage')}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
                 >
@@ -279,7 +287,7 @@ const GalleryContent = memo(() => {
                 </button>
                 <button
                   type="button"
-                  aria-label="Last page"
+                  aria-label={t('gallery.lastPage')}
                   onClick={() => setPage(totalPages)}
                   className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
                 >

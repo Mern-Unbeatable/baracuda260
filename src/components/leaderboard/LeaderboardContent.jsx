@@ -1,4 +1,5 @@
 import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { ImgIcon, Shell, SitePageLayout, useMonthMenu } from '../site';
 
@@ -20,6 +21,12 @@ const ASSETS = {
 };
 
 const ALBUM_TABS = ['Single Photo', '6 Photos', '12 photos - full Zodiac Story'];
+
+const ALBUM_TAB_LABEL_KEYS = {
+  'Single Photo': 'common.singlePhoto',
+  '6 Photos': 'common.sixPhotos',
+  '12 photos - full Zodiac Story': 'common.twelveZodiac',
+};
 
 const MONTHS = [
   'January',
@@ -43,7 +50,7 @@ const PODIUM = [
     emoji: '🥈',
     name: 'Piotr',
     city: 'Warsaw',
-    votes: '4,203 votes',
+    votesCount: '4,203',
     avatar: ASSETS.avatarPiotr,
     size: 64,
     border: 'border-2 border-[#e5e7eb]',
@@ -53,7 +60,7 @@ const PODIUM = [
     emoji: '🥇',
     name: 'Anna',
     city: 'Kraków',
-    votes: '4,821 votes',
+    votesCount: '4,821',
     avatar: ASSETS.avatarAnna,
     size: 80,
     border:
@@ -65,7 +72,7 @@ const PODIUM = [
     emoji: '🥉',
     name: 'Marta',
     city: 'Wrocław',
-    votes: '3,981 votes',
+    votesCount: '3,981',
     avatar: ASSETS.avatarMarta,
     size: 56,
     border: 'border-2 border-[#fee685]',
@@ -128,6 +135,7 @@ const LEADERBOARD = [
 ];
 
 const LeaderboardContent = memo(() => {
+  const { t } = useTranslation();
   const [albumTab, setAlbumTab] = useState('6 Photos');
   const {
     month,
@@ -150,10 +158,13 @@ const LeaderboardContent = memo(() => {
           <div className="mb-10 flex flex-col gap-6 xl:mb-11 xl:flex-row xl:items-end xl:justify-between">
             <div>
               <h1 className="pt-3 text-[32px] font-extrabold leading-[40px] text-[#0d0d14] sm:text-[40px] sm:leading-[48px] xl:text-[48px]">
-                Top Photographers
+                {t('leaderboard.title')}
               </h1>
               <p className="mt-2 text-[16px] leading-6 text-[#6b7280]">
-                {month} {STANDINGS_YEAR} — Live standings
+                {t('leaderboard.liveStandings', {
+                  month: t(`common.months.${month}`),
+                  year: STANDINGS_YEAR,
+                })}
               </p>
             </div>
 
@@ -172,7 +183,7 @@ const LeaderboardContent = memo(() => {
                           : 'bg-[#f2f2f2] text-[#6b7280] hover:text-[#0d0d14]'
                       } ${tab.startsWith('12') && !active ? 'text-[#0d0d14]' : ''}`}
                     >
-                      {tab}
+                      {t(ALBUM_TAB_LABEL_KEYS[tab])}
                     </button>
                   );
                 })}
@@ -187,7 +198,7 @@ const LeaderboardContent = memo(() => {
                   className="inline-flex items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222]"
                 >
                   <ImgIcon src={ASSETS.calendar} size={13} />
-                  <span>{month}</span>
+                  <span>{t(`common.months.${month}`)}</span>
                   <span
                     className={`inline-flex transition ${monthOpen ? 'rotate-180' : ''}`}
                     aria-hidden="true"
@@ -199,7 +210,7 @@ const LeaderboardContent = memo(() => {
                 {monthOpen && (
                   <ul
                     role="listbox"
-                    aria-label="Select month"
+                    aria-label={t('common.selectMonth')}
                     className="absolute right-0 z-30 mt-2 max-h-64 w-[180px] overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
                   >
                     {MONTHS.map((name) => {
@@ -219,7 +230,7 @@ const LeaderboardContent = memo(() => {
                             }`}
                           >
                             <ImgIcon src={ASSETS.calendar} size={12} />
-                            {name}
+                            {t(`common.months.${name}`)}
                           </button>
                         </li>
                       );
@@ -261,7 +272,9 @@ const LeaderboardContent = memo(() => {
                   {p.name}
                 </p>
                 <p className="text-[12px] leading-4 text-[#6b7280]">{p.city}</p>
-                <p className="mt-1 text-[14px] font-bold leading-5 text-[#e31837]">{p.votes}</p>
+                <p className="mt-1 text-[14px] font-bold leading-5 text-[#e31837]">
+                  {t('home.winners.votesLabel', { count: p.votesCount })}
+                </p>
               </div>
             ))}
           </div>
@@ -270,11 +283,11 @@ const LeaderboardContent = memo(() => {
             <table className="min-w-[720px] w-full text-left">
               <thead className="bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
                 <tr className="border-b border-black/20">
-                  <th className="px-6 py-4">#</th>
-                  <th className="px-6 py-4">Photographer</th>
-                  <th className="px-6 py-4">City</th>
-                  <th className="px-6 py-4 text-right">Votes</th>
-                  <th className="px-6 py-4 text-right">Points</th>
+                  <th className="px-6 py-4">{t('common.rank')}</th>
+                  <th className="px-6 py-4">{t('common.photographer')}</th>
+                  <th className="px-6 py-4">{t('common.city')}</th>
+                  <th className="px-6 py-4 text-right">{t('common.votes')}</th>
+                  <th className="px-6 py-4 text-right">{t('common.points')}</th>
                 </tr>
               </thead>
               <tbody>

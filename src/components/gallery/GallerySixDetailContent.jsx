@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { getGallerySixStoryById } from '../../data/gallerySixStory';
@@ -34,6 +35,7 @@ const COMMENTS = [
 ];
 
 const GallerySixDetailContent = memo(() => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const story = getGallerySixStoryById(id);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -84,7 +86,7 @@ const GallerySixDetailContent = memo(() => {
             <button
               type="button"
               onClick={goPrev}
-              aria-label="Previous photo"
+              aria-label={t('galleryDetail.previousPhoto')}
               className="absolute left-3 top-1/2 flex size-[44px] -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-[51px] sm:size-[51px]"
             >
               <img
@@ -98,7 +100,7 @@ const GallerySixDetailContent = memo(() => {
             <button
               type="button"
               onClick={goNext}
-              aria-label="Next photo"
+              aria-label={t('galleryDetail.nextPhoto')}
               className="absolute right-3 top-1/2 flex size-[44px] -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-[51px] sm:size-[51px]"
             >
               <img
@@ -173,7 +175,7 @@ const GallerySixDetailContent = memo(() => {
               href="#"
               className="inline-flex items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
             >
-              Download
+              {t('galleryDetail.download')}
             </a>
           </div>
         </Shell>
@@ -202,8 +204,8 @@ const GallerySixDetailContent = memo(() => {
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-[21px]">
             {[
-              { label: 'VOTES RECEIVED', value: story.votes },
-              { label: 'VIEWS COUNTED', value: story.views },
+              { label: t('galleryDetail.votesReceived'), value: story.votes },
+              { label: t('galleryDetail.viewsCounted'), value: story.views },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -223,7 +225,7 @@ const GallerySixDetailContent = memo(() => {
               className="inline-flex items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
             >
               <ImgIcon src={ASSETS.voteHeart} size={20} />
-              Cast Your Vote
+              {t('galleryDetail.castVote')}
             </button>
           </div>
 
@@ -238,7 +240,7 @@ const GallerySixDetailContent = memo(() => {
               />
               <div>
                 <p className="text-[14px] leading-[22px] text-[#6b7280] sm:text-[16px]">
-                  Photographer
+                  {t('galleryDetail.photographerLabel')}
                 </p>
                 <p className="text-[18px] font-bold leading-[27px] text-[#111827] sm:text-[20px]">
                   {story.photographer}
@@ -249,7 +251,7 @@ const GallerySixDetailContent = memo(() => {
               href={ROUTES.PHOTOGRAPHER_PROFILE}
               className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
             >
-              Photographer Profile
+              {t('galleryDetail.photographerProfile')}
             </AppLink>
           </div>
         </Shell>
@@ -259,7 +261,9 @@ const GallerySixDetailContent = memo(() => {
       <section className="bg-white pb-12 sm:pb-16">
         <Shell>
           <div className="overflow-hidden rounded-lg bg-[#f8fafc] p-4 sm:p-6">
-            <h2 className="text-[22px] font-semibold text-[#101112] sm:text-[24px]">Comments</h2>
+            <h2 className="text-[22px] font-semibold text-[#101112] sm:text-[24px]">
+              {t('galleryDetail.comments')}
+            </h2>
 
             <ul className="mt-6 flex flex-col">
               {COMMENTS.map((item, index) => (
@@ -282,7 +286,7 @@ const GallerySixDetailContent = memo(() => {
                     </div>
                     <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
                       <ImgIcon src={ASSETS.verified} size={16} />
-                      Verified
+                      {t('galleryDetail.verified')}
                     </span>
                   </div>
                   <p className="mt-3 text-[14px] leading-5 text-[#475156]">{item.text}</p>
@@ -299,13 +303,13 @@ const GallerySixDetailContent = memo(() => {
                   htmlFor="gallery-six-comment"
                   className="text-[18px] font-medium text-black sm:text-[20px]"
                 >
-                  Comment
+                  {t('galleryDetail.commentLabel')}
                 </label>
                 <textarea
                   id="gallery-six-comment"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="Write your comment"
+                  placeholder={t('galleryDetail.commentPlaceholder')}
                   rows={6}
                   className="w-full resize-y rounded-lg bg-white p-2.5 text-[12px] text-[#373737] outline-none placeholder:text-[#373737]"
                 />
@@ -314,7 +318,7 @@ const GallerySixDetailContent = memo(() => {
                 type="submit"
                 className="w-full rounded bg-[#ee1c25] px-2.5 py-3 text-[16px] font-medium text-white"
               >
-                Submit
+                {t('galleryDetail.submit')}
               </button>
             </form>
           </div>
