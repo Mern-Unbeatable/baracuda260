@@ -28,6 +28,7 @@ const GallerySixDetail = lazy(() => import('../pages/GallerySixDetail'));
 const GallerySixBlueDetail = lazy(() => import('../pages/GallerySixBlueDetail'));
 const GalleryTwelveDetail = lazy(() => import('../pages/GalleryTwelveDetail'));
 const PhotographerProfile = lazy(() => import('../pages/PhotographerProfile'));
+const Leaderboard = lazy(() => import('../pages/Leaderboard'));
 const Login = lazy(() => import('../pages/Login'));
 
 // Admin pages — each lazy-loaded so they only download when visited
@@ -88,6 +89,7 @@ const router = createBrowserRouter(
         <Route path={ROUTES.GALLERY_TWELVE_DETAIL} element={<GalleryTwelveDetail />} />
         <Route path={ROUTES.GALLERY_DETAIL} element={<GalleryDetail />} />
         <Route path={ROUTES.PHOTOGRAPHER_PROFILE} element={<PhotographerProfile />} />
+        <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
       </Route>
 
       <Route
