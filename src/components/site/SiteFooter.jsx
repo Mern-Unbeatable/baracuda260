@@ -1,11 +1,23 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '../../config';
 import { SITE_ASSETS } from './siteAssets';
 import { SITE_FOOTER_COLUMNS, SITE_FOOTER_YEAR } from './siteCopy';
+import AppLink from './AppLink';
 import ImgIcon from './ImgIcon';
 import Shell from './Shell';
 
 const SOCIAL_ICONS = [SITE_ASSETS.ig, SITE_ASSETS.fb, SITE_ASSETS.x];
+
+const FOOTER_LINK_HREF = {
+  'footer.privacy': ROUTES.PRIVACY,
+  'footer.gallery': ROUTES.GALLERY,
+  'footer.leaderboard': ROUTES.LEADERBOARD,
+  'footer.about': ROUTES.ABOUT,
+  'footer.contact': ROUTES.CONTACT,
+  'footer.winners': ROUTES.WINNERS,
+  'footer.competitions': ROUTES.COMPETITIONS,
+};
 
 const SiteFooter = memo(() => {
   const { t } = useTranslation();
@@ -49,9 +61,12 @@ const SiteFooter = memo(() => {
               <ul className="mt-5 flex flex-col gap-3">
                 {col.linkKeys.map((linkKey) => (
                   <li key={linkKey}>
-                    <a href="#" className="text-[16px] text-[#1a1a1a]">
+                    <AppLink
+                      href={FOOTER_LINK_HREF[linkKey] || '#'}
+                      className="text-[16px] text-[#1a1a1a]"
+                    >
                       {t(linkKey)}
-                    </a>
+                    </AppLink>
                   </li>
                 ))}
               </ul>

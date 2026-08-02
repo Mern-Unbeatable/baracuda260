@@ -17,6 +17,7 @@ export const ROUTES = {
   PHOTOGRAPHER_PROFILE: '/photographer',
   LEADERBOARD: '/leaderboard',
   WINNERS: '/winners',
+  PRIVACY: '/privacy',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
