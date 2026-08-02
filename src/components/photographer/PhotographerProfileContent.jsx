@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ROUTES, SITE_NAV_LINKS } from '../../config';
-import { getGalleryPhotoById } from '../../data/galleryPhotos';
+import { GALLERY_PHOTOS, galleryDetailPath } from '../../data/galleryPhotos';
 
 const A = '/assets/home';
 
@@ -30,11 +30,11 @@ const ASSETS = {
   fb: `${A}/icon-fb.svg`,
   x: `${A}/icon-x.svg`,
   newsletterBg: `${A}/newsletter-bg.png`,
-  aries: `${A}/icon-aries.svg`,
+  heart: `${A}/icon-heart.svg`,
+  pageFirst: `${A}/icon-page-first.svg`,
+  pagePrev: `${A}/icon-page-prev.svg`,
+  pageNext: `${A}/icon-page-next.svg`,
   photographer: `${A}/avatar-photographer.jpg`,
-  commentAvatar: `${A}/avatar-comment.jpg`,
-  verified: `${A}/icon-verified.svg`,
-  voteHeart: `${A}/icon-vote-heart.svg`,
 };
 
 const NAV_LINKS = SITE_NAV_LINKS.map(({ label, href }) => ({
@@ -46,16 +46,19 @@ const NAV_LINKS = SITE_NAV_LINKS.map(({ label, href }) => ({
 const ANNOUNCEMENT =
   "🎉 May 2026 winners announced — View now · 📢 June competition is now open — Free to enter · 🏆 This month's prize: $500 · 📅 Competition ends in 7 days · ";
 
-const COMMENTS = [
-  {
-    name: 'Darrell Steward',
-    text: 'I really like the composition and the colors. Amazing work!',
-  },
-  {
-    name: 'Darrell Steward',
-    text: 'Your creativity really stands out. Best of luck in the competition!',
-  },
-];
+const PROFILE = {
+  name: 'Wong Kar-Wai',
+  email: 'georgia.young@example.com',
+  phone: '(270) 555-0117',
+  avatar: ASSETS.photographer,
+};
+
+const PAGE_SIZE = 8;
+
+const displayBadge = (badge = '') => {
+  if (/12/i.test(badge)) return '12 Photo Zodiac';
+  return badge;
+};
 
 const Shell = memo(({ children, className = '' }) => (
   <div className={`mx-auto w-full max-w-[1536px] px-4 sm:px-6 md:px-8 lg:px-12 ${className}`}>
@@ -74,11 +77,9 @@ const ImgIcon = memo(({ src, size = 16, className = '' }) => (
 ));
 ImgIcon.displayName = 'ImgIcon';
 
-const GalleryDetailContent = memo(() => {
-  const { id } = useParams();
-  const photo = getGalleryPhotoById(id);
+const PhotographerProfileContent = memo(() => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [comment, setComment] = useState('');
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (!document.querySelector('link[data-manrope-font]')) {
@@ -121,8 +122,16 @@ const GalleryDetailContent = memo(() => {
     };
   }, []);
 
+  const totalPages = Math.max(1, Math.ceil(GALLERY_PHOTOS.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pagedPhotos = GALLERY_PHOTOS.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+  const pageNumbers = Array.from({ length: Math.min(totalPages, 3) }, (_, i) => i + 1);
+
   return (
-    <div className="site-page-root gallery-detail-page-root w-full overflow-x-hidden bg-white">
+    <div className="site-page-root photographer-profile-root w-full overflow-x-hidden bg-white">
       {/* Announcement */}
       <div className="flex h-[46px] items-center overflow-hidden bg-[#4048cd]">
         <div className="site-marquee-track flex w-max whitespace-nowrap text-[14px] leading-[22px] text-white sm:text-[16px]">
@@ -244,181 +253,145 @@ const GalleryDetailContent = memo(() => {
         )}
       </header>
 
-      {/* Hero photo */}
-      <section className="bg-white pt-8 sm:pt-10 xl:pt-12">
-        <Shell>
-          <div className="relative aspect-[1536/653] w-full overflow-hidden rounded-[16px] sm:rounded-[20px]">
-            <img
-              src={photo.image}
-              alt={photo.title}
-              width={1536}
-              height={653}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute left-3 top-3 flex items-end gap-2 rounded-[20px] bg-[#ee1c25] px-4 py-1 sm:left-6 sm:top-6 sm:px-5 sm:py-[5px]">
-              <span className="relative inline-flex h-[18px] w-[20px] shrink-0 overflow-hidden sm:h-[21px] sm:w-6">
-                <img
-                  src={ASSETS.aries}
-                  alt=""
-                  width={24}
-                  height={21}
-                  className="h-full w-full object-contain"
-                />
-              </span>
-              <span className="text-[16px] leading-none text-white sm:text-[20px]">Aries</span>
-            </div>
-          </div>
-
-          <div className="mt-5 sm:mt-6">
-            <a
-              href="#"
-              className="inline-flex items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
-            >
-              Download
-            </a>
-          </div>
-        </Shell>
-      </section>
-
-      {/* Details */}
+      {/* Profile + photos */}
       <section className="bg-white py-10 sm:py-12 xl:py-14">
         <Shell>
-          <div className="flex flex-wrap gap-3 sm:gap-8">
-            {[photo.badge, photo.category].map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-[#ecedfa] px-4 py-[5px] text-[14px] font-bold uppercase tracking-[1.2px] text-[#4048cd] sm:text-[16px]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          <h1 className="mt-4 text-[28px] font-extrabold leading-tight text-[#111827] sm:mt-5 sm:text-[32px] xl:text-[36px]">
-            {photo.title}
-          </h1>
-          <p className="mt-4 text-[16px] font-medium leading-7 text-[#3e3f40] sm:text-[18px] sm:leading-8 xl:text-[20px] xl:leading-[30px]">
-            {photo.description}
-          </p>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-[21px]">
-            {[
-              { label: 'VOTES RECEIVED', value: photo.votes.replace(/,/g, '') },
-              { label: 'VIEWS COUNTED', value: photo.views.replace(/,/g, '') },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="flex flex-col items-center justify-center gap-[15px] rounded-2xl border border-black/[0.08] bg-[#f5f5f5] p-3 text-center"
-              >
-                <p className="w-full text-[14px] font-bold uppercase tracking-[1.2px] text-[#6b7280]">
-                  {stat.label}
-                </p>
-                <p className="w-full text-[20px] font-bold text-[#111827]">{stat.value}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 border-t border-black/10 pt-8">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
-            >
-              <ImgIcon src={ASSETS.voteHeart} size={20} />
-              Cast Your Vote
-            </button>
-          </div>
-
-          <div className="mt-8 flex flex-col gap-4 border-b border-black/10 pb-6 sm:mt-9 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-[12px]">
-              <img
-                src={ASSETS.photographer}
-                alt={photo.photographer}
-                width={57}
-                height={57}
-                className="size-[48px] rounded-full object-cover sm:size-[57px]"
-              />
-              <div>
-                <p className="text-[14px] leading-[22px] text-[#6b7280] sm:text-[16px]">Photographer</p>
-                <p className="text-[18px] font-bold leading-[27px] text-[#111827] sm:text-[20px]">
-                  {photo.photographer}
-                </p>
-              </div>
+          <div className="flex items-start gap-3">
+            <img
+              src={PROFILE.avatar}
+              alt={PROFILE.name}
+              width={86}
+              height={87}
+              className="size-[72px] shrink-0 rounded-full object-cover sm:h-[87px] sm:w-[86px]"
+            />
+            <div className="min-w-0 flex flex-col gap-2">
+              <h1 className="text-[18px] font-bold leading-normal text-[#111827] sm:text-[20px]">
+                {PROFILE.name}
+              </h1>
+              <p className="text-[14px] leading-normal text-[#6b7280] sm:text-[16px]">
+                {PROFILE.email}
+              </p>
+              <p className="text-[14px] leading-normal text-[#6b7280] sm:text-[16px]">
+                {PROFILE.phone}
+              </p>
             </div>
-            <AppLink
-              href={ROUTES.PHOTOGRAPHER_PROFILE}
-              className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
-            >
-              Photographer Profile
-            </AppLink>
           </div>
-        </Shell>
-      </section>
 
-      {/* Comments */}
-      <section className="bg-white pb-12 sm:pb-16">
-        <Shell>
-          <div className="overflow-hidden rounded-lg bg-[#f8fafc] p-4 sm:p-6">
-            <h2 className="text-[22px] font-semibold text-[#101112] sm:text-[24px]">Comments</h2>
-
-            <ul className="mt-6 flex flex-col">
-              {COMMENTS.map((item, index) => (
-                <li
-                  key={`${item.name}-${index}`}
-                  className="border-b border-[#c8c8c8] pb-4 pt-0 first:pt-0 [&:not(:first-child)]:pt-5"
+          <div className="mt-8 sm:mt-10">
+            <div className="grid gap-[19px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {pagedPhotos.map((photo) => (
+                <AppLink
+                  key={photo.id}
+                  href={galleryDetailPath(photo.id)}
+                  className="block overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white transition hover:border-black/20 hover:shadow-sm"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
+                  <article>
+                    <div className="relative h-[220px] bg-[#f3f4f6] sm:h-[252px]">
                       <img
-                        src={ASSETS.commentAvatar}
-                        alt=""
-                        width={48}
-                        height={48}
-                        className="size-12 rounded-full object-cover"
+                        src={photo.image}
+                        alt={photo.title}
+                        width={370}
+                        height={252}
+                        className="h-full w-full object-cover"
                       />
-                      <p className="text-[14px] font-medium leading-5 text-[#191c1f]">{item.name}</p>
+                      <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#3f51b5]">
+                        {displayBadge(photo.badge)}
+                      </span>
                     </div>
-                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
-                      <ImgIcon src={ASSETS.verified} size={16} />
-                      Verified
-                    </span>
-                  </div>
-                  <p className="mt-3 text-[14px] leading-5 text-[#475156]">{item.text}</p>
-                </li>
+                    <div className="flex flex-col gap-2 p-4">
+                      <h2 className="truncate text-[18px] font-bold leading-5 text-[#111827] sm:text-[20px]">
+                        {photo.title}
+                      </h2>
+                      <div className="flex items-center justify-between gap-2 pt-1 text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
+                        <span className="truncate">{photo.author}</span>
+                        <span className="inline-flex shrink-0 items-center gap-1">
+                          <ImgIcon src={ASSETS.heart} size={24} />
+                          {photo.votes}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                </AppLink>
               ))}
-            </ul>
+            </div>
 
-            <form
-              className="mt-6 flex flex-col gap-4 rounded-lg bg-[#e6f0f8] p-4"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <div className="flex flex-col gap-2">
-                <label htmlFor="gallery-comment" className="text-[18px] font-medium text-black sm:text-[20px]">
-                  Comment
-                </label>
-                <textarea
-                  id="gallery-comment"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Write your comment"
-                  rows={6}
-                  className="w-full resize-y rounded-lg bg-white p-2.5 text-[12px] text-[#373737] outline-none placeholder:text-[#373737]"
-                />
-              </div>
+            {/* Pagination */}
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-[5px]">
               <button
-                type="submit"
-                className="w-full rounded bg-[#ee1c25] px-2.5 py-3 text-[16px] font-medium text-white"
+                type="button"
+                aria-label="First page"
+                onClick={() => setPage(1)}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
               >
-                Post a comment
+                <ImgIcon src={ASSETS.pageFirst} size={14} />
               </button>
-            </form>
+              <button
+                type="button"
+                aria-label="Previous page"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
+              >
+                <ImgIcon src={ASSETS.pagePrev} size={14} />
+              </button>
+              {pageNumbers.map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setPage(n)}
+                  className={`flex size-8 items-center justify-center rounded-lg text-[13px] font-semibold ${
+                    currentPage === n
+                      ? 'bg-[#ee1c25] text-white'
+                      : 'border border-[#f1f1f1] bg-white text-[#333]'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+              {totalPages > 3 && (
+                <>
+                  <span className="flex size-8 items-center justify-center text-[13px] font-semibold text-[#333]">
+                    …
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPage(totalPages)}
+                    className={`flex size-8 items-center justify-center rounded-lg text-[13px] font-semibold ${
+                      currentPage === totalPages
+                        ? 'bg-[#ee1c25] text-white'
+                        : 'border border-[#f1f1f1] bg-white text-[#333]'
+                    }`}
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
+              <button
+                type="button"
+                aria-label="Next page"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
+              >
+                <ImgIcon src={ASSETS.pageNext} size={14} />
+              </button>
+              <button
+                type="button"
+                aria-label="Last page"
+                onClick={() => setPage(totalPages)}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white"
+              >
+                <span className="inline-flex scale-x-[-1]">
+                  <ImgIcon src={ASSETS.pageFirst} size={14} />
+                </span>
+              </button>
+            </div>
           </div>
         </Shell>
       </section>
 
       {/* Newsletter */}
-      <section className="bg-white pb-10 xl:pb-12">
+      <section className="bg-white py-10 sm:py-16">
         <Shell>
-          <div className="relative overflow-hidden rounded-2xl bg-[#4048cd] px-4 py-14 sm:px-8 sm:py-16 xl:py-20">
+          <div className="relative min-h-[320px] overflow-hidden rounded-2xl bg-[#4048cd] px-4 py-16 sm:min-h-[400px] sm:px-8 sm:py-20 xl:min-h-[465px]">
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.22]"
               style={{
@@ -427,20 +400,18 @@ const GalleryDetailContent = memo(() => {
                 backgroundPosition: 'top left',
               }}
             />
-            <div className="relative mx-auto flex max-w-[640px] flex-col items-center gap-8 text-center">
-              <div className="flex flex-col gap-2">
-                <h2 className="text-[32px] font-semibold text-white sm:text-[40px] xl:text-[48px]">
-                  Stay Updated
-                </h2>
-                <p className="text-[16px] text-[#eaeaea] sm:text-[18px] xl:text-[20px]">
+            <div className="relative mx-auto flex h-full max-w-[640px] flex-col items-center justify-center gap-8 text-center">
+              <div>
+                <h2 className="text-[36px] font-semibold text-white sm:text-[48px]">Stay Updated</h2>
+                <p className="mt-2 text-[16px] text-[#eaeaea] sm:text-[20px]">
                   Receive competition announcements, winner reveals, and photography tips.
                 </p>
               </div>
               <form
-                className="flex w-full max-w-[520px] flex-col gap-3 rounded-[33px] bg-white/24 p-3 sm:flex-row sm:items-center sm:justify-between"
+                className="flex w-full max-w-[520px] flex-col gap-3 rounded-[33px] bg-white/24 p-3 sm:flex-row sm:items-center"
                 onSubmit={(e) => e.preventDefault()}
               >
-                <label className="flex w-full items-center gap-1 rounded-3xl bg-white px-4 py-3 sm:max-w-[316px]">
+                <label className="flex flex-1 items-center gap-1 rounded-3xl bg-white px-4 py-3">
                   <ImgIcon src={ASSETS.mail} size={24} />
                   <input
                     type="email"
@@ -450,7 +421,7 @@ const GalleryDetailContent = memo(() => {
                 </label>
                 <button
                   type="submit"
-                  className="rounded-[27px] bg-[#ee1c25] px-8 py-3 text-[16px] text-white sm:px-12"
+                  className="rounded-[27px] bg-[#ee1c25] px-10 py-3 text-[16px] text-white"
                 >
                   Subscribe
                 </button>
@@ -462,8 +433,8 @@ const GalleryDetailContent = memo(() => {
 
       {/* Footer */}
       <footer className="bg-[#ecedfa]">
-        <Shell className="py-12 sm:py-16">
-          <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-[1.4fr_repeat(3,1fr)] xl:gap-8">
+        <Shell className="py-14 xl:py-[69px]">
+          <div className="grid gap-10 sm:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div>
               <div className="relative h-[67px] w-[220px] overflow-hidden">
                 <img
@@ -475,8 +446,8 @@ const GalleryDetailContent = memo(() => {
                 />
               </div>
               <p className="mt-5 max-w-[320px] text-[16px] leading-[22.75px] text-[#1a1a1a]">
-                A photography platform connecting photo enthusiasts and rewarding the best work every
-                month.
+                A photography platform connecting photo enthusiasts and rewarding the best work
+                every month.
               </p>
               <div className="mt-6 flex gap-3">
                 {[ASSETS.ig, ASSETS.fb, ASSETS.x].map((icon, i) => (
@@ -523,9 +494,9 @@ const GalleryDetailContent = memo(() => {
             ))}
           </div>
         </Shell>
-        <div className="border-t border-black/5">
-          <Shell className="py-6">
-            <p className="text-[16px] font-medium text-[#191818] sm:text-[20px] sm:leading-5">
+        <div className="border-t border-black/5 px-4 py-6 sm:px-6 md:px-8 lg:px-10">
+          <Shell>
+            <p className="text-[16px] font-medium text-[#191818] sm:text-[20px]">
               © 2026 My12Photos. All rights reserved.
             </p>
           </Shell>
@@ -535,6 +506,6 @@ const GalleryDetailContent = memo(() => {
   );
 });
 
-GalleryDetailContent.displayName = 'GalleryDetailContent';
+PhotographerProfileContent.displayName = 'PhotographerProfileContent';
 
-export default GalleryDetailContent;
+export default PhotographerProfileContent;

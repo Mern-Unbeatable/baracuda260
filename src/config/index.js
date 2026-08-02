@@ -14,6 +14,7 @@ export const ROUTES = {
   GALLERY_SIX_DETAIL: '/gallery/story/:id',
   GALLERY_SIX_BLUE_DETAIL: '/gallery/story-blue/:id',
   GALLERY_TWELVE_DETAIL: '/gallery/zodiac/:id',
+  PHOTOGRAPHER_PROFILE: '/photographer',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',

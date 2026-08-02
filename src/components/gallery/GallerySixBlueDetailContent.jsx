@@ -463,12 +463,12 @@ const GallerySixBlueDetailContent = memo(() => {
                 </p>
               </div>
             </div>
-            <a
-              href="#"
+            <AppLink
+              href={ROUTES.PHOTOGRAPHER_PROFILE}
               className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
             >
               Photographer Profile
-            </a>
+            </AppLink>
           </div>
         </Shell>
       </section>
