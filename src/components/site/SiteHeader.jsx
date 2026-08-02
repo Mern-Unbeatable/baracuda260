@@ -1,14 +1,16 @@
 import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SITE_NAV_LINKS } from '../../config';
 import { SITE_ASSETS } from './siteAssets';
 import AppLink from './AppLink';
-import ImgIcon from './ImgIcon';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const SiteHeader = memo(({ activeHref }) => {
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const navLinks = SITE_NAV_LINKS.map(({ label, href }) => ({
-    label,
+  const navLinks = SITE_NAV_LINKS.map(({ labelKey, href }) => ({
+    labelKey,
     href,
     active: href === activeHref,
   }));
@@ -30,40 +32,34 @@ const SiteHeader = memo(({ activeHref }) => {
         </AppLink>
 
         <nav className="hidden items-center gap-1 2xl:flex" aria-label="Primary">
-          {navLinks.map(({ label, href, active }) => (
+          {navLinks.map(({ labelKey, href, active }) => (
             <AppLink
-              key={label}
+              key={href}
               href={href}
               className={`px-2.5 py-2 text-center text-[14px] font-semibold leading-5 ${
                 active ? 'text-[#ee1c25]' : 'text-[#6b7280]'
               }`}
               aria-current={active ? 'page' : undefined}
             >
-              {label}
+              {t(labelKey)}
             </AppLink>
           ))}
         </nav>
 
         <div className="hidden items-center gap-4 xl:flex">
-          <button
-            type="button"
-            className="flex items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222]"
-          >
-            English
-            <ImgIcon src={SITE_ASSETS.chevron} size={24} />
-          </button>
+          <LanguageSwitcher />
           <div className="flex items-center gap-4">
             <a
               href="#"
               className="rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
             >
-              Log IN
+              {t('header.logIn')}
             </a>
             <a
               href="#"
               className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
             >
-              Register Free
+              {t('header.registerFree')}
             </a>
           </div>
         </div>
@@ -71,7 +67,7 @@ const SiteHeader = memo(({ activeHref }) => {
         <button
           type="button"
           className="flex h-10 w-10 items-center justify-center rounded-lg text-[#1b1e56] xl:hidden"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={menuOpen ? t('header.closeMenu') : t('header.openMenu')}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
@@ -92,9 +88,9 @@ const SiteHeader = memo(({ activeHref }) => {
       {menuOpen && (
         <div className="border-t border-black/5 bg-white px-4 py-4 xl:hidden">
           <nav className="flex flex-col gap-1">
-            {navLinks.map(({ label, href, active }) => (
+            {navLinks.map(({ labelKey, href, active }) => (
               <AppLink
-                key={label}
+                key={href}
                 href={href}
                 onClick={() => setMenuOpen(false)}
                 className={`rounded-lg px-3 py-2.5 text-sm font-semibold ${
@@ -102,22 +98,23 @@ const SiteHeader = memo(({ activeHref }) => {
                 }`}
                 aria-current={active ? 'page' : undefined}
               >
-                {label}
+                {t(labelKey)}
               </AppLink>
             ))}
           </nav>
           <div className="mt-4 flex flex-col gap-2 border-t border-black/5 pt-4">
+            <LanguageSwitcher className="w-full [&_button]:w-full [&_button]:justify-between" />
             <a
               href="#"
               className="rounded-full bg-[#4048cd] px-6 py-3 text-center text-sm font-medium text-white"
             >
-              Log IN
+              {t('header.logIn')}
             </a>
             <a
               href="#"
               className="rounded-full bg-[#ee1c25] px-6 py-3 text-center text-sm font-medium text-white"
             >
-              Register Free
+              {t('header.registerFree')}
             </a>
           </div>
         </div>

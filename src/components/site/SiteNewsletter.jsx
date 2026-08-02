@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SITE_ASSETS } from './siteAssets';
-import { SITE_NEWSLETTER_SUBTITLE, SITE_NEWSLETTER_TITLE } from './siteCopy';
 import ImgIcon from './ImgIcon';
 import Shell from './Shell';
 
@@ -17,6 +17,7 @@ const INNER_CLASS = {
 };
 
 const SiteNewsletter = memo(({ variant = 'page' }) => {
+  const { t } = useTranslation();
   const panelClass = PANEL_CLASS[variant] || PANEL_CLASS.page;
   const innerClass = INNER_CLASS[variant] || INNER_CLASS.page;
 
@@ -35,10 +36,10 @@ const SiteNewsletter = memo(({ variant = 'page' }) => {
           <div className={innerClass}>
             <div>
               <h2 className="text-[36px] font-semibold text-white sm:text-[48px]">
-                {SITE_NEWSLETTER_TITLE}
+                {t('newsletter.title')}
               </h2>
               <p className="mt-2 text-[16px] text-[#eaeaea] sm:text-[20px]">
-                {SITE_NEWSLETTER_SUBTITLE}
+                {t('newsletter.subtitle')}
               </p>
             </div>
             <form
@@ -49,7 +50,7 @@ const SiteNewsletter = memo(({ variant = 'page' }) => {
                 <ImgIcon src={SITE_ASSETS.mail} size={24} />
                 <input
                   type="email"
-                  placeholder="Enter your email here..."
+                  placeholder={t('newsletter.placeholder')}
                   className="w-full bg-transparent text-[12px] text-[#222] outline-none placeholder:text-[#7d7d7d]"
                 />
               </label>
@@ -57,7 +58,7 @@ const SiteNewsletter = memo(({ variant = 'page' }) => {
                 type="submit"
                 className="rounded-[27px] bg-[#ee1c25] px-10 py-3 text-[16px] text-white"
               >
-                Subscribe
+                {t('newsletter.subscribe')}
               </button>
             </form>
           </div>

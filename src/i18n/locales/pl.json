@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "home": "Strona główna",
+    "competitions": "Konkursy",
+    "gallery": "Galeria",
+    "leaderboard": "Ranking",
+    "winners": "Zwycięzcy",
+    "about": "O nas",
+    "contact": "Kontakt"
+  },
+  "header": {
+    "logIn": "Zaloguj się",
+    "registerFree": "Zarejestruj się",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu",
+    "language": "Język"
+  },
+  "languages": {
+    "en": "English",
+    "pl": "Polski"
+  },
+  "announcement": "🎉 Ogłoszono zwycięzców maja 2026 — Zobacz teraz · 📢 Konkurs czerwcowy jest otwarty — Wstęp wolny · 🏆 Nagroda miesiąca: 500 $ · 📅 Konkurs kończy się za 7 dni · ",
+  "newsletter": {
+    "title": "Bądź na bieżąco",
+    "subtitle": "Otrzymuj ogłoszenia konkursów, wyniki i wskazówki fotograficzne.",
+    "placeholder": "Wpisz swój e-mail...",
+    "subscribe": "Subskrybuj"
+  },
+  "footer": {
+    "tagline": "Platforma fotograficzna łącząca pasjonatów i nagradzająca najlepsze prace co miesiąc.",
+    "socialLink": "Link społecznościowy",
+    "competitions": "Konkursy",
+    "platform": "Platforma",
+    "legal": "Prawne",
+    "singlePhoto": "Pojedyncze zdjęcie",
+    "sixPhotoStory": "Historia 6 zdjęć",
+    "zodiacAlbum": "Album zodiakalny",
+    "winners": "Zwycięzcy",
+    "leaderboard": "Ranking",
+    "gallery": "Galeria",
+    "about": "O nas",
+    "faq": "FAQ",
+    "contact": "Kontakt",
+    "privacy": "Polityka prywatności",
+    "terms": "Regulamin",
+    "cookies": "Cookies",
+    "rights": "© {{year}} My12Photos. Wszelkie prawa zastrzeżone."
+  }
+}

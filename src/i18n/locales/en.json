@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "home": "Home",
+    "competitions": "Competitions",
+    "gallery": "Gallery",
+    "leaderboard": "Leaderboard",
+    "winners": "Winners",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "header": {
+    "logIn": "Log IN",
+    "registerFree": "Register Free",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language"
+  },
+  "languages": {
+    "en": "English",
+    "pl": "Polski"
+  },
+  "announcement": "🎉 May 2026 winners announced — View now · 📢 June competition is now open — Free to enter · 🏆 This month's prize: $500 · 📅 Competition ends in 7 days · ",
+  "newsletter": {
+    "title": "Stay Updated",
+    "subtitle": "Receive competition announcements, winner reveals, and photography tips.",
+    "placeholder": "Enter your email here...",
+    "subscribe": "Subscribe"
+  },
+  "footer": {
+    "tagline": "A photography platform connecting photo enthusiasts and rewarding the best work every month.",
+    "socialLink": "Social link",
+    "competitions": "Competitions",
+    "platform": "Platform",
+    "legal": "Legal",
+    "singlePhoto": "Single Photo",
+    "sixPhotoStory": "6-Photo Story",
+    "zodiacAlbum": "Zodiac Album",
+    "winners": "Winners",
+    "leaderboard": "Leaderboard",
+    "gallery": "Gallery",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookies",
+    "rights": "© {{year}} My12Photos. All rights reserved."
+  }
+}

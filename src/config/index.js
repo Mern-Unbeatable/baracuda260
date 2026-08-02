@@ -33,12 +33,12 @@ export const ROUTES = {
 
 /** Site header nav — add new pages here AND register them in router.jsx */
 export const SITE_NAV_LINKS = [
-  { label: 'Home', href: ROUTES.HOME, end: true },
-  { label: 'Competitions', href: ROUTES.COMPETITIONS },
-  { label: 'Gallery', href: ROUTES.GALLERY },
-  { label: 'Leaderboard', href: ROUTES.LEADERBOARD },
-  { label: 'Winners', href: ROUTES.WINNERS },
-  { label: 'About', href: ROUTES.ABOUT },
+  { labelKey: 'nav.home', href: ROUTES.HOME, end: true },
+  { labelKey: 'nav.competitions', href: ROUTES.COMPETITIONS },
+  { labelKey: 'nav.gallery', href: ROUTES.GALLERY },
+  { labelKey: 'nav.leaderboard', href: ROUTES.LEADERBOARD },
+  { labelKey: 'nav.winners', href: ROUTES.WINNERS },
+  { labelKey: 'nav.about', href: ROUTES.ABOUT },
 ];
 
 export const API_CONFIG = {
