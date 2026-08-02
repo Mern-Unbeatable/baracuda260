@@ -24,79 +24,122 @@ const ASSETS = {
   logo: `${A}/logo.png`,
   logoFooter: `${A}/logo-footer.png`,
   chevron: `${A}/chevron-down.svg`,
-  camera: `${A}/icon-camera.svg`,
-  book: `${A}/icon-book.svg`,
-  sparkle: `${A}/icon-sparkle.svg`,
-  check: `${A}/icon-check.svg`,
-  checkAlt: `${A}/icon-check-alt.svg`,
-  arrow: `${A}/icon-arrow.svg`,
   mail: `${A}/icon-mail.svg`,
   ig: `${A}/icon-ig.svg`,
   fb: `${A}/icon-fb.svg`,
   x: `${A}/icon-x.svg`,
   newsletterBg: `${A}/newsletter-bg.png`,
+  heart: `${A}/icon-heart.svg`,
+  checkbox: `${A}/icon-checkbox.svg`,
+  pageFirst: `${A}/icon-page-first.svg`,
+  pagePrev: `${A}/icon-page-prev.svg`,
+  pageNext: `${A}/icon-page-next.svg`,
+  photoAutumn: `${A}/photo-autumn.jpg`,
+  photoWings: `${A}/photo-wings.jpg`,
+  photoCity: `${A}/photo-city.jpg`,
+  photoForest: `${A}/photo-forest.jpg`,
+  photoMorning: `${A}/photo-morning.jpg`,
+  photoZodiac: `${A}/photo-zodiac.jpg`,
 };
 
 const NAV_LINKS = SITE_NAV_LINKS.map(({ label, href }) => ({
   label,
   href,
-  active: href === ROUTES.COMPETITIONS,
+  active: href === ROUTES.GALLERY,
 }));
 
 const ANNOUNCEMENT =
   "🎉 May 2026 winners announced — View now · 📢 June competition is now open — Free to enter · 🏆 This month's prize: $500 · 📅 Competition ends in 7 days · ";
 
-const COMPETITIONS = [
-  {
-    icon: ASSETS.camera,
-    title: 'Single Photo',
-    description:
-      'Submit one outstanding photograph that speaks for itself. Pure skill, pure story — judged by the community.',
-    features: ['Monthly competition', 'Public community voting', 'Top 3 win cash prizes'],
-    prize: '$1500.00',
-    check: ASSETS.check,
-  },
-  {
-    icon: ASSETS.book,
-    title: '6-Photos Story',
-    description:
-      'Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.',
-    features: ['Sequential storytelling', 'Community votes', 'Best story wins'],
-    prize: '$2500.00',
-    popular: true,
-    check: ASSETS.checkAlt,
-  },
-  {
-    icon: ASSETS.sparkle,
-    title: '12 photos - full Zodiac Story',
-    description:
-      'Create a complete zodiac-themed visual journey across twelve stunning images — our grandest format.',
-    features: ['12-sign visual arc', 'Zodiac-order display', 'Grand prize category'],
-    prize: '$3500.00',
-    check: ASSETS.check,
-  },
+const ALBUM_TYPES = [
+  'Single Photo',
+  '6 Photo Story',
+  '12 photos - full Zodiac Story',
 ];
 
-const STEPS = [
+const CATEGORIES = [
+  'Nature',
+  'Portrait',
+  'Wildlife',
+  'Landscape',
+  'Street Photography',
+  'Architecture',
+  'Black & White',
+  'Travel',
+  'Wedding',
+  'Macro',
+  'Fine Art',
+  'Pets',
+  'Sports',
+  'Night Photography',
+];
+
+const PHOTOS = [
   {
-    num: '01',
-    title: 'Create an Account',
-    text: 'Sign up for free in seconds. No fees, no hidden costs — ever.',
+    title: 'Autumn Sequence',
+    author: 'Kasia L. · Poland',
+    votes: '1,488',
+    badge: '6 PHOTOS STORY',
+    image: ASSETS.photoAutumn,
   },
   {
-    num: '02',
-    title: 'Submit Your Photos',
-    text: 'Choose a competition category and upload your best work before the deadline.',
+    title: 'Wings Over the Marsh',
+    author: 'Kasia L. · Poland',
+    votes: '1,488',
+    badge: 'Single Photo',
+    image: ASSETS.photoWings,
   },
   {
-    num: '03',
-    title: 'Earn Votes',
-    text: 'The photography community votes for their favourites. The more votes, the higher your rank.',
+    title: 'City After Midnight',
+    author: 'Kasia L. · Poland',
+    votes: '1,488',
+    badge: '6 PHOTOS STORY',
+    image: ASSETS.photoCity,
   },
   {
-    num: '04',
-    title: 'Claim Your Prize',
-    text: 'Winners receive cash prizes via PayPal. Fast, transparent, and reliable.',
+    title: 'Forest Cathedral',
+    author: 'Jan M. · Czech',
+    votes: '1,488',
+    badge: 'Single Photo',
+    image: ASSETS.photoForest,
+  },
+  {
+    title: 'Morning Fields',
+    author: 'Kasia L. · Poland',
+    votes: '1,488',
+    badge: 'Single Photo',
+    image: ASSETS.photoMorning,
+  },
+  {
+    title: 'Zodiac Journey',
+    author: 'Kasia L. · Poland',
+    votes: '1,488',
+    badge: '12 photos - full Zodiac Story',
+    image: ASSETS.photoZodiac,
+  },
+  {
+    title: 'Forest Cathedral',
+    author: 'Jan M. · Czech',
+    votes: '1,488',
+    badge: 'Single Photo',
+    image: ASSETS.photoForest,
+    key: 'forest-2',
+  },
+  {
+    title: 'Morning Fields',
+    author: 'Kasia L. · Poland',
+    votes: '1,488',
+    badge: 'Single Photo',
+    image: ASSETS.photoMorning,
+    key: 'morning-2',
+  },
+  {
+    title: 'Zodiac Journey',
+    author: 'Kasia L. · Poland',
+    votes: '1,488',
+    badge: '12 photos - full Zodiac Story',
+    image: ASSETS.photoZodiac,
+    key: 'zodiac-2',
   },
 ];
 
@@ -117,8 +160,49 @@ const ImgIcon = memo(({ src, size = 16, className = '' }) => (
 ));
 ImgIcon.displayName = 'ImgIcon';
 
-const CompetitionsContent = memo(() => {
+const FilterGroup = memo(({ title, options, selected, onToggle }) => (
+  <div>
+    <h3 className="text-[18px] font-bold leading-6 text-[#0d0d14] sm:text-[20px]">{title}</h3>
+    <ul className="mt-4 flex flex-col gap-4">
+      {options.map((option) => {
+        const checked = selected.includes(option);
+        return (
+          <li key={option}>
+            <label className="flex cursor-pointer items-center gap-2 text-[14px] leading-5 text-[#111827]">
+              <span className="relative inline-flex size-4 shrink-0 items-center justify-center overflow-hidden">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => onToggle(option)}
+                  className="peer absolute inset-0 z-10 cursor-pointer opacity-0"
+                />
+                <span className="size-4 rounded-[3px] border border-[#d1d5db] bg-white peer-checked:border-[#ee1c25] peer-checked:bg-[#ee1c25]" />
+                {checked && (
+                  <img
+                    src={ASSETS.checkbox}
+                    alt=""
+                    width={10}
+                    height={10}
+                    className="pointer-events-none absolute size-2.5 invert"
+                  />
+                )}
+              </span>
+              <span>{option}</span>
+            </label>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+));
+FilterGroup.displayName = 'FilterGroup';
+
+const GalleryContent = memo(() => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [albumTypes, setAlbumTypes] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (!document.querySelector('link[data-manrope-font]')) {
@@ -161,8 +245,14 @@ const CompetitionsContent = memo(() => {
     };
   }, []);
 
+  const toggle = (list, setList, value) => {
+    setList((prev) =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value],
+    );
+  };
+
   return (
-    <div className="site-page-root competitions-page-root w-full overflow-x-hidden bg-white">
+    <div className="site-page-root gallery-page-root w-full overflow-x-hidden bg-white">
       {/* Announcement */}
       <div className="flex h-[46px] items-center overflow-hidden bg-[#1b1e56]">
         <div className="site-marquee-track flex w-max whitespace-nowrap text-[14px] leading-[22px] text-white">
@@ -176,7 +266,10 @@ const CompetitionsContent = memo(() => {
       {/* Header */}
       <header className="relative z-50 border-b border-black/[0.04] bg-[rgba(236,237,250,0.16)] backdrop-blur-sm">
         <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-4 px-4 py-2.5 sm:px-6 md:px-10 xl:px-[192px]">
-          <AppLink href="/" className="relative h-[52px] w-[170px] shrink-0 overflow-hidden sm:h-[67px] sm:w-[220px]">
+          <AppLink
+            href="/"
+            className="relative h-[52px] w-[170px] shrink-0 overflow-hidden sm:h-[67px] sm:w-[220px]"
+          >
             <img
               src={ASSETS.logo}
               alt="My 12 Photos"
@@ -281,112 +374,152 @@ const CompetitionsContent = memo(() => {
         )}
       </header>
 
-      {/* Active Competitions */}
-      <section className="bg-[#f7f8fa] py-16 sm:py-20 xl:py-[114px]">
+      {/* Gallery main */}
+      <section className="bg-white py-10 sm:py-14 xl:py-16">
         <Shell>
-          <div className="mx-auto mb-11 max-w-[682px] text-center">
-            <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-              Active Competitions
-            </p>
-            <h1 className="mt-5 text-[32px] font-extrabold leading-tight text-[#0d0d14] sm:text-[40px] xl:text-[48px] xl:leading-[48px]">
-              Choose Your Album Type
-            </h1>
-            <p className="mt-2.5 text-[16px] leading-[1.45] text-[#6b7280] sm:text-[20px] sm:leading-[29.25px]">
-              Three competition album type. One goal: show your talent and win a prize.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {COMPETITIONS.map((card) => (
-              <article
-                key={card.title}
-                className="relative flex h-full flex-col justify-between rounded-[20px] border border-black/16 bg-white p-6 sm:p-8"
-              >
-                {card.popular && (
-                  <span className="absolute left-1/2 top-[-12px] -translate-x-1/2 rounded-full bg-[#4048cd] px-3 py-1 text-[10px] font-extrabold tracking-[0.5px] text-white">
-                    MOST POPULAR
-                  </span>
-                )}
-                <div className="flex flex-col gap-4">
-                  <div className="flex size-14 items-center justify-center rounded-lg bg-[#fde8e9]">
-                    <ImgIcon src={card.icon} size={32} />
-                  </div>
-                  <div className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-4">
-                      <h2 className="text-[24px] font-semibold capitalize leading-7 text-[#0d0d14] sm:text-[32px]">
-                        {card.title}
-                      </h2>
-                      <p className="text-[16px] leading-normal text-[#6b7280]">{card.description}</p>
-                    </div>
-                    <ul className="flex flex-col gap-2.5">
-                      {card.features.map((feature) => (
-                        <li
-                          key={feature}
-                          className="flex items-center gap-2 text-[14px] text-[#111827]"
-                        >
-                          <ImgIcon src={card.check} size={13} />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <p className="text-[16px] text-[#1b1e56]">
-                    <span className="text-[28px] font-semibold text-[#4048cd] sm:text-[32px]">
-                      {card.prize}
-                    </span>
-                    /prize money
-                  </p>
-                </div>
-                <a
-                  href="#"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white"
-                >
-                  Enter Now
-                  <ImgIcon src={ASSETS.arrow} size={16} />
-                </a>
-              </article>
-            ))}
-          </div>
-        </Shell>
-      </section>
-
-      {/* How It Works */}
-      <section className="bg-white py-16 sm:py-20 xl:py-[112px]">
-        <Shell>
-          <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-            <div className="max-w-[576px]">
-              <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-                How It Works
+          <div className="mb-6 flex items-center justify-between lg:hidden">
+            <div>
+              <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
+                Community Work
               </p>
-              <h2 className="mt-2.5 text-[36px] font-extrabold leading-[1.1] text-[#0d0d14] sm:text-[48px] sm:leading-[48px]">
-                From Photo to Prize
-                <br />
-                in 4 Steps
-              </h2>
-              <p className="mt-2.5 text-[16px] leading-[1.45] text-[#6b7280] sm:text-[20px] sm:leading-[29.25px]">
-                A simple, transparent process. Join thousands of photographers who have already won.
-              </p>
+              <h1 className="mt-1 text-[32px] font-extrabold text-[#0d0d14]">Photo Showcase</h1>
             </div>
+            <button
+              type="button"
+              onClick={() => setFiltersOpen((v) => !v)}
+              className="rounded-full border border-black/15 px-4 py-2 text-sm font-semibold text-[#0d0d14]"
+            >
+              {filtersOpen ? 'Hide Filters' : 'Filters'}
+            </button>
+          </div>
 
-            <div className="flex flex-col">
-              {STEPS.map((step, i) => (
-                <div key={step.num} className="flex gap-5">
-                  <div className="flex w-11 flex-col items-center">
-                    <div className="flex size-11 items-center justify-center rounded-2xl bg-[rgba(227,24,55,0.08)] text-[12px] font-extrabold text-[#e31837]">
-                      {step.num}
+          <div className="flex flex-col gap-8 lg:flex-row lg:gap-[103px]">
+            {/* Sidebar */}
+            <aside
+              className={`w-full shrink-0 lg:w-[285px] ${filtersOpen ? 'block' : 'hidden lg:block'}`}
+            >
+              <div className="flex flex-col gap-10">
+                <FilterGroup
+                  title="Album Type"
+                  options={ALBUM_TYPES}
+                  selected={albumTypes}
+                  onToggle={(value) => toggle(albumTypes, setAlbumTypes, value)}
+                />
+                <FilterGroup
+                  title="Category"
+                  options={CATEGORIES}
+                  selected={categories}
+                  onToggle={(value) => toggle(categories, setCategories, value)}
+                />
+              </div>
+            </aside>
+
+            {/* Grid */}
+            <div className="min-w-0 flex-1">
+              <div className="mb-8 hidden lg:block">
+                <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
+                  Community Work
+                </p>
+                <h1 className="mt-2 text-[48px] font-extrabold leading-[66px] text-[#0d0d14]">
+                  Photo Showcase
+                </h1>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {PHOTOS.map((photo) => (
+                  <article
+                    key={photo.key || photo.title + photo.badge}
+                    className="overflow-hidden rounded-[12px] border border-black/10 bg-white"
+                  >
+                    <div className="relative h-[220px] sm:h-[252px]">
+                      <img
+                        src={photo.image}
+                        alt={photo.title}
+                        width={368}
+                        height={252}
+                        className="h-full w-full object-cover"
+                      />
+                      <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
+                        {photo.badge}
+                      </span>
                     </div>
-                    {i < STEPS.length - 1 && (
-                      <div className="my-2 min-h-10 w-px flex-1 bg-black/8" />
-                    )}
-                  </div>
-                  <div className="pb-8">
-                    <h3 className="text-[20px] font-extrabold leading-6 text-[#0d0d14]">
-                      {step.title}
-                    </h3>
-                    <p className="mt-1.5 text-[16px] leading-normal text-[#6b7280]">{step.text}</p>
-                  </div>
-                </div>
-              ))}
+                    <div className="p-4">
+                      <h2 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h2>
+                      <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
+                        <span>{photo.author}</span>
+                        <span className="inline-flex items-center gap-1.5">
+                          <ImgIcon src={ASSETS.heart} size={24} />
+                          {photo.votes}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              <div className="mt-9 flex flex-wrap items-center justify-center gap-[5px]">
+                <button
+                  type="button"
+                  aria-label="First page"
+                  onClick={() => setPage(1)}
+                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                >
+                  <ImgIcon src={ASSETS.pageFirst} size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Previous page"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                >
+                  <ImgIcon src={ASSETS.pagePrev} size={14} />
+                </button>
+                {[1, 2, 3].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setPage(n)}
+                    className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
+                      page === n
+                        ? 'bg-[#ee1c25] text-white'
+                        : 'border border-[#e5e7eb] text-[#0d0d14]'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+                <span className="px-1 text-[14px] text-[#6b7280]">…</span>
+                <button
+                  type="button"
+                  onClick={() => setPage(10)}
+                  className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
+                    page === 10
+                      ? 'bg-[#ee1c25] text-white'
+                      : 'border border-[#e5e7eb] text-[#0d0d14]'
+                  }`}
+                >
+                  10
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next page"
+                  onClick={() => setPage((p) => Math.min(10, p + 1))}
+                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                >
+                  <ImgIcon src={ASSETS.pageNext} size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Last page"
+                  onClick={() => setPage(10)}
+                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                >
+                  <span className="inline-flex scale-x-[-1]">
+                    <ImgIcon src={ASSETS.pageFirst} size={14} />
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </Shell>
@@ -498,7 +631,7 @@ const CompetitionsContent = memo(() => {
             ))}
           </div>
         </Shell>
-        <div className="border-t border-black/5 px-4 py-6 sm:px-6 md:px-8 lg:px-10 xl:px-0">
+        <div className="border-t border-black/5 px-4 py-6 sm:px-6 md:px-8 lg:px-10">
           <Shell>
             <p className="text-[16px] font-medium text-[#191818] sm:text-[20px]">
               © 2026 My12Photos. All rights reserved.
@@ -510,6 +643,6 @@ const CompetitionsContent = memo(() => {
   );
 });
 
-CompetitionsContent.displayName = 'CompetitionsContent';
+GalleryContent.displayName = 'GalleryContent';
 
-export default CompetitionsContent;
+export default GalleryContent;

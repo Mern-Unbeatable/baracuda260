@@ -5,8 +5,9 @@ import { APP_CONFIG, ROUTES } from '../config';
 
 const NAV_LINKS = [
   { to: ROUTES.HOME, label: 'Home', end: true },
+  { to: ROUTES.COMPETITIONS, label: 'Competitions' },
+  { to: ROUTES.GALLERY, label: 'Gallery' },
   { to: ROUTES.ABOUT, label: 'About' },
-  { to: ROUTES.SERVICES, label: 'Services' },
   { to: ROUTES.CONTACT, label: 'Contact' },
 ];
 

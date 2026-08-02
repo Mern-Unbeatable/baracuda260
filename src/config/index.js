@@ -9,6 +9,7 @@ export const ROUTES = {
   SERVICES: '/services',
   CONTACT: '/contact',
   COMPETITIONS: '/competitions',
+  GALLERY: '/gallery',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
@@ -22,6 +23,17 @@ export const ROUTES = {
   ADMIN_PRICING: '/admin/pricing',
   ADMIN_MESSAGES: '/admin/messages',
 };
+
+/** Site header nav — add new pages here AND register them in router.jsx */
+export const SITE_NAV_LINKS = [
+  { label: 'Home', href: ROUTES.HOME, end: true },
+  { label: 'Competitions', href: ROUTES.COMPETITIONS },
+  { label: 'Gallery', href: ROUTES.GALLERY },
+  { label: 'Leaderboard', href: '#' },
+  { label: 'Winners', href: '#' },
+  { label: 'About', href: ROUTES.ABOUT },
+  { label: 'Contact', href: ROUTES.CONTACT },
+];
 
 export const API_CONFIG = {
   BASE_URL: process.env.REACT_APP_API_BASE_URL || 'https://backend.c4r.co.uk',

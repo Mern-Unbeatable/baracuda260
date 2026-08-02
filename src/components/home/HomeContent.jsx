@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ROUTES, SITE_NAV_LINKS } from '../../config';
 
 const A = '/assets/home';
 
@@ -63,15 +64,11 @@ const ASSETS = {
   photoZodiac: `${A}/photo-zodiac.jpg`,
 };
 
-const NAV_LINKS = [
-  { label: 'Home', href: '/', active: true },
-  { label: 'Competitions', href: '/competitions' },
-  { label: 'Gallery', href: '#' },
-  { label: 'Leaderboard', href: '#' },
-  { label: 'Winners', href: '#' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-];
+const NAV_LINKS = SITE_NAV_LINKS.map(({ label, href }) => ({
+  label,
+  href,
+  active: href === ROUTES.HOME,
+}));
 
 const ANNOUNCEMENT =
   '🎉 May 2026 winners announced — View now · 📢 June competition is now open — Free to enter · 🏆 This month\'s prize: $500 · 📅 Competition ends in 7 days · ';
@@ -559,12 +556,12 @@ const HomeContent = memo(() => {
               >
                 Join a Competition
               </a>
-              <a
-                href="#"
+              <AppLink
+                href={ROUTES.GALLERY}
                 className="inline-flex items-center justify-center rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
               >
                 Explore Gallery
-              </a>
+              </AppLink>
             </div>
           </div>
         </div>
@@ -765,13 +762,13 @@ const HomeContent = memo(() => {
           </div>
 
           <div className="mt-10 flex justify-center">
-            <a
-              href="#"
+            <AppLink
+              href={ROUTES.GALLERY}
               className="inline-flex items-center gap-2 rounded-full bg-[#ee1c25] px-8 py-3.5 text-[16px] font-bold text-white"
             >
               View Full Gallery
               <ImgIcon src={ASSETS.arrowGallery} size={16} />
-            </a>
+            </AppLink>
           </div>
         </Shell>
       </section>
