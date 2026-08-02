@@ -35,6 +35,9 @@ const COMMENTS = [
   },
 ];
 
+/** Auto-advance interval for gallery story photo strip (ms). */
+const GALLERY_DETAIL_SLIDE_MS = 6000;
+
 const GalleryTwelveDetailContent = memo(() => {
   const { t } = useTranslation();
   const { id } = useParams();
@@ -43,12 +46,21 @@ const GalleryTwelveDetailContent = memo(() => {
   const [comment, setComment] = useState('');
 
   const slides = story.slides;
+  const slideCount = slides.length;
   const activeSlide = slides[activeIndex] || slides[0];
   const isBlueTheme = activeSlide.theme === 'blue';
 
   useEffect(() => {
     setActiveIndex(0);
   }, [story.id]);
+
+  useEffect(() => {
+    if (slideCount <= 1) return undefined;
+    const timerId = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % slideCount);
+    }, GALLERY_DETAIL_SLIDE_MS);
+    return () => window.clearInterval(timerId);
+  }, [slideCount, story.id]);
 
   const goPrev = () => setActiveIndex((i) => (i === 0 ? slides.length - 1 : i - 1));
   const goNext = () => setActiveIndex((i) => (i === slides.length - 1 ? 0 : i + 1));
