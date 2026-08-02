@@ -53,8 +53,8 @@
     "sixPhotosStory": "Historia 6 zdjęć",
     "twelveZodiac": "12 zdjęć — pełna historia zodiaku",
     "allEntries": "Wszystkie zgłoszenia",
-    "mostPopular": "NAJPOPULARNIEJSZY",
-    "prizeMoney": "/nagroda",
+    "mostPopular": "NAJPOPULARNIEJSZE",
+    "prizeMoney": "/nagroda pieniężna",
     "enterNow": "Dołącz teraz",
     "selectMonth": "Wybierz miesiąc",
     "heroSlides": "Slajdy główne",
@@ -89,7 +89,7 @@
       "Travel": "Podróże",
       "Wedding": "Ślub",
       "Macro": "Makro",
-      "Fine Art": "Sztuka",
+      "Fine Art": "Fotografia artystyczna",
       "Pets": "Zwierzęta",
       "Sports": "Sport",
       "Night Photography": "Fotografia nocna"
@@ -149,7 +149,7 @@
       "monthLabel": "Maj 2026",
       "title": "Zwycięzcy miesiąca",
       "subtitle": "Gratulacje dla mistrzów maja 2026",
-      "cashPrize": "Nagroda przez PayPal",
+      "cashPrize": "Nagroda pieniężna przez PayPal",
       "viewAlbum": "Zobacz album",
       "viewAll": "Zobacz wszystkich poprzednich zwycięzców →",
       "votesLabel": "{{count}} głosów"
@@ -158,17 +158,17 @@
       "eyebrow": "Platforma",
       "title": "Dlaczego My12Photos",
       "prizesTitle": "Miesięczne nagrody",
-      "prizesText": "Prawdziwe pieniądze przez PayPal dla top 3 co miesiąc.",
+      "prizesText": "Prawdziwe pieniądze wypłacane przez PayPal trzem najlepszym co miesiąc.",
       "votingTitle": "Głosowanie społeczności",
-      "votingText": "Przejrzyste głosowanie — każdy zarejestrowany użytkownik może brać udział.",
+      "votingText": "Przejrzyste głosowanie społeczności — każdy zarejestrowany użytkownik może brać udział.",
       "formatsTitle": "3 formaty konkursów",
       "formatsText": "Pojedyncze zdjęcie, historie i serie zodiakalne dla każdego stylu.",
       "hallTitle": "Galeria sławy",
-      "hallText": "Poprzedni zwycięzcy na stałe w archiwum.",
+      "hallText": "Poprzedni zwycięzcy na stałe w naszym archiwum.",
       "freeTitle": "Zawsze za darmo",
       "freeText": "Zero opłat startowych. Udział jest i zawsze będzie darmowy.",
       "globalTitle": "Globalna społeczność",
-      "globalText": "Fotografowie z ponad 40 krajów co miesiąc."
+      "globalText": "Fotografowie z ponad 40 krajów startują co miesiąc."
     },
     "testimonials": {
       "eyebrow": "Opinie",
@@ -176,7 +176,7 @@
       "a1quote": "Dzięki My12Photos moje prace zobaczyły tysiące osób. To najlepsza społeczność fotograficzna, w jakiej brałam udział.",
       "a1role": "Zwyciężczyni lipca 2025",
       "a2quote": "Platforma jest wyjątkowo czysta i elegancka. Głosowanie to przyjemność, a nagrody naprawdę motywują do rozwoju.",
-      "a2role": "Top 3 — czerwiec 2025",
+      "a2role": "Trójka najlepszych — czerwiec 2025",
       "a3quote": "Otrzymałam tu więcej wartościowych opinii niż na wszystkich innych platformach razem. Polecam każdemu fotografowi.",
       "a3role": "Zwyciężczyni albumu zodiakalnego"
     }
@@ -187,15 +187,15 @@
       "singleDesc": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia — oceniane przez społeczność.",
       "singleF0": "Miesięczny konkurs",
       "singleF1": "Publiczne głosowanie społeczności",
-      "singleF2": "Top 3 wygrywa nagrody pieniężne",
+      "singleF2": "Trójka najlepszych wygrywa nagrody pieniężne",
       "sixTitle": "Historia 6 zdjęć",
-      "sixDesc": "Stwórz wizualną narrację z sześciu starannie ułożonych obrazów.",
+      "sixDesc": "Stwórz wizualną narrację z sześciu starannie ułożonych zdjęć, które prowadzą widza przez historię.",
       "sixF0": "Opowiadanie sekwencyjne",
       "sixF1": "Głosy społeczności",
       "sixF2": "Najlepsza historia wygrywa",
       "twelveTitle": "12 zdjęć — pełna historia zodiaku",
       "twelveDesc": "Stwórz pełną zodiakalną podróż wizualną w dwunastu zdjęciach — nasz największy format.",
-      "twelveF0": "Łuk 12 znaków",
+      "twelveF0": "Łuk wizualny 12 znaków",
       "twelveF1": "Wyświetlanie w kolejności zodiaku",
       "twelveF2": "Kategoria głównej nagrody"
     },
@@ -212,7 +212,7 @@
   },
   "about": {
     "hero": {
-      "badge": "Wzmacniamy kreatywne wizje",
+      "badge": "Wspieramy kreatywne wizje",
       "title": "O My12Photos",
       "subtitle": "Odkryj globalną społeczność fotograficzną, w której celebrujemy kreatywność, dzielimy się historiami i nagradzamy utalentowanych fotografów co miesiąc.",
       "ctaJoin": "Dołącz teraz",
@@ -225,9 +225,9 @@
     },
     "story": {
       "title": "Nasza historia",
-      "p1": "My12Photos powstało z prostą ideą — dać fotografom na każdym poziomie miejsce do prezentacji kreatywności, opowiadania historii wizualnych i zdobycia uznania. W przeciwieństwie do tradycyjnych platform, łączymy fotografów przez miesięczne konkursy, przejrzyste głosowanie i wspierającą globalną społeczność.",
-      "p2": "Niezależnie od tego, czy uwieczniasz krajobrazy, niezapomniane chwile, czy historie w albumach — nasza platforma pomaga dotrzeć do szerszej publiczności.",
-      "quote": "Każdy fotograf powinien mieć uczciwą scenę, by pokazać swoją wizualną linię czasu. My12Photos zaprojektowaliśmy jako ten globalny amfiteatr."
+      "p1": "My12Photos powstało z prostą ideą — dać fotografom na każdym poziomie miejsce do prezentacji kreatywności, opowiadania historii wizualnych i zdobycia uznania. W przeciwieństwie do tradycyjnych platform do dzielenia się zdjęciami łączymy fotografów poprzez ekscytujące miesięczne konkursy, przejrzyste głosowanie i wspierającą globalną społeczność.",
+      "p2": "Niezależnie od tego, czy uwieczniasz zapierające dech krajobrazy, niezapomniane chwile, czy kreatywne historie w albumach — nasza platforma pomaga dotrzeć do szerszej publiczności.",
+      "quote": "Każdy fotograf powinien mieć uczciwą scenę, by zaprezentować swoją wizualną opowieść. My12Photos stworzyliśmy właśnie jako tę globalną scenę."
     },
     "mission": {
       "title": "Nasza misja",
@@ -254,7 +254,7 @@
       "s2title": "Wybierz konkurs",
       "s2summary": "Wybierz jedną z kategorii konkursowych.",
       "s2detailTitle": "Wybierz format albumu dopasowany do historii.",
-      "s2detailBody": "Dołącz do Single Photo, 6-Photo Story lub pełnego albumu zodiakalnego — każdy z własnymi nagrodami i motywem miesiąca.",
+      "s2detailBody": "Dołącz do konkursu Pojedyncze zdjęcie, Historia 6 zdjęć lub pełnego Albumu zodiakalnego — każdy z własnymi nagrodami i motywem miesiąca.",
       "s3title": "Prześlij pracę",
       "s3summary": "Prześlij najlepsze zdjęcia przed miesięcznym terminem.",
       "s3detailTitle": "Prześlij przed miesięcznym terminem.",
@@ -266,16 +266,16 @@
       "s5title": "Wygraj miesięczne nagrody",
       "s5summary": "Najlepsi fotografowie otrzymują uznanie, nagrody i wyróżnienia.",
       "s5detailTitle": "Odbierz uznanie i nagrody pieniężne.",
-      "s5detailBody": "Najlepsi otrzymują uznanie, nagrody i miesięczne premie — a zwycięzcy są prezentowani na platformie."
+      "s5detailBody": "Najlepsi otrzymują uznanie, nagrody i miesięczne premie — a zwycięzcy są prezentowani na całej platformie."
     },
     "community": {
       "title": "Nasza społeczność",
-      "body": "Nasza rosnąca społeczność to fotografowie, narratorzy, hobbyści i entuzjaści z całego świata. Członkowie przeglądają galerie, odkrywają talent, biorą udział w konkursach i świętują zwycięzców miesiąca.",
+      "body": "Nasza rosnąca społeczność to fotografowie, narratorzy, hobbyści i entuzjaści fotografii z całego świata. Członkowie przeglądają inspirujące galerie, odkrywają utalentowanych artystów, biorą udział w konkursach i wspólnie świętują zwycięzców miesiąca.",
       "belief": "Wierzymy, że każde zdjęcie opowiada historię, a każda historia zasługuje na publiczność.",
       "exchangeTitle": "Globalna wymiana",
-      "exchangeText": "Połącz się z twórcami z ponad 150 krajów.",
+      "exchangeText": "Połącz się z twórcami wizualnymi z ponad 150 krajów.",
       "critiqueTitle": "Empatyczna krytyka",
-      "critiqueText": "Zdobywaj pomocne opinie i głosy od rówieśników."
+      "critiqueText": "Otrzymuj pomocne opinie i głosy od innych fotografów."
     },
     "cta": {
       "eyebrow": "Bez opłat za rejestrację",
@@ -306,7 +306,7 @@
     "photographerLabel": "Fotograf",
     "photographerProfile": "Profil fotografa",
     "comments": "Komentarze",
-    "verified": "Zweryfikowany",
+    "verified": "Zweryfikowane",
     "commentLabel": "Komentarz",
     "commentPlaceholder": "Napisz komentarz",
     "postComment": "Opublikuj komentarz",
@@ -425,7 +425,7 @@
           "Skontaktować się z nami w sprawach prywatności"
         ],
         "footnotes": [
-          "Każda usługa ma własną politykę prywatności."
+          "Aby skorzystać z tych praw, skontaktuj się z nami przez stronę Kontakt."
         ]
       },
       {
