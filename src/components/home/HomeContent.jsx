@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react';
 import { ROUTES } from '../../config';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { COMPETITION_CARDS, COMPETITION_STEPS } from '../../data/competitionsMarketing';
+import HomeHero from './HomeHero';
 
 const A = '/assets/home';
 
@@ -267,53 +268,7 @@ const HomeContent = memo(() => {
       announcementTone="navy"
       newsletterVariant="home"
     >
-      {/* Hero */}
-      <section className="relative min-h-[560px] w-full overflow-hidden md:min-h-[720px] xl:min-h-[890px]">
-        <img
-          src={ASSETS.hero}
-          alt=""
-          width={1920}
-          height={890}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1b1e56] from-[28%] via-[#1b1e56]/70 to-transparent" />
-        <div className="relative mx-auto flex min-h-[560px] w-full max-w-[1920px] items-center px-4 py-16 sm:px-6 md:min-h-[720px] md:px-10 xl:min-h-[890px] xl:px-[192px]">
-          <div className="flex w-full max-w-[900px] flex-col gap-9">
-            <div className="flex flex-col gap-3">
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-[17px] py-[7px]">
-                <span className="size-2 rounded-full bg-[#05df72]" />
-                <span className="text-sm font-semibold text-white">
-                  Competitions live — July 2026
-                </span>
-              </div>
-              <h1 className="text-[36px] font-extrabold uppercase leading-[1.15] tracking-[-1.44px] text-white sm:text-[48px] xl:text-[64px] xl:leading-[77.76px]">
-                12 Photos - Full Zodiac Story
-              </h1>
-              <p className="max-w-[720px] text-[16px] leading-[1.6] text-white sm:text-[20px] sm:leading-[32.5px]">
-                Join over 12,000 photographers. Free competitions, community voting, cash prizes
-                every month.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-              <a
-                href="#"
-                className="inline-flex items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
-              >
-                Join a Competition
-              </a>
-              <AppLink
-                href={ROUTES.GALLERY}
-                className="inline-flex items-center justify-center rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
-              >
-                Explore Gallery
-              </AppLink>
-            </div>
-          </div>
-        </div>
-        <div className="absolute bottom-[50px] left-1/2 h-[14px] w-[77px] -translate-x-1/2">
-          <img src={ASSETS.heroDots} alt="" width={77} height={14} className="h-full w-full" />
-        </div>
-      </section>
+      <HomeHero />
 
       {/* Stats */}
       <section className="bg-[#1b1e56] py-10 xl:py-12">
