@@ -460,22 +460,30 @@ const GalleryTwelveDetailContent = memo(() => {
             </button>
           </div>
 
-          <div className="mt-8 flex items-center gap-[12px] sm:mt-9">
-            <img
-              src={ASSETS.photographer}
-              alt={story.photographer}
-              width={57}
-              height={57}
-              className="size-[48px] rounded-full object-cover sm:size-[57px]"
-            />
-            <div>
-              <p className="text-[14px] leading-[22px] text-[#6b7280] sm:text-[16px]">
-                Photographer
-              </p>
-              <p className="text-[18px] font-bold leading-[27px] text-[#111827] sm:text-[20px]">
-                {story.photographer}
-              </p>
+          <div className="mt-8 flex flex-col gap-4 border-b border-black/10 pb-6 sm:mt-9 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-[12px]">
+              <img
+                src={ASSETS.photographer}
+                alt={story.photographer}
+                width={57}
+                height={57}
+                className="size-[48px] rounded-full object-cover sm:size-[57px]"
+              />
+              <div>
+                <p className="text-[14px] leading-[22px] text-[#6b7280] sm:text-[16px]">
+                  Photographer
+                </p>
+                <p className="text-[18px] font-bold leading-[27px] text-[#111827] sm:text-[20px]">
+                  {story.photographer}
+                </p>
+              </div>
             </div>
+            <a
+              href="#"
+              className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
+            >
+              Photographer Profile
+            </a>
           </div>
         </Shell>
       </section>
