@@ -32,6 +32,7 @@ const Leaderboard = lazy(() => import('../pages/Leaderboard'));
 const Winners = lazy(() => import('../pages/Winners'));
 const Privacy = lazy(() => import('../pages/Privacy'));
 const Terms = lazy(() => import('../pages/Terms'));
+const Cookies = lazy(() => import('../pages/Cookies'));
 const Login = lazy(() => import('../pages/Login'));
 
 // Admin pages — each lazy-loaded so they only download when visited
@@ -96,6 +97,7 @@ const router = createBrowserRouter(
         <Route path={ROUTES.WINNERS} element={<Winners />} />
         <Route path={ROUTES.PRIVACY} element={<Privacy />} />
         <Route path={ROUTES.TERMS} element={<Terms />} />
+        <Route path={ROUTES.COOKIES} element={<Cookies />} />
       </Route>
 
       <Route

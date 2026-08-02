@@ -19,6 +19,7 @@ export const ROUTES = {
   WINNERS: '/winners',
   PRIVACY: '/privacy',
   TERMS: '/terms',
+  COOKIES: '/cookies',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',

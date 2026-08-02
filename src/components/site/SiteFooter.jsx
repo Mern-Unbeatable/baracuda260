@@ -12,6 +12,7 @@ const SOCIAL_ICONS = [SITE_ASSETS.ig, SITE_ASSETS.fb, SITE_ASSETS.x];
 const FOOTER_LINK_HREF = {
   'footer.privacy': ROUTES.PRIVACY,
   'footer.terms': ROUTES.TERMS,
+  'footer.cookies': ROUTES.COOKIES,
   'footer.gallery': ROUTES.GALLERY,
   'footer.leaderboard': ROUTES.LEADERBOARD,
   'footer.about': ROUTES.ABOUT,
