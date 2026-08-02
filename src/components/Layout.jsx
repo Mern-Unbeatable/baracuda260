@@ -1,5 +1,5 @@
-import React, { memo, useState, useCallback, useEffect } from 'react';
-import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
+import React, { memo, useState, useCallback } from 'react';
+import { Outlet, NavLink, Link } from 'react-router-dom';
 import { LogIn, Menu, X } from 'lucide-react';
 import { APP_CONFIG, ROUTES } from '../config';
 
@@ -24,11 +24,6 @@ const mobileNavLinkClass = ({ isActive }) =>
 const Layout = memo(() => {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
 
   return (
     <div className="min-h-screen bg-gray-50">

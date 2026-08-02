@@ -10,6 +10,7 @@ import {
 import { useSelector } from 'react-redux';
 import Layout from '../components/Layout';
 import AdminLayout from '../components/layout/admin/Layout';
+import ScrollToTop from '../components/ScrollToTop';
 import { ROUTES } from '../config';
 import { selectIsAuthenticated } from '../store/slices/authSlice';
 
@@ -68,7 +69,7 @@ const ProtectedRoute = ({ children }) => {
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <>
+    <Route element={<ScrollToTop />}>
       <Route
         element={
           <Suspense fallback={<PageLoader />}>
@@ -122,7 +123,7 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="*" element={<NotFound />} />
-    </>,
+    </Route>,
   ),
 );
 
