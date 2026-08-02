@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { Shell, SitePageLayout } from '../site';
-import { COOKIES_INTRO, COOKIES_LAST_UPDATED, COOKIES_SECTIONS } from './cookiesData';
+import { readLegalPage } from '../legal/legalI18n';
 
 const leadClassName =
   'text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px] xl:text-[24px]';
@@ -15,13 +16,13 @@ const CookiesSection = memo(({ section }) => (
       {section.title}
     </h2>
 
-    {section.leads?.map((text) => (
+    {section.leads.map((text) => (
       <p key={text} className={leadClassName}>
         {text}
       </p>
     ))}
 
-    {section.paragraphs?.map((text) => (
+    {section.paragraphs.map((text) => (
       <p key={text} className={bodyClassName}>
         {text}
       </p>
@@ -29,7 +30,7 @@ const CookiesSection = memo(({ section }) => (
 
     {section.listIntro ? <p className={bodyClassName}>{section.listIntro}</p> : null}
 
-    {section.bullets?.length ? (
+    {section.bullets.length ? (
       <ul className="list-disc space-y-0 pl-[30px] text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px]">
         {section.bullets.map((item) => (
           <li key={item}>
@@ -39,7 +40,7 @@ const CookiesSection = memo(({ section }) => (
       </ul>
     ) : null}
 
-    {section.footnotes?.map((text) => (
+    {section.footnotes.map((text) => (
       <p key={text} className={leadClassName}>
         {text}
       </p>
@@ -51,43 +52,48 @@ CookiesSection.displayName = 'CookiesSection';
 
 /**
  * Cookie Policy page — Figma node 264:1716.
- * Chrome (announcement / header / newsletter / footer) from SitePageLayout.
+ * Chrome from SitePageLayout; copy from i18n (`cookies`).
  */
-const CookiesContent = memo(() => (
-  <SitePageLayout
-    activeHref={ROUTES.COOKIES}
-    rootClassName="cookies-page-root"
-    announcementTone="blue"
-    newsletterVariant="page"
-  >
-    <main className="bg-[#f9fafb]">
-      <Shell className="pb-16 pt-8 sm:pb-20 sm:pt-10 xl:pb-24 xl:pt-12">
-        <header className="mb-6 flex max-w-[570px] flex-col gap-2 sm:mb-8">
-          <h1 className="font-[family-name:Manrope,sans-serif] text-[28px] font-semibold leading-normal text-black sm:text-[34px] xl:text-[40px]">
-            Cookie Policy
-          </h1>
-          <div className="flex items-center gap-[9px]">
-            <span
-              className="inline-block size-2.5 shrink-0 rounded-full bg-[#ee1c25]"
-              aria-hidden="true"
-            />
-            <p className="text-[16px] font-normal leading-normal text-[#373737] sm:text-[18px] md:text-[20px]">
-              {COOKIES_LAST_UPDATED}
-            </p>
+const CookiesContent = memo(() => {
+  const { t } = useTranslation();
+  const page = readLegalPage(t, 'cookies');
+
+  return (
+    <SitePageLayout
+      activeHref={ROUTES.COOKIES}
+      rootClassName="cookies-page-root"
+      announcementTone="blue"
+      newsletterVariant="page"
+    >
+      <main className="bg-[#f9fafb]">
+        <Shell className="pb-16 pt-8 sm:pb-20 sm:pt-10 xl:pb-24 xl:pt-12">
+          <header className="mb-6 flex max-w-[570px] flex-col gap-2 sm:mb-8">
+            <h1 className="font-[family-name:Manrope,sans-serif] text-[28px] font-semibold leading-normal text-black sm:text-[34px] xl:text-[40px]">
+              {page.title}
+            </h1>
+            <div className="flex items-center gap-[9px]">
+              <span
+                className="inline-block size-2.5 shrink-0 rounded-full bg-[#ee1c25]"
+                aria-hidden="true"
+              />
+              <p className="text-[16px] font-normal leading-normal text-[#373737] sm:text-[18px] md:text-[20px]">
+                {page.lastUpdated}
+              </p>
+            </div>
+          </header>
+
+          <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
+            {page.intro ? <p className={`max-w-[1200px] ${bodyClassName}`}>{page.intro}</p> : null}
+
+            {page.sections.map((section) => (
+              <CookiesSection key={section.id} section={section} />
+            ))}
           </div>
-        </header>
-
-        <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
-          <p className={`max-w-[1200px] ${bodyClassName}`}>{COOKIES_INTRO}</p>
-
-          {COOKIES_SECTIONS.map((section) => (
-            <CookiesSection key={section.id} section={section} />
-          ))}
-        </div>
-      </Shell>
-    </main>
-  </SitePageLayout>
-));
+        </Shell>
+      </main>
+    </SitePageLayout>
+  );
+});
 
 CookiesContent.displayName = 'CookiesContent';
 

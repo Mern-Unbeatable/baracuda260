@@ -43,7 +43,7 @@
     "contact": "Kontakt",
     "privacy": "Polityka prywatności",
     "terms": "Regulamin",
-    "cookies": "Cookies",
+    "cookies": "Pliki cookie",
     "rights": "© {{year}} My12Photos. Wszelkie prawa zastrzeżone."
   },
   "common": {
@@ -57,7 +57,7 @@
     "prizeMoney": "/nagroda",
     "enterNow": "Dołącz teraz",
     "selectMonth": "Wybierz miesiąc",
-    "heroSlides": "Slajdy hero",
+    "heroSlides": "Slajdy główne",
     "showSlide": "Pokaż slajd {{n}}",
     "votes": "Głosy",
     "points": "Punkty",
@@ -77,7 +77,37 @@
       "October": "Październik",
       "November": "Listopad",
       "December": "Grudzień"
-    }
+    },
+    "categories": {
+      "Nature": "Natura",
+      "Portrait": "Portret",
+      "Wildlife": "Dzika przyroda",
+      "Landscape": "Krajobraz",
+      "Street Photography": "Fotografia uliczna",
+      "Architecture": "Architektura",
+      "Black & White": "Czarno-białe",
+      "Travel": "Podróże",
+      "Wedding": "Ślub",
+      "Macro": "Makro",
+      "Fine Art": "Sztuka",
+      "Pets": "Zwierzęta",
+      "Sports": "Sport",
+      "Night Photography": "Fotografia nocna"
+    },
+    "badges": {
+      "singlePhoto": "Pojedyncze zdjęcie",
+      "sixPhotosStory": "HISTORIA 6 ZDJĘĆ",
+      "twelveZodiacFull": "12 zdjęć — pełna historia zodiaku",
+      "twelvePhotoZodiac": "12 zdjęć — zodiak",
+      "firstPlace": "1. MIEJSCE",
+      "secondPlace": "2. MIEJSCE",
+      "thirdPlace": "3. MIEJSCE",
+      "popularVote": "Głos publiczności",
+      "topRated": "Najwyżej oceniane",
+      "editorsChoice": "Wybór redakcji"
+    },
+    "themeSilentStreets": "MOTYW: CICHE ULICZKI",
+    "categorySingleShort": "Kat.: pojedyncze zdjęcie"
   },
   "home": {
     "hero": {
@@ -133,7 +163,7 @@
       "votingText": "Przejrzyste głosowanie — każdy zarejestrowany użytkownik może brać udział.",
       "formatsTitle": "3 formaty konkursów",
       "formatsText": "Pojedyncze zdjęcie, historie i serie zodiakalne dla każdego stylu.",
-      "hallTitle": "Hall of Fame",
+      "hallTitle": "Galeria sławy",
       "hallText": "Poprzedni zwycięzcy na stałe w archiwum.",
       "freeTitle": "Zawsze za darmo",
       "freeText": "Zero opłat startowych. Udział jest i zawsze będzie darmowy.",
@@ -142,7 +172,13 @@
     },
     "testimonials": {
       "eyebrow": "Opinie",
-      "title": "Co mówią fotografowie"
+      "title": "Co mówią fotografowie",
+      "a1quote": "Dzięki My12Photos moje prace zobaczyły tysiące osób. To najlepsza społeczność fotograficzna, w jakiej brałam udział.",
+      "a1role": "Zwyciężczyni lipca 2025",
+      "a2quote": "Platforma jest wyjątkowo czysta i elegancka. Głosowanie to przyjemność, a nagrody naprawdę motywują do rozwoju.",
+      "a2role": "Top 3 — czerwiec 2025",
+      "a3quote": "Otrzymałam tu więcej wartościowych opinii niż na wszystkich innych platformach razem. Polecam każdemu fotografowi.",
+      "a3role": "Zwyciężczyni albumu zodiakalnego"
     }
   },
   "competitionsPage": {
@@ -243,8 +279,8 @@
     },
     "cta": {
       "eyebrow": "Bez opłat za rejestrację",
-      "title": "Gotowy, by dzielić się fotografią ze światem?",
-      "subtitle": "Dołącz do tysięcy fotografów konkursujących co miesiąc. Prześlij najlepszą pracę, zbieraj głosy i zostań kolejnym zwycięzcą.",
+      "title": "Chcesz dzielić się fotografią ze światem?",
+      "subtitle": "Dołącz do tysięcy fotografów biorących udział w konkursach co miesiąc. Prześlij najlepszą pracę, zbieraj głosy i zostań kolejnym zwycięzcą.",
       "registerFree": "Zarejestruj się"
     }
   },
@@ -299,5 +335,315 @@
     "sending": "Wysyłanie...",
     "success": "Wiadomość wysłana!",
     "error": "Nie udało się wysłać. Spróbuj ponownie."
+  },
+  "privacy": {
+    "title": "Polityka prywatności",
+    "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Wprowadzenie",
+        "paragraphs": [
+          "Witamy w My12Photos. Ochrona Twojej prywatności jest jednym z naszych najwyższych priorytetów. Niniejsza Polityka prywatności wyjaśnia, jak zbieramy, wykorzystujemy, przechowujemy i chronimy Twoje dane osobowe podczas korzystania z naszej platformy konkursów fotograficznych."
+        ]
+      },
+      {
+        "id": "collect",
+        "title": "2. Jakie informacje zbieramy",
+        "lead": "Możemy zbierać następujące informacje:",
+        "bullets": [
+          "Imię i nazwisko",
+          "Adres e-mail",
+          "Informacje o profilu",
+          "Przesłane zdjęcia i albumy",
+          "Dane o udziale w konkursach",
+          "Aktywność głosowania",
+          "Informacje o urządzeniu i przeglądarce",
+          "Adres IP",
+          "Pliki cookie i dane analityczne"
+        ]
+      },
+      {
+        "id": "use",
+        "title": "3. Jak wykorzystujemy Twoje informacje",
+        "lead": "Twoje informacje są wykorzystywane do:",
+        "bullets": [
+          "Tworzenia i zarządzania kontem",
+          "Umożliwienia udziału w konkursach fotograficznych",
+          "Wyświetlania zgłoszonych prac",
+          "Weryfikacji zwycięzców i wypłaty nagród",
+          "Wysyłania newsletterów i aktualizacji konkursów",
+          "Poprawy wydajności strony i doświadczenia użytkownika",
+          "Zapobiegania oszustwom i nadużyciom"
+        ]
+      },
+      {
+        "id": "ownership",
+        "title": "4. Prawa do zdjęć",
+        "paragraphs": [
+          "Zachowujesz pełne prawa własności do każdego przesłanego zdjęcia.",
+          "Przesyłając zdjęcia do My12Photos, udzielasz nam niewyłącznej licencji na wyświetlanie Twoich obrazów w konkursach, galeriach, materiałach promocyjnych oraz ogłoszeniach zwycięzców."
+        ]
+      },
+      {
+        "id": "payments",
+        "title": "5. Wypłaty nagród",
+        "paragraphs": [
+          "Jeśli zostaniesz zwycięzcą, możemy zebrać dodatkowe dane płatnicze, takie jak adres e-mail PayPal, wyłącznie w celu wypłaty nagrody."
+        ]
+      },
+      {
+        "id": "security",
+        "title": "6. Bezpieczeństwo danych",
+        "paragraphs": [
+          "Stosujemy standardowe w branży środki bezpieczeństwa, aby chronić Twoje dane osobowe przed nieuprawnionym dostępem, ujawnieniem lub niewłaściwym użyciem."
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "7. Usługi zewnętrzne",
+        "lead": "Nasza platforma może korzystać z zaufanych usług zewnętrznych, w tym:",
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal",
+          "Dostawcy usług e-mail"
+        ],
+        "footnotes": [
+          "Każda usługa ma własną politykę prywatności."
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "8. Twoje prawa",
+        "lead": "Możesz:",
+        "bullets": [
+          "Uzyskać dostęp do swoich danych osobowych",
+          "Zaktualizować profil",
+          "Poprosić o usunięcie konta",
+          "Zrezygnować z subskrypcji newslettera",
+          "Skontaktować się z nami w sprawach prywatności"
+        ],
+        "footnotes": [
+          "Każda usługa ma własną politykę prywatności."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "9. Kontakt",
+        "paragraphs": [
+          "Jeśli masz pytania dotyczące niniejszej Polityki prywatności, skontaktuj się z nami przez stronę Kontakt."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Regulamin",
+    "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Wprowadzenie",
+        "paragraphs": [
+          "Witamy w My12Photos.",
+          "Korzystając z tej strony, zgadzasz się przestrzegać niniejszego Regulaminu."
+        ]
+      },
+      {
+        "id": "eligibility",
+        "title": "2. Warunki udziału",
+        "leads": [
+          "Musisz mieć ukończone 18 lat lub posiadać zgodę rodzica albo opiekuna prawnego."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. Konta użytkowników",
+        "leads": [
+          "Użytkownicy są odpowiedzialni za:"
+        ],
+        "bullets": [
+          "Utrzymanie bezpieczeństwa konta",
+          "Podawanie prawdziwych informacji",
+          "Zachowanie poufności danych logowania"
+        ]
+      },
+      {
+        "id": "competitions",
+        "title": "4. Konkursy fotograficzne",
+        "leads": [
+          "Udział jest całkowicie bezpłatny, o ile nie ogłoszono inaczej."
+        ],
+        "listIntro": "Użytkownicy zobowiązują się do:",
+        "bullets": [
+          "Przesyłania wyłącznie oryginalnych treści.",
+          "Przestrzegania zasad konkursu.",
+          "Unikania materiałów chronionych prawem autorskim należących do innych.",
+          "Powstrzymania się od treści obraźliwych, nielegalnych lub nieodpowiednich."
+        ]
+      },
+      {
+        "id": "voting",
+        "title": "5. Głosowanie",
+        "paragraphs": [
+          "Platforma zastrzega sobie prawo do usuwania fałszywych głosów lub dyskwalifikacji użytkowników manipulujących wynikami."
+        ]
+      },
+      {
+        "id": "ip",
+        "title": "6. Własność intelektualna",
+        "paragraphs": [
+          "Użytkownicy zachowują prawa do przesłanych fotografii.",
+          "Biorąc udział, użytkownicy udzielają My12Photos zgody na wyświetlanie zgłoszonych obrazów w celach konkursowych i promocyjnych."
+        ]
+      },
+      {
+        "id": "prizes",
+        "title": "7. Wypłata nagród",
+        "leads": [
+          "Nagrody pieniężne są wypłacane przez PayPal, o ile nie wskazano inaczej.",
+          "Zwycięzcy mogą zostać poproszeni o weryfikację tożsamości przed otrzymaniem wypłaty."
+        ]
+      },
+      {
+        "id": "prohibited",
+        "title": "8. Zabronione działania",
+        "leads": [
+          "Użytkownicy nie mogą:"
+        ],
+        "bullets": [
+          "Przesyłać nielegalnych treści",
+          "Podszywać się pod innych",
+          "Używać botów ani automatycznego głosowania",
+          "Manipulować rankingami",
+          "Próbować nieuprawnionego dostępu",
+          "Nadużywać platformy"
+        ]
+      },
+      {
+        "id": "suspension",
+        "title": "9. Zawieszenie konta",
+        "leads": [
+          "Zastrzegamy sobie prawo do zawieszenia lub usunięcia kont naruszających niniejszy Regulamin."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "10. Zastrzeżenie",
+        "leads": [
+          "Choć dążymy do nieprzerwanej dostępności, My12Photos nie gwarantuje ciągłego działania usługi."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "11. Zmiany",
+        "leads": [
+          "Możemy aktualizować niniejszy Regulamin w dowolnym momencie.",
+          "Dalsze korzystanie z platformy oznacza akceptację zaktualizowanego Regulaminu."
+        ]
+      }
+    ]
+  },
+  "cookies": {
+    "title": "Polityka plików cookie",
+    "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
+    "intro": "Niniejsza Polityka plików cookie wyjaśnia, w jaki sposób My12Photos używa plików cookie, aby poprawić Twoje doświadczenie przeglądania.",
+    "sections": [
+      {
+        "id": "what-are-cookies",
+        "title": "Czym są pliki cookie?",
+        "leads": [
+          "Pliki cookie to małe pliki tekstowe przechowywane na Twoim urządzeniu, które pomagają stronom zapamiętywać preferencje i poprawiać działanie."
+        ]
+      },
+      {
+        "id": "types",
+        "title": "Rodzaje plików cookie, których używamy",
+        "leads": [
+          "Wymagane do:"
+        ],
+        "bullets": [
+          "Logowania",
+          "Bezpieczeństwa konta",
+          "Zarządzania sesją",
+          "Preferencji językowych"
+        ]
+      },
+      {
+        "id": "performance",
+        "title": "Pliki cookie wydajnościowe",
+        "listIntro": "Służą do:",
+        "bullets": [
+          "Pomiaru wydajności strony",
+          "Poprawy szybkości ładowania",
+          "Analizy zachowań odwiedzających"
+        ]
+      },
+      {
+        "id": "analytics",
+        "title": "Pliki cookie analityczne",
+        "leads": [
+          "Używamy Google Analytics, aby zrozumieć:"
+        ],
+        "bullets": [
+          "Ruch odwiedzających",
+          "Popularne strony",
+          "Zaangażowanie użytkowników",
+          "Wydajność witryny"
+        ]
+      },
+      {
+        "id": "advertising",
+        "title": "Pliki cookie reklamowe",
+        "leads": [
+          "Google Ads może używać plików cookie do wyświetlania trafnych reklam i pomiaru skuteczności reklam."
+        ]
+      },
+      {
+        "id": "functional",
+        "title": "Pliki cookie funkcjonalne",
+        "leads": [
+          "Zapamiętują:"
+        ],
+        "bullets": [
+          "Wybrany język",
+          "Preferencje użytkownika",
+          "Filtry konkursów",
+          "Ustawienia wyświetlania"
+        ]
+      },
+      {
+        "id": "managing",
+        "title": "Zarządzanie plikami cookie",
+        "leads": [
+          "Większość przeglądarek pozwala na:"
+        ],
+        "bullets": [
+          "Akceptację wszystkich plików cookie",
+          "Odrzucenie plików cookie",
+          "Usunięcie zapisanych plików cookie",
+          "Kontrolę preferencji cookie"
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "Pliki cookie stron trzecich",
+        "leads": [
+          "Niektóre pliki cookie pochodzą z zaufanych usług zewnętrznych, w tym:"
+        ],
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal"
+        ]
+      },
+      {
+        "id": "updates",
+        "title": "Aktualizacje",
+        "leads": [
+          "Możemy okresowo aktualizować tę Politykę plików cookie, aby odzwierciedlać zmiany technologiczne lub wymogi prawne."
+        ]
+      }
+    ]
   }
 }

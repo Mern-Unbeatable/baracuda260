@@ -239,30 +239,33 @@ const FEATURES = [
 
 const TESTIMONIALS = [
   {
-    quote:
-      'Thanks to My12Photos, my work reached thousands of people. This is the best photography community I have ever been part of.',
+    quoteKey: 'home.testimonials.a1quote',
     name: 'Anna Kowalska',
-    role: 'July 2025 Winner',
+    roleKey: 'home.testimonials.a1role',
     avatar: ASSETS.avatarAnna,
     stars: 5,
   },
   {
-    quote:
-      'The platform is incredibly clean and elegant. Voting is a pleasure, and the prizes genuinely motivate you to push your craft.',
+    quoteKey: 'home.testimonials.a2quote',
     name: 'Piotr Mazur',
-    role: 'Top 3 — June 2025',
+    roleKey: 'home.testimonials.a2role',
     avatar: ASSETS.avatarPiotr,
     stars: 5,
   },
   {
-    quote:
-      'I received more meaningful feedback here than on every other platform combined. I recommend it to every photographer.',
+    quoteKey: 'home.testimonials.a3quote',
     name: 'Marta Wiśniewska',
-    role: 'Zodiac Album Winner',
+    roleKey: 'home.testimonials.a3role',
     avatar: ASSETS.avatarMarta,
     stars: 4.5,
   },
 ];
+
+const SHOWCASE_BADGE_KEYS = {
+  'Single Photo': 'common.badges.singlePhoto',
+  '6 PHOTOS STORY': 'common.badges.sixPhotosStory',
+  '12 Photos - Full Zodiac Story': 'common.badges.twelveZodiacFull',
+};
 
 const STATS = [
   { value: '14,820+', labelKey: 'home.stats.photographers' },
@@ -462,7 +465,9 @@ const HomeContent = memo(() => {
                     className="h-full w-full object-cover"
                   />
                   <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
-                    {photo.badge}
+                    {t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
+                      defaultValue: photo.badge,
+                    })}
                   </span>
                 </div>
                 <div className="p-4">
@@ -734,7 +739,7 @@ const HomeContent = memo(() => {
                   ))}
                 </div>
                 <p className="flex-1 text-[14px] leading-[22.75px] text-[#0d0d14]">
-                  &ldquo;{item.quote}&rdquo;
+                  &ldquo;{t(item.quoteKey)}&rdquo;
                 </p>
                 <div className="mt-6 flex items-center gap-3">
                   <img
@@ -746,7 +751,7 @@ const HomeContent = memo(() => {
                   />
                   <div>
                     <p className="text-[14px] font-bold text-[#0d0d14]">{item.name}</p>
-                    <p className="text-[12px] text-[#6b7280]">{item.role}</p>
+                    <p className="text-[12px] text-[#6b7280]">{t(item.roleKey)}</p>
                   </div>
                 </div>
               </article>

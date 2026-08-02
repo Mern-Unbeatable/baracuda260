@@ -30,8 +30,10 @@ const PROFILE = {
 
 const PAGE_SIZE = 8;
 
-const displayBadge = (badge = '') => {
-  if (/12/i.test(badge)) return '12 Photo Zodiac';
+const displayBadge = (badge = '', t) => {
+  if (/12/i.test(badge)) return t('common.badges.twelvePhotoZodiac');
+  if (/6/i.test(badge)) return t('common.badges.sixPhotosStory');
+  if (/single/i.test(badge)) return t('common.badges.singlePhoto');
   return badge;
 };
 
@@ -92,7 +94,7 @@ const PhotographerProfileContent = memo(() => {
                         className="h-full w-full object-cover"
                       />
                       <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#3f51b5]">
-                        {displayBadge(photo.badge)}
+                        {displayBadge(photo.badge, t)}
                       </span>
                     </div>
                     <div className="flex flex-col gap-2 p-4">

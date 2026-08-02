@@ -172,6 +172,7 @@ const GalleryContent = memo(() => {
                   options={CATEGORIES}
                   selected={categories}
                   onToggle={(value) => toggle(setCategories, value)}
+                  getLabel={(value) => t(`common.categories.${value}`, { defaultValue: value })}
                 />
               </div>
             </aside>

@@ -43,6 +43,15 @@ const MONTHS = [
   'December',
 ];
 
+const WINNER_BADGE_KEYS = {
+  '1st PLACE': 'common.badges.firstPlace',
+  '2nd PLACE': 'common.badges.secondPlace',
+  '3rd PLACE': 'common.badges.thirdPlace',
+  'Popular Vote': 'common.badges.popularVote',
+  'Top Rated': 'common.badges.topRated',
+  "Editor's Choice": 'common.badges.editorsChoice',
+};
+
 const WINNERS = [
   {
     id: 'golden-horizons',
@@ -150,7 +159,7 @@ const WINNERS = [
   },
 ];
 
-const WinnerCard = memo(({ item }) => (
+const WinnerCard = memo(({ item, t }) => (
   <article className="flex flex-col overflow-hidden rounded-xl bg-[#f4f4f4]">
     <div className="relative h-[220px] overflow-hidden sm:h-[254px]">
       <img
@@ -163,7 +172,9 @@ const WinnerCard = memo(({ item }) => (
       <div className="pointer-events-none absolute inset-0 bg-black/20" />
       <div className="absolute left-[13px] top-[15px] inline-flex items-center gap-2 rounded bg-black/50 px-[7px] py-1">
         <ImgIcon src={item.badgeIcon === 'trophy' ? ASSETS.trophy : ASSETS.badge} size={18} />
-        <span className="text-[14px] leading-6 text-[#fdc700]">{item.badge}</span>
+        <span className="text-[14px] leading-6 text-[#fdc700]">
+          {t(WINNER_BADGE_KEYS[item.badge] || item.badge, { defaultValue: item.badge })}
+        </span>
       </div>
       <div className="absolute bottom-4 right-4 rounded-lg bg-black/55 px-2 py-1">
         <span className="text-[14px] leading-6 text-white sm:text-[16px]">{item.date}</span>
@@ -172,7 +183,7 @@ const WinnerCard = memo(({ item }) => (
     <div className="flex flex-col gap-6 px-4 py-6">
       <div>
         <p className="text-[14px] font-medium leading-6 text-[#42444a] sm:text-[16px]">
-          {item.theme}
+          {t('common.themeSilentStreets')}
         </p>
         <h2 className="mt-1 text-[22px] font-extrabold leading-tight text-[#0d0d14] sm:text-[24px]">
           {item.title}
@@ -181,7 +192,9 @@ const WinnerCard = memo(({ item }) => (
       <div>
         <div className="h-px w-full bg-black/15" />
         <div className="mt-3 flex items-center justify-between gap-3">
-          <p className="text-[14px] leading-6 text-[#2c2e30] sm:text-[16px]">{item.category}</p>
+          <p className="text-[14px] leading-6 text-[#2c2e30] sm:text-[16px]">
+            {t('common.categorySingleShort')}
+          </p>
           <p className="shrink-0 text-[16px] font-semibold text-[#25252b] sm:text-[20px]">
             {item.votes}
           </p>
@@ -317,7 +330,7 @@ const WinnersContent = memo(() => {
           ) : (
             <div className="mt-11 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {filteredWinners.map((item) => (
-                <WinnerCard key={item.id} item={item} />
+                <WinnerCard key={item.id} item={item} t={t} />
               ))}
             </div>
           )}

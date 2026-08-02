@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { Shell, SitePageLayout } from '../site';
-import { TERMS_LAST_UPDATED, TERMS_SECTIONS } from './termsData';
+import { readLegalPage } from '../legal/legalI18n';
 
 const leadClassName =
   'text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px] xl:text-[24px]';
@@ -15,13 +16,13 @@ const TermsSection = memo(({ section }) => (
       {section.title}
     </h2>
 
-    {section.leads?.map((text) => (
+    {section.leads.map((text) => (
       <p key={text} className={leadClassName}>
         {text}
       </p>
     ))}
 
-    {section.paragraphs?.map((text) => (
+    {section.paragraphs.map((text) => (
       <p key={text} className={bodyClassName}>
         {text}
       </p>
@@ -29,7 +30,7 @@ const TermsSection = memo(({ section }) => (
 
     {section.listIntro ? <p className={bodyClassName}>{section.listIntro}</p> : null}
 
-    {section.bullets?.length ? (
+    {section.bullets.length ? (
       <ul className="list-disc space-y-0 pl-[30px] text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px]">
         {section.bullets.map((item) => (
           <li key={item}>
@@ -39,7 +40,7 @@ const TermsSection = memo(({ section }) => (
       </ul>
     ) : null}
 
-    {section.footnotes?.map((text) => (
+    {section.footnotes.map((text) => (
       <p key={text} className={leadClassName}>
         {text}
       </p>
@@ -51,41 +52,46 @@ TermsSection.displayName = 'TermsSection';
 
 /**
  * Terms of Service page — Figma node 264:1562.
- * Chrome (announcement / header / newsletter / footer) from SitePageLayout.
+ * Chrome from SitePageLayout; copy from i18n (`terms`).
  */
-const TermsContent = memo(() => (
-  <SitePageLayout
-    activeHref={ROUTES.TERMS}
-    rootClassName="terms-page-root"
-    announcementTone="blue"
-    newsletterVariant="page"
-  >
-    <main className="bg-[#f9fafb]">
-      <Shell className="pb-16 pt-8 sm:pb-20 sm:pt-10 xl:pb-24 xl:pt-12">
-        <header className="mb-6 flex max-w-[570px] flex-col gap-2 sm:mb-8">
-          <h1 className="font-[family-name:Manrope,sans-serif] text-[28px] font-semibold leading-normal text-black sm:text-[34px] xl:text-[40px]">
-            Terms of Service
-          </h1>
-          <div className="flex items-center gap-[9px]">
-            <span
-              className="inline-block size-2.5 shrink-0 rounded-full bg-[#ee1c25]"
-              aria-hidden="true"
-            />
-            <p className="text-[16px] font-normal leading-normal text-[#373737] sm:text-[18px] md:text-[20px]">
-              {TERMS_LAST_UPDATED}
-            </p>
-          </div>
-        </header>
+const TermsContent = memo(() => {
+  const { t } = useTranslation();
+  const page = readLegalPage(t, 'terms');
 
-        <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
-          {TERMS_SECTIONS.map((section) => (
-            <TermsSection key={section.id} section={section} />
-          ))}
-        </div>
-      </Shell>
-    </main>
-  </SitePageLayout>
-));
+  return (
+    <SitePageLayout
+      activeHref={ROUTES.TERMS}
+      rootClassName="terms-page-root"
+      announcementTone="blue"
+      newsletterVariant="page"
+    >
+      <main className="bg-[#f9fafb]">
+        <Shell className="pb-16 pt-8 sm:pb-20 sm:pt-10 xl:pb-24 xl:pt-12">
+          <header className="mb-6 flex max-w-[570px] flex-col gap-2 sm:mb-8">
+            <h1 className="font-[family-name:Manrope,sans-serif] text-[28px] font-semibold leading-normal text-black sm:text-[34px] xl:text-[40px]">
+              {page.title}
+            </h1>
+            <div className="flex items-center gap-[9px]">
+              <span
+                className="inline-block size-2.5 shrink-0 rounded-full bg-[#ee1c25]"
+                aria-hidden="true"
+              />
+              <p className="text-[16px] font-normal leading-normal text-[#373737] sm:text-[18px] md:text-[20px]">
+                {page.lastUpdated}
+              </p>
+            </div>
+          </header>
+
+          <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
+            {page.sections.map((section) => (
+              <TermsSection key={section.id} section={section} />
+            ))}
+          </div>
+        </Shell>
+      </main>
+    </SitePageLayout>
+  );
+});
 
 TermsContent.displayName = 'TermsContent';
 

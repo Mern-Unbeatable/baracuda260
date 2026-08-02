@@ -77,7 +77,37 @@
       "October": "October",
       "November": "November",
       "December": "December"
-    }
+    },
+    "categories": {
+      "Nature": "Nature",
+      "Portrait": "Portrait",
+      "Wildlife": "Wildlife",
+      "Landscape": "Landscape",
+      "Street Photography": "Street Photography",
+      "Architecture": "Architecture",
+      "Black & White": "Black & White",
+      "Travel": "Travel",
+      "Wedding": "Wedding",
+      "Macro": "Macro",
+      "Fine Art": "Fine Art",
+      "Pets": "Pets",
+      "Sports": "Sports",
+      "Night Photography": "Night Photography"
+    },
+    "badges": {
+      "singlePhoto": "Single Photo",
+      "sixPhotosStory": "6 PHOTOS STORY",
+      "twelveZodiacFull": "12 Photos - Full Zodiac Story",
+      "twelvePhotoZodiac": "12 Photo Zodiac",
+      "firstPlace": "1st PLACE",
+      "secondPlace": "2nd PLACE",
+      "thirdPlace": "3rd PLACE",
+      "popularVote": "Popular Vote",
+      "topRated": "Top Rated",
+      "editorsChoice": "Editor's Choice"
+    },
+    "themeSilentStreets": "THEME: SILENT STREETS",
+    "categorySingleShort": "Cat : Single Short"
   },
   "home": {
     "hero": {
@@ -142,7 +172,13 @@
     },
     "testimonials": {
       "eyebrow": "Testimonials",
-      "title": "What Photographers Say"
+      "title": "What Photographers Say",
+      "a1quote": "Thanks to My12Photos, my work reached thousands of people. This is the best photography community I have ever been part of.",
+      "a1role": "July 2025 Winner",
+      "a2quote": "The platform is incredibly clean and elegant. Voting is a pleasure, and the prizes genuinely motivate you to push your craft.",
+      "a2role": "Top 3 — June 2025",
+      "a3quote": "I received more meaningful feedback here than on every other platform combined. I recommend it to every photographer.",
+      "a3role": "Zodiac Album Winner"
     }
   },
   "competitionsPage": {
@@ -299,5 +335,315 @@
     "sending": "Sending...",
     "success": "Message sent successfully!",
     "error": "Failed to send message. Please try again."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last Updated: July 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Welcome to My12Photos. Protecting your privacy is one of our highest priorities. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our photography competition platform."
+        ]
+      },
+      {
+        "id": "collect",
+        "title": "2. Information We Collect",
+        "lead": "We may collect the following information:",
+        "bullets": [
+          "Full Name",
+          "Email Address",
+          "Profile Information",
+          "Uploaded Photos and Albums",
+          "Competition Participation Data",
+          "Voting Activity",
+          "Device and Browser Information",
+          "IP Address",
+          "Cookies and Analytics Data"
+        ]
+      },
+      {
+        "id": "use",
+        "title": "3. How We Use Your Information",
+        "lead": "Your information is used to:",
+        "bullets": [
+          "Create and manage your account",
+          "Allow participation in photography competitions",
+          "Display your submitted entries",
+          "Process winner verification and prize payments",
+          "Send newsletters and competition updates",
+          "Improve website performance and user experience",
+          "Prevent fraud and abuse"
+        ]
+      },
+      {
+        "id": "ownership",
+        "title": "4. Photo Ownership",
+        "paragraphs": [
+          "You retain full ownership of every image you upload.",
+          "By submitting photos to My12Photos, you grant us a non-exclusive license to display your images within competitions, galleries, promotional materials, and winner announcements."
+        ]
+      },
+      {
+        "id": "payments",
+        "title": "5. Prize Payments",
+        "paragraphs": [
+          "If you become a winner, we may collect additional payment information, such as your PayPal email address, solely for prize distribution."
+        ]
+      },
+      {
+        "id": "security",
+        "title": "6. Data Security",
+        "paragraphs": [
+          "We use industry-standard security measures to protect your personal information from unauthorized access, disclosure, or misuse."
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "7. Third-Party Services",
+        "lead": "Our platform may use trusted third-party services including:",
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal",
+          "Email Service Providers"
+        ],
+        "footnotes": [
+          "Each service has its own privacy policy."
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "8. Your Rights",
+        "lead": "You may:",
+        "bullets": [
+          "Access your personal information",
+          "Update your profile",
+          "Request deletion of your account",
+          "Withdraw newsletter subscriptions",
+          "Contact us regarding privacy concerns"
+        ],
+        "footnotes": [
+          "Each service has its own privacy policy."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "9. Contact",
+        "paragraphs": [
+          "If you have questions regarding this Privacy Policy, please contact us through our Contact page."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last Updated: July 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Welcome to My12Photos.",
+          "By accessing or using this website, you agree to comply with these Terms of Service."
+        ]
+      },
+      {
+        "id": "eligibility",
+        "title": "2. Eligibility",
+        "leads": [
+          "You must be at least 18 years old or have permission from a parent or legal guardian."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. User Accounts",
+        "leads": [
+          "Users are responsible for:"
+        ],
+        "bullets": [
+          "Maintaining account security",
+          "Providing accurate information",
+          "Keeping login credentials confidential"
+        ]
+      },
+      {
+        "id": "competitions",
+        "title": "4. Photography Competitions",
+        "leads": [
+          "Participation is completely free unless otherwise announced."
+        ],
+        "listIntro": "Users agree to:",
+        "bullets": [
+          "Upload only original content.",
+          "Respect competition rules.",
+          "Avoid copyrighted material owned by others.",
+          "Refrain from offensive, illegal, or inappropriate content."
+        ]
+      },
+      {
+        "id": "voting",
+        "title": "5. Voting",
+        "paragraphs": [
+          "The platform reserves the right to remove fraudulent votes or disqualify users engaging in manipulation."
+        ]
+      },
+      {
+        "id": "ip",
+        "title": "6. Intellectual Property",
+        "paragraphs": [
+          "Users retain ownership of their uploaded photographs.",
+          "By participating, users grant My12Photos permission to display submitted images for competition purposes and promotional activities."
+        ]
+      },
+      {
+        "id": "prizes",
+        "title": "7. Prize Distribution",
+        "leads": [
+          "Cash prizes are distributed through PayPal unless otherwise specified.",
+          "Winners may be required to verify their identity before receiving payments."
+        ]
+      },
+      {
+        "id": "prohibited",
+        "title": "8. Prohibited Activities",
+        "leads": [
+          "Users must not:"
+        ],
+        "bullets": [
+          "Upload illegal content",
+          "Impersonate others",
+          "Use bots or automated voting",
+          "Manipulate rankings",
+          "Attempt unauthorized access",
+          "Abuse the platform"
+        ]
+      },
+      {
+        "id": "suspension",
+        "title": "9. Account Suspension",
+        "leads": [
+          "We reserve the right to suspend or terminate accounts that violate these Terms."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "10. Disclaimer",
+        "leads": [
+          "While we strive to provide uninterrupted service, My12Photos cannot guarantee continuous availability."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "11. Changes",
+        "leads": [
+          "We may update these Terms at any time.",
+          "Continued use of the platform constitutes acceptance of the updated Terms."
+        ]
+      }
+    ]
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Last Updated: July 2026",
+    "intro": "This Cookie Policy explains how My12Photos uses cookies to improve your browsing experience.",
+    "sections": [
+      {
+        "id": "what-are-cookies",
+        "title": "What Are Cookies?",
+        "leads": [
+          "Cookies are small text files stored on your device that help websites remember your preferences and improve functionality."
+        ]
+      },
+      {
+        "id": "types",
+        "title": "Types of Cookies We Use",
+        "leads": [
+          "Required for:"
+        ],
+        "bullets": [
+          "Login",
+          "Account Security",
+          "Session Management",
+          "Language Preferences"
+        ]
+      },
+      {
+        "id": "performance",
+        "title": "Performance Cookies",
+        "listIntro": "Used to:",
+        "bullets": [
+          "Measure website performance",
+          "Improve loading speed",
+          "Analyze visitor behavior"
+        ]
+      },
+      {
+        "id": "analytics",
+        "title": "Analytics Cookies",
+        "leads": [
+          "We use Google Analytics to understand:"
+        ],
+        "bullets": [
+          "Visitor traffic",
+          "Popular pages",
+          "User engagement",
+          "Website performance"
+        ]
+      },
+      {
+        "id": "advertising",
+        "title": "Advertising Cookies",
+        "leads": [
+          "Google Ads may use cookies to display relevant advertisements and measure advertising effectiveness."
+        ]
+      },
+      {
+        "id": "functional",
+        "title": "Functional Cookies",
+        "leads": [
+          "Remember:"
+        ],
+        "bullets": [
+          "Selected language",
+          "User preferences",
+          "Competition filters",
+          "Display settings"
+        ]
+      },
+      {
+        "id": "managing",
+        "title": "Managing Cookies",
+        "leads": [
+          "Most browsers allow you to:"
+        ],
+        "bullets": [
+          "Accept all cookies",
+          "Reject cookies",
+          "Delete stored cookies",
+          "Control cookie preferences"
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "Third-Party Cookies",
+        "leads": [
+          "Some cookies are provided by trusted third-party services including:"
+        ],
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal"
+        ]
+      },
+      {
+        "id": "updates",
+        "title": "Updates",
+        "leads": [
+          "We may update this Cookie Policy periodically to reflect changes in technology or legal requirements."
+        ]
+      }
+    ]
   }
 }
