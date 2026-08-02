@@ -23,6 +23,9 @@ const Services = lazy(() => import('../pages/Services'));
 const Competitions = lazy(() => import('../pages/Competitions'));
 const Gallery = lazy(() => import('../pages/Gallery'));
 const GalleryDetail = lazy(() => import('../pages/GalleryDetail'));
+const GallerySixDetail = lazy(() => import('../pages/GallerySixDetail'));
+const GallerySixBlueDetail = lazy(() => import('../pages/GallerySixBlueDetail'));
+const GalleryTwelveDetail = lazy(() => import('../pages/GalleryTwelveDetail'));
 const Login = lazy(() => import('../pages/Login'));
 
 // Admin pages — each lazy-loaded so they only download when visited
@@ -78,6 +81,9 @@ const router = createBrowserRouter(
         <Route path={ROUTES.CONTACT} element={<Contact />} />
         <Route path={ROUTES.COMPETITIONS} element={<Competitions />} />
         <Route path={ROUTES.GALLERY} element={<Gallery />} />
+        <Route path={ROUTES.GALLERY_SIX_DETAIL} element={<GallerySixDetail />} />
+        <Route path={ROUTES.GALLERY_SIX_BLUE_DETAIL} element={<GallerySixBlueDetail />} />
+        <Route path={ROUTES.GALLERY_TWELVE_DETAIL} element={<GalleryTwelveDetail />} />
         <Route path={ROUTES.GALLERY_DETAIL} element={<GalleryDetail />} />
       </Route>
 

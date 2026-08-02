@@ -12,6 +12,7 @@ export const GALLERY_PHOTOS = [
     votes: '1,488',
     views: '9,240',
     badge: '6 Photos Story',
+    sixStoryVariant: 'aries', // signs 1–6 (red)
     category: 'Nature',
     image: `${A}/photo-autumn.jpg`,
     description:
@@ -38,6 +39,7 @@ export const GALLERY_PHOTOS = [
     votes: '1,488',
     views: '12,400',
     badge: '6 Photos Story',
+    sixStoryVariant: 'libra', // signs 7–12 (blue)
     category: 'Street Photography',
     image: `${A}/photo-city.jpg`,
     description:
@@ -126,6 +128,18 @@ export const GALLERY_PHOTOS = [
 export const getGalleryPhotoById = (id) =>
   GALLERY_PHOTOS.find((photo) => photo.id === id) || GALLERY_PHOTOS[0];
 
-export const galleryDetailPath = (id) => `/gallery/${id || GALLERY_PHOTOS[0].id}`;
+export const galleryDetailPath = (id) => {
+  const photo = getGalleryPhotoById(id);
+  if (/12\s*photos?/i.test(photo.badge || '')) {
+    return `/gallery/zodiac/${photo.id}`;
+  }
+  if (/6\s*photos?\s*story/i.test(photo.badge || '')) {
+    if (photo.sixStoryVariant === 'libra') {
+      return `/gallery/story-blue/${photo.id}`;
+    }
+    return `/gallery/story/${photo.id}`;
+  }
+  return `/gallery/${photo.id}`;
+};
 
 export { DEFAULT_DESCRIPTION };
