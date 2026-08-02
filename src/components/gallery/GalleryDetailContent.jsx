@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ROUTES, SITE_NAV_LINKS } from '../../config';
+import { getGalleryPhotoById } from '../../data/galleryPhotos';
 
 const A = '/assets/home';
 
@@ -29,7 +30,6 @@ const ASSETS = {
   fb: `${A}/icon-fb.svg`,
   x: `${A}/icon-x.svg`,
   newsletterBg: `${A}/newsletter-bg.png`,
-  hero: `${A}/detail-hero.jpg`,
   aries: `${A}/icon-aries.svg`,
   photographer: `${A}/avatar-photographer.jpg`,
   commentAvatar: `${A}/avatar-comment.jpg`,
@@ -75,6 +75,8 @@ const ImgIcon = memo(({ src, size = 16, className = '' }) => (
 ImgIcon.displayName = 'ImgIcon';
 
 const GalleryDetailContent = memo(() => {
+  const { id } = useParams();
+  const photo = getGalleryPhotoById(id);
   const [menuOpen, setMenuOpen] = useState(false);
   const [comment, setComment] = useState('');
 
@@ -247,8 +249,8 @@ const GalleryDetailContent = memo(() => {
         <Shell>
           <div className="relative aspect-[1536/653] w-full overflow-hidden rounded-[16px] sm:rounded-[20px]">
             <img
-              src={ASSETS.hero}
-              alt="Chasing the Neon Stream"
+              src={photo.image}
+              alt={photo.title}
               width={1536}
               height={653}
               className="absolute inset-0 h-full w-full object-cover"
@@ -282,7 +284,7 @@ const GalleryDetailContent = memo(() => {
       <section className="bg-white py-10 sm:py-12 xl:py-14">
         <Shell>
           <div className="flex flex-wrap gap-3 sm:gap-8">
-            {['Single photo', 'Nature'].map((tag) => (
+            {[photo.badge, photo.category].map((tag) => (
               <span
                 key={tag}
                 className="rounded-full bg-[#ecedfa] px-4 py-[5px] text-[14px] font-bold uppercase tracking-[1.2px] text-[#4048cd] sm:text-[16px]"
@@ -293,22 +295,16 @@ const GalleryDetailContent = memo(() => {
           </div>
 
           <h1 className="mt-4 text-[28px] font-extrabold leading-tight text-[#111827] sm:mt-5 sm:text-[32px] xl:text-[36px]">
-            Chasing the Neon Stream
+            {photo.title}
           </h1>
           <p className="mt-4 text-[16px] font-medium leading-7 text-[#3e3f40] sm:text-[18px] sm:leading-8 xl:text-[20px] xl:leading-[30px]">
-            A young man walking confidently along a quiet city street during golden hour, wearing a
-            casual white t-shirt, black jeans, and clean white sneakers. His hands are relaxed by
-            his sides, with a natural walking posture and a calm expression. Soft sunlight creates
-            warm highlights and long shadows on the pavement. Modern buildings, green trees, and a
-            slightly blurred urban background add depth to the scene. Captured in a cinematic,
-            photorealistic style with shallow depth of field, ultra-realistic, high detail, 8K
-            quality.
+            {photo.description}
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-[21px]">
             {[
-              { label: 'VOTES RECEIVED', value: '2150' },
-              { label: 'VIEWS COUNTED', value: '12400' },
+              { label: 'VOTES RECEIVED', value: photo.votes.replace(/,/g, '') },
+              { label: 'VIEWS COUNTED', value: photo.views.replace(/,/g, '') },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -335,7 +331,7 @@ const GalleryDetailContent = memo(() => {
           <div className="mt-8 flex items-center gap-[12px] sm:mt-9">
             <img
               src={ASSETS.photographer}
-              alt="Wong Kar-Wai"
+              alt={photo.photographer}
               width={57}
               height={57}
               className="size-[48px] rounded-full object-cover sm:size-[57px]"
@@ -343,7 +339,7 @@ const GalleryDetailContent = memo(() => {
             <div>
               <p className="text-[14px] leading-[22px] text-[#6b7280] sm:text-[16px]">Photographer</p>
               <p className="text-[18px] font-bold leading-[27px] text-[#111827] sm:text-[20px]">
-                Wong Kar-Wai
+                {photo.photographer}
               </p>
             </div>
           </div>

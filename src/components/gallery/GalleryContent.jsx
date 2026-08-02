@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES, SITE_NAV_LINKS } from '../../config';
+import { GALLERY_PHOTOS, galleryDetailPath } from '../../data/galleryPhotos';
 
 const A = '/assets/home';
 
@@ -34,12 +35,6 @@ const ASSETS = {
   pageFirst: `${A}/icon-page-first.svg`,
   pagePrev: `${A}/icon-page-prev.svg`,
   pageNext: `${A}/icon-page-next.svg`,
-  photoAutumn: `${A}/photo-autumn.jpg`,
-  photoWings: `${A}/photo-wings.jpg`,
-  photoCity: `${A}/photo-city.jpg`,
-  photoForest: `${A}/photo-forest.jpg`,
-  photoMorning: `${A}/photo-morning.jpg`,
-  photoZodiac: `${A}/photo-zodiac.jpg`,
 };
 
 const NAV_LINKS = SITE_NAV_LINKS.map(({ label, href }) => ({
@@ -74,74 +69,7 @@ const CATEGORIES = [
   'Night Photography',
 ];
 
-const PHOTOS = [
-  {
-    title: 'Autumn Sequence',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '6 PHOTOS STORY',
-    image: ASSETS.photoAutumn,
-  },
-  {
-    title: 'Wings Over the Marsh',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoWings,
-  },
-  {
-    title: 'City After Midnight',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '6 PHOTOS STORY',
-    image: ASSETS.photoCity,
-  },
-  {
-    title: 'Forest Cathedral',
-    author: 'Jan M. · Czech',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoForest,
-  },
-  {
-    title: 'Morning Fields',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoMorning,
-  },
-  {
-    title: 'Zodiac Journey',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '12 photos - full Zodiac Story',
-    image: ASSETS.photoZodiac,
-  },
-  {
-    title: 'Forest Cathedral',
-    author: 'Jan M. · Czech',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoForest,
-    key: 'forest-2',
-  },
-  {
-    title: 'Morning Fields',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoMorning,
-    key: 'morning-2',
-  },
-  {
-    title: 'Zodiac Journey',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '12 photos - full Zodiac Story',
-    image: ASSETS.photoZodiac,
-    key: 'zodiac-2',
-  },
-];
+const PHOTOS = GALLERY_PHOTOS;
 
 const Shell = memo(({ children, className = '' }) => (
   <div className={`mx-auto w-full max-w-[1536px] px-4 sm:px-6 md:px-8 lg:px-12 ${className}`}>
@@ -428,8 +356,8 @@ const GalleryContent = memo(() => {
               <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {PHOTOS.map((photo) => (
                   <AppLink
-                    key={photo.key || photo.title + photo.badge}
-                    href={ROUTES.GALLERY_DETAIL}
+                    key={photo.id}
+                    href={galleryDetailPath(photo.id)}
                     className="block overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
                   >
                     <article>

@@ -10,7 +10,7 @@ export const ROUTES = {
   CONTACT: '/contact',
   COMPETITIONS: '/competitions',
   GALLERY: '/gallery',
-  GALLERY_DETAIL: '/gallery/details',
+  GALLERY_DETAIL: '/gallery/:id',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
