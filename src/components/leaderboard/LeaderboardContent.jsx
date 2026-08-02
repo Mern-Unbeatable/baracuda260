@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES, SITE_NAV_LINKS } from '../../config';
 
@@ -45,6 +45,23 @@ const ANNOUNCEMENT =
   "🎉 May 2026 winners announced — View now · 📢 June competition is now open — Free to enter · 🏆 This month's prize: $500 · 📅 Competition ends in 7 days · ";
 
 const ALBUM_TABS = ['Single Photo', '6 Photos', '12 photos - full Zodiac Story'];
+
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const STANDINGS_YEAR = 2026;
 
 const PODIUM = [
   {
@@ -154,6 +171,27 @@ ImgIcon.displayName = 'ImgIcon';
 const LeaderboardContent = memo(() => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [albumTab, setAlbumTab] = useState('6 Photos');
+  const [month, setMonth] = useState('July');
+  const [monthOpen, setMonthOpen] = useState(false);
+  const monthRef = useRef(null);
+
+  useEffect(() => {
+    if (!monthOpen) return undefined;
+    const onPointerDown = (event) => {
+      if (monthRef.current && !monthRef.current.contains(event.target)) {
+        setMonthOpen(false);
+      }
+    };
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setMonthOpen(false);
+    };
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [monthOpen]);
 
   useEffect(() => {
     if (!document.querySelector('link[data-manrope-font]')) {
@@ -327,7 +365,9 @@ const LeaderboardContent = memo(() => {
               <h1 className="pt-3 text-[32px] font-extrabold leading-[40px] text-[#0d0d14] sm:text-[40px] sm:leading-[48px] xl:text-[48px]">
                 Top Photographers
               </h1>
-              <p className="mt-2 text-[16px] leading-6 text-[#6b7280]">July 2026 — Live standings</p>
+              <p className="mt-2 text-[16px] leading-6 text-[#6b7280]">
+                {month} {STANDINGS_YEAR} — Live standings
+              </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
@@ -350,14 +390,56 @@ const LeaderboardContent = memo(() => {
                   );
                 })}
               </div>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2.5 self-start rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222] sm:self-auto"
-              >
-                <ImgIcon src={ASSETS.calendar} size={13} />
-                July
-                <ImgIcon src={ASSETS.chevron} size={24} />
-              </button>
+
+              <div className="relative self-start sm:self-auto" ref={monthRef}>
+                <button
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded={monthOpen}
+                  onClick={() => setMonthOpen((open) => !open)}
+                  className="inline-flex items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222]"
+                >
+                  <ImgIcon src={ASSETS.calendar} size={13} />
+                  <span>{month}</span>
+                  <span
+                    className={`inline-flex transition ${monthOpen ? 'rotate-180' : ''}`}
+                    aria-hidden="true"
+                  >
+                    <ImgIcon src={ASSETS.chevron} size={24} />
+                  </span>
+                </button>
+
+                {monthOpen && (
+                  <ul
+                    role="listbox"
+                    aria-label="Select month"
+                    className="absolute right-0 z-30 mt-2 max-h-64 w-[180px] overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
+                  >
+                    {MONTHS.map((name) => {
+                      const selected = name === month;
+                      return (
+                        <li key={name} role="option" aria-selected={selected}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMonth(name);
+                              setMonthOpen(false);
+                            }}
+                            className={`flex w-full items-center gap-2 px-3 py-2.5 text-left text-[14px] font-medium transition ${
+                              selected
+                                ? 'bg-[#4048cd]/10 text-[#4048cd]'
+                                : 'text-[#222] hover:bg-[#f7f8fa]'
+                            }`}
+                          >
+                            <ImgIcon src={ASSETS.calendar} size={12} />
+                            {name}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
 
