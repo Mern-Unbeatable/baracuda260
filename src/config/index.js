@@ -18,6 +18,7 @@ export const ROUTES = {
   LEADERBOARD: '/leaderboard',
   WINNERS: '/winners',
   PRIVACY: '/privacy',
+  TERMS: '/terms',
   LOGIN: '/login',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
