@@ -699,5 +699,72 @@
     "passwordRequired": "Password is required.",
     "passwordTooShort": "Password must be at least 8 characters.",
     "registerFailed": "Could not create your account. Please try again."
+  },
+  "dashboard": {
+    "defaultName": "Sarah Jenkins",
+    "roleUser": "User",
+    "logoutSuccess": "Signed out successfully",
+    "placeholderBody": "This section is coming soon.",
+    "welcome": "Welcome back, {{name}}",
+    "welcomeBody": "Your portfolio has grown by 12% in views this week. You have 3 active competitions ending soon.",
+    "uploadCta": "Upload New Photo",
+    "sidebar": {
+      "subtitle": "My12Photos",
+      "mainMenu": "Main menu",
+      "navAria": "Main navigation",
+      "open": "Open navigation",
+      "close": "Close navigation",
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "uploadPhotos": "Upload Photos",
+      "myCompetitions": "My Competitions",
+      "businessPhotos": "Business Link Photos",
+      "chat": "Chat",
+      "prizePayments": "Prize & Payments",
+      "profile": "Profile",
+      "logOut": "Log Out"
+    },
+    "stats": {
+      "aria": "Quick stats",
+      "rank": "Current Rank",
+      "photos": "Total Photos",
+      "votes": "Total Votes",
+      "prizes": "Prizes Won",
+      "competitions": "Competitions"
+    },
+    "competitions": {
+      "title": "Participating Competitions",
+      "subtitle": "Current progress in your active contests",
+      "viewAll": "View All My Competitions",
+      "openItem": "Open competition",
+      "yourSubmission": "Your Submission",
+      "finalStanding": "Final Standing",
+      "items": {
+        "celestial": {
+          "title": "Celestial Wonders 2024",
+          "badge": "Top 5%",
+          "participants": "4,231 Participants",
+          "timing": "Ends in 2 days",
+          "status": "#14th Place"
+        },
+        "urban": {
+          "title": "Urban Rhythms: Neon Nights",
+          "badge": "In Review",
+          "participants": "1,120 Participants",
+          "timing": "Voting starts tomorrow",
+          "status": "Pending..."
+        },
+        "portrait": {
+          "title": "The Human Story: Portraiture",
+          "badge": "Winner",
+          "participants": "890 Participants",
+          "timing": "Completed Dec 12",
+          "status": "1st Place"
+        }
+      }
+    }
   }
 }

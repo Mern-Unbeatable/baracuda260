@@ -1,42 +1,45 @@
-import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import { Menu } from "lucide-react";
-import Sidebar from "./adminSidebar/Sidebar";
+import { useState, useEffect, memo } from 'react';
+import { Outlet } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Menu } from 'lucide-react';
+import { DASHBOARD_ASSETS } from '../../dashboard/dashboardAssets';
+import Sidebar from './adminSidebar/Sidebar';
 
-const Layout = () => {
+const Layout = memo(() => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(true);
 
   useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === "Escape") setSidebarOpen(false);
+    const handleKey = (event) => {
+      if (event.key === 'Escape') setSidebarOpen(false);
     };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
   }, []);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setSidebarOpen(false);
     };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = sidebarOpen ? "hidden" : "";
+    document.body.style.overflow = sidebarOpen ? 'hidden' : '';
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   }, [sidebarOpen]);
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-gray-50">
+    <div className="flex h-dvh overflow-hidden bg-[#f9fafb]">
       <div
-        className={`fixed inset-0 z-20 bg-black/40 backdrop-blur-sm lg:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 z-20 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
           sidebarOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+            ? 'pointer-events-auto opacity-100'
+            : 'pointer-events-none opacity-0'
         }`}
         onClick={() => setSidebarOpen(false)}
         aria-hidden="true"
@@ -44,12 +47,12 @@ const Layout = () => {
 
       <aside
         id="sidebar"
-        aria-label="Sidebar navigation"
+        aria-label={t('dashboard.sidebar.navAria')}
         className={`
           fixed inset-y-0 left-0 z-30 w-72 transform transition-all duration-300 ease-in-out
           lg:relative lg:z-auto lg:shrink-0
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          ${desktopOpen ? "lg:translate-x-0 lg:w-72" : "lg:translate-x-0 lg:w-16"}
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          ${desktopOpen ? 'lg:w-72 lg:translate-x-0' : 'lg:w-16 lg:translate-x-0'}
         `}
       >
         <Sidebar
@@ -61,40 +64,40 @@ const Layout = () => {
         />
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="lg:hidden flex items-center gap-3 h-14 px-4 bg-white border-b border-gray-100 shrink-0">
+      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <header className="flex h-14 shrink-0 items-center gap-3 border-b border-[#e2e2e2] bg-white px-4 lg:hidden">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
             aria-expanded={sidebarOpen}
             aria-controls="sidebar"
-            aria-label="Open navigation"
-            className="p-2 -ml-1 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            aria-label={t('dashboard.sidebar.open')}
+            className="-ml-1 rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
           >
             <Menu size={20} aria-hidden="true" />
           </button>
           <img
-            src="/maktech_logo.png"
-            alt="Maktech"
+            src={DASHBOARD_ASSETS.logo}
+            alt="My12Photos"
             width={120}
             height={28}
-            fetchPriority="high"
             className="h-7 w-auto object-contain"
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
+            onError={(event) => {
+              event.currentTarget.style.display = 'none';
             }}
           />
         </header>
 
-        {/* Scrollable page area — data-lenis-prevent stops Lenis hijacking this scroll container */}
-        <div className="flex-1 min-h-0 overflow-y-auto" data-lenis-prevent>
-          <div className="w-full min-h-full px-6 py-5 sm:px-8 sm:py-6 lg:px-10 lg:py-8 flex flex-col">
+        <div className="min-h-0 flex-1 overflow-y-auto" data-lenis-prevent>
+          <div className="flex min-h-full w-full flex-col px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
             <Outlet />
           </div>
         </div>
       </main>
     </div>
   );
-};
+});
+
+Layout.displayName = 'AdminLayout';
 
 export default Layout;

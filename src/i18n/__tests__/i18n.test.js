@@ -37,7 +37,7 @@ describe('i18n', () => {
   });
 
   it('provides login strings in English and Polish', () => {
-    expect(i18n.t('login.welcome', { lng: 'en' })).toBe('Welcome back');
+    expect(i18n.t('login.welcome', { lng: 'en' })).toBe('Welcome Back');
     expect(i18n.t('login.welcome', { lng: 'pl' })).toBe('Witamy z powrotem');
     expect(i18n.t('login.submit', { lng: 'en' })).toBe('Log in');
     expect(i18n.t('login.submit', { lng: 'pl' })).toBe('Zaloguj się');

@@ -36,21 +36,18 @@ const Cookies = lazy(() => import('../pages/Cookies'));
 const Login = lazy(() => import('../pages/Login'));
 const SignUp = lazy(() => import('../pages/SignUp'));
 
-// Admin pages — each lazy-loaded so they only download when visited
+// User dashboard pages — each lazy-loaded so they only download when visited
 const Dashboard = lazy(() => import('../pages/admin/Dashboard'));
-const Emails = lazy(() => import('../pages/admin/Emails'));
-const Leads = lazy(() => import('../pages/admin/Leads'));
-const Orders = lazy(() => import('../pages/admin/Orders'));
-const MarketplaceOrders = lazy(() => import('../pages/admin/MarketplaceOrders'));
-const CaseStudies = lazy(() => import('../pages/admin/CaseStudies'));
-const Blog = lazy(() => import('../pages/admin/Blog'));
-const Jobs = lazy(() => import('../pages/admin/Jobs'));
-const Pricing = lazy(() => import('../pages/admin/Pricing'));
-const AdminMessages = lazy(() => import('../pages/admin/Messages'));
+const UploadPhotos = lazy(() => import('../pages/admin/UploadPhotos'));
+const MyCompetitions = lazy(() => import('../pages/admin/MyCompetitions'));
+const BusinessPhotos = lazy(() => import('../pages/admin/BusinessPhotos'));
+const Chat = lazy(() => import('../pages/admin/Chat'));
+const PrizePayments = lazy(() => import('../pages/admin/PrizePayments'));
+const Profile = lazy(() => import('../pages/admin/Profile'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen">
-    <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+    <div className="w-8 h-8 border-4 border-[#ee1c25] border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
@@ -131,15 +128,12 @@ const router = createBrowserRouter(
       >
         <Route index element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
         <Route path={seg(ROUTES.ADMIN_DASHBOARD)} element={<Dashboard />} />
-        <Route path={seg(ROUTES.ADMIN_EMAILS)} element={<Emails />} />
-        <Route path={seg(ROUTES.ADMIN_LEADS)} element={<Leads />} />
-        <Route path={seg(ROUTES.ADMIN_ORDERS)} element={<Orders />} />
-        <Route path={seg(ROUTES.ADMIN_MARKETPLACE_ORDERS)} element={<MarketplaceOrders />} />
-        <Route path={seg(ROUTES.ADMIN_CASE_STUDIES)} element={<CaseStudies />} />
-        <Route path={seg(ROUTES.ADMIN_BLOG)} element={<Blog />} />
-        <Route path={seg(ROUTES.ADMIN_JOBS)} element={<Jobs />} />
-        <Route path={seg(ROUTES.ADMIN_PRICING)} element={<Pricing />} />
-        <Route path={seg(ROUTES.ADMIN_MESSAGES)} element={<AdminMessages />} />
+        <Route path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)} element={<UploadPhotos />} />
+        <Route path={seg(ROUTES.ADMIN_MY_COMPETITIONS)} element={<MyCompetitions />} />
+        <Route path={seg(ROUTES.ADMIN_BUSINESS_PHOTOS)} element={<BusinessPhotos />} />
+        <Route path={seg(ROUTES.ADMIN_CHAT)} element={<Chat />} />
+        <Route path={seg(ROUTES.ADMIN_PRIZE_PAYMENTS)} element={<PrizePayments />} />
+        <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<Profile />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

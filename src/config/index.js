@@ -24,15 +24,12 @@ export const ROUTES = {
   SIGNUP: '/signup',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
-  ADMIN_EMAILS: '/admin/emails',
-  ADMIN_LEADS: '/admin/leads',
-  ADMIN_ORDERS: '/admin/orders',
-  ADMIN_MARKETPLACE_ORDERS: '/admin/marketplace-orders',
-  ADMIN_CASE_STUDIES: '/admin/case-studies',
-  ADMIN_BLOG: '/admin/blog',
-  ADMIN_JOBS: '/admin/jobs',
-  ADMIN_PRICING: '/admin/pricing',
-  ADMIN_MESSAGES: '/admin/messages',
+  ADMIN_UPLOAD_PHOTOS: '/admin/upload-photos',
+  ADMIN_MY_COMPETITIONS: '/admin/my-competitions',
+  ADMIN_BUSINESS_PHOTOS: '/admin/business-link-photos',
+  ADMIN_CHAT: '/admin/chat',
+  ADMIN_PRIZE_PAYMENTS: '/admin/prize-payments',
+  ADMIN_PROFILE: '/admin/profile',
 };
 
 /** Site header nav — add new pages here AND register them in router.jsx */

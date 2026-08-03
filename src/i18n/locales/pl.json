@@ -699,5 +699,72 @@
     "passwordRequired": "Hasło jest wymagane.",
     "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
     "registerFailed": "Nie udało się utworzyć konta. Spróbuj ponownie."
+  },
+  "dashboard": {
+    "defaultName": "Sarah Jenkins",
+    "roleUser": "Użytkownik",
+    "logoutSuccess": "Wylogowano pomyślnie",
+    "placeholderBody": "Ta sekcja wkrótce będzie dostępna.",
+    "welcome": "Witaj ponownie, {{name}}",
+    "welcomeBody": "Twoje portfolio zyskało 12% wyświetleń w tym tygodniu. Masz 3 aktywne konkursy kończące się wkrótce.",
+    "uploadCta": "Prześlij nowe zdjęcie",
+    "sidebar": {
+      "subtitle": "My12Photos",
+      "mainMenu": "Menu główne",
+      "navAria": "Nawigacja główna",
+      "open": "Otwórz nawigację",
+      "close": "Zamknij nawigację",
+      "expand": "Rozwiń panel boczny",
+      "collapse": "Zwiń panel boczny"
+    },
+    "nav": {
+      "dashboard": "Panel",
+      "uploadPhotos": "Prześlij zdjęcia",
+      "myCompetitions": "Moje konkursy",
+      "businessPhotos": "Zdjęcia biznesowe",
+      "chat": "Czat",
+      "prizePayments": "Nagrody i płatności",
+      "profile": "Profil",
+      "logOut": "Wyloguj się"
+    },
+    "stats": {
+      "aria": "Szybkie statystyki",
+      "rank": "Aktualna pozycja",
+      "photos": "Łącznie zdjęć",
+      "votes": "Łącznie głosów",
+      "prizes": "Wygrane nagrody",
+      "competitions": "Konkursy"
+    },
+    "competitions": {
+      "title": "Udział w konkursach",
+      "subtitle": "Bieżący postęp w aktywnych konkursach",
+      "viewAll": "Zobacz wszystkie moje konkursy",
+      "openItem": "Otwórz konkurs",
+      "yourSubmission": "Twoje zgłoszenie",
+      "finalStanding": "Końcowa pozycja",
+      "items": {
+        "celestial": {
+          "title": "Celestial Wonders 2024",
+          "badge": "Top 5%",
+          "participants": "4 231 uczestników",
+          "timing": "Kończy się za 2 dni",
+          "status": "#14. miejsce"
+        },
+        "urban": {
+          "title": "Urban Rhythms: Neon Nights",
+          "badge": "W trakcie przeglądu",
+          "participants": "1 120 uczestników",
+          "timing": "Głosowanie zaczyna się jutro",
+          "status": "Oczekujące..."
+        },
+        "portrait": {
+          "title": "The Human Story: Portraiture",
+          "badge": "Zwycięzca",
+          "participants": "890 uczestników",
+          "timing": "Zakończono 12 grudnia",
+          "status": "1. miejsce"
+        }
+      }
+    }
   }
 }
