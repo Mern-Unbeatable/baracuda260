@@ -27,6 +27,7 @@ export const ROUTES = {
   ADMIN_UPLOAD_PHOTOS: '/admin/upload-photos',
   ADMIN_UPLOAD_SINGLE: '/admin/upload-photos/single',
   ADMIN_UPLOAD_SIX: '/admin/upload-photos/six',
+  ADMIN_UPLOAD_ZODIAC12: '/admin/upload-photos/zodiac',
   ADMIN_MY_COMPETITIONS: '/admin/my-competitions',
   ADMIN_BUSINESS_PHOTOS: '/admin/business-link-photos',
   ADMIN_CHAT: '/admin/chat',

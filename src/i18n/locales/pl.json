@@ -804,6 +804,54 @@
       }
     }
   },
+  "zodiac12": {
+    "backToSelection": "Wróć do wyboru",
+    "bannerTitle": "Wiosna, lato, jesień i zima – <red>czerwona</red> i <blue>niebieska</blue> pełna historia 12 znaków zodiaku",
+    "bannerSubtitle": "Prześlij 12 zdjęć — po jednym na każdy znak zodiaku, aby ukończyć historię",
+    "gridTitle": "Profesjonalna rama wizualna 12 znaków zodiaku",
+    "addPhoto": "Dodaj zdjęcie",
+    "changePhoto": "Zmień zdjęcie",
+    "collectionTitle": "Tytuł kolekcji",
+    "collectionTitlePlaceholder": "np. Niebiańskie archetypy ognia",
+    "artisticCategory": "Kategoria artystyczna",
+    "storyLabel": "Historia / koncepcja / dziennik twórczy",
+    "storyPlaceholder": "Podziel się narracją twórczą stojącą za tą kosmologiczną serią...",
+    "copyrightConfirm": "Potwierdzam, że posiadam pełne prawa autorskie do wszystkich przesłanych zdjęć oraz że nie zawierają one treści nielegalnych ani ich nie promują.",
+    "submit": "Prześlij swoje zdjęcia",
+    "errors": {
+      "titleRequired": "Tytuł kolekcji jest wymagany.",
+      "storyRequired": "Historia / koncepcja jest wymagana.",
+      "photosRequired": "Dodaj zdjęcie do każdego slotu zodiaku.",
+      "copyrightRequired": "Potwierdź posiadanie praw autorskich."
+    },
+    "categories": {
+      "astrophotography": "Astrofotografia",
+      "portrait": "Portret",
+      "landscape": "Krajobraz",
+      "street": "Ulica",
+      "abstract": "Abstrakcja"
+    },
+    "elements": {
+      "fire": "OGIEŃ",
+      "earth": "ZIEMIA",
+      "air": "POWIETRZE",
+      "water": "WODA"
+    },
+    "signs": {
+      "aries": { "name": "Baran", "range": "21 mar - 20 kwi" },
+      "taurus": { "name": "Byk", "range": "21 kwi - 20 maj" },
+      "gemini": { "name": "Bliźnięta", "range": "21 maj - 20 cze" },
+      "cancer": { "name": "Rak", "range": "21 cze - 22 lip" },
+      "leo": { "name": "Lew", "range": "23 lip - 22 sie" },
+      "virgo": { "name": "Panna", "range": "23 sie - 22 wrz" },
+      "libra": { "name": "Waga", "range": "23 wrz - 22 paź" },
+      "scorpio": { "name": "Skorpion", "range": "23 paź - 21 lis" },
+      "sagittarius": { "name": "Strzelec", "range": "22 lis - 21 gru" },
+      "capricorn": { "name": "Koziorożec", "range": "22 gru - 19 sty" },
+      "aquarius": { "name": "Wodnik", "range": "20 sty - 18 lut" },
+      "pisces": { "name": "Ryby", "range": "19 lut - 20 mar" }
+    }
+  },
   "sixPhoto": {
     "backToSelection": "Wróć do wyboru",
     "selectTheme": "Wybierz akcent motywu astro-akustycznego",

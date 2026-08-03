@@ -13,7 +13,9 @@ const UploadTierCard = memo(({ tier }) => {
       ? ROUTES.ADMIN_UPLOAD_SINGLE
       : tier.id === 'story6'
         ? ROUTES.ADMIN_UPLOAD_SIX
-        : null;
+        : tier.id === 'zodiac12'
+          ? ROUTES.ADMIN_UPLOAD_ZODIAC12
+          : null;
 
   const ctaClassName =
     'mt-8 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white transition hover:bg-[#d41921]';

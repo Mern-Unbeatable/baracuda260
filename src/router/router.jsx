@@ -41,6 +41,7 @@ const Dashboard = lazy(() => import('../pages/admin/Dashboard'));
 const UploadPhotos = lazy(() => import('../pages/admin/UploadPhotos'));
 const SinglePhoto = lazy(() => import('../pages/admin/SinglePhoto'));
 const SixPhoto = lazy(() => import('../pages/admin/SixPhoto'));
+const Zodiac12 = lazy(() => import('../pages/admin/Zodiac12'));
 const MyCompetitions = lazy(() => import('../pages/admin/MyCompetitions'));
 const BusinessPhotos = lazy(() => import('../pages/admin/BusinessPhotos'));
 const Chat = lazy(() => import('../pages/admin/Chat'));
@@ -133,6 +134,7 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)} element={<UploadPhotos />} />
         <Route path={seg(ROUTES.ADMIN_UPLOAD_SINGLE)} element={<SinglePhoto />} />
         <Route path={seg(ROUTES.ADMIN_UPLOAD_SIX)} element={<SixPhoto />} />
+        <Route path={seg(ROUTES.ADMIN_UPLOAD_ZODIAC12)} element={<Zodiac12 />} />
         <Route path={seg(ROUTES.ADMIN_MY_COMPETITIONS)} element={<MyCompetitions />} />
         <Route path={seg(ROUTES.ADMIN_BUSINESS_PHOTOS)} element={<BusinessPhotos />} />
         <Route path={seg(ROUTES.ADMIN_CHAT)} element={<Chat />} />
