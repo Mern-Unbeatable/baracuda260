@@ -966,5 +966,83 @@
       "aquarius": { "name": "Aquarius", "range": "Jan 20 – Feb 18" },
       "pisces": { "name": "Pisces", "range": "Feb 19 – Mar 20" }
     }
+  },
+  "myCompetitions": {
+    "title": "My Competition Submissions",
+    "subtitle": "Track your artistic journey, view live voting results, and manage your elite photography entries.",
+    "newEntry": "New Entry",
+    "filtersLabel": "Filters:",
+    "statusFilterAria": "Filter by status",
+    "categoryFilterAria": "Filter by category",
+    "submissionsAria": "Competition submissions",
+    "share": "Share submission",
+    "viewDetails": "View\nDetails",
+    "empty": "No submissions match these filters.",
+    "showing": "Showing {{count}} of {{total}} submissions",
+    "paginationAria": "Submissions pagination",
+    "prevPage": "Previous page",
+    "nextPage": "Next page",
+    "pageNumber": "Page {{page}}",
+    "stats": {
+      "aria": "Competition stats",
+      "totalEntries": "TOTAL ENTRIES",
+      "activeVotes": "ACTIVE VOTES",
+      "bestPosition": "BEST POSITION",
+      "globalRanking": "Global Ranking",
+      "awards": "AWARDS"
+    },
+    "statusOptions": {
+      "all": "All Status",
+      "completed": "Completed",
+      "approved": "Approved",
+      "pending": "Pending"
+    },
+    "categoryOptions": {
+      "all": "All Categories",
+      "nature": "Nature",
+      "urban": "Urban",
+      "portrait": "Portrait"
+    },
+    "status": {
+      "completed": "Completed",
+      "approved": "Approved",
+      "pending": "Pending"
+    },
+    "types": {
+      "single": "Single Photo",
+      "zodiac12": "12 Photo Zodiac",
+      "story6": "6 photo story"
+    },
+    "categories": {
+      "nature": "Nature",
+      "urban": "Urban",
+      "portrait": "Portrait"
+    },
+    "metrics": {
+      "votes": "VOTES",
+      "position": "POSITION",
+      "endsDate": "Ends Date",
+      "na": "N/A"
+    },
+    "items": {
+      "monochrome": {
+        "title": "Minimalist Monochrome",
+        "description": "A study on isolation and  texture along the northern…",
+        "ends": "Completed",
+        "submitted": "Submitted Oct 12,\n2023"
+      },
+      "celestial": {
+        "title": "Celestial Narratives",
+        "description": "A full 12-part series mapping the zodiac constellations…",
+        "ends": "6/30/2026",
+        "submitted": "Submitted Nov 02,\n2023"
+      },
+      "oak": {
+        "title": "The Guardian Oak",
+        "description": "A solitary centennial tree captured during the first winter....",
+        "ends": "6/30/2026",
+        "submitted": "Submitted Today,\n08:45"
+      }
+    }
   }
 }

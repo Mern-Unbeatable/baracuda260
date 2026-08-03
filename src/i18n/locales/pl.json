@@ -966,5 +966,83 @@
       "aquarius": { "name": "Wodnik", "range": "20 sty – 18 lut" },
       "pisces": { "name": "Ryby", "range": "19 lut – 20 mar" }
     }
+  },
+  "myCompetitions": {
+    "title": "Moje zgłoszenia konkursowe",
+    "subtitle": "Śledź swoją artystyczną podróż, oglądaj wyniki głosowania na żywo i zarządzaj swoimi elitarnymi pracami fotograficznymi.",
+    "newEntry": "Nowe zgłoszenie",
+    "filtersLabel": "Filtry:",
+    "statusFilterAria": "Filtruj według statusu",
+    "categoryFilterAria": "Filtruj według kategorii",
+    "submissionsAria": "Zgłoszenia konkursowe",
+    "share": "Udostępnij zgłoszenie",
+    "viewDetails": "Zobacz\nszczegóły",
+    "empty": "Brak zgłoszeń pasujących do tych filtrów.",
+    "showing": "Wyświetlanie {{count}} z {{total}} zgłoszeń",
+    "paginationAria": "Paginacja zgłoszeń",
+    "prevPage": "Poprzednia strona",
+    "nextPage": "Następna strona",
+    "pageNumber": "Strona {{page}}",
+    "stats": {
+      "aria": "Statystyki konkursów",
+      "totalEntries": "ŁĄCZNA LICZBA ZGŁOSZEŃ",
+      "activeVotes": "AKTYWNE GŁOSY",
+      "bestPosition": "NAJLEPSZA POZYCJA",
+      "globalRanking": "Ranking globalny",
+      "awards": "NAGRODY"
+    },
+    "statusOptions": {
+      "all": "Wszystkie statusy",
+      "completed": "Zakończone",
+      "approved": "Zatwierdzone",
+      "pending": "Oczekujące"
+    },
+    "categoryOptions": {
+      "all": "Wszystkie kategorie",
+      "nature": "Natura",
+      "urban": "Miejskie",
+      "portrait": "Portret"
+    },
+    "status": {
+      "completed": "Zakończone",
+      "approved": "Zatwierdzone",
+      "pending": "Oczekujące"
+    },
+    "types": {
+      "single": "Pojedyncze zdjęcie",
+      "zodiac12": "12 zdjęć zodiaku",
+      "story6": "Historia 6 zdjęć"
+    },
+    "categories": {
+      "nature": "Natura",
+      "urban": "Miejskie",
+      "portrait": "Portret"
+    },
+    "metrics": {
+      "votes": "GŁOSY",
+      "position": "POZYCJA",
+      "endsDate": "Data końca",
+      "na": "Brak"
+    },
+    "items": {
+      "monochrome": {
+        "title": "Minimalistyczna monochromia",
+        "description": "Studium izolacji i tekstury wzdłuż północnego…",
+        "ends": "Zakończone",
+        "submitted": "Wysłano 12 paź\n2023"
+      },
+      "celestial": {
+        "title": "Niebiańskie narracje",
+        "description": "Pełna 12-częściowa seria mapująca konstelacje zodiaku…",
+        "ends": "30.06.2026",
+        "submitted": "Wysłano 02 lis\n2023"
+      },
+      "oak": {
+        "title": "Dąb strażnik",
+        "description": "Samotne stuletnie drzewo uchwycone podczas pierwszej zimy....",
+        "ends": "30.06.2026",
+        "submitted": "Wysłano dziś,\n08:45"
+      }
+    }
   }
 }
