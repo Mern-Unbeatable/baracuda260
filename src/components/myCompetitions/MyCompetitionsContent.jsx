@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
@@ -13,11 +13,32 @@ import {
   TYPE_STYLES,
 } from './myCompetitionsAssets';
 
-const FilterSelect = memo(({ label, value, options, open, onToggle, onSelect, optionKeyPrefix }) => {
+const FilterSelect = memo(({ label, value, options, open, onToggle, onSelect, onClose, optionKeyPrefix }) => {
   const { t } = useTranslation();
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const onPointerDown = (event) => {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open, onClose]);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={rootRef}>
       <button
         type="button"
         aria-expanded={open}
@@ -314,6 +335,7 @@ const MyCompetitionsContent = memo(() => {
             setStatusOpen((open) => !open);
             setCategoryOpen(false);
           }}
+          onClose={() => setStatusOpen(false)}
           onSelect={handleStatusSelect}
           optionKeyPrefix="myCompetitions.statusOptions"
         />
@@ -326,6 +348,7 @@ const MyCompetitionsContent = memo(() => {
             setCategoryOpen((open) => !open);
             setStatusOpen(false);
           }}
+          onClose={() => setCategoryOpen(false)}
           onSelect={handleCategorySelect}
           optionKeyPrefix="myCompetitions.categoryOptions"
         />

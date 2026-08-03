@@ -86,6 +86,36 @@ describe('My Competitions page', () => {
     ).toHaveAttribute('aria-current', 'page');
   });
 
+  it('closes filter dropdown on outside click', () => {
+    render(<MyCompetitionsContent />);
+
+    fireEvent.click(screen.getByText(i18n.t('myCompetitions.categoryOptions.all')));
+    expect(
+      screen.getByRole('listbox', { name: i18n.t('myCompetitions.categoryFilterAria') }),
+    ).toBeInTheDocument();
+
+    fireEvent.mouseDown(screen.getByRole('heading', { level: 1 }));
+
+    expect(
+      screen.queryByRole('listbox', { name: i18n.t('myCompetitions.categoryFilterAria') }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('closes filter dropdown on Escape', () => {
+    render(<MyCompetitionsContent />);
+
+    fireEvent.click(screen.getByText(i18n.t('myCompetitions.statusOptions.all')));
+    expect(
+      screen.getByRole('listbox', { name: i18n.t('myCompetitions.statusFilterAria') }),
+    ).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+
+    expect(
+      screen.queryByRole('listbox', { name: i18n.t('myCompetitions.statusFilterAria') }),
+    ).not.toBeInTheDocument();
+  });
+
   it('switches copy to Polish', async () => {
     render(<MyCompetitionsContent />);
 
