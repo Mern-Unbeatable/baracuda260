@@ -852,6 +852,54 @@
       "pisces": { "name": "Pisces", "range": "February 19 - March 20" }
     }
   },
+  "businessLink": {
+    "backToSelection": "Back to Selection",
+    "infoTitle": "12-Photo Business Link Gateway",
+    "infoBody": "Submit exclusive commercial-grade full zodiac portfolios. These are routed strictly to the administrator inbox for custom brand licensing, bypassed from public galleries.",
+    "gridTitle": "Professional 12-Zodiac Visual Frame",
+    "addPhoto": "Add Photo",
+    "changePhoto": "Change photo",
+    "collectionTitle": "Collection Title",
+    "collectionTitlePlaceholder": "e.g., Celestial Archetypes of Fire",
+    "artisticCategory": "Artistic Category",
+    "storyLabel": "Story / Concept / Creative Log",
+    "storyPlaceholder": "Share the creative narrative behind this cosmological series...",
+    "copyrightConfirm": "I confirm that I own the full copyright for all uploaded photos and that they do not contain or promote anything illegal.",
+    "submit": "Submit your photos",
+    "errors": {
+      "titleRequired": "Collection title is required.",
+      "storyRequired": "Story / concept is required.",
+      "photosRequired": "Please add a photo to every zodiac slot.",
+      "copyrightRequired": "Please confirm copyright ownership."
+    },
+    "categories": {
+      "astrophotography": "Astrophotography",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "street": "Street",
+      "abstract": "Abstract"
+    },
+    "elements": {
+      "fire": "FIRE",
+      "earth": "EARTH",
+      "air": "AIR",
+      "water": "WATER"
+    },
+    "signs": {
+      "aries": { "name": "Aries", "range": "March 21 - April 20" },
+      "taurus": { "name": "Taurus", "range": "April 21 - May 20" },
+      "gemini": { "name": "Gemini", "range": "May 21 - June 20" },
+      "cancer": { "name": "Cancer", "range": "June 21 - July 22" },
+      "leo": { "name": "Leo", "range": "July 23 - August 22" },
+      "virgo": { "name": "Virgo", "range": "August 23 - September 22" },
+      "libra": { "name": "Libra", "range": "September 23 - October 22" },
+      "scorpio": { "name": "Scorpio", "range": "October 23 - November 21" },
+      "sagittarius": { "name": "Sagittarius", "range": "November 22 - December 21" },
+      "capricorn": { "name": "Capricorn", "range": "December 22 - January 19" },
+      "aquarius": { "name": "Aquarius", "range": "January 20 - February 18" },
+      "pisces": { "name": "Pisces", "range": "February 19 - March 20" }
+    }
+  },
   "sixPhoto": {
     "backToSelection": "Back to Selection",
     "selectTheme": "Select Astro-Acoustic Theme Accent",
