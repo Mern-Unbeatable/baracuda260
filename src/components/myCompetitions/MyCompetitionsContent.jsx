@@ -369,7 +369,7 @@ const MyCompetitionsContent = memo(() => {
         </p>
       ) : null}
 
-      <footer className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <footer className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
         <p className="text-[12px] font-medium leading-4 tracking-[0.6px] text-[#494453]">
           {t('myCompetitions.showing', {
             count: pageItems.length,
@@ -378,7 +378,7 @@ const MyCompetitionsContent = memo(() => {
         </p>
         <nav
           aria-label={t('myCompetitions.paginationAria')}
-          className="flex items-center gap-2"
+          className="flex items-center justify-center gap-2"
         >
           <button
             type="button"
