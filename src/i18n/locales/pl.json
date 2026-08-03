@@ -818,10 +818,19 @@
     "storyPlaceholder": "Podziel się narracją twórczą stojącą za tą kosmologiczną serią...",
     "submit": "Prześlij swoje zdjęcia",
     "submitSuccess": "Szczegóły zdjęcia są gotowe do przesłania.",
+    "copyrightConfirm": "Potwierdzam, że posiadam pełne prawa autorskie do wszystkich przesłanych zdjęć oraz że nie zawierają one treści nielegalnych ani ich nie promują.",
+    "successModal": {
+      "title": "📷 Gratulacje!",
+      "body": "Twoje zdjęcia zostały przesłane i biorą teraz udział w konkursie głosowania. Powodzenia!",
+      "goHome": "Przejdź na stronę główną",
+      "uploadAnother": "Prześlij kolejny album",
+      "close": "Zamknij"
+    },
     "errors": {
       "titleRequired": "Tytuł kolekcji jest wymagany.",
       "storyRequired": "Historia / koncepcja jest wymagana.",
-      "photoRequired": "Dodaj zdjęcie."
+      "photoRequired": "Dodaj zdjęcie.",
+      "copyrightRequired": "Potwierdź posiadanie praw autorskich."
     },
     "categories": {
       "astrophotography": "Astrofotografia",

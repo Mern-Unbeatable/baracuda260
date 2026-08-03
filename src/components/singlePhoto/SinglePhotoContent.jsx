@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ChevronDown, Sparkles, Upload } from 'lucide-react';
+import { ArrowLeft, ArrowUpFromLine, ChevronDown, Sparkles } from 'lucide-react';
 import { ROUTES } from '../../config';
+import PhotoSubmitSuccessModal from './PhotoSubmitSuccessModal';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_CATEGORY,
@@ -14,10 +15,7 @@ import {
 const findSign = (id) => ZODIAC_SIGNS.find((sign) => sign.id === id) ?? ZODIAC_SIGNS[5];
 
 const ZodiacIcon = memo(({ sign, size = 35, variant = 'default' }) => {
-  const src =
-    variant === 'slot' && sign.slotIcon
-      ? sign.slotIcon
-      : sign.icon;
+  const src = variant === 'slot' && sign.slotIcon ? sign.slotIcon : sign.icon;
 
   if (src) {
     return (
@@ -46,8 +44,8 @@ const ZodiacIcon = memo(({ sign, size = 35, variant = 'default' }) => {
 ZodiacIcon.displayName = 'ZodiacIcon';
 
 /**
- * Single Photo upload workspace — Figma node 190:142.
- * Desktop: left workspace (~930) + right metadata (~579), same top alignment as Figma.
+ * Single Photo upload workspace — Figma node 190:142 (file kE9g2eZmAoSco81PgZNlj2).
+ * Layout: left 930 + gap 71 + right 579; copyright confirm + submit on right panel.
  */
 const SinglePhotoContent = memo(() => {
   const { t } = useTranslation();
@@ -59,9 +57,10 @@ const SinglePhotoContent = memo(() => {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [story, setStory] = useState('');
+  const [copyrightOk, setCopyrightOk] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
 
   const selectedSign = findSign(signId);
 
@@ -94,6 +93,7 @@ const SinglePhotoContent = memo(() => {
     if (!title.trim()) nextErrors.title = t('singlePhoto.errors.titleRequired');
     if (!story.trim()) nextErrors.story = t('singlePhoto.errors.storyRequired');
     if (!photoPreview) nextErrors.photo = t('singlePhoto.errors.photoRequired');
+    if (!copyrightOk) nextErrors.copyright = t('singlePhoto.errors.copyrightRequired');
     return nextErrors;
   };
 
@@ -102,111 +102,112 @@ const SinglePhotoContent = memo(() => {
     const nextErrors = validate();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      setSubmitted(false);
+      setSuccessOpen(false);
       return;
     }
     setErrors({});
-    setSubmitted(true);
+    setSuccessOpen(true);
+  };
+
+  const handleCloseSuccess = () => {
+    setSuccessOpen(false);
   };
 
   return (
     <div className="mx-auto w-full max-w-[1580px]">
-      {/* Back — full width row like Figma */}
-      <Link
-        to={ROUTES.ADMIN_UPLOAD_PHOTOS}
-        className="mb-6 inline-flex items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25] lg:mb-8"
-      >
-        <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
-        {t('singlePhoto.backToSelection')}
-      </Link>
-
-      {/* Figma: left 930 + gap ~71 + right 579 ≈ 1580 */}
-      <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-[40px] xl:gap-[71px]">
-        {/* LEFT WORKSPACE */}
+      {/* Figma: left 930 | gap ~71 | right 579 */}
+      <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-10 xl:gap-[71px]">
+        {/* LEFT */}
         <div className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-col gap-8">
-            {/* Select Astro Sign card */}
-            <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-[26px]">
-              <p className="mb-5 text-[16px] font-medium uppercase tracking-[0.35em] text-[#28252f]">
-                {t('singlePhoto.selectSign')}
-              </p>
-              <div className="relative">
-                <button
-                  type="button"
-                  aria-expanded={signOpen}
-                  aria-haspopup="listbox"
-                  onClick={() => {
-                    setSignOpen((open) => !open);
-                    setCategoryOpen(false);
-                  }}
-                  className="flex w-full items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-[14px] text-left"
-                >
-                  <span className="flex min-w-0 items-center gap-1.5">
-                    <ZodiacIcon sign={selectedSign} />
-                    <span className="truncate text-[16px] leading-6 text-[#1b1b1b]">
-                      {t(selectedSign.nameKey)} ({t(selectedSign.rangeKey)})
-                    </span>
-                  </span>
-                  <ChevronDown
-                    size={18}
-                    className={`shrink-0 text-[#494453] transition ${signOpen ? 'rotate-180' : ''}`}
-                    aria-hidden="true"
-                  />
-                </button>
+            <div className="flex flex-col gap-[34px]">
+              <Link
+                to={ROUTES.ADMIN_UPLOAD_PHOTOS}
+                className="inline-flex w-fit items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
+              >
+                <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
+                {t('singlePhoto.backToSelection')}
+              </Link>
 
-                {signOpen ? (
-                  <ul
-                    role="listbox"
-                    className="absolute z-30 mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-[rgba(0,0,0,0.12)] bg-white py-1 shadow-lg"
+              <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-[26px]">
+                <p className="mb-5 whitespace-pre-wrap text-[16px] font-medium uppercase tracking-[0.28em] text-[#28252f]">
+                  {t('singlePhoto.selectSign')}
+                </p>
+                <div className="relative">
+                  <button
+                    type="button"
+                    aria-expanded={signOpen}
+                    aria-haspopup="listbox"
+                    onClick={() => {
+                      setSignOpen((open) => !open);
+                      setCategoryOpen(false);
+                    }}
+                    className="flex w-full items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-[14px] text-left"
                   >
-                    {ZODIAC_SIGNS.map((sign) => (
-                      <li key={sign.id}>
-                        <button
-                          type="button"
-                          role="option"
-                          aria-selected={sign.id === signId}
-                          onClick={() => {
-                            setSignId(sign.id);
-                            setSignOpen(false);
-                          }}
-                          className={`flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[15px] transition hover:bg-[#ecedfa] ${
-                            sign.id === signId ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#1b1b1b]'
-                          }`}
-                        >
-                          <ZodiacIcon sign={sign} size={28} />
-                          <span>
-                            {t(sign.nameKey)} ({t(sign.rangeKey)})
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </div>
-            </section>
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <ZodiacIcon sign={selectedSign} />
+                      <span className="truncate text-[16px] leading-6 text-[#1b1b1b]">
+                        {t(selectedSign.nameKey)} ({t(selectedSign.rangeKey)})
+                      </span>
+                    </span>
+                    <ChevronDown
+                      size={18}
+                      className={`shrink-0 text-[#494453] transition ${signOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
 
-            {/* Decorative wave — full left column width */}
-            <div className="h-[46px] w-full" aria-hidden="true">
+                  {signOpen ? (
+                    <ul
+                      role="listbox"
+                      className="absolute z-30 mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-[rgba(0,0,0,0.12)] bg-white py-1 shadow-lg"
+                    >
+                      {ZODIAC_SIGNS.map((sign) => (
+                        <li key={sign.id}>
+                          <button
+                            type="button"
+                            role="option"
+                            aria-selected={sign.id === signId}
+                            onClick={() => {
+                              setSignId(sign.id);
+                              setSignOpen(false);
+                            }}
+                            className={`flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[15px] transition hover:bg-[#ecedfa] ${
+                              sign.id === signId ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#1b1b1b]'
+                            }`}
+                          >
+                            <ZodiacIcon sign={sign} size={28} />
+                            <span>
+                              {t(sign.nameKey)} ({t(sign.rangeKey)})
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              </section>
+            </div>
+
+            <div className="relative h-[46px] w-full overflow-visible" aria-hidden="true">
               <img
                 src={SINGLE_PHOTO_ASSETS.wave}
                 alt=""
-                className="h-full w-full object-fill"
+                className="absolute inset-x-0 top-0 h-[58px] w-full object-fill"
               />
             </div>
 
-            {/* Slots heading */}
-            <div className="w-full max-w-[485px]">
+            <div className="flex w-full max-w-[485px] flex-col gap-4">
               <h1 className="text-[24px] font-semibold leading-6 text-[#2a282d]">
                 {t('singlePhoto.slotsTitle')}
               </h1>
-              <p className="mt-4 text-[16px] font-medium leading-6 text-[#555555]">
+              <p className="text-[16px] font-medium leading-6 text-[#555555]">
                 {t('singlePhoto.slotsSubtitle')}
               </p>
             </div>
           </div>
 
-          {/* Zodiac slot card — full left width */}
-          <article className="mt-0 flex w-full flex-col items-center gap-[27px] rounded-xl border border-[#c4c6f0] bg-white p-5">
+          <article className="flex w-full flex-col items-center gap-[27px] rounded-xl border border-[#c4c6f0] bg-white p-5">
             <div className="flex w-full flex-col items-center gap-5">
               <div className="flex w-full items-center justify-between">
                 <p className="text-[20px] font-semibold leading-6 text-[#4048cd]">
@@ -223,7 +224,7 @@ const SinglePhotoContent = memo(() => {
                   <p className="w-full text-[20px] font-medium leading-6 text-[#1b1e56]">
                     {t(selectedSign.nameKey)}
                   </p>
-                  <p className="w-full text-[16px] font-medium leading-6 text-[#666dd7]">
+                  <p className="w-full whitespace-pre-wrap text-[16px] font-medium leading-6 text-[#666dd7]">
                     {t(selectedSign.rangeKey)}
                   </p>
                 </div>
@@ -247,7 +248,7 @@ const SinglePhotoContent = memo(() => {
                 onClick={handlePickPhoto}
                 className="inline-flex w-full items-center justify-center gap-2.5 rounded-lg border border-[#4048cd] bg-white px-6 py-3 text-[16px] font-medium leading-6 text-[#4048cd] transition hover:bg-[#ecedfa]"
               >
-                <Upload size={24} aria-hidden="true" />
+                <ArrowUpFromLine size={24} aria-hidden="true" />
                 {t('singlePhoto.addPhoto')}
               </button>
             )}
@@ -268,8 +269,8 @@ const SinglePhotoContent = memo(() => {
           </article>
         </div>
 
-        {/* RIGHT METADATA PANEL — top-aligned with left select card (after back link) */}
-        <aside className="w-full min-w-0 lg:sticky lg:top-0">
+        {/* RIGHT — Figma y=170 aligns with select card (after back link) */}
+        <aside className="w-full min-w-0 lg:mt-[58px] lg:sticky lg:top-0">
           <form
             onSubmit={handleSubmit}
             noValidate
@@ -290,7 +291,7 @@ const SinglePhotoContent = memo(() => {
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder={t('singlePhoto.collectionTitlePlaceholder')}
                   aria-invalid={Boolean(errors.title)}
-                  className="w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#c8c8d0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+                  className="w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
                 />
                 {errors.title ? (
                   <p className="text-sm text-red-600" role="alert">
@@ -313,7 +314,7 @@ const SinglePhotoContent = memo(() => {
                   }}
                   className="flex w-full items-center justify-between rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-left"
                 >
-                  <span className="text-[16px] leading-6 text-[#9a9aa3]">
+                  <span className="text-[16px] leading-6 text-[#707070]">
                     {t(`singlePhoto.categories.${category}`)}
                   </span>
                   <ChevronDown
@@ -363,7 +364,7 @@ const SinglePhotoContent = memo(() => {
                   placeholder={t('singlePhoto.storyPlaceholder')}
                   rows={5}
                   aria-invalid={Boolean(errors.story)}
-                  className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#c8c8d0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+                  className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
                 />
                 {errors.story ? (
                   <p className="text-sm text-red-600" role="alert">
@@ -373,9 +374,28 @@ const SinglePhotoContent = memo(() => {
               </div>
             </div>
 
-            {submitted ? (
-              <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700" role="status">
-                {t('singlePhoto.submitSuccess')}
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={copyrightOk}
+                onChange={(event) => {
+                  setCopyrightOk(event.target.checked);
+                  if (event.target.checked) {
+                    setErrors((current) => {
+                      const { copyright: _copyright, ...rest } = current;
+                      return rest;
+                    });
+                  }
+                }}
+                className="mt-1 size-[18px] shrink-0 rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+              />
+              <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+                {t('singlePhoto.copyrightConfirm')}
+              </span>
+            </label>
+            {errors.copyright ? (
+              <p className="-mt-3 text-sm text-red-600" role="alert">
+                {errors.copyright}
               </p>
             ) : null}
 
@@ -389,6 +409,8 @@ const SinglePhotoContent = memo(() => {
           </form>
         </aside>
       </div>
+
+      <PhotoSubmitSuccessModal open={successOpen} onClose={handleCloseSuccess} />
     </div>
   );
 });

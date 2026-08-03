@@ -818,10 +818,19 @@
     "storyPlaceholder": "Share the creative narrative behind this cosmological series...",
     "submit": "Submit your photos",
     "submitSuccess": "Your photo details are ready to submit.",
+    "copyrightConfirm": "I confirm that I own the full copyright for all uploaded photos and that they do not contain or promote anything illegal.",
+    "successModal": {
+      "title": "📷 Congratulations!",
+      "body": "Your photos have been uploaded and are now taking part in the voting competition. Good Luck!",
+      "goHome": "Go to Homepage",
+      "uploadAnother": "Upload Another Album",
+      "close": "Close"
+    },
     "errors": {
       "titleRequired": "Collection title is required.",
       "storyRequired": "Story / concept is required.",
-      "photoRequired": "Please add a photo."
+      "photoRequired": "Please add a photo.",
+      "copyrightRequired": "Please confirm copyright ownership."
     },
     "categories": {
       "astrophotography": "Astrophotography",

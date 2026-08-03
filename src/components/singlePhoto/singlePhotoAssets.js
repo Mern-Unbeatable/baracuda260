@@ -7,6 +7,10 @@ export const SINGLE_PHOTO_ASSETS = {
     virgo: `${A}/virgo.svg`,
     slot: `${A}/aries.svg`,
   },
+  modal: {
+    close: `${A}/modal-close.svg`,
+    check: `${A}/modal-check.svg`,
+  },
 };
 
 export const ARTISTIC_CATEGORIES = [
