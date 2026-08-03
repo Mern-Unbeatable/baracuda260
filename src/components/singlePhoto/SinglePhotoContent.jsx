@@ -13,11 +13,16 @@ import {
 
 const findSign = (id) => ZODIAC_SIGNS.find((sign) => sign.id === id) ?? ZODIAC_SIGNS[5];
 
-const ZodiacIcon = memo(({ sign, size = 35 }) => {
-  if (sign.icon) {
+const ZodiacIcon = memo(({ sign, size = 35, variant = 'default' }) => {
+  const src =
+    variant === 'slot' && sign.slotIcon
+      ? sign.slotIcon
+      : sign.icon;
+
+  if (src) {
     return (
       <img
-        src={sign.icon}
+        src={src}
         alt=""
         width={size}
         height={size}
@@ -29,8 +34,8 @@ const ZodiacIcon = memo(({ sign, size = 35 }) => {
 
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-center text-[#4048cd]"
-      style={{ width: size, height: size, fontSize: size * 0.72 }}
+      className="inline-flex shrink-0 items-center justify-center rounded bg-[#4048cd] font-semibold text-white"
+      style={{ width: size, height: size, fontSize: size * 0.55 }}
       aria-hidden="true"
     >
       {sign.symbol}
@@ -213,7 +218,7 @@ const SinglePhotoContent = memo(() => {
               </div>
 
               <div className="flex w-[149px] flex-col items-center gap-3">
-                <ZodiacIcon sign={selectedSign} />
+                <ZodiacIcon sign={selectedSign} variant="slot" />
                 <div className="flex w-full flex-col items-center gap-1 text-center">
                   <p className="w-full text-[20px] font-medium leading-6 text-[#1b1e56]">
                     {t(selectedSign.nameKey)}

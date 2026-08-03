@@ -4,8 +4,8 @@ const A = '/assets/single-photo';
 export const SINGLE_PHOTO_ASSETS = {
   wave: `${A}/wave.svg`,
   icons: {
-    virgo: `${A}/virgo.png`,
-    aries: `${A}/aries.png`,
+    virgo: `${A}/virgo.svg`,
+    slot: `${A}/aries.svg`,
   },
 };
 
@@ -26,7 +26,6 @@ export const ZODIAC_SIGNS = [
     nameKey: 'singlePhoto.signs.aries.name',
     rangeKey: 'singlePhoto.signs.aries.range',
     symbol: '♈',
-    icon: SINGLE_PHOTO_ASSETS.icons.aries,
   },
   {
     id: 'taurus',
@@ -68,6 +67,7 @@ export const ZODIAC_SIGNS = [
     rangeKey: 'singlePhoto.signs.virgo.range',
     symbol: '♍',
     icon: SINGLE_PHOTO_ASSETS.icons.virgo,
+    slotIcon: SINGLE_PHOTO_ASSETS.icons.slot,
   },
   {
     id: 'libra',
