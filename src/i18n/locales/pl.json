@@ -843,24 +843,24 @@
       "abstract": "Abstrakcja"
     },
     "elements": {
-      "fire": "Ogień",
-      "earth": "Ziemia",
-      "air": "Powietrze",
-      "water": "Woda"
+      "fire": "OGIEŃ",
+      "earth": "ZIEMIA",
+      "air": "POWIETRZE",
+      "water": "WODA"
     },
     "signs": {
-      "aries": { "name": "Baran", "range": "21 marca   -  20 kwietnia" },
-      "taurus": { "name": "Byk", "range": "21 kwietnia   -  20 maja" },
-      "gemini": { "name": "Bliźnięta", "range": "21 maja   -  20 czerwca" },
-      "cancer": { "name": "Rak", "range": "21 czerwca   -  22 lipca" },
-      "leo": { "name": "Lew", "range": "23 lipca   -  22 sierpnia" },
-      "virgo": { "name": "Panna", "range": "23 sierpnia   -  22 września" },
-      "libra": { "name": "Waga", "range": "23 września   -  22 października" },
-      "scorpio": { "name": "Skorpion", "range": "23 października   -  21 listopada" },
-      "sagittarius": { "name": "Strzelec", "range": "22 listopada   -  21 grudnia" },
-      "capricorn": { "name": "Koziorożec", "range": "22 grudnia   -  19 stycznia" },
-      "aquarius": { "name": "Wodnik", "range": "20 stycznia   -  18 lutego" },
-      "pisces": { "name": "Ryby", "range": "19 lutego   -  20 marca" }
+      "aries": { "name": "Baran", "range": "21 mar - 20 kwi" },
+      "taurus": { "name": "Byk", "range": "21 kwi - 20 maj" },
+      "gemini": { "name": "Bliźnięta", "range": "21 maj - 20 cze" },
+      "cancer": { "name": "Rak", "range": "21 cze - 22 lip" },
+      "leo": { "name": "Lew", "range": "23 lip - 22 sie" },
+      "virgo": { "name": "Panna", "range": "23 sie - 22 wrz" },
+      "libra": { "name": "Waga", "range": "23 wrz - 22 paź" },
+      "scorpio": { "name": "Skorpion", "range": "23 paź - 21 lis" },
+      "sagittarius": { "name": "Strzelec", "range": "22 lis - 21 gru" },
+      "capricorn": { "name": "Koziorożec", "range": "22 gru - 19 sty" },
+      "aquarius": { "name": "Wodnik", "range": "20 sty - 18 lut" },
+      "pisces": { "name": "Ryby", "range": "19 lut - 20 mar" }
     }
   },
   "singlePhoto": {

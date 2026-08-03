@@ -12,10 +12,28 @@ import {
   getThemeById,
   SIX_PHOTO_ASSETS,
   THEMES,
-  THEME_IDS,
 } from './sixPhotoAssets';
 
-const SlotIcon = memo(({ slot, accentClassName }) => {
+const SlotIcon = memo(({ slot }) => {
+  if (slot.iconBg && slot.iconOverlay) {
+    return (
+      <span className="relative size-[35px] shrink-0 overflow-hidden">
+        <img
+          src={slot.iconBg}
+          alt=""
+          width={35}
+          height={35}
+          className="absolute inset-0 size-[35px] object-contain"
+        />
+        <img
+          src={slot.iconOverlay}
+          alt=""
+          className="absolute left-1/2 top-1/2 max-h-[26px] max-w-[26px] -translate-x-1/2 -translate-y-1/2 object-contain"
+        />
+      </span>
+    );
+  }
+
   if (slot.icon) {
     return (
       <img
@@ -28,43 +46,40 @@ const SlotIcon = memo(({ slot, accentClassName }) => {
     );
   }
 
-  return (
-    <span
-      className={`inline-flex size-[35px] shrink-0 items-center justify-center text-[28px] leading-none ${accentClassName}`}
-      aria-hidden="true"
-    >
-      {slot.symbol}
-    </span>
-  );
+  return null;
 });
 
 SlotIcon.displayName = 'SlotIcon';
 
+/**
+ * Zodiac slot card — Figma 190:331 (red) / 190:872 (blue).
+ * Equal-height row; date band reserved so CTAs share one baseline.
+ */
 const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLabel, addLabel }) => {
   const { t } = useTranslation();
 
   return (
     <article
-      className={`flex w-full flex-col items-center gap-[27px] rounded-xl border bg-white p-5 ${themeStyles.cardBorder}`}
+      className={`flex h-full min-w-0 flex-col gap-[27px] rounded-[12px] border bg-white p-5 ${themeStyles.cardBorder}`}
     >
-      <div className="flex w-full flex-col items-center gap-5">
-        <div className="flex w-full items-center justify-between">
-          <p className={`text-[20px] font-semibold leading-6 ${themeStyles.number}`}>
+      <div className="flex w-full flex-1 flex-col items-center gap-5">
+        <div className="flex w-full items-center justify-between whitespace-nowrap">
+          <p className={`shrink-0 text-[20px] font-semibold leading-6 ${themeStyles.number}`}>
             #{slot.number}
           </p>
-          <p className="text-[16px] font-medium uppercase leading-6 text-[#3a3a3a]">
+          <p className="shrink-0 text-[16px] font-medium leading-6 text-[#3a3a3a]">
             {t(slot.elementKey)}
           </p>
         </div>
 
         <div className="flex w-full flex-col items-center gap-3">
-          <SlotIcon slot={slot} accentClassName={themeStyles.number} />
+          <SlotIcon slot={slot} />
           <div className="flex w-full flex-col items-center gap-1 text-center">
             <p className={`w-full text-[20px] font-medium leading-6 ${themeStyles.name}`}>
               {t(slot.nameKey)}
             </p>
             <p
-              className={`w-full whitespace-pre-wrap text-[14px] font-medium leading-6 sm:text-[16px] ${themeStyles.range}`}
+              className={`flex min-h-12 w-full items-start justify-center text-[16px] font-medium leading-6 ${themeStyles.range}`}
             >
               {t(slot.rangeKey)}
             </p>
@@ -73,8 +88,8 @@ const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLab
       </div>
 
       {preview ? (
-        <div className="relative w-full overflow-hidden rounded-lg border border-black/10">
-          <img src={preview} alt="" className="max-h-40 w-full object-cover" />
+        <div className="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10">
+          <img src={preview} alt="" className="h-24 w-full object-cover" />
           <button
             type="button"
             onClick={onAddPhoto}
@@ -87,10 +102,10 @@ const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLab
         <button
           type="button"
           onClick={onAddPhoto}
-          className={`inline-flex w-full items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/[0.02] ${themeStyles.buttonBorder} ${themeStyles.buttonText}`}
+          className={`mt-auto inline-flex w-full shrink-0 items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/[0.02] ${themeStyles.buttonBorder} ${themeStyles.buttonText}`}
         >
           <img
-            src={SIX_PHOTO_ASSETS.upload}
+            src={themeStyles.upload}
             alt=""
             width={24}
             height={24}
@@ -212,7 +227,7 @@ const SixPhotoContent = memo(() => {
             </h1>
           </div>
 
-          <div className="flex flex-col items-stretch gap-5 lg:flex-row lg:items-center">
+          <div className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-center lg:gap-6">
             {THEMES.map((item, index) => {
               const selected = item.id === themeId;
               const styles = selected ? item.selected : item.idle;
@@ -247,7 +262,7 @@ const SixPhotoContent = memo(() => {
                       </span>
                       {selected ? (
                         <img
-                          src={SIX_PHOTO_ASSETS.selectedDot}
+                          src={item.selectedDot}
                           alt=""
                           width={8}
                           height={8}
@@ -267,16 +282,11 @@ const SixPhotoContent = memo(() => {
           </div>
         </section>
 
-        <div
-          className={`relative h-[52px] w-full overflow-visible ${
-            themeId === THEME_IDS.AUTUMN ? '[filter:hue-rotate(220deg)_saturate(1.2)]' : ''
-          }`}
-          aria-hidden="true"
-        >
+        <div className={`relative w-full overflow-visible ${theme.waveClassName}`} aria-hidden="true">
           <img
-            src={SIX_PHOTO_ASSETS.wave}
+            src={theme.wave}
             alt=""
-            className="absolute inset-x-0 top-0 h-[52px] w-full object-fill"
+            className={`absolute inset-x-0 top-0 w-full object-fill ${theme.waveClassName}`}
           />
         </div>
 
@@ -290,7 +300,7 @@ const SixPhotoContent = memo(() => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid grid-cols-1 items-stretch gap-[14px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {slots.map((slot) => (
               <ZodiacSlotCard
                 key={slot.id}

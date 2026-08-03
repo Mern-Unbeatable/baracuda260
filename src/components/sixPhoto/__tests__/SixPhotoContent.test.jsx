@@ -66,7 +66,7 @@ describe('6 Photo page', () => {
     expect(screen.getByRole('button', { name: i18n.t('sixPhoto.submit') })).toBeInTheDocument();
   });
 
-  it('switches theme to autumn slots', async () => {
+  it('switches theme to autumn blue slots', async () => {
     const user = userEvent.setup();
     render(<SixPhotoContent />);
 
@@ -76,9 +76,19 @@ describe('6 Photo page', () => {
       'aria-pressed',
       'true',
     );
+    expect(screen.getByRole('button', { name: /Spring and Summer/i })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
     expect(screen.getByText('#7')).toBeInTheDocument();
+    expect(screen.getByText('#12')).toBeInTheDocument();
     expect(screen.getByText(i18n.t('sixPhoto.signs.libra.name'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('sixPhoto.signs.scorpio.name'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('sixPhoto.signs.sagittarius.name'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('sixPhoto.signs.capricorn.name'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('sixPhoto.signs.aquarius.name'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('sixPhoto.signs.pisces.name'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('sixPhoto.signs.libra.range'))).toBeInTheDocument();
     expect(screen.queryByText(i18n.t('sixPhoto.signs.aries.name'))).not.toBeInTheDocument();
   });
 
