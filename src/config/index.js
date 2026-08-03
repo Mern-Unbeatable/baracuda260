@@ -21,6 +21,7 @@ export const ROUTES = {
   TERMS: '/terms',
   COOKIES: '/cookies',
   LOGIN: '/login',
+  SIGNUP: '/signup',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_EMAILS: '/admin/emails',

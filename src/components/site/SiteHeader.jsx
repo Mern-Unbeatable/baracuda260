@@ -55,12 +55,12 @@ const SiteHeader = memo(({ activeHref }) => {
             >
               {t('header.logIn')}
             </AppLink>
-            <a
-              href="#"
+            <AppLink
+              href={ROUTES.SIGNUP}
               className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
             >
               {t('header.registerFree')}
-            </a>
+            </AppLink>
           </div>
         </div>
 
@@ -111,12 +111,13 @@ const SiteHeader = memo(({ activeHref }) => {
             >
               {t('header.logIn')}
             </AppLink>
-            <a
-              href="#"
+            <AppLink
+              href={ROUTES.SIGNUP}
+              onClick={() => setMenuOpen(false)}
               className="rounded-full bg-[#ee1c25] px-6 py-3 text-center text-sm font-medium text-white"
             >
               {t('header.registerFree')}
-            </a>
+            </AppLink>
           </div>
         </div>
       )}

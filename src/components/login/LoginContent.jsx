@@ -270,7 +270,7 @@ const LoginContent = memo(() => {
 
             <p className="text-center text-[16px] leading-6 text-[#494453]">
               <span>{t('login.noAccount')} </span>
-              <Link to={ROUTES.HOME} className="font-bold text-[#ee1c25]">
+              <Link to={ROUTES.SIGNUP} className="font-bold text-[#ee1c25]">
                 {t('login.createAccount')}
               </Link>
             </p>
