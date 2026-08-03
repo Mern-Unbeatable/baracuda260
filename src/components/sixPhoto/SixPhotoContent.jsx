@@ -341,7 +341,7 @@ const SixPhotoContent = memo(() => {
               onChange={(event) => setTitle(event.target.value)}
               placeholder={t('sixPhoto.collectionTitlePlaceholder')}
               aria-invalid={Boolean(errors.title)}
-              className="w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              className="w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
             />
             {errors.title ? (
               <p className="text-sm text-red-600" role="alert">
@@ -411,7 +411,7 @@ const SixPhotoContent = memo(() => {
               placeholder={t('sixPhoto.storyPlaceholder')}
               rows={5}
               aria-invalid={Boolean(errors.story)}
-              className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
             />
             {errors.story ? (
               <p className="text-sm text-red-600" role="alert">
