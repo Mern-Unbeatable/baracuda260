@@ -976,7 +976,7 @@
     "categoryFilterAria": "Filter by category",
     "submissionsAria": "Competition submissions",
     "share": "Share submission",
-    "viewDetails": "View\nDetails",
+    "viewDetails": "View Details",
     "empty": "No submissions match these filters.",
     "showing": "Showing {{count}} of {{total}} submissions",
     "paginationAria": "Submissions pagination",

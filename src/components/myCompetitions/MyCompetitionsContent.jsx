@@ -219,7 +219,7 @@ const SubmissionCard = memo(({ item }) => {
             type="button"
             className="inline-flex cursor-pointer items-center gap-3 text-[16px] leading-6 text-[#532aa8] transition hover:text-[#4048cd]"
           >
-            <span className="whitespace-pre-line text-center">
+            <span className="whitespace-nowrap">
               {t('myCompetitions.viewDetails')}
             </span>
             <img
