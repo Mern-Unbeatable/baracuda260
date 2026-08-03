@@ -123,7 +123,7 @@ const SinglePhotoContent = memo(() => {
             <div className="flex flex-col gap-[34px]">
               <Link
                 to={ROUTES.ADMIN_UPLOAD_PHOTOS}
-                className="inline-flex w-fit items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
+                className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
               >
                 <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
                 {t('singlePhoto.backToSelection')}
@@ -142,7 +142,7 @@ const SinglePhotoContent = memo(() => {
                       setSignOpen((open) => !open);
                       setCategoryOpen(false);
                     }}
-                    className="flex w-full items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-[14px] text-left"
+                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-[14px] text-left"
                   >
                     <span className="flex min-w-0 items-center gap-1.5">
                       <ZodiacIcon sign={selectedSign} />
@@ -172,7 +172,7 @@ const SinglePhotoContent = memo(() => {
                               setSignId(sign.id);
                               setSignOpen(false);
                             }}
-                            className={`flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[15px] transition hover:bg-[#ecedfa] ${
+                            className={`flex w-full cursor-pointer items-center gap-2 px-3.5 py-2.5 text-left text-[15px] transition hover:bg-[#ecedfa] ${
                               sign.id === signId ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#1b1b1b]'
                             }`}
                           >
@@ -237,7 +237,7 @@ const SinglePhotoContent = memo(() => {
                 <button
                   type="button"
                   onClick={handlePickPhoto}
-                  className="absolute bottom-3 right-3 rounded-lg bg-white/95 px-3 py-1.5 text-sm font-medium text-[#4048cd] shadow"
+                  className="absolute bottom-3 right-3 cursor-pointer rounded-lg bg-white/95 px-3 py-1.5 text-sm font-medium text-[#4048cd] shadow"
                 >
                   {t('singlePhoto.changePhoto')}
                 </button>
@@ -246,7 +246,7 @@ const SinglePhotoContent = memo(() => {
               <button
                 type="button"
                 onClick={handlePickPhoto}
-                className="inline-flex w-full items-center justify-center gap-2.5 rounded-lg border border-[#4048cd] bg-white px-6 py-3 text-[16px] font-medium leading-6 text-[#4048cd] transition hover:bg-[#ecedfa]"
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border border-[#4048cd] bg-white px-6 py-3 text-[16px] font-medium leading-6 text-[#4048cd] transition hover:bg-[#ecedfa]"
               >
                 <ArrowUpFromLine size={24} aria-hidden="true" />
                 {t('singlePhoto.addPhoto')}
@@ -312,7 +312,7 @@ const SinglePhotoContent = memo(() => {
                     setCategoryOpen((open) => !open);
                     setSignOpen(false);
                   }}
-                  className="flex w-full items-center justify-between rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-left"
+                  className="flex w-full cursor-pointer items-center justify-between rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-left"
                 >
                   <span className="text-[16px] leading-6 text-[#707070]">
                     {t(`singlePhoto.categories.${category}`)}
@@ -338,7 +338,7 @@ const SinglePhotoContent = memo(() => {
                             setCategory(item);
                             setCategoryOpen(false);
                           }}
-                          className={`w-full px-[17px] py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
+                          className={`w-full cursor-pointer px-[17px] py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
                             item === category ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#494453]'
                           }`}
                         >
@@ -387,7 +387,7 @@ const SinglePhotoContent = memo(() => {
                     });
                   }
                 }}
-                className="mt-1 size-[18px] shrink-0 rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+                className="mt-1 size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
               />
               <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
                 {t('singlePhoto.copyrightConfirm')}
@@ -401,7 +401,7 @@ const SinglePhotoContent = memo(() => {
 
             <button
               type="submit"
-              className="inline-flex w-full items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
+              className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
             >
               <Sparkles size={24} aria-hidden="true" />
               {t('singlePhoto.submit')}

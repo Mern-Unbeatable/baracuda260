@@ -6,7 +6,7 @@ import { ROUTES } from '../../config';
 import { SINGLE_PHOTO_ASSETS } from './singlePhotoAssets';
 
 /**
- * Post-submit success modal — Figma nodes 338:574 (Single) / 367:884 (6 Photo).
+ * Post-submit success modal — Figma 338:574 (Single) / 367:884 (6 Photo) / 367:965 (12 Zodiac).
  * Backdrop blur 6px; card 672×409, radius 24; CTAs red #ee1c25 + blue #4048cd.
  */
 const PhotoSubmitSuccessModal = memo(({ open, onClose }) => {
@@ -50,7 +50,7 @@ const PhotoSubmitSuccessModal = memo(({ open, onClose }) => {
           type="button"
           onClick={onClose}
           aria-label={t('singlePhoto.successModal.close')}
-          className="absolute right-4 top-4 inline-flex items-center justify-center rounded-full p-2 transition hover:bg-black/5 sm:right-6 sm:top-6"
+          className="absolute right-4 top-4 inline-flex cursor-pointer items-center justify-center rounded-full p-2 transition hover:bg-black/5 sm:right-6 sm:top-6"
         >
           <img
             src={SINGLE_PHOTO_ASSETS.modal.close}
@@ -92,13 +92,13 @@ const PhotoSubmitSuccessModal = memo(({ open, onClose }) => {
         <div className="flex w-full flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-start sm:justify-center">
           <Link
             to={ROUTES.HOME}
-            className="inline-flex items-center justify-center rounded-lg bg-[#ee1c25] px-8 py-[17px] text-center text-[16px] font-normal leading-6 text-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
+            className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-[#ee1c25] px-8 py-[17px] text-center text-[16px] font-normal leading-6 text-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
           >
             {t('singlePhoto.successModal.goHome')}
           </Link>
           <Link
             to={ROUTES.ADMIN_UPLOAD_PHOTOS}
-            className="inline-flex items-center justify-center rounded-lg border border-[#e5e7eb] bg-[#4048cd] px-8 py-[17px] text-center text-[16px] font-normal leading-6 text-white transition hover:bg-[#363db5]"
+            className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#e5e7eb] bg-[#4048cd] px-8 py-[17px] text-center text-[16px] font-normal leading-6 text-white transition hover:bg-[#363db5]"
           >
             {t('singlePhoto.successModal.uploadAnother')}
           </Link>

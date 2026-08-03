@@ -18,7 +18,7 @@ const UploadTierCard = memo(({ tier }) => {
           : null;
 
   const ctaClassName =
-    'mt-8 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white transition hover:bg-[#d41921]';
+    'mt-8 inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white transition hover:bg-[#d41921]';
 
   return (
     <article

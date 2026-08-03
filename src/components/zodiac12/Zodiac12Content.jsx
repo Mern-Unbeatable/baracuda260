@@ -89,7 +89,7 @@ const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel 
           <button
             type="button"
             onClick={onAddPhoto}
-            className="absolute bottom-2 right-2 rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#ee1c25] shadow"
+            className="absolute bottom-2 right-2 cursor-pointer rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#ee1c25] shadow"
           >
             {changeLabel}
           </button>
@@ -98,7 +98,7 @@ const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel 
         <button
           type="button"
           onClick={onAddPhoto}
-          className={`mt-auto inline-flex w-full shrink-0 items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/[0.02] ${theme.buttonBorder} ${theme.buttonText}`}
+          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/[0.02] ${theme.buttonBorder} ${theme.buttonText}`}
         >
           <img
             src={theme.upload}
@@ -205,7 +205,7 @@ const Zodiac12Content = memo(() => {
     <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
       <Link
         to={ROUTES.ADMIN_UPLOAD_PHOTOS}
-        className="inline-flex w-fit items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
+        className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
       >
         <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
         {t('zodiac12.backToSelection')}
@@ -304,7 +304,7 @@ const Zodiac12Content = memo(() => {
               aria-expanded={categoryOpen}
               aria-haspopup="listbox"
               onClick={() => setCategoryOpen((open) => !open)}
-              className="flex w-full items-center justify-between rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-left"
+              className="flex w-full cursor-pointer items-center justify-between rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-left"
             >
               <span className="text-[16px] leading-6 text-[#707070]">
                 {t(`zodiac12.categories.${category}`)}
@@ -330,7 +330,7 @@ const Zodiac12Content = memo(() => {
                         setCategory(item);
                         setCategoryOpen(false);
                       }}
-                      className={`w-full px-[17px] py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
+                      className={`w-full cursor-pointer px-[17px] py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
                         item === category ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#494453]'
                       }`}
                     >
@@ -379,7 +379,7 @@ const Zodiac12Content = memo(() => {
                 });
               }
             }}
-            className="mt-1 size-[18px] shrink-0 rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+            className="mt-1 size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
           />
           <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
             {t('zodiac12.copyrightConfirm')}
@@ -393,7 +393,7 @@ const Zodiac12Content = memo(() => {
 
         <button
           type="submit"
-          className="inline-flex w-full items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
+          className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
         >
           <img
             src={ZODIAC12_ASSETS.sparkles}

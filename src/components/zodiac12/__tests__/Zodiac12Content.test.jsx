@@ -96,4 +96,43 @@ describe('12 Photo Zodiac Album page', () => {
     expect(screen.getByText(i18n.t('zodiac12.errors.copyrightRequired'))).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('opens the same success popup after a valid submit', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Zodiac12Content />);
+
+    await user.type(
+      screen.getByLabelText(i18n.t('zodiac12.collectionTitle')),
+      'Full Zodiac Story',
+    );
+    await user.type(
+      screen.getByLabelText(i18n.t('zodiac12.storyLabel')),
+      'A complete red and blue zodiac series.',
+    );
+    await user.click(screen.getByText(i18n.t('zodiac12.copyrightConfirm')));
+
+    const fileInput = container.querySelector('input[type="file"]');
+    for (let index = 0; index < 12; index += 1) {
+      const addButton = screen.getAllByRole('button', { name: i18n.t('zodiac12.addPhoto') })[0];
+      await user.click(addButton);
+      await user.upload(fileInput, new File(['photo'], `slot-${index}.png`, { type: 'image/png' }));
+    }
+
+    await user.click(screen.getByRole('button', { name: i18n.t('zodiac12.submit') }));
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: i18n.t('singlePhoto.successModal.title'),
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('singlePhoto.successModal.body'))).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: i18n.t('singlePhoto.successModal.goHome') }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: i18n.t('singlePhoto.successModal.uploadAnother') }),
+    ).toBeInTheDocument();
+  });
 });
