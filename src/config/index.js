@@ -29,6 +29,7 @@ export const ROUTES = {
   ADMIN_UPLOAD_SIX: '/admin/upload-photos/six',
   ADMIN_UPLOAD_ZODIAC12: '/admin/upload-photos/zodiac',
   ADMIN_MY_COMPETITIONS: '/admin/my-competitions',
+  ADMIN_MY_COMPETITION_DETAIL: '/admin/my-competitions/:id',
   ADMIN_BUSINESS_PHOTOS: '/admin/business-link-photos',
   ADMIN_CHAT: '/admin/chat',
   ADMIN_PRIZE_PAYMENTS: '/admin/prize-payments',

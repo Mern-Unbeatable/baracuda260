@@ -1044,5 +1044,41 @@
         "submitted": "Wysłano dziś,\n08:45"
       }
     }
+  },
+  "competitionDetails": {
+    "back": "Powrót do Moich konkursów",
+    "slidesAria": "Slajdy historii zdjęć",
+    "rankingsAria": "Ranking globalny",
+    "rankingsTitle": "Ranking globalny",
+    "title": "Minimalistyczna monochromia",
+    "description": "Młody mężczyzna pewnie idący spokojną ulicą miasta o złotej godzinie, w casualowej białej koszulce, czarnych jeansach i czystych białych sneakersach. Ręce ma swobodnie opuszczone, naturalną postawę i spokojny wyraz twarzy. Miękkie światło tworzy ciepłe refleksy i długie cienie na chodniku. Nowoczesne budynki, zielone drzewa i lekko rozmazane tło miejskie dodają głębi. Ujęte w cinematicznym, fotorealistycznym stylu z płytką głębią ostrości, ultra-realistyczne, wysoka szczegółowość, jakość 8K.",
+    "metrics": {
+      "votes": "GŁOSY",
+      "position": "Pozycja"
+    },
+    "table": {
+      "rank": "RANGA",
+      "photographer": "FOTOGRAF",
+      "wins": "WYGRANE KONKURSY",
+      "votes": "ŁĄCZNE GŁOSY"
+    },
+    "showing": "Wyświetlanie top {{count}} z {{total}} fotografów",
+    "prevPage": "Poprzednia strona rankingu",
+    "nextPage": "Następna strona rankingu",
+    "signs": {
+      "aries": "Baran",
+      "taurus": "Byk",
+      "gemini": "Bliźnięta",
+      "cancer": "Rak",
+      "leo": "Lew",
+      "virgo": "Panna"
+    },
+    "rankings": {
+      "alessandro": "Alessandro Vieri",
+      "elena": "Elena Soros",
+      "sarah": "Sarah Jenkins",
+      "julian": "Julian Thorne",
+      "marcus": "Marcus Chen"
+    }
   }
 }

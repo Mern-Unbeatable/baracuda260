@@ -215,8 +215,8 @@ const SubmissionCard = memo(({ item }) => {
           <p className="whitespace-pre-line text-[12px] font-medium leading-4 tracking-[0.6px] text-[#494453]">
             {t(item.submittedKey)}
           </p>
-          <button
-            type="button"
+          <Link
+            to={`/admin/my-competitions/${item.id}`}
             className="inline-flex cursor-pointer items-center gap-3 text-[16px] leading-6 text-[#532aa8] transition hover:text-[#4048cd]"
           >
             <span className="whitespace-nowrap">
@@ -229,7 +229,7 @@ const SubmissionCard = memo(({ item }) => {
               height={11}
               className="size-[11px] shrink-0 object-contain"
             />
-          </button>
+          </Link>
         </div>
       </div>
     </article>
