@@ -35,4 +35,11 @@ describe('i18n', () => {
     expect(enTerms).toHaveLength(11);
     expect(enCookies).toHaveLength(9);
   });
+
+  it('provides login strings in English and Polish', () => {
+    expect(i18n.t('login.welcome', { lng: 'en' })).toBe('Welcome back');
+    expect(i18n.t('login.welcome', { lng: 'pl' })).toBe('Witamy z powrotem');
+    expect(i18n.t('login.submit', { lng: 'en' })).toBe('Log in');
+    expect(i18n.t('login.submit', { lng: 'pl' })).toBe('Zaloguj się');
+  });
 });

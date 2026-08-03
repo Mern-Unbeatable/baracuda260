@@ -645,5 +645,27 @@
         ]
       }
     ]
+  },
+  "login": {
+    "brandTitle": "My 12Photos",
+    "brandTagline": "CAPTURE.",
+    "welcome": "Welcome back",
+    "subtitle": "Log in to take part in competitions and showcase your work",
+    "email": "Email address",
+    "emailPlaceholder": "name@example.com",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me for 30 days",
+    "submit": "Log in",
+    "submitting": "Signing in…",
+    "or": "OR",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create Account",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Please enter a valid email address.",
+    "passwordRequired": "Password is required.",
+    "invalidCredentials": "Invalid email or password."
   }
 }

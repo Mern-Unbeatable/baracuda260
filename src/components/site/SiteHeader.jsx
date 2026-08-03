@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SITE_NAV_LINKS } from '../../config';
+import { ROUTES, SITE_NAV_LINKS } from '../../config';
 import { SITE_ASSETS } from './siteAssets';
 import AppLink from './AppLink';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -49,12 +49,12 @@ const SiteHeader = memo(({ activeHref }) => {
         <div className="hidden items-center gap-4 xl:flex">
           <LanguageSwitcher />
           <div className="flex items-center gap-4">
-            <a
-              href="#"
+            <AppLink
+              href={ROUTES.LOGIN}
               className="rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
             >
               {t('header.logIn')}
-            </a>
+            </AppLink>
             <a
               href="#"
               className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
@@ -104,12 +104,13 @@ const SiteHeader = memo(({ activeHref }) => {
           </nav>
           <div className="mt-4 flex flex-col gap-2 border-t border-black/5 pt-4">
             <LanguageSwitcher className="w-full [&_button]:w-full [&_button]:justify-between" />
-            <a
-              href="#"
+            <AppLink
+              href={ROUTES.LOGIN}
+              onClick={() => setMenuOpen(false)}
               className="rounded-full bg-[#4048cd] px-6 py-3 text-center text-sm font-medium text-white"
             >
               {t('header.logIn')}
-            </a>
+            </AppLink>
             <a
               href="#"
               className="rounded-full bg-[#ee1c25] px-6 py-3 text-center text-sm font-medium text-white"
