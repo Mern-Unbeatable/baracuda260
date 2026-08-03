@@ -766,5 +766,42 @@
         }
       }
     }
+  },
+  "uploadPhotos": {
+    "title": "Creative Upload Hub",
+    "subtitle": "Select the competition tier you want to upload into. Each format offers a unique way to showcase your photographic vision.",
+    "tiersAria": "Competition upload tiers",
+    "mostPopular": "MOST POPULAR",
+    "prizeMoney": "/prize money",
+    "enterNow": "Enter Now",
+    "tiers": {
+      "single": {
+        "title": "Single Photo",
+        "description": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story — judged by the community.",
+        "features": {
+          "0": "Monthly competition",
+          "1": "Public community voting",
+          "2": "Top 3 win cash prizes"
+        }
+      },
+      "story6": {
+        "title": "6-Photo Story",
+        "description": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
+        "features": {
+          "0": "Sequential storytelling",
+          "1": "Community votes",
+          "2": "Best story wins"
+        }
+      },
+      "zodiac12": {
+        "title": "12 photos - full Zodiac Story",
+        "description": "Create a complete zodiac-themed visual journey across twelve stunning images — our grandest format.",
+        "features": {
+          "0": "12-sign visual arc",
+          "1": "Zodiac-order display",
+          "2": "Grand prize category"
+        }
+      }
+    }
   }
 }

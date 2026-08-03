@@ -766,5 +766,42 @@
         }
       }
     }
+  },
+  "uploadPhotos": {
+    "title": "Centrum kreatywnego przesyłania",
+    "subtitle": "Wybierz poziom konkursu, do którego chcesz przesłać zdjęcia. Każdy format daje inny sposób na pokazanie Twojej wizji fotograficznej.",
+    "tiersAria": "Poziomy przesyłania do konkursów",
+    "mostPopular": "NAJPOPULARNIEJSZE",
+    "prizeMoney": "/pula nagród",
+    "enterNow": "Dołącz teraz",
+    "tiers": {
+      "single": {
+        "title": "Pojedyncze zdjęcie",
+        "description": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia — oceniane przez społeczność.",
+        "features": {
+          "0": "Konkurs miesięczny",
+          "1": "Publiczne głosowanie społeczności",
+          "2": "Top 3 wygrywa nagrody pieniężne"
+        }
+      },
+      "story6": {
+        "title": "Historia 6 zdjęć",
+        "description": "Stwórz wizualną narrację z sześciu starannie ułożonych zdjęć, które prowadzą widza przez historię.",
+        "features": {
+          "0": "Opowiadanie sekwencyjne",
+          "1": "Głosy społeczności",
+          "2": "Wygrywa najlepsza historia"
+        }
+      },
+      "zodiac12": {
+        "title": "12 zdjęć - pełna historia zodiaku",
+        "description": "Stwórz kompletną wizualną podróż z motywem zodiaku w dwunastu zdjęciach — nasz największy format.",
+        "features": {
+          "0": "Łuk wizualny 12 znaków",
+          "1": "Wyświetlanie w kolejności zodiaku",
+          "2": "Kategoria nagrody głównej"
+        }
+      }
+    }
   }
 }

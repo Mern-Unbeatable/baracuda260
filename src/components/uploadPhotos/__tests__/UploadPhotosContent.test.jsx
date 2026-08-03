@@ -1,0 +1,52 @@
+import React from 'react';
+import { act, render, screen } from '@testing-library/react';
+import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
+import UploadPhotosContent from '../UploadPhotosContent';
+
+describe('Upload Photos page', () => {
+  afterEach(async () => {
+    localStorage.removeItem(LOCALE_STORAGE_KEY);
+    await act(async () => {
+      await changeAppLanguage(DEFAULT_LOCALE);
+    });
+  });
+
+  it('renders English title, tiers, and CTAs', () => {
+    render(<UploadPhotosContent />);
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: i18n.t('uploadPhotos.title') }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('uploadPhotos.subtitle'))).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('uploadPhotos.tiers.single.title') }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('uploadPhotos.tiers.story6.title') }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('uploadPhotos.tiers.zodiac12.title') }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('uploadPhotos.mostPopular'))).toBeInTheDocument();
+    expect(screen.getByText('$1500.00')).toBeInTheDocument();
+    expect(screen.getByText('$2500.00')).toBeInTheDocument();
+    expect(screen.getByText('$3500.00')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: i18n.t('uploadPhotos.enterNow') })).toHaveLength(3);
+  });
+
+  it('switches copy to Polish', async () => {
+    render(<UploadPhotosContent />);
+
+    await act(async () => {
+      await changeAppLanguage('pl');
+    });
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Centrum kreatywnego przesyłania' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('NAJPOPULARNIEJSZE')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Pojedyncze zdjęcie' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Historia 6 zdjęć' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Dołącz teraz' })).toHaveLength(3);
+  });
+});
