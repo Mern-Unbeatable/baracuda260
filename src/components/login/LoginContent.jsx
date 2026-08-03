@@ -6,7 +6,7 @@ import { loginSuccess } from '../../store/slices/authSlice';
 import { ROUTES } from '../../config';
 import { httpMethods } from '../../services/httpMethods';
 import { API_ENDPOINTS } from '../../services/httpEndpoint';
-import { LanguageSwitcher } from '../site';
+import AuthPageChrome from '../auth/AuthPageChrome';
 import { EMAIL_REGEX, LOGIN_ASSETS } from './loginAssets';
 
 /**
@@ -83,41 +83,50 @@ const LoginContent = memo(() => {
   };
 
   return (
-    <div className="login-page-root relative min-h-dvh w-full overflow-x-hidden bg-[#b2e3f0] lg:bg-white">
-      <div className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6">
-        <LanguageSwitcher />
-      </div>
+    <div className="login-page-root relative min-h-dvh w-full overflow-x-hidden bg-white">
+      <AuthPageChrome backLabelKey="login.backHome" />
 
-      <div className="grid min-h-dvh w-full lg:grid-cols-2">
-        {/* Visual panel */}
-        <aside className="relative block min-h-[220px] overflow-hidden sm:min-h-[360px] lg:min-h-dvh">
+      <div className="grid min-h-dvh w-full grid-cols-1 lg:grid-cols-2">
+        {/* Visual panel — stacked banner on mobile/tablet, full-height column on laptop+ */}
+        <aside className="relative h-[220px] overflow-hidden sm:h-[300px] md:h-[360px] lg:h-auto lg:min-h-dvh">
           <img
             src={LOGIN_ASSETS.hero}
             alt=""
             width={724}
             height={1024}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent p-6 pb-10 sm:p-8 lg:pb-[52px] lg:pl-[46px]">
-            <div className="max-w-[448px] rounded-2xl px-4 py-2 backdrop-blur-[2px]">
-              <h1 className="text-[32px] font-bold leading-[1.15] tracking-[-0.96px] text-white sm:text-[40px] lg:text-[48px] lg:leading-[56px]">
+          {/* Mobile/tablet: brand top-left under chrome; desktop: bottom-left */}
+          <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/50 via-black/15 to-transparent px-4 pb-8 pt-16 sm:px-6 sm:pt-[4.5rem] lg:hidden">
+            <div className="max-w-[280px]">
+              <p className="text-[28px] font-bold leading-tight tracking-[-0.5px] text-white sm:text-[36px]">
+                {t('login.brandTitle')}
+              </p>
+              <p className="mt-1 text-[12px] font-normal uppercase tracking-[1.8px] text-white/90 sm:text-[14px]">
+                {t('login.brandTagline')}
+              </p>
+            </div>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-black/55 via-black/20 to-transparent p-8 pb-[52px] pl-[46px] lg:block">
+            <div className="max-w-[448px] rounded-2xl px-4 py-2">
+              <h1 className="text-[48px] font-bold leading-[56px] tracking-[-0.96px] text-white">
                 {t('login.brandTitle')}
               </h1>
-              <p className="mt-2 text-[14px] font-normal uppercase tracking-[1.8px] text-white/90 sm:text-[16px] lg:text-[18px] lg:leading-7">
+              <p className="mt-2 text-[18px] font-normal uppercase leading-7 tracking-[1.8px] text-white/90">
                 {t('login.brandTagline')}
               </p>
             </div>
           </div>
         </aside>
 
-        {/* Form panel */}
-        <section className="relative flex min-h-dvh items-center justify-center bg-white px-4 py-16 shadow-[-7px_0_11.4px_rgba(0,0,0,0.25)] sm:px-8 lg:py-12">
-          <div className="w-full max-w-[480px] rounded-xl bg-white p-6 sm:p-10 lg:p-12">
-            <header className="mb-10 flex flex-col items-center gap-2 text-center sm:mb-12">
-              <h2 className="pt-2 text-[26px] font-semibold leading-[38px] tracking-[-0.3px] text-[#161c27] sm:text-[30px]">
+        {/* Form panel — natural height on mobile; centered full column on laptop+ */}
+        <section className="relative flex w-full items-start justify-center bg-white px-4 py-8 shadow-none sm:px-8 sm:py-10 md:px-10 lg:min-h-dvh lg:items-center lg:py-12 lg:shadow-[-7px_0_11.4px_rgba(0,0,0,0.25)]">
+          <div className="w-full max-w-[480px] bg-white px-0 py-2 sm:px-2 lg:p-4">
+            <header className="mb-8 flex flex-col items-center gap-2 text-center sm:mb-10">
+              <h2 className="text-[26px] font-semibold leading-[1.25] tracking-[-0.3px] text-[#161c27] sm:text-[30px]">
                 {t('login.welcome')}
               </h2>
-              <p className="whitespace-nowrap text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+              <p className="max-w-[22rem] text-pretty text-[15px] leading-6 text-[#494453] sm:max-w-[26rem] sm:text-[16px]">
                 {t('login.subtitle')}
               </p>
             </header>
@@ -131,7 +140,7 @@ const LoginContent = memo(() => {
               </div>
             ) : null}
 
-            <form onSubmit={handleLogin} noValidate className="flex flex-col gap-6">
+            <form onSubmit={handleLogin} noValidate className="flex flex-col gap-5 sm:gap-6">
               <div>
                 <label
                   htmlFor="login-email"
@@ -158,7 +167,7 @@ const LoginContent = memo(() => {
                     placeholder={t('login.emailPlaceholder')}
                     aria-invalid={Boolean(errors.email)}
                     aria-describedby={errors.email ? 'login-email-error' : undefined}
-                    className={`w-full rounded-lg border bg-white py-[18px] pl-[49px] pr-4 text-[16px] text-[#161c27] placeholder:text-[#6b7280] outline-none transition focus:border-[#ee1c25] focus:ring-2 focus:ring-[#ee1c25]/20 ${
+                    className={`w-full rounded-lg border bg-white py-[16px] pl-[49px] pr-4 text-[16px] text-[#161c27] placeholder:text-[#6b7280] outline-none transition focus:border-[#ee1c25] focus:ring-2 focus:ring-[#ee1c25]/20 sm:py-[18px] ${
                       errors.email ? 'border-red-400' : 'border-[#cbc3d5]'
                     }`}
                   />
@@ -178,7 +187,7 @@ const LoginContent = memo(() => {
                   >
                     {t('login.password')}
                   </label>
-                  <button type="button" className="shrink-0 text-[16px] leading-6 text-[#ee1c25]">
+                  <button type="button" className="shrink-0 text-[15px] leading-6 text-[#ee1c25] sm:text-[16px]">
                     {t('login.forgotPassword')}
                   </button>
                 </div>
@@ -201,7 +210,7 @@ const LoginContent = memo(() => {
                     placeholder="••••••••"
                     aria-invalid={Boolean(errors.password)}
                     aria-describedby={errors.password ? 'login-password-error' : undefined}
-                    className={`w-full rounded-lg border bg-white py-[18px] pl-[49px] pr-12 text-[16px] text-[#161c27] placeholder:text-[#6b7280] outline-none transition focus:border-[#ee1c25] focus:ring-2 focus:ring-[#ee1c25]/20 ${
+                    className={`w-full rounded-lg border bg-white py-[16px] pl-[49px] pr-12 text-[16px] text-[#161c27] placeholder:text-[#6b7280] outline-none transition focus:border-[#ee1c25] focus:ring-2 focus:ring-[#ee1c25]/20 sm:py-[18px] ${
                       errors.password ? 'border-red-400' : 'border-[#cbc3d5]'
                     }`}
                   />
@@ -240,7 +249,7 @@ const LoginContent = memo(() => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#ee1c25] py-4 text-[14px] font-semibold tracking-[0.28px] text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#ee1c25] py-3.5 text-[14px] font-semibold tracking-[0.28px] text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60 sm:py-4"
               >
                 {isLoading ? (
                   <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -260,7 +269,7 @@ const LoginContent = memo(() => {
               </button>
             </form>
 
-            <div className="my-10 flex w-full items-center">
+            <div className="my-8 flex w-full items-center sm:my-10">
               <div className="h-px flex-1 border-t border-[#cbc3d5]" />
               <span className="px-4 text-[16px] uppercase tracking-[1.6px] text-[#7a7484]">
                 {t('login.or')}
@@ -268,7 +277,7 @@ const LoginContent = memo(() => {
               <div className="h-px flex-1 border-t border-[#cbc3d5]" />
             </div>
 
-            <p className="text-center text-[16px] leading-6 text-[#494453]">
+            <p className="pb-4 text-center text-[16px] leading-6 text-[#494453]">
               <span>{t('login.noAccount')} </span>
               <Link to={ROUTES.SIGNUP} className="font-bold text-[#ee1c25]">
                 {t('login.createAccount')}

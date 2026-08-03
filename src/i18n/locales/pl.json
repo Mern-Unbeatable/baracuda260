@@ -650,7 +650,8 @@
     "brandTitle": "Moje 12Zdjęć",
     "brandTagline": "SCHWYTAĆ.",
     "welcome": "Witamy z powrotem",
-    "subtitle": "Zaloguj się, aby wziąć udział w konkursach i zaprezentować swoje prace",
+    "subtitle": "Zaloguj się, aby dołączyć do konkursów i zaprezentować swoją fotografię",
+    "backHome": "Wróć do strony głównej",
     "email": "Adres e-mail",
     "emailPlaceholder": "nazwa@przykład.com",
     "password": "Hasło",
@@ -671,6 +672,7 @@
   "signup": {
     "brandTitle": "My12Photos",
     "brandTagline": "UCHWYĆ. RYWALIZUJ. ŚWIĘTUJ.",
+    "backHome": "Wróć do strony głównej",
     "title": "Stwórz swoje konto",
     "fullName": "Imię i nazwisko",
     "fullNamePlaceholder": "Wpisz imię i nazwisko",

@@ -649,8 +649,9 @@
   "login": {
     "brandTitle": "My 12Photos",
     "brandTagline": "CAPTURE.",
-    "welcome": "Welcome back",
-    "subtitle": "Log in to take part in competitions and showcase your work",
+    "welcome": "Welcome Back",
+    "subtitle": "Sign in to join competitions and showcase your photography",
+    "backHome": "Back to home",
     "email": "Email address",
     "emailPlaceholder": "name@example.com",
     "password": "Password",
@@ -671,6 +672,7 @@
   "signup": {
     "brandTitle": "My12Photos",
     "brandTagline": "CAPTURE. COMPETE. CELEBRATE.",
+    "backHome": "Back to home",
     "title": "Create your Account",
     "fullName": "Full Name",
     "fullNamePlaceholder": "Enter your full name",

@@ -12,8 +12,13 @@ jest.mock('../../site', () => ({
 }));
 
 jest.mock('react-router-dom', () => ({
-  Link: ({ children, to, className }) => (
-    <span role="link" data-to={typeof to === 'string' ? to : ''} className={className}>
+  Link: ({ children, to, className, 'aria-label': ariaLabel }) => (
+    <span
+      role="link"
+      data-to={typeof to === 'string' ? to : ''}
+      className={className}
+      aria-label={ariaLabel}
+    >
       {children}
     </span>
   ),
@@ -42,6 +47,8 @@ describe('Login page', () => {
     renderLogin();
 
     expect(screen.getByRole('heading', { level: 2, name: i18n.t('login.welcome') })).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('login.subtitle'))).toBeInTheDocument();
+    expect(screen.getByLabelText(i18n.t('login.backHome'))).toBeInTheDocument();
     expect(screen.getByLabelText(i18n.t('login.email'))).toBeInTheDocument();
     expect(screen.getByLabelText(i18n.t('login.password'))).toBeInTheDocument();
     expect(screen.getByRole('button', { name: i18n.t('login.submit') })).toBeInTheDocument();
