@@ -803,5 +803,52 @@
         }
       }
     }
+  },
+  "singlePhoto": {
+    "backToSelection": "Wróć do wyboru",
+    "selectSign": "Wybierz znak zodiaku",
+    "slotsTitle": "Siatka slotów zdjęć zodiaku",
+    "slotsSubtitle": "Kliknij dowolny slot, aby przypisać lub przesłać reprezentatywne zdjęcie.",
+    "addPhoto": "Dodaj zdjęcie",
+    "changePhoto": "Zmień zdjęcie",
+    "collectionTitle": "Tytuł kolekcji",
+    "collectionTitlePlaceholder": "np. Niebiańskie archetypy ognia",
+    "artisticCategory": "Kategoria artystyczna",
+    "storyLabel": "Historia / koncepcja / dziennik twórczy",
+    "storyPlaceholder": "Podziel się narracją twórczą stojącą za tą kosmologiczną serią...",
+    "submit": "Prześlij swoje zdjęcia",
+    "submitSuccess": "Szczegóły zdjęcia są gotowe do przesłania.",
+    "errors": {
+      "titleRequired": "Tytuł kolekcji jest wymagany.",
+      "storyRequired": "Historia / koncepcja jest wymagana.",
+      "photoRequired": "Dodaj zdjęcie."
+    },
+    "categories": {
+      "astrophotography": "Astrofotografia",
+      "portrait": "Portret",
+      "landscape": "Krajobraz",
+      "street": "Ulica",
+      "abstract": "Abstrakcja"
+    },
+    "elements": {
+      "fire": "Ogień",
+      "earth": "Ziemia",
+      "air": "Powietrze",
+      "water": "Woda"
+    },
+    "signs": {
+      "aries": { "name": "Baran", "range": "21 mar – 19 kwi" },
+      "taurus": { "name": "Byk", "range": "20 kwi – 20 maj" },
+      "gemini": { "name": "Bliźnięta", "range": "21 maj – 20 cze" },
+      "cancer": { "name": "Rak", "range": "21 cze – 22 lip" },
+      "leo": { "name": "Lew", "range": "23 lip – 22 sie" },
+      "virgo": { "name": "Panna", "range": "23 sie – 22 wrz" },
+      "libra": { "name": "Waga", "range": "23 wrz – 22 paź" },
+      "scorpio": { "name": "Skorpion", "range": "23 paź – 21 lis" },
+      "sagittarius": { "name": "Strzelec", "range": "22 lis – 21 gru" },
+      "capricorn": { "name": "Koziorożec", "range": "22 gru – 19 sty" },
+      "aquarius": { "name": "Wodnik", "range": "20 sty – 18 lut" },
+      "pisces": { "name": "Ryby", "range": "19 lut – 20 mar" }
+    }
   }
 }

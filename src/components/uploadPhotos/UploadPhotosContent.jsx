@@ -1,11 +1,17 @@
 import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Check } from 'lucide-react';
+import { ROUTES } from '../../config';
 import { UPLOAD_TIERS } from './uploadPhotosAssets';
 
 const UploadTierCard = memo(({ tier }) => {
   const { t } = useTranslation();
   const Icon = tier.icon;
+  const href = tier.id === 'single' ? ROUTES.ADMIN_UPLOAD_SINGLE : null;
+
+  const ctaClassName =
+    'mt-8 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white transition hover:bg-[#d41921]';
 
   return (
     <article
@@ -65,13 +71,17 @@ const UploadTierCard = memo(({ tier }) => {
         </p>
       </div>
 
-      <button
-        type="button"
-        className="mt-8 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white transition hover:bg-[#d41921]"
-      >
-        {t('uploadPhotos.enterNow')}
-        <ArrowRight size={16} aria-hidden="true" />
-      </button>
+      {href ? (
+        <Link to={href} className={ctaClassName}>
+          {t('uploadPhotos.enterNow')}
+          <ArrowRight size={16} aria-hidden="true" />
+        </Link>
+      ) : (
+        <button type="button" className={ctaClassName}>
+          {t('uploadPhotos.enterNow')}
+          <ArrowRight size={16} aria-hidden="true" />
+        </button>
+      )}
     </article>
   );
 });

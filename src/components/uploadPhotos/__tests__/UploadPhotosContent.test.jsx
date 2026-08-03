@@ -3,6 +3,14 @@ import { act, render, screen } from '@testing-library/react';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
 import UploadPhotosContent from '../UploadPhotosContent';
 
+jest.mock('react-router-dom', () => ({
+  Link: ({ children, to, className }) => (
+    <a href={typeof to === 'string' ? to : '#'} className={className}>
+      {children}
+    </a>
+  ),
+}));
+
 describe('Upload Photos page', () => {
   afterEach(async () => {
     localStorage.removeItem(LOCALE_STORAGE_KEY);
@@ -31,7 +39,11 @@ describe('Upload Photos page', () => {
     expect(screen.getByText('$1500.00')).toBeInTheDocument();
     expect(screen.getByText('$2500.00')).toBeInTheDocument();
     expect(screen.getByText('$3500.00')).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: i18n.t('uploadPhotos.enterNow') })).toHaveLength(3);
+    expect(screen.getAllByText(i18n.t('uploadPhotos.enterNow'))).toHaveLength(3);
+    expect(screen.getByRole('link', { name: i18n.t('uploadPhotos.enterNow') })).toHaveAttribute(
+      'href',
+      '/admin/upload-photos/single',
+    );
   });
 
   it('switches copy to Polish', async () => {
@@ -47,6 +59,6 @@ describe('Upload Photos page', () => {
     expect(screen.getByText('NAJPOPULARNIEJSZE')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Pojedyncze zdjęcie' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Historia 6 zdjęć' })).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: 'Dołącz teraz' })).toHaveLength(3);
+    expect(screen.getAllByText('Dołącz teraz')).toHaveLength(3);
   });
 });

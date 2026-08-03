@@ -803,5 +803,52 @@
         }
       }
     }
+  },
+  "singlePhoto": {
+    "backToSelection": "Back to Selection",
+    "selectSign": "Select Astro Sign",
+    "slotsTitle": "Zodiac Photo Slots Grid",
+    "slotsSubtitle": "Click any slot to assign or upload a visual representational image.",
+    "addPhoto": "Add Photo",
+    "changePhoto": "Change photo",
+    "collectionTitle": "Collection Title",
+    "collectionTitlePlaceholder": "e.g., Celestial Archetypes of Fire",
+    "artisticCategory": "Artistic Category",
+    "storyLabel": "Story / Concept / Creative Log",
+    "storyPlaceholder": "Share the creative narrative behind this cosmological series...",
+    "submit": "Submit your photos",
+    "submitSuccess": "Your photo details are ready to submit.",
+    "errors": {
+      "titleRequired": "Collection title is required.",
+      "storyRequired": "Story / concept is required.",
+      "photoRequired": "Please add a photo."
+    },
+    "categories": {
+      "astrophotography": "Astrophotography",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "street": "Street",
+      "abstract": "Abstract"
+    },
+    "elements": {
+      "fire": "Fire",
+      "earth": "Earth",
+      "air": "Air",
+      "water": "Water"
+    },
+    "signs": {
+      "aries": { "name": "Aries", "range": "Mar 21 – Apr 19" },
+      "taurus": { "name": "Taurus", "range": "Apr 20 – May 20" },
+      "gemini": { "name": "Gemini", "range": "May 21 – Jun 20" },
+      "cancer": { "name": "Cancer", "range": "Jun 21 – Jul 22" },
+      "leo": { "name": "Leo", "range": "Jul 23 – Aug 22" },
+      "virgo": { "name": "Virgo", "range": "Aug 23 – Sep 22" },
+      "libra": { "name": "Libra", "range": "Sep 23 – Oct 22" },
+      "scorpio": { "name": "Scorpio", "range": "Oct 23 – Nov 21" },
+      "sagittarius": { "name": "Sagittarius", "range": "Nov 22 – Dec 21" },
+      "capricorn": { "name": "Capricorn", "range": "Dec 22 – Jan 19" },
+      "aquarius": { "name": "Aquarius", "range": "Jan 20 – Feb 18" },
+      "pisces": { "name": "Pisces", "range": "Feb 19 – Mar 20" }
+    }
   }
 }
