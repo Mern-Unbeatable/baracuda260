@@ -6,7 +6,7 @@ import { ROUTES } from '../../config';
 import { SINGLE_PHOTO_ASSETS } from './singlePhotoAssets';
 
 /**
- * Post-submit success modal — Figma node 338:574 (file kE9g2eZmAoSco81PgZNlj2).
+ * Post-submit success modal — Figma nodes 338:574 (Single) / 367:884 (6 Photo).
  * Backdrop blur 6px; card 672×409, radius 24; CTAs red #ee1c25 + blue #4048cd.
  */
 const PhotoSubmitSuccessModal = memo(({ open, onClose }) => {

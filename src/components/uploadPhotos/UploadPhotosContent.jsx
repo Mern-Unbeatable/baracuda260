@@ -8,7 +8,12 @@ import { UPLOAD_TIERS } from './uploadPhotosAssets';
 const UploadTierCard = memo(({ tier }) => {
   const { t } = useTranslation();
   const Icon = tier.icon;
-  const href = tier.id === 'single' ? ROUTES.ADMIN_UPLOAD_SINGLE : null;
+  const href =
+    tier.id === 'single'
+      ? ROUTES.ADMIN_UPLOAD_SINGLE
+      : tier.id === 'story6'
+        ? ROUTES.ADMIN_UPLOAD_SIX
+        : null;
 
   const ctaClassName =
     'mt-8 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white transition hover:bg-[#d41921]';

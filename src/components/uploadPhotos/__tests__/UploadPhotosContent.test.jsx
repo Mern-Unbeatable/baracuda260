@@ -40,10 +40,9 @@ describe('Upload Photos page', () => {
     expect(screen.getByText('$2500.00')).toBeInTheDocument();
     expect(screen.getByText('$3500.00')).toBeInTheDocument();
     expect(screen.getAllByText(i18n.t('uploadPhotos.enterNow'))).toHaveLength(3);
-    expect(screen.getByRole('link', { name: i18n.t('uploadPhotos.enterNow') })).toHaveAttribute(
-      'href',
-      '/admin/upload-photos/single',
-    );
+    const enterLinks = screen.getAllByRole('link', { name: i18n.t('uploadPhotos.enterNow') });
+    expect(enterLinks[0]).toHaveAttribute('href', '/admin/upload-photos/single');
+    expect(enterLinks[1]).toHaveAttribute('href', '/admin/upload-photos/six');
   });
 
   it('switches copy to Polish', async () => {

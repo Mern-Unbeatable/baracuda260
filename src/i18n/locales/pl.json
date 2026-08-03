@@ -804,6 +804,65 @@
       }
     }
   },
+  "sixPhoto": {
+    "backToSelection": "Wróć do wyboru",
+    "selectTheme": "Wybierz akcent motywu astro-akustycznego",
+    "or": "LUB",
+    "slotsTitle": "Siatka slotów zdjęć zodiaku",
+    "slotsSubtitle": "Kliknij dowolny slot, aby przypisać lub przesłać reprezentatywne zdjęcie.",
+    "addPhoto": "Dodaj zdjęcie",
+    "changePhoto": "Zmień zdjęcie",
+    "collectionTitle": "Tytuł kolekcji",
+    "collectionTitlePlaceholder": "np. Niebiańskie archetypy ognia",
+    "artisticCategory": "Kategoria artystyczna",
+    "storyLabel": "Historia / koncepcja / dziennik twórczy",
+    "storyPlaceholder": "Podziel się narracją twórczą stojącą za tą kosmologiczną serią...",
+    "copyrightConfirm": "Potwierdzam, że posiadam pełne prawa autorskie do wszystkich przesłanych zdjęć oraz że nie zawierają one treści nielegalnych ani ich nie promują.",
+    "submit": "Prześlij swoje zdjęcia",
+    "themes": {
+      "spring": {
+        "title": "Wiosna i lato – czerwona historia zdjęć",
+        "description": "Namiętna, energiczna, aktywna. Obejmuje znaki 1–6 (Baran–Panna)"
+      },
+      "autumn": {
+        "title": "Jesień i zima – niebieska historia zdjęć",
+        "description": "Głęboka, intuicyjna, spokojna. Obejmuje znaki 7–12 (Waga–Ryby)"
+      }
+    },
+    "errors": {
+      "titleRequired": "Tytuł kolekcji jest wymagany.",
+      "storyRequired": "Historia / koncepcja jest wymagana.",
+      "photosRequired": "Dodaj zdjęcie do każdego slotu zodiaku.",
+      "copyrightRequired": "Potwierdź posiadanie praw autorskich."
+    },
+    "categories": {
+      "astrophotography": "Astrofotografia",
+      "portrait": "Portret",
+      "landscape": "Krajobraz",
+      "street": "Ulica",
+      "abstract": "Abstrakcja"
+    },
+    "elements": {
+      "fire": "Ogień",
+      "earth": "Ziemia",
+      "air": "Powietrze",
+      "water": "Woda"
+    },
+    "signs": {
+      "aries": { "name": "Baran", "range": "21 marca   -  20 kwietnia" },
+      "taurus": { "name": "Byk", "range": "21 kwietnia   -  20 maja" },
+      "gemini": { "name": "Bliźnięta", "range": "21 maja   -  20 czerwca" },
+      "cancer": { "name": "Rak", "range": "21 czerwca   -  22 lipca" },
+      "leo": { "name": "Lew", "range": "23 lipca   -  22 sierpnia" },
+      "virgo": { "name": "Panna", "range": "23 sierpnia   -  22 września" },
+      "libra": { "name": "Waga", "range": "23 września   -  22 października" },
+      "scorpio": { "name": "Skorpion", "range": "23 października   -  21 listopada" },
+      "sagittarius": { "name": "Strzelec", "range": "22 listopada   -  21 grudnia" },
+      "capricorn": { "name": "Koziorożec", "range": "22 grudnia   -  19 stycznia" },
+      "aquarius": { "name": "Wodnik", "range": "20 stycznia   -  18 lutego" },
+      "pisces": { "name": "Ryby", "range": "19 lutego   -  20 marca" }
+    }
+  },
   "singlePhoto": {
     "backToSelection": "Wróć do wyboru",
     "selectSign": "Wybierz znak zodiaku",

@@ -804,6 +804,65 @@
       }
     }
   },
+  "sixPhoto": {
+    "backToSelection": "Back to Selection",
+    "selectTheme": "Select Astro-Acoustic Theme Accent",
+    "or": "OR",
+    "slotsTitle": "Zodiac Photo Slots Grid",
+    "slotsSubtitle": "Click any slot to assign or upload a visual representational image.",
+    "addPhoto": "Add Photo",
+    "changePhoto": "Change photo",
+    "collectionTitle": "Collection Title",
+    "collectionTitlePlaceholder": "e.g., Celestial Archetypes of Fire",
+    "artisticCategory": "Artistic Category",
+    "storyLabel": "Story / Concept / Creative Log",
+    "storyPlaceholder": "Share the creative narrative behind this cosmological series...",
+    "copyrightConfirm": "I confirm that I own the full copyright for all uploaded photos and that they do not contain or promote anything illegal.",
+    "submit": "Submit your photos",
+    "themes": {
+      "spring": {
+        "title": "Spring and Summer – Red Photo Story",
+        "description": "Passionate, energetic, active. Covers signs 1–6 (Aries to Virgo)"
+      },
+      "autumn": {
+        "title": "Autumn and Winter – Blue Photo Story",
+        "description": "Deep, intuitive, serene. Covers signs 7–12 (Libra to Pisces)"
+      }
+    },
+    "errors": {
+      "titleRequired": "Collection title is required.",
+      "storyRequired": "Story / concept is required.",
+      "photosRequired": "Please add a photo to every zodiac slot.",
+      "copyrightRequired": "Please confirm copyright ownership."
+    },
+    "categories": {
+      "astrophotography": "Astrophotography",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "street": "Street",
+      "abstract": "Abstract"
+    },
+    "elements": {
+      "fire": "Fire",
+      "earth": "Earth",
+      "air": "Air",
+      "water": "Water"
+    },
+    "signs": {
+      "aries": { "name": "Aries", "range": "March 21   -  April 20" },
+      "taurus": { "name": "Taurus", "range": "April 21   -  May 20" },
+      "gemini": { "name": "Gemini", "range": "May 21   -  June 20" },
+      "cancer": { "name": "Cancer", "range": "June 21   -  July 22" },
+      "leo": { "name": "Leo", "range": "July 23   -  August 22" },
+      "virgo": { "name": "Virgo", "range": "August 23   -  September 22" },
+      "libra": { "name": "Libra", "range": "September 23   -  October 22" },
+      "scorpio": { "name": "Scorpio", "range": "October 23   -  November 21" },
+      "sagittarius": { "name": "Sagittarius", "range": "November 22   -  December 21" },
+      "capricorn": { "name": "Capricorn", "range": "December 22   -  January 19" },
+      "aquarius": { "name": "Aquarius", "range": "January 20   -  February 18" },
+      "pisces": { "name": "Pisces", "range": "February 19   -  March 20" }
+    }
+  },
   "singlePhoto": {
     "backToSelection": "Back to Selection",
     "selectSign": "Select Astro Sign",
