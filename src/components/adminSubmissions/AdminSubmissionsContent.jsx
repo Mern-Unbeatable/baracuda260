@@ -64,7 +64,7 @@ const SubmissionCard = memo(({ card, decision, onApprove, onReject }) => {
               aria-label={t('adminSubmissions.actions.approve', { title: t(card.titleKey) })}
               aria-pressed={decision === 'approved'}
               onClick={() => onApprove(card.id)}
-              className={`inline-flex items-center overflow-hidden rounded-[8px] p-[6px] transition ${
+              className={`inline-flex cursor-pointer items-center overflow-hidden rounded-[8px] p-[6px] transition ${
                 decision === 'approved'
                   ? 'bg-[#4048cd] ring-2 ring-[#4048cd]/40'
                   : 'bg-[#a7abe8] hover:bg-[#9499e0]'
@@ -83,7 +83,7 @@ const SubmissionCard = memo(({ card, decision, onApprove, onReject }) => {
               aria-label={t('adminSubmissions.actions.reject', { title: t(card.titleKey) })}
               aria-pressed={decision === 'rejected'}
               onClick={() => onReject(card.id)}
-              className={`inline-flex items-center overflow-hidden rounded-[8px] p-[6px] transition ${
+              className={`inline-flex cursor-pointer items-center overflow-hidden rounded-[8px] p-[6px] transition ${
                 decision === 'rejected'
                   ? 'bg-[#ee1c25] ring-2 ring-[#ee1c25]/40'
                   : 'bg-[#f4676d] hover:bg-[#e4555c]'
@@ -122,7 +122,7 @@ const PaginationControl = memo(({ label, onClick, disabled, children, active = f
     aria-current={active ? 'page' : undefined}
     disabled={disabled}
     onClick={onClick}
-    className={`inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] border p-[10px] text-[13px] font-semibold leading-none transition ${
+    className={`inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-[8px] border p-[10px] text-[13px] font-semibold leading-none transition ${
       active
         ? 'border-[#ee1c25] bg-[#ee1c25] text-white'
         : 'border-[#f1f1f1] bg-white text-[#333333] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
@@ -255,7 +255,7 @@ const SubmissionFilters = memo(({ activeFilter, onFilterClick }) => {
             type="button"
             aria-pressed={selected}
             onClick={() => onFilterClick(filter.id)}
-            className={`rounded-full px-4 py-2 text-[14px] font-semibold leading-4 transition ${
+            className={`cursor-pointer rounded-full px-4 py-2 text-[14px] font-semibold leading-4 transition ${
               selected
                 ? 'bg-[#4048cd] text-white'
                 : 'bg-[#f3f4f6] text-[#6b7280] hover:bg-[#e5e7eb]'
