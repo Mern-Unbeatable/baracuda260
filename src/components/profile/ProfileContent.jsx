@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
+import { LOGIN_ASSETS } from '../login/loginAssets';
 import { DEFAULT_PROFILE, PROFILE_ASSETS } from './profileData';
 
 const fieldBoxClass =
@@ -10,10 +11,57 @@ const fieldLabelClass =
   'text-[14px] font-medium uppercase leading-4 tracking-[1.2px] text-[#532aa8]';
 
 const passwordInputClass =
-  'w-full rounded-[12px] border border-[rgba(203,195,213,0.3)] bg-white px-[17px] py-[14px] text-[16px] leading-normal text-[#161c27] outline-none placeholder:text-[#6b7280] focus:ring-2 focus:ring-[#4048cd]/25';
+  'w-full rounded-[12px] border border-[rgba(203,195,213,0.3)] bg-white py-[14px] pl-[17px] pr-12 text-[16px] leading-normal text-[#161c27] outline-none placeholder:text-[#6b7280] focus:ring-2 focus:ring-[#4048cd]/25';
 
 const passwordLabelClass =
   'text-[12px] font-medium leading-4 tracking-[0.6px] text-[#494453]';
+
+const PasswordField = memo(
+  ({ id, label, value, onChange, autoComplete, error, show, onToggleShow }) => {
+    const { t } = useTranslation();
+
+    return (
+      <div className="flex w-full flex-col gap-2">
+        <label htmlFor={id} className={passwordLabelClass}>
+          {label}
+        </label>
+        <div className="relative w-full">
+          <input
+            id={id}
+            type={show ? 'text' : 'password'}
+            autoComplete={autoComplete}
+            value={value}
+            onChange={onChange}
+            placeholder="••••••••"
+            aria-invalid={Boolean(error)}
+            className={passwordInputClass}
+          />
+          <button
+            type="button"
+            onClick={onToggleShow}
+            aria-label={show ? t('login.hidePassword') : t('login.showPassword')}
+            className="absolute right-4 top-1/2 flex h-[15px] w-[22px] -translate-y-1/2 items-center justify-center overflow-hidden"
+          >
+            <img
+              src={LOGIN_ASSETS.eye}
+              alt=""
+              width={22}
+              height={15}
+              className={`h-full w-full object-contain ${show ? 'opacity-100' : 'opacity-70'}`}
+            />
+          </button>
+        </div>
+        {error ? (
+          <p className="text-sm text-red-600" role="alert">
+            {error}
+          </p>
+        ) : null}
+      </div>
+    );
+  },
+);
+
+PasswordField.displayName = 'PasswordField';
 
 const ProfileField = memo(({ label, value, icon, trailing }) => (
   <div className="flex w-full flex-col gap-2">
@@ -129,6 +177,9 @@ const AccountSecurityCard = memo(() => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -187,67 +238,41 @@ const AccountSecurityCard = memo(() => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="profile-current-password" className={passwordLabelClass}>
-              {t('userProfile.security.currentPassword')}
-            </label>
-            <input
-              id="profile-current-password"
-              type="password"
-              autoComplete="current-password"
-              value={currentPassword}
-              onChange={(event) => setCurrentPassword(event.target.value)}
-              placeholder="••••••••"
-              aria-invalid={Boolean(errors.currentPassword)}
-              className={passwordInputClass}
-            />
-            {errors.currentPassword ? (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.currentPassword}
-              </p>
-            ) : null}
-          </div>
+          <PasswordField
+            id="profile-current-password"
+            label={t('userProfile.security.currentPassword')}
+            value={currentPassword}
+            onChange={(event) => setCurrentPassword(event.target.value)}
+            autoComplete="current-password"
+            error={errors.currentPassword}
+            show={showCurrent}
+            onToggleShow={() => setShowCurrent((current) => !current)}
+          />
 
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-4">
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <label htmlFor="profile-new-password" className={passwordLabelClass}>
-                {t('userProfile.security.newPassword')}
-              </label>
-              <input
+            <div className="min-w-0 flex-1">
+              <PasswordField
                 id="profile-new-password"
-                type="password"
-                autoComplete="new-password"
+                label={t('userProfile.security.newPassword')}
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
-                placeholder="••••••••"
-                aria-invalid={Boolean(errors.newPassword)}
-                className={passwordInputClass}
-              />
-              {errors.newPassword ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {errors.newPassword}
-                </p>
-              ) : null}
-            </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <label htmlFor="profile-confirm-password" className={passwordLabelClass}>
-                {t('userProfile.security.confirmPassword')}
-              </label>
-              <input
-                id="profile-confirm-password"
-                type="password"
                 autoComplete="new-password"
+                error={errors.newPassword}
+                show={showNew}
+                onToggleShow={() => setShowNew((current) => !current)}
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <PasswordField
+                id="profile-confirm-password"
+                label={t('userProfile.security.confirmPassword')}
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
-                placeholder="••••••••"
-                aria-invalid={Boolean(errors.confirmPassword)}
-                className={passwordInputClass}
+                autoComplete="new-password"
+                error={errors.confirmPassword}
+                show={showConfirm}
+                onToggleShow={() => setShowConfirm((current) => !current)}
               />
-              {errors.confirmPassword ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {errors.confirmPassword}
-                </p>
-              ) : null}
             </div>
           </div>
 

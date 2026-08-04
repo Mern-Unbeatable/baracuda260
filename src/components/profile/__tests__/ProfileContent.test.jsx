@@ -115,6 +115,25 @@ describe('Profile page', () => {
     expect(toast.success).toHaveBeenCalledWith(i18n.t('userProfile.security.success'));
   });
 
+  it('toggles password visibility with eye icon', async () => {
+    const user = userEvent.setup();
+    render(<ProfileContent />);
+
+    const currentInput = screen.getByLabelText(i18n.t('userProfile.security.currentPassword'));
+    expect(currentInput).toHaveAttribute('type', 'password');
+
+    const showButtons = screen.getAllByRole('button', {
+      name: i18n.t('login.showPassword'),
+    });
+    expect(showButtons).toHaveLength(3);
+
+    await user.click(showButtons[0]);
+    expect(currentInput).toHaveAttribute('type', 'text');
+    expect(
+      screen.getByRole('button', { name: i18n.t('login.hidePassword') }),
+    ).toBeInTheDocument();
+  });
+
   it('shows copy success toast when Copy is clicked', async () => {
     const user = userEvent.setup();
     render(<ProfileContent />);
