@@ -34,6 +34,12 @@ export const ROUTES = {
   ADMIN_CHAT: '/admin/chat',
   ADMIN_PRIZE_PAYMENTS: '/admin/prize-payments',
   ADMIN_PROFILE: '/admin/profile',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_CATEGORIES: '/admin/categories',
+  ADMIN_ALBUM_TYPES: '/admin/album-types',
+  ADMIN_WINNERS: '/admin/winners',
+  ADMIN_NEWSLETTER: '/admin/newsletter',
+  ADMIN_COMMENT: '/admin/comment',
 };
 
 /** Site header nav — add new pages here AND register them in router.jsx */

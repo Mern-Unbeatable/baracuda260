@@ -1332,5 +1332,101 @@
       "julian": "Julian Thorne",
       "marcus": "Marcus Chen"
     }
+  },
+  "adminOverview": {
+    "defaultName": "Adriana",
+    "greeting": "DZIEŃ DOBRY, {{name}}",
+    "title": "Oto puls Twoich konkursów.",
+    "subtitle": "Miej jasny widok na historie, ludzi i chwile przechodzące przez My12Photos.",
+    "nav": {
+      "groups": {
+        "workspace": "Obszar roboczy",
+        "manage": "Zarządzanie",
+        "system": "System"
+      },
+      "overview": "Przegląd",
+      "competitions": "Konkursy",
+      "submissions": "Zgłoszenia",
+      "users": "Użytkownicy",
+      "categories": "Kategorie",
+      "albumTypes": "Typy albumów",
+      "winners": "Zwycięzcy",
+      "payouts": "Wypłaty",
+      "support": "Wsparcie",
+      "businessPhotos": "Zdjęcia Business Link",
+      "newsletter": "Newsletter",
+      "comment": "Komentarz",
+      "profile": "Profil"
+    },
+    "stats": {
+      "aria": "Statystyki platformy",
+      "registeredUsers": "Zarejestrowani użytkownicy",
+      "registeredUsersValue": "24 892",
+      "photosSubmitted": "Przesłane zdjęcia",
+      "photosSubmittedValue": "184 390",
+      "pendingApproval": "Oczekujące na zatwierdzenie",
+      "pendingApprovalValue": "128",
+      "votesCast": "Oddane głosy",
+      "votesCastValue": "1,24 mln"
+    },
+    "analytics": {
+      "title": "Analityka odwiedzin",
+      "subtitle": "Unikalni odwiedzający i sesje powracające",
+      "total": "88 420",
+      "months": {
+        "jan": "Sty",
+        "feb": "Lut",
+        "mar": "Mar",
+        "apr": "Kwi",
+        "may": "Maj",
+        "jun": "Cze",
+        "jul": "Lip",
+        "aug": "Sie",
+        "sep": "Wrz",
+        "oct": "Paź",
+        "nov": "Lis",
+        "dec": "Gru"
+      }
+    },
+    "pending": {
+      "title": "Oczekujące na przegląd",
+      "subtitle": "128 zgłoszeń wymaga decyzji",
+      "reviewAll": "Przejrzyj wszystkie",
+      "badge": "Oczekujące",
+      "openQueue": "Otwórz kolejkę przeglądu",
+      "items": {
+        "river": {
+          "title": "When the river sleeps",
+          "meta": "Maya Sutanto · Indonezja"
+        },
+        "garden": {
+          "title": "A stranger's garden",
+          "meta": "Jon Bell · Wielka Brytania"
+        },
+        "ceiling": {
+          "title": "The room with no ceiling",
+          "meta": "Sofia Nyström · Szwecja"
+        }
+      }
+    },
+    "community": {
+      "title": "Zasięg społeczności",
+      "subtitle": "Najaktywniejsze kraje według udziału",
+      "countries": {
+        "us": "Stany Zjednoczone",
+        "usValue": "4 283",
+        "uk": "Wielka Brytania",
+        "ukValue": "2 740",
+        "id": "Indonezja",
+        "idValue": "1 958",
+        "jp": "Japonia",
+        "jpValue": "1 421"
+      }
+    },
+    "comingSoon": {
+      "eyebrow": "Administrator",
+      "title": "Wkrótce",
+      "body": "Ta sekcja panelu administratora jest jeszcze w przygotowaniu. Przegląd jest już gotowy — kolejne narzędzia pojawią się wkrótce."
+    }
   }
 }

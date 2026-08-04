@@ -1,14 +1,26 @@
 import { useState, useEffect, memo } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Menu } from 'lucide-react';
+import { ROUTES } from '../../../config';
+import { selectUser } from '../../../store/slices/authSlice';
 import { DASHBOARD_ASSETS } from '../../dashboard/dashboardAssets';
+import AdminComingSoonContent from '../../adminOverview/AdminComingSoonContent';
 import Sidebar from './adminSidebar/Sidebar';
+
+const normalizePath = (pathname) => pathname.replace(/\/+$/, '') || '/';
 
 const Layout = memo(() => {
   const { t } = useTranslation();
+  const location = useLocation();
+  const user = useSelector(selectUser);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(true);
+
+  const isAdmin = user?.role === 'admin';
+  const isAdminOverview =
+    normalizePath(location.pathname) === normalizePath(ROUTES.ADMIN_DASHBOARD);
 
   useEffect(() => {
     const handleKey = (event) => {
@@ -90,7 +102,7 @@ const Layout = memo(() => {
 
         <div className="min-h-0 flex-1 overflow-y-auto" data-lenis-prevent>
           <div className="flex min-h-full w-full flex-col px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
-            <Outlet />
+            {isAdmin && !isAdminOverview ? <AdminComingSoonContent /> : <Outlet />}
           </div>
         </div>
       </main>

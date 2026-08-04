@@ -1331,5 +1331,101 @@
       "julian": "Julian Thorne",
       "marcus": "Marcus Chen"
     }
+  },
+  "adminOverview": {
+    "defaultName": "Adriana",
+    "greeting": "GOOD MORNING, {{name}}",
+    "title": "Here's your competition pulse.",
+    "subtitle": "Keep a clear view of the stories, people, and moments moving through My12Photos.",
+    "nav": {
+      "groups": {
+        "workspace": "Workspace",
+        "manage": "Manage",
+        "system": "System"
+      },
+      "overview": "Overview",
+      "competitions": "Competitions",
+      "submissions": "Submissions",
+      "users": "Users",
+      "categories": "Categories",
+      "albumTypes": "Album types",
+      "winners": "Winners",
+      "payouts": "Payouts",
+      "support": "Support",
+      "businessPhotos": "Business Link Photos",
+      "newsletter": "Newsletter",
+      "comment": "Comment",
+      "profile": "Profile"
+    },
+    "stats": {
+      "aria": "Platform statistics",
+      "registeredUsers": "Registered users",
+      "registeredUsersValue": "24,892",
+      "photosSubmitted": "Photos submitted",
+      "photosSubmittedValue": "184,390",
+      "pendingApproval": "Pending approval",
+      "pendingApprovalValue": "128",
+      "votesCast": "Votes cast",
+      "votesCastValue": "1.24M"
+    },
+    "analytics": {
+      "title": "Visitor analytics",
+      "subtitle": "Unique visitors and return sessions",
+      "total": "88,420",
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mar",
+        "apr": "Apr",
+        "may": "May",
+        "jun": "Jun",
+        "jul": "July",
+        "aug": "Aug",
+        "sep": "Sep",
+        "oct": "Oct",
+        "nov": "Nov",
+        "dec": "Dec"
+      }
+    },
+    "pending": {
+      "title": "Pending review",
+      "subtitle": "128 submissions need a decision",
+      "reviewAll": "Review all",
+      "badge": "Pending",
+      "openQueue": "Open review queue",
+      "items": {
+        "river": {
+          "title": "When the river sleeps",
+          "meta": "Maya Sutanto · Indonesia"
+        },
+        "garden": {
+          "title": "A stranger's garden",
+          "meta": "Jon Bell · United Kingdom"
+        },
+        "ceiling": {
+          "title": "The room with no ceiling",
+          "meta": "Sofia Nyström · Sweden"
+        }
+      }
+    },
+    "community": {
+      "title": "Community reach",
+      "subtitle": "Top countries by participation",
+      "countries": {
+        "us": "United States",
+        "usValue": "4,283",
+        "uk": "United Kingdom",
+        "ukValue": "2,740",
+        "id": "Indonesia",
+        "idValue": "1,958",
+        "jp": "Japan",
+        "jpValue": "1,421"
+      }
+    },
+    "comingSoon": {
+      "eyebrow": "Admin",
+      "title": "Coming soon",
+      "body": "This admin section is still in progress. Overview is ready now — more tools will land here soon."
+    }
   }
 }

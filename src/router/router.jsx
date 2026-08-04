@@ -48,6 +48,7 @@ const BusinessPhotos = lazy(() => import('../pages/admin/BusinessPhotos'));
 const Chat = lazy(() => import('../pages/admin/Chat'));
 const PrizePayments = lazy(() => import('../pages/admin/PrizePayments'));
 const Profile = lazy(() => import('../pages/admin/Profile'));
+const AdminComingSoon = lazy(() => import('../pages/admin/AdminComingSoon'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -142,6 +143,12 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_CHAT)} element={<Chat />} />
         <Route path={seg(ROUTES.ADMIN_PRIZE_PAYMENTS)} element={<PrizePayments />} />
         <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<Profile />} />
+        <Route path={seg(ROUTES.ADMIN_USERS)} element={<AdminComingSoon />} />
+        <Route path={seg(ROUTES.ADMIN_CATEGORIES)} element={<AdminComingSoon />} />
+        <Route path={seg(ROUTES.ADMIN_ALBUM_TYPES)} element={<AdminComingSoon />} />
+        <Route path={seg(ROUTES.ADMIN_WINNERS)} element={<AdminComingSoon />} />
+        <Route path={seg(ROUTES.ADMIN_NEWSLETTER)} element={<AdminComingSoon />} />
+        <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComingSoon />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

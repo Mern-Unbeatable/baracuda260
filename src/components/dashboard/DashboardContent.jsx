@@ -1,7 +1,7 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Camera,
   Compass,
@@ -15,8 +15,8 @@ import {
   Wallet,
 } from 'lucide-react';
 import { ROUTES } from '../../config';
-import { selectUser, updateUser } from '../../store/slices/authSlice';
-import { DEMO_ACCOUNTS } from '../login/demoAccounts';
+import { selectUser } from '../../store/slices/authSlice';
+import AdminOverviewContent from '../adminOverview/AdminOverviewContent';
 import {
   DASHBOARD_COMPETITIONS,
   DASHBOARD_STATS,
@@ -132,35 +132,11 @@ const CompetitionRow = memo(({ item }) => {
 
 CompetitionRow.displayName = 'CompetitionRow';
 
-/**
- * User dashboard main content — Figma node 111:1064.
- */
-const DashboardContent = memo(() => {
+const UserDashboardView = memo(() => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const [activeTab, setActiveTab] = useState(user?.role === 'admin' ? 'admin' : 'user');
-
-  useEffect(() => {
-    setActiveTab(user?.role === 'admin' ? 'admin' : 'user');
-  }, [user?.role]);
-
-  const handleTabChange = (role) => {
-    setActiveTab(role);
-    const account = role === 'admin' ? DEMO_ACCOUNTS.admin : DEMO_ACCOUNTS.user;
-    dispatch(
-      updateUser({
-        role: account.role,
-        email: account.email,
-        fullName: account.fullName,
-      }),
-    );
-  };
-
   const displayName =
     user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
-  const welcomeBodyKey =
-    activeTab === 'admin' ? 'dashboard.welcomeBodyAdmin' : 'dashboard.welcomeBody';
 
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
@@ -174,33 +150,8 @@ const DashboardContent = memo(() => {
             {t('dashboard.welcome', { name: displayName })}
           </h1>
           <p className="max-w-xl text-[15px] leading-normal text-white/70 sm:text-[18px] lg:text-[20px]">
-            {t(welcomeBodyKey)}
+            {t('dashboard.welcomeBody')}
           </p>
-          <div
-            role="tablist"
-            aria-label={t('dashboard.tabs.aria')}
-            className="mt-3 inline-flex w-fit rounded-full border border-white/20 bg-white/10 p-1"
-          >
-            {(['user', 'admin']).map((role) => {
-              const selected = activeTab === role;
-              return (
-                <button
-                  key={role}
-                  type="button"
-                  role="tab"
-                  aria-selected={selected}
-                  onClick={() => handleTabChange(role)}
-                  className={`rounded-full px-4 py-1.5 text-[13px] font-semibold tracking-[0.28px] transition sm:px-5 sm:text-[14px] ${
-                    selected
-                      ? 'bg-[#ee1c25] text-white'
-                      : 'text-white/80 hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  {t(`dashboard.tabs.${role}`)}
-                </button>
-              );
-            })}
-          </div>
           <div className="pt-3 sm:pt-4">
             <Link
               to={ROUTES.ADMIN_UPLOAD_PHOTOS}
@@ -249,6 +200,23 @@ const DashboardContent = memo(() => {
       </section>
     </div>
   );
+});
+
+UserDashboardView.displayName = 'UserDashboardView';
+
+/**
+ * Role-based dashboard shell:
+ * - user login → user dashboard (Figma 111:1064)
+ * - admin login → admin Overview (Figma 339:1136)
+ */
+const DashboardContent = memo(() => {
+  const user = useSelector(selectUser);
+
+  if (user?.role === 'admin') {
+    return <AdminOverviewContent />;
+  }
+
+  return <UserDashboardView />;
 });
 
 DashboardContent.displayName = 'DashboardContent';
