@@ -100,7 +100,7 @@ const Layout = memo(() => {
           />
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto" data-lenis-prevent>
+        <div className="scrollbar-white min-h-0 flex-1 overflow-y-auto" data-lenis-prevent>
           <div className="flex min-h-full w-full flex-col px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
             {isAdmin && !isAdminOverview ? <AdminComingSoonContent /> : <Outlet />}
           </div>

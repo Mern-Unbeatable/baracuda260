@@ -130,7 +130,7 @@ const Sidebar = ({
         </button>
 
         <nav
-          className="flex w-full flex-1 flex-col items-center gap-1 overflow-y-auto px-2"
+          className="scrollbar-white flex w-full flex-1 flex-col items-center gap-1 overflow-y-auto px-2"
           aria-label={t('dashboard.sidebar.navAria')}
         >
           {collapsedItems.map(({ labelKey, path, icon: Icon, autoCollapse }) => (
@@ -204,7 +204,7 @@ const Sidebar = ({
       </div>
 
       <nav
-        className="flex-1 overflow-y-auto px-3 py-5"
+        className="scrollbar-white flex-1 overflow-y-auto px-3 py-5"
         aria-label={t('dashboard.sidebar.navAria')}
       >
         {isAdmin ? (

@@ -53,6 +53,36 @@
   border-radius: 9999px;
 }
 
+/* ── Admin shell scrollbar (white / low-contrast) ─────────────────────────── */
+.scrollbar-white {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff #ffffff;
+}
+
+.scrollbar-white::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-white::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.scrollbar-white::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+}
+
+.scrollbar-white::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.scrollbar-white::-webkit-scrollbar-corner {
+  background: #ffffff;
+}
+
 /* ── Poppins font utility ─────────────────────────────────────────────────── */
 .font-poppins {
   font-family: "Poppins", sans-serif;

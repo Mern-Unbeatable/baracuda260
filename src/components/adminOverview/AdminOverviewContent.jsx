@@ -51,8 +51,8 @@ const VisitorChart = memo(() => {
         {t('adminOverview.analytics.total')}
       </p>
 
-      <div className="relative mt-4 min-h-[200px] flex-1 pl-7 sm:mt-4 sm:min-h-[220px] sm:pl-8">
-        <div className="absolute inset-y-0 left-0 flex w-6 flex-col justify-between py-1 sm:w-7">
+      <div className="relative mt-4 min-h-[200px] flex-1 pl-7 sm:mt-4 sm:min-h-[220px] sm:pl-9">
+        <div className="absolute inset-y-0 left-0 flex w-6 flex-col justify-between py-1 sm:w-8">
           {CHART_Y_LABELS.map((label) => (
             <span key={label} className="text-[11px] leading-4 text-[#a2a9b7] sm:text-[12px]">
               {label}
@@ -61,47 +61,67 @@ const VisitorChart = memo(() => {
         </div>
 
         <div className="relative h-[180px] w-full border-b border-[#edf0f5] sm:h-[204px]">
-          <img
-            src={ADMIN_OVERVIEW_ASSETS.chartArea}
-            alt=""
-            className="pointer-events-none absolute inset-0 h-full w-full object-fill"
-          />
-          <img
-            src={ADMIN_OVERVIEW_ASSETS.chartLine}
-            alt=""
-            className="pointer-events-none absolute inset-x-0 top-0 h-[80%] w-full object-fill"
-          />
-          <div
-            className="pointer-events-none absolute bottom-0 left-[63.5%] top-[38%] w-px"
-            aria-hidden="true"
-          >
-            <img
-              src={ADMIN_OVERVIEW_ASSETS.chartMarkerLine}
-              alt=""
-              width={2}
-              height={120}
-              className="h-full w-[2px] max-w-none object-fill"
-            />
+          <div className="pointer-events-none absolute inset-0 flex flex-col justify-between py-1" aria-hidden="true">
+            {[0, 1, 2, 3].map((line) => (
+              <div key={line} className="h-px w-full bg-[#edf0f5]" />
+            ))}
           </div>
-          <div
-            className="pointer-events-none absolute left-[62.5%] top-[32%] size-3"
-            aria-hidden="true"
+
+          <svg
+            viewBox="0 0 838 194"
+            className="absolute inset-0 h-full w-full overflow-visible"
+            preserveAspectRatio="none"
+            role="img"
+            aria-label={t('adminOverview.analytics.title')}
           >
-            <img
-              src={ADMIN_OVERVIEW_ASSETS.chartMarkerDot}
-              alt=""
-              width={12}
-              height={12}
-              className="size-3 max-w-none object-contain"
+            <defs>
+              <linearGradient id="visitor-area-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3374E6" stopOpacity="0.17" />
+                <stop offset="100%" stopColor="#3374E6" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0 155.312C58.874 135.054 83.7319 146.308 130.831 118.172C177.93 90.0358 196.247 126.05 235.496 94.5376C274.745 63.0251 308.761 106.918 345.394 75.405C382.027 43.8925 400.343 109.168 450.059 81.0323C499.775 52.8961 528.557 85.534 565.19 48.3943C601.823 11.2545 638.456 75.405 682.938 36.0143C727.421 -3.37634 745.737 40.5161 837.319 0V193.577H0V155.312Z"
+              fill="url(#visitor-area-fill)"
             />
-          </div>
+            <path
+              d="M0.592223 156.976C59.4662 136.718 84.3241 147.973 131.423 119.837C178.522 91.7004 196.839 127.715 236.088 96.2022C275.337 64.6896 309.354 108.582 345.986 77.0696C382.619 45.557 400.935 110.833 450.651 82.6968C500.367 54.5606 529.15 87.1986 565.782 50.0588C602.415 12.919 639.048 77.0696 683.53 37.6789C728.013 -1.7118 746.329 42.1807 837.911 1.66454"
+              fill="none"
+              stroke="#3374E6"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+            <line
+              x1="532"
+              y1="55"
+              x2="532"
+              y2="194"
+              stroke="#3374E6"
+              strokeWidth="1.5"
+              strokeDasharray="8 8"
+              vectorEffect="non-scaling-stroke"
+            />
+            <circle
+              cx="532"
+              cy="55"
+              r="6"
+              fill="white"
+              stroke="#3374E6"
+              strokeWidth="3"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
         </div>
 
         <div className="mt-2 flex items-start justify-between gap-1">
-          {CHART_MONTHS.map((month) => (
+          {CHART_MONTHS.map((month, index) => (
             <span
               key={month}
-              className="text-[10px] leading-4 text-[#a2a9b7] sm:text-[11px] sm:leading-[17px]"
+              className={`text-[10px] leading-4 sm:text-[11px] sm:leading-[17px] ${
+                index === 7 ? 'font-semibold text-[#3374E6]' : 'text-[#a2a9b7]'
+              }`}
             >
               {t(`adminOverview.analytics.months.${month}`)}
             </span>

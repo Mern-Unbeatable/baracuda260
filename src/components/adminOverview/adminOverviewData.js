@@ -2,10 +2,6 @@
 const A = '/assets/admin-overview';
 
 export const ADMIN_OVERVIEW_ASSETS = {
-  chartArea: `${A}/chart-area.png`,
-  chartLine: `${A}/chart-line.png`,
-  chartMarkerLine: `${A}/chart-marker-line.png`,
-  chartMarkerDot: `${A}/chart-marker-dot.png`,
   thumbRiver: `${A}/thumb-river.jpg`,
   thumbGarden: `${A}/thumb-garden.jpg`,
   thumbCeiling: `${A}/thumb-ceiling.jpg`,
