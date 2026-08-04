@@ -3,6 +3,62 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
 import AdminCategoriesContent from '../AdminCategoriesContent';
+import AddCategoryModal from '../AddCategoryModal';
+
+describe('AddCategoryModal', () => {
+  afterEach(async () => {
+    localStorage.removeItem(LOCALE_STORAGE_KEY);
+    await act(async () => {
+      await changeAppLanguage(DEFAULT_LOCALE);
+    });
+  });
+
+  it('renders English add-category fields', () => {
+    render(<AddCategoryModal open onClose={jest.fn()} onSave={jest.fn()} />);
+
+    expect(screen.getByRole('textbox', { name: i18n.t('adminCategories.addModal.nameLabel') })).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(i18n.t('adminCategories.addModal.namePlaceholder')),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: i18n.t('adminCategories.addModal.save') })).toBeInTheDocument();
+  });
+
+  it('requires a name before saving', async () => {
+    const user = userEvent.setup();
+    const onSave = jest.fn();
+    render(<AddCategoryModal open onClose={jest.fn()} onSave={onSave} />);
+
+    await user.click(screen.getByRole('button', { name: i18n.t('adminCategories.addModal.save') }));
+
+    expect(onSave).not.toHaveBeenCalled();
+    expect(screen.getByText(i18n.t('adminCategories.addModal.nameRequired'))).toBeInTheDocument();
+  });
+
+  it('saves a trimmed category name', async () => {
+    const user = userEvent.setup();
+    const onSave = jest.fn();
+    render(<AddCategoryModal open onClose={jest.fn()} onSave={onSave} />);
+
+    await user.type(
+      screen.getByPlaceholderText(i18n.t('adminCategories.addModal.namePlaceholder')),
+      '  Astrophotography  ',
+    );
+    await user.click(screen.getByRole('button', { name: i18n.t('adminCategories.addModal.save') }));
+
+    expect(onSave).toHaveBeenCalledWith('Astrophotography');
+  });
+
+  it('switches add modal copy to Polish', async () => {
+    render(<AddCategoryModal open onClose={jest.fn()} onSave={jest.fn()} />);
+
+    await act(async () => {
+      await changeAppLanguage('pl');
+    });
+
+    expect(screen.getByRole('textbox', { name: 'Nazwa kategorii' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Zapisz' })).toBeInTheDocument();
+  });
+});
 
 describe('Admin Categories content', () => {
   afterEach(async () => {
@@ -40,15 +96,25 @@ describe('Admin Categories content', () => {
     expect(screen.getByText(i18n.t('adminCategories.items.portrait'))).toBeInTheDocument();
   });
 
-  it('adds a new category chip', async () => {
+  it('opens add modal and saves a new category chip', async () => {
     const user = userEvent.setup();
     render(<AdminCategoriesContent />);
 
     await user.click(screen.getByRole('button', { name: i18n.t('adminCategories.add') }));
-
     expect(
-      screen.getByText(i18n.t('adminCategories.items.newCategory', { number: 1 })),
+      screen.getByRole('textbox', { name: i18n.t('adminCategories.addModal.nameLabel') }),
     ).toBeInTheDocument();
+
+    await user.type(
+      screen.getByPlaceholderText(i18n.t('adminCategories.addModal.namePlaceholder')),
+      'Documentary',
+    );
+    await user.click(screen.getByRole('button', { name: i18n.t('adminCategories.addModal.save') }));
+
+    expect(screen.getByText('Documentary')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('textbox', { name: i18n.t('adminCategories.addModal.nameLabel') }),
+    ).not.toBeInTheDocument();
   });
 
   it('switches categories copy to Polish', async () => {

@@ -1,7 +1,8 @@
 import {
   ADMIN_CATEGORY_ITEMS,
   appendCategory,
-  createAddedCategory,
+  createCategoryFromName,
+  isCategoryNameValid,
   removeCategoryById,
 } from '../adminCategoriesData';
 
@@ -16,7 +17,7 @@ describe('adminCategoriesData helpers', () => {
   });
 
   it('appends a unique category and skips duplicates', () => {
-    const added = { id: 'astro', labelKey: 'adminCategories.items.newCategory' };
+    const added = { id: 'astro', label: 'Astro' };
     const once = appendCategory(ADMIN_CATEGORY_ITEMS, added);
     const twice = appendCategory(once, added);
 
@@ -25,11 +26,15 @@ describe('adminCategoriesData helpers', () => {
     expect(appendCategory(ADMIN_CATEGORY_ITEMS, null)).toBe(ADMIN_CATEGORY_ITEMS);
   });
 
-  it('creates a numbered custom category payload', () => {
-    expect(createAddedCategory(2)).toEqual({
+  it('creates a category from a typed name', () => {
+    expect(createCategoryFromName('  Astro  ', 2)).toEqual({
       id: 'custom-2',
-      labelKey: 'adminCategories.items.newCategory',
-      labelParams: { number: 2 },
+      label: 'Astro',
     });
+  });
+
+  it('validates category name input', () => {
+    expect(isCategoryNameValid('Nature')).toBe(true);
+    expect(isCategoryNameValid('   ')).toBe(false);
   });
 });

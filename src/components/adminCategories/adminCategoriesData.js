@@ -1,4 +1,4 @@
-/** Admin Categories — Figma node 339:3170. */
+/** Admin Categories — Figma node 339:3170 / Add popup 339:4813. */
 
 const A = '/assets/admin-categories';
 
@@ -28,6 +28,11 @@ export const ADMIN_CATEGORY_ITEMS = [
 ];
 
 /**
+ * @param {string} name
+ */
+export const isCategoryNameValid = (name) => Boolean(String(name || '').trim());
+
+/**
  * @param {typeof ADMIN_CATEGORY_ITEMS} categories
  * @param {string} categoryId
  */
@@ -36,7 +41,7 @@ export const removeCategoryById = (categories, categoryId) =>
 
 /**
  * @param {typeof ADMIN_CATEGORY_ITEMS} categories
- * @param {{ id: string, labelKey: string }} category
+ * @param {{ id: string, labelKey?: string, label?: string }} category
  */
 export const appendCategory = (categories, category) => {
   if (!category?.id) return categories;
@@ -45,10 +50,10 @@ export const appendCategory = (categories, category) => {
 };
 
 /**
+ * @param {string} name
  * @param {number} nextIndex
  */
-export const createAddedCategory = (nextIndex) => ({
+export const createCategoryFromName = (name, nextIndex) => ({
   id: `custom-${nextIndex}`,
-  labelKey: 'adminCategories.items.newCategory',
-  labelParams: { number: nextIndex },
+  label: String(name || '').trim(),
 });

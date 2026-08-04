@@ -6,16 +6,37 @@ import {
   TRASH_ICON_SIZE,
 } from './adminCategoriesData';
 import useAdminCategories from './useAdminCategories';
+import AddCategoryModal from './AddCategoryModal';
 
 /**
  * @param {{
- *   category: { id: string, labelKey: string, labelParams?: Record<string, string | number> },
+ *   category: {
+ *     id: string,
+ *     labelKey?: string,
+ *     label?: string,
+ *     labelParams?: Record<string, string | number>,
+ *   },
+ * }} props
+ */
+const getCategoryLabel = (t, category) => {
+  if (category.label) return category.label;
+  return t(category.labelKey, category.labelParams);
+};
+
+/**
+ * @param {{
+ *   category: {
+ *     id: string,
+ *     labelKey?: string,
+ *     label?: string,
+ *     labelParams?: Record<string, string | number>,
+ *   },
  *   onRemove: (id: string) => void,
  * }} props
  */
 const CategoryChip = memo(({ category, onRemove }) => {
   const { t } = useTranslation();
-  const label = t(category.labelKey, category.labelParams);
+  const label = getCategoryLabel(t, category);
 
   return (
     <div className="inline-flex items-center gap-2.5 rounded-[8px] bg-[#ecedfa] px-5 py-2.5">
@@ -47,7 +68,14 @@ CategoryChip.displayName = 'CategoryChip';
  */
 const AdminCategoriesContent = memo(() => {
   const { t } = useTranslation();
-  const { categories, handleRemoveCategory, handleAddCategory } = useAdminCategories();
+  const {
+    categories,
+    isAddModalOpen,
+    handleRemoveCategory,
+    handleOpenAddModal,
+    handleCloseAddModal,
+    handleSaveCategory,
+  } = useAdminCategories();
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -74,7 +102,7 @@ const AdminCategoriesContent = memo(() => {
             </h2>
             <button
               type="button"
-              onClick={handleAddCategory}
+              onClick={handleOpenAddModal}
               className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-[8px] bg-[#ee1c25] px-5 py-3 text-[12px] leading-5 text-white transition hover:bg-[#d41921]"
             >
               <img
@@ -107,6 +135,12 @@ const AdminCategoriesContent = memo(() => {
           )}
         </div>
       </section>
+
+      <AddCategoryModal
+        open={isAddModalOpen}
+        onClose={handleCloseAddModal}
+        onSave={handleSaveCategory}
+      />
     </div>
   );
 });

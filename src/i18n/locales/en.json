@@ -1655,6 +1655,12 @@
     "add": "Add Category",
     "remove": "Remove {{name}}",
     "empty": "No categories yet. Add your first category.",
+    "addModal": {
+      "nameLabel": "Category name",
+      "namePlaceholder": "Category name",
+      "nameRequired": "Please enter a category name.",
+      "save": "Save"
+    },
     "items": {
       "nature": "Nature",
       "portrait": "Portrait",
