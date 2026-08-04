@@ -336,6 +336,54 @@
     "success": "Message sent successfully!",
     "error": "Failed to send message. Please try again."
   },
+  "contactSupport": {
+    "formTitle": "Contact Support",
+    "formSubtitle": "Need help? Send us a message and our support team will get back to you as soon as possible.",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "email": "Email Address",
+    "emailPlaceholder": "Enter your email",
+    "subject": "Subject",
+    "subjectPlaceholder": "Choose a subject",
+    "message": "Message",
+    "messagePlaceholder": "Write your message here...",
+    "send": "Send Message",
+    "success": "Message sent successfully!",
+    "conversationsTitle": "Your conversations",
+    "conversationsSubtitle": "Track and revisit previous support threads.",
+    "filtersAria": "Filter conversations",
+    "empty": "No conversations in this filter.",
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "replied": "Replied"
+    },
+    "status": {
+      "pending": "Pending",
+      "replied": "Replied"
+    },
+    "subjects": {
+      "technical": "Technical issue",
+      "billing": "Billing & payments",
+      "competition": "Competition help",
+      "account": "Account & profile",
+      "other": "Other"
+    },
+    "errors": {
+      "nameRequired": "Full name is required.",
+      "emailRequired": "Email address is required.",
+      "emailInvalid": "Enter a valid email address.",
+      "subjectRequired": "Please choose a subject.",
+      "messageRequired": "Message is required."
+    },
+    "threads": {
+      "export": {
+        "title": "Unable to export analytics report",
+        "preview": "Thanks for the details — we've pushed a fix. Could you try again?",
+        "time": "· 2h ago"
+      }
+    }
+  },
   "privacy": {
     "title": "Privacy Policy",
     "lastUpdated": "Last Updated: July 2026",
@@ -722,7 +770,7 @@
       "uploadPhotos": "Upload Photos",
       "myCompetitions": "My Competitions",
       "businessPhotos": "Business Link Photos",
-      "chat": "Chat",
+      "chat": "Contact Us",
       "prizePayments": "Prize & Payments",
       "profile": "Profile",
       "logOut": "Log Out"

@@ -336,6 +336,54 @@
     "success": "Wiadomość wysłana!",
     "error": "Nie udało się wysłać. Spróbuj ponownie."
   },
+  "contactSupport": {
+    "formTitle": "Kontakt z pomocą",
+    "formSubtitle": "Potrzebujesz pomocy? Wyślij nam wiadomość, a nasz zespół wsparcia odpowie tak szybko, jak to możliwe.",
+    "fullName": "Imię i nazwisko",
+    "fullNamePlaceholder": "Wpisz imię i nazwisko",
+    "email": "Adres e-mail",
+    "emailPlaceholder": "Wpisz swój e-mail",
+    "subject": "Temat",
+    "subjectPlaceholder": "Wybierz temat",
+    "message": "Wiadomość",
+    "messagePlaceholder": "Napisz swoją wiadomość tutaj...",
+    "send": "Wyślij wiadomość",
+    "success": "Wiadomość wysłana pomyślnie!",
+    "conversationsTitle": "Twoje rozmowy",
+    "conversationsSubtitle": "Śledź i wracaj do wcześniejszych wątków wsparcia.",
+    "filtersAria": "Filtruj rozmowy",
+    "empty": "Brak rozmów w tym filtrze.",
+    "filters": {
+      "all": "Wszystkie",
+      "pending": "Oczekujące",
+      "replied": "Odpowiedziane"
+    },
+    "status": {
+      "pending": "Oczekujące",
+      "replied": "Odpowiedziane"
+    },
+    "subjects": {
+      "technical": "Problem techniczny",
+      "billing": "Płatności i rozliczenia",
+      "competition": "Pomoc w konkursie",
+      "account": "Konto i profil",
+      "other": "Inne"
+    },
+    "errors": {
+      "nameRequired": "Imię i nazwisko jest wymagane.",
+      "emailRequired": "Adres e-mail jest wymagany.",
+      "emailInvalid": "Podaj prawidłowy adres e-mail.",
+      "subjectRequired": "Wybierz temat.",
+      "messageRequired": "Wiadomość jest wymagana."
+    },
+    "threads": {
+      "export": {
+        "title": "Nie można wyeksportować raportu analitycznego",
+        "preview": "Dziękujemy za szczegóły — wprowadziliśmy poprawkę. Czy możesz spróbować ponownie?",
+        "time": "· 2 godz. temu"
+      }
+    }
+  },
   "privacy": {
     "title": "Polityka prywatności",
     "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
@@ -722,7 +770,7 @@
       "uploadPhotos": "Prześlij zdjęcia",
       "myCompetitions": "Moje konkursy",
       "businessPhotos": "Zdjęcia biznesowe",
-      "chat": "Czat",
+      "chat": "Kontakt",
       "prizePayments": "Nagrody i płatności",
       "profile": "Profil",
       "logOut": "Wyloguj się"
