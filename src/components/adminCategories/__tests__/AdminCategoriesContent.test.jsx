@@ -34,6 +34,18 @@ describe('AddCategoryModal', () => {
     expect(screen.getByText(i18n.t('adminCategories.addModal.nameRequired'))).toBeInTheDocument();
   });
 
+  it('closes via the close icon without saving', async () => {
+    const user = userEvent.setup();
+    const onClose = jest.fn();
+    const onSave = jest.fn();
+    render(<AddCategoryModal open onClose={onClose} onSave={onSave} />);
+
+    await user.click(screen.getByRole('button', { name: i18n.t('adminCategories.addModal.close') }));
+
+    expect(onClose).toHaveBeenCalled();
+    expect(onSave).not.toHaveBeenCalled();
+  });
+
   it('saves a trimmed category name', async () => {
     const user = userEvent.setup();
     const onSave = jest.fn();

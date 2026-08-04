@@ -1659,7 +1659,8 @@
       "nameLabel": "Category name",
       "namePlaceholder": "Category name",
       "nameRequired": "Please enter a category name.",
-      "save": "Save"
+      "save": "Save",
+      "close": "Close add category dialog"
     },
     "items": {
       "nature": "Nature",

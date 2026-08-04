@@ -5,10 +5,12 @@ const A = '/assets/admin-categories';
 export const ADMIN_CATEGORIES_ASSETS = {
   plus: `${A}/icon-plus.svg`,
   trash: `${A}/icon-trash.svg`,
+  close: `${A}/icon-close.svg`,
 };
 
 export const PLUS_ICON_SIZE = 16;
 export const TRASH_ICON_SIZE = 20;
+export const CLOSE_ICON_SIZE = 18;
 
 export const ADMIN_CATEGORY_ITEMS = [
   { id: 'nature', labelKey: 'adminCategories.items.nature' },

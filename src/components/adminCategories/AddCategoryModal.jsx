@@ -1,7 +1,11 @@
 import React, { memo, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { isCategoryNameValid } from './adminCategoriesData';
+import {
+  ADMIN_CATEGORIES_ASSETS,
+  CLOSE_ICON_SIZE,
+  isCategoryNameValid,
+} from './adminCategoriesData';
 
 /**
  * Add Category popup — Figma node 339:4813.
@@ -52,7 +56,7 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 p-4 backdrop-blur-[6px]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 backdrop-blur-[6px]"
       role="presentation"
       onClick={onClose}
     >
@@ -65,13 +69,30 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
       >
         <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
           <div className="flex w-full flex-col gap-2.5">
-            <label
-              id={titleId}
-              htmlFor={nameId}
-              className="text-[16px] font-medium leading-6 text-[#323232]"
-            >
-              {t('adminCategories.addModal.nameLabel')}
-            </label>
+            <div className="flex items-center justify-between gap-3">
+              <label
+                id={titleId}
+                htmlFor={nameId}
+                className="min-w-0 text-[16px] font-medium leading-6 text-[#323232]"
+              >
+                {t('adminCategories.addModal.nameLabel')}
+              </label>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label={t('adminCategories.addModal.close')}
+                className="-mr-1 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition hover:bg-black/5"
+              >
+                <img
+                  src={ADMIN_CATEGORIES_ASSETS.close}
+                  alt=""
+                  width={CLOSE_ICON_SIZE}
+                  height={CLOSE_ICON_SIZE}
+                  className="size-[18px]"
+                />
+              </button>
+            </div>
+
             <input
               id={nameId}
               name="categoryName"
@@ -81,7 +102,7 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
               placeholder={t('adminCategories.addModal.namePlaceholder')}
               aria-invalid={showNameError}
               aria-describedby={showNameError ? `${nameId}-error` : undefined}
-              className={`h-10 w-full rounded-[8px] border bg-[#f4f4f4] px-2 py-[9px] text-[14px] leading-[22px] text-[#454545] outline-none placeholder:text-[#9a9a9a] focus:border-[#4048cd] ${
+              className={`box-border h-10 w-full rounded-[8px] border bg-[#f4f4f4] px-2 text-[14px] leading-[22px] text-[#454545] outline-none placeholder:text-[#9a9a9a] focus:border-[#4048cd] ${
                 showNameError ? 'border-[#ee1c25]' : 'border-transparent'
               }`}
             />
@@ -94,7 +115,7 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
 
           <button
             type="submit"
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-[8px] bg-[#ee1c25] px-5 py-2.5 text-[12px] leading-5 text-white transition hover:bg-[#d41921]"
+            className="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-[8px] bg-[#ee1c25] px-5 text-[12px] leading-5 text-white transition hover:bg-[#d41921]"
           >
             {t('adminCategories.addModal.save')}
           </button>

@@ -1660,7 +1660,8 @@
       "nameLabel": "Nazwa kategorii",
       "namePlaceholder": "Nazwa kategorii",
       "nameRequired": "Podaj nazwę kategorii.",
-      "save": "Zapisz"
+      "save": "Zapisz",
+      "close": "Zamknij okno dodawania kategorii"
     },
     "items": {
       "nature": "Natura",
