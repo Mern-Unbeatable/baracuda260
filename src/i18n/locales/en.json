@@ -445,7 +445,9 @@
         "third": "3 rd"
       },
       "items": {
-        "celestial": "Celestial Wonders 2024"
+        "celestial": "Celestial Wonders 2024",
+        "celestialLine1": "Celestial Wonders",
+        "celestialLine2": "2024"
       }
     },
     "transactions": {

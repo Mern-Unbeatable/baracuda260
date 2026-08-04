@@ -22,7 +22,7 @@ export const SUMMARY_CARDS = [
     iconWidth: 20,
     iconHeight: 16,
     iconBg: 'bg-[#e9ddff]',
-    valueClass: 'text-[#532aa8]',
+    valueClass: 'text-[#6b47c2]',
     orbClass: 'bg-[rgba(83,42,168,0.05)]',
   },
   {
@@ -50,12 +50,12 @@ export const SUMMARY_CARDS = [
 ];
 
 export const PRIZING_ROWS = [
-  { id: 'p1', nameKey: 'prizePayments.prizing.items.celestial', positionKey: 'prizePayments.prizing.positions.first', votes: '12,408', prize: '$2000' },
-  { id: 'p2', nameKey: 'prizePayments.prizing.items.celestial', positionKey: 'prizePayments.prizing.positions.second', votes: '80,000', prize: '$4000' },
-  { id: 'p3', nameKey: 'prizePayments.prizing.items.celestial', positionKey: 'prizePayments.prizing.positions.first', votes: '4,000', prize: '$8000' },
-  { id: 'p4', nameKey: 'prizePayments.prizing.items.celestial', positionKey: 'prizePayments.prizing.positions.third', votes: '13,805', prize: '$7000' },
-  { id: 'p5', nameKey: 'prizePayments.prizing.items.celestial', positionKey: 'prizePayments.prizing.positions.first', votes: '20,589', prize: '$8000' },
-  { id: 'p6', nameKey: 'prizePayments.prizing.items.celestial', positionKey: 'prizePayments.prizing.positions.second', votes: '56,800', prize: '$7000' },
+  { id: 'p1', positionKey: 'prizePayments.prizing.positions.first', votes: '12,408', prize: '$2000' },
+  { id: 'p2', positionKey: 'prizePayments.prizing.positions.second', votes: '80,000', prize: '$4000' },
+  { id: 'p3', positionKey: 'prizePayments.prizing.positions.first', votes: '4,000', prize: '$8000' },
+  { id: 'p4', positionKey: 'prizePayments.prizing.positions.third', votes: '13,805', prize: '$7000' },
+  { id: 'p5', positionKey: 'prizePayments.prizing.positions.first', votes: '20,589', prize: '$8000' },
+  { id: 'p6', positionKey: 'prizePayments.prizing.positions.second', votes: '56,800', prize: '$7000' },
 ];
 
 export const TRANSACTION_ROWS = [
@@ -69,6 +69,8 @@ export const TRANSACTION_ROWS = [
     amountTone: 'neutral',
     pendingStyle: false,
     icon: PRIZE_PAYMENTS_ASSETS.txnTrophy1,
+    iconWidth: 17,
+    iconHeight: 17,
     iconBg: 'bg-[rgba(255,221,184,0.3)]',
   },
   {
@@ -81,6 +83,8 @@ export const TRANSACTION_ROWS = [
     amountTone: 'neutral',
     pendingStyle: false,
     icon: PRIZE_PAYMENTS_ASSETS.txnTrophy2,
+    iconWidth: 15,
+    iconHeight: 15,
     iconBg: 'bg-[rgba(233,221,255,0.3)]',
   },
   {
@@ -93,6 +97,8 @@ export const TRANSACTION_ROWS = [
     amountTone: 'debit',
     pendingStyle: false,
     icon: PRIZE_PAYMENTS_ASSETS.txnCard,
+    iconWidth: 18,
+    iconHeight: 13,
     iconBg: 'bg-[#dde2f3]',
   },
   {
@@ -105,6 +111,8 @@ export const TRANSACTION_ROWS = [
     amountTone: 'neutral',
     pendingStyle: false,
     icon: PRIZE_PAYMENTS_ASSETS.txnTrophy3,
+    iconWidth: 8,
+    iconHeight: 17,
     iconBg: 'bg-[rgba(255,221,184,0.3)]',
   },
   {
@@ -117,6 +125,8 @@ export const TRANSACTION_ROWS = [
     amountTone: 'muted',
     pendingStyle: true,
     icon: PRIZE_PAYMENTS_ASSETS.txnPending,
+    iconWidth: 15,
+    iconHeight: 15,
     iconBg: 'bg-[rgba(227,227,222,0.3)]',
   },
 ];

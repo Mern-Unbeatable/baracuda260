@@ -50,7 +50,10 @@ describe('Prize & Payments page', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getAllByText(i18n.t('prizePayments.prizing.items.celestial')),
+      screen.getAllByText(i18n.t('prizePayments.prizing.items.celestialLine1')),
+    ).toHaveLength(PRIZING_ROWS.length);
+    expect(
+      screen.getAllByText(i18n.t('prizePayments.prizing.items.celestialLine2')),
     ).toHaveLength(PRIZING_ROWS.length);
     expect(
       screen.getByText(i18n.t('prizePayments.transactions.items.golden.title')),
