@@ -8,7 +8,7 @@ import {
 } from './contactSupportData';
 
 const inputClassName =
-  'w-full rounded-[12px] border border-black/[0.22] bg-white p-[15px] text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none transition focus:ring-2 focus:ring-[#2563eb]/25';
+  'w-full rounded-[12px] border border-black/10 bg-white p-[15px] text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none transition focus:ring-2 focus:ring-[#2563eb]/25';
 
 const StatusBadge = memo(({ status }) => {
   const { t } = useTranslation();
