@@ -1529,5 +1529,70 @@
       "city": { "title": "City After Midnight" },
       "zodiac": { "title": "Zodiac Journey" }
     }
+  },
+  "adminSubmissions": {
+    "eyebrow": "MODERACJA",
+    "title": "Przegląd zgłoszeń",
+    "subtitle": "Sprawdzaj, proś o poprawki lub publikuj każde zdjęcie, zanim trafi do publicznej galerii.",
+    "gridAria": "Karty przeglądu zgłoszeń",
+    "empty": "Brak zgłoszeń pasujących do tego filtra.",
+    "filters": {
+      "aria": "Filtruj zgłoszenia według typu albumu",
+      "all": "Wszystkie",
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "types": {
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "actions": {
+      "approve": "Zatwierdź {{title}}",
+      "reject": "Odrzuć {{title}}"
+    },
+    "pagination": {
+      "aria": "Paginacja zgłoszeń",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
+    },
+    "cards": {
+      "golden": {
+        "title": "Golden Hour Silence",
+        "meta": "Kasia L. · Polska"
+      },
+      "autumn": {
+        "title": "Autumn Sequence",
+        "meta": "Kasia L. · Polska"
+      },
+      "wings": {
+        "title": "Wings Over the Marsh",
+        "meta": "Kasia L. · Polska"
+      },
+      "city": {
+        "title": "City After Midnight",
+        "meta": "Kasia L. · Polska"
+      },
+      "tidal": {
+        "title": "Tidal Memory",
+        "meta": "Kasia L. · Polska"
+      },
+      "forest": {
+        "title": "Forest Cathedral",
+        "meta": "Kasia L. · Polska"
+      },
+      "morning": {
+        "title": "Morning Fields",
+        "meta": "Kasia L. · Polska"
+      },
+      "zodiac": {
+        "title": "Zodiac Journey",
+        "meta": "Kasia L. · Polska"
+      }
+    }
   }
 }

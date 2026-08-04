@@ -47,7 +47,7 @@ const ADMIN_NAV_GROUPS = [
     items: [
       { labelKey: 'adminOverview.nav.overview', path: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
       { labelKey: 'adminOverview.nav.competitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
-      { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_UPLOAD_PHOTOS, icon: Images },
+      { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
       { labelKey: 'adminOverview.nav.users', path: ROUTES.ADMIN_USERS, icon: Users },
     ],
   },

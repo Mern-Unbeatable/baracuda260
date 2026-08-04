@@ -1528,5 +1528,70 @@
       "city": { "title": "City After Midnight" },
       "zodiac": { "title": "Zodiac Journey" }
     }
+  },
+  "adminSubmissions": {
+    "eyebrow": "MODERATION",
+    "title": "Submission review",
+    "subtitle": "Review, request changes, or publish every photograph before it reaches the public gallery.",
+    "gridAria": "Submission review cards",
+    "empty": "No submissions match this filter.",
+    "filters": {
+      "aria": "Filter submissions by album type",
+      "all": "All",
+      "single": "Single Photo",
+      "six": "6 Photo story",
+      "zodiac": "12 photos - full Zodiac Story"
+    },
+    "types": {
+      "single": "Single Photo",
+      "six": "6 Photo Story",
+      "zodiac": "12 photos - full Zodiac Story"
+    },
+    "actions": {
+      "approve": "Approve {{title}}",
+      "reject": "Reject {{title}}"
+    },
+    "pagination": {
+      "aria": "Submissions pagination",
+      "first": "First page",
+      "prev": "Previous page",
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {{page}}"
+    },
+    "cards": {
+      "golden": {
+        "title": "Golden Hour Silence",
+        "meta": "Kasia L. · Poland"
+      },
+      "autumn": {
+        "title": "Autumn Sequence",
+        "meta": "Kasia L. · Poland"
+      },
+      "wings": {
+        "title": "Wings Over the Marsh",
+        "meta": "Kasia L. · Poland"
+      },
+      "city": {
+        "title": "City After Midnight",
+        "meta": "Kasia L. · Poland"
+      },
+      "tidal": {
+        "title": "Tidal Memory",
+        "meta": "Kasia L. · Poland"
+      },
+      "forest": {
+        "title": "Forest Cathedral",
+        "meta": "Kasia L. · Poland"
+      },
+      "morning": {
+        "title": "Morning Fields",
+        "meta": "Kasia L. · Poland"
+      },
+      "zodiac": {
+        "title": "Zodiac Journey",
+        "meta": "Kasia L. · Poland"
+      }
+    }
   }
 }
