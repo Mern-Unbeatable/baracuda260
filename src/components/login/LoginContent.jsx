@@ -7,6 +7,7 @@ import { ROUTES } from '../../config';
 import { httpMethods } from '../../services/httpMethods';
 import { API_ENDPOINTS } from '../../services/httpEndpoint';
 import AuthPageChrome from '../auth/AuthPageChrome';
+import { DEMO_ACCOUNTS, DEMO_PASSWORD, getDemoAccount } from './demoAccounts';
 import { EMAIL_REGEX, LOGIN_ASSETS } from './loginAssets';
 
 /**
@@ -26,6 +27,26 @@ const LoginContent = memo(() => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const goToDashboard = () => {
+    const destination = location.state?.from?.pathname ?? ROUTES.ADMIN_DASHBOARD;
+    navigate(destination, { replace: true });
+  };
+
+  const completeDemoLogin = (account) => {
+    dispatch(
+      loginSuccess({
+        user: {
+          email: account.email,
+          fullName: account.fullName,
+          role: account.role,
+          rememberMe,
+        },
+        token: 'demo',
+      }),
+    );
+    goToDashboard();
+  };
+
   const validate = () => {
     const nextErrors = {};
     if (!email.trim()) {
@@ -37,6 +58,20 @@ const LoginContent = memo(() => {
       nextErrors.password = t('login.passwordRequired');
     }
     return nextErrors;
+  };
+
+  const handleDemoQuickLogin = (role) => {
+    const account = DEMO_ACCOUNTS[role];
+    if (!account) return;
+    setErrors({});
+    setEmail(account.email);
+    setPassword(DEMO_PASSWORD);
+    setIsLoading(true);
+    try {
+      completeDemoLogin(account);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogin = async (event) => {
@@ -51,10 +86,20 @@ const LoginContent = memo(() => {
     setIsLoading(true);
 
     try {
+      const demoAccount = getDemoAccount(email, password);
+      if (demoAccount) {
+        completeDemoLogin(demoAccount);
+        return;
+      }
+
       if (process.env.REACT_APP_DEV_MOCK_AUTH === 'true') {
-        dispatch(loginSuccess({ user: { email, rememberMe }, token: null }));
-        const destination = location.state?.from?.pathname ?? ROUTES.ADMIN_DASHBOARD;
-        navigate(destination, { replace: true });
+        dispatch(
+          loginSuccess({
+            user: { email, rememberMe, role: 'user', fullName: email },
+            token: null,
+          }),
+        );
+        goToDashboard();
         return;
       }
 
@@ -75,8 +120,7 @@ const LoginContent = memo(() => {
       const token = data?.token ?? data?.data?.token ?? data?.accessToken;
       const user = data?.user ?? data?.data?.user ?? null;
       dispatch(loginSuccess({ user, token }));
-      const destination = location.state?.from?.pathname ?? ROUTES.ADMIN_DASHBOARD;
-      navigate(destination, { replace: true });
+      goToDashboard();
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +166,7 @@ const LoginContent = memo(() => {
         {/* Form panel — natural height on mobile; centered full column on laptop+ */}
         <section className="relative flex w-full items-start justify-center bg-white px-4 py-8 shadow-none sm:px-8 sm:py-10 md:px-10 lg:min-h-dvh lg:items-center lg:py-12 lg:shadow-[-7px_0_11.4px_rgba(0,0,0,0.25)]">
           <div className="w-full max-w-[480px] bg-white px-0 py-2 sm:px-2 lg:p-4">
-            <header className="mb-8 flex flex-col items-center gap-2 text-center sm:mb-10">
+            <header className="mb-6 flex flex-col items-center gap-2 text-center sm:mb-8">
               <h2 className="text-[26px] font-semibold leading-[1.25] tracking-[-0.3px] text-[#161c27] sm:text-[30px]">
                 {t('login.welcome')}
               </h2>
@@ -130,6 +174,28 @@ const LoginContent = memo(() => {
                 {t('login.subtitle')}
               </p>
             </header>
+
+            <div className="mb-6 flex flex-col gap-3">
+              <p className="text-center text-[13px] leading-5 text-[#7a7484]">{t('login.demoHint')}</p>
+              <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleDemoQuickLogin('user')}
+                  className="flex-1 rounded-lg border border-[#cbc3d5] bg-white px-4 py-3 text-[14px] font-semibold text-[#161c27] transition hover:border-[#ee1c25] hover:text-[#ee1c25] disabled:opacity-60"
+                >
+                  {t('login.demoUser')}
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleDemoQuickLogin('admin')}
+                  className="flex-1 rounded-lg border border-[#cbc3d5] bg-white px-4 py-3 text-[14px] font-semibold text-[#161c27] transition hover:border-[#ee1c25] hover:text-[#ee1c25] disabled:opacity-60"
+                >
+                  {t('login.demoAdmin')}
+                </button>
+              </div>
+            </div>
 
             {errors.form ? (
               <div

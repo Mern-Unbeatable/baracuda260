@@ -6,10 +6,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../../../store/slices/authSlice';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
 import LoginContent from '../LoginContent';
+import { DEMO_ACCOUNTS } from '../demoAccounts';
 
 jest.mock('../../site', () => ({
   LanguageSwitcher: () => <div data-testid="language-switcher" />,
 }));
+
+const mockNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   Link: ({ children, to, className, 'aria-label': ariaLabel }) => (
@@ -22,20 +25,27 @@ jest.mock('react-router-dom', () => ({
       {children}
     </span>
   ),
-  useNavigate: () => jest.fn(),
+  useNavigate: () => mockNavigate,
   useLocation: () => ({ pathname: '/login', state: null }),
 }));
 
 const renderLogin = () => {
   const store = configureStore({ reducer: { auth: authReducer } });
-  return render(
-    <Provider store={store}>
-      <LoginContent />
-    </Provider>,
-  );
+  return {
+    store,
+    ...render(
+      <Provider store={store}>
+        <LoginContent />
+      </Provider>,
+    ),
+  };
 };
 
 describe('Login page', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
+  });
+
   afterEach(async () => {
     localStorage.removeItem(LOCALE_STORAGE_KEY);
     await act(async () => {
@@ -53,6 +63,8 @@ describe('Login page', () => {
     expect(screen.getByLabelText(i18n.t('login.password'))).toBeInTheDocument();
     expect(screen.getByRole('button', { name: i18n.t('login.submit') })).toBeInTheDocument();
     expect(screen.getByText(i18n.t('login.or'))).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: i18n.t('login.demoUser') })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: i18n.t('login.demoAdmin') })).toBeInTheDocument();
   });
 
   it('switches copy to Polish', async () => {
@@ -77,5 +89,37 @@ describe('Login page', () => {
 
     expect(await screen.findByText(i18n.t('login.emailRequired'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('login.passwordRequired'))).toBeInTheDocument();
+  });
+
+  it('quick-login User sets authenticated demo user', async () => {
+    const user = userEvent.setup();
+    const { store } = renderLogin();
+
+    await user.click(screen.getByRole('button', { name: i18n.t('login.demoUser') }));
+
+    expect(store.getState().auth.isAuthenticated).toBe(true);
+    expect(store.getState().auth.user).toMatchObject({
+      email: DEMO_ACCOUNTS.user.email,
+      role: 'user',
+      fullName: DEMO_ACCOUNTS.user.fullName,
+    });
+    expect(store.getState().auth.token).toBe('demo');
+    expect(mockNavigate).toHaveBeenCalled();
+  });
+
+  it('quick-login Admin sets authenticated demo admin', async () => {
+    const user = userEvent.setup();
+    const { store } = renderLogin();
+
+    await user.click(screen.getByRole('button', { name: i18n.t('login.demoAdmin') }));
+
+    expect(store.getState().auth.isAuthenticated).toBe(true);
+    expect(store.getState().auth.user).toMatchObject({
+      email: DEMO_ACCOUNTS.admin.email,
+      role: 'admin',
+      fullName: DEMO_ACCOUNTS.admin.fullName,
+    });
+    expect(store.getState().auth.token).toBe('demo');
+    expect(mockNavigate).toHaveBeenCalled();
   });
 });

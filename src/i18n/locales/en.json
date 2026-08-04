@@ -861,7 +861,10 @@
     "emailRequired": "Email is required.",
     "emailInvalid": "Please enter a valid email address.",
     "passwordRequired": "Password is required.",
-    "invalidCredentials": "Invalid email or password."
+    "invalidCredentials": "Invalid email or password.",
+    "demoHint": "Quick demo login",
+    "demoUser": "User (user@gmail.com)",
+    "demoAdmin": "Admin (admin@gmail.com)"
   },
   "signup": {
     "brandTitle": "My12Photos",
@@ -897,12 +900,18 @@
   "dashboard": {
     "defaultName": "Sarah Jenkins",
     "roleUser": "User",
+    "roleAdmin": "Admin",
     "logoutSuccess": "Signed out successfully",
     "placeholderBody": "This section is coming soon.",
     "welcome": "Welcome back, {{name}}",
     "welcomeBody": "Your portfolio has grown by 12% in views this week. You have 3 active competitions ending soon.",
-    "uploadCta": "Upload New Photo",
-    "sidebar": {
+    "welcomeBodyAdmin": "Admin view — review competitions, members, and platform activity. Signed in as admin@gmail.com.",
+    "tabs": {
+      "aria": "Dashboard role view",
+      "user": "User",
+      "admin": "Admin"
+    },
+    "uploadCta": "Upload New Photo",    "sidebar": {
       "subtitle": "My12Photos",
       "mainMenu": "Main menu",
       "navAria": "Main navigation",

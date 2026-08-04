@@ -55,6 +55,8 @@ const Sidebar = ({
 
   const displayName =
     user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
+  const roleLabel =
+    user?.role === 'admin' ? t('dashboard.roleAdmin') : t('dashboard.roleUser');
   const avatarInitial = displayName.trim().charAt(0).toUpperCase() || 'U';
 
   const handleLogout = () => {
@@ -217,9 +219,10 @@ const Sidebar = ({
             <p className="truncate text-base font-medium capitalize leading-snug text-black">
               {displayName}
             </p>
-            <p className="truncate text-sm leading-[22px] text-gray-500">
-              {t('dashboard.roleUser')}
-            </p>
+            {user?.email ? (
+              <p className="truncate text-xs leading-5 text-gray-400">{user.email}</p>
+            ) : null}
+            <p className="truncate text-sm leading-[22px] text-gray-500">{roleLabel}</p>
           </div>
         </div>
 

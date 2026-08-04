@@ -8,6 +8,9 @@ const UNAUTHENTICATED = {
 };
 
 const isTokenExpired = (token) => {
+  // Non-JWT demo/mock tokens stay valid for the session persistence path
+  if (token === 'demo') return false;
+
   try {
     // JWT uses base64url — replace url-safe chars before atob()
     const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");

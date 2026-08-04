@@ -861,7 +861,10 @@
     "emailRequired": "Adres e-mail jest wymagany.",
     "emailInvalid": "Podaj prawidłowy adres e-mail.",
     "passwordRequired": "Hasło jest wymagane.",
-    "invalidCredentials": "Nieprawidłowy e-mail lub hasło."
+    "invalidCredentials": "Nieprawidłowy e-mail lub hasło.",
+    "demoHint": "Szybkie logowanie demo",
+    "demoUser": "Użytkownik (user@gmail.com)",
+    "demoAdmin": "Administrator (admin@gmail.com)"
   },
   "signup": {
     "brandTitle": "My12Photos",
@@ -897,10 +900,17 @@
   "dashboard": {
     "defaultName": "Sarah Jenkins",
     "roleUser": "Użytkownik",
+    "roleAdmin": "Administrator",
     "logoutSuccess": "Wylogowano pomyślnie",
     "placeholderBody": "Ta sekcja wkrótce będzie dostępna.",
     "welcome": "Witaj ponownie, {{name}}",
     "welcomeBody": "Twoje portfolio zyskało 12% wyświetleń w tym tygodniu. Masz 3 aktywne konkursy kończące się wkrótce.",
+    "welcomeBodyAdmin": "Widok administratora — przeglądaj konkursy, członków i aktywność platformy. Zalogowano jako admin@gmail.com.",
+    "tabs": {
+      "aria": "Widok roli panelu",
+      "user": "Użytkownik",
+      "admin": "Administrator"
+    },
     "uploadCta": "Prześlij nowe zdjęcie",
     "sidebar": {
       "subtitle": "My12Photos",
