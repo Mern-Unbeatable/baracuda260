@@ -1428,5 +1428,63 @@
       "title": "Wkrótce",
       "body": "Ta sekcja panelu administratora jest jeszcze w przygotowaniu. Przegląd jest już gotowy — kolejne narzędzia pojawią się wkrótce."
     }
+  },
+  "adminCompetitions": {
+    "title": "Galeria zdjęć",
+    "gridAria": "Galeria konkursowych zdjęć",
+    "empty": "Brak zgłoszeń pasujących do tego filtra.",
+    "filters": {
+      "aria": "Filtruj według typu albumu",
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "types": {
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "pagination": {
+      "aria": "Paginacja konkursów",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
+    },
+    "cards": {
+      "autumn": {
+        "title": "Autumn Sequence",
+        "meta": "Kasia L. · Polska"
+      },
+      "wings": {
+        "title": "Wings Over the Marsh",
+        "meta": "Kasia L. · Polska"
+      },
+      "city": {
+        "title": "City After Midnight",
+        "meta": "Kasia L. · Polska"
+      },
+      "forest": {
+        "title": "Forest Cathedral",
+        "meta": "Jan M. · Czechy"
+      },
+      "morning": {
+        "title": "Morning Fields",
+        "meta": "Anna K. · Polska"
+      },
+      "harbor": {
+        "title": "Harbor Lights",
+        "meta": "Piotr W. · Polska"
+      },
+      "silent": {
+        "title": "Silent Shore",
+        "meta": "Eva N. · Niemcy"
+      },
+      "zodiac": {
+        "title": "Zodiac Journey",
+        "meta": "Kasia L. · Polska"
+      }
+    }
   }
 }

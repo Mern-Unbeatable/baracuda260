@@ -1427,5 +1427,63 @@
       "title": "Coming soon",
       "body": "This admin section is still in progress. Overview is ready now — more tools will land here soon."
     }
+  },
+  "adminCompetitions": {
+    "title": "Photo Showcase",
+    "gridAria": "Competition photo showcase",
+    "empty": "No submissions match this filter.",
+    "filters": {
+      "aria": "Filter by album type",
+      "single": "Single Photo",
+      "six": "6 Photo Story",
+      "zodiac": "12 photos - full Zodiac Story"
+    },
+    "types": {
+      "single": "Single Photo",
+      "six": "6 Photo Story",
+      "zodiac": "12 photos - full Zodiac Story"
+    },
+    "pagination": {
+      "aria": "Competitions pagination",
+      "first": "First page",
+      "prev": "Previous page",
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {{page}}"
+    },
+    "cards": {
+      "autumn": {
+        "title": "Autumn Sequence",
+        "meta": "Kasia L. · Poland"
+      },
+      "wings": {
+        "title": "Wings Over the Marsh",
+        "meta": "Kasia L. · Poland"
+      },
+      "city": {
+        "title": "City After Midnight",
+        "meta": "Kasia L. · Poland"
+      },
+      "forest": {
+        "title": "Forest Cathedral",
+        "meta": "Jan M. · Czech"
+      },
+      "morning": {
+        "title": "Morning Fields",
+        "meta": "Anna K. · Poland"
+      },
+      "harbor": {
+        "title": "Harbor Lights",
+        "meta": "Piotr W. · Poland"
+      },
+      "silent": {
+        "title": "Silent Shore",
+        "meta": "Eva N. · Germany"
+      },
+      "zodiac": {
+        "title": "Zodiac Journey",
+        "meta": "Kasia L. · Poland"
+      }
+    }
   }
 }

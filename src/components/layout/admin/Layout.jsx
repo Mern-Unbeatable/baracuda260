@@ -19,8 +19,10 @@ const Layout = memo(() => {
   const [desktopOpen, setDesktopOpen] = useState(true);
 
   const isAdmin = user?.role === 'admin';
-  const isAdminOverview =
-    normalizePath(location.pathname) === normalizePath(ROUTES.ADMIN_DASHBOARD);
+  const currentPath = normalizePath(location.pathname);
+  const isAdminReadyPage =
+    currentPath === normalizePath(ROUTES.ADMIN_DASHBOARD) ||
+    currentPath === normalizePath(ROUTES.ADMIN_MY_COMPETITIONS);
 
   useEffect(() => {
     const handleKey = (event) => {
@@ -102,7 +104,7 @@ const Layout = memo(() => {
 
         <div className="scrollbar-white min-h-0 flex-1 overflow-y-auto" data-lenis-prevent>
           <div className="flex min-h-full w-full flex-col px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
-            {isAdmin && !isAdminOverview ? <AdminComingSoonContent /> : <Outlet />}
+            {isAdmin && !isAdminReadyPage ? <AdminComingSoonContent /> : <Outlet />}
           </div>
         </div>
       </main>
