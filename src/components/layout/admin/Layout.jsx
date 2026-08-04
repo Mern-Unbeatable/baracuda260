@@ -22,7 +22,8 @@ const Layout = memo(() => {
   const currentPath = normalizePath(location.pathname);
   const isAdminReadyPage =
     currentPath === normalizePath(ROUTES.ADMIN_DASHBOARD) ||
-    currentPath === normalizePath(ROUTES.ADMIN_MY_COMPETITIONS);
+    currentPath === normalizePath(ROUTES.ADMIN_MY_COMPETITIONS) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_MY_COMPETITIONS)}/`);
 
   useEffect(() => {
     const handleKey = (event) => {

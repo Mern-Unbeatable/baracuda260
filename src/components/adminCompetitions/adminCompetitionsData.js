@@ -1,4 +1,5 @@
-/** Admin Competitions — Figma node 339:1447. */
+/** Admin Competitions (Photo Showcase) — Figma node 339:1447. */
+
 const A = '/assets/admin-competitions';
 
 export const ADMIN_COMPETITIONS_ASSETS = {
@@ -6,6 +7,7 @@ export const ADMIN_COMPETITIONS_ASSETS = {
   heart: `${A}/icon-heart.svg`,
 };
 
+/** Album-type filter chip ids shown in the showcase header. */
 export const COMPETITION_FILTERS = [
   { id: 'single', labelKey: 'adminCompetitions.filters.single' },
   { id: 'six', labelKey: 'adminCompetitions.filters.six' },
@@ -95,3 +97,44 @@ export const COMPETITION_CARDS = [
 
 export const COMPETITIONS_PAGE_SIZE = 8;
 export const COMPETITIONS_TOTAL_PAGES = 10;
+/** Leading page numbers shown before the ellipsis in Figma pagination. */
+export const PAGINATION_LEADING_PAGES = [1, 2, 3];
+export const PAGINATION_ICON_SIZE = 16;
+export const CARD_IMAGE_WIDTH = 370;
+export const CARD_IMAGE_HEIGHT = 252;
+export const METRIC_ICON_SIZE = 24;
+
+/**
+ * @param {string} id
+ * @param {string} detailRoutePattern e.g. `/admin/my-competitions/:id`
+ */
+export const getCompetitionDetailPath = (id, detailRoutePattern) =>
+  detailRoutePattern.replace(':id', id);
+
+/**
+ * @param {typeof COMPETITION_CARDS} cards
+ * @param {string | null} filterId
+ */
+export const filterCompetitionCards = (cards, filterId) => {
+  if (!filterId) return cards;
+  return cards.filter((card) => card.type === filterId);
+};
+
+/**
+ * @param {typeof COMPETITION_CARDS} cards
+ * @param {number} page 1-based
+ * @param {number} pageSize
+ */
+export const paginateCompetitionCards = (cards, page, pageSize) => {
+  const safePage = Math.max(1, page);
+  const startIndex = (safePage - 1) * pageSize;
+  return cards.slice(startIndex, startIndex + pageSize);
+};
+
+/**
+ * Toggle album-type filter: same id clears the filter.
+ * @param {string | null} currentFilter
+ * @param {string} nextFilterId
+ */
+export const toggleCompetitionFilter = (currentFilter, nextFilterId) =>
+  currentFilter === nextFilterId ? null : nextFilterId;

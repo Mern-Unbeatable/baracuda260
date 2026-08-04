@@ -1486,5 +1486,48 @@
         "meta": "Kasia L. · Polska"
       }
     }
+  },
+  "adminCompetitionDetail": {
+    "breadcrumb": {
+      "competitions": "KONKURSY",
+      "details": "Szczegóły zdjęcia"
+    },
+    "title": "Zarządzanie konkursami",
+    "subtitle": "Ustal zasady, harmonogram i widoczność każdego aktywnego konkursu fotograficznego.",
+    "heroAria": "Zdjęcie konkursowe",
+    "slidesAria": "Slajdy historii zdjęć",
+    "votesReceived": "Otrzymane głosy",
+    "viewsCounted": "Policzone wyświetlenia",
+    "photographerLabel": "Fotograf",
+    "photographerName": "Wong Kar-Wai",
+    "photographerKasia": "Kasia L.",
+    "description": "Młody mężczyzna pewnie idący cichą miejską ulicą podczas złotej godziny, w casualowej białej koszulce, czarnych jeansach i czystych białych sneakersach. Ręce swobodnie opuszczone, naturalna postawa i spokojny wyraz twarzy. Miękkie światło słoneczne tworzy ciepłe refleksy i długie cienie na chodniku. Nowoczesne budynki, zielone drzewa i lekko rozmyte miejskie tło dodają głębi. Ujęte w cinematicznym, fotorealistycznym stylu z płytką głębią ostrości, ultra-realistycznie, w wysokiej szczegółowości, jakość 8K.",
+    "categories": {
+      "nature": "Natura"
+    },
+    "signs": {
+      "aries": "Baran",
+      "taurus": "Byk",
+      "gemini": "Bliźnięta",
+      "cancer": "Rak",
+      "leo": "Lew",
+      "virgo": "Panna",
+      "libra": "Waga",
+      "scorpio": "Skorpion",
+      "sagittarius": "Strzelec",
+      "capricorn": "Koziorożec",
+      "aquarius": "Wodnik",
+      "pisces": "Ryby"
+    },
+    "entries": {
+      "wings": { "title": "Chasing the Neon Stream" },
+      "forest": { "title": "Forest Cathedral" },
+      "morning": { "title": "Morning Fields" },
+      "harbor": { "title": "Harbor Lights" },
+      "silent": { "title": "Silent Shore" },
+      "autumn": { "title": "Autumn Sequence" },
+      "city": { "title": "City After Midnight" },
+      "zodiac": { "title": "Zodiac Journey" }
+    }
   }
 }

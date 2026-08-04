@@ -4,6 +4,14 @@ import userEvent from '@testing-library/user-event';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
 import AdminCompetitionsContent from '../AdminCompetitionsContent';
 
+jest.mock('react-router-dom', () => ({
+  Link: ({ children, to, className, 'aria-label': ariaLabel }) => (
+    <a href={typeof to === 'string' ? to : '#'} className={className} aria-label={ariaLabel}>
+      {children}
+    </a>
+  ),
+}));
+
 describe('Admin Competitions content', () => {
   afterEach(async () => {
     localStorage.removeItem(LOCALE_STORAGE_KEY);
@@ -23,6 +31,9 @@ describe('Admin Competitions content', () => {
     expect(screen.getByRole('button', { name: i18n.t('adminCompetitions.filters.zodiac') })).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminCompetitions.cards.autumn.title'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminCompetitions.cards.zodiac.title'))).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: i18n.t('adminCompetitions.cards.autumn.title') }),
+    ).toHaveAttribute('href', '/admin/my-competitions/autumn');
     expect(screen.getByLabelText(i18n.t('adminCompetitions.pagination.aria'))).toBeInTheDocument();
     expect(screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 1 }) })).toHaveAttribute(
       'aria-current',
@@ -42,6 +53,23 @@ describe('Admin Competitions content', () => {
       'aria-pressed',
       'true',
     );
+  });
+
+  it('paginates away from page one', async () => {
+    const user = userEvent.setup();
+    render(<AdminCompetitionsContent />);
+
+    expect(screen.getByText(i18n.t('adminCompetitions.cards.autumn.title'))).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 2 }) }),
+    );
+
+    expect(screen.queryByText(i18n.t('adminCompetitions.cards.autumn.title'))).not.toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitions.empty'))).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 2 }) }),
+    ).toHaveAttribute('aria-current', 'page');
   });
 
   it('switches competitions copy to Polish', async () => {

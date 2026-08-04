@@ -1,4 +1,5 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   ChevronLeft,
@@ -6,71 +7,103 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react';
+import { ROUTES } from '../../config';
 import {
   ADMIN_COMPETITIONS_ASSETS,
-  COMPETITION_CARDS,
+  CARD_IMAGE_HEIGHT,
+  CARD_IMAGE_WIDTH,
   COMPETITION_FILTERS,
   COMPETITION_TYPE_KEYS,
-  COMPETITIONS_PAGE_SIZE,
-  COMPETITIONS_TOTAL_PAGES,
+  getCompetitionDetailPath,
+  METRIC_ICON_SIZE,
+  PAGINATION_ICON_SIZE,
+  PAGINATION_LEADING_PAGES,
 } from './adminCompetitionsData';
+import useAdminCompetitionsShowcase from './useAdminCompetitionsShowcase';
 
+/** @param {{ icon: string, value: string }} props */
+const MetricStat = memo(({ icon, value }) => (
+  <span className="inline-flex items-center gap-1 text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
+    <img
+      src={icon}
+      alt=""
+      width={METRIC_ICON_SIZE}
+      height={METRIC_ICON_SIZE}
+      className="size-5 sm:size-6"
+    />
+    {value}
+  </span>
+));
+
+MetricStat.displayName = 'MetricStat';
+
+/**
+ * @param {{
+ *   card: {
+ *     id: string,
+ *     type: string,
+ *     titleKey: string,
+ *     metaKey: string,
+ *     image: string,
+ *     views: string,
+ *     likes: string,
+ *   },
+ * }} props
+ */
 const ShowcaseCard = memo(({ card }) => {
   const { t } = useTranslation();
+  const detailPath = getCompetitionDetailPath(card.id, ROUTES.ADMIN_MY_COMPETITION_DETAIL);
 
   return (
-    <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white">
-      <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-[220px] lg:h-[252px]">
-        <img
-          src={card.image}
-          alt=""
-          width={370}
-          height={252}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#3f51b5]">
-          {t(COMPETITION_TYPE_KEYS[card.type])}
-        </span>
-      </div>
+    <Link
+      to={detailPath}
+      className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white transition hover:border-[#d1d5db] hover:shadow-sm"
+      aria-label={t(card.titleKey)}
+    >
+      <article className="flex h-full min-w-0 flex-col">
+        <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-[220px] lg:h-[252px]">
+          <img
+            src={card.image}
+            alt=""
+            width={CARD_IMAGE_WIDTH}
+            height={CARD_IMAGE_HEIGHT}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#3f51b5]">
+            {t(COMPETITION_TYPE_KEYS[card.type])}
+          </span>
+        </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <h3 className="truncate text-[18px] font-bold leading-5 text-[#111827] sm:text-[20px]">
-          {t(card.titleKey)}
-        </h3>
-        <div className="mt-auto flex items-center justify-between gap-2 pt-1">
-          <p className="min-w-0 truncate text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
-            {t(card.metaKey)}
-          </p>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="inline-flex items-center gap-1 text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
-              <img
-                src={ADMIN_COMPETITIONS_ASSETS.eye}
-                alt=""
-                width={24}
-                height={24}
-                className="size-5 sm:size-6"
-              />
-              {card.views}
-            </span>
-            <span className="inline-flex items-center gap-1 text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
-              <img
-                src={ADMIN_COMPETITIONS_ASSETS.heart}
-                alt=""
-                width={24}
-                height={24}
-                className="size-5 sm:size-6"
-              />
-              {card.likes}
-            </span>
+        <div className="flex flex-1 flex-col gap-2 p-4">
+          <h3 className="truncate text-[18px] font-bold leading-5 text-[#111827] sm:text-[20px]">
+            {t(card.titleKey)}
+          </h3>
+          <div className="mt-auto flex items-center justify-between gap-2 pt-1">
+            <p className="min-w-0 truncate text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
+              {t(card.metaKey)}
+            </p>
+            <div className="flex shrink-0 items-center gap-2">
+              <MetricStat icon={ADMIN_COMPETITIONS_ASSETS.eye} value={card.views} />
+              <MetricStat icon={ADMIN_COMPETITIONS_ASSETS.heart} value={card.likes} />
+            </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 });
 
 ShowcaseCard.displayName = 'ShowcaseCard';
 
+/**
+ * @param {{
+ *   label: string,
+ *   onClick: () => void,
+ *   disabled?: boolean,
+ *   active?: boolean,
+ *   children: React.ReactNode,
+ * }} props
+ */
 const PaginationControl = memo(({ label, onClick, disabled, children, active = false }) => (
   <button
     type="button"
@@ -90,9 +123,17 @@ const PaginationControl = memo(({ label, onClick, disabled, children, active = f
 
 PaginationControl.displayName = 'PaginationControl';
 
+/**
+ * @param {{
+ *   page: number,
+ *   totalPages: number,
+ *   onPageChange: (page: number) => void,
+ * }} props
+ */
 const CompetitionsPagination = memo(({ page, totalPages, onPageChange }) => {
   const { t } = useTranslation();
-  const pages = [1, 2, 3];
+  const isFirstPage = page <= 1;
+  const isLastPage = page >= totalPages;
 
   return (
     <nav
@@ -101,21 +142,31 @@ const CompetitionsPagination = memo(({ page, totalPages, onPageChange }) => {
     >
       <PaginationControl
         label={t('adminCompetitions.pagination.first')}
-        disabled={page <= 1}
+        disabled={isFirstPage}
         onClick={() => onPageChange(1)}
       >
-        <ChevronsLeft size={16} strokeWidth={2} aria-hidden="true" className="text-[#333333]" />
+        <ChevronsLeft
+          size={PAGINATION_ICON_SIZE}
+          strokeWidth={2}
+          aria-hidden="true"
+          className="text-[#333333]"
+        />
       </PaginationControl>
 
       <PaginationControl
         label={t('adminCompetitions.pagination.prev')}
-        disabled={page <= 1}
+        disabled={isFirstPage}
         onClick={() => onPageChange(page - 1)}
       >
-        <ChevronLeft size={16} strokeWidth={2} aria-hidden="true" className="text-[#333333]" />
+        <ChevronLeft
+          size={PAGINATION_ICON_SIZE}
+          strokeWidth={2}
+          aria-hidden="true"
+          className="text-[#333333]"
+        />
       </PaginationControl>
 
-      {pages.map((pageNumber) => (
+      {PAGINATION_LEADING_PAGES.map((pageNumber) => (
         <PaginationControl
           key={pageNumber}
           label={t('adminCompetitions.pagination.page', { page: pageNumber })}
@@ -143,18 +194,28 @@ const CompetitionsPagination = memo(({ page, totalPages, onPageChange }) => {
 
       <PaginationControl
         label={t('adminCompetitions.pagination.next')}
-        disabled={page >= totalPages}
+        disabled={isLastPage}
         onClick={() => onPageChange(page + 1)}
       >
-        <ChevronRight size={16} strokeWidth={2} aria-hidden="true" className="text-[#333333]" />
+        <ChevronRight
+          size={PAGINATION_ICON_SIZE}
+          strokeWidth={2}
+          aria-hidden="true"
+          className="text-[#333333]"
+        />
       </PaginationControl>
 
       <PaginationControl
         label={t('adminCompetitions.pagination.last')}
-        disabled={page >= totalPages}
+        disabled={isLastPage}
         onClick={() => onPageChange(totalPages)}
       >
-        <ChevronsRight size={16} strokeWidth={2} aria-hidden="true" className="text-[#333333]" />
+        <ChevronsRight
+          size={PAGINATION_ICON_SIZE}
+          strokeWidth={2}
+          aria-hidden="true"
+          className="text-[#333333]"
+        />
       </PaginationControl>
     </nav>
   );
@@ -163,23 +224,80 @@ const CompetitionsPagination = memo(({ page, totalPages, onPageChange }) => {
 CompetitionsPagination.displayName = 'CompetitionsPagination';
 
 /**
+ * @param {{
+ *   activeFilter: string | null,
+ *   onFilterClick: (filterId: string) => void,
+ * }} props
+ */
+const CompetitionTypeFilters = memo(({ activeFilter, onFilterClick }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div
+      role="group"
+      aria-label={t('adminCompetitions.filters.aria')}
+      className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-[27px]"
+    >
+      {COMPETITION_FILTERS.map((filter) => {
+        const selected = activeFilter === filter.id;
+        return (
+          <button
+            key={filter.id}
+            type="button"
+            aria-pressed={selected}
+            onClick={() => onFilterClick(filter.id)}
+            className={`rounded-full px-4 py-2.5 text-[14px] leading-5 transition sm:px-5 sm:text-[16px] ${
+              selected
+                ? 'bg-[#ee1c25] text-white'
+                : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
+            }`}
+          >
+            {t(filter.labelKey)}
+          </button>
+        );
+      })}
+    </div>
+  );
+});
+
+CompetitionTypeFilters.displayName = 'CompetitionTypeFilters';
+
+/**
+ * @param {{
+ *   cards: Array<{ id: string }>,
+ * }} props
+ */
+const ShowcaseGrid = memo(({ cards }) => {
+  const { t } = useTranslation();
+
+  return (
+    <section
+      aria-label={t('adminCompetitions.gridAria')}
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-[19px] xl:grid-cols-3 2xl:grid-cols-4"
+    >
+      {cards.map((card) => (
+        <ShowcaseCard key={card.id} card={card} />
+      ))}
+    </section>
+  );
+});
+
+ShowcaseGrid.displayName = 'ShowcaseGrid';
+
+/**
  * Admin Competitions (Photo Showcase) — Figma node 339:1447.
+ * Orchestrates filters, grid, and pagination; domain logic lives in helpers/hook.
  */
 const AdminCompetitionsContent = memo(() => {
   const { t } = useTranslation();
-  const [activeFilter, setActiveFilter] = useState(null);
-  const [page, setPage] = useState(1);
-
-  const filteredCards = activeFilter
-    ? COMPETITION_CARDS.filter((card) => card.type === activeFilter)
-    : COMPETITION_CARDS;
-
-  const visibleCards = filteredCards.slice(0, COMPETITIONS_PAGE_SIZE);
-
-  const handleFilterClick = (filterId) => {
-    setActiveFilter((current) => (current === filterId ? null : filterId));
-    setPage(1);
-  };
+  const {
+    activeFilter,
+    page,
+    totalPages,
+    visibleCards,
+    handleFilterClick,
+    handlePageChange,
+  } = useAdminCompetitionsShowcase();
 
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
@@ -187,41 +305,13 @@ const AdminCompetitionsContent = memo(() => {
         <h1 className="text-[32px] font-extrabold leading-tight text-[#111827] sm:text-[40px] lg:text-[48px]">
           {t('adminCompetitions.title')}
         </h1>
-
-        <div
-          role="group"
-          aria-label={t('adminCompetitions.filters.aria')}
-          className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-[27px]"
-        >
-          {COMPETITION_FILTERS.map((filter) => {
-            const selected = activeFilter === filter.id;
-            return (
-              <button
-                key={filter.id}
-                type="button"
-                aria-pressed={selected}
-                onClick={() => handleFilterClick(filter.id)}
-                className={`rounded-full px-4 py-2.5 text-[14px] leading-5 transition sm:px-5 sm:text-[16px] ${
-                  selected
-                    ? 'bg-[#ee1c25] text-white'
-                    : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
-                }`}
-              >
-                {t(filter.labelKey)}
-              </button>
-            );
-          })}
-        </div>
+        <CompetitionTypeFilters
+          activeFilter={activeFilter}
+          onFilterClick={handleFilterClick}
+        />
       </header>
 
-      <section
-        aria-label={t('adminCompetitions.gridAria')}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-[19px] xl:grid-cols-3 2xl:grid-cols-4"
-      >
-        {visibleCards.map((card) => (
-          <ShowcaseCard key={card.id} card={card} />
-        ))}
-      </section>
+      <ShowcaseGrid cards={visibleCards} />
 
       {visibleCards.length === 0 ? (
         <p className="text-center text-[16px] text-[#6b7280]">{t('adminCompetitions.empty')}</p>
@@ -230,8 +320,8 @@ const AdminCompetitionsContent = memo(() => {
       <div className="flex justify-center pt-2 sm:pt-4">
         <CompetitionsPagination
           page={page}
-          totalPages={COMPETITIONS_TOTAL_PAGES}
-          onPageChange={setPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>
