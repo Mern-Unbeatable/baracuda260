@@ -1,0 +1,14 @@
+# Coolify / Nixpacks — production SPA (no Docker).
+# Installs build tools, builds webpack bundle, serves dist on $PORT.
+
+[variables]
+NIXPACKS_NODE_VERSION = "20"
+
+[phases.install]
+cmds = ["npm ci --include=dev"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm start"
