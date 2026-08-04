@@ -494,6 +494,42 @@
       }
     }
   },
+  "userProfile": {
+    "title": "Profile Details Editor",
+    "subtitle": "Manage your artistic identity and account security settings.",
+    "fields": {
+      "fullName": "Full Name",
+      "phone": "Phone number",
+      "email": "Email id",
+      "profileLink": "Profile link"
+    },
+    "photographer": {
+      "title": "Your Photographer Profile",
+      "subtitle": "Control how other photographers and judges see your public bio portfolio",
+      "edit": "Edit Profile",
+      "editToast": "Profile editing will be available soon.",
+      "copy": "Copy",
+      "copySuccess": "Profile link copied to clipboard!",
+      "copyFailed": "Could not copy the profile link."
+    },
+    "security": {
+      "title": "Account Security",
+      "subtitle": "Manage your access and safeguard your creative portfolio",
+      "setPassword": "Set New Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "changePassword": "Change Password",
+      "success": "Password changed successfully!"
+    },
+    "errors": {
+      "currentRequired": "Current password is required.",
+      "newRequired": "New password is required.",
+      "newTooShort": "New password must be at least 8 characters.",
+      "confirmRequired": "Please confirm your new password.",
+      "confirmMismatch": "Passwords do not match."
+    }
+  },
   "privacy": {
     "title": "Privacy Policy",
     "lastUpdated": "Last Updated: July 2026",

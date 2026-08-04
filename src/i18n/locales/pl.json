@@ -494,6 +494,42 @@
       }
     }
   },
+  "userProfile": {
+    "title": "Edytor szczegółów profilu",
+    "subtitle": "Zarządzaj swoją tożsamością artystyczną i ustawieniami bezpieczeństwa konta.",
+    "fields": {
+      "fullName": "Imię i nazwisko",
+      "phone": "Numer telefonu",
+      "email": "Adres e-mail",
+      "profileLink": "Link do profilu"
+    },
+    "photographer": {
+      "title": "Twój profil fotografa",
+      "subtitle": "Kontroluj, jak inni fotografowie i sędziowie widzą Twoje publiczne portfolio bio",
+      "edit": "Edytuj profil",
+      "editToast": "Edycja profilu będzie wkrótce dostępna.",
+      "copy": "Kopiuj",
+      "copySuccess": "Link do profilu skopiowano do schowka!",
+      "copyFailed": "Nie udało się skopiować linku do profilu."
+    },
+    "security": {
+      "title": "Bezpieczeństwo konta",
+      "subtitle": "Zarządzaj dostępem i chroń swoje kreatywne portfolio",
+      "setPassword": "Ustaw nowe hasło",
+      "currentPassword": "Aktualne hasło",
+      "newPassword": "Nowe hasło",
+      "confirmPassword": "Potwierdź nowe hasło",
+      "changePassword": "Zmień hasło",
+      "success": "Hasło zostało zmienione pomyślnie!"
+    },
+    "errors": {
+      "currentRequired": "Aktualne hasło jest wymagane.",
+      "newRequired": "Nowe hasło jest wymagane.",
+      "newTooShort": "Nowe hasło musi mieć co najmniej 8 znaków.",
+      "confirmRequired": "Potwierdź nowe hasło.",
+      "confirmMismatch": "Hasła nie są zgodne."
+    }
+  },
   "privacy": {
     "title": "Polityka prywatności",
     "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
