@@ -260,48 +260,56 @@ const AdminCompetitionDetailContent = memo(() => {
           </>
         ) : null}
 
-        <section className="flex flex-col gap-9">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap gap-8">
-              <span className="font-manrope inline-flex items-center justify-center rounded-full bg-[#ecedfa] px-4 py-[5px] text-[16px] font-bold leading-6 uppercase tracking-[1.2px] text-[#4048cd]">
-                {t(detail.typeKey)}
-              </span>
-              <span className="font-manrope inline-flex items-center justify-center rounded-full bg-[#ecedfa] px-4 py-[5px] text-[16px] font-bold leading-6 uppercase tracking-[1.2px] text-[#4048cd]">
-                {t(detail.categoryKey)}
-              </span>
+        {/* Figma export — tags + title + description (exact text sizes) */}
+        <section className="flex w-full flex-col gap-[36px]">
+          <div className="flex w-full flex-col gap-8">
+            <div className="inline-flex w-full flex-col items-start justify-start gap-4">
+              <div className="inline-flex items-start justify-start gap-8">
+                <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-[5px]">
+                  <div className="font-['Manrope'] text-base font-bold uppercase leading-6 tracking-wider text-indigo-700">
+                    {t(detail.typeKey)}
+                  </div>
+                </div>
+                <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-[5px]">
+                  <div className="font-['Manrope'] text-base font-bold uppercase leading-6 tracking-wider text-indigo-700">
+                    {t(detail.categoryKey)}
+                  </div>
+                </div>
+              </div>
+              <div className="flex w-full flex-col items-start justify-start gap-4 self-stretch">
+                <h2 className="w-full self-stretch font-['Manrope'] text-4xl font-extrabold text-gray-900">
+                  {t(detail.titleKey)}
+                </h2>
+                <p className="w-full self-stretch font-['Manrope'] text-xl font-medium leading-8 text-neutral-700">
+                  {t(detail.descriptionKey)}
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col gap-4">
-              <h2 className="font-manrope text-[36px] font-extrabold leading-normal text-[#111827]">
-                {t(detail.titleKey)}
-              </h2>
-              <p className="font-manrope text-[20px] font-medium leading-[30px] text-[#3e3f40]">
-                {t(detail.descriptionKey)}
-              </p>
+            <div className="flex w-full flex-col items-start justify-center">
+              <div className="flex w-full items-center gap-[21px]">
+                <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-[15px] rounded-2xl border border-[rgba(0,0,0,0.08)] bg-[#f5f5f5] p-3 text-center">
+                  <p className="admin-detail-meta__stat-label w-full">
+                    {t('adminCompetitionDetail.votesReceived')}
+                  </p>
+                  <p className="admin-detail-meta__stat-value w-full">{detail.votes}</p>
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-[15px] rounded-2xl border border-[rgba(0,0,0,0.08)] bg-[#f5f5f5] p-3 text-center">
+                  <p className="admin-detail-meta__stat-label w-full">
+                    {t('adminCompetitionDetail.viewsCounted')}
+                  </p>
+                  <p className="admin-detail-meta__stat-value w-full">{detail.views}</p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-[21px]">
-            <div className="flex flex-col items-center justify-center gap-[15px] rounded-2xl border border-black/[0.08] bg-[#f5f5f5] p-3 text-center">
-              <p className="font-manrope w-full text-[14px] font-bold uppercase tracking-[1.2px] text-[#6b7280]">
-                {t('adminCompetitionDetail.votesReceived')}
-              </p>
-              <p className="font-manrope w-full text-[20px] font-bold text-[#111827]">{detail.votes}</p>
+            <div className="h-0 w-full" aria-hidden="true">
+              <img
+                src={ADMIN_DETAIL_ASSETS.divider}
+                alt=""
+                className="block h-px w-full max-w-none"
+              />
             </div>
-            <div className="flex flex-col items-center justify-center gap-[15px] rounded-2xl border border-black/[0.08] bg-[#f5f5f5] p-3 text-center">
-              <p className="font-manrope w-full text-[14px] font-bold uppercase tracking-[1.2px] text-[#6b7280]">
-                {t('adminCompetitionDetail.viewsCounted')}
-              </p>
-              <p className="font-manrope w-full text-[20px] font-bold text-[#111827]">{detail.views}</p>
-            </div>
-          </div>
-
-          <div className="w-full" aria-hidden="true">
-            <img
-              src={ADMIN_DETAIL_ASSETS.divider}
-              alt=""
-              className="h-px w-full object-cover"
-            />
           </div>
 
           <div className="flex items-start gap-3">
@@ -312,11 +320,11 @@ const AdminCompetitionDetailContent = memo(() => {
               height={57}
               className="size-[57px] shrink-0 rounded-full object-cover"
             />
-            <div className="flex flex-col gap-1">
-              <p className="font-manrope text-[16px] text-[#6b7280]">
+            <div className="flex w-[139px] flex-col gap-1">
+              <p className="admin-detail-meta__photographer-label w-full">
                 {t('adminCompetitionDetail.photographerLabel')}
               </p>
-              <p className="font-manrope text-[20px] font-bold text-[#111827]">
+              <p className="admin-detail-meta__photographer-name w-full">
                 {t(detail.photographerKey)}
               </p>
             </div>

@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
 
 :root {
   --primary-text-color: #373737;
@@ -7,6 +7,15 @@
   --secondary-text-color: #ffffff;
   --ternary-text-color: #525252;
   --button-bg: #2b6a0a;
+  /* Admin competition detail — Figma export (text-4xl / text-xl / text-base) */
+  --admin-detail-title-size: 2.25rem; /* text-4xl */
+  --admin-detail-body-size: 1.25rem; /* text-xl */
+  --admin-detail-body-leading: 2rem; /* leading-8 */
+  --admin-detail-tag-size: 1rem; /* text-base */
+  --admin-detail-stat-label-size: 14px;
+  --admin-detail-stat-value-size: 20px;
+  --admin-detail-meta-label-size: 16px;
+  --admin-detail-meta-name-size: 20px;
 }
 
 @keyframes nav-arrow {
@@ -90,4 +99,39 @@
 
 .font-manrope {
   font-family: "Manrope", sans-serif;
+}
+
+/* Unused tag/title/body helpers kept for stats + photographer only */
+.admin-detail-meta__stat-label {
+  font-family: "Manrope", sans-serif;
+  font-size: var(--admin-detail-stat-label-size);
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.admin-detail-meta__stat-value {
+  font-family: "Manrope", sans-serif;
+  font-size: var(--admin-detail-stat-value-size);
+  font-weight: 700;
+  line-height: normal;
+  color: #111827;
+}
+
+.admin-detail-meta__photographer-label {
+  font-family: "Manrope", sans-serif;
+  font-size: var(--admin-detail-meta-label-size);
+  font-weight: 400;
+  line-height: normal;
+  color: #6b7280;
+}
+
+.admin-detail-meta__photographer-name {
+  font-family: "Manrope", sans-serif;
+  font-size: var(--admin-detail-meta-name-size);
+  font-weight: 700;
+  line-height: normal;
+  color: #111827;
 }
