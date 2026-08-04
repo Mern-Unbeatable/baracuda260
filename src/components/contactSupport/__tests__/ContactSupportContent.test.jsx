@@ -30,6 +30,7 @@ describe('Contact Support page', () => {
     expect(screen.getByText(i18n.t('contactSupport.formSubtitle'))).toBeInTheDocument();
     expect(screen.getByLabelText(i18n.t('contactSupport.fullName'))).toBeInTheDocument();
     expect(screen.getByLabelText(i18n.t('contactSupport.email'))).toBeInTheDocument();
+    expect(screen.getByLabelText(i18n.t('contactSupport.subject'))).toBeInTheDocument();
     expect(screen.getByLabelText(i18n.t('contactSupport.message'))).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: i18n.t('contactSupport.send') }),
@@ -111,11 +112,9 @@ describe('Contact Support page', () => {
       screen.getByLabelText(i18n.t('contactSupport.email')),
       'atik@example.com',
     );
-    await user.click(
-      screen.getByRole('button', { name: i18n.t('contactSupport.subjectPlaceholder') }),
-    );
-    await user.click(
-      screen.getByRole('option', { name: i18n.t('contactSupport.subjects.technical') }),
+    await user.type(
+      screen.getByLabelText(i18n.t('contactSupport.subject')),
+      'Export issue',
     );
     await user.type(
       screen.getByLabelText(i18n.t('contactSupport.message')),
@@ -126,19 +125,7 @@ describe('Contact Support page', () => {
     expect(toast.success).toHaveBeenCalledWith(i18n.t('contactSupport.success'));
     expect(screen.getByLabelText(i18n.t('contactSupport.fullName'))).toHaveValue('');
     expect(screen.getByLabelText(i18n.t('contactSupport.email'))).toHaveValue('');
+    expect(screen.getByLabelText(i18n.t('contactSupport.subject'))).toHaveValue('');
     expect(screen.getByLabelText(i18n.t('contactSupport.message'))).toHaveValue('');
-  });
-
-  it('closes subject dropdown on outside click', async () => {
-    const user = userEvent.setup();
-    render(<ContactSupportContent />);
-
-    await user.click(
-      screen.getByRole('button', { name: i18n.t('contactSupport.subjectPlaceholder') }),
-    );
-    expect(screen.getByRole('listbox')).toBeInTheDocument();
-
-    await user.click(document.body);
-    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 });

@@ -7,14 +7,6 @@ export const CONTACT_SUPPORT_ASSETS = {
   chevron: `${A}/chevron.svg`,
 };
 
-export const SUBJECT_OPTIONS = [
-  'technical',
-  'billing',
-  'competition',
-  'account',
-  'other',
-];
-
 export const FILTERS = ['all', 'pending', 'replied'];
 
 export const CONVERSATIONS = [

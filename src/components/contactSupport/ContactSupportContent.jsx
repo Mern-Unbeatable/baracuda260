@@ -1,11 +1,10 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import {
   CONVERSATIONS,
   CONTACT_SUPPORT_ASSETS,
   FILTERS,
-  SUBJECT_OPTIONS,
 } from './contactSupportData';
 
 const inputClassName =
@@ -83,35 +82,13 @@ ConversationItem.displayName = 'ConversationItem';
  */
 const ContactSupportContent = memo(() => {
   const { t } = useTranslation();
-  const subjectMenuRef = useRef(null);
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
-  const [subjectOpen, setSubjectOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [filter, setFilter] = useState('all');
-
-  useEffect(() => {
-    if (!subjectOpen) return undefined;
-
-    const onPointerDown = (event) => {
-      if (subjectMenuRef.current && !subjectMenuRef.current.contains(event.target)) {
-        setSubjectOpen(false);
-      }
-    };
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape') setSubjectOpen(false);
-    };
-
-    document.addEventListener('mousedown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [subjectOpen]);
 
   const validate = () => {
     const nextErrors = {};
@@ -120,7 +97,7 @@ const ContactSupportContent = memo(() => {
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       nextErrors.email = t('contactSupport.errors.emailInvalid');
     }
-    if (!subject) nextErrors.subject = t('contactSupport.errors.subjectRequired');
+    if (!subject.trim()) nextErrors.subject = t('contactSupport.errors.subjectRequired');
     if (!message.trim()) nextErrors.message = t('contactSupport.errors.messageRequired');
     return nextErrors;
   };
@@ -211,59 +188,22 @@ const ContactSupportContent = memo(() => {
               </div>
             </div>
 
-            <div className="relative flex flex-col gap-3" ref={subjectMenuRef}>
-              <p className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]">
-                {t('contactSupport.subject')}
-              </p>
-              <button
-                type="button"
-                aria-expanded={subjectOpen}
-                aria-haspopup="listbox"
-                onClick={() => setSubjectOpen((open) => !open)}
-                className={`${inputClassName} flex cursor-pointer items-center justify-between text-left`}
+            <div className="flex flex-col gap-3">
+              <label
+                htmlFor="contact-support-subject"
+                className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
               >
-                <span className={subject ? 'text-[#161c27]' : 'text-[#a8a8b0]'}>
-                  {subject
-                    ? t(`contactSupport.subjects.${subject}`)
-                    : t('contactSupport.subjectPlaceholder')}
-                </span>
-                <img
-                  src={CONTACT_SUPPORT_ASSETS.chevron}
-                  alt=""
-                  width={24}
-                  height={12}
-                  className={`h-3 w-6 shrink-0 transition ${subjectOpen ? 'rotate-90' : '-rotate-90'}`}
-                />
-              </button>
-              {subjectOpen ? (
-                <ul
-                  role="listbox"
-                  className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-[12px] border border-black/10 bg-white shadow-lg"
-                >
-                  {SUBJECT_OPTIONS.map((option) => (
-                    <li key={option}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={option === subject}
-                        onClick={() => {
-                          setSubject(option);
-                          setSubjectOpen(false);
-                          setErrors((current) => {
-                            const { subject: _subject, ...rest } = current;
-                            return rest;
-                          });
-                        }}
-                        className={`w-full cursor-pointer px-[15px] py-3 text-left text-[15px] transition hover:bg-[#eff6ff] ${
-                          option === subject ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-[#494453]'
-                        }`}
-                      >
-                        {t(`contactSupport.subjects.${option}`)}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
+                {t('contactSupport.subject')}
+              </label>
+              <input
+                id="contact-support-subject"
+                type="text"
+                value={subject}
+                onChange={(event) => setSubject(event.target.value)}
+                placeholder={t('contactSupport.subjectPlaceholder')}
+                aria-invalid={Boolean(errors.subject)}
+                className={inputClassName}
+              />
               {errors.subject ? (
                 <p className="text-sm text-red-600" role="alert">
                   {errors.subject}
@@ -322,7 +262,11 @@ const ContactSupportContent = memo(() => {
         </header>
 
         <div className="overflow-hidden rounded-[24px] border border-[#f3f4f6] bg-white shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.1),0px_8px_10px_-6px_rgba(0,0,0,0.1)]">
-          <div className="flex flex-wrap gap-2 px-6 pb-4 pt-6" role="tablist" aria-label={t('contactSupport.filtersAria')}>
+          <div
+            className="flex flex-wrap gap-2 px-6 pb-4 pt-6"
+            role="tablist"
+            aria-label={t('contactSupport.filtersAria')}
+          >
             {FILTERS.map((item) => {
               const active = filter === item;
               return (
