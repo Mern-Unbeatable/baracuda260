@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap");
 
 :root {
   --primary-text-color: #373737;
@@ -83,7 +83,11 @@
   background: #ffffff;
 }
 
-/* ── Poppins font utility ─────────────────────────────────────────────────── */
+/* ── Font utilities (Figma: Manrope for admin content headings) ───────────── */
 .font-poppins {
   font-family: "Poppins", sans-serif;
+}
+
+.font-manrope {
+  font-family: "Manrope", sans-serif;
 }

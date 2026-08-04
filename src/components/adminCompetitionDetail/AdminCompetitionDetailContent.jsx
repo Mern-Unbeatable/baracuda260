@@ -31,7 +31,7 @@ const SignBadge = memo(({ slide, name }) => {
           }`}
         />
       </span>
-      <span className="text-[16px] leading-none text-white sm:text-[20px]">{name}</span>
+      <span className="text-[20px] leading-none text-white">{name}</span>
     </div>
   );
 });
@@ -46,14 +46,14 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
     return (
       <div className="flex flex-col items-center gap-2">
         <span
-          className={`inline-flex size-[26px] items-center justify-center rounded-full bg-[#fde8e9] text-[14px] sm:size-[30px] sm:text-[18px] ${
+          className={`inline-flex size-[30px] items-center justify-center rounded-full bg-[#fde8e9] text-[18px] ${
             isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
           }`}
         >
           {slide.number}
         </span>
         <span
-          className={`relative inline-flex size-[28px] items-center justify-center overflow-hidden sm:size-[35px] ${
+          className={`relative inline-flex size-[35px] items-center justify-center overflow-hidden ${
             isBlue
               ? slide.iconBoxed
                 ? 'rounded-[4px] bg-[#4048cd]'
@@ -68,7 +68,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
             height={35}
             className={`object-contain ${
               slide.iconBoxed || !isBlue
-                ? 'h-4 w-4 sm:h-5 sm:w-5'
+                ? 'h-5 w-5'
                 : 'h-full w-full'
             }`}
           />
@@ -78,7 +78,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
           onClick={onSelect}
           aria-label={name}
           aria-pressed={active}
-          className={`relative h-[56px] w-full overflow-hidden rounded-lg sm:h-[72px] xl:h-[90px] ${
+          className={`relative h-[90px] w-full overflow-hidden rounded-lg ${
             active ? 'border-[3px] border-[#ee1c25]' : 'border border-transparent'
           }`}
         >
@@ -100,7 +100,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
       onClick={onSelect}
       aria-pressed={active}
       aria-label={name}
-      className="flex w-[min(100%,239px)] shrink-0 flex-col gap-2.5 text-left sm:w-full"
+      className="flex w-full flex-col gap-2.5 text-left"
     >
       <span className="flex w-full items-center justify-between gap-2">
         <span className="flex min-w-0 items-center gap-2.5">
@@ -114,15 +114,13 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
               alt=""
               width={24}
               height={21}
-              className="h-[16px] w-[18px] object-contain sm:h-[21px] sm:w-6"
+              className="h-[21px] w-6 object-contain"
             />
           </span>
-          <span className="truncate text-[13px] text-[#2b2b2b] sm:text-[18px] xl:text-[24px]">
-            {name}
-          </span>
+          <span className="truncate text-[24px] text-[#2b2b2b]">{name}</span>
         </span>
         <span
-          className={`inline-flex size-[26px] shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[14px] sm:size-[30px] sm:text-[20px] ${
+          className={`inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[20px] ${
             isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
           }`}
         >
@@ -130,7 +128,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
         </span>
       </span>
       <span
-        className={`relative block h-[72px] w-full overflow-hidden rounded-lg sm:h-[100px] xl:h-[120px] ${
+        className={`relative block h-[120px] w-full overflow-hidden rounded-lg ${
           active ? 'border-[3px] border-[#ee1c25]' : 'border border-transparent'
         }`}
       >
@@ -174,7 +172,7 @@ const AdminCompetitionDetailContent = memo(() => {
   return (
     <div className="mx-auto flex w-full max-w-[1536px] flex-col">
       <header className="flex flex-col gap-1">
-        <p className="text-[11px] font-extrabold uppercase tracking-[1.55px] text-[#7f8ba1] sm:text-[13px]">
+        <p className="text-[13px] font-extrabold uppercase leading-[19px] tracking-[1.55px] text-[#7f8ba1]">
           <Link
             to={ROUTES.ADMIN_MY_COMPETITIONS}
             className="transition hover:text-[#ee1c25]"
@@ -186,10 +184,10 @@ const AdminCompetitionDetailContent = memo(() => {
             {t('adminCompetitionDetail.breadcrumb.details')}
           </span>
         </p>
-        <h1 className="pt-2 text-[28px] font-normal leading-tight tracking-[-1.2px] text-[#151e31] sm:text-[32px] lg:text-[36px]">
+        <h1 className="font-manrope pt-[13px] text-[36px] font-normal leading-[42px] tracking-[-1.68px] text-[#151e31]">
           {t('adminCompetitionDetail.title')}
         </h1>
-        <p className="pt-2 text-[15px] leading-6 text-[#687186] sm:text-[17px]">
+        <p className="pt-[13px] text-[17px] leading-[25px] text-[#687186]">
           {t('adminCompetitionDetail.subtitle')}
         </p>
       </header>
@@ -228,11 +226,11 @@ const AdminCompetitionDetailContent = memo(() => {
               className={
                 isTwelve
                   ? 'w-full overflow-x-auto pb-2'
-                  : 'flex gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0 lg:grid-cols-6 lg:gap-3 xl:gap-5'
+                  : 'w-full overflow-x-auto pb-2'
               }
             >
               {isTwelve ? (
-                <div className="grid min-w-[1100px] grid-cols-12 gap-2 lg:min-w-0 xl:gap-3">
+                <div className="grid min-w-[1100px] grid-cols-12 gap-2 xl:min-w-0 xl:gap-3">
                   {detail.slides.map((slide, index) => (
                     <StoryThumb
                       key={slide.id}
@@ -245,37 +243,39 @@ const AdminCompetitionDetailContent = memo(() => {
                   ))}
                 </div>
               ) : (
-                detail.slides.map((slide, index) => (
-                  <StoryThumb
-                    key={slide.id}
-                    slide={slide}
-                    name={t(slide.nameKey)}
-                    active={index === activeIndex}
-                    onSelect={() => setActiveIndex(index)}
-                    variant={detail.variant}
-                  />
-                ))
+                <div className="grid min-w-[980px] grid-cols-6 gap-3 xl:min-w-0 xl:gap-5">
+                  {detail.slides.map((slide, index) => (
+                    <StoryThumb
+                      key={slide.id}
+                      slide={slide}
+                      name={t(slide.nameKey)}
+                      active={index === activeIndex}
+                      onSelect={() => setActiveIndex(index)}
+                      variant={detail.variant}
+                    />
+                  ))}
+                </div>
               )}
             </section>
           </>
         ) : null}
 
-        <section className="flex flex-col gap-8 sm:gap-9">
+        <section className="flex flex-col gap-9">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap gap-4 sm:gap-8">
-              <span className="inline-flex items-center justify-center rounded-full bg-[#ecedfa] px-4 py-[5px] text-[14px] font-bold uppercase tracking-[1.2px] text-[#4048cd] sm:text-[16px]">
+            <div className="flex flex-wrap gap-8">
+              <span className="font-manrope inline-flex items-center justify-center rounded-full bg-[#ecedfa] px-4 py-[5px] text-[16px] font-bold leading-6 uppercase tracking-[1.2px] text-[#4048cd]">
                 {t(detail.typeKey)}
               </span>
-              <span className="inline-flex items-center justify-center rounded-full bg-[#ecedfa] px-4 py-[5px] text-[14px] font-bold uppercase tracking-[1.2px] text-[#4048cd] sm:text-[16px]">
+              <span className="font-manrope inline-flex items-center justify-center rounded-full bg-[#ecedfa] px-4 py-[5px] text-[16px] font-bold leading-6 uppercase tracking-[1.2px] text-[#4048cd]">
                 {t(detail.categoryKey)}
               </span>
             </div>
 
             <div className="flex flex-col gap-4">
-              <h2 className="text-[28px] font-extrabold leading-tight text-[#111827] sm:text-[32px] lg:text-[36px]">
+              <h2 className="font-manrope text-[36px] font-extrabold leading-normal text-[#111827]">
                 {t(detail.titleKey)}
               </h2>
-              <p className="text-[16px] font-medium leading-7 text-[#3e3f40] sm:text-[18px] sm:leading-8 lg:text-[20px] lg:leading-[30px]">
+              <p className="font-manrope text-[20px] font-medium leading-[30px] text-[#3e3f40]">
                 {t(detail.descriptionKey)}
               </p>
             </div>
@@ -283,16 +283,16 @@ const AdminCompetitionDetailContent = memo(() => {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-[21px]">
             <div className="flex flex-col items-center justify-center gap-[15px] rounded-2xl border border-black/[0.08] bg-[#f5f5f5] p-3 text-center">
-              <p className="w-full text-[14px] font-bold uppercase tracking-[1.2px] text-[#6b7280]">
+              <p className="font-manrope w-full text-[14px] font-bold uppercase tracking-[1.2px] text-[#6b7280]">
                 {t('adminCompetitionDetail.votesReceived')}
               </p>
-              <p className="w-full text-[20px] font-bold text-[#111827]">{detail.votes}</p>
+              <p className="font-manrope w-full text-[20px] font-bold text-[#111827]">{detail.votes}</p>
             </div>
             <div className="flex flex-col items-center justify-center gap-[15px] rounded-2xl border border-black/[0.08] bg-[#f5f5f5] p-3 text-center">
-              <p className="w-full text-[14px] font-bold uppercase tracking-[1.2px] text-[#6b7280]">
+              <p className="font-manrope w-full text-[14px] font-bold uppercase tracking-[1.2px] text-[#6b7280]">
                 {t('adminCompetitionDetail.viewsCounted')}
               </p>
-              <p className="w-full text-[20px] font-bold text-[#111827]">{detail.views}</p>
+              <p className="font-manrope w-full text-[20px] font-bold text-[#111827]">{detail.views}</p>
             </div>
           </div>
 
@@ -313,10 +313,10 @@ const AdminCompetitionDetailContent = memo(() => {
               className="size-[57px] shrink-0 rounded-full object-cover"
             />
             <div className="flex flex-col gap-1">
-              <p className="text-[16px] text-[#6b7280]">
+              <p className="font-manrope text-[16px] text-[#6b7280]">
                 {t('adminCompetitionDetail.photographerLabel')}
               </p>
-              <p className="text-[20px] font-bold text-[#111827]">
+              <p className="font-manrope text-[20px] font-bold text-[#111827]">
                 {t(detail.photographerKey)}
               </p>
             </div>

@@ -44,6 +44,7 @@ describe('Admin Competition Detail content', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminCompetitionDetail.signs.aries'))).toBeInTheDocument();
     expect(screen.queryByLabelText(i18n.t('adminCompetitionDetail.slidesAria'))).not.toBeInTheDocument();
+    expect(document.querySelector('img[src="/assets/admin-competitions/wings.jpg"]')).toBeInTheDocument();
   });
 
   it('renders six-photo red story strip and switches slides', () => {

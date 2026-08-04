@@ -1,27 +1,24 @@
 import { useState } from 'react';
 import {
   COMPETITION_CARDS,
-  COMPETITIONS_PAGE_SIZE,
   COMPETITIONS_TOTAL_PAGES,
   filterCompetitionCards,
-  paginateCompetitionCards,
   toggleCompetitionFilter,
 } from './adminCompetitionsData';
 
 /**
  * Showcase filter + pagination state for Admin Photo Showcase.
- * Derived lists stay pure; updates happen only via event handlers.
+ * All filtered cards stay visible (Figma shows the full grid);
+ * page state only drives pagination chrome.
  */
 export default function useAdminCompetitionsShowcase(
   cards = COMPETITION_CARDS,
-  pageSize = COMPETITIONS_PAGE_SIZE,
   totalPages = COMPETITIONS_TOTAL_PAGES,
 ) {
   const [activeFilter, setActiveFilter] = useState(null);
   const [page, setPage] = useState(1);
 
-  const filteredCards = filterCompetitionCards(cards, activeFilter);
-  const visibleCards = paginateCompetitionCards(filteredCards, page, pageSize);
+  const visibleCards = filterCompetitionCards(cards, activeFilter);
 
   const handleFilterClick = (filterId) => {
     setActiveFilter((current) => toggleCompetitionFilter(current, filterId));
@@ -37,7 +34,6 @@ export default function useAdminCompetitionsShowcase(
     activeFilter,
     page,
     totalPages,
-    filteredCards,
     visibleCards,
     handleFilterClick,
     handlePageChange,

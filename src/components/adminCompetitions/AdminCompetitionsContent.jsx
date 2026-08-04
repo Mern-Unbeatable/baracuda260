@@ -23,13 +23,13 @@ import useAdminCompetitionsShowcase from './useAdminCompetitionsShowcase';
 
 /** @param {{ icon: string, value: string }} props */
 const MetricStat = memo(({ icon, value }) => (
-  <span className="inline-flex items-center gap-1 text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
+  <span className="inline-flex items-center gap-1 text-[16px] leading-4 text-[#6b7280]">
     <img
       src={icon}
       alt=""
       width={METRIC_ICON_SIZE}
       height={METRIC_ICON_SIZE}
-      className="size-5 sm:size-6"
+      className="size-6"
     />
     {value}
   </span>
@@ -61,7 +61,7 @@ const ShowcaseCard = memo(({ card }) => {
       aria-label={t(card.titleKey)}
     >
       <article className="flex h-full min-w-0 flex-col">
-        <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-[220px] lg:h-[252px]">
+        <div className="relative h-[208px] w-full shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-[252px]">
           <img
             src={card.image}
             alt=""
@@ -69,17 +69,17 @@ const ShowcaseCard = memo(({ card }) => {
             height={CARD_IMAGE_HEIGHT}
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#3f51b5]">
+          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold leading-[15px] uppercase tracking-[0.5px] text-[#3f51b5]">
             {t(COMPETITION_TYPE_KEYS[card.type])}
           </span>
         </div>
 
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <h3 className="truncate text-[18px] font-bold leading-5 text-[#111827] sm:text-[20px]">
+          <h3 className="font-manrope truncate text-[20px] font-bold leading-5 text-[#111827]">
             {t(card.titleKey)}
           </h3>
           <div className="mt-auto flex items-center justify-between gap-2 pt-1">
-            <p className="min-w-0 truncate text-[14px] leading-4 text-[#6b7280] sm:text-[16px]">
+            <p className="font-manrope min-w-0 truncate text-[16px] leading-4 text-[#6b7280]">
               {t(card.metaKey)}
             </p>
             <div className="flex shrink-0 items-center gap-2">
@@ -111,10 +111,10 @@ const PaginationControl = memo(({ label, onClick, disabled, children, active = f
     aria-current={active ? 'page' : undefined}
     disabled={disabled}
     onClick={onClick}
-    className={`inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] border p-[10px] text-[14px] font-medium leading-none transition ${
+    className={`inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] border p-[10px] text-[13px] font-semibold leading-none transition ${
       active
         ? 'border-[#ee1c25] bg-[#ee1c25] text-white'
-        : 'border-[#f1f1f1] bg-white text-[#111827] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
+        : 'border-[#f1f1f1] bg-white text-[#333333] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
     } disabled:cursor-not-allowed disabled:opacity-40`}
   >
     {children}
@@ -246,11 +246,11 @@ const CompetitionTypeFilters = memo(({ activeFilter, onFilterClick }) => {
             type="button"
             aria-pressed={selected}
             onClick={() => onFilterClick(filter.id)}
-            className={`rounded-full px-4 py-2.5 text-[14px] leading-5 transition sm:px-5 sm:text-[16px] ${
-              selected
-                ? 'bg-[#ee1c25] text-white'
-                : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
-            }`}
+            className={`rounded-full px-5 py-2.5 text-[16px] leading-5 transition ${
+                  selected
+                    ? 'bg-[#ee1c25] text-white'
+                    : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
+                }`}
           >
             {t(filter.labelKey)}
           </button>
@@ -302,7 +302,7 @@ const AdminCompetitionsContent = memo(() => {
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <h1 className="text-[32px] font-extrabold leading-tight text-[#111827] sm:text-[40px] lg:text-[48px]">
+        <h1 className="font-manrope text-[48px] font-extrabold leading-none text-[#111827]">
           {t('adminCompetitions.title')}
         </h1>
         <CompetitionTypeFilters

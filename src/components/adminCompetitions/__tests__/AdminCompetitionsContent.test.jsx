@@ -55,18 +55,20 @@ describe('Admin Competitions content', () => {
     );
   });
 
-  it('paginates away from page one', async () => {
+  it('keeps every card photo visible when pagination page changes', async () => {
     const user = userEvent.setup();
     render(<AdminCompetitionsContent />);
 
     expect(screen.getByText(i18n.t('adminCompetitions.cards.autumn.title'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitions.cards.zodiac.title'))).toBeInTheDocument();
 
     await user.click(
       screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 2 }) }),
     );
 
-    expect(screen.queryByText(i18n.t('adminCompetitions.cards.autumn.title'))).not.toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminCompetitions.empty'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitions.cards.autumn.title'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitions.cards.wings.title'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitions.cards.zodiac.title'))).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 2 }) }),
     ).toHaveAttribute('aria-current', 'page');

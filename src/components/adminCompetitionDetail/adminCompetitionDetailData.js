@@ -1,27 +1,40 @@
 /** Admin Competition Photo Details — Figma 339:1796 / 339:1936 / 339:2155 / 339:2375. */
 
-const A = '/assets/admin-competition-detail';
+const DETAIL = '/assets/admin-competition-detail';
+const SHOWCASE = '/assets/admin-competitions';
 const HOME = '/assets/home';
 const CD = '/assets/competition-details';
 
 export const ADMIN_DETAIL_ASSETS = {
-  divider: `${A}/divider.svg`,
-  photographer: `${A}/photographer.jpg`,
+  divider: `${DETAIL}/divider.svg`,
+  photographer: `${DETAIL}/photographer.jpg`,
   curves: {
-    red: `${A}/curve-red.svg`,
-    blue: `${A}/curve-blue.svg`,
-    twelve: `${A}/curve-12.svg`,
+    red: `${DETAIL}/curve-red.svg`,
+    blue: `${DETAIL}/curve-blue.svg`,
+    twelve: `${DETAIL}/curve-12.svg`,
   },
 };
 
-const RED_SIGNS = [
+/** Showcase card cover used as the hero for that entry. */
+const CARD_COVER = {
+  autumn: `${SHOWCASE}/autumn.jpg`,
+  wings: `${SHOWCASE}/wings.jpg`,
+  city: `${SHOWCASE}/city.jpg`,
+  forest: `${SHOWCASE}/forest.jpg`,
+  morning: `${SHOWCASE}/morning.jpg`,
+  harbor: `${SHOWCASE}/harbor.jpg`,
+  silent: `${SHOWCASE}/silent.jpg`,
+  zodiac: `${SHOWCASE}/zodiac.jpg`,
+};
+
+const buildRedSlides = (coverHero) => [
   {
     id: 'aries',
     number: 1,
     nameKey: 'adminCompetitionDetail.signs.aries',
     icon: `${HOME}/icon-aries.svg`,
-    thumb: `${A}/thumb-1.jpg`,
-    hero: `${A}/hero-six-red.jpg`,
+    thumb: `${DETAIL}/thumb-1.jpg`,
+    hero: coverHero,
     theme: 'red',
   },
   {
@@ -29,8 +42,8 @@ const RED_SIGNS = [
     number: 2,
     nameKey: 'adminCompetitionDetail.signs.taurus',
     icon: `${HOME}/icon-taurus.svg`,
-    thumb: `${A}/thumb-2.jpg`,
-    hero: `${A}/thumb-2.jpg`,
+    thumb: `${DETAIL}/thumb-2.jpg`,
+    hero: `${DETAIL}/thumb-2.jpg`,
     theme: 'red',
   },
   {
@@ -38,8 +51,8 @@ const RED_SIGNS = [
     number: 3,
     nameKey: 'adminCompetitionDetail.signs.gemini',
     icon: `${HOME}/icon-gemini.svg`,
-    thumb: `${A}/thumb-3.jpg`,
-    hero: `${A}/thumb-3.jpg`,
+    thumb: `${DETAIL}/thumb-3.jpg`,
+    hero: `${DETAIL}/thumb-3.jpg`,
     theme: 'red',
   },
   {
@@ -47,8 +60,8 @@ const RED_SIGNS = [
     number: 4,
     nameKey: 'adminCompetitionDetail.signs.cancer',
     icon: `${HOME}/icon-cancer.svg`,
-    thumb: `${A}/thumb-4.jpg`,
-    hero: `${A}/thumb-4.jpg`,
+    thumb: `${DETAIL}/thumb-4.jpg`,
+    hero: `${DETAIL}/thumb-4.jpg`,
     theme: 'red',
   },
   {
@@ -56,8 +69,8 @@ const RED_SIGNS = [
     number: 5,
     nameKey: 'adminCompetitionDetail.signs.leo',
     icon: `${HOME}/icon-leo.svg`,
-    thumb: `${A}/thumb-5.jpg`,
-    hero: `${A}/thumb-5.jpg`,
+    thumb: `${DETAIL}/thumb-5.jpg`,
+    hero: `${DETAIL}/thumb-5.jpg`,
     theme: 'red',
   },
   {
@@ -71,14 +84,14 @@ const RED_SIGNS = [
   },
 ];
 
-const BLUE_SIGNS = [
+const buildBlueSlides = (coverHero) => [
   {
     id: 'libra',
     number: 7,
     nameKey: 'adminCompetitionDetail.signs.libra',
     icon: `${HOME}/icon-libra.svg`,
-    thumb: `${A}/blue-thumb-1.jpg`,
-    hero: `${A}/hero-six-blue.jpg`,
+    thumb: `${DETAIL}/blue-thumb-1.jpg`,
+    hero: coverHero,
     theme: 'blue',
     iconBoxed: true,
   },
@@ -87,8 +100,8 @@ const BLUE_SIGNS = [
     number: 8,
     nameKey: 'adminCompetitionDetail.signs.scorpio',
     icon: `${HOME}/icon-scorpio.svg`,
-    thumb: `${A}/blue-thumb-2.jpg`,
-    hero: `${A}/blue-thumb-2.jpg`,
+    thumb: `${DETAIL}/blue-thumb-2.jpg`,
+    hero: `${DETAIL}/blue-thumb-2.jpg`,
     theme: 'blue',
     iconBoxed: true,
   },
@@ -97,8 +110,8 @@ const BLUE_SIGNS = [
     number: 9,
     nameKey: 'adminCompetitionDetail.signs.sagittarius',
     icon: `${HOME}/icon-sagittarius.svg`,
-    thumb: `${A}/blue-thumb-3.jpg`,
-    hero: `${A}/blue-thumb-3.jpg`,
+    thumb: `${DETAIL}/blue-thumb-3.jpg`,
+    hero: `${DETAIL}/blue-thumb-3.jpg`,
     theme: 'blue',
   },
   {
@@ -106,8 +119,8 @@ const BLUE_SIGNS = [
     number: 10,
     nameKey: 'adminCompetitionDetail.signs.capricorn',
     icon: `${HOME}/icon-capricorn.svg`,
-    thumb: `${A}/blue-thumb-4.jpg`,
-    hero: `${A}/blue-thumb-4.jpg`,
+    thumb: `${DETAIL}/blue-thumb-4.jpg`,
+    hero: `${DETAIL}/blue-thumb-4.jpg`,
     theme: 'blue',
   },
   {
@@ -115,8 +128,8 @@ const BLUE_SIGNS = [
     number: 11,
     nameKey: 'adminCompetitionDetail.signs.aquarius',
     icon: `${HOME}/icon-aquarius.svg`,
-    thumb: `${A}/blue-thumb-5.jpg`,
-    hero: `${A}/blue-thumb-5.jpg`,
+    thumb: `${DETAIL}/blue-thumb-5.jpg`,
+    hero: `${DETAIL}/blue-thumb-5.jpg`,
     theme: 'blue',
     iconBoxed: true,
   },
@@ -125,8 +138,8 @@ const BLUE_SIGNS = [
     number: 12,
     nameKey: 'adminCompetitionDetail.signs.pisces',
     icon: `${HOME}/icon-pisces.svg`,
-    thumb: `${A}/blue-thumb-6.jpg`,
-    hero: `${A}/blue-thumb-6.jpg`,
+    thumb: `${DETAIL}/blue-thumb-6.jpg`,
+    hero: `${DETAIL}/blue-thumb-6.jpg`,
     theme: 'blue',
   },
 ];
@@ -140,63 +153,31 @@ const SHARED_COPY = {
   categoryKey: 'adminCompetitionDetail.categories.nature',
 };
 
-/** Map showcase card id → admin photo detail variant. */
+const singleEntry = (id, titleKey) => ({
+  id,
+  variant: 'single',
+  typeKey: 'adminCompetitions.types.single',
+  titleKey,
+  hero: CARD_COVER[id],
+  sign: {
+    id: 'aries',
+    number: 1,
+    nameKey: 'adminCompetitionDetail.signs.aries',
+    icon: `${HOME}/icon-aries.svg`,
+    theme: 'red',
+  },
+  slides: [],
+  curve: null,
+  ...SHARED_COPY,
+});
+
+/** Map showcase card id → admin photo detail variant (each card keeps its own cover photo). */
 export const ADMIN_COMPETITION_DETAILS = {
-  wings: {
-    id: 'wings',
-    variant: 'single',
-    typeKey: 'adminCompetitions.types.single',
-    titleKey: 'adminCompetitionDetail.entries.wings.title',
-    hero: `${A}/hero-single.jpg`,
-    sign: RED_SIGNS[0],
-    slides: [],
-    curve: null,
-    ...SHARED_COPY,
-  },
-  forest: {
-    id: 'forest',
-    variant: 'single',
-    typeKey: 'adminCompetitions.types.single',
-    titleKey: 'adminCompetitionDetail.entries.forest.title',
-    hero: `${A}/hero-single.jpg`,
-    sign: RED_SIGNS[0],
-    slides: [],
-    curve: null,
-    ...SHARED_COPY,
-  },
-  morning: {
-    id: 'morning',
-    variant: 'single',
-    typeKey: 'adminCompetitions.types.single',
-    titleKey: 'adminCompetitionDetail.entries.morning.title',
-    hero: `${A}/hero-single.jpg`,
-    sign: RED_SIGNS[0],
-    slides: [],
-    curve: null,
-    ...SHARED_COPY,
-  },
-  harbor: {
-    id: 'harbor',
-    variant: 'single',
-    typeKey: 'adminCompetitions.types.single',
-    titleKey: 'adminCompetitionDetail.entries.harbor.title',
-    hero: `${A}/hero-single.jpg`,
-    sign: RED_SIGNS[0],
-    slides: [],
-    curve: null,
-    ...SHARED_COPY,
-  },
-  silent: {
-    id: 'silent',
-    variant: 'single',
-    typeKey: 'adminCompetitions.types.single',
-    titleKey: 'adminCompetitionDetail.entries.silent.title',
-    hero: `${A}/hero-single.jpg`,
-    sign: RED_SIGNS[0],
-    slides: [],
-    curve: null,
-    ...SHARED_COPY,
-  },
+  wings: singleEntry('wings', 'adminCompetitionDetail.entries.wings.title'),
+  forest: singleEntry('forest', 'adminCompetitionDetail.entries.forest.title'),
+  morning: singleEntry('morning', 'adminCompetitionDetail.entries.morning.title'),
+  harbor: singleEntry('harbor', 'adminCompetitionDetail.entries.harbor.title'),
+  silent: singleEntry('silent', 'adminCompetitionDetail.entries.silent.title'),
   autumn: {
     id: 'autumn',
     variant: 'six-red',
@@ -204,7 +185,7 @@ export const ADMIN_COMPETITION_DETAILS = {
     titleKey: 'adminCompetitionDetail.entries.autumn.title',
     hero: null,
     sign: null,
-    slides: RED_SIGNS,
+    slides: buildRedSlides(CARD_COVER.autumn),
     curve: ADMIN_DETAIL_ASSETS.curves.red,
     ...SHARED_COPY,
     votes: '1488',
@@ -218,7 +199,7 @@ export const ADMIN_COMPETITION_DETAILS = {
     titleKey: 'adminCompetitionDetail.entries.city.title',
     hero: null,
     sign: null,
-    slides: BLUE_SIGNS,
+    slides: buildBlueSlides(CARD_COVER.city),
     curve: ADMIN_DETAIL_ASSETS.curves.blue,
     ...SHARED_COPY,
   },
@@ -229,7 +210,10 @@ export const ADMIN_COMPETITION_DETAILS = {
     titleKey: 'adminCompetitionDetail.entries.zodiac.title',
     hero: null,
     sign: null,
-    slides: [...RED_SIGNS, ...BLUE_SIGNS],
+    slides: [
+      ...buildRedSlides(CARD_COVER.zodiac),
+      ...buildBlueSlides(`${DETAIL}/hero-six-blue.jpg`),
+    ],
     curve: ADMIN_DETAIL_ASSETS.curves.twelve,
     ...SHARED_COPY,
   },
