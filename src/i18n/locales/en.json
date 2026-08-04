@@ -382,6 +382,29 @@
         "preview": "Thanks for the details — we've pushed a fix. Could you try again?",
         "time": "· 2h ago"
       }
+    },
+    "modal": {
+      "close": "Close conversation",
+      "lastUpdated": "Last updated 2h ago",
+      "today": "Today",
+      "you": "YOU",
+      "supportInitial": "S",
+      "read": "Read",
+      "waitReply": "Please wait for the support team to reply. New messages can only be sent after receiving a response.",
+      "attachment": {
+        "name": "export-flow-fix.png",
+        "size": "184 KB"
+      },
+      "times": {
+        "user1": "9:42 AM",
+        "support1": "10:15 AM",
+        "support2": "10:16 AM"
+      },
+      "messages": {
+        "user1": "When I try to export the weekly analytics report as CSV, the download fails silently after ~5 seconds. Chrome, latest version.",
+        "support1": "Hey Alex — thanks for reporting this. We reproduced the issue on our side and it's tied to reports with more than 10k rows. We've deployed a patch.",
+        "support2": "Could you retry the export and let us know if it completes? Attaching a screenshot of the fixed flow for reference."
+      }
     }
   },
   "privacy": {

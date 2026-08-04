@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
+import ConversationMessageModal from './ConversationMessageModal';
 import {
   CONVERSATIONS,
   CONTACT_SUPPORT_ASSETS,
@@ -33,12 +34,13 @@ const StatusBadge = memo(({ status }) => {
 
 StatusBadge.displayName = 'StatusBadge';
 
-const ConversationItem = memo(({ thread }) => {
+const ConversationItem = memo(({ thread, onOpen }) => {
   const { t } = useTranslation();
 
   return (
     <button
       type="button"
+      onClick={() => onOpen(thread)}
       className="flex w-full cursor-pointer items-start gap-4 p-6 text-left transition hover:bg-[#f9fafb]"
     >
       <span className="flex size-12 shrink-0 items-center justify-center rounded-[12px] bg-[#eff6ff]">
@@ -89,6 +91,7 @@ const ContactSupportContent = memo(() => {
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [filter, setFilter] = useState('all');
+  const [activeThread, setActiveThread] = useState(null);
 
   const validate = () => {
     const nextErrors = {};
@@ -293,7 +296,11 @@ const ContactSupportContent = memo(() => {
           <div className="flex flex-col divide-y divide-[#f3f4f6]">
             {visibleThreads.length > 0 ? (
               visibleThreads.map((thread) => (
-                <ConversationItem key={thread.id} thread={thread} />
+                <ConversationItem
+                  key={thread.id}
+                  thread={thread}
+                  onOpen={setActiveThread}
+                />
               ))
             ) : (
               <p className="p-6 text-[14px] text-[#6b7280]">{t('contactSupport.empty')}</p>
@@ -301,6 +308,12 @@ const ContactSupportContent = memo(() => {
           </div>
         </div>
       </section>
+
+      <ConversationMessageModal
+        open={Boolean(activeThread)}
+        thread={activeThread}
+        onClose={() => setActiveThread(null)}
+      />
     </div>
   );
 });

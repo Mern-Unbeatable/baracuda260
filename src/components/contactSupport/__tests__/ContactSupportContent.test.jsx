@@ -128,4 +128,16 @@ describe('Contact Support page', () => {
     expect(screen.getByLabelText(i18n.t('contactSupport.subject'))).toHaveValue('');
     expect(screen.getByLabelText(i18n.t('contactSupport.message'))).toHaveValue('');
   });
+
+  it('opens the message popup when a conversation is clicked', async () => {
+    const user = userEvent.setup();
+    render(<ContactSupportContent />);
+
+    await user.click(
+      screen.getAllByText(i18n.t('contactSupport.threads.export.title'))[0],
+    );
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('contactSupport.modal.waitReply'))).toBeInTheDocument();
+  });
 });

@@ -382,6 +382,29 @@
         "preview": "Dziękujemy za szczegóły — wprowadziliśmy poprawkę. Czy możesz spróbować ponownie?",
         "time": "· 2 godz. temu"
       }
+    },
+    "modal": {
+      "close": "Zamknij rozmowę",
+      "lastUpdated": "Ostatnia aktualizacja 2 godz. temu",
+      "today": "Dziś",
+      "you": "TY",
+      "supportInitial": "S",
+      "read": "Przeczytano",
+      "waitReply": "Poczekaj na odpowiedź zespołu wsparcia. Nowe wiadomości można wysłać dopiero po otrzymaniu odpowiedzi.",
+      "attachment": {
+        "name": "export-flow-fix.png",
+        "size": "184 KB"
+      },
+      "times": {
+        "user1": "9:42",
+        "support1": "10:15",
+        "support2": "10:16"
+      },
+      "messages": {
+        "user1": "Gdy próbuję wyeksportować tygodniowy raport analityczny jako CSV, pobieranie kończy się po cichu po ~5 sekundach. Chrome, najnowsza wersja.",
+        "support1": "Cześć Alex — dzięki za zgłoszenie. Odtworzyliśmy problem po naszej stronie i dotyczy on raportów z ponad 10 tys. wierszy. Wdrożyliśmy poprawkę.",
+        "support2": "Czy możesz ponowić eksport i dać znać, czy się udał? Dołączam zrzut ekranu poprawionego procesu."
+      }
     }
   },
   "privacy": {
