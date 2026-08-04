@@ -99,25 +99,31 @@ const SummaryCard = memo(({ card }) => {
 
 SummaryCard.displayName = 'SummaryCard';
 
-/** My Prizing row — shared 4-column track so header/body stay pixel-aligned. */
+/**
+ * My Prizing — Figma: justify-between column slots; every cell left-aligned
+ * so "Prize money" and "$2000" share the same start edge.
+ */
+const PRIZING_GRID =
+  'flex w-full min-w-[720px] items-center justify-between px-4';
+
 const PrizingRow = memo(({ row, isHeader = false }) => {
   const { t } = useTranslation();
-  const cell =
-    'px-2.5 text-[16px] leading-6 sm:px-[10px]';
+  const nameCell = 'w-[160px] shrink-0 px-2.5 text-left text-[16px] leading-6 lg:w-[200px]';
+  const colCell = 'w-[180px] shrink-0 px-2.5 text-left text-[16px] leading-6';
 
   if (isHeader) {
     return (
-      <div className="grid w-full min-w-[700px] grid-cols-[minmax(180px,1.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(120px,1fr)] bg-[#f6fbff] px-4">
-        <div className={`${cell} py-3 font-normal text-black`}>
+      <div className={`${PRIZING_GRID} bg-[#f6fbff]`}>
+        <div className={`${nameCell} py-3 font-normal text-black`}>
           {t('prizePayments.prizing.columns.name')}
         </div>
-        <div className={`${cell} py-3 font-normal text-black`}>
+        <div className={`${colCell} py-3 font-normal text-black`}>
           {t('prizePayments.prizing.columns.position')}
         </div>
-        <div className={`${cell} py-3 font-normal text-black`}>
+        <div className={`${colCell} py-3 font-normal text-black`}>
           {t('prizePayments.prizing.columns.votes')}
         </div>
-        <div className={`${cell} py-3 font-normal text-black`}>
+        <div className={`${colCell} py-3 font-normal text-black`}>
           {t('prizePayments.prizing.columns.prize')}
         </div>
       </div>
@@ -125,14 +131,14 @@ const PrizingRow = memo(({ row, isHeader = false }) => {
   }
 
   return (
-    <div className="grid w-full min-w-[700px] grid-cols-[minmax(180px,1.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(120px,1fr)] border-b border-[#e4e4e4] px-4">
-      <div className={`${cell} py-6 text-[#0c0c0c]`}>
+    <div className={`${PRIZING_GRID} border-b border-[#e4e4e4]`}>
+      <div className={`${nameCell} py-6 text-[#0c0c0c]`}>
         <span className="block">{t('prizePayments.prizing.items.celestialLine1')}</span>
         <span className="block">{t('prizePayments.prizing.items.celestialLine2')}</span>
       </div>
-      <div className={`${cell} py-6 text-[#0c0c0c]`}>{t(row.positionKey)}</div>
-      <div className={`${cell} py-6 text-[#0c0c0c]`}>{row.votes}</div>
-      <div className={`${cell} py-6 text-[#0c0c0c]`}>{row.prize}</div>
+      <div className={`${colCell} py-6 text-[#0c0c0c]`}>{t(row.positionKey)}</div>
+      <div className={`${colCell} py-6 text-[#0c0c0c]`}>{row.votes}</div>
+      <div className={`${colCell} py-6 text-[#0c0c0c]`}>{row.prize}</div>
     </div>
   );
 });
