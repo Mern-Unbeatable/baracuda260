@@ -1679,5 +1679,62 @@
       "night": "Night Photography",
       "newCategory": "New Category {{number}}"
     }
+  },
+  "adminAlbumTypes": {
+    "eyebrow": "FORMAT",
+    "title": "Album types",
+    "subtitle": "Define how stories are assembled and judged across your competitions.",
+    "create": "＋ Create album type",
+    "editAlbum": "Edit Album",
+    "prizeSuffix": "/prize money",
+    "gridAria": "Album type cards",
+    "modal": {
+      "eyebrow": "Album configuration",
+      "createTitle": "New Album type",
+      "editTitle": "Edit Album type",
+      "createSubtitle": "Enter the required details for this competition format.",
+      "editSubtitle": "Update the required details for this competition format.",
+      "nameLabel": "Album type name",
+      "prizeLabel": "Prize money",
+      "descriptionLabel": "Description",
+      "featuredLabel": "Featured",
+      "featuredPlaceholder": "One feature per line",
+      "nameRequired": "Please enter an album type name.",
+      "prizeRequired": "Please enter a valid prize amount.",
+      "descriptionRequired": "Please enter a description.",
+      "featuredRequired": "Please enter at least one featured item.",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "close": "Close album type dialog"
+    },
+    "items": {
+      "single": {
+        "name": "Single Photo",
+        "description": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story — judged by the community.",
+        "features": {
+          "monthly": "Monthly competition",
+          "voting": "Public community voting",
+          "prizes": "Top 3 win cash prizes"
+        }
+      },
+      "six": {
+        "name": "6-Photos Story",
+        "description": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
+        "features": {
+          "storytelling": "Sequential storytelling",
+          "votes": "Community votes",
+          "wins": "Best story wins"
+        }
+      },
+      "zodiac": {
+        "name": "12 photos - full Zodiac Story",
+        "description": "Create a complete zodiac-themed visual journey across twelve stunning images — our grandest format.",
+        "features": {
+          "arc": "12-sign visual arc",
+          "order": "Zodiac-order display",
+          "grand": "Grand prize category"
+        }
+      }
+    }
   }
 }

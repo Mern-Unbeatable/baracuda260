@@ -1680,5 +1680,62 @@
       "night": "Fotografia nocna",
       "newCategory": "Nowa kategoria {{number}}"
     }
+  },
+  "adminAlbumTypes": {
+    "eyebrow": "FORMAT",
+    "title": "Typy albumów",
+    "subtitle": "Określ, jak historie są składane i oceniane w Twoich konkursach.",
+    "create": "＋ Utwórz typ albumu",
+    "editAlbum": "Edytuj album",
+    "prizeSuffix": "/pula nagród",
+    "gridAria": "Karty typów albumów",
+    "modal": {
+      "eyebrow": "Konfiguracja albumu",
+      "createTitle": "Nowy typ albumu",
+      "editTitle": "Edytuj typ albumu",
+      "createSubtitle": "Wprowadź wymagane dane dla tego formatu konkursu.",
+      "editSubtitle": "Zaktualizuj wymagane dane dla tego formatu konkursu.",
+      "nameLabel": "Nazwa typu albumu",
+      "prizeLabel": "Pula nagród",
+      "descriptionLabel": "Opis",
+      "featuredLabel": "Wyróżnione",
+      "featuredPlaceholder": "Jedna cecha w wierszu",
+      "nameRequired": "Podaj nazwę typu albumu.",
+      "prizeRequired": "Podaj prawidłową kwotę nagrody.",
+      "descriptionRequired": "Podaj opis.",
+      "featuredRequired": "Podaj co najmniej jedną wyróżnioną pozycję.",
+      "cancel": "Anuluj",
+      "save": "Zapisz zmiany",
+      "close": "Zamknij okno typu albumu"
+    },
+    "items": {
+      "single": {
+        "name": "Pojedyncze zdjęcie",
+        "description": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia — oceniane przez społeczność.",
+        "features": {
+          "monthly": "Comiesięczny konkurs",
+          "voting": "Publiczne głosowanie społeczności",
+          "prizes": "Top 3 wygrywa nagrody pieniężne"
+        }
+      },
+      "six": {
+        "name": "Historia 6 zdjęć",
+        "description": "Stwórz wizualną narrację z sześciu starannie ułożonych obrazów, które prowadzą widza przez łuk historii.",
+        "features": {
+          "storytelling": "Sekwencyjne opowiadanie",
+          "votes": "Głosy społeczności",
+          "wins": "Wygrywa najlepsza historia"
+        }
+      },
+      "zodiac": {
+        "name": "12 zdjęć - pełna historia Zodiaku",
+        "description": "Stwórz kompletną, zodiakalną podróż wizualną w dwunastu wspaniałych obrazach — nasz największy format.",
+        "features": {
+          "arc": "Wizualny łuk 12 znaków",
+          "order": "Wyświetlanie w kolejności zodiaku",
+          "grand": "Kategoria nagrody głównej"
+        }
+      }
+    }
   }
 }
