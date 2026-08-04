@@ -1645,5 +1645,32 @@
       "construction": { "name": "Construction Ltd" },
       "emily": { "name": "Emily Davis" }
     }
+  },
+  "adminCategories": {
+    "eyebrow": "TAXONOMY",
+    "title": "Categories",
+    "subtitle": "Shape the places your photographers’ work can belong.",
+    "panelAria": "Category management",
+    "panelTitle": "Category",
+    "add": "Add Category",
+    "remove": "Remove {{name}}",
+    "empty": "No categories yet. Add your first category.",
+    "items": {
+      "nature": "Nature",
+      "portrait": "Portrait",
+      "wildlife": "Wildlife",
+      "landscape": "Landscape",
+      "street": "Street Photography",
+      "architecture": "Architecture",
+      "blackWhite": "Black & White",
+      "travel": "Travel",
+      "wedding": "Wedding",
+      "macro": "Macro",
+      "fineArt": "Fine Art",
+      "pets": "Pets",
+      "sports": "Sports",
+      "night": "Night Photography",
+      "newCategory": "New Category {{number}}"
+    }
   }
 }
