@@ -7,6 +7,8 @@ import {
   getAdminCompetitionDetailById,
 } from './adminCompetitionDetailData';
 
+/** Auto-advance interval for multi-photo story strip (ms). */
+const ADMIN_DETAIL_SLIDE_MS = 6000;
 const SignBadge = memo(({ slide, name }) => {
   const isBlue = slide.theme === 'blue';
 
@@ -154,12 +156,23 @@ const AdminCompetitionDetailContent = memo(() => {
   const { id } = useParams();
   const detail = getAdminCompetitionDetailById(id);
   const [activeIndex, setActiveIndex] = useState(0);
+  const slideCount = detail.slides.length;
 
   useEffect(() => {
     setActiveIndex(0);
   }, [detail.id]);
 
-  const hasSlides = detail.slides.length > 0;
+  useEffect(() => {
+    if (slideCount <= 1) return undefined;
+
+    const timerId = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % slideCount);
+    }, ADMIN_DETAIL_SLIDE_MS);
+
+    return () => window.clearInterval(timerId);
+  }, [slideCount, detail.id]);
+
+  const hasSlides = slideCount > 0;
   const activeSlide = hasSlides
     ? detail.slides[activeIndex] || detail.slides[0]
     : detail.sign;

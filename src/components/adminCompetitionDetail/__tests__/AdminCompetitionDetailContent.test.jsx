@@ -16,6 +16,7 @@ jest.mock('react-router-dom', () => ({
 
 describe('Admin Competition Detail content', () => {
   afterEach(async () => {
+    jest.useRealTimers();
     mockUseParams.mockReturnValue({ id: 'wings' });
     localStorage.removeItem(LOCALE_STORAGE_KEY);
     await act(async () => {
@@ -88,6 +89,28 @@ describe('Admin Competition Detail content', () => {
     expect(
       screen.getAllByText(i18n.t('adminCompetitionDetail.signs.aries')).length,
     ).toBeGreaterThan(0);
+  });
+
+  it('auto-advances story slides every 6 seconds', () => {
+    jest.useFakeTimers();
+    mockUseParams.mockReturnValue({ id: 'autumn' });
+    render(<AdminCompetitionDetailContent />);
+
+    const aries = screen.getByRole('button', {
+      name: i18n.t('adminCompetitionDetail.signs.aries'),
+    });
+    const taurus = screen.getByRole('button', {
+      name: i18n.t('adminCompetitionDetail.signs.taurus'),
+    });
+
+    expect(aries).toHaveAttribute('aria-pressed', 'true');
+
+    act(() => {
+      jest.advanceTimersByTime(6000);
+    });
+
+    expect(taurus).toHaveAttribute('aria-pressed', 'true');
+    jest.useRealTimers();
   });
 
   it('switches detail copy to Polish', async () => {
