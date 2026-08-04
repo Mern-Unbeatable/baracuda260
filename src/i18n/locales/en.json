@@ -407,6 +407,91 @@
       }
     }
   },
+  "prizePayments": {
+    "title": "Prize & Payments",
+    "subtitle": "Manage your earnings, pending rewards, and withdrawal methods securely.",
+    "requestPayout": "Request Payout",
+    "payoutRequested": "Payout request submitted successfully!",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "status": {
+      "success": "Success",
+      "completed": "Completed",
+      "pending": "Pending"
+    },
+    "summary": {
+      "aria": "Prize payment summary",
+      "wallet": "Wallet Balance",
+      "walletValue": "$1,240.00",
+      "earned": "Total Earned",
+      "earnedValue": "$8,450.00",
+      "pending": "Pending Payouts",
+      "pendingValue": "$450.00"
+    },
+    "prizing": {
+      "title": "My Prizing",
+      "showing": "Showing 1 to 7 of 7 results",
+      "columns": {
+        "name": "Competitions Name",
+        "position": "Position",
+        "votes": "Total Vote",
+        "prize": "Prize money"
+      },
+      "positions": {
+        "first": "1 st",
+        "second": "2 nd",
+        "third": "3 rd"
+      },
+      "items": {
+        "celestial": "Celestial Wonders 2024"
+      }
+    },
+    "transactions": {
+      "title": "Transaction History",
+      "subtitle": "Last 6 months of prize winnings and payouts",
+      "showing": "Showing 1 to 7 of 7 results",
+      "columns": {
+        "competition": "Competition / ID",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status"
+      },
+      "items": {
+        "golden": {
+          "title": "Golden Hour Portraits",
+          "id": "TXN-90281-PH",
+          "date": "Oct 12, 2023",
+          "amount": "+$1,500.00"
+        },
+        "macro": {
+          "title": "Macro World Weekly",
+          "id": "TXN-88412-PH",
+          "date": "Sep 28, 2023",
+          "amount": "+$250.00"
+        },
+        "paypal": {
+          "title": "Payout to PayPal",
+          "id": "TXN-WTH-5512",
+          "date": "Sep 15, 2023",
+          "amount": "-$2,000.00"
+        },
+        "wild": {
+          "title": "Wild Nature Annual",
+          "id": "TXN-77310-PH",
+          "date": "Aug 05, 2023",
+          "amount": "+$5,000.00"
+        },
+        "urban": {
+          "title": "Urban Dusk Challenge",
+          "id": "Processing...",
+          "date": "Pending",
+          "amount": "+$450.00"
+        }
+      }
+    }
+  },
   "privacy": {
     "title": "Privacy Policy",
     "lastUpdated": "Last Updated: July 2026",

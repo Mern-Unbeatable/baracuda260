@@ -407,6 +407,91 @@
       }
     }
   },
+  "prizePayments": {
+    "title": "Nagrody i płatności",
+    "subtitle": "Bezpiecznie zarządzaj zarobkami, oczekującymi nagrodami i metodami wypłat.",
+    "requestPayout": "Poproś o wypłatę",
+    "payoutRequested": "Wniosek o wypłatę został wysłany pomyślnie!",
+    "pagination": {
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "status": {
+      "success": "Sukces",
+      "completed": "Zakończono",
+      "pending": "Oczekujące"
+    },
+    "summary": {
+      "aria": "Podsumowanie nagród i płatności",
+      "wallet": "Saldo portfela",
+      "walletValue": "$1,240.00",
+      "earned": "Łączne zarobki",
+      "earnedValue": "$8,450.00",
+      "pending": "Oczekujące wypłaty",
+      "pendingValue": "$450.00"
+    },
+    "prizing": {
+      "title": "Moje nagrody",
+      "showing": "Wyświetlanie 1–7 z 7 wyników",
+      "columns": {
+        "name": "Nazwa konkursu",
+        "position": "Pozycja",
+        "votes": "Łączna liczba głosów",
+        "prize": "Nagroda pieniężna"
+      },
+      "positions": {
+        "first": "1. miejsce",
+        "second": "2. miejsce",
+        "third": "3. miejsce"
+      },
+      "items": {
+        "celestial": "Celestial Wonders 2024"
+      }
+    },
+    "transactions": {
+      "title": "Historia transakcji",
+      "subtitle": "Ostatnie 6 miesięcy wygranych nagród i wypłat",
+      "showing": "Wyświetlanie 1–7 z 7 wyników",
+      "columns": {
+        "competition": "Konkurs / ID",
+        "date": "Data",
+        "amount": "Kwota",
+        "status": "Status"
+      },
+      "items": {
+        "golden": {
+          "title": "Golden Hour Portraits",
+          "id": "TXN-90281-PH",
+          "date": "12 paź 2023",
+          "amount": "+$1,500.00"
+        },
+        "macro": {
+          "title": "Macro World Weekly",
+          "id": "TXN-88412-PH",
+          "date": "28 wrz 2023",
+          "amount": "+$250.00"
+        },
+        "paypal": {
+          "title": "Wypłata na PayPal",
+          "id": "TXN-WTH-5512",
+          "date": "15 wrz 2023",
+          "amount": "-$2,000.00"
+        },
+        "wild": {
+          "title": "Wild Nature Annual",
+          "id": "TXN-77310-PH",
+          "date": "05 sie 2023",
+          "amount": "+$5,000.00"
+        },
+        "urban": {
+          "title": "Urban Dusk Challenge",
+          "id": "Przetwarzanie...",
+          "date": "Oczekujące",
+          "amount": "+$450.00"
+        }
+      }
+    }
+  },
   "privacy": {
     "title": "Polityka prywatności",
     "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",

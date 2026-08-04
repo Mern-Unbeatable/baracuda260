@@ -1,9 +1,17 @@
 import React, { memo } from 'react';
-import UserSectionPlaceholder from './UserSectionPlaceholder';
+import { useSEO } from '../../hooks/useSEO';
+import PrizePaymentsContent from '../../components/prizePayments/PrizePaymentsContent';
 
-const PrizePayments = memo(() => (
-  <UserSectionPlaceholder titleKey="dashboard.nav.prizePayments" />
-));
+const PrizePayments = memo(() => {
+  useSEO({
+    title: 'Prize & Payments',
+    description:
+      'Manage your My12Photos earnings, pending rewards, and withdrawal methods securely.',
+    keywords: ['prize', 'payments', 'payout', 'wallet', 'My12Photos'],
+  });
+
+  return <PrizePaymentsContent />;
+});
 
 PrizePayments.displayName = 'PrizePayments';
 
