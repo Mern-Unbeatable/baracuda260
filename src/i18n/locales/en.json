@@ -1593,5 +1593,48 @@
         "meta": "Kasia L. · Poland"
       }
     }
+  },
+  "adminUsers": {
+    "eyebrow": "COMMUNITY",
+    "title": "Users Management",
+    "subtitle": "Manage Registered User",
+    "tableAria": "Registered users table",
+    "empty": "No users match this filter.",
+    "sortBy": "Sort By:",
+    "filters": {
+      "aria": "Filter users by status",
+      "all": "All Status",
+      "active": "Active",
+      "suspended": "Suspended"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "registeredDate": "Registered Date",
+      "status": "Status",
+      "action": "Action"
+    },
+    "status": {
+      "active": "Active",
+      "suspended": "Suspended"
+    },
+    "actions": {
+      "suspend": "Suspend {{name}}",
+      "reactivate": "Reactivate {{name}}"
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "rows": {
+      "john": { "name": "John Anderson" },
+      "sarah": { "name": "Sarah Mitchell" },
+      "buildpro": { "name": "BuildPro Corp" },
+      "mike": { "name": "Mike Johnson" },
+      "construction": { "name": "Construction Ltd" },
+      "emily": { "name": "Emily Davis" }
+    }
   }
 }

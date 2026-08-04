@@ -1594,5 +1594,48 @@
         "meta": "Kasia L. · Polska"
       }
     }
+  },
+  "adminUsers": {
+    "eyebrow": "SPOŁECZNOŚĆ",
+    "title": "Zarządzanie użytkownikami",
+    "subtitle": "Zarządzaj zarejestrowanymi użytkownikami",
+    "tableAria": "Tabela zarejestrowanych użytkowników",
+    "empty": "Brak użytkowników pasujących do tego filtra.",
+    "sortBy": "Sortuj według:",
+    "filters": {
+      "aria": "Filtruj użytkowników według statusu",
+      "all": "Wszystkie statusy",
+      "active": "Aktywny",
+      "suspended": "Zawieszony"
+    },
+    "columns": {
+      "name": "Imię i nazwisko",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "registeredDate": "Data rejestracji",
+      "status": "Status",
+      "action": "Akcja"
+    },
+    "status": {
+      "active": "Aktywny",
+      "suspended": "Zawieszony"
+    },
+    "actions": {
+      "suspend": "Zawieś {{name}}",
+      "reactivate": "Przywróć {{name}}"
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "rows": {
+      "john": { "name": "John Anderson" },
+      "sarah": { "name": "Sarah Mitchell" },
+      "buildpro": { "name": "BuildPro Corp" },
+      "mike": { "name": "Mike Johnson" },
+      "construction": { "name": "Construction Ltd" },
+      "emily": { "name": "Emily Davis" }
+    }
   }
 }
