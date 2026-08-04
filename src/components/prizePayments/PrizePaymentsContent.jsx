@@ -100,10 +100,9 @@ const SummaryCard = memo(({ card }) => {
 SummaryCard.displayName = 'SummaryCard';
 
 /**
- * My Prizing — Figma: justify-between column slots; every cell left-aligned
- * so "Prize money" and "$2000" share the same start edge.
+ * Shared table row layout — same even column gaps as My Prizing (justify-between).
  */
-const PRIZING_GRID =
+const TABLE_ROW =
   'flex w-full min-w-[720px] items-center justify-between px-4';
 
 const PrizingRow = memo(({ row, isHeader = false }) => {
@@ -113,7 +112,7 @@ const PrizingRow = memo(({ row, isHeader = false }) => {
 
   if (isHeader) {
     return (
-      <div className={`${PRIZING_GRID} bg-[#f6fbff]`}>
+      <div className={`${TABLE_ROW} bg-[#f6fbff]`}>
         <div className={`${nameCell} py-3 font-normal text-black`}>
           {t('prizePayments.prizing.columns.name')}
         </div>
@@ -131,7 +130,7 @@ const PrizingRow = memo(({ row, isHeader = false }) => {
   }
 
   return (
-    <div className={`${PRIZING_GRID} border-b border-[#e4e4e4]`}>
+    <div className={`${TABLE_ROW} border-b border-[#e4e4e4]`}>
       <div className={`${nameCell} py-6 text-[#0c0c0c]`}>
         <span className="block">{t('prizePayments.prizing.items.celestialLine1')}</span>
         <span className="block">{t('prizePayments.prizing.items.celestialLine2')}</span>
@@ -145,64 +144,90 @@ const PrizingRow = memo(({ row, isHeader = false }) => {
 
 PrizingRow.displayName = 'PrizingRow';
 
+const txnNameCell =
+  'w-[200px] shrink-0 px-2.5 text-left sm:w-[220px] lg:w-[260px]';
+const txnColCell = 'w-[180px] shrink-0 px-2.5 text-left';
+
+const TransactionHeader = memo(() => {
+  const { t } = useTranslation();
+  const headClass =
+    'py-4 text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
+
+  return (
+    <div className={`${TABLE_ROW} bg-[#f1f3ff]`}>
+      <div className={`${txnNameCell} ${headClass}`}>
+        {t('prizePayments.transactions.columns.competition')}
+      </div>
+      <div className={`${txnColCell} ${headClass}`}>
+        {t('prizePayments.transactions.columns.date')}
+      </div>
+      <div className={`${txnColCell} ${headClass}`}>
+        {t('prizePayments.transactions.columns.amount')}
+      </div>
+      <div className={`${txnColCell} ${headClass}`}>
+        {t('prizePayments.transactions.columns.status')}
+      </div>
+    </div>
+  );
+});
+
+TransactionHeader.displayName = 'TransactionHeader';
+
 const TransactionRow = memo(({ row }) => {
   const { t } = useTranslation();
   const pending = row.pendingStyle;
-  const cellClass = `border-t border-[rgba(203,195,213,0.3)] px-6 py-6 text-left align-middle ${
-    pending ? 'bg-[rgba(241,243,255,0.5)]' : 'bg-transparent'
-  }`;
 
   return (
-    <tr>
-      <td className={cellClass}>
-        <div className="flex min-w-0 items-center gap-3">
-          <span
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded ${row.iconBg}`}
-          >
-            <img
-              src={row.icon}
-              alt=""
-              width={row.iconWidth}
-              height={row.iconHeight}
-              style={{ width: row.iconWidth, height: row.iconHeight }}
-            />
-          </span>
-          <div className="min-w-0">
-            <p
-              className={`text-[16px] font-bold leading-6 ${
-                pending ? 'italic text-[#7a7484]' : 'text-[#161c27]'
-              }`}
-            >
-              {t(row.titleKey)}
-            </p>
-            <p
-              className={`text-[12px] font-medium leading-4 tracking-[0.6px] text-[#7a7484] ${
-                pending ? 'italic' : ''
-              }`}
-            >
-              {t(row.idKey)}
-            </p>
-          </div>
-        </div>
-      </td>
-      <td className={cellClass}>
+    <div
+      className={`${TABLE_ROW} border-t border-[rgba(203,195,213,0.3)] ${
+        pending ? 'bg-[rgba(241,243,255,0.5)]' : 'bg-transparent'
+      }`}
+    >
+      <div className={`${txnNameCell} flex items-center gap-3 py-6`}>
         <span
-          className={`text-[16px] leading-6 ${
-            pending ? 'italic text-[#7a7484]' : 'text-[#494453]'
-          }`}
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded ${row.iconBg}`}
         >
-          {t(row.dateKey)}
+          <img
+            src={row.icon}
+            alt=""
+            width={row.iconWidth}
+            height={row.iconHeight}
+            style={{ width: row.iconWidth, height: row.iconHeight }}
+          />
         </span>
-      </td>
-      <td className={cellClass}>
-        <span className={`text-[16px] font-bold leading-6 ${amountClassName[row.amountTone]}`}>
-          {t(row.amountKey)}
-        </span>
-      </td>
-      <td className={cellClass}>
+        <div className="min-w-0">
+          <p
+            className={`text-[16px] font-bold leading-6 ${
+              pending ? 'italic text-[#7a7484]' : 'text-[#161c27]'
+            }`}
+          >
+            {t(row.titleKey)}
+          </p>
+          <p
+            className={`text-[12px] font-medium leading-4 tracking-[0.6px] text-[#7a7484] ${
+              pending ? 'italic' : ''
+            }`}
+          >
+            {t(row.idKey)}
+          </p>
+        </div>
+      </div>
+      <div
+        className={`${txnColCell} py-6 text-[16px] leading-6 ${
+          pending ? 'italic text-[#7a7484]' : 'text-[#494453]'
+        }`}
+      >
+        {t(row.dateKey)}
+      </div>
+      <div
+        className={`${txnColCell} py-6 text-[16px] font-bold leading-6 ${amountClassName[row.amountTone]}`}
+      >
+        {t(row.amountKey)}
+      </div>
+      <div className={`${txnColCell} py-6`}>
         <StatusBadge status={row.status} />
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 });
 
@@ -294,47 +319,10 @@ const PrizePaymentsContent = memo(() => {
         </div>
 
         <div className="w-full overflow-x-auto">
-          <table className="w-full min-w-[800px] table-fixed border-collapse text-left">
-            <colgroup>
-              <col className="w-[34%]" />
-              <col className="w-[22%]" />
-              <col className="w-[22%]" />
-              <col className="w-[22%]" />
-            </colgroup>
-            <thead>
-              <tr className="bg-[#f1f3ff]">
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
-                >
-                  {t('prizePayments.transactions.columns.competition')}
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
-                >
-                  {t('prizePayments.transactions.columns.date')}
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
-                >
-                  {t('prizePayments.transactions.columns.amount')}
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
-                >
-                  {t('prizePayments.transactions.columns.status')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {TRANSACTION_ROWS.map((row) => (
-                <TransactionRow key={row.id} row={row} />
-              ))}
-            </tbody>
-          </table>
+          <TransactionHeader />
+          {TRANSACTION_ROWS.map((row) => (
+            <TransactionRow key={row.id} row={row} />
+          ))}
         </div>
 
         <TablePagination showingKey="prizePayments.transactions.showing" />
