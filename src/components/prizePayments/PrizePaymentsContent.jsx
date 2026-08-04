@@ -195,7 +195,7 @@ const TransactionRow = memo(({ row }) => {
         </p>
       </div>
 
-      <div className="flex items-center justify-end px-6 py-6 lg:pr-16 xl:pr-[100px]">
+      <div className="flex items-center justify-center px-6 py-6">
         <StatusBadge status={row.status} />
       </div>
     </div>
@@ -300,7 +300,7 @@ const PrizePaymentsContent = memo(() => {
             <p className="px-3 py-4 text-center text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]">
               {t('prizePayments.transactions.columns.amount')}
             </p>
-            <p className="px-6 py-4 text-right text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484] lg:pr-16 xl:pr-[100px]">
+            <p className="px-6 py-4 text-center text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]">
               {t('prizePayments.transactions.columns.status')}
             </p>
           </div>
