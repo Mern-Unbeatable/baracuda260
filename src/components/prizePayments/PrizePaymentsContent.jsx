@@ -148,63 +148,61 @@ PrizingRow.displayName = 'PrizingRow';
 const TransactionRow = memo(({ row }) => {
   const { t } = useTranslation();
   const pending = row.pendingStyle;
+  const cellClass = `border-t border-[rgba(203,195,213,0.3)] px-6 py-6 text-left align-middle ${
+    pending ? 'bg-[rgba(241,243,255,0.5)]' : 'bg-transparent'
+  }`;
 
   return (
-    <div
-      className={`grid min-w-[800px] grid-cols-[minmax(220px,1.35fr)_minmax(140px,1fr)_minmax(140px,1fr)_minmax(120px,1fr)] items-center border-t border-[rgba(203,195,213,0.3)] ${
-        pending ? 'bg-[rgba(241,243,255,0.5)]' : 'bg-transparent'
-      }`}
-    >
-      <div className="flex min-w-0 items-center gap-3 py-6 pl-6 pr-3">
-        <span
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded ${row.iconBg}`}
-        >
-          <img
-            src={row.icon}
-            alt=""
-            width={row.iconWidth}
-            height={row.iconHeight}
-            style={{ width: row.iconWidth, height: row.iconHeight }}
-          />
-        </span>
-        <div className="min-w-0">
-          <p
-            className={`text-[16px] font-bold leading-6 ${
-              pending ? 'italic text-[#7a7484]' : 'text-[#161c27]'
-            }`}
+    <tr>
+      <td className={cellClass}>
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded ${row.iconBg}`}
           >
-            {t(row.titleKey)}
-          </p>
-          <p
-            className={`text-[12px] font-medium leading-4 tracking-[0.6px] text-[#7a7484] ${
-              pending ? 'italic' : ''
-            }`}
-          >
-            {t(row.idKey)}
-          </p>
+            <img
+              src={row.icon}
+              alt=""
+              width={row.iconWidth}
+              height={row.iconHeight}
+              style={{ width: row.iconWidth, height: row.iconHeight }}
+            />
+          </span>
+          <div className="min-w-0">
+            <p
+              className={`text-[16px] font-bold leading-6 ${
+                pending ? 'italic text-[#7a7484]' : 'text-[#161c27]'
+              }`}
+            >
+              {t(row.titleKey)}
+            </p>
+            <p
+              className={`text-[12px] font-medium leading-4 tracking-[0.6px] text-[#7a7484] ${
+                pending ? 'italic' : ''
+              }`}
+            >
+              {t(row.idKey)}
+            </p>
+          </div>
         </div>
-      </div>
-
-      <div className="flex items-center justify-center px-3 py-6">
-        <p
-          className={`text-center text-[16px] leading-6 ${
+      </td>
+      <td className={cellClass}>
+        <span
+          className={`text-[16px] leading-6 ${
             pending ? 'italic text-[#7a7484]' : 'text-[#494453]'
           }`}
         >
           {t(row.dateKey)}
-        </p>
-      </div>
-
-      <div className="flex items-center justify-center px-3 py-6">
-        <p className={`text-[16px] font-bold leading-6 ${amountClassName[row.amountTone]}`}>
+        </span>
+      </td>
+      <td className={cellClass}>
+        <span className={`text-[16px] font-bold leading-6 ${amountClassName[row.amountTone]}`}>
           {t(row.amountKey)}
-        </p>
-      </div>
-
-      <div className="flex items-center justify-center px-6 py-6">
+        </span>
+      </td>
+      <td className={cellClass}>
         <StatusBadge status={row.status} />
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 });
 
@@ -296,24 +294,47 @@ const PrizePaymentsContent = memo(() => {
         </div>
 
         <div className="w-full overflow-x-auto">
-          <div className="grid min-w-[800px] grid-cols-[minmax(220px,1.35fr)_minmax(140px,1fr)_minmax(140px,1fr)_minmax(120px,1fr)] bg-[#f1f3ff]">
-            <p className="px-6 py-4 text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]">
-              {t('prizePayments.transactions.columns.competition')}
-            </p>
-            <p className="px-3 py-4 text-center text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]">
-              {t('prizePayments.transactions.columns.date')}
-            </p>
-            <p className="px-3 py-4 text-center text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]">
-              {t('prizePayments.transactions.columns.amount')}
-            </p>
-            <p className="px-6 py-4 text-center text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]">
-              {t('prizePayments.transactions.columns.status')}
-            </p>
-          </div>
-
-          {TRANSACTION_ROWS.map((row) => (
-            <TransactionRow key={row.id} row={row} />
-          ))}
+          <table className="w-full min-w-[800px] table-fixed border-collapse text-left">
+            <colgroup>
+              <col className="w-[34%]" />
+              <col className="w-[22%]" />
+              <col className="w-[22%]" />
+              <col className="w-[22%]" />
+            </colgroup>
+            <thead>
+              <tr className="bg-[#f1f3ff]">
+                <th
+                  scope="col"
+                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
+                >
+                  {t('prizePayments.transactions.columns.competition')}
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
+                >
+                  {t('prizePayments.transactions.columns.date')}
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
+                >
+                  {t('prizePayments.transactions.columns.amount')}
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-4 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]"
+                >
+                  {t('prizePayments.transactions.columns.status')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {TRANSACTION_ROWS.map((row) => (
+                <TransactionRow key={row.id} row={row} />
+              ))}
+            </tbody>
+          </table>
         </div>
 
         <TablePagination showingKey="prizePayments.transactions.showing" />
