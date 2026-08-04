@@ -6,6 +6,7 @@ export const ADMIN_USERS_ASSETS = {
   chevronDown: `${A}/icon-chevron-down.svg`,
   trash: `${A}/icon-trash.svg`,
   reactivate: `${A}/icon-reactivate.svg`,
+  close: `${A}/icon-close.svg`,
 };
 
 export const USER_STATUS = {
@@ -27,6 +28,12 @@ export const STATUS_LABEL_KEYS = {
 export const USERS_PAGE_SIZE = 7;
 export const ACTION_ICON_SIZE = 24;
 export const CHEVRON_ICON_SIZE = 24;
+export const CLOSE_ICON_SIZE = 18;
+
+/**
+ * @param {string} reason
+ */
+export const isSuspendReasonValid = (reason) => Boolean(String(reason || '').trim());
 
 export const ADMIN_USERS = [
   {

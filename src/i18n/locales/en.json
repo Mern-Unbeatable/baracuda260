@@ -1623,6 +1623,15 @@
       "suspend": "Suspend {{name}}",
       "reactivate": "Reactivate {{name}}"
     },
+    "suspendModal": {
+      "title": "Suspend User",
+      "close": "Close suspend dialog",
+      "reason": "Reason",
+      "reasonPlaceholder": "Why Suspend this user",
+      "reasonRequired": "Please enter a reason.",
+      "cancel": "Cancel",
+      "confirm": "Suspend"
+    },
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
       "previous": "Previous",

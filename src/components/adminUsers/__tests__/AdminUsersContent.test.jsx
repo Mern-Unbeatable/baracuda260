@@ -47,7 +47,7 @@ describe('Admin Users content', () => {
     ).toBeInTheDocument();
   });
 
-  it('suspends an active user and shows the reactivate action', async () => {
+  it('suspends an active user through the Suspend User popup', async () => {
     const user = userEvent.setup();
     render(<AdminUsersContent />);
 
@@ -55,6 +55,16 @@ describe('Admin Users content', () => {
       name: i18n.t('adminUsers.rows.john.name'),
     });
     await user.click(screen.getAllByRole('button', { name: suspendLabel })[0]);
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('adminUsers.suspendModal.title') }),
+    ).toBeInTheDocument();
+
+    await user.type(
+      screen.getByPlaceholderText(i18n.t('adminUsers.suspendModal.reasonPlaceholder')),
+      'Abuse reports',
+    );
+    await user.click(screen.getByRole('button', { name: i18n.t('adminUsers.suspendModal.confirm') }));
 
     expect(
       screen.getAllByRole('button', {
@@ -65,9 +75,8 @@ describe('Admin Users content', () => {
     ).toBeGreaterThan(0);
 
     const section = screen.getByLabelText(i18n.t('adminUsers.tableAria'));
-    const johnRow = within(section).getAllByText(i18n.t('adminUsers.rows.john.name'))[0]
-      .closest('tr') || within(section).getAllByText(i18n.t('adminUsers.rows.john.name'))[0]
-      .closest('article');
+    const johnNode = within(section).getAllByText(i18n.t('adminUsers.rows.john.name'))[0];
+    const johnRow = johnNode.closest('tr') || johnNode.closest('article');
     expect(within(johnRow).getByText(i18n.t('adminUsers.status.suspended'))).toBeInTheDocument();
   });
 

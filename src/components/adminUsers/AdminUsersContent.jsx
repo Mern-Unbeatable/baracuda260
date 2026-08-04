@@ -9,6 +9,7 @@ import {
   USER_STATUS,
 } from './adminUsersData';
 import useAdminUsers from './useAdminUsers';
+import SuspendUserModal from './SuspendUserModal';
 
 /**
  * @param {{ status: string }} props
@@ -163,10 +164,10 @@ const getUserActionLabel = (t, user) => {
  *     registeredDate: string,
  *     status: string,
  *   },
- *   onToggleStatus: (id: string) => void,
+ *   onUserAction: (id: string) => void,
  * }} props
  */
-const UserActionButton = memo(({ user, onToggleStatus }) => {
+const UserActionButton = memo(({ user, onUserAction }) => {
   const { t } = useTranslation();
   const isActive = user.status === USER_STATUS.ACTIVE;
 
@@ -174,7 +175,7 @@ const UserActionButton = memo(({ user, onToggleStatus }) => {
     <button
       type="button"
       aria-label={getUserActionLabel(t, user)}
-      onClick={() => onToggleStatus(user.id)}
+      onClick={() => onUserAction(user.id)}
       className="inline-flex size-6 cursor-pointer items-center justify-center"
     >
       <img
@@ -200,10 +201,10 @@ UserActionButton.displayName = 'UserActionButton';
  *     registeredDate: string,
  *     status: string,
  *   },
- *   onToggleStatus: (id: string) => void,
+ *   onUserAction: (id: string) => void,
  * }} props
  */
-const UserTableRow = memo(({ user, onToggleStatus }) => {
+const UserTableRow = memo(({ user, onUserAction }) => {
   const { t } = useTranslation();
 
   return (
@@ -224,7 +225,7 @@ const UserTableRow = memo(({ user, onToggleStatus }) => {
         <StatusBadge status={user.status} />
       </td>
       <td className="min-w-[100px] px-[26px] py-6">
-        <UserActionButton user={user} onToggleStatus={onToggleStatus} />
+        <UserActionButton user={user} onUserAction={onUserAction} />
       </td>
     </tr>
   );
@@ -243,10 +244,10 @@ UserTableRow.displayName = 'UserTableRow';
  *     registeredDate: string,
  *     status: string,
  *   },
- *   onToggleStatus: (id: string) => void,
+ *   onUserAction: (id: string) => void,
  * }} props
  */
-const UserMobileCard = memo(({ user, onToggleStatus }) => {
+const UserMobileCard = memo(({ user, onUserAction }) => {
   const { t } = useTranslation();
 
   return (
@@ -256,7 +257,7 @@ const UserMobileCard = memo(({ user, onToggleStatus }) => {
           <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">{t(user.nameKey)}</p>
           <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">{user.email}</p>
         </div>
-        <UserActionButton user={user} onToggleStatus={onToggleStatus} />
+        <UserActionButton user={user} onUserAction={onUserAction} />
       </div>
 
       <div className="grid grid-cols-1 gap-2">
@@ -284,13 +285,13 @@ UserMobileCard.displayName = 'UserMobileCard';
 /**
  * @param {{
  *   users: Array<{ id: string, status: string }>,
- *   onToggleStatus: (id: string) => void,
+ *   onUserAction: (id: string) => void,
  * }} props
  */
-const UsersMobileCards = memo(({ users, onToggleStatus }) => (
+const UsersMobileCards = memo(({ users, onUserAction }) => (
   <div className="flex flex-col md:hidden" data-testid="users-mobile-cards">
     {users.map((user) => (
-      <UserMobileCard key={user.id} user={user} onToggleStatus={onToggleStatus} />
+      <UserMobileCard key={user.id} user={user} onUserAction={onUserAction} />
     ))}
   </div>
 ));
@@ -300,10 +301,10 @@ UsersMobileCards.displayName = 'UsersMobileCards';
 /**
  * @param {{
  *   users: Array<{ id: string, status: string }>,
- *   onToggleStatus: (id: string) => void,
+ *   onUserAction: (id: string) => void,
  * }} props
  */
-const UsersTable = memo(({ users, onToggleStatus }) => {
+const UsersTable = memo(({ users, onUserAction }) => {
   const { t } = useTranslation();
 
   return (
@@ -333,7 +334,7 @@ const UsersTable = memo(({ users, onToggleStatus }) => {
         </thead>
         <tbody>
           {users.map((user) => (
-            <UserTableRow key={user.id} user={user} onToggleStatus={onToggleStatus} />
+            <UserTableRow key={user.id} user={user} onUserAction={onUserAction} />
           ))}
         </tbody>
       </table>
@@ -398,12 +399,15 @@ const AdminUsersContent = memo(() => {
     range,
     isFirstPage,
     isLastPage,
+    isSuspendModalOpen,
     handleStatusFilterChange,
     handleToggleSort,
     handleCloseSort,
     handlePreviousPage,
     handleNextPage,
-    handleToggleUserStatus,
+    handleUserAction,
+    handleCloseSuspendModal,
+    handleConfirmSuspend,
   } = useAdminUsers();
 
   return (
@@ -434,8 +438,8 @@ const AdminUsersContent = memo(() => {
       >
         {visibleUsers.length > 0 ? (
           <>
-            <UsersMobileCards users={visibleUsers} onToggleStatus={handleToggleUserStatus} />
-            <UsersTable users={visibleUsers} onToggleStatus={handleToggleUserStatus} />
+            <UsersMobileCards users={visibleUsers} onUserAction={handleUserAction} />
+            <UsersTable users={visibleUsers} onUserAction={handleUserAction} />
           </>
         ) : (
           <p className="px-6 py-10 text-center text-[16px] text-[#687186]">{t('adminUsers.empty')}</p>
@@ -451,6 +455,12 @@ const AdminUsersContent = memo(() => {
           onNext={handleNextPage}
         />
       </section>
+
+      <SuspendUserModal
+        open={isSuspendModalOpen}
+        onClose={handleCloseSuspendModal}
+        onConfirm={handleConfirmSuspend}
+      />
     </div>
   );
 });

@@ -3,6 +3,7 @@ import {
   USER_STATUS,
   filterUsersByStatus,
   getUsersPageRange,
+  isSuspendReasonValid,
   paginateUsers,
   toggleUserStatus,
 } from '../adminUsersData';
@@ -45,5 +46,10 @@ describe('adminUsersData helpers', () => {
   it('toggles active and suspended status', () => {
     expect(toggleUserStatus(USER_STATUS.ACTIVE)).toBe(USER_STATUS.SUSPENDED);
     expect(toggleUserStatus(USER_STATUS.SUSPENDED)).toBe(USER_STATUS.ACTIVE);
+  });
+
+  it('validates suspend reason input', () => {
+    expect(isSuspendReasonValid('ok')).toBe(true);
+    expect(isSuspendReasonValid(' ')).toBe(false);
   });
 });

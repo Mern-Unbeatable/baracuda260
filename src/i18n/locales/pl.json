@@ -1624,6 +1624,15 @@
       "suspend": "Zawieś {{name}}",
       "reactivate": "Przywróć {{name}}"
     },
+    "suspendModal": {
+      "title": "Zawieś użytkownika",
+      "close": "Zamknij okno zawieszenia",
+      "reason": "Powód",
+      "reasonPlaceholder": "Dlaczego zawieszasz tego użytkownika",
+      "reasonRequired": "Podaj powód.",
+      "cancel": "Anuluj",
+      "confirm": "Zawieś"
+    },
     "pagination": {
       "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
       "previous": "Poprzednia",
