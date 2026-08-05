@@ -50,14 +50,14 @@ const SiteHeader = memo(({ activeHref }) => {
       <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-4 px-4 py-2.5 sm:px-6 md:px-10 xl:px-[192px]">
         <AppLink
           href="/"
-          className="relative h-[52px] w-[170px] shrink-0 overflow-hidden sm:h-[67px] sm:w-[220px]"
+          className="relative flex h-[52px] w-[170px] shrink-0 items-center sm:h-[67px] sm:w-[220px]"
         >
           <img
             src={SITE_ASSETS.logo}
             alt="My 12 Photos"
             width={220}
             height={68}
-            className="absolute left-0 top-[-110%] h-[326%] w-full max-w-none object-cover"
+            className="h-full w-full object-contain object-left"
           />
         </AppLink>
 
