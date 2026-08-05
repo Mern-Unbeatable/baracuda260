@@ -1,4 +1,4 @@
-/** Admin Winners — Figma node 339:4188. */
+/** Admin Winners — Figma nodes 339:4188 / podium 2066:504. */
 
 const A = '/assets/admin-winners';
 
@@ -18,7 +18,8 @@ export const EYE_ICON_SIZE = 24;
 export const CALENDAR_ICON_SIZE = 12;
 export const CHEVRON_ICON_SIZE = 24;
 export const TABLE_AVATAR_SIZE = 36;
-export const PODIUM_MEDAL_SIZE = { width: 30, height: 30 };
+/** Podium medal display size — Figma 2066:504. */
+export const PODIUM_MEDAL_SIZE = { width: 28, height: 28 };
 export const TABLE_MEDAL_SIZE = { width: 20, height: 20 };
 
 export const PODIUM_SIZES = {

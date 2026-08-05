@@ -72,7 +72,11 @@ const RankMedal = memo(({ rank, size = 'podium' }) => {
       alt=""
       width={dims.width}
       height={dims.height}
-      className={size === 'table' ? 'size-5' : 'size-[30px]'}
+      className={
+        size === 'table'
+          ? 'size-5 object-contain'
+          : 'size-7 object-contain'
+      }
     />
   );
 });
@@ -80,59 +84,106 @@ const RankMedal = memo(({ rank, size = 'podium' }) => {
 RankMedal.displayName = 'RankMedal';
 
 /**
+ * Podium avatar + medal — Figma 2066:504 (avatars bottom-aligned; 1st taller).
+ * @param {{
+ *   winner: object | null,
+ *   place: 'first' | 'second' | 'third',
+ * }} props
+ */
+const PodiumAvatar = memo(({ winner, place }) => {
+  if (!winner) return null;
+
+  const size = PODIUM_SIZES[place];
+  const isFirst = place === 'first';
+  const borderClass = isFirst
+    ? 'border-4 border-[#fdc700] shadow-[0_8px_20px_rgba(253,199,0,0.45)]'
+    : place === 'second'
+      ? 'border-[1.5px] border-[#d1d5db]'
+      : 'border-2 border-[#fee685]';
+
+  return (
+    <div className="relative flex w-full justify-center" style={{ height: size }}>
+      <div className="relative" style={{ width: size, height: size }}>
+        <div className={`size-full overflow-hidden rounded-full bg-[#f3f4f6] ${borderClass}`}>
+          <PhotographerAvatar winner={winner} size={size} />
+        </div>
+        <div
+          className="pointer-events-none absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-[58%]"
+          aria-hidden="true"
+        >
+          <RankMedal rank={winner.rank} size="podium" />
+        </div>
+      </div>
+    </div>
+  );
+});
+
+PodiumAvatar.displayName = 'PodiumAvatar';
+
+/**
+ * Podium name / city / votes — shared baseline across columns (Figma 2066:504).
  * @param {{
  *   winner: object | null,
  *   place: 'first' | 'second' | 'third',
  *   locale: string,
  * }} props
  */
-const PodiumCard = memo(({ winner, place, locale }) => {
+const PodiumMeta = memo(({ winner, place, locale }) => {
   const { t } = useTranslation();
   if (!winner) return null;
 
-  const size = PODIUM_SIZES[place];
   const isFirst = place === 'first';
-  const borderClass = isFirst
-    ? 'border-4 border-[#fdc700] shadow-[0px_10px_15px_-3px_#fff085,0px_4px_6px_-4px_#fff085]'
-    : place === 'second'
-      ? 'border-[1.75px] border-[#e5e7eb]'
-      : 'border-2 border-[#fee685]';
-  const offsetClass = isFirst ? '-mt-4' : '';
-  const padding = isFirst ? 4 : place === 'second' ? 1.75 : 2;
 
   return (
-    <div className={`flex w-[76px] flex-col items-center sm:w-20 ${offsetClass}`}>
-      <div className="flex h-[30px] items-center justify-center" aria-hidden="true">
-        <RankMedal rank={winner.rank} size="podium" />
-      </div>
-      <div className="pt-2">
-        <div
-          className={`overflow-hidden rounded-full bg-[#f3f4f6] ${borderClass}`}
-          style={{ width: size, height: size, padding }}
-        >
-          <div className="size-full overflow-hidden rounded-full">
-            <PhotographerAvatar winner={winner} size={size - padding * 2} />
-          </div>
-        </div>
-      </div>
+    <div className="flex w-full flex-col items-center pt-2 text-center">
       <p
-        className={`pt-2 text-center text-[#0d0d14] ${
-          isFirst
-            ? 'text-[16px] font-extrabold leading-6'
-            : 'text-[14px] font-bold leading-5'
+        className={`text-[#0d0d14] ${
+          isFirst ? 'text-[16px] font-extrabold leading-6' : 'text-[14px] font-bold leading-5'
         }`}
       >
         {t(winner.firstNameKey)}
       </p>
-      <p className="text-center text-[12px] leading-4 text-[#6b7280]">{t(winner.cityKey)}</p>
-      <p className="pt-1 text-center text-[14px] font-bold leading-5 text-[#e31837]">
+      <p className="text-[12px] leading-4 text-[#6b7280]">{t(winner.cityKey)}</p>
+      <p className="pt-1 text-[14px] font-bold leading-5 text-[#e31837]">
         {t('adminWinners.votesLabel', { count: formatCount(winner.votes, locale) })}
       </p>
     </div>
   );
 });
 
-PodiumCard.displayName = 'PodiumCard';
+PodiumMeta.displayName = 'PodiumMeta';
+
+/**
+ * Full podium — avatars staggered, text on one baseline (Figma 2066:504).
+ * @param {{
+ *   podium: { first: object | null, second: object | null, third: object | null },
+ *   locale: string,
+ * }} props
+ */
+const WinnersPodium = memo(({ podium, locale }) => {
+  const places = [
+    { place: 'second', winner: podium.second },
+    { place: 'first', winner: podium.first },
+    { place: 'third', winner: podium.third },
+  ];
+
+  return (
+    <div className="mx-auto w-full max-w-[360px] sm:max-w-[420px]">
+      <div className="grid grid-cols-3 items-end gap-x-4 sm:gap-x-6 md:gap-x-8">
+        {places.map(({ place, winner }) => (
+          <PodiumAvatar key={`avatar-${place}`} winner={winner} place={place} />
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8">
+        {places.map(({ place, winner }) => (
+          <PodiumMeta key={`meta-${place}`} winner={winner} place={place} locale={locale} />
+        ))}
+      </div>
+    </div>
+  );
+});
+
+WinnersPodium.displayName = 'WinnersPodium';
 
 /**
  * @param {{
@@ -390,7 +441,7 @@ const WinnerMobileCard = memo(({ winner, locale, onView }) => {
 WinnerMobileCard.displayName = 'WinnerMobileCard';
 
 /**
- * Admin Winners — Figma node 339:4188.
+ * Admin Winners — Figma 339:4188; podium 2066:504.
  */
 const AdminWinnersContent = memo(() => {
   const { t, i18n } = useTranslation();
@@ -438,12 +489,8 @@ const AdminWinnersContent = memo(() => {
         </div>
       </header>
 
-      <section aria-label={t('adminWinners.podiumAria')} className="flex justify-center">
-        <div className="flex items-end gap-4 sm:gap-6">
-          <PodiumCard winner={podium.second} place="second" locale={locale} />
-          <PodiumCard winner={podium.first} place="first" locale={locale} />
-          <PodiumCard winner={podium.third} place="third" locale={locale} />
-        </div>
+      <section aria-label={t('adminWinners.podiumAria')} className="flex justify-center pt-5">
+        <WinnersPodium podium={podium} locale={locale} />
       </section>
 
       <section
