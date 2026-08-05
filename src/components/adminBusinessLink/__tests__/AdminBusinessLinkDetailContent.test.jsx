@@ -54,6 +54,9 @@ describe('Admin Business Link Details', () => {
     expect(
       screen.getByRole('heading', { level: 2, name: i18n.t('adminBusinessLink.detail.photoTitle') }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(i18n.t('adminBusinessLink.detail.photoDescription')),
+    ).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminBusinessLink.detail.photographer'))).toBeInTheDocument();
     expect(screen.getByText('https://website.com/business/album-45215')).toBeInTheDocument();
     expect(
@@ -99,5 +102,10 @@ describe('Admin Business Link Details', () => {
     expect(screen.getByText('Stany Zjednoczone')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Kopiuj link' })).toBeInTheDocument();
     expect(screen.getByText('Wygenerowany link biznesowy')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Młody mężczyzna pewnie idący cichą miejską ulicą podczas złotej godziny/,
+      ),
+    ).toBeInTheDocument();
   });
 });
