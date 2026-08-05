@@ -1804,10 +1804,31 @@
       "answered": "Answered",
       "viewMessage": "View Message"
     },
+    "modal": {
+      "title": "Answer & Publish Question",
+      "close": "Close answer modal",
+      "originalQuestion": "Original Consultant Question",
+      "answerLabel": "Answer Content",
+      "answerPlaceholder": "Provide a detailed answer for the knowledge base...",
+      "answerRequired": "Please enter an answer before publishing.",
+      "publish": "Publish & Notify",
+      "backToSupport": "Back to Support",
+      "toolbar": {
+        "aria": "Answer formatting toolbar",
+        "bold": "Bold",
+        "italic": "Italic",
+        "listUl": "Bullet list",
+        "listOl": "Numbered list",
+        "link": "Insert link",
+        "image": "Insert image"
+      }
+    },
     "tickets": {
       "export": {
         "title": "Unable to export analytics report",
         "preview": "I've been trying to export the Analytics report but....",
+        "fullQuestion": "I've been trying to export the Analytics report but I couldn’t. Please Give me a solution",
+        "answer": "To export analytics data, please try to refresh your browser and then find out “Export data” from your dashboard and click to the button.",
         "time": "2 hours ago"
       }
     }

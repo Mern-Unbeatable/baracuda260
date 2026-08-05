@@ -1,21 +1,12 @@
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import toast from 'react-hot-toast';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
 import AdminSupportContent from '../AdminSupportContent';
-
-jest.mock('react-hot-toast', () => ({
-  __esModule: true,
-  default: {
-    success: jest.fn(),
-  },
-}));
 
 describe('Admin Support content', () => {
   afterEach(async () => {
     localStorage.removeItem(LOCALE_STORAGE_KEY);
-    jest.clearAllMocks();
     await act(async () => {
       await changeAppLanguage(DEFAULT_LOCALE);
     });
@@ -45,30 +36,19 @@ describe('Admin Support content', () => {
     ).toHaveLength(2);
   });
 
-  it('moves a pending ticket into the answered queue', async () => {
+  it('opens compose modal when Answer is clicked', async () => {
     const user = userEvent.setup();
     render(<AdminSupportContent />);
 
     await user.click(screen.getAllByRole('button', { name: i18n.t('adminSupport.actions.answer') })[0]);
 
-    expect(screen.getAllByRole('button', { name: i18n.t('adminSupport.actions.answer') })).toHaveLength(
-      2,
-    );
-    expect(screen.getAllByText(i18n.t('adminSupport.actions.answered')).length).toBe(3);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(
-      screen.getAllByRole('button', { name: i18n.t('adminSupport.actions.viewMessage') }),
-    ).toHaveLength(3);
-  });
-
-  it('shows the message preview when viewing an answered ticket', async () => {
-    const user = userEvent.setup();
-    render(<AdminSupportContent />);
-
-    await user.click(
-      screen.getAllByRole('button', { name: i18n.t('adminSupport.actions.viewMessage') })[0],
+      screen.getByRole('heading', { level: 2, name: i18n.t('adminSupport.modal.title') }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: i18n.t('adminSupport.actions.answer') })).toHaveLength(
+      3,
     );
-
-    expect(toast.success).toHaveBeenCalledWith(i18n.t('adminSupport.tickets.export.preview'));
   });
 
   it('switches support copy to Polish', async () => {

@@ -1805,10 +1805,31 @@
       "answered": "Odpowiedziano",
       "viewMessage": "Zobacz wiadomość"
     },
+    "modal": {
+      "title": "Odpowiedz i opublikuj pytanie",
+      "close": "Zamknij okno odpowiedzi",
+      "originalQuestion": "Oryginalne pytanie konsultanta",
+      "answerLabel": "Treść odpowiedzi",
+      "answerPlaceholder": "Podaj szczegółową odpowiedź dla bazy wiedzy...",
+      "answerRequired": "Wpisz odpowiedź przed publikacją.",
+      "publish": "Opublikuj i powiadom",
+      "backToSupport": "Powrót do wsparcia",
+      "toolbar": {
+        "aria": "Pasek formatowania odpowiedzi",
+        "bold": "Pogrubienie",
+        "italic": "Kursywa",
+        "listUl": "Lista punktowana",
+        "listOl": "Lista numerowana",
+        "link": "Wstaw link",
+        "image": "Wstaw obraz"
+      }
+    },
     "tickets": {
       "export": {
         "title": "Nie można wyeksportować raportu analitycznego",
         "preview": "Próbuję wyeksportować raport Analytics, ale....",
+        "fullQuestion": "Próbuję wyeksportować raport Analytics, ale nie mogę. Proszę o rozwiązanie",
+        "answer": "Aby wyeksportować dane analityczne, odśwież przeglądarkę, a następnie znajdź „Export data” na pulpicie i kliknij przycisk.",
         "time": "2 godziny temu"
       }
     }

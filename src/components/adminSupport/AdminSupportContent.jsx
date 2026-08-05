@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import AnswerPublishModal from './AnswerPublishModal';
 import {
   ADMIN_SUPPORT_ASSETS,
   AVATAR_SIZE,
@@ -144,15 +144,17 @@ SupportQueueCard.displayName = 'SupportQueueCard';
  */
 const AdminSupportContent = memo(() => {
   const { t } = useTranslation();
-  const { pendingTickets, answeredTickets, handleAnswer, handleViewMessage } = useAdminSupport();
-
-  const onViewMessage = (ticketId) => {
-    handleViewMessage(ticketId);
-    const ticket = answeredTickets.find((item) => item.id === ticketId);
-    if (ticket) {
-      toast.success(t(ticket.previewKey));
-    }
-  };
+  const {
+    pendingTickets,
+    answeredTickets,
+    activeTicket,
+    modalMode,
+    isModalOpen,
+    handleOpenCompose,
+    handleOpenPublished,
+    handleCloseModal,
+    handlePublish,
+  } = useAdminSupport();
 
   return (
     <div className="flex w-full flex-col gap-6 py-2 sm:py-4">
@@ -174,16 +176,24 @@ const AdminSupportContent = memo(() => {
           tickets={pendingTickets}
           emptyLabel={t('adminSupport.emptyPending')}
           variant="pending"
-          onAnswer={handleAnswer}
+          onAnswer={handleOpenCompose}
         />
         <SupportQueueCard
           title={t('adminSupport.answeredTitle')}
           tickets={answeredTickets}
           emptyLabel={t('adminSupport.emptyAnswered')}
           variant="answered"
-          onView={onViewMessage}
+          onView={handleOpenPublished}
         />
       </div>
+
+      <AnswerPublishModal
+        open={isModalOpen}
+        mode={modalMode}
+        ticket={activeTicket}
+        onClose={handleCloseModal}
+        onPublish={handlePublish}
+      />
     </div>
   );
 });

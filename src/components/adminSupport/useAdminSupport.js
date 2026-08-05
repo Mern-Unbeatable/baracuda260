@@ -1,34 +1,55 @@
 import { useState } from 'react';
 import {
   ADMIN_SUPPORT_TICKETS,
+  ANSWER_MODAL_MODE,
   SUPPORT_STATUS,
   filterSupportTicketsByStatus,
-  markSupportTicketAnswered,
+  findSupportTicketById,
+  publishSupportAnswer,
 } from './adminSupportData';
 
 /**
- * Pending / answered queues and ticket actions for Admin Support.
+ * Queues + Answer & Publish modal state for Admin Support.
  */
 export default function useAdminSupport(initialTickets = ADMIN_SUPPORT_TICKETS) {
   const [tickets, setTickets] = useState(initialTickets);
-  const [viewedTicketId, setViewedTicketId] = useState(null);
+  const [activeTicketId, setActiveTicketId] = useState(null);
+  const [modalMode, setModalMode] = useState(null);
 
   const pendingTickets = filterSupportTicketsByStatus(tickets, SUPPORT_STATUS.PENDING);
   const answeredTickets = filterSupportTicketsByStatus(tickets, SUPPORT_STATUS.ANSWERED);
+  const activeTicket = findSupportTicketById(tickets, activeTicketId);
 
-  const handleAnswer = (ticketId) => {
-    setTickets((current) => markSupportTicketAnswered(current, ticketId));
+  const handleOpenCompose = (ticketId) => {
+    setActiveTicketId(ticketId);
+    setModalMode(ANSWER_MODAL_MODE.COMPOSE);
   };
 
-  const handleViewMessage = (ticketId) => {
-    setViewedTicketId(ticketId);
+  const handleOpenPublished = (ticketId) => {
+    setActiveTicketId(ticketId);
+    setModalMode(ANSWER_MODAL_MODE.PUBLISHED);
+  };
+
+  const handleCloseModal = () => {
+    setActiveTicketId(null);
+    setModalMode(null);
+  };
+
+  const handlePublish = (answer) => {
+    if (!activeTicketId) return;
+    setTickets((current) => publishSupportAnswer(current, activeTicketId, answer));
+    setModalMode(ANSWER_MODAL_MODE.PUBLISHED);
   };
 
   return {
     pendingTickets,
     answeredTickets,
-    viewedTicketId,
-    handleAnswer,
-    handleViewMessage,
+    activeTicket,
+    modalMode,
+    isModalOpen: Boolean(modalMode && activeTicket),
+    handleOpenCompose,
+    handleOpenPublished,
+    handleCloseModal,
+    handlePublish,
   };
 }
