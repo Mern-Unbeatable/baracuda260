@@ -1792,6 +1792,27 @@
       }
     }
   },
+  "adminSupport": {
+    "eyebrow": "SKRZYNKA",
+    "title": "Prośby o wsparcie",
+    "subtitle": "Każda wiadomość z formularza kontaktowego, uporządkowana poza hałasem czatu na żywo.",
+    "pendingTitle": "Oczekujące pytania społeczności",
+    "answeredTitle": "Odpowiedzi na pytania społeczności",
+    "emptyPending": "Brak oczekujących pytań społeczności.",
+    "emptyAnswered": "Brak jeszcze odpowiedzi na pytania społeczności.",
+    "actions": {
+      "answer": "Odpowiedz",
+      "answered": "Odpowiedziano",
+      "viewMessage": "Zobacz wiadomość"
+    },
+    "tickets": {
+      "export": {
+        "title": "Nie można wyeksportować raportu analitycznego",
+        "preview": "Próbuję wyeksportować raport Analytics, ale....",
+        "time": "2 godziny temu"
+      }
+    }
+  },
   "adminWinners": {
     "title": "Najlepsi fotografowie",
     "subtitle": "{{month}} {{year}} — Aktualny ranking",

@@ -1791,6 +1791,27 @@
       }
     }
   },
+  "adminSupport": {
+    "eyebrow": "INBOX",
+    "title": "Support requests",
+    "subtitle": "Every contact-form message, prioritized and kept out of live chat noise.",
+    "pendingTitle": "Pending Community Questions",
+    "answeredTitle": "Answered Community Questions",
+    "emptyPending": "No pending community questions.",
+    "emptyAnswered": "No answered community questions yet.",
+    "actions": {
+      "answer": "Answer",
+      "answered": "Answered",
+      "viewMessage": "View Message"
+    },
+    "tickets": {
+      "export": {
+        "title": "Unable to export analytics report",
+        "preview": "I've been trying to export the Analytics report but....",
+        "time": "2 hours ago"
+      }
+    }
+  },
   "adminWinners": {
     "title": "Top Photographers",
     "subtitle": "{{month}} {{year}} — Live standings",

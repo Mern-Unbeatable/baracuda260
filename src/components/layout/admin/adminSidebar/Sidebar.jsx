@@ -59,7 +59,7 @@ const ADMIN_NAV_GROUPS = [
       { labelKey: 'adminOverview.nav.albumTypes', path: ROUTES.ADMIN_ALBUM_TYPES, icon: BookImage },
       { labelKey: 'adminOverview.nav.winners', path: ROUTES.ADMIN_WINNERS, icon: Crown },
       { labelKey: 'adminOverview.nav.payouts', path: ROUTES.ADMIN_PAYOUTS, icon: CreditCard },
-      { labelKey: 'adminOverview.nav.support', path: ROUTES.ADMIN_CHAT, icon: MessageCircleQuestion },
+      { labelKey: 'adminOverview.nav.support', path: ROUTES.ADMIN_SUPPORT, icon: MessageCircleQuestion },
       { labelKey: 'adminOverview.nav.businessPhotos', path: ROUTES.ADMIN_BUSINESS_PHOTOS, icon: Link2 },
       { labelKey: 'adminOverview.nav.newsletter', path: ROUTES.ADMIN_NEWSLETTER, icon: Newspaper },
       { labelKey: 'adminOverview.nav.comment', path: ROUTES.ADMIN_COMMENT, icon: MessageSquareText },
