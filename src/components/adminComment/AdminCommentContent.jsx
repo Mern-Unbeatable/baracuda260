@@ -206,7 +206,7 @@ const CommentActionMenu = memo(
             }}
             className="overflow-hidden rounded-[8px] bg-white shadow-[0_10px_30px_rgba(27,39,69,0.12)]"
           >
-            {ACTION_MENU_OPTIONS.map((option, index) => {
+            {ACTION_MENU_OPTIONS.map((option) => {
               const isDetails = option.kind === 'details';
               return (
                 <li key={option.id}>
@@ -217,11 +217,7 @@ const CommentActionMenu = memo(
                       if (isDetails) onSeeDetails(row.id);
                       else onSelectStatus(row.id, option.id);
                     }}
-                    className={`flex w-full cursor-pointer items-center px-[10px] py-[5px] text-left text-[16px] leading-6 transition ${
-                      isDetails
-                        ? 'bg-[#4048cd] text-white hover:bg-[#353cb0]'
-                        : 'text-[#222] hover:bg-[#f6fbff]'
-                    } ${index === 0 ? '' : 'mt-0'}`}
+                    className="flex w-full cursor-pointer items-center bg-white px-[10px] py-[5px] text-left text-[16px] leading-6 text-[#222] transition hover:bg-[#f6fbff] focus-visible:bg-[#f6fbff]"
                   >
                     {t(option.labelKey)}
                   </button>
