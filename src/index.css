@@ -62,6 +62,11 @@
   border-radius: 9999px;
 }
 
+.scrollbar-light::-webkit-scrollbar-thumb:hover,
+.scrollbar-light::-webkit-scrollbar-thumb:active {
+  background-color: #e5e7eb;
+}
+
 /* ── Newsletter subscriber list scrollbar (always visible, light) ─────────── */
 .scrollbar-newsletter {
   scrollbar-gutter: stable;
@@ -69,60 +74,91 @@
   scrollbar-color: #e5e7eb #f8fafc;
 }
 
+@supports (-webkit-appearance: none) {
+  .scrollbar-newsletter {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}
+
 .scrollbar-newsletter::-webkit-scrollbar {
   width: 8px;
   background: #f8fafc;
 }
 
-.scrollbar-newsletter::-webkit-scrollbar-track {
-  background: #f8fafc;
+.scrollbar-newsletter::-webkit-scrollbar-track,
+.scrollbar-newsletter::-webkit-scrollbar-track:hover {
+  background: #f8fafc !important;
   border-radius: 9999px;
 }
 
-.scrollbar-newsletter::-webkit-scrollbar-thumb {
-  background-color: #e5e7eb;
+.scrollbar-newsletter::-webkit-scrollbar-thumb,
+.scrollbar-newsletter::-webkit-scrollbar-thumb:hover,
+.scrollbar-newsletter::-webkit-scrollbar-thumb:active {
+  background: #e5e7eb !important;
+  background-color: #e5e7eb !important;
   border-radius: 9999px;
   border: 2px solid #f8fafc;
-}
-
-.scrollbar-newsletter::-webkit-scrollbar-thumb:hover {
-  background-color: #d1d5db;
+  box-shadow: none !important;
 }
 
 .scrollbar-newsletter::-webkit-scrollbar-button {
-  display: none;
+  display: none !important;
   height: 0;
   width: 0;
 }
 
-/* ── Admin shell scrollbar (white / low-contrast) ─────────────────────────── */
+/* ── Admin shell scrollbar (white / low-contrast, no hover darkening) ───── */
 .scrollbar-white {
+  /* Firefox only — no hover darkening with scrollbar-color */
   scrollbar-width: thin;
   scrollbar-color: #e8e8e8 #ffffff;
 }
 
-.scrollbar-white::-webkit-scrollbar {
-  width: 10px;
+/* Chromium: `scrollbar-width: thin` uses OS overlay scrollbars that darken on
+   hover. Force classic custom webkit scrollbar instead. */
+@supports (-webkit-appearance: none) {
+  .scrollbar-white {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
 }
 
-.scrollbar-white::-webkit-scrollbar-track {
+.scrollbar-white::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
   background: #ffffff;
 }
 
-.scrollbar-white::-webkit-scrollbar-thumb {
-  background-color: #e8e8e8;
-  border-radius: 9999px;
-  border: 2px solid #ffffff;
+.scrollbar-white::-webkit-scrollbar-track,
+.scrollbar-white::-webkit-scrollbar-track:hover,
+.scrollbar-white::-webkit-scrollbar-track:active {
+  background: #ffffff !important;
 }
 
-.scrollbar-white::-webkit-scrollbar-button {
-  display: none;
-  height: 0;
-  width: 0;
+.scrollbar-white::-webkit-scrollbar-thumb,
+.scrollbar-white::-webkit-scrollbar-thumb:hover,
+.scrollbar-white::-webkit-scrollbar-thumb:active,
+.scrollbar-white::-webkit-scrollbar-thumb:window-inactive {
+  background: #e8e8e8 !important;
+  background-color: #e8e8e8 !important;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  box-shadow: none !important;
+}
+
+.scrollbar-white::-webkit-scrollbar-button,
+.scrollbar-white::-webkit-scrollbar-button:hover,
+.scrollbar-white::-webkit-scrollbar-button:start:decrement,
+.scrollbar-white::-webkit-scrollbar-button:end:increment {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
 }
 
 .scrollbar-white::-webkit-scrollbar-corner {
-  background: #ffffff;
+  background: #ffffff !important;
 }
 
 /* ── Font utilities (Figma: Manrope for admin content headings) ───────────── */
