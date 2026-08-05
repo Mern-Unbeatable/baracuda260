@@ -124,7 +124,7 @@ const Sidebar = ({
           onClick={onExpand}
           title={t('dashboard.sidebar.expand')}
           aria-label={t('dashboard.sidebar.expand')}
-          className="mb-2 flex size-10 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors duration-200 hover:bg-[#fde8e9]/60 hover:text-gray-800"
+          className="mb-2 flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg text-gray-500 transition-colors duration-200 hover:bg-[#fde8e9]/60 hover:text-gray-800"
         >
           <ChevronsRight size={20} aria-hidden="true" />
         </button>
@@ -161,7 +161,7 @@ const Sidebar = ({
           onClick={handleLogout}
           title={t('dashboard.nav.logOut')}
           aria-label={t('dashboard.nav.logOut')}
-          className="mt-1 flex size-10 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors duration-200 hover:bg-red-50 hover:text-[#d00000]"
+          className="mt-1 flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition-colors duration-200 hover:bg-red-50 hover:text-[#d00000]"
         >
           <LogOut size={20} aria-hidden="true" />
         </button>
@@ -187,7 +187,7 @@ const Sidebar = ({
         <button
           type="button"
           onClick={onClose}
-          className="-mr-1 mt-0.5 rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 lg:hidden"
+          className="-mr-1 mt-0.5 cursor-pointer rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 lg:hidden"
           aria-label={t('dashboard.sidebar.close')}
         >
           <X size={20} aria-hidden="true" />
@@ -195,7 +195,7 @@ const Sidebar = ({
         <button
           type="button"
           onClick={onDesktopClose}
-          className="-mr-1 mt-0.5 hidden items-center justify-center rounded-md p-1.5 text-gray-500 transition-colors hover:bg-[#fde8e9]/60 hover:text-gray-900 lg:flex"
+          className="-mr-1 mt-0.5 hidden cursor-pointer items-center justify-center rounded-md p-1.5 text-gray-500 transition-colors hover:bg-[#fde8e9]/60 hover:text-gray-900 lg:flex"
           aria-label={t('dashboard.sidebar.collapse')}
         >
           <ChevronsLeft size={20} aria-hidden="true" />
@@ -325,7 +325,7 @@ const Sidebar = ({
         <button
           type="button"
           onClick={handleLogout}
-          className={`${NAV_BASE} w-full border-transparent text-[#d00000] hover:bg-red-50 hover:shadow-[inset_3px_0_0_0_#d00000]`}
+          className={`${NAV_BASE} w-full cursor-pointer border-transparent text-[#d00000] hover:bg-red-50 hover:shadow-[inset_3px_0_0_0_#d00000]`}
         >
           <LogOut size={20} aria-hidden="true" className="shrink-0 text-[#d00000]" />
           <span>{t('dashboard.nav.logOut')}</span>
