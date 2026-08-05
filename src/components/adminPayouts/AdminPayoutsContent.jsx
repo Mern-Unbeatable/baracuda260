@@ -508,15 +508,15 @@ const PayoutsPagination = memo(
       'inline-flex cursor-pointer items-center justify-center rounded-[6px] px-[9px] py-[5px] text-[13px] leading-[19px] transition';
 
     return (
-      <div className="flex flex-col gap-3 border-t border-[#e8ebf1] px-[18px] pb-[15.5px] pt-[17px] sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[13px] font-normal leading-[19px] text-[#8b95a5]">
+      <div className="flex flex-col items-center gap-3 border-t border-[#e8ebf1] px-[18px] pb-[15.5px] pt-[17px] sm:flex-row sm:justify-between">
+        <p className="text-center text-[13px] font-normal leading-[19px] text-[#8b95a5] sm:text-left">
           {t('adminPayouts.pagination.showing', {
             count,
             total: total.toLocaleString('en-US'),
           })}
         </p>
         <div
-          className="flex items-center gap-[4px]"
+          className="flex items-center justify-center gap-[4px]"
           role="navigation"
           aria-label={t('adminPayouts.pagination.aria')}
         >
