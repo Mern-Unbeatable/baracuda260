@@ -1850,6 +1850,51 @@
       "photographer": "Wong Kar-Wai"
     }
   },
+  "adminNewsletter": {
+    "title": "Newsletter",
+    "subtitle": "Manage newsletter subscribers and email campaigns.",
+    "tableAria": "Newsletter subscribers",
+    "columns": {
+      "email": "Email",
+      "subscribedDate": "Subscribed Date"
+    },
+    "composer": {
+      "title": "Email Composer",
+      "close": "Close email composer",
+      "reopen": "Open Email Composer",
+      "subject": "Subject",
+      "subjectPlaceholder": "Enter email subject...",
+      "emailTitle": "Email Title",
+      "emailTitlePlaceholder": "Headline shown inside the email...",
+      "content": "Content",
+      "contentPlaceholder": "Start writing your newsletter...",
+      "toolbarAria": "Formatting toolbar",
+      "banner": "Banner Image",
+      "upload": "Click to upload",
+      "uploadHint": "PNG, JPG up to 4MB · 1200x400 recommended",
+      "bannerInvalid": "Please upload a PNG or JPG image up to 4MB.",
+      "ctaText": "CTA Button Text",
+      "ctaTextPlaceholder": "Read more",
+      "ctaUrl": "CTA Button URL",
+      "ctaUrlPlaceholder": "https://yoursite.com/post"
+    },
+    "recipients": {
+      "title": "Recipients",
+      "subtitle": "Choose who receives this campaign.",
+      "everyone": {
+        "title": "Send to Everyone",
+        "subtitle": "All 18,420 subscribers"
+      },
+      "selected": {
+        "title": "Send to Selected Users",
+        "subtitle": "Choose specific subscribers"
+      },
+      "new": {
+        "title": "Send to New Subscribers",
+        "subtitle": "Joined in the last 7 days"
+      }
+    }
+  },
   "adminSupport": {
     "eyebrow": "INBOX",
     "title": "Support requests",

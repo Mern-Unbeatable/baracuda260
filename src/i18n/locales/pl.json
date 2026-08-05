@@ -1851,6 +1851,51 @@
       "photographer": "Wong Kar-Wai"
     }
   },
+  "adminNewsletter": {
+    "title": "Newsletter",
+    "subtitle": "Zarządzaj subskrybentami newslettera i kampaniami e-mail.",
+    "tableAria": "Subskrybenci newslettera",
+    "columns": {
+      "email": "E-mail",
+      "subscribedDate": "Data subskrypcji"
+    },
+    "composer": {
+      "title": "Kompozytor e-mail",
+      "close": "Zamknij kompozytor e-mail",
+      "reopen": "Otwórz kompozytor e-mail",
+      "subject": "Temat",
+      "subjectPlaceholder": "Wpisz temat e-maila...",
+      "emailTitle": "Tytuł e-maila",
+      "emailTitlePlaceholder": "Nagłówek widoczny w e-mailu...",
+      "content": "Treść",
+      "contentPlaceholder": "Zacznij pisać newsletter...",
+      "toolbarAria": "Pasek formatowania",
+      "banner": "Obraz banera",
+      "upload": "Kliknij, aby przesłać",
+      "uploadHint": "PNG, JPG do 4MB · zalecane 1200x400",
+      "bannerInvalid": "Prześlij obraz PNG lub JPG o rozmiarze do 4MB.",
+      "ctaText": "Tekst przycisku CTA",
+      "ctaTextPlaceholder": "Czytaj więcej",
+      "ctaUrl": "URL przycisku CTA",
+      "ctaUrlPlaceholder": "https://yoursite.com/post"
+    },
+    "recipients": {
+      "title": "Odbiorcy",
+      "subtitle": "Wybierz, kto otrzyma tę kampanię.",
+      "everyone": {
+        "title": "Wyślij do wszystkich",
+        "subtitle": "Wszyscy 18 420 subskrybentów"
+      },
+      "selected": {
+        "title": "Wyślij do wybranych użytkowników",
+        "subtitle": "Wybierz konkretnych subskrybentów"
+      },
+      "new": {
+        "title": "Wyślij do nowych subskrybentów",
+        "subtitle": "Dołączyli w ciągu ostatnich 7 dni"
+      }
+    }
+  },
   "adminSupport": {
     "eyebrow": "SKRZYNKA",
     "title": "Prośby o wsparcie",

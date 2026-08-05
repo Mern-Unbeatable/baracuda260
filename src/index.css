@@ -62,10 +62,43 @@
   border-radius: 9999px;
 }
 
+/* ── Newsletter subscriber list scrollbar (always visible, light) ─────────── */
+.scrollbar-newsletter {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb #f8fafc;
+}
+
+.scrollbar-newsletter::-webkit-scrollbar {
+  width: 8px;
+  background: #f8fafc;
+}
+
+.scrollbar-newsletter::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 9999px;
+}
+
+.scrollbar-newsletter::-webkit-scrollbar-thumb {
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  border: 2px solid #f8fafc;
+}
+
+.scrollbar-newsletter::-webkit-scrollbar-thumb:hover {
+  background-color: #d1d5db;
+}
+
+.scrollbar-newsletter::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
 /* ── Admin shell scrollbar (white / low-contrast) ─────────────────────────── */
 .scrollbar-white {
   scrollbar-width: thin;
-  scrollbar-color: #ffffff #ffffff;
+  scrollbar-color: #e8e8e8 #ffffff;
 }
 
 .scrollbar-white::-webkit-scrollbar {
@@ -77,7 +110,7 @@
 }
 
 .scrollbar-white::-webkit-scrollbar-thumb {
-  background-color: #ffffff;
+  background-color: #e8e8e8;
   border-radius: 9999px;
   border: 2px solid #ffffff;
 }
