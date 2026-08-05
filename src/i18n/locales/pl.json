@@ -1737,5 +1737,60 @@
         }
       }
     }
+  },
+  "adminWinners": {
+    "title": "Najlepsi fotografowie",
+    "subtitle": "{{month}} {{year}} — Aktualny ranking",
+    "formatsAria": "Filtry formatu albumu",
+    "monthAria": "Wybierz miesiąc",
+    "podiumAria": "Trzech najlepszych fotografów",
+    "tableAria": "Tabela zwycięzców",
+    "votes": "głosów",
+    "votesLabel": "{{count}} głosów",
+    "points": "punktów",
+    "view": "Zobacz {{name}}",
+    "formats": {
+      "single": "Pojedyncze zdjęcie",
+      "six": "6 zdjęć",
+      "zodiac": "12 zdjęć Zodiak"
+    },
+    "columns": {
+      "rank": "#",
+      "photographer": "Fotograf",
+      "city": "Miasto",
+      "votes": "Głosy",
+      "points": "Punkty",
+      "action": "Akcja"
+    },
+    "months": {
+      "january": "Styczeń",
+      "february": "Luty",
+      "march": "Marzec",
+      "april": "Kwiecień",
+      "may": "Maj",
+      "june": "Czerwiec",
+      "july": "Lipiec",
+      "august": "Sierpień",
+      "september": "Wrzesień",
+      "october": "Październik",
+      "november": "Listopad",
+      "december": "Grudzień"
+    },
+    "cities": {
+      "krakow": "Kraków",
+      "warsaw": "Warszawa",
+      "wroclaw": "Wrocław",
+      "poznan": "Poznań",
+      "gdansk": "Gdańsk",
+      "lodz": "Łódź"
+    },
+    "people": {
+      "anna": { "firstName": "Anna", "name": "Anna Kowalska" },
+      "piotr": { "firstName": "Piotr", "name": "Piotr Mazur" },
+      "marta": { "firstName": "Marta", "name": "Marta Wiśniewska" },
+      "kamil": { "firstName": "Kamil", "name": "Kamil Zając" },
+      "ewa": { "firstName": "Ewa", "name": "Ewa Krawczyk" },
+      "tomasz": { "firstName": "Tomasz", "name": "Tomasz Nowak" }
+    }
   }
 }

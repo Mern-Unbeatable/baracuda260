@@ -1736,5 +1736,60 @@
         }
       }
     }
+  },
+  "adminWinners": {
+    "title": "Top Photographers",
+    "subtitle": "{{month}} {{year}} — Live standings",
+    "formatsAria": "Album format filters",
+    "monthAria": "Select month",
+    "podiumAria": "Top three photographers",
+    "tableAria": "Winners standings table",
+    "votes": "votes",
+    "votesLabel": "{{count}} votes",
+    "points": "points",
+    "view": "View {{name}}",
+    "formats": {
+      "single": "Single Photo",
+      "six": "6 Photo",
+      "zodiac": "12 Photo Zodiac"
+    },
+    "columns": {
+      "rank": "#",
+      "photographer": "Photographer",
+      "city": "City",
+      "votes": "Votes",
+      "points": "Points",
+      "action": "Action"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "cities": {
+      "krakow": "Kraków",
+      "warsaw": "Warsaw",
+      "wroclaw": "Wrocław",
+      "poznan": "Poznań",
+      "gdansk": "Gdańsk",
+      "lodz": "Łódź"
+    },
+    "people": {
+      "anna": { "firstName": "Anna", "name": "Anna Kowalska" },
+      "piotr": { "firstName": "Piotr", "name": "Piotr Mazur" },
+      "marta": { "firstName": "Marta", "name": "Marta Wiśniewska" },
+      "kamil": { "firstName": "Kamil", "name": "Kamil Zając" },
+      "ewa": { "firstName": "Ewa", "name": "Ewa Krawczyk" },
+      "tomasz": { "firstName": "Tomasz", "name": "Tomasz Nowak" }
+    }
   }
 }

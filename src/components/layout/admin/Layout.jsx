@@ -27,7 +27,8 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_SUBMISSIONS) ||
     currentPath === normalizePath(ROUTES.ADMIN_USERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_CATEGORIES) ||
-    currentPath === normalizePath(ROUTES.ADMIN_ALBUM_TYPES);
+    currentPath === normalizePath(ROUTES.ADMIN_ALBUM_TYPES) ||
+    currentPath === normalizePath(ROUTES.ADMIN_WINNERS);
 
   useEffect(() => {
     const handleKey = (event) => {
