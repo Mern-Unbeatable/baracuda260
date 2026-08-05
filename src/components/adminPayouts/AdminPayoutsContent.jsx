@@ -15,6 +15,8 @@ import {
 import useAdminPayouts from './useAdminPayouts';
 
 const ACTION_MENU_OFFSET_PX = 6;
+const ACTION_MENU_FALLBACK_HEIGHT_PX = 132;
+const ACTION_MENU_VIEWPORT_MARGIN_PX = 8;
 
 /**
  * @param {{ status: string }} props
@@ -71,7 +73,8 @@ WinnerAvatar.displayName = 'WinnerAvatar';
 const StatusSortSelect = memo(({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
   const { t } = useTranslation();
   const rootRef = useRef(null);
-  const activeFilter = STATUS_FILTERS.find((filter) => filter.id === statusFilter) || STATUS_FILTERS[0];
+  const activeFilter =
+    STATUS_FILTERS.find((filter) => filter.id === statusFilter) || STATUS_FILTERS[0];
 
   useEffect(() => {
     if (!sortOpen) return undefined;
@@ -166,22 +169,26 @@ const PayoutActionMenu = memo(({ row, isOpen, onToggle, onClose, onSelectStatus 
   const buttonWrapRef = useRef(null);
   const buttonRef = useRef(null);
   const menuRef = useRef(null);
-  const [menuStyle, setMenuStyle] = useState(null);
+  const [placement, setPlacement] = useState(null);
 
   useLayoutEffect(() => {
     if (!isOpen || !buttonRef.current) {
-      setMenuStyle(null);
+      setPlacement(null);
       return undefined;
     }
 
+    // Drop down by default; flip up only for rows without room below (last row).
     const updatePosition = () => {
       const rect = buttonRef.current.getBoundingClientRect();
-      // Open above the ··· trigger so it never covers pagination / next rows.
-      setMenuStyle({
-        position: 'fixed',
-        bottom: window.innerHeight - rect.top + ACTION_MENU_OFFSET_PX,
-        right: Math.max(8, window.innerWidth - rect.right),
-        zIndex: 50,
+      const menuHeight = menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const openUpward = spaceBelow < menuHeight + ACTION_MENU_OFFSET_PX;
+
+      setPlacement({
+        right: Math.max(ACTION_MENU_VIEWPORT_MARGIN_PX, window.innerWidth - rect.right),
+        ...(openUpward
+          ? { bottom: window.innerHeight - rect.top + ACTION_MENU_OFFSET_PX }
+          : { top: rect.bottom + ACTION_MENU_OFFSET_PX }),
       });
     };
 
@@ -215,44 +222,48 @@ const PayoutActionMenu = memo(({ row, isOpen, onToggle, onClose, onSelectStatus 
     };
   }, [isOpen, onClose]);
 
-  const menu =
-    isOpen && menuStyle
-      ? createPortal(
-          <ul
-            ref={menuRef}
-            role="listbox"
-            aria-label={t('adminPayouts.actions.menuAria', { name: t(row.nameKey) })}
-            style={menuStyle}
-            className="min-w-[160px] overflow-hidden rounded-[10px] border border-[#e8ebf1] bg-white py-1 shadow-[0_10px_30px_rgba(27,39,69,0.12)]"
-          >
-            {ACTION_STATUS_OPTIONS.map((option) => {
-              const selected = option.id === row.status;
-              return (
-                <li key={option.id}>
-                  <button
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    onClick={() => onSelectStatus(row.id, option.id)}
-                    className={`flex w-full cursor-pointer items-center gap-2 px-3.5 py-2.5 text-left text-[14px] font-medium leading-5 transition hover:bg-[#f6fbff] ${
-                      selected ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
+  const menu = isOpen
+    ? createPortal(
+        <ul
+          ref={menuRef}
+          role="listbox"
+          aria-label={t('adminPayouts.actions.menuAria', { name: t(row.nameKey) })}
+          style={{
+            position: 'fixed',
+            zIndex: 50,
+            visibility: placement ? 'visible' : 'hidden',
+            ...placement,
+          }}
+          className="min-w-[160px] overflow-hidden rounded-[10px] border border-[#e8ebf1] bg-white py-1 shadow-[0_10px_30px_rgba(27,39,69,0.12)]"
+        >
+          {ACTION_STATUS_OPTIONS.map((option) => {
+            const selected = option.id === row.status;
+            return (
+              <li key={option.id}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  onClick={() => onSelectStatus(row.id, option.id)}
+                  className={`flex w-full cursor-pointer items-center gap-2 px-3.5 py-2.5 text-left text-[14px] font-medium leading-5 transition hover:bg-[#f6fbff] ${
+                    selected ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
+                  }`}
+                >
+                  <span
+                    className={`size-1.5 shrink-0 rounded-full ${
+                      STATUS_STYLES[option.id]?.dot || 'bg-[#8b95a5]'
                     }`}
-                  >
-                    <span
-                      className={`size-1.5 shrink-0 rounded-full ${
-                        STATUS_STYLES[option.id]?.dot || 'bg-[#8b95a5]'
-                      }`}
-                      aria-hidden="true"
-                    />
-                    {t(option.labelKey)}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>,
-          document.body,
-        )
-      : null;
+                    aria-hidden="true"
+                  />
+                  {t(option.labelKey)}
+                </button>
+              </li>
+            );
+          })}
+        </ul>,
+        document.body,
+      )
+    : null;
 
   return (
     <div className="relative inline-flex" ref={buttonWrapRef}>
@@ -291,47 +302,51 @@ PayoutActionMenu.displayName = 'PayoutActionMenu';
  *   onSelectStatus: (rowId: string, status: string) => void,
  * }} props
  */
-const PayoutTableRow = memo(({ row, openActionId, onToggleAction, onCloseAction, onSelectStatus }) => {
-  const { t } = useTranslation();
+const PayoutTableRow = memo(
+  ({ row, openActionId, onToggleAction, onCloseAction, onSelectStatus }) => {
+    const { t } = useTranslation();
 
-  return (
-    <tr className="border-t border-[#f0f2f5]">
-      <td className="px-[18px] py-[15px]">
-        <div className="flex items-center gap-3">
-          <WinnerAvatar initials={row.initials} avatarTone={row.avatarTone} />
-          <div className="min-w-0">
-            <p className="truncate text-[14px] font-bold leading-[21px] text-[#263147]">
-              {t(row.nameKey)}
-            </p>
-            <p className="truncate text-[13px] leading-[19px] text-[#929bab]">{row.email}</p>
+    return (
+      <tr className="border-t border-[#f0f2f5]">
+        <td className="px-[18px] py-[15px]">
+          <div className="flex items-center gap-3">
+            <WinnerAvatar initials={row.initials} avatarTone={row.avatarTone} />
+            <div className="min-w-0">
+              <p className="truncate text-[14px] font-bold leading-[21px] text-[#263147]">
+                {t(row.nameKey)}
+              </p>
+              <p className="truncate text-[13px] leading-[19px] text-[#929bab]">{row.email}</p>
+            </div>
           </div>
-        </div>
-      </td>
-      <td className="px-[18px] py-[26px] text-[14px] leading-[21px] text-[#59657a]">{row.totalEarn}</td>
-      <td className="px-[18px] py-[26px] text-[14px] leading-[21px] text-[#59657a]">
-        {row.withdrawAmount}
-      </td>
-      <td className="px-[18px] py-[26px] text-[14px] leading-[21px] whitespace-nowrap text-[#59657a]">
-        {row.paypalNumber}
-      </td>
-      <td className="px-[18px] py-[26px] text-[14px] leading-[21px] whitespace-nowrap text-[#59657a]">
-        {t(row.requestedKey)}
-      </td>
-      <td className="px-[18px] py-[22px]">
-        <StatusBadge status={row.status} />
-      </td>
-      <td className="px-[18px] py-[23px]">
-        <PayoutActionMenu
-          row={row}
-          isOpen={openActionId === row.id}
-          onToggle={onToggleAction}
-          onClose={onCloseAction}
-          onSelectStatus={onSelectStatus}
-        />
-      </td>
-    </tr>
-  );
-});
+        </td>
+        <td className="px-[18px] py-[26px] text-[14px] leading-[21px] text-[#59657a]">
+          {row.totalEarn}
+        </td>
+        <td className="px-[18px] py-[26px] text-[14px] leading-[21px] text-[#59657a]">
+          {row.withdrawAmount}
+        </td>
+        <td className="px-[18px] py-[26px] text-[14px] leading-[21px] whitespace-nowrap text-[#59657a]">
+          {row.paypalNumber}
+        </td>
+        <td className="px-[18px] py-[26px] text-[14px] leading-[21px] whitespace-nowrap text-[#59657a]">
+          {t(row.requestedKey)}
+        </td>
+        <td className="px-[18px] py-[22px]">
+          <StatusBadge status={row.status} />
+        </td>
+        <td className="px-[18px] py-[23px]">
+          <PayoutActionMenu
+            row={row}
+            isOpen={openActionId === row.id}
+            onToggle={onToggleAction}
+            onClose={onCloseAction}
+            onSelectStatus={onSelectStatus}
+          />
+        </td>
+      </tr>
+    );
+  },
+);
 
 PayoutTableRow.displayName = 'PayoutTableRow';
 
@@ -344,53 +359,55 @@ PayoutTableRow.displayName = 'PayoutTableRow';
  *   onSelectStatus: (rowId: string, status: string) => void,
  * }} props
  */
-const PayoutsTable = memo(({ rows, openActionId, onToggleAction, onCloseAction, onSelectStatus }) => {
-  const { t } = useTranslation();
+const PayoutsTable = memo(
+  ({ rows, openActionId, onToggleAction, onCloseAction, onSelectStatus }) => {
+    const { t } = useTranslation();
 
-  return (
-    <div className="hidden w-full overflow-x-auto md:block">
-      <table className="w-full min-w-[1100px] border-collapse text-left">
-        <thead>
-          <tr className="bg-[#fbfcfd]">
-            <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
-              {t('adminPayouts.columns.winner')}
-            </th>
-            <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
-              {t('adminPayouts.columns.totalEarn')}
-            </th>
-            <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
-              {t('adminPayouts.columns.withdrawAmount')}
-            </th>
-            <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
-              {t('adminPayouts.columns.paypalNumber')}
-            </th>
-            <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
-              {t('adminPayouts.columns.requested')}
-            </th>
-            <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
-              {t('adminPayouts.columns.status')}
-            </th>
-            <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
-              {t('adminPayouts.columns.action')}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <PayoutTableRow
-              key={row.id}
-              row={row}
-              openActionId={openActionId}
-              onToggleAction={onToggleAction}
-              onCloseAction={onCloseAction}
-              onSelectStatus={onSelectStatus}
-            />
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-});
+    return (
+      <div className="hidden w-full overflow-x-auto md:block">
+        <table className="w-full min-w-[1100px] border-collapse text-left">
+          <thead>
+            <tr className="bg-[#fbfcfd]">
+              <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
+                {t('adminPayouts.columns.winner')}
+              </th>
+              <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
+                {t('adminPayouts.columns.totalEarn')}
+              </th>
+              <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
+                {t('adminPayouts.columns.withdrawAmount')}
+              </th>
+              <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
+                {t('adminPayouts.columns.paypalNumber')}
+              </th>
+              <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
+                {t('adminPayouts.columns.requested')}
+              </th>
+              <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
+                {t('adminPayouts.columns.status')}
+              </th>
+              <th className="px-[18px] py-3 text-[13px] font-bold leading-[19px] text-[#8b95a5]">
+                {t('adminPayouts.columns.action')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <PayoutTableRow
+                key={row.id}
+                row={row}
+                openActionId={openActionId}
+                onToggleAction={onToggleAction}
+                onCloseAction={onCloseAction}
+                onSelectStatus={onSelectStatus}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  },
+);
 
 PayoutsTable.displayName = 'PayoutsTable';
 
@@ -585,7 +602,9 @@ const AdminPayoutsContent = memo(() => {
           <h1 className="font-manrope pt-3 text-[32px] font-normal leading-[40px] tracking-[-1.67px] text-[#151e31] sm:text-[36px] sm:leading-[42px]">
             {t('adminPayouts.title')}
           </h1>
-          <p className="pt-3 text-[16px] leading-[25px] text-[#687186]">{t('adminPayouts.subtitle')}</p>
+          <p className="pt-3 text-[16px] leading-[25px] text-[#687186]">
+            {t('adminPayouts.subtitle')}
+          </p>
         </header>
       </div>
 
@@ -621,7 +640,9 @@ const AdminPayoutsContent = memo(() => {
             />
           </>
         ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">{t('adminPayouts.empty')}</p>
+          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+            {t('adminPayouts.empty')}
+          </p>
         )}
 
         <PayoutsPagination
