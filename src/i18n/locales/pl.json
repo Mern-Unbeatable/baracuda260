@@ -1851,6 +1851,163 @@
       "photographer": "Wong Kar-Wai"
     }
   },
+  "adminComment": {
+    "title": "Zarządzanie komentarzami",
+    "subtitle": "Zarządzaj, przeglądaj i moderuj wszystkie komentarze użytkowników do zdjęć i albumów.",
+    "tableAria": "Tabela zarządzania komentarzami",
+    "tableTitle": "Wszystkie komentarze",
+    "empty": "Brak komentarzy dla tego filtra.",
+    "selectAll": "Zaznacz wszystkie widoczne komentarze",
+    "selectRow": "Zaznacz komentarz {{code}}",
+    "stats": {
+      "total": { "label": "Wszystkie komentarze", "hint": "+12 dziś" },
+      "approved": { "label": "Zatwierdzone", "hint": "50% wskaźnik" },
+      "pending": { "label": "Do przeglądu", "hint": "Wymaga uwagi" },
+      "hidden": { "label": "Ukryte", "hint": "Przez moderację" }
+    },
+    "filters": {
+      "aria": "Filtruj komentarze według statusu",
+      "all": "Wszystkie",
+      "approved": "Zatwierdzone",
+      "pending": "Oczekujące",
+      "deleted": "Usunięte"
+    },
+    "columns": {
+      "commentId": "ID komentarza",
+      "user": "Użytkownik",
+      "photo": "Zdjęcie",
+      "type": "Typ",
+      "comment": "Komentarz",
+      "date": "Data",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "status": {
+      "approved": "Zatwierdzony",
+      "pending": "Oczekujący",
+      "deleted": "Usunięty",
+      "hidden": "Ukryty"
+    },
+    "types": {
+      "single": "Pojedyncze",
+      "album6": "Album 6",
+      "zodiac": "Zodiak"
+    },
+    "actions": {
+      "menu": "Akcje dla {{name}}",
+      "menuAria": "Akcje komentarza dla {{name}}",
+      "seeDetails": "Zobacz szczegóły",
+      "hide": "Ukryj",
+      "approved": "Zatwierdzony",
+      "pending": "Oczekujący"
+    },
+    "drawer": {
+      "title": "Szczegóły komentarza",
+      "close": "Zamknij szczegóły komentarza",
+      "commentLabel": "Komentarz",
+      "photographerProfile": "Profil fotografa",
+      "followers": "Obserwujący",
+      "uploads": "Przesłania",
+      "visits": "Wizyty",
+      "adminActions": "Akcje administratora",
+      "approve": "✓ Zatwierdź",
+      "hide": "◉ Ukryj",
+      "delete": "🗑 Usuń komentarz"
+    },
+    "pagination": {
+      "showing": "Wyświetlono {{count}} z {{total}} komentarzy",
+      "aria": "Paginacja komentarzy",
+      "previous": "Poprzednia strona",
+      "next": "Następna strona",
+      "page": "Strona {{page}}"
+    },
+    "rows": {
+      "cmt0001": {
+        "name": "Elena Vasquez",
+        "country": "Hiszpania",
+        "photoTitle": "Szczyt złotej godziny",
+        "category": "Krajobraz",
+        "comment": "Absolutnie zapierająca dech kompozycja! Sposób, w jaki światło pada na grzbiet góry, to czysta magia. To zasługuje na galerię."
+      },
+      "cmt0002": {
+        "name": "Marcus Chen",
+        "country": "Singapur",
+        "photoTitle": "Miejska samotność",
+        "category": "Ulica",
+        "comment": "Odbicie w kałuży tworzy idealną symetrię. Uwielbiam monochromatyczne potraktowanie."
+      },
+      "cmt0003": {
+        "name": "Priya Sharma",
+        "country": "Indie",
+        "photoTitle": "Tygrys o zmierzchu",
+        "category": "Dzika przyroda",
+        "comment": "Kup mój pakiet presetów! Dziś tylko 50% taniej. Napisz DM po kod zniżkowy 🔥🔥🔥"
+      },
+      "cmt0004": {
+        "name": "James Okafor",
+        "country": "Nigeria",
+        "photoTitle": "Poranek na rynku",
+        "category": "Ulica",
+        "comment": "Kolory są niesamowicie żywe. Użyłeś filtrów, czy to prosto z aparatu?"
+      },
+      "cmt0005": {
+        "name": "Sofia Andersson",
+        "country": "Szwecja",
+        "photoTitle": "Leśna katedra",
+        "category": "Natura",
+        "comment": "To skradzione od innego fotografa. Widziałam dokładnie to samo zdjęcie na 500px w zeszłym miesiącu."
+      },
+      "cmt0006": {
+        "name": "Yuki Tanaka",
+        "country": "Japonia",
+        "photoTitle": "Deszcz kwiatów wiśni",
+        "category": "Natura",
+        "comment": "Głębia ostrości jest tu idealna. Prawie czuć spadające płatki. Olśniewające mistrzostwo obiektywu 85 mm."
+      },
+      "cmt0007": {
+        "name": "Ahmed Al-Rashid",
+        "country": "Zjednoczone Emiraty Arabskie",
+        "photoTitle": "Abstrakcja wydm",
+        "category": "Krajobraz",
+        "comment": "Okropna edycja. Niebo wygląda całkowicie sztucznie i jest przeprocesowane. Przestań używać presetów jak wszyscy inni."
+      },
+      "cmt0008": {
+        "name": "Isabelle Laurent",
+        "country": "Francja",
+        "photoTitle": "Makro kropla rosy",
+        "category": "Makro",
+        "comment": "Załamanie światła w kropli pokazuje cały krajobraz. To technicznie niezwykłe. Jakiego obiektywu + tubusu pośredniego użyłeś?"
+      },
+      "cmt0009": {
+        "name": "Kofi Mensah",
+        "country": "Ghana",
+        "photoTitle": "Portret w błękicie",
+        "category": "Portret",
+        "comment": "Piękny model i oświetlenie. Catchlighty w oczach są idealnie umieszczone."
+      },
+      "cmt0010": {
+        "name": "Natalia Petrov",
+        "country": "Rosja",
+        "photoTitle": "Studium kryształu lodu",
+        "category": "Makro",
+        "comment": "Obserwuj mnie też proszę, już Cię obserwuję!! Sprawdź moje portfolio!!!"
+      },
+      "cmt0011": {
+        "name": "Luca Bianchi",
+        "country": "Włochy",
+        "photoTitle": "Wenecja o świcie",
+        "category": "Krajobraz",
+        "comment": "Mgła nad kanałem tworzy tak eteryczną atmosferę. To świetnie wyglądałoby jako wielkoformatowy print."
+      },
+      "cmt0012": {
+        "name": "Amara Diallo",
+        "country": "Senegal",
+        "photoTitle": "Sylwetka baobabu",
+        "category": "Natura",
+        "comment": "To drzewo jest koło mojej wioski! Rozpoznaję je od razu. Dumna, że zostało tu wyróżnione."
+      }
+    }
+  },
   "adminNewsletter": {
     "title": "Newsletter",
     "subtitle": "Zarządzaj subskrybentami newslettera i kampaniami e-mail.",

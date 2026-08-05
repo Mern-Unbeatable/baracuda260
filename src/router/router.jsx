@@ -54,10 +54,10 @@ const AdminSupport = lazy(() => import('../pages/admin/Support'));
 const BusinessPhotos = lazy(() => import('../pages/admin/BusinessPhotos'));
 const BusinessLinkDetails = lazy(() => import('../pages/admin/BusinessLinkDetails'));
 const AdminNewsletter = lazy(() => import('../pages/admin/Newsletter'));
+const AdminComment = lazy(() => import('../pages/admin/Comment'));
 const Chat = lazy(() => import('../pages/admin/Chat'));
 const PrizePayments = lazy(() => import('../pages/admin/PrizePayments'));
 const Profile = lazy(() => import('../pages/admin/Profile'));
-const AdminComingSoon = lazy(() => import('../pages/admin/AdminComingSoon'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -161,7 +161,7 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_PRIZE_PAYMENTS)} element={<PrizePayments />} />
         <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<Profile />} />
         <Route path={seg(ROUTES.ADMIN_NEWSLETTER)} element={<AdminNewsletter />} />
-        <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComingSoon />} />
+        <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComment />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

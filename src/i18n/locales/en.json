@@ -1850,6 +1850,163 @@
       "photographer": "Wong Kar-Wai"
     }
   },
+  "adminComment": {
+    "title": "Comment Management",
+    "subtitle": "Manage, review and moderate all user comments across photos and albums.",
+    "tableAria": "Comment management table",
+    "tableTitle": "All Comments",
+    "empty": "No comments match this filter.",
+    "selectAll": "Select all visible comments",
+    "selectRow": "Select comment {{code}}",
+    "stats": {
+      "total": { "label": "Total Comments", "hint": "+12 today" },
+      "approved": { "label": "Approved", "hint": "50% rate" },
+      "pending": { "label": "Pending Review", "hint": "Needs attention" },
+      "hidden": { "label": "Hidden", "hint": "By moderation" }
+    },
+    "filters": {
+      "aria": "Filter comments by status",
+      "all": "All",
+      "approved": "Approved",
+      "pending": "Pending",
+      "deleted": "Deleted"
+    },
+    "columns": {
+      "commentId": "Comment ID",
+      "user": "User",
+      "photo": "Photo",
+      "type": "Type",
+      "comment": "Comment",
+      "date": "Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "approved": "Approved",
+      "pending": "Pending",
+      "deleted": "Deleted",
+      "hidden": "Hidden"
+    },
+    "types": {
+      "single": "Single",
+      "album6": "6 Album",
+      "zodiac": "Zodiac"
+    },
+    "actions": {
+      "menu": "Actions for {{name}}",
+      "menuAria": "Comment actions for {{name}}",
+      "seeDetails": "See Details",
+      "hide": "Hide",
+      "approved": "Approved",
+      "pending": "Pending"
+    },
+    "drawer": {
+      "title": "Comment Details",
+      "close": "Close comment details",
+      "commentLabel": "Comment",
+      "photographerProfile": "Photographer Profile",
+      "followers": "Followers",
+      "uploads": "Uploads",
+      "visits": "Visits",
+      "adminActions": "Admin Actions",
+      "approve": "✓ Approve",
+      "hide": "◉ Hide",
+      "delete": "🗑 Delete Comment"
+    },
+    "pagination": {
+      "showing": "Showing {{count}} of {{total}} comments",
+      "aria": "Comment pagination",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {{page}}"
+    },
+    "rows": {
+      "cmt0001": {
+        "name": "Elena Vasquez",
+        "country": "Spain",
+        "photoTitle": "Golden Hour Peak",
+        "category": "Landscape",
+        "comment": "Absolutely breathtaking composition! The way the light hits the mountain ridge is pure magic. This deserves to be in a gallery."
+      },
+      "cmt0002": {
+        "name": "Marcus Chen",
+        "country": "Singapore",
+        "photoTitle": "Urban Solitude",
+        "category": "Street",
+        "comment": "The reflection in the puddle creates a perfect symmetry. Love the monochrome treatment."
+      },
+      "cmt0003": {
+        "name": "Priya Sharma",
+        "country": "India",
+        "photoTitle": "Tiger at Dusk",
+        "category": "Wildlife",
+        "comment": "Buy my preset pack! 50% off today only. DM me for discount code 🔥🔥🔥"
+      },
+      "cmt0004": {
+        "name": "James Okafor",
+        "country": "Nigeria",
+        "photoTitle": "Market Morning",
+        "category": "Street",
+        "comment": "The colors are incredibly vivid. Did you use any filters or is this straight out of camera?"
+      },
+      "cmt0005": {
+        "name": "Sofia Andersson",
+        "country": "Sweden",
+        "photoTitle": "Forest Cathedral",
+        "category": "Nature",
+        "comment": "This is stolen from another photographer. I saw this exact shot on 500px last month."
+      },
+      "cmt0006": {
+        "name": "Yuki Tanaka",
+        "country": "Japan",
+        "photoTitle": "Cherry Blossom Rain",
+        "category": "Nature",
+        "comment": "The depth of field is perfect here. You can almost feel the petals falling. Stunning mastery of the 85mm lens."
+      },
+      "cmt0007": {
+        "name": "Ahmed Al-Rashid",
+        "country": "UAE",
+        "photoTitle": "Sand Dune Abstract",
+        "category": "Landscape",
+        "comment": "Terrible editing. The sky looks completely fake and over-processed. Stop using presets like everyone else."
+      },
+      "cmt0008": {
+        "name": "Isabelle Laurent",
+        "country": "France",
+        "photoTitle": "Macro Dewdrop",
+        "category": "Macro",
+        "comment": "The refraction inside the droplet shows an entire landscape. This is technically extraordinary. Which lens + extension tube did you use?"
+      },
+      "cmt0009": {
+        "name": "Kofi Mensah",
+        "country": "Ghana",
+        "photoTitle": "Portrait in Blue",
+        "category": "Portrait",
+        "comment": "Beautiful subject and lighting. The catchlights in the eyes are perfectly placed."
+      },
+      "cmt0010": {
+        "name": "Natalia Petrov",
+        "country": "Russia",
+        "photoTitle": "Ice Crystal Study",
+        "category": "Macro",
+        "comment": "Follow me back please I followed you already!! Check my portfolio!!!"
+      },
+      "cmt0011": {
+        "name": "Luca Bianchi",
+        "country": "Italy",
+        "photoTitle": "Venice at Dawn",
+        "category": "Landscape",
+        "comment": "The mist over the canal creates such an ethereal atmosphere. This would work beautifully as a large format print."
+      },
+      "cmt0012": {
+        "name": "Amara Diallo",
+        "country": "Senegal",
+        "photoTitle": "Baobab Silhouette",
+        "category": "Nature",
+        "comment": "This tree is near my village! I recognize it immediately. So proud to see it featured here."
+      }
+    }
+  },
   "adminNewsletter": {
     "title": "Newsletter",
     "subtitle": "Manage newsletter subscribers and email campaigns.",
