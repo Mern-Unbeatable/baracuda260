@@ -52,7 +52,7 @@ const LanguageSwitcher = memo(({ className = '' }) => {
         <ul
           role="listbox"
           aria-label={t('header.language')}
-          className="absolute right-0 z-40 mt-2 min-w-full overflow-hidden rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
+          className="absolute right-0 z-50 mt-2 min-w-full overflow-hidden rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
         >
           {SUPPORTED_LOCALES.map((locale) => {
             const selected = locale.code === currentLng;

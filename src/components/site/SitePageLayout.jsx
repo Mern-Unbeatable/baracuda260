@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useLayoutEffect, useRef, useState } from 'react';
 import useSitePageStyles from './useSitePageStyles';
 import SiteAnnouncement from './SiteAnnouncement';
 import SiteHeader from './SiteHeader';
@@ -18,11 +18,30 @@ const SitePageLayout = memo(
     children,
   }) => {
     useSitePageStyles();
+    const chromeRef = useRef(null);
+    const [chromeHeight, setChromeHeight] = useState(118);
+
+    useLayoutEffect(() => {
+      const node = chromeRef.current;
+      if (!node) return undefined;
+
+      const updateHeight = () => {
+        setChromeHeight(node.getBoundingClientRect().height);
+      };
+
+      updateHeight();
+      const observer = new ResizeObserver(updateHeight);
+      observer.observe(node);
+      return () => observer.disconnect();
+    }, []);
 
     return (
       <div className={`site-page-root ${rootClassName} w-full overflow-x-hidden bg-white`.trim()}>
-        <SiteAnnouncement tone={announcementTone} />
-        <SiteHeader activeHref={activeHref} />
+        <div ref={chromeRef} className="fixed inset-x-0 top-0 z-[100]">
+          <SiteAnnouncement tone={announcementTone} />
+          <SiteHeader activeHref={activeHref} />
+        </div>
+        <div style={{ height: chromeHeight }} aria-hidden="true" />
         {children}
         <SiteNewsletter variant={newsletterVariant} />
         <SiteFooter />

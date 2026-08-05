@@ -46,7 +46,7 @@ const SiteHeader = memo(({ activeHref }) => {
   );
 
   return (
-    <header className="relative z-50 border-b border-black/[0.04] bg-[rgba(236,237,250,0.16)] backdrop-blur-sm">
+    <header className="relative border-b border-black/[0.04] bg-white">
       <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-4 px-4 py-2.5 sm:px-6 md:px-10 xl:px-[192px]">
         <AppLink
           href="/"
