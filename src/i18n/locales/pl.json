@@ -1738,6 +1738,59 @@
       }
     }
   },
+  "adminPayouts": {
+    "eyebrow": "WYPŁATY",
+    "title": "Wypłaty nagród",
+    "subtitle": "Przeglądaj wnioski o wypłatę i uzgadniaj płatności ręczne.",
+    "tableAria": "Tabela wypłat nagród",
+    "empty": "Brak wypłat pasujących do tego filtra.",
+    "sortBy": "Sortuj według:",
+    "filters": {
+      "aria": "Filtruj wypłaty według statusu",
+      "all": "Wszystkie statusy",
+      "pending": "Oczekujące",
+      "processing": "W trakcie",
+      "paid": "Wypłacone"
+    },
+    "columns": {
+      "winner": "Zwycięzca",
+      "totalEarn": "Łączny zarobek",
+      "withdrawAmount": "Kwota wypłaty",
+      "paypalNumber": "Numer PayPal",
+      "requested": "Złożono",
+      "status": "Status",
+      "action": "Akcja"
+    },
+    "status": {
+      "pending": "Oczekujące",
+      "processing": "W trakcie",
+      "paid": "Wypłacone"
+    },
+    "actions": {
+      "menu": "Otwórz działania dla {{name}}"
+    },
+    "pagination": {
+      "showing": "Wyświetlono {{count}} z {{total}} wyników",
+      "aria": "Paginacja wypłat",
+      "previous": "Poprzednia strona",
+      "next": "Następna strona",
+      "page": "Strona {{page}}"
+    },
+    "rows": {
+      "kofi": {
+        "name": "Kofi Agyeman",
+        "requested": "18 maja 2026"
+      },
+      "nguyen": {
+        "name": "B. Nguyen",
+        "requested": "17 maja 2026"
+      },
+      "tara": {
+        "name": "Tara Cole",
+        "requested": "15 maja 2026"
+      }
+    }
+  },
   "adminWinners": {
     "title": "Najlepsi fotografowie",
     "subtitle": "{{month}} {{year}} — Aktualny ranking",

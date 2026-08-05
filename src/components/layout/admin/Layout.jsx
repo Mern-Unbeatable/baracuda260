@@ -28,7 +28,8 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_USERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_CATEGORIES) ||
     currentPath === normalizePath(ROUTES.ADMIN_ALBUM_TYPES) ||
-    currentPath === normalizePath(ROUTES.ADMIN_WINNERS);
+    currentPath === normalizePath(ROUTES.ADMIN_WINNERS) ||
+    currentPath === normalizePath(ROUTES.ADMIN_PAYOUTS);
 
   useEffect(() => {
     const handleKey = (event) => {

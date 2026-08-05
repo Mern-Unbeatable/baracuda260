@@ -49,6 +49,7 @@ const Users = lazy(() => import('../pages/admin/Users'));
 const Categories = lazy(() => import('../pages/admin/Categories'));
 const AlbumTypes = lazy(() => import('../pages/admin/AlbumTypes'));
 const AdminWinners = lazy(() => import('../pages/admin/Winners'));
+const AdminPayouts = lazy(() => import('../pages/admin/Payouts'));
 const BusinessPhotos = lazy(() => import('../pages/admin/BusinessPhotos'));
 const Chat = lazy(() => import('../pages/admin/Chat'));
 const PrizePayments = lazy(() => import('../pages/admin/PrizePayments'));
@@ -149,6 +150,7 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_CATEGORIES)} element={<Categories />} />
         <Route path={seg(ROUTES.ADMIN_ALBUM_TYPES)} element={<AlbumTypes />} />
         <Route path={seg(ROUTES.ADMIN_WINNERS)} element={<AdminWinners />} />
+        <Route path={seg(ROUTES.ADMIN_PAYOUTS)} element={<AdminPayouts />} />
         <Route path={seg(ROUTES.ADMIN_BUSINESS_PHOTOS)} element={<BusinessPhotos />} />
         <Route path={seg(ROUTES.ADMIN_CHAT)} element={<Chat />} />
         <Route path={seg(ROUTES.ADMIN_PRIZE_PAYMENTS)} element={<PrizePayments />} />

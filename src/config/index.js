@@ -39,6 +39,7 @@ export const ROUTES = {
   ADMIN_CATEGORIES: '/admin/categories',
   ADMIN_ALBUM_TYPES: '/admin/album-types',
   ADMIN_WINNERS: '/admin/winners',
+  ADMIN_PAYOUTS: '/admin/payouts',
   ADMIN_NEWSLETTER: '/admin/newsletter',
   ADMIN_COMMENT: '/admin/comment',
 };

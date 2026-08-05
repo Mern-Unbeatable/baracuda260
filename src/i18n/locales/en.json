@@ -1737,6 +1737,59 @@
       }
     }
   },
+  "adminPayouts": {
+    "eyebrow": "PAYOUTS",
+    "title": "Prize payouts",
+    "subtitle": "Review withdrawal requests and reconcile manual payments.",
+    "tableAria": "Prize payouts table",
+    "empty": "No payouts match this filter.",
+    "sortBy": "Sort By:",
+    "filters": {
+      "aria": "Filter payouts by status",
+      "all": "All Status",
+      "pending": "Pending",
+      "processing": "Processing",
+      "paid": "Paid"
+    },
+    "columns": {
+      "winner": "Winner",
+      "totalEarn": "Total Earn",
+      "withdrawAmount": "Wthdraw Amount",
+      "paypalNumber": "PayPal Number",
+      "requested": "Requested",
+      "status": "Status",
+      "action": "Action"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "paid": "Paid"
+    },
+    "actions": {
+      "menu": "Open actions for {{name}}"
+    },
+    "pagination": {
+      "showing": "Showing {{count}} of {{total}} results",
+      "aria": "Payouts pagination",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {{page}}"
+    },
+    "rows": {
+      "kofi": {
+        "name": "Kofi Agyeman",
+        "requested": "18 May 2026"
+      },
+      "nguyen": {
+        "name": "B. Nguyen",
+        "requested": "17 May 2026"
+      },
+      "tara": {
+        "name": "Tara Cole",
+        "requested": "15 May 2026"
+      }
+    }
+  },
   "adminWinners": {
     "title": "Top Photographers",
     "subtitle": "{{month}} {{year}} — Live standings",
