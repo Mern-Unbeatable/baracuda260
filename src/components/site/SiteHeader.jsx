@@ -1,12 +1,15 @@
 import React, { memo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { ROUTES, SITE_NAV_LINKS } from '../../config';
+import { selectIsAuthenticated } from '../../store/slices/authSlice';
 import { SITE_ASSETS } from './siteAssets';
 import AppLink from './AppLink';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const SiteHeader = memo(({ activeHref }) => {
   const { t } = useTranslation();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = SITE_NAV_LINKS.map(({ labelKey, href }) => ({
@@ -14,6 +17,33 @@ const SiteHeader = memo(({ activeHref }) => {
     href,
     active: href === activeHref,
   }));
+
+  const authActions = isAuthenticated ? (
+    <AppLink
+      href={ROUTES.ADMIN_DASHBOARD}
+      onClick={() => setMenuOpen(false)}
+      className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
+    >
+      {t('header.dashboard')}
+    </AppLink>
+  ) : (
+    <>
+      <AppLink
+        href={ROUTES.LOGIN}
+        onClick={() => setMenuOpen(false)}
+        className="rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
+      >
+        {t('header.logIn')}
+      </AppLink>
+      <AppLink
+        href={ROUTES.SIGNUP}
+        onClick={() => setMenuOpen(false)}
+        className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
+      >
+        {t('header.registerFree')}
+      </AppLink>
+    </>
+  );
 
   return (
     <header className="relative z-50 border-b border-black/[0.04] bg-[rgba(236,237,250,0.16)] backdrop-blur-sm">
@@ -48,20 +78,7 @@ const SiteHeader = memo(({ activeHref }) => {
 
         <div className="hidden items-center gap-4 xl:flex">
           <LanguageSwitcher />
-          <div className="flex items-center gap-4">
-            <AppLink
-              href={ROUTES.LOGIN}
-              className="rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
-            >
-              {t('header.logIn')}
-            </AppLink>
-            <AppLink
-              href={ROUTES.SIGNUP}
-              className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
-            >
-              {t('header.registerFree')}
-            </AppLink>
-          </div>
+          <div className="flex items-center gap-4">{authActions}</div>
         </div>
 
         <button
@@ -104,20 +121,9 @@ const SiteHeader = memo(({ activeHref }) => {
           </nav>
           <div className="mt-4 flex flex-col gap-2 border-t border-black/5 pt-4">
             <LanguageSwitcher className="w-full [&_button]:w-full [&_button]:justify-between" />
-            <AppLink
-              href={ROUTES.LOGIN}
-              onClick={() => setMenuOpen(false)}
-              className="rounded-full bg-[#4048cd] px-6 py-3 text-center text-sm font-medium text-white"
-            >
-              {t('header.logIn')}
-            </AppLink>
-            <AppLink
-              href={ROUTES.SIGNUP}
-              onClick={() => setMenuOpen(false)}
-              className="rounded-full bg-[#ee1c25] px-6 py-3 text-center text-sm font-medium text-white"
-            >
-              {t('header.registerFree')}
-            </AppLink>
+            <div className="flex flex-col gap-2 [&_a]:text-center [&_a]:text-sm">
+              {authActions}
+            </div>
           </div>
         </div>
       )}
