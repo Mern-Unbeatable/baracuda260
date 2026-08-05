@@ -2,7 +2,7 @@
 const A = '/assets/dashboard';
 
 export const DASHBOARD_ASSETS = {
-  logo: '/assets/home/logo.png',
+  logo: '/assets/logo/logo.png',
   avatar: `${A}/avatar.png`,
   competitions: {
     celestial: `${A}/comp-celestial.jpg`,

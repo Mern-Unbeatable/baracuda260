@@ -172,18 +172,17 @@ const Sidebar = ({
   return (
     <div className="flex h-full w-full flex-col border-r border-[#e8ebf1] bg-white">
       <div className="flex shrink-0 items-start justify-between border-b border-gray-100 px-5 pb-4 pt-5">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1 pr-2">
           <img
             src={DASHBOARD_ASSETS.logo}
             alt="My12Photos"
-            width={160}
-            height={40}
-            className="h-10 w-auto max-w-[160px] object-contain object-left"
+            width={200}
+            height={56}
+            className="h-12 w-auto max-w-[200px] object-contain object-left"
             onError={(event) => {
               event.currentTarget.style.display = 'none';
             }}
           />
-          <p className="mt-1.5 text-sm text-gray-400">{t('dashboard.sidebar.subtitle')}</p>
         </div>
         <button
           type="button"
