@@ -1766,7 +1766,8 @@
       "paid": "Paid"
     },
     "actions": {
-      "menu": "Open actions for {{name}}"
+      "menu": "Open actions for {{name}}",
+      "menuAria": "Change status for {{name}}"
     },
     "pagination": {
       "showing": "Showing {{count}} of {{total}} results",

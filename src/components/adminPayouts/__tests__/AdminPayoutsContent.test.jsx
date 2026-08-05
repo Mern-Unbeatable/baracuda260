@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
 import AdminPayoutsContent from '../AdminPayoutsContent';
@@ -37,6 +37,12 @@ describe('Admin Payouts content', () => {
     expect(
       screen.getByText(i18n.t('adminPayouts.pagination.showing', { count: 7, total: '2,480' })),
     ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: i18n.t('adminPayouts.pagination.page', { page: 1 }) })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(screen.getByRole('button', { name: i18n.t('adminPayouts.pagination.page', { page: 2 }) })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: i18n.t('adminPayouts.pagination.page', { page: 3 }) })).toBeInTheDocument();
   });
 
   it('filters the table by pending status', async () => {
@@ -51,6 +57,30 @@ describe('Admin Payouts content', () => {
     expect(
       screen.getByText(i18n.t('adminPayouts.pagination.showing', { count: 1, total: '1' })),
     ).toBeInTheDocument();
+  });
+
+  it('opens action menu and updates row status', async () => {
+    const user = userEvent.setup();
+    render(<AdminPayoutsContent />);
+
+    const actionLabel = i18n.t('adminPayouts.actions.menu', {
+      name: i18n.t('adminPayouts.rows.kofi.name'),
+    });
+    await user.click(screen.getAllByRole('button', { name: actionLabel })[0]);
+
+    const menu = screen.getAllByRole('listbox', {
+      name: i18n.t('adminPayouts.actions.menuAria', {
+        name: i18n.t('adminPayouts.rows.kofi.name'),
+      }),
+    })[0];
+
+    expect(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.pending') })).toBeInTheDocument();
+    expect(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.processing') })).toBeInTheDocument();
+    expect(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.paid') })).toBeInTheDocument();
+
+    await user.click(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.paid') }));
+
+    expect(screen.getAllByText(i18n.t('adminPayouts.status.paid')).length).toBeGreaterThan(5);
   });
 
   it('switches payouts copy to Polish', async () => {

@@ -1767,7 +1767,8 @@
       "paid": "Wypłacone"
     },
     "actions": {
-      "menu": "Otwórz działania dla {{name}}"
+      "menu": "Otwórz działania dla {{name}}",
+      "menuAria": "Zmień status dla {{name}}"
     },
     "pagination": {
       "showing": "Wyświetlono {{count}} z {{total}} wyników",

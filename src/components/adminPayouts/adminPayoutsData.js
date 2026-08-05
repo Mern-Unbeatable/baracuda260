@@ -4,7 +4,10 @@ const A = '/assets/admin-payouts';
 
 export const ADMIN_PAYOUTS_ASSETS = {
   chevronDown: `${A}/icon-chevron-down.svg`,
+  more: `${A}/icon-more.svg`,
 };
+
+export const MORE_ICON_SIZE = 20;
 
 export const PAYOUT_STATUS = {
   PENDING: 'pending',
@@ -18,6 +21,9 @@ export const STATUS_FILTERS = [
   { id: PAYOUT_STATUS.PROCESSING, labelKey: 'adminPayouts.filters.processing' },
   { id: PAYOUT_STATUS.PAID, labelKey: 'adminPayouts.filters.paid' },
 ];
+
+/** Row action menu — same status choices as the filter (without "all"). */
+export const ACTION_STATUS_OPTIONS = STATUS_FILTERS.filter((filter) => filter.id !== 'all');
 
 export const STATUS_LABEL_KEYS = {
   [PAYOUT_STATUS.PENDING]: 'adminPayouts.status.pending',
@@ -162,6 +168,14 @@ export const paginatePayouts = (rows, page, pageSize) => {
   const start = (safePage - 1) * pageSize;
   return rows.slice(start, start + pageSize);
 };
+
+/**
+ * @param {typeof ADMIN_PAYOUT_ROWS} rows
+ * @param {string} rowId
+ * @param {string} nextStatus
+ */
+export const updatePayoutStatus = (rows, rowId, nextStatus) =>
+  rows.map((row) => (row.id === rowId ? { ...row, status: nextStatus } : row));
 
 /**
  * Visible page numbers around the current page (Figma shows 1–3).

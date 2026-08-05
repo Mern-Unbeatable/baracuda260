@@ -4,6 +4,7 @@ import {
   filterPayoutsByStatus,
   getPayoutPageNumbers,
   paginatePayouts,
+  updatePayoutStatus,
 } from '../adminPayoutsData';
 
 describe('adminPayoutsData helpers', () => {
@@ -33,5 +34,13 @@ describe('adminPayoutsData helpers', () => {
     expect(getPayoutPageNumbers(1, 3)).toEqual([1, 2, 3]);
     expect(getPayoutPageNumbers(2, 5)).toEqual([1, 2, 3]);
     expect(getPayoutPageNumbers(5, 5)).toEqual([3, 4, 5]);
+  });
+
+  it('updates a row status immutably', () => {
+    const next = updatePayoutStatus(ADMIN_PAYOUT_ROWS, 'kofi-agyeman', PAYOUT_STATUS.PAID);
+    expect(next.find((row) => row.id === 'kofi-agyeman')?.status).toBe(PAYOUT_STATUS.PAID);
+    expect(ADMIN_PAYOUT_ROWS.find((row) => row.id === 'kofi-agyeman')?.status).toBe(
+      PAYOUT_STATUS.PENDING,
+    );
   });
 });
