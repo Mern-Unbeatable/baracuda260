@@ -1,16 +1,16 @@
 import React, { memo } from 'react';
 import { useSEO } from '../../hooks/useSEO';
-import BusinessLinkContent from '../../components/businessLink/BusinessLinkContent';
+import AdminBusinessLinkContent from '../../components/adminBusinessLink/AdminBusinessLinkContent';
 
 const BusinessPhotos = memo(() => {
   useSEO({
     title: 'Business Link Photos',
     description:
-      'Submit exclusive commercial-grade full zodiac portfolios for administrator brand licensing.',
-    keywords: ['business link', 'zodiac portfolio', 'commercial photos', 'My12Photos'],
+      'Admin business link photos — review uploaded 12-photo albums and manage submissions on My12Photos.',
+    keywords: ['business link', 'photos', 'admin', 'My12Photos'],
   });
 
-  return <BusinessLinkContent />;
+  return <AdminBusinessLinkContent />;
 });
 
 BusinessPhotos.displayName = 'BusinessPhotos';

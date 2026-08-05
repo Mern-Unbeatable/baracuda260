@@ -1792,6 +1792,39 @@
       }
     }
   },
+  "adminBusinessLink": {
+    "title": "Zdjęcia Business Link",
+    "subtitle": "Przeglądaj przesłane albumy 12-zdjęciowe, generuj linki biznesowe i zarządzaj zgłoszeniami.",
+    "tableAria": "Tabela zgłoszeń Business Link",
+    "empty": "Brak zgłoszeń Business Link.",
+    "columns": {
+      "user": "Użytkownik",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "country": "Kraj",
+      "uploadDate": "Data przesłania",
+      "action": "Akcja"
+    },
+    "actions": {
+      "view": "Zobacz zgłoszenie {{user}}",
+      "viewToast": "Otwieranie zgłoszenia {{user}}"
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "aria": "Paginacja Business Link",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "rows": {
+      "john": { "user": "John Anderson", "country": "Chiny" },
+      "sarah": { "user": "Sarah Mitchell", "country": "Japonia" },
+      "buildpro": { "user": "BuildPro Corp", "country": "Bangladesz" },
+      "mike": { "user": "Mike Johnson", "country": "USA" },
+      "construction": { "user": "Construction Ltd", "country": "Kanada" },
+      "emily": { "user": "Emily Davis", "country": "Indie" },
+      "david": { "user": "David Chen", "country": "USA" }
+    }
+  },
   "adminSupport": {
     "eyebrow": "SKRZYNKA",
     "title": "Prośby o wsparcie",

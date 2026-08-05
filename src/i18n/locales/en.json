@@ -1791,6 +1791,39 @@
       }
     }
   },
+  "adminBusinessLink": {
+    "title": "Business Link Photos",
+    "subtitle": "Review uploaded 12-photo albums, generate business links, and manage submissions.",
+    "tableAria": "Business link submissions table",
+    "empty": "No business link submissions yet.",
+    "columns": {
+      "user": "User",
+      "email": "Email",
+      "phone": "Phone",
+      "country": "Country",
+      "uploadDate": "Upload Date",
+      "action": "Action"
+    },
+    "actions": {
+      "view": "View submission for {{user}}",
+      "viewToast": "Opening {{user}} submission"
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "aria": "Business link pagination",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "rows": {
+      "john": { "user": "John Anderson", "country": "Chin" },
+      "sarah": { "user": "Sarah Mitchell", "country": "Japan" },
+      "buildpro": { "user": "BuildPro Corp", "country": "Bangladesh" },
+      "mike": { "user": "Mike Johnson", "country": "USA" },
+      "construction": { "user": "Construction Ltd", "country": "Canada" },
+      "emily": { "user": "Emily Davis", "country": "India" },
+      "david": { "user": "David Chen", "country": "USA" }
+    }
+  },
   "adminSupport": {
     "eyebrow": "INBOX",
     "title": "Support requests",
