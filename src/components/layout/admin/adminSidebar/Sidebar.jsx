@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
@@ -172,7 +172,12 @@ const Sidebar = ({
   return (
     <div className="flex h-full w-full flex-col border-r border-[#e8ebf1] bg-white">
       <div className="flex shrink-0 items-start justify-between border-b border-gray-100 px-5 pb-4 pt-5">
-        <div className="min-w-0 flex-1 pr-2">
+        <Link
+          to={ROUTES.HOME}
+          onClick={onClose}
+          className="min-w-0 flex-1 cursor-pointer pr-2"
+          aria-label={t('nav.home')}
+        >
           <img
             src={DASHBOARD_ASSETS.logo}
             alt="My12Photos"
@@ -183,7 +188,7 @@ const Sidebar = ({
               event.currentTarget.style.display = 'none';
             }}
           />
-        </div>
+        </Link>
         <button
           type="button"
           onClick={onClose}
