@@ -100,8 +100,6 @@ const Sidebar = ({
 
   const displayName =
     user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
-  const roleLabel =
-    isAdmin ? t('dashboard.roleAdmin') : t('dashboard.roleUser');
   const avatarInitial = displayName.trim().charAt(0).toUpperCase() || 'U';
   const avatarSrc = isAdmin ? ADMIN_OVERVIEW_ASSETS.avatar : DASHBOARD_ASSETS.avatar;
 
@@ -323,7 +321,6 @@ const Sidebar = ({
             {user?.email ? (
               <p className="truncate text-xs leading-5 text-gray-400">{user.email}</p>
             ) : null}
-            <p className="truncate text-sm leading-[22px] text-gray-500">{roleLabel}</p>
           </div>
         </div>
 
