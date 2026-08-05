@@ -6,7 +6,6 @@ import { ROUTES } from '../../config';
 import {
   ADMIN_BUSINESS_LINK_ASSETS,
   ARROW_ICON_SIZE,
-  COPY_ICON_SIZE,
 } from './adminBusinessLinkData';
 import useAdminBusinessLinkDetail from './useAdminBusinessLinkDetail';
 
@@ -19,12 +18,12 @@ import useAdminBusinessLinkDetail from './useAdminBusinessLinkDetail';
  */
 const ZodiacThumb = memo(({ slide, active, onSelect }) => {
   const { t } = useTranslation();
-  const isRed = slide.theme === 'red';
-  const numberColor = isRed ? 'text-[#ee1c25]' : 'text-[#4048cd]';
+  const isBlue = slide.theme === 'blue';
+  const numberColor = isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]';
   const borderClass = active
-    ? isRed
-      ? 'border-[#ee1c25]'
-      : 'border-[#4048cd]'
+    ? isBlue
+      ? 'border-[#4048cd]'
+      : 'border-[#ee1c25]'
     : 'border-transparent';
 
   return (
@@ -36,15 +35,41 @@ const ZodiacThumb = memo(({ slide, active, onSelect }) => {
         sign: slide.sign,
       })}
       aria-current={active ? 'true' : undefined}
-      className="flex min-w-[72px] cursor-pointer flex-col items-center gap-1.5 sm:min-w-0"
+      className="flex w-[72px] min-w-[72px] cursor-pointer flex-col items-center gap-[8px] sm:w-auto sm:min-w-0 sm:flex-1"
     >
-      <span className={`text-[14px] font-semibold leading-none ${numberColor}`}>{slide.number}</span>
-      <img src={slide.icon} alt="" width={22} height={22} className="size-[22px] object-contain" />
-      <span className={`text-[11px] font-medium leading-none sm:text-[12px] ${numberColor}`}>
+      <span
+        className={`inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[16px] leading-none sm:text-[18px] ${numberColor}`}
+      >
+        {slide.number}
+      </span>
+
+      {/* Figma: red/blue badge with white glyph — white SVGs need the colored box */}
+      <span
+        className={`relative inline-flex size-[35px] shrink-0 items-center justify-center overflow-hidden ${
+          isBlue
+            ? slide.iconBoxed
+              ? 'rounded-[4px] bg-[#4048cd]'
+              : ''
+            : 'rounded-[4px] bg-[#ee1c25] px-2.5 py-1'
+        }`}
+      >
+        <img
+          src={slide.icon}
+          alt=""
+          width={35}
+          height={35}
+          className={`object-contain ${
+            slide.iconBoxed || !isBlue ? 'h-5 w-5' : 'h-full w-full'
+          }`}
+        />
+      </span>
+
+      <span className="max-w-full truncate text-center text-[12px] leading-none text-[#2b2b2b] capitalize sm:text-[14px] lg:text-[16px] xl:text-[20px]">
         {slide.sign}
       </span>
+
       <span
-        className={`mt-1 block size-[56px] overflow-hidden rounded-[8px] border-2 sm:size-[64px] ${borderClass}`}
+        className={`mt-1 block size-[64px] overflow-hidden rounded-[8px] border-[3px] sm:size-[80px] lg:h-[100px] lg:w-full lg:max-w-[112px] ${borderClass}`}
       >
         <img src={slide.thumb} alt="" className="size-full object-cover" />
       </span>
@@ -225,76 +250,104 @@ const AdminBusinessLinkDetailContent = memo(() => {
         </div>
       </section>
 
-      {/* Story + link — Figma 345:1555 */}
-      <div className="flex w-full flex-col gap-8 sm:gap-9">
-        <section className="flex w-full flex-col gap-4" aria-labelledby="business-link-photo-title">
-          <div className="flex flex-wrap items-start gap-4 sm:gap-8">
-            <span className="inline-flex items-center justify-center rounded-[50px] bg-[#ecedfa] px-4 py-[5px] font-manrope text-[14px] font-bold uppercase leading-6 tracking-[1.2px] text-[#4048cd] sm:text-[16px]">
-              {t(detail.typeBadgeKey)}
-            </span>
-            <span className="inline-flex items-center justify-center rounded-[50px] bg-[#ecedfa] px-4 py-[5px] font-manrope text-[14px] font-bold uppercase leading-6 tracking-[1.2px] text-[#4048cd] sm:text-[16px]">
-              {t(detail.categoryBadgeKey)}
-            </span>
+      {/* Story + link — same text scale as /admin/my-competitions/zodiac */}
+      <div className="flex w-full flex-col gap-[36px]">
+        <div className="flex w-full flex-col gap-8">
+          <section
+            className="inline-flex w-full flex-col items-start justify-start gap-4"
+            aria-labelledby="business-link-photo-title"
+          >
+            <div className="inline-flex flex-wrap items-start justify-start gap-4 sm:gap-8">
+              <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-[5px]">
+                <div className="font-['Manrope'] text-base font-bold uppercase leading-6 tracking-wider text-indigo-700">
+                  {t(detail.typeBadgeKey)}
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-[5px]">
+                <div className="font-['Manrope'] text-base font-bold uppercase leading-6 tracking-wider text-indigo-700">
+                  {t(detail.categoryBadgeKey)}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex w-full flex-col items-start justify-start gap-4 self-stretch">
+              <h2
+                id="business-link-photo-title"
+                className="w-full self-stretch font-['Manrope'] text-4xl font-extrabold text-gray-900"
+              >
+                {t(detail.titleKey)}
+              </h2>
+              <p className="w-full self-stretch font-['Manrope'] text-xl font-medium leading-8 text-neutral-700">
+                {t(detail.descriptionKey)}
+              </p>
+            </div>
+          </section>
+
+          {/* Link generator card — Figma 345:1627 */}
+          <section className="flex w-full flex-col gap-6 rounded-[24px] border border-solid border-[#f3f4f6] bg-white p-[41px] shadow-[0px_8px_15px_rgba(0,0,0,0.04)] max-sm:p-5">
+            <div className="flex w-full items-center justify-between gap-3">
+              <h3 className="font-manrope text-[18px] font-bold leading-7 tracking-[-0.45px] text-[#111827]">
+                {t('adminBusinessLink.detail.linkLabel')}
+              </h3>
+              <span className="shrink-0 text-[14px] font-medium leading-5 text-[#6b7280]">
+                {t('adminBusinessLink.detail.autoGenerated')}
+              </span>
+            </div>
+
+            <div className="w-full rounded-[12px] border border-dashed border-[#d1d5db] bg-[#f9fafb] px-[25px] pb-[17px] pt-[19px] max-sm:px-4">
+              <p className="break-all font-mono text-[16px] leading-6 tracking-[-0.4px] text-[#1f2937] sm:truncate sm:whitespace-nowrap">
+                {detail.businessLink}
+              </p>
+            </div>
+
+            <div className="flex w-full items-center pt-2">
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#4048cd] px-5 py-2.5 shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition hover:bg-[#343aa8]"
+              >
+                <img
+                  src={ADMIN_BUSINESS_LINK_ASSETS.copy}
+                  alt=""
+                  width={18}
+                  height={18}
+                  className="size-[18px] shrink-0"
+                />
+                <span className="text-[16px] font-semibold leading-6 text-white">
+                  {t('adminBusinessLink.detail.copyLink')}
+                </span>
+              </button>
+            </div>
+          </section>
+
+          <div className="h-0 w-full" aria-hidden="true">
+            <img
+              src={ADMIN_BUSINESS_LINK_ASSETS.divider}
+              alt=""
+              className="block h-px w-full max-w-none"
+            />
           </div>
-          <div className="flex w-full flex-col gap-4">
-            <h2
-              id="business-link-photo-title"
-              className="w-full font-manrope text-[28px] font-extrabold leading-tight text-[#111827] sm:text-[36px]"
-            >
-              {t(detail.titleKey)}
-            </h2>
-            <p className="w-full font-manrope text-[16px] font-medium leading-7 text-[#3e3f40] sm:text-[20px] sm:leading-[30px]">
-              {t(detail.descriptionKey)}
+        </div>
+
+        {/* Photographer — same meta text sizes as zodiac competition detail */}
+        <section className="flex items-start gap-3">
+          <img
+            src={detail.photographerAvatar}
+            alt=""
+            width={57}
+            height={57}
+            className="size-[57px] shrink-0 rounded-full object-cover"
+          />
+          <div className="flex w-[139px] flex-col gap-1">
+            <p className="admin-detail-meta__photographer-label w-full">
+              {t('adminBusinessLink.detail.photographerLabel')}
+            </p>
+            <p className="admin-detail-meta__photographer-name w-full">
+              {t(detail.photographerKey)}
             </p>
           </div>
         </section>
-
-        {/* Business link — Figma 345:1627 */}
-        <section className="w-full rounded-[24px] border border-[#f3f4f6] bg-white p-5 shadow-[0px_8px_15px_rgba(0,0,0,0.04)] sm:p-[41px]">
-          <div className="mb-4 flex items-center justify-between gap-3 sm:mb-6">
-            <h3 className="font-manrope text-[16px] font-bold tracking-[-0.45px] text-[#111827] sm:text-[18px] sm:leading-7">
-              {t('adminBusinessLink.detail.linkLabel')}
-            </h3>
-            <span className="text-[14px] font-medium leading-5 text-[#6b7280]">
-              {t('adminBusinessLink.detail.autoGenerated')}
-            </span>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <div className="min-w-0 flex-1 truncate rounded-[12px] border border-[#e5e7eb] bg-[#f9fafb] px-4 py-3 text-[14px] text-[#374151] sm:text-[16px]">
-              {detail.businessLink}
-            </div>
-            <button
-              type="button"
-              onClick={handleCopyLink}
-              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-[12px] bg-[#4048cd] px-5 py-2.5 text-[16px] font-medium text-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition hover:bg-[#343aa8]"
-            >
-              <img
-                src={ADMIN_BUSINESS_LINK_ASSETS.copy}
-                alt=""
-                width={COPY_ICON_SIZE}
-                height={COPY_ICON_SIZE}
-                className="size-5"
-              />
-              {t('adminBusinessLink.detail.copyLink')}
-            </button>
-          </div>
-        </section>
       </div>
-
-      {/* Photographer */}
-      <section className="flex items-center gap-3">
-        <img
-          src={detail.photographerAvatar}
-          alt=""
-          width={48}
-          height={48}
-          className="size-12 rounded-full object-cover"
-        />
-        <div>
-          <p className="text-[13px] text-[#9ca3af]">{t('adminBusinessLink.detail.photographerLabel')}</p>
-          <p className="text-[16px] font-semibold text-[#111827]">{t(detail.photographerKey)}</p>
-        </div>
-      </section>
     </div>
   );
 });

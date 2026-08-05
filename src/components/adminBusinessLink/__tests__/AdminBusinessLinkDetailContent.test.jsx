@@ -67,6 +67,16 @@ describe('Admin Business Link Details', () => {
         name: i18n.t('adminBusinessLink.detail.selectPhoto', { number: 1, sign: 'Aries' }),
       }),
     ).toHaveAttribute('aria-current', 'true');
+    expect(
+      screen.getByRole('button', {
+        name: i18n.t('adminBusinessLink.detail.selectPhoto', { number: 1, sign: 'Aries' }),
+      }).querySelector('img[src*="icon-aries"]'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: i18n.t('adminBusinessLink.detail.selectPhoto', { number: 9, sign: 'Sagittarius' }),
+      }).querySelector('img[src*="icon-sagittarius"]'),
+    ).toBeInTheDocument();
   });
 
   it('copies the generated business link', async () => {

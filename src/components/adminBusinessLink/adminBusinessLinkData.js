@@ -12,6 +12,7 @@ export const ADMIN_BUSINESS_LINK_ASSETS = {
   ariesWhite: `${A}/icon-aries-white.svg`,
   photographer: `${A}/photographer.jpg`,
   curve: `${A}/curve.svg`,
+  divider: `${A}/divider.svg`,
   thumbs: [
     `${A}/thumb-1.jpg`,
     `${A}/thumb-2.jpg`,
