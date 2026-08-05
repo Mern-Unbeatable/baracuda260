@@ -1,5 +1,7 @@
 import {
   ADMIN_BUSINESS_LINK_ROWS,
+  getBusinessLinkDetailById,
+  getBusinessLinkDetailPath,
   getBusinessLinkResultRange,
   paginateBusinessLinkRows,
 } from '../adminBusinessLinkData';
@@ -22,5 +24,16 @@ describe('adminBusinessLinkData helpers', () => {
 
   it('includes seven Figma mock rows', () => {
     expect(ADMIN_BUSINESS_LINK_ROWS).toHaveLength(7);
+  });
+
+  it('builds detail paths and album lookups', () => {
+    expect(getBusinessLinkDetailPath('john-anderson')).toBe(
+      '/admin/business-link-photos/john-anderson',
+    );
+    expect(getBusinessLinkDetailById('missing')).toBeNull();
+    const detail = getBusinessLinkDetailById('john-anderson');
+    expect(detail?.albumId).toBe('ALB-45215');
+    expect(detail?.slides).toHaveLength(12);
+    expect(detail?.businessLink).toContain('album-45215');
   });
 });

@@ -1,21 +1,19 @@
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import toast from 'react-hot-toast';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '../../../i18n';
 import AdminBusinessLinkContent from '../AdminBusinessLinkContent';
 
-jest.mock('react-hot-toast', () => ({
-  __esModule: true,
-  default: {
-    success: jest.fn(),
-  },
+jest.mock('react-router-dom', () => ({
+  Link: ({ children, to, className, 'aria-label': ariaLabel }) => (
+    <a href={typeof to === 'string' ? to : '#'} className={className} aria-label={ariaLabel}>
+      {children}
+    </a>
+  ),
 }));
 
 describe('Admin Business Link content', () => {
   afterEach(async () => {
     localStorage.removeItem(LOCALE_STORAGE_KEY);
-    jest.clearAllMocks();
     await act(async () => {
       await changeAppLanguage(DEFAULT_LOCALE);
     });
@@ -53,23 +51,16 @@ describe('Admin Business Link content', () => {
     expect(screen.getByTestId('business-link-mobile-cards')).toBeInTheDocument();
   });
 
-  it('toasts when a row view action is clicked', async () => {
-    const user = userEvent.setup();
+  it('links the action eye icon to the details page', () => {
     render(<AdminBusinessLinkContent />);
 
-    await user.click(
-      screen.getAllByRole('button', {
-        name: i18n.t('adminBusinessLink.actions.view', {
-          user: i18n.t('adminBusinessLink.rows.john.user'),
-        }),
-      })[0],
-    );
-
-    expect(toast.success).toHaveBeenCalledWith(
-      i18n.t('adminBusinessLink.actions.viewToast', {
+    const link = screen.getAllByRole('link', {
+      name: i18n.t('adminBusinessLink.actions.view', {
         user: i18n.t('adminBusinessLink.rows.john.user'),
       }),
-    );
+    })[0];
+
+    expect(link).toHaveAttribute('href', '/admin/business-link-photos/john-anderson');
   });
 
   it('switches business link copy to Polish', async () => {
@@ -82,9 +73,7 @@ describe('Admin Business Link content', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: 'Zdjęcia Business Link' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('columnheader', { name: 'Użytkownik' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: 'Użytkownik' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Poprzednia' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Następna' })).toBeDisabled();
     expect(screen.getByText('Wyświetlanie 1–7 z 7 wyników')).toBeInTheDocument();

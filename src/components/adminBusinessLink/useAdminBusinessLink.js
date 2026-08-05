@@ -14,7 +14,6 @@ export default function useAdminBusinessLink(
   pageSize = BUSINESS_LINK_PAGE_SIZE,
 ) {
   const [page, setPage] = useState(1);
-  const [viewedId, setViewedId] = useState(null);
 
   const total = initialRows.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -30,20 +29,14 @@ export default function useAdminBusinessLink(
     setPage((current) => Math.min(totalPages, current + 1));
   };
 
-  const handleViewRow = (rowId) => {
-    setViewedId(rowId);
-  };
-
   return {
     visibleRows,
     page: safePage,
     totalPages,
     range,
-    viewedId,
     isFirstPage: safePage <= 1,
     isLastPage: safePage >= totalPages,
     handlePreviousPage,
     handleNextPage,
-    handleViewRow,
   };
 }

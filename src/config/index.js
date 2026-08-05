@@ -32,6 +32,7 @@ export const ROUTES = {
   ADMIN_MY_COMPETITION_DETAIL: '/admin/my-competitions/:id',
   ADMIN_SUBMISSIONS: '/admin/submissions',
   ADMIN_BUSINESS_PHOTOS: '/admin/business-link-photos',
+  ADMIN_BUSINESS_PHOTOS_DETAIL: '/admin/business-link-photos/:id',
   ADMIN_CHAT: '/admin/chat',
   ADMIN_PRIZE_PAYMENTS: '/admin/prize-payments',
   ADMIN_PROFILE: '/admin/profile',

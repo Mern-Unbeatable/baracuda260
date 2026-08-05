@@ -1,20 +1,22 @@
 import React, { memo } from 'react';
-import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '../../config';
 import {
   ADMIN_BUSINESS_LINK_ASSETS,
   EYE_ICON_SIZE,
+  getBusinessLinkDetailPath,
 } from './adminBusinessLinkData';
 import useAdminBusinessLink from './useAdminBusinessLink';
 
 /**
  * @param {{
  *   row: object,
- *   onView: (rowId: string) => void,
  * }} props
  */
-const BusinessLinkTableRow = memo(({ row, onView }) => {
+const BusinessLinkTableRow = memo(({ row }) => {
   const { t } = useTranslation();
+  const detailPath = getBusinessLinkDetailPath(row.id, ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL);
 
   return (
     <tr className="border-b border-[#e4e4e4]">
@@ -30,11 +32,10 @@ const BusinessLinkTableRow = memo(({ row, onView }) => {
         {row.uploadDate}
       </td>
       <td className="px-[26px] py-6">
-        <button
-          type="button"
+        <Link
+          to={detailPath}
           aria-label={t('adminBusinessLink.actions.view', { user: t(row.userKey) })}
-          onClick={() => onView(row.id)}
-          className="inline-flex size-6 cursor-pointer items-center justify-center rounded-[6px] transition hover:bg-[#f6fbff]"
+          className="inline-flex size-6 items-center justify-center rounded-[6px] transition hover:bg-[#f6fbff]"
         >
           <img
             src={ADMIN_BUSINESS_LINK_ASSETS.eye}
@@ -43,7 +44,7 @@ const BusinessLinkTableRow = memo(({ row, onView }) => {
             height={EYE_ICON_SIZE}
             className="size-6"
           />
-        </button>
+        </Link>
       </td>
     </tr>
   );
@@ -54,10 +55,9 @@ BusinessLinkTableRow.displayName = 'BusinessLinkTableRow';
 /**
  * @param {{
  *   rows: object[],
- *   onView: (rowId: string) => void,
  * }} props
  */
-const BusinessLinkTable = memo(({ rows, onView }) => {
+const BusinessLinkTable = memo(({ rows }) => {
   const { t } = useTranslation();
 
   return (
@@ -87,7 +87,7 @@ const BusinessLinkTable = memo(({ rows, onView }) => {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <BusinessLinkTableRow key={row.id} row={row} onView={onView} />
+            <BusinessLinkTableRow key={row.id} row={row} />
           ))}
         </tbody>
       </table>
@@ -100,52 +100,53 @@ BusinessLinkTable.displayName = 'BusinessLinkTable';
 /**
  * @param {{
  *   rows: object[],
- *   onView: (rowId: string) => void,
  * }} props
  */
-const BusinessLinkMobileCards = memo(({ rows, onView }) => {
+const BusinessLinkMobileCards = memo(({ rows }) => {
   const { t } = useTranslation();
 
   return (
     <ul className="flex flex-col md:hidden" data-testid="business-link-mobile-cards">
-      {rows.map((row) => (
-        <li key={row.id} className="border-b border-[#e4e4e4] px-4 py-5 last:border-b-0">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-[16px] font-medium leading-6 text-[#0c0c0c]">{t(row.userKey)}</p>
-              <p className="mt-1 break-words text-[14px] leading-5 text-[#687186]">{row.email}</p>
+      {rows.map((row) => {
+        const detailPath = getBusinessLinkDetailPath(row.id, ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL);
+        return (
+          <li key={row.id} className="border-b border-[#e4e4e4] px-4 py-5 last:border-b-0">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[16px] font-medium leading-6 text-[#0c0c0c]">{t(row.userKey)}</p>
+                <p className="mt-1 break-words text-[14px] leading-5 text-[#687186]">{row.email}</p>
+              </div>
+              <Link
+                to={detailPath}
+                aria-label={t('adminBusinessLink.actions.view', { user: t(row.userKey) })}
+                className="inline-flex size-6 shrink-0 items-center justify-center rounded-[6px] transition hover:bg-[#f6fbff]"
+              >
+                <img
+                  src={ADMIN_BUSINESS_LINK_ASSETS.eye}
+                  alt=""
+                  width={EYE_ICON_SIZE}
+                  height={EYE_ICON_SIZE}
+                  className="size-6"
+                />
+              </Link>
             </div>
-            <button
-              type="button"
-              aria-label={t('adminBusinessLink.actions.view', { user: t(row.userKey) })}
-              onClick={() => onView(row.id)}
-              className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-[6px] transition hover:bg-[#f6fbff]"
-            >
-              <img
-                src={ADMIN_BUSINESS_LINK_ASSETS.eye}
-                alt=""
-                width={EYE_ICON_SIZE}
-                height={EYE_ICON_SIZE}
-                className="size-6"
-              />
-            </button>
-          </div>
-          <dl className="mt-4 grid grid-cols-1 gap-2 text-[14px] leading-5 sm:grid-cols-2">
-            <div>
-              <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.phone')}</dt>
-              <dd className="text-[#0c0c0c]">{row.phone}</dd>
-            </div>
-            <div>
-              <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.country')}</dt>
-              <dd className="text-[#0c0c0c]">{t(row.countryKey)}</dd>
-            </div>
-            <div>
-              <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.uploadDate')}</dt>
-              <dd className="text-[#0c0c0c]">{row.uploadDate}</dd>
-            </div>
-          </dl>
-        </li>
-      ))}
+            <dl className="mt-4 grid grid-cols-1 gap-2 text-[14px] leading-5 sm:grid-cols-2">
+              <div>
+                <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.phone')}</dt>
+                <dd className="text-[#0c0c0c]">{row.phone}</dd>
+              </div>
+              <div>
+                <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.country')}</dt>
+                <dd className="text-[#0c0c0c]">{t(row.countryKey)}</dd>
+              </div>
+              <div>
+                <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.uploadDate')}</dt>
+                <dd className="text-[#0c0c0c]">{row.uploadDate}</dd>
+              </div>
+            </dl>
+          </li>
+        );
+      })}
     </ul>
   );
 });
@@ -179,12 +180,7 @@ const BusinessLinkPagination = memo(
           role="navigation"
           aria-label={t('adminBusinessLink.pagination.aria')}
         >
-          <button
-            type="button"
-            disabled={isFirstPage}
-            onClick={onPrevious}
-            className={btnClass}
-          >
+          <button type="button" disabled={isFirstPage} onClick={onPrevious} className={btnClass}>
             {t('adminBusinessLink.pagination.previous')}
           </button>
           <button type="button" disabled={isLastPage} onClick={onNext} className={btnClass}>
@@ -210,16 +206,7 @@ const AdminBusinessLinkContent = memo(() => {
     isLastPage,
     handlePreviousPage,
     handleNextPage,
-    handleViewRow,
   } = useAdminBusinessLink();
-
-  const onView = (rowId) => {
-    handleViewRow(rowId);
-    const row = visibleRows.find((item) => item.id === rowId);
-    if (row) {
-      toast.success(t('adminBusinessLink.actions.viewToast', { user: t(row.userKey) }));
-    }
-  };
 
   return (
     <div className="flex w-full flex-col gap-6 py-2 sm:py-4">
@@ -238,8 +225,8 @@ const AdminBusinessLinkContent = memo(() => {
       >
         {visibleRows.length > 0 ? (
           <>
-            <BusinessLinkMobileCards rows={visibleRows} onView={onView} />
-            <BusinessLinkTable rows={visibleRows} onView={onView} />
+            <BusinessLinkMobileCards rows={visibleRows} />
+            <BusinessLinkTable rows={visibleRows} />
           </>
         ) : (
           <p className="px-6 py-10 text-center text-[16px] text-[#687186]">

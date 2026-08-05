@@ -31,7 +31,8 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_WINNERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_PAYOUTS) ||
     currentPath === normalizePath(ROUTES.ADMIN_SUPPORT) ||
-    currentPath === normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS);
+    currentPath === normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS)}/`);
 
   useEffect(() => {
     const handleKey = (event) => {
