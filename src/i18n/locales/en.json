@@ -495,27 +495,18 @@
     }
   },
   "userProfile": {
-    "title": "Profile Details Editor",
-    "subtitle": "Manage your artistic identity and account security settings.",
-    "fields": {
-      "fullName": "Full Name",
-      "phone": "Phone number",
-      "email": "Email id",
-      "profileLink": "Profile link"
-    },
-    "photographer": {
-      "title": "Your Photographer Profile",
-      "subtitle": "Control how other photographers and judges see your public bio portfolio",
-      "edit": "Edit Profile",
-      "editToast": "Profile editing will be available soon.",
-      "copy": "Copy",
-      "copySuccess": "Profile link copied to clipboard!",
-      "copyFailed": "Could not copy the profile link."
+    "title": "My Profile",
+    "subtitle": "Manage your account and store preferences.",
+    "cardAria": "Profile account settings",
+    "account": {
+      "title": "Account Information",
+      "name": "Name",
+      "email": "Email",
+      "update": "Update Profile",
+      "updateSuccess": "Profile updated successfully!"
     },
     "security": {
-      "title": "Account Security",
-      "subtitle": "Manage your access and safeguard your creative portfolio",
-      "setPassword": "Set New Password",
+      "title": "Change Password",
       "currentPassword": "Current Password",
       "newPassword": "New Password",
       "confirmPassword": "Confirm New Password",
@@ -523,6 +514,9 @@
       "success": "Password changed successfully!"
     },
     "errors": {
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Please enter a valid email address.",
       "currentRequired": "Current password is required.",
       "newRequired": "New password is required.",
       "newTooShort": "New password must be at least 8 characters.",

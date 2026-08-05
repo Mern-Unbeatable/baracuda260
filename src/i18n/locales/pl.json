@@ -495,27 +495,18 @@
     }
   },
   "userProfile": {
-    "title": "Edytor szczegółów profilu",
-    "subtitle": "Zarządzaj swoją tożsamością artystyczną i ustawieniami bezpieczeństwa konta.",
-    "fields": {
-      "fullName": "Imię i nazwisko",
-      "phone": "Numer telefonu",
-      "email": "Adres e-mail",
-      "profileLink": "Link do profilu"
-    },
-    "photographer": {
-      "title": "Twój profil fotografa",
-      "subtitle": "Kontroluj, jak inni fotografowie i sędziowie widzą Twoje publiczne portfolio bio",
-      "edit": "Edytuj profil",
-      "editToast": "Edycja profilu będzie wkrótce dostępna.",
-      "copy": "Kopiuj",
-      "copySuccess": "Link do profilu skopiowano do schowka!",
-      "copyFailed": "Nie udało się skopiować linku do profilu."
+    "title": "Mój profil",
+    "subtitle": "Zarządzaj kontem i preferencjami sklepu.",
+    "cardAria": "Ustawienia konta profilu",
+    "account": {
+      "title": "Informacje o koncie",
+      "name": "Nazwa",
+      "email": "E-mail",
+      "update": "Zaktualizuj profil",
+      "updateSuccess": "Profil został zaktualizowany pomyślnie!"
     },
     "security": {
-      "title": "Bezpieczeństwo konta",
-      "subtitle": "Zarządzaj dostępem i chroń swoje kreatywne portfolio",
-      "setPassword": "Ustaw nowe hasło",
+      "title": "Zmień hasło",
       "currentPassword": "Aktualne hasło",
       "newPassword": "Nowe hasło",
       "confirmPassword": "Potwierdź nowe hasło",
@@ -523,6 +514,9 @@
       "success": "Hasło zostało zmienione pomyślnie!"
     },
     "errors": {
+      "nameRequired": "Nazwa jest wymagana.",
+      "emailRequired": "E-mail jest wymagany.",
+      "emailInvalid": "Podaj prawidłowy adres e-mail.",
       "currentRequired": "Aktualne hasło jest wymagane.",
       "newRequired": "Nowe hasło jest wymagane.",
       "newTooShort": "Nowe hasło musi mieć co najmniej 8 znaków.",
