@@ -696,11 +696,11 @@ const HomeContent = memo(() => {
       {/* Why My12Photos */}
       <section className="bg-white py-16 sm:py-20">
         <Shell>
-          <div className="mb-11 max-w-[290px]">
+          <div className="mb-11">
             <p className="text-[16px] font-bold uppercase tracking-[1.65px] text-[#3f51b5]">
               {t('home.features.eyebrow')}
             </p>
-            <h2 className="mt-[18px] text-[36px] font-extrabold tracking-[-0.9px] text-[#111827]">
+            <h2 className="mt-[18px] whitespace-nowrap text-[36px] font-bold tracking-[-0.9px] text-[#3a3a42]">
               {t('home.features.title')}
             </h2>
           </div>
@@ -710,7 +710,7 @@ const HomeContent = memo(() => {
                 <div className="mb-2.5 flex size-10 items-center justify-center rounded-[14px] bg-[#eef2ff]">
                   <ImgIcon src={f.icon} size={18} />
                 </div>
-                <h3 className="text-[24px] font-extrabold leading-[27px] text-[#111827]">
+                <h3 className="text-[24px] font-semibold leading-[27px] text-[#3a3a42]">
                   {t(f.titleKey)}
                 </h3>
                 <p className="mt-2.5 max-w-[324px] text-[16px] leading-[22.75px] text-[#6b7280]">
