@@ -2,26 +2,8 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { ImgIcon, Shell, SitePageLayout } from '../site';
-import { COMPETITION_CARDS, COMPETITION_STEPS } from '../../data/competitionsMarketing';
-
-const A = '/assets/home';
-
-const ASSETS = {
-  logo: `${A}/logo.png`,
-  logoFooter: `${A}/logo-footer.png`,
-  chevron: `${A}/chevron-down.svg`,
-  camera: `${A}/icon-camera.svg`,
-  book: `${A}/icon-book.svg`,
-  sparkle: `${A}/icon-sparkle.svg`,
-  check: `${A}/icon-check.svg`,
-  checkAlt: `${A}/icon-check-alt.svg`,
-  arrow: `${A}/icon-arrow.svg`,
-  mail: `${A}/icon-mail.svg`,
-  ig: `${A}/icon-ig.svg`,
-  fb: `${A}/icon-fb.svg`,
-  x: `${A}/icon-x.svg`,
-  newsletterBg: `${A}/newsletter-bg.png`,
-};
+import { COMPETITION_STEPS } from '../../data/competitionsMarketing';
+import ActiveCompetitions from './ActiveCompetitions';
 
 const CompetitionsContent = memo(() => {
   const { t } = useTranslation();
@@ -33,77 +15,7 @@ const CompetitionsContent = memo(() => {
       announcementTone="navy"
       newsletterVariant="page"
     >
-      {/* Active Competitions */}
-      <section className="bg-[#f7f8fa] py-16 sm:py-20 xl:py-[114px]">
-        <Shell>
-          <div className="mx-auto mb-11 max-w-[682px] text-center">
-            <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-              {t('home.competitions.eyebrow')}
-            </p>
-            <h1 className="mt-5 text-[32px] font-extrabold leading-tight text-[#0d0d14] sm:text-[40px] xl:text-[48px] xl:leading-[48px]">
-              {t('home.competitions.title')}
-            </h1>
-            <p className="mt-2.5 text-[16px] leading-[1.45] text-[#6b7280] sm:text-[20px] sm:leading-[29.25px]">
-              {t('home.competitions.subtitle')}
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {COMPETITION_CARDS.map((card) => (
-              <article
-                key={card.titleKey}
-                id={card.id}
-                className="relative flex h-full scroll-mt-[140px] flex-col justify-between rounded-[20px] border border-black/16 bg-white p-6 sm:p-8"
-              >
-                {card.popular && (
-                  <span className="absolute left-1/2 top-[-12px] -translate-x-1/2 rounded-full bg-[#4048cd] px-3 py-1 text-[10px] font-extrabold tracking-[0.5px] text-white">
-                    {t('common.mostPopular')}
-                  </span>
-                )}
-                <div className="flex flex-col gap-4">
-                  <div className="flex size-14 items-center justify-center rounded-lg bg-[#fde8e9]">
-                    <ImgIcon src={card.icon} size={32} />
-                  </div>
-                  <div className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-4">
-                      <h2 className="text-[24px] font-semibold capitalize leading-7 text-[#0d0d14] sm:text-[32px]">
-                        {t(card.titleKey)}
-                      </h2>
-                      <p className="text-[16px] leading-normal text-[#6b7280]">
-                        {t(card.descriptionKey)}
-                      </p>
-                    </div>
-                    <ul className="flex flex-col gap-2.5">
-                      {card.featureKeys.map((featureKey) => (
-                        <li
-                          key={featureKey}
-                          className="flex items-center gap-2 text-[14px] text-[#111827]"
-                        >
-                          <ImgIcon src={card.check} size={13} />
-                          {t(featureKey)}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <p className="text-[16px] text-[#1b1e56]">
-                    <span className="text-[28px] font-semibold text-[#4048cd] sm:text-[32px]">
-                      {card.prize}
-                    </span>
-                    {t('common.prizeMoney')}
-                  </p>
-                </div>
-                <a
-                  href="#"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white"
-                >
-                  {t('common.enterNow')}
-                  <ImgIcon src={ASSETS.arrow} size={16} />
-                </a>
-              </article>
-            ))}
-          </div>
-        </Shell>
-      </section>
+      <ActiveCompetitions headingAs="h1" />
 
       {/* How It Works */}
       <section className="bg-white py-16 sm:py-20 xl:py-[112px]">
