@@ -361,7 +361,7 @@ const HomeContent = memo(() => {
                     </ul>
                   </div>
                   <p className="text-[16px] font-normal leading-normal text-[#1b1e56]">
-                    <span className="text-[32px] font-semibold leading-normal text-[#4048cd]">
+                    <span className="text-[32px] font-medium leading-normal text-[#4048cd]">
                       {card.prize}
                     </span>
                     {t('common.prizeMoney')}
