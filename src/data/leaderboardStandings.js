@@ -1,6 +1,35 @@
-/** Shared top-photographer standings for Home Leaderboard section. */
+/** Shared top-photographer standings for Home + Leaderboard page. */
 
 const A = '/assets/home';
+
+export const LEADERBOARD_STANDINGS_YEAR = 2026;
+
+export const LEADERBOARD_ALBUM_TABS = [
+  'Single Photo',
+  '6 Photos',
+  '12 photos - full Zodiac Story',
+];
+
+export const LEADERBOARD_ALBUM_TAB_LABEL_KEYS = {
+  'Single Photo': 'common.singlePhoto',
+  '6 Photos': 'common.sixPhotos',
+  '12 photos - full Zodiac Story': 'common.twelveZodiac',
+};
+
+export const LEADERBOARD_MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 export const LEADERBOARD_PODIUM = [
   {
