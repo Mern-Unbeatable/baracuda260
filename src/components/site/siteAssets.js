@@ -5,7 +5,7 @@ export const SITE_ASSET_BASE = A;
 
 export const SITE_ASSETS = {
   logo: '/assets/logo/logo.png',
-  logoFooter: `${A}/logo-footer.png`,
+  logoFooter: '/assets/logo/logo.png',
   chevron: `${A}/chevron-down.svg`,
   mail: `${A}/icon-mail.svg`,
   ig: `${A}/icon-ig.svg`,

@@ -25,7 +25,6 @@ export const SITE_FOOTER_COLUMNS = [
     titleKey: 'footer.platform',
     linkKeys: [
       'footer.gallery',
-      'footer.leaderboard',
       'footer.about',
       'footer.faq',
       'footer.contact',

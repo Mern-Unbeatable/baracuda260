@@ -52,7 +52,8 @@ const CompetitionsContent = memo(() => {
             {COMPETITION_CARDS.map((card) => (
               <article
                 key={card.titleKey}
-                className="relative flex h-full flex-col justify-between rounded-[20px] border border-black/16 bg-white p-6 sm:p-8"
+                id={card.id}
+                className="relative flex h-full scroll-mt-[140px] flex-col justify-between rounded-[20px] border border-black/16 bg-white p-6 sm:p-8"
               >
                 {card.popular && (
                   <span className="absolute left-1/2 top-[-12px] -translate-x-1/2 rounded-full bg-[#4048cd] px-3 py-1 text-[10px] font-extrabold tracking-[0.5px] text-white">
