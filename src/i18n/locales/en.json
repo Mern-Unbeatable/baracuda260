@@ -307,6 +307,8 @@
     "title": "Photo Showcase",
     "filters": "Filters",
     "hideFilters": "Hide Filters",
+    "closeFilters": "Close filters",
+    "filtersTitle": "Filters",
     "albumType": "Album Type",
     "category": "Category",
     "emptyTitle": "No photos match",
