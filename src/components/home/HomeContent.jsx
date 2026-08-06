@@ -432,7 +432,7 @@ const HomeContent = memo(() => {
               <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
                 {t('home.showcase.eyebrow')}
               </p>
-              <h2 className="mt-2 text-[36px] font-extrabold text-[#0d0d14] sm:text-[48px] sm:leading-[66px]">
+              <h2 className="mt-2 text-[36px] font-bold text-[#3a3a42] sm:text-[48px] sm:leading-[66px]">
                 {t('home.showcase.title')}
               </h2>
             </div>
@@ -442,7 +442,7 @@ const HomeContent = memo(() => {
                   key={item}
                   type="button"
                   onClick={() => setFilter(item)}
-                  className={`shrink-0 rounded-full px-4 py-2 text-[14px] font-semibold transition ${
+                  className={`shrink-0 cursor-pointer rounded-full px-4 py-2 text-[14px] font-semibold transition ${
                     filter === item ? 'bg-[#4048cd] text-white' : 'bg-[#f3f4f6] text-[#6b7280]'
                   }`}
                 >
@@ -466,7 +466,7 @@ const HomeContent = memo(() => {
                     height={252}
                     className="h-full w-full object-cover"
                   />
-                  <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
+                  <span className="absolute left-3 top-3 rounded bg-[#e8eafc] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#4048cd]">
                     {t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
                       defaultValue: photo.badge,
                     })}
