@@ -139,10 +139,12 @@ const GalleryContent = memo(() => {
             </button>
           </div>
 
-          <div className="flex flex-col gap-8 lg:flex-row lg:gap-[103px]">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-[103px]">
             {/* Sidebar */}
             <aside
-              className={`w-full shrink-0 lg:w-[285px] ${filtersOpen ? 'block' : 'hidden lg:block'}`}
+              className={`w-full shrink-0 lg:sticky lg:top-[calc(var(--site-chrome-height,118px)+1.5rem)] lg:w-[285px] lg:self-start ${
+                filtersOpen ? 'block' : 'hidden lg:block'
+              }`}
             >
               <div className="flex flex-col gap-10">
                 <FilterGroup
