@@ -108,7 +108,15 @@
       "editorsChoice": "Wybór redakcji"
     },
     "themeSilentStreets": "MOTYW: CICHE ULICZKI",
-    "categorySingleShort": "Kat.: pojedyncze zdjęcie"
+    "categorySingleShort": "Kat.: pojedyncze zdjęcie",
+    "cities": {
+      "krakow": "Kraków",
+      "warsaw": "Warszawa",
+      "wroclaw": "Wrocław",
+      "poznan": "Poznań",
+      "gdansk": "Gdańsk",
+      "lodz": "Łódź"
+    }
   },
   "home": {
     "hero": {

@@ -130,7 +130,7 @@ const LEADERBOARD = [
   {
     rank: '🥇',
     name: 'Anna Kowalska',
-    city: 'Kraków',
+    cityKey: 'krakow',
     votes: '4,821',
     points: '9,640',
     avatar: ASSETS.avatarAnna,
@@ -138,7 +138,7 @@ const LEADERBOARD = [
   {
     rank: '🥈',
     name: 'Piotr Mazur',
-    city: 'Warsaw',
+    cityKey: 'warsaw',
     votes: '4,203',
     points: '8,406',
     avatar: ASSETS.avatarPiotr,
@@ -146,7 +146,7 @@ const LEADERBOARD = [
   {
     rank: '🥉',
     name: 'Marta Wiśniewska',
-    city: 'Wrocław',
+    cityKey: 'wroclaw',
     votes: '3,981',
     points: '7,962',
     avatar: ASSETS.avatarMarta,
@@ -154,7 +154,7 @@ const LEADERBOARD = [
   {
     rank: '4',
     name: 'Kamil Zając',
-    city: 'Poznań',
+    cityKey: 'poznan',
     votes: '3,542',
     points: '7,084',
     initial: 'K',
@@ -162,7 +162,7 @@ const LEADERBOARD = [
   {
     rank: '5',
     name: 'Ewa Krawczyk',
-    city: 'Gdańsk',
+    cityKey: 'gdansk',
     votes: '3,218',
     points: '6,436',
     initial: 'E',
@@ -170,7 +170,7 @@ const LEADERBOARD = [
   {
     rank: '6',
     name: 'Tomasz Nowak',
-    city: 'Łódź',
+    cityKey: 'lodz',
     votes: '2,967',
     points: '5,934',
     initial: 'T',
@@ -525,7 +525,7 @@ const HomeContent = memo(() => {
               {
                 emoji: '🥈',
                 name: 'Piotr',
-                city: 'Warsaw',
+                cityKey: 'warsaw',
                 votesCount: '4,203',
                 avatar: ASSETS.avatarPiotr,
                 size: 64,
@@ -534,7 +534,7 @@ const HomeContent = memo(() => {
               {
                 emoji: '🥇',
                 name: 'Anna',
-                city: 'Kraków',
+                cityKey: 'krakow',
                 votesCount: '4,821',
                 avatar: ASSETS.avatarAnna,
                 size: 80,
@@ -544,7 +544,7 @@ const HomeContent = memo(() => {
               {
                 emoji: '🥉',
                 name: 'Marta',
-                city: 'Wrocław',
+                cityKey: 'wroclaw',
                 votesCount: '3,981',
                 avatar: ASSETS.avatarMarta,
                 size: 64,
@@ -575,7 +575,7 @@ const HomeContent = memo(() => {
                 >
                   {p.name}
                 </p>
-                <p className="text-[12px] text-[#6b7280]">{p.city}</p>
+                <p className="text-[12px] text-[#6b7280]">{t(`common.cities.${p.cityKey}`)}</p>
                 <p className="mt-1 text-[14px] font-bold text-[#e31837]">
                   {t('home.winners.votesLabel', { count: p.votesCount })}
                 </p>
@@ -584,47 +584,53 @@ const HomeContent = memo(() => {
           </div>
 
           <div className="overflow-x-auto rounded-2xl border border-black/20 bg-white">
-            <table className="min-w-[720px] w-full text-left">
-              <thead className="bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
-                <tr className="border-b border-black/20">
-                  <th className="px-6 py-4">{t('common.rank')}</th>
-                  <th className="px-6 py-4">{t('common.photographer')}</th>
-                  <th className="px-6 py-4">{t('common.city')}</th>
-                  <th className="px-6 py-4 text-right">{t('common.votes')}</th>
-                  <th className="px-6 py-4 text-right">{t('common.points')}</th>
+            <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
+              <thead>
+                <tr className="border-b border-black/20 bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
+                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.rank')}</th>
+                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.photographer')}</th>
+                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.city')}</th>
+                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.votes')}</th>
+                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.points')}</th>
                 </tr>
               </thead>
               <tbody>
                 {LEADERBOARD.map((row) => (
                   <tr key={row.name} className="border-b border-black/20 last:border-b-0">
-                    <td className="px-6 py-5 text-[14px] font-extrabold text-[#e31837]">
+                    <td
+                      className={`px-6 py-5 text-[16px] font-extrabold ${
+                        row.rank.length <= 1 ? 'text-[#6b7280]' : 'text-[#e31837]'
+                      }`}
+                    >
                       {row.rank}
                     </td>
                     <td className="px-6 py-5">
-                      <div className="flex items-center gap-3">
+                      <div className="flex min-w-0 items-center gap-3">
                         {row.avatar ? (
                           <img
                             src={row.avatar}
                             alt=""
                             width={36}
                             height={36}
-                            className="size-9 rounded-full object-cover"
+                            className="size-9 shrink-0 rounded-full object-cover"
                           />
                         ) : (
-                          <span className="flex size-9 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
+                          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
                             {row.initial}
                           </span>
                         )}
-                        <span className="text-[14px] font-bold text-[#0d0d14]">{row.name}</span>
+                        <span className="truncate text-[14px] font-bold text-[#0d0d14]">
+                          {row.name}
+                        </span>
                       </div>
                     </td>
-                    <td className="px-6 py-5 text-[14px] text-[#6b7280]">{row.city}</td>
-                    <td className="px-6 py-5 text-right text-[14px] font-extrabold text-[#0d0d14]">
+                    <td className="px-6 py-5 text-[14px] text-[#6b7280]">
+                      {t(`common.cities.${row.cityKey}`)}
+                    </td>
+                    <td className="px-6 py-5 text-[14px] font-extrabold text-[#0d0d14]">
                       {row.votes}
                     </td>
-                    <td className="px-6 py-5 text-right text-[14px] text-[#6b7280]">
-                      {row.points}
-                    </td>
+                    <td className="px-6 py-5 text-[14px] text-[#6b7280]">{row.points}</td>
                   </tr>
                 ))}
               </tbody>

@@ -108,7 +108,15 @@
       "editorsChoice": "Editor's Choice"
     },
     "themeSilentStreets": "THEME: SILENT STREETS",
-    "categorySingleShort": "Cat : Single Short"
+    "categorySingleShort": "Cat : Single Short",
+    "cities": {
+      "krakow": "Krakow",
+      "warsaw": "Warsaw",
+      "wroclaw": "Wroclaw",
+      "poznan": "Poznan",
+      "gdansk": "Gdansk",
+      "lodz": "Lodz"
+    }
   },
   "home": {
     "hero": {
