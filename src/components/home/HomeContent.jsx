@@ -1,10 +1,11 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
-import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
+import { ImgIcon, Shell, SitePageLayout } from '../site';
 import HomeHero from './HomeHero';
 import ActiveCompetitions from '../competitions/ActiveCompetitions';
 import HowItWorks from '../competitions/HowItWorks';
+import CommunityWork from '../gallery/CommunityWork';
 
 const A = '/assets/home';
 
@@ -21,8 +22,6 @@ const ASSETS = {
   checkAlt: `${A}/icon-check-alt.svg`,
   arrow: `${A}/icon-arrow.svg`,
   arrowRed: `${A}/icon-arrow-red.svg`,
-  arrowGallery: `${A}/icon-arrow-gallery.svg`,
-  heart: `${A}/icon-heart.svg`,
   trophy: `${A}/icon-trophy.svg`,
   users: `${A}/icon-users.svg`,
   formats: `${A}/icon-formats.svg`,
@@ -42,96 +41,7 @@ const ASSETS = {
   winnerEmma: `${A}/winner-emma.jpg`,
   winnerDavid: `${A}/winner-david.jpg`,
   winnerMarie: `${A}/winner-marie.jpg`,
-  photoGolden: `${A}/photo-golden.jpg`,
-  photoAutumn: `${A}/photo-autumn.jpg`,
-  photoWings: `${A}/photo-wings.jpg`,
-  photoCity: `${A}/photo-city.jpg`,
-  photoTidal: `${A}/photo-tidal.jpg`,
-  photoForest: `${A}/photo-forest.jpg`,
-  photoMorning: `${A}/photo-morning.jpg`,
-  photoZodiac: `${A}/photo-zodiac.jpg`,
 };
-
-const FILTERS = ['Single Photo', '6 Photo story', '12 photos - full Zodiac Story'];
-
-const FILTER_LABEL_KEYS = {
-  'Single Photo': 'common.singlePhoto',
-  '6 Photo story': 'common.sixPhotoStory',
-  '12 photos - full Zodiac Story': 'common.twelveZodiac',
-};
-
-const FILTER_SHORT_LABEL_KEYS = {
-  'Single Photo': 'common.filtersShort.single',
-  '6 Photo story': 'common.filtersShort.six',
-  '12 photos - full Zodiac Story': 'common.filtersShort.zodiac',
-};
-
-const SHOWCASE = [
-  {
-    title: 'Golden Hour Silence',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoGolden,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'Autumn Sequence',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '6 PHOTOS STORY',
-    image: ASSETS.photoAutumn,
-    filter: '6 Photo story',
-  },
-  {
-    title: 'Winqs Over the Marsh',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoWings,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'City After Midniqht',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '6 PHOTOS STORY',
-    image: ASSETS.photoCity,
-    filter: '6 Photo story',
-  },
-  {
-    title: 'Tidal Memory',
-    author: 'Sofia R. · Italy',
-    votes: '1,488',
-    badge: '12 Photos - Full Zodiac Story',
-    image: ASSETS.photoTidal,
-    filter: '12 photos - full Zodiac Story',
-  },
-  {
-    title: 'Forest Cathedral',
-    author: 'Jan M. · Czech',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoForest,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'Morninq Fields',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoMorning,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'Zodiac Journey',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '12 Photos - Full Zodiac Story',
-    image: ASSETS.photoZodiac,
-    filter: '12 photos - full Zodiac Story',
-  },
-];
 
 const LEADERBOARD = [
   {
@@ -268,12 +178,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const SHOWCASE_BADGE_KEYS = {
-  'Single Photo': 'common.badges.singlePhoto',
-  '6 PHOTOS STORY': 'common.badges.sixPhotosStory',
-  '12 Photos - Full Zodiac Story': 'common.badges.twelveZodiacFull',
-};
-
 const STATS = [
   { value: '14,820+', labelKey: 'home.stats.photographers' },
   { value: '89,450+', labelKey: 'home.stats.photos' },
@@ -283,9 +187,6 @@ const STATS = [
 
 const HomeContent = memo(() => {
   const { t } = useTranslation();
-  const [filter, setFilter] = useState(FILTERS[0]);
-
-  const photos = filter === FILTERS[0] ? SHOWCASE : SHOWCASE.filter((p) => p.filter === filter);
 
   return (
     <SitePageLayout
@@ -318,88 +219,7 @@ const HomeContent = memo(() => {
 
       <HowItWorks />
 
-      {/* Photo Showcase */}
-      <section className="bg-white py-16 sm:py-20">
-        <Shell>
-          <div className="mb-8 flex flex-col gap-6 lg:mb-[52px] lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
-                {t('home.showcase.eyebrow')}
-              </p>
-              <h2 className="mt-2 text-[36px] font-bold text-[#3a3a42] sm:text-[48px] sm:leading-[66px]">
-                {t('home.showcase.title')}
-              </h2>
-            </div>
-            <div
-              className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:gap-3 lg:justify-end"
-              role="tablist"
-              aria-label={t('home.showcase.title')}
-            >
-              {FILTERS.map((item, index) => (
-                <button
-                  key={item}
-                  type="button"
-                  role="tab"
-                  aria-selected={filter === item}
-                  onClick={() => setFilter(item)}
-                  className={`cursor-pointer rounded-full px-4 py-2.5 text-center text-[13px] font-semibold transition sm:shrink-0 sm:px-4 sm:py-2 sm:text-[14px] ${
-                    index === FILTERS.length - 1 ? 'col-span-2 sm:col-span-1' : ''
-                  } ${
-                    filter === item ? 'bg-[#4048cd] text-white' : 'bg-[#f3f4f6] text-[#6b7280]'
-                  }`}
-                >
-                  <span className="sm:hidden">{t(FILTER_SHORT_LABEL_KEYS[item])}</span>
-                  <span className="hidden sm:inline">{t(FILTER_LABEL_KEYS[item])}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {photos.map((photo) => (
-              <article
-                key={photo.title}
-                className="overflow-hidden rounded-[12px] border border-black/10 bg-white"
-              >
-                <div className="relative h-[220px] sm:h-[252px]">
-                  <img
-                    src={photo.image}
-                    alt={photo.title}
-                    width={368}
-                    height={252}
-                    className="h-full w-full object-cover"
-                  />
-                  <span className="absolute left-3 top-3 rounded bg-[#e8eafc] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#4048cd]">
-                    {t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
-                      defaultValue: photo.badge,
-                    })}
-                  </span>
-                </div>
-                <div className="p-4">
-                  <h3 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h3>
-                  <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
-                    <span>{photo.author}</span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <ImgIcon src={ASSETS.heart} size={24} />
-                      {photo.votes}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-10 flex justify-center">
-            <AppLink
-              href={ROUTES.GALLERY}
-              className="inline-flex items-center gap-2 rounded-full bg-[#ee1c25] px-8 py-3.5 text-[16px] font-bold text-white"
-            >
-              {t('home.showcase.viewFullGallery')}
-              <ImgIcon src={ASSETS.arrowGallery} size={16} />
-            </AppLink>
-          </div>
-        </Shell>
-      </section>
+      <CommunityWork />
 
       {/* Leaderboard */}
       <section className="bg-[#f7f8fa] py-16 sm:py-20 xl:py-[114px]">

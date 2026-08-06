@@ -3,20 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { GALLERY_PHOTOS, galleryDetailPath } from '../../data/galleryPhotos';
+import {
+  ALBUM_TYPE_LABEL_KEYS,
+  ALBUM_TYPE_VALUES,
+  matchesAlbumType,
+} from '../../data/albumTypes';
 
 const A = '/assets/home';
-
-const normalize = (value = '') =>
-  value.toLowerCase().replace(/[-–—]/g, ' ').replace(/\s+/g, ' ').trim();
-
-const matchesAlbumType = (badge, albumType) => {
-  const b = normalize(badge);
-  const t = normalize(albumType);
-  if (t.includes('12')) return b.includes('12') && b.includes('zodiac');
-  if (t.includes('6')) return b.includes('6') && b.includes('story');
-  if (t.includes('single')) return b.includes('single');
-  return b === t;
-};
 
 const ASSETS = {
   logo: `${A}/logo.png`,
@@ -32,14 +25,6 @@ const ASSETS = {
   pageFirst: `${A}/icon-page-first.svg`,
   pagePrev: `${A}/icon-page-prev.svg`,
   pageNext: `${A}/icon-page-next.svg`,
-};
-
-const ALBUM_TYPES = ['Single Photo', '6 Photo Story', '12 photos - Full Zodiac Story'];
-
-const ALBUM_TYPE_LABEL_KEYS = {
-  'Single Photo': 'common.singlePhoto',
-  '6 Photo Story': 'common.sixPhotosStory',
-  '12 photos - Full Zodiac Story': 'common.twelveZodiac',
 };
 
 const PAGE_SIZE = 9;
@@ -162,7 +147,7 @@ const GalleryContent = memo(() => {
               <div className="flex flex-col gap-10">
                 <FilterGroup
                   title={t('gallery.albumType')}
-                  options={ALBUM_TYPES}
+                  options={ALBUM_TYPE_VALUES}
                   selected={albumTypes}
                   onToggle={(value) => toggle(setAlbumTypes, value)}
                   getLabel={(value) => t(ALBUM_TYPE_LABEL_KEYS[value])}
