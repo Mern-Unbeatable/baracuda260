@@ -598,7 +598,56 @@ const HomeContent = memo(() => {
             ))}
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-black/20 bg-white">
+          {/* Mobile cards */}
+          <div className="flex flex-col gap-3 md:hidden">
+            {LEADERBOARD.map((row) => (
+              <article
+                key={row.name}
+                className="rounded-2xl border border-black/20 bg-white p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`w-8 shrink-0 text-center text-[16px] font-extrabold ${
+                      row.rank.length <= 1 ? 'text-[#6b7280]' : 'text-[#e31837]'
+                    }`}
+                  >
+                    {row.rank}
+                  </span>
+                  {row.avatar ? (
+                    <img
+                      src={row.avatar}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="size-10 shrink-0 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
+                      {row.initial}
+                    </span>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[14px] font-bold text-[#0d0d14]">{row.name}</p>
+                    <p className="text-[12px] text-[#6b7280]">
+                      {t(`common.cities.${row.cityKey}`)}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center justify-between border-t border-black/10 pt-3 text-[13px]">
+                  <span className="text-[#6b7280]">
+                    {t('common.votes')}:{' '}
+                    <span className="font-extrabold text-[#0d0d14]">{row.votes}</span>
+                  </span>
+                  <span className="text-[#6b7280]">
+                    {t('common.points')}: <span className="text-[#0d0d14]">{row.points}</span>
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden overflow-x-auto rounded-2xl border border-black/20 bg-white md:block">
             <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
               <thead>
                 <tr className="border-b border-black/20 bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
