@@ -388,7 +388,7 @@ const HomeContent = memo(() => {
               <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
                 {t('home.howItWorks.eyebrow')}
               </p>
-              <h2 className="mt-2.5 text-[36px] font-extrabold leading-[1.1] text-[#0d0d14] sm:text-[48px] sm:leading-[48px]">
+              <h2 className="mt-2.5 text-[36px] font-bold leading-[1.1] text-[#3a3a42] sm:text-[48px] sm:leading-[48px]">
                 {t('home.howItWorks.titleLine1')}
                 <br />
                 {t('home.howItWorks.titleLine2')}
@@ -410,7 +410,7 @@ const HomeContent = memo(() => {
                     )}
                   </div>
                   <div className="pb-8">
-                    <h3 className="text-[20px] font-extrabold leading-6 text-[#0d0d14]">
+                    <h3 className="text-[20px] font-semibold leading-6 text-[#3a3a42]">
                       {t(step.titleKey)}
                     </h3>
                     <p className="mt-1.5 text-[16px] leading-normal text-[#6b7280]">
