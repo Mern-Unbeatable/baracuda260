@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSEO } from '../hooks/useSEO';
-import GalleryTwelveDetailContent from '../components/gallery/GalleryTwelveDetailContent';
+import GalleryDetailView from '../components/gallery/GalleryDetailView';
 import { getGalleryTwelveStoryById } from '../data/galleryTwelveStory';
 
 const GalleryTwelveDetail = memo(() => {
@@ -14,7 +14,7 @@ const GalleryTwelveDetail = memo(() => {
     keywords: ['gallery', '12 photos', 'zodiac story', story.title, 'my12photos'],
   });
 
-  return <GalleryTwelveDetailContent />;
+  return <GalleryDetailView entry={story} variant="twelve" />;
 });
 
 GalleryTwelveDetail.displayName = 'GalleryTwelveDetail';
