@@ -506,7 +506,7 @@ const HomeContent = memo(() => {
               <p className="text-[12px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
                 {t('home.leaderboard.eyebrow')}
               </p>
-              <h2 className="mt-3 text-[36px] font-extrabold text-[#0d0d14] sm:text-[48px] sm:leading-[48px]">
+              <h2 className="mt-3 text-[36px] font-bold text-[#3a3a42] sm:text-[48px] sm:leading-[48px]">
                 {t('home.leaderboard.title')}
               </h2>
               <p className="mt-2 text-[16px] text-[#6b7280]">{t('home.leaderboard.liveStandings')}</p>
@@ -547,13 +547,15 @@ const HomeContent = memo(() => {
                 city: 'Wrocław',
                 votesCount: '3,981',
                 avatar: ASSETS.avatarMarta,
-                size: 56,
+                size: 64,
                 border: 'border-[#fee685]',
               },
             ].map((p) => (
               <div
                 key={p.name}
-                className={`flex w-[80px] flex-col items-center text-center ${p.lift ? '-mt-4' : 'mt-2'}`}
+                className={`flex w-[88px] flex-col items-center text-center ${
+                  p.lift ? '-translate-y-5' : ''
+                }`}
               >
                 <span className="text-[30px] leading-9">{p.emoji}</span>
                 <div
