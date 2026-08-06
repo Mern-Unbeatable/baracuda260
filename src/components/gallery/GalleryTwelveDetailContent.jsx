@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../config';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { getGalleryTwelveStoryById } from '../../data/galleryTwelveStory';
+import GalleryDetailBreadcrumb from './GalleryDetailBreadcrumb';
 
 const A = '/assets/home';
 
@@ -74,6 +75,7 @@ const GalleryTwelveDetailContent = memo(() => {
       {/* Hero + story strip */}
       <section className="bg-white pt-8 sm:pt-10 xl:pt-12">
         <Shell>
+          <GalleryDetailBreadcrumb title={story.title} />
           <div className="relative aspect-[1536/653] w-full overflow-hidden rounded-[16px] sm:rounded-[20px]">
             <img
               src={activeSlide.hero}

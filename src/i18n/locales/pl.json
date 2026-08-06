@@ -319,6 +319,11 @@
     "unfavorite": "Usuń z ulubionych: {{title}}"
   },
   "galleryDetail": {
+    "breadcrumb": {
+      "aria": "Ścieżka nawigacji",
+      "home": "Strona główna",
+      "gallery": "Galeria"
+    },
     "download": "Pobierz",
     "votesReceived": "OTRZYMANE GŁOSY",
     "viewsCounted": "WYŚWIETLENIA",

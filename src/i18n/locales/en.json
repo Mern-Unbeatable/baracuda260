@@ -319,6 +319,11 @@
     "unfavorite": "Unfavorite {{title}}"
   },
   "galleryDetail": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home",
+      "gallery": "Gallery"
+    },
     "download": "Download",
     "votesReceived": "VOTES RECEIVED",
     "viewsCounted": "VIEWS COUNTED",
