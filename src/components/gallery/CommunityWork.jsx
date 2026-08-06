@@ -7,6 +7,7 @@ import {
   ALBUM_TYPE_SHORT_LABEL_KEYS,
   matchesAlbumType,
 } from '../../data/albumTypes';
+import { galleryDetailPath } from '../../data/galleryPhotos';
 import { AppLink, ImgIcon, Shell, homeAsset } from '../site';
 
 const A = '/assets/home';
@@ -19,6 +20,7 @@ const SHOWCASE_BADGE_KEYS = {
 
 const SHOWCASE = [
   {
+    id: 'golden-hour-silence',
     title: 'Golden Hour Silence',
     author: 'Kasia L. · Poland',
     votes: '1,488',
@@ -27,6 +29,7 @@ const SHOWCASE = [
     albumType: 'Single Photo',
   },
   {
+    id: 'autumn-sequence',
     title: 'Autumn Sequence',
     author: 'Kasia L. · Poland',
     votes: '1,488',
@@ -35,7 +38,8 @@ const SHOWCASE = [
     albumType: '6 Photo Story',
   },
   {
-    title: 'Winqs Over the Marsh',
+    id: 'wings-over-the-marsh',
+    title: 'Wings Over the Marsh',
     author: 'Kasia L. · Poland',
     votes: '1,488',
     badge: 'Single Photo',
@@ -43,7 +47,8 @@ const SHOWCASE = [
     albumType: 'Single Photo',
   },
   {
-    title: 'City After Midniqht',
+    id: 'city-after-midnight',
+    title: 'City After Midnight',
     author: 'Kasia L. · Poland',
     votes: '1,488',
     badge: '6 PHOTOS STORY',
@@ -51,6 +56,7 @@ const SHOWCASE = [
     albumType: '6 Photo Story',
   },
   {
+    id: 'tidal-memory',
     title: 'Tidal Memory',
     author: 'Sofia R. · Italy',
     votes: '1,488',
@@ -59,6 +65,7 @@ const SHOWCASE = [
     albumType: '12 photos - Full Zodiac Story',
   },
   {
+    id: 'forest-cathedral',
     title: 'Forest Cathedral',
     author: 'Jan M. · Czech',
     votes: '1,488',
@@ -67,7 +74,8 @@ const SHOWCASE = [
     albumType: 'Single Photo',
   },
   {
-    title: 'Morninq Fields',
+    id: 'morning-fields',
+    title: 'Morning Fields',
     author: 'Kasia L. · Poland',
     votes: '1,488',
     badge: 'Single Photo',
@@ -75,6 +83,7 @@ const SHOWCASE = [
     albumType: 'Single Photo',
   },
   {
+    id: 'zodiac-journey',
     title: 'Zodiac Journey',
     author: 'Kasia L. · Poland',
     votes: '1,488',
@@ -152,35 +161,38 @@ const CommunityWork = memo(() => {
 
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {photos.map((photo) => (
-            <article
-              key={photo.title}
-              className="overflow-hidden rounded-[12px] border border-black/10 bg-white"
+            <AppLink
+              key={photo.id}
+              href={galleryDetailPath(photo.id)}
+              className="block overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
             >
-              <div className="relative h-[220px] sm:h-[252px]">
-                <img
-                  src={photo.image}
-                  alt={photo.title}
-                  width={368}
-                  height={252}
-                  className="h-full w-full object-cover"
-                />
-                <span className="absolute left-3 top-3 rounded bg-[#e8eafc] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#4048cd]">
-                  {t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
-                    defaultValue: photo.badge,
-                  })}
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h3>
-                <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
-                  <span>{photo.author}</span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <ImgIcon src={homeAsset('icon-heart.svg')} size={24} />
-                    {photo.votes}
+              <article>
+                <div className="relative h-[220px] sm:h-[252px]">
+                  <img
+                    src={photo.image}
+                    alt={photo.title}
+                    width={368}
+                    height={252}
+                    className="h-full w-full object-cover"
+                  />
+                  <span className="absolute left-3 top-3 rounded bg-[#e8eafc] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#4048cd]">
+                    {t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
+                      defaultValue: photo.badge,
+                    })}
                   </span>
                 </div>
-              </div>
-            </article>
+                <div className="p-4">
+                  <h3 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h3>
+                  <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
+                    <span>{photo.author}</span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <ImgIcon src={homeAsset('icon-heart.svg')} size={24} />
+                      {photo.votes}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </AppLink>
           ))}
         </div>
 
