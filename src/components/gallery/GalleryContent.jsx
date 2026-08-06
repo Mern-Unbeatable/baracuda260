@@ -1,5 +1,6 @@
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { ROUTES } from '../../config';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '../site';
 import { GALLERY_PHOTOS, galleryDetailPath } from '../../data/galleryPhotos';
@@ -22,12 +23,13 @@ const ASSETS = {
   newsletterBg: `${A}/newsletter-bg.png`,
   heart: `${A}/icon-heart.svg`,
   checkbox: `${A}/icon-checkbox.svg`,
-  pageFirst: `${A}/icon-page-first.svg`,
-  pagePrev: `${A}/icon-page-prev.svg`,
-  pageNext: `${A}/icon-page-next.svg`,
 };
 
 const PAGE_SIZE = 9;
+/** Figma pagination chrome — sliding window + ellipsis + last page. */
+const PAGINATION_TOTAL_PAGES = 10;
+const PAGINATION_WINDOW = 3;
+const PAGINATION_ICON_SIZE = 16;
 
 const CATEGORIES = [
   'Nature',
@@ -108,10 +110,32 @@ const GalleryContent = memo(() => {
     });
   }, [albumTypes, categories]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredPhotos.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const pagedPhotos = filteredPhotos.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  const pageNumbers = Array.from({ length: Math.min(totalPages, 3) }, (_, i) => i + 1);
+  const totalPages = PAGINATION_TOTAL_PAGES;
+  const currentPage = Math.min(Math.max(1, page), totalPages);
+  const pagedPhotos = filteredPhotos.slice(0, PAGE_SIZE);
+
+  // Sliding window: 1,2,3…10 → 2,3,4…10 → … and reverse on prev
+  const windowStart = Math.min(
+    currentPage,
+    Math.max(1, totalPages - PAGINATION_WINDOW + 1),
+  );
+  const windowPages = Array.from(
+    { length: PAGINATION_WINDOW },
+    (_, i) => windowStart + i,
+  ).filter((n) => n <= totalPages);
+  const showEllipsis = windowPages[windowPages.length - 1] < totalPages;
+
+  const pageBtnClass = (active) =>
+    `inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] border text-[13px] font-semibold leading-none transition ${
+      active
+        ? 'border-[#ee1c25] bg-[#ee1c25] text-white'
+        : 'border-[#f1f1f1] bg-white text-[#333333] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
+    }`;
+
+  const navBtnClass =
+    'inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] border border-[#f1f1f1] bg-white transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40';
+
+  const goToPage = (next) => setPage(Math.min(Math.max(1, next), totalPages));
 
   return (
     <SitePageLayout
@@ -217,73 +241,102 @@ const GalleryContent = memo(() => {
                 </div>
               )}
 
-              {/* Pagination */}
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-[5px]">
+              {/* Figma pagination — sliding window: 1,2,3…10 → 2,3,4…10 */}
+              <nav
+                aria-label={t('gallery.paginationAria', { defaultValue: 'Gallery pagination' })}
+                className="mt-9 flex flex-wrap items-center justify-center gap-[5px]"
+              >
                 <button
                   type="button"
                   aria-label={t('gallery.firstPage')}
-                  onClick={() => setPage(1)}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage <= 1}
+                  onClick={() => goToPage(1)}
+                  className={navBtnClass}
                 >
-                  <ImgIcon src={ASSETS.pageFirst} size={14} />
+                  <ChevronsLeft
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
                 <button
                   type="button"
                   aria-label={t('gallery.previousPage')}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage <= 1}
+                  onClick={() => goToPage(currentPage - 1)}
+                  className={navBtnClass}
                 >
-                  <ImgIcon src={ASSETS.pagePrev} size={14} />
+                  <ChevronLeft
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
-                {pageNumbers.map((n) => (
+                {windowPages.map((n) => (
                   <button
                     key={n}
                     type="button"
-                    onClick={() => setPage(n)}
-                    className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
-                      currentPage === n
-                        ? 'bg-[#ee1c25] text-white'
-                        : 'border border-[#e5e7eb] text-[#0d0d14]'
-                    }`}
+                    aria-label={t('gallery.page', { page: n, defaultValue: `Page ${n}` })}
+                    aria-current={currentPage === n ? 'page' : undefined}
+                    onClick={() => goToPage(n)}
+                    className={pageBtnClass(currentPage === n)}
                   >
                     {n}
                   </button>
                 ))}
-                {totalPages > 3 && (
+                {showEllipsis ? (
                   <>
-                    <span className="px-1 text-[14px] text-[#6b7280]">…</span>
+                    <span
+                      className="inline-flex size-8 items-center justify-center text-[14px] leading-none text-[#6b7280]"
+                      aria-hidden="true"
+                    >
+                      …
+                    </span>
                     <button
                       type="button"
-                      onClick={() => setPage(totalPages)}
-                      className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
-                        currentPage === totalPages
-                          ? 'bg-[#ee1c25] text-white'
-                          : 'border border-[#e5e7eb] text-[#0d0d14]'
-                      }`}
+                      aria-label={t('gallery.page', {
+                        page: totalPages,
+                        defaultValue: `Page ${totalPages}`,
+                      })}
+                      aria-current={currentPage === totalPages ? 'page' : undefined}
+                      onClick={() => goToPage(totalPages)}
+                      className={pageBtnClass(currentPage === totalPages)}
                     >
                       {totalPages}
                     </button>
                   </>
-                )}
+                ) : null}
                 <button
                   type="button"
                   aria-label={t('gallery.nextPage')}
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => goToPage(currentPage + 1)}
+                  className={navBtnClass}
                 >
-                  <ImgIcon src={ASSETS.pageNext} size={14} />
+                  <ChevronRight
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
                 <button
                   type="button"
                   aria-label={t('gallery.lastPage')}
-                  onClick={() => setPage(totalPages)}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => goToPage(totalPages)}
+                  className={navBtnClass}
                 >
-                  <span className="inline-flex scale-x-[-1]">
-                    <ImgIcon src={ASSETS.pageFirst} size={14} />
-                  </span>
+                  <ChevronsRight
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
-              </div>
+              </nav>
             </div>
           </div>
         </Shell>
