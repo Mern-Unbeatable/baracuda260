@@ -35,11 +35,12 @@ const SiteNewsletter = memo(({ variant = 'page' }) => {
           />
           <div className={innerClass}>
             <div>
-              <h2 className="text-[36px] font-semibold text-white sm:text-[48px]">
+              <h2 className="text-[36px] font-medium text-white/90 sm:text-[48px]">
                 {t('newsletter.title')}
               </h2>
-              <p className="mt-2 text-[16px] text-[#eaeaea] sm:text-[20px]">
-                {t('newsletter.subtitle')}
+              <p className="mt-2 text-[16px] leading-normal text-[#eaeaea] sm:text-[20px]">
+                <span className="block">{t('newsletter.subtitleLine1')}</span>
+                <span className="block">{t('newsletter.subtitleLine2')}</span>
               </p>
             </div>
             <form

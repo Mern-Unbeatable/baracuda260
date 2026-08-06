@@ -24,6 +24,8 @@
   "newsletter": {
     "title": "Bądź na bieżąco",
     "subtitle": "Otrzymuj ogłoszenia konkursów, wyniki i wskazówki fotograficzne.",
+    "subtitleLine1": "Otrzymuj ogłoszenia konkursów, wyniki,",
+    "subtitleLine2": "i wskazówki fotograficzne.",
     "placeholder": "Wpisz swój e-mail...",
     "subscribe": "Subskrybuj"
   },

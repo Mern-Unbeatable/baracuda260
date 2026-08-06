@@ -24,6 +24,8 @@
   "newsletter": {
     "title": "Stay Updated",
     "subtitle": "Receive competition announcements, winner reveals, and photography tips.",
+    "subtitleLine1": "Receive competition announcements, winner reveals,",
+    "subtitleLine2": "and photography tips.",
     "placeholder": "Enter your email here...",
     "subscribe": "Subscribe"
   },
