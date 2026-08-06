@@ -9,6 +9,7 @@ import {
 } from '../../data/albumTypes';
 import { galleryDetailPath } from '../../data/galleryPhotos';
 import { AppLink, ImgIcon, Shell, homeAsset } from '../site';
+import FavoriteHeartButton from './FavoriteHeartButton';
 
 const A = '/assets/home';
 
@@ -161,12 +162,11 @@ const CommunityWork = memo(() => {
 
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {photos.map((photo) => (
-            <AppLink
+            <article
               key={photo.id}
-              href={galleryDetailPath(photo.id)}
-              className="block overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
+              className="overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
             >
-              <article>
+              <AppLink href={galleryDetailPath(photo.id)} className="block">
                 <div className="relative h-[220px] sm:h-[252px]">
                   <img
                     src={photo.image}
@@ -181,18 +181,15 @@ const CommunityWork = memo(() => {
                     })}
                   </span>
                 </div>
-                <div className="p-4">
+                <div className="px-4 pt-4">
                   <h3 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h3>
-                  <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
-                    <span>{photo.author}</span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <ImgIcon src={homeAsset('icon-heart.svg')} size={24} />
-                      {photo.votes}
-                    </span>
-                  </div>
                 </div>
-              </article>
-            </AppLink>
+              </AppLink>
+              <div className="flex items-center justify-between px-4 pb-4 pt-2 text-[14px] text-[#6b7280]">
+                <span>{photo.author}</span>
+                <FavoriteHeartButton initialVotes={photo.votes} title={photo.title} />
+              </div>
+            </article>
           ))}
         </div>
 

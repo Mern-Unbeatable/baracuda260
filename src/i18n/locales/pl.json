@@ -314,7 +314,9 @@
     "firstPage": "Pierwsza strona",
     "previousPage": "Poprzednia strona",
     "nextPage": "Następna strona",
-    "lastPage": "Ostatnia strona"
+    "lastPage": "Ostatnia strona",
+    "favorite": "Dodaj do ulubionych: {{title}}",
+    "unfavorite": "Usuń z ulubionych: {{title}}"
   },
   "galleryDetail": {
     "download": "Pobierz",
