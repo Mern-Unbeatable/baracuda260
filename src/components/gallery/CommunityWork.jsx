@@ -84,14 +84,36 @@ const SHOWCASE = [
   },
 ];
 
+const ALL_FILTER = 'All';
+/** Mixed sample for the All tab — all 8 showcase cards. */
+const ALL_MIX = SHOWCASE;
+
+const COMMUNITY_TABS = [
+  {
+    id: 'all',
+    value: ALL_FILTER,
+    labelKey: 'common.all',
+    shortLabelKey: 'common.filtersShort.all',
+  },
+  ...ALBUM_TYPES.map((type) => ({
+    id: type.id,
+    value: type.value,
+    labelKey: ALBUM_TYPE_LABEL_KEYS[type.value],
+    shortLabelKey: ALBUM_TYPE_SHORT_LABEL_KEYS[type.value],
+  })),
+];
+
 /**
  * Shared Community Work / Photo Showcase (Home) — album filters match Gallery Album Type.
  */
 const CommunityWork = memo(() => {
   const { t } = useTranslation();
-  const [filter, setFilter] = useState(ALBUM_TYPES[0].value);
+  const [filter, setFilter] = useState(ALL_FILTER);
 
-  const photos = SHOWCASE.filter((photo) => matchesAlbumType(photo.albumType, filter));
+  const photos =
+    filter === ALL_FILTER
+      ? ALL_MIX
+      : SHOWCASE.filter((photo) => matchesAlbumType(photo.albumType, filter));
 
   return (
     <section className="bg-white py-16 sm:py-20">
@@ -110,21 +132,19 @@ const CommunityWork = memo(() => {
             role="tablist"
             aria-label={t('home.showcase.title')}
           >
-            {ALBUM_TYPES.map((type, index) => (
+            {COMMUNITY_TABS.map((tab) => (
               <button
-                key={type.id}
+                key={tab.id}
                 type="button"
                 role="tab"
-                aria-selected={filter === type.value}
-                onClick={() => setFilter(type.value)}
-                className={`cursor-pointer rounded-full px-4 py-2.5 text-center text-[13px] font-semibold transition sm:shrink-0 sm:py-2 sm:text-[14px] ${
-                  index === ALBUM_TYPES.length - 1 ? 'col-span-2 sm:col-span-1' : ''
-                } ${
-                  filter === type.value ? 'bg-[#4048cd] text-white' : 'bg-[#f3f4f6] text-[#6b7280]'
+                aria-selected={filter === tab.value}
+                onClick={() => setFilter(tab.value)}
+                className={`cursor-pointer rounded-full px-4 py-2.5 text-center text-[13px] font-semibold transition sm:shrink-0 sm:px-4 sm:py-2 sm:text-[14px] ${
+                  filter === tab.value ? 'bg-[#4048cd] text-white' : 'bg-[#f3f4f6] text-[#6b7280]'
                 }`}
               >
-                <span className="sm:hidden">{t(ALBUM_TYPE_SHORT_LABEL_KEYS[type.value])}</span>
-                <span className="hidden sm:inline">{t(ALBUM_TYPE_LABEL_KEYS[type.value])}</span>
+                <span className="sm:hidden">{t(tab.shortLabelKey)}</span>
+                <span className="hidden sm:inline">{t(tab.labelKey)}</span>
               </button>
             ))}
           </div>

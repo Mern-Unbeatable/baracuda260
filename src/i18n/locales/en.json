@@ -55,6 +55,7 @@
     "sixPhotoStory": "6 Photo story",
     "sixPhotosStory": "6-Photos Story",
     "twelveZodiac": "12 photos - full Zodiac Story",
+    "all": "All",
     "allEntries": "All Entries",
     "mostPopular": "MOST POPULAR",
     "prizeMoney": "/prize money",
@@ -112,6 +113,7 @@
     "themeSilentStreets": "THEME: SILENT STREETS",
     "categorySingleShort": "Cat : Single Short",
     "filtersShort": {
+      "all": "All",
       "single": "Single Photo",
       "six": "6 Photos",
       "zodiac": "Zodiac Story"

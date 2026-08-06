@@ -55,6 +55,7 @@
     "sixPhotoStory": "Historia 6 zdjęć",
     "sixPhotosStory": "Historia 6 zdjęć",
     "twelveZodiac": "12 zdjęć — pełna historia zodiaku",
+    "all": "Wszystkie",
     "allEntries": "Wszystkie zgłoszenia",
     "mostPopular": "NAJPOPULARNIEJSZE",
     "prizeMoney": "/nagroda pieniężna",
@@ -112,6 +113,7 @@
     "themeSilentStreets": "MOTYW: CICHE ULICZKI",
     "categorySingleShort": "Kat.: pojedyncze zdjęcie",
     "filtersShort": {
+      "all": "Wszystkie",
       "single": "Pojedyncze",
       "six": "6 zdjęć",
       "zodiac": "Zodiak"
