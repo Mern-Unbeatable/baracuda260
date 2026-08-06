@@ -647,7 +647,7 @@ const HomeContent = memo(() => {
               <p className="text-center text-[11px] font-bold uppercase tracking-[1.65px] text-white">
                 {t('home.winners.monthLabel')}
               </p>
-              <h2 className="mt-3 text-center text-[32px] font-extrabold tracking-[-0.9px] text-white sm:text-[36px]">
+              <h2 className="mt-3 text-center text-[32px] font-bold tracking-[-0.9px] text-white/90 sm:text-[36px]">
                 {t('home.winners.title')}
               </h2>
               <p className="mt-2 text-center text-[16px] text-white">{t('home.winners.subtitle')}</p>
@@ -666,12 +666,12 @@ const HomeContent = memo(() => {
                       height={64}
                       className="mt-3 size-16 rounded-full border-2 border-white/20 object-cover"
                     />
-                    <h3 className="mt-3 text-[18px] font-extrabold">{w.name}</h3>
+                    <h3 className="mt-3 text-[18px] font-semibold text-white/90">{w.name}</h3>
                     <p className="text-[14px]">{w.work}</p>
                     <p className="mt-1 text-[12px]">
                       {t('home.winners.votesLabel', { count: w.votesCount })}
                     </p>
-                    <p className="mt-4 text-[24px] font-extrabold">{w.prize}</p>
+                    <p className="mt-4 text-[24px] font-semibold text-white/90">{w.prize}</p>
                     <p className="mb-4 text-[12px]">{t('home.winners.cashPrize')}</p>
                     <a
                       href="#"
