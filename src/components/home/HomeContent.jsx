@@ -6,6 +6,7 @@ import HomeHero from './HomeHero';
 import ActiveCompetitions from '../competitions/ActiveCompetitions';
 import HowItWorks from '../competitions/HowItWorks';
 import CommunityWork from '../gallery/CommunityWork';
+import TopPhotographers from '../leaderboard/TopPhotographers';
 
 const A = '/assets/home';
 
@@ -21,7 +22,6 @@ const ASSETS = {
   check: `${A}/icon-check.svg`,
   checkAlt: `${A}/icon-check-alt.svg`,
   arrow: `${A}/icon-arrow.svg`,
-  arrowRed: `${A}/icon-arrow-red.svg`,
   trophy: `${A}/icon-trophy.svg`,
   users: `${A}/icon-users.svg`,
   formats: `${A}/icon-formats.svg`,
@@ -42,57 +42,6 @@ const ASSETS = {
   winnerDavid: `${A}/winner-david.jpg`,
   winnerMarie: `${A}/winner-marie.jpg`,
 };
-
-const LEADERBOARD = [
-  {
-    rank: '🥇',
-    name: 'Anna Kowalska',
-    cityKey: 'krakow',
-    votes: '4,821',
-    points: '9,640',
-    avatar: ASSETS.avatarAnna,
-  },
-  {
-    rank: '🥈',
-    name: 'Piotr Mazur',
-    cityKey: 'warsaw',
-    votes: '4,203',
-    points: '8,406',
-    avatar: ASSETS.avatarPiotr,
-  },
-  {
-    rank: '🥉',
-    name: 'Marta Wiśniewska',
-    cityKey: 'wroclaw',
-    votes: '3,981',
-    points: '7,962',
-    avatar: ASSETS.avatarMarta,
-  },
-  {
-    rank: '4',
-    name: 'Kamil Zając',
-    cityKey: 'poznan',
-    votes: '3,542',
-    points: '7,084',
-    initial: 'K',
-  },
-  {
-    rank: '5',
-    name: 'Ewa Krawczyk',
-    cityKey: 'gdansk',
-    votes: '3,218',
-    points: '6,436',
-    initial: 'E',
-  },
-  {
-    rank: '6',
-    name: 'Tomasz Nowak',
-    cityKey: 'lodz',
-    votes: '2,967',
-    points: '5,934',
-    initial: 'T',
-  },
-];
 
 const WINNERS = [
   {
@@ -221,195 +170,7 @@ const HomeContent = memo(() => {
 
       <CommunityWork />
 
-      {/* Leaderboard */}
-      <section className="bg-[#f7f8fa] py-16 sm:py-20 xl:py-[114px]">
-        <Shell>
-          <div className="mb-11 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[12px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-                {t('home.leaderboard.eyebrow')}
-              </p>
-              <h2 className="mt-3 text-[36px] font-bold text-[#3a3a42] sm:text-[48px] sm:leading-[48px]">
-                {t('home.leaderboard.title')}
-              </h2>
-              <p className="mt-2 text-[16px] text-[#6b7280]">{t('home.leaderboard.liveStandings')}</p>
-            </div>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 text-[14px] font-bold text-[#e31837]"
-            >
-              {t('home.leaderboard.fullLeaderboard')}
-              <ImgIcon src={ASSETS.arrowRed} size={16} />
-            </a>
-          </div>
-
-          <div className="mb-9 flex items-end justify-center gap-6 sm:gap-10">
-            {[
-              {
-                emoji: '🥈',
-                name: 'Piotr',
-                cityKey: 'warsaw',
-                votesCount: '4,203',
-                avatar: ASSETS.avatarPiotr,
-                size: 64,
-                border: 'border-[#e5e7eb]',
-              },
-              {
-                emoji: '🥇',
-                name: 'Anna',
-                cityKey: 'krakow',
-                votesCount: '4,821',
-                avatar: ASSETS.avatarAnna,
-                size: 80,
-                border: 'border-[#fdc700]',
-                lift: true,
-              },
-              {
-                emoji: '🥉',
-                name: 'Marta',
-                cityKey: 'wroclaw',
-                votesCount: '3,981',
-                avatar: ASSETS.avatarMarta,
-                size: 64,
-                border: 'border-[#fee685]',
-              },
-            ].map((p) => (
-              <div
-                key={p.name}
-                className={`flex w-[88px] flex-col items-center text-center ${
-                  p.lift ? '-translate-y-5' : ''
-                }`}
-              >
-                <span className="text-[30px] leading-9">{p.emoji}</span>
-                <div
-                  className={`mt-2 overflow-hidden rounded-full border-2 bg-[#f3f4f6] ${p.border}`}
-                  style={{ width: p.size, height: p.size }}
-                >
-                  <img
-                    src={p.avatar}
-                    alt={p.name}
-                    width={p.size}
-                    height={p.size}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <p
-                  className={`mt-2 font-bold text-[#0d0d14] ${p.lift ? 'text-[16px]' : 'text-[14px]'}`}
-                >
-                  {p.name}
-                </p>
-                <p className="text-[12px] text-[#6b7280]">{t(`common.cities.${p.cityKey}`)}</p>
-                <p className="mt-1 text-[14px] font-bold text-[#e31837]">
-                  {t('home.winners.votesLabel', { count: p.votesCount })}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile cards */}
-          <div className="flex flex-col gap-3 md:hidden">
-            {LEADERBOARD.map((row) => (
-              <article
-                key={row.name}
-                className="rounded-2xl border border-black/20 bg-white p-4"
-              >
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`w-8 shrink-0 text-center text-[16px] font-extrabold ${
-                      row.rank.length <= 1 ? 'text-[#6b7280]' : 'text-[#e31837]'
-                    }`}
-                  >
-                    {row.rank}
-                  </span>
-                  {row.avatar ? (
-                    <img
-                      src={row.avatar}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="size-10 shrink-0 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
-                      {row.initial}
-                    </span>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[14px] font-bold text-[#0d0d14]">{row.name}</p>
-                    <p className="text-[12px] text-[#6b7280]">
-                      {t(`common.cities.${row.cityKey}`)}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-center justify-between border-t border-black/10 pt-3 text-[13px]">
-                  <span className="text-[#6b7280]">
-                    {t('common.votes')}:{' '}
-                    <span className="font-extrabold text-[#0d0d14]">{row.votes}</span>
-                  </span>
-                  <span className="text-[#6b7280]">
-                    {t('common.points')}: <span className="text-[#0d0d14]">{row.points}</span>
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          {/* Desktop table */}
-          <div className="hidden overflow-x-auto rounded-2xl border border-black/20 bg-white md:block">
-            <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
-              <thead>
-                <tr className="border-b border-black/20 bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
-                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.rank')}</th>
-                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.photographer')}</th>
-                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.city')}</th>
-                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.votes')}</th>
-                  <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.points')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {LEADERBOARD.map((row) => (
-                  <tr key={row.name} className="border-b border-black/20 last:border-b-0">
-                    <td
-                      className={`px-6 py-5 text-[16px] font-extrabold ${
-                        row.rank.length <= 1 ? 'text-[#6b7280]' : 'text-[#e31837]'
-                      }`}
-                    >
-                      {row.rank}
-                    </td>
-                    <td className="px-6 py-5">
-                      <div className="flex min-w-0 items-center gap-3">
-                        {row.avatar ? (
-                          <img
-                            src={row.avatar}
-                            alt=""
-                            width={36}
-                            height={36}
-                            className="size-9 shrink-0 rounded-full object-cover"
-                          />
-                        ) : (
-                          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
-                            {row.initial}
-                          </span>
-                        )}
-                        <span className="truncate text-[14px] font-bold text-[#0d0d14]">
-                          {row.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 text-[14px] text-[#6b7280]">
-                      {t(`common.cities.${row.cityKey}`)}
-                    </td>
-                    <td className="px-6 py-5 text-[14px] font-extrabold text-[#0d0d14]">
-                      {row.votes}
-                    </td>
-                    <td className="px-6 py-5 text-[14px] text-[#6b7280]">{row.points}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Shell>
-      </section>
+      <TopPhotographers />
 
       {/* Monthly Winners */}
       <section className="bg-white py-16 sm:py-20">

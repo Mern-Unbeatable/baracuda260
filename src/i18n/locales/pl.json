@@ -160,7 +160,7 @@
     "leaderboard": {
       "eyebrow": "Ranking",
       "title": "Najlepsi fotografowie",
-      "liveStandings": "Lipiec 2026 — na żywo",
+      "liveStandings": "Lipiec 2026 na żywo",
       "fullLeaderboard": "Pełny ranking"
     },
     "winners": {
@@ -343,7 +343,7 @@
   },
   "leaderboard": {
     "title": "Najlepsi fotografowie",
-    "liveStandings": "{{month}} {{year}} — na żywo"
+    "liveStandings": "{{month}} {{year}} na żywo"
   },
   "winners": {
     "title": "Pełne archiwum zwycięzców",

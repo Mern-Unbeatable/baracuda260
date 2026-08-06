@@ -160,7 +160,7 @@
     "leaderboard": {
       "eyebrow": "Leaderboard",
       "title": "Top Photographers",
-      "liveStandings": "July 2026 — Live standings",
+      "liveStandings": "July 2026 Live standings",
       "fullLeaderboard": "Full leaderboard"
     },
     "winners": {
@@ -343,7 +343,7 @@
   },
   "leaderboard": {
     "title": "Top Photographers",
-    "liveStandings": "{{month}} {{year}} — Live standings"
+    "liveStandings": "{{month}} {{year}} Live standings"
   },
   "winners": {
     "title": "Complete Winners Archive",
