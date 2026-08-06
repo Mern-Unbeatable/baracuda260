@@ -2,7 +2,7 @@ import React, { memo, useLayoutEffect, useRef, useState } from 'react';
 import useSitePageStyles from './useSitePageStyles';
 import SiteAnnouncement from './SiteAnnouncement';
 import SiteHeader from './SiteHeader';
-import SiteNewsletter from './SiteNewsletter';
+import StayUpdated from './StayUpdated';
 import SiteFooter from './SiteFooter';
 
 /**
@@ -43,7 +43,7 @@ const SitePageLayout = memo(
         </div>
         <div style={{ height: chromeHeight }} aria-hidden="true" />
         {children}
-        <SiteNewsletter variant={newsletterVariant} />
+        <StayUpdated variant={newsletterVariant} />
         <SiteFooter />
       </div>
     );
