@@ -61,12 +61,12 @@ const SiteHeader = memo(({ activeHref }) => {
           />
         </AppLink>
 
-        <nav className="hidden items-center gap-1 2xl:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-4 2xl:flex" aria-label="Primary">
           {navLinks.map(({ labelKey, href, active }) => (
             <AppLink
               key={href}
               href={href}
-              className={`px-2.5 py-2 text-center text-[14px] font-semibold leading-5 ${
+              className={`px-3 py-2 text-center text-[14px] font-semibold leading-5 ${
                 active ? 'text-[#ee1c25]' : 'text-[#6b7280]'
               }`}
               aria-current={active ? 'page' : undefined}
