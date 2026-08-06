@@ -729,7 +729,7 @@ const HomeContent = memo(() => {
             <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
               {t('home.testimonials.eyebrow')}
             </p>
-            <h2 className="mt-3 text-[32px] font-extrabold tracking-[-0.96px] text-[#0d0d14] sm:text-[48px]">
+            <h2 className="mt-3 text-[32px] font-bold tracking-[-0.96px] text-[#3a3a42] sm:text-[48px]">
               {t('home.testimonials.title')}
             </h2>
           </div>
