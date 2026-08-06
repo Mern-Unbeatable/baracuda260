@@ -50,7 +50,7 @@ const PHOTOS = GALLERY_PHOTOS;
 
 const FilterGroup = memo(({ title, options, selected, onToggle, getLabel }) => (
   <div>
-    <h3 className="text-[18px] font-bold leading-6 text-[#0d0d14] sm:text-[20px]">{title}</h3>
+    <h3 className="text-[18px] font-semibold leading-6 text-[#3a3a42] sm:text-[20px]">{title}</h3>
     <ul className="mt-4 flex flex-col gap-4">
       {options.map((option) => {
         const checked = selected.includes(option);
@@ -128,7 +128,7 @@ const GalleryContent = memo(() => {
               <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
                 {t('gallery.eyebrow')}
               </p>
-              <h1 className="mt-1 text-[32px] font-extrabold text-[#0d0d14]">{t('gallery.title')}</h1>
+              <h1 className="mt-1 text-[32px] font-bold text-[#3a3a42]">{t('gallery.title')}</h1>
             </div>
             <button
               type="button"
@@ -168,7 +168,7 @@ const GalleryContent = memo(() => {
                 <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
                   {t('gallery.eyebrow')}
                 </p>
-                <h1 className="mt-2 text-[48px] font-extrabold leading-[66px] text-[#0d0d14]">
+                <h1 className="mt-2 text-[48px] font-bold leading-[66px] text-[#3a3a42]">
                   {t('gallery.title')}
                 </h1>
               </div>
