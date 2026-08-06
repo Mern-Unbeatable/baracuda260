@@ -111,6 +111,11 @@
     },
     "themeSilentStreets": "MOTYW: CICHE ULICZKI",
     "categorySingleShort": "Kat.: pojedyncze zdjęcie",
+    "filtersShort": {
+      "single": "Pojedyncze",
+      "six": "6 zdjęć",
+      "zodiac": "Zodiak"
+    },
     "cities": {
       "krakow": "Kraków",
       "warsaw": "Warszawa",

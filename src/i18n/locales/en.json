@@ -111,6 +111,11 @@
     },
     "themeSilentStreets": "THEME: SILENT STREETS",
     "categorySingleShort": "Cat : Single Short",
+    "filtersShort": {
+      "single": "Single Photo",
+      "six": "6 Photos",
+      "zodiac": "Zodiac Story"
+    },
     "cities": {
       "krakow": "Krakow",
       "warsaw": "Warsaw",

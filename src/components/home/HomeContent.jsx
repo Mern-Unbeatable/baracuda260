@@ -59,6 +59,12 @@ const FILTER_LABEL_KEYS = {
   '12 photos - full Zodiac Story': 'common.twelveZodiac',
 };
 
+const FILTER_SHORT_LABEL_KEYS = {
+  'Single Photo': 'common.filtersShort.single',
+  '6 Photo story': 'common.filtersShort.six',
+  '12 photos - full Zodiac Story': 'common.filtersShort.zodiac',
+};
+
 const SHOWCASE = [
   {
     title: 'Golden Hour Silence',
@@ -436,17 +442,26 @@ const HomeContent = memo(() => {
                 {t('home.showcase.title')}
               </h2>
             </div>
-            <div className="flex gap-3 overflow-x-auto pb-1">
-              {FILTERS.map((item) => (
+            <div
+              className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:gap-3 lg:justify-end"
+              role="tablist"
+              aria-label={t('home.showcase.title')}
+            >
+              {FILTERS.map((item, index) => (
                 <button
                   key={item}
                   type="button"
+                  role="tab"
+                  aria-selected={filter === item}
                   onClick={() => setFilter(item)}
-                  className={`shrink-0 cursor-pointer rounded-full px-4 py-2 text-[14px] font-semibold transition ${
+                  className={`cursor-pointer rounded-full px-4 py-2.5 text-center text-[13px] font-semibold transition sm:shrink-0 sm:px-4 sm:py-2 sm:text-[14px] ${
+                    index === FILTERS.length - 1 ? 'col-span-2 sm:col-span-1' : ''
+                  } ${
                     filter === item ? 'bg-[#4048cd] text-white' : 'bg-[#f3f4f6] text-[#6b7280]'
                   }`}
                 >
-                  {t(FILTER_LABEL_KEYS[item])}
+                  <span className="sm:hidden">{t(FILTER_SHORT_LABEL_KEYS[item])}</span>
+                  <span className="hidden sm:inline">{t(FILTER_LABEL_KEYS[item])}</span>
                 </button>
               ))}
             </div>
