@@ -9,11 +9,8 @@ const AboutCta = memo(() => {
   return (
     <section className="bg-white section-py">
       <Shell>
-        <MarketingCard
-          variant="inset"
-          className="px-6 sm:px-10"
-        >
-          <div className="mx-auto flex max-w-[682px] flex-col items-center gap-8">
+        <MarketingCard variant="inset" className="px-6 py-12 sm:px-10 ">
+          <div className="mx-auto flex max-w-170.5 flex-col items-center gap-8">
             <SectionHeader
               badge={t('about.cta.eyebrow')}
               badgeTone="brand"
