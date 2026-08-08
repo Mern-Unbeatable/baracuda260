@@ -24,6 +24,8 @@
   "newsletter": {
     "title": "Stay Updated",
     "subtitle": "Receive competition announcements, winner reveals, and photography tips.",
+    "subtitleLine1": "Receive competition announcements, winner reveals,",
+    "subtitleLine2": "and photography tips.",
     "placeholder": "Enter your email here...",
     "subscribe": "Subscribe"
   },
@@ -53,6 +55,7 @@
     "sixPhotoStory": "6 Photo story",
     "sixPhotosStory": "6-Photos Story",
     "twelveZodiac": "12 photos - full Zodiac Story",
+    "all": "All",
     "allEntries": "All Entries",
     "mostPopular": "MOST POPULAR",
     "prizeMoney": "/prize money",
@@ -108,7 +111,21 @@
       "editorsChoice": "Editor's Choice"
     },
     "themeSilentStreets": "THEME: SILENT STREETS",
-    "categorySingleShort": "Cat : Single Short"
+    "categorySingleShort": "Cat : Single Short",
+    "filtersShort": {
+      "all": "All",
+      "single": "Single Photo",
+      "six": "6 Photos",
+      "zodiac": "Zodiac Story"
+    },
+    "cities": {
+      "krakow": "Krakow",
+      "warsaw": "Warsaw",
+      "wroclaw": "Wroclaw",
+      "poznan": "Poznan",
+      "gdansk": "Gdansk",
+      "lodz": "Lodz"
+    }
   },
   "home": {
     "hero": {
@@ -143,7 +160,7 @@
     "leaderboard": {
       "eyebrow": "Leaderboard",
       "title": "Top Photographers",
-      "liveStandings": "July 2026 — Live standings",
+      "liveStandings": "July 2026 Live standings",
       "fullLeaderboard": "Full leaderboard"
     },
     "winners": {
@@ -177,7 +194,7 @@
       "a1quote": "Thanks to My12Photos, my work reached thousands of people. This is the best photography community I have ever been part of.",
       "a1role": "July 2025 Winner",
       "a2quote": "The platform is incredibly clean and elegant. Voting is a pleasure, and the prizes genuinely motivate you to push your craft.",
-      "a2role": "Top 3 — June 2025",
+      "a2role": "Top 3 June 2025",
       "a3quote": "I received more meaningful feedback here than on every other platform combined. I recommend it to every photographer.",
       "a3role": "Zodiac Album Winner"
     }
@@ -185,7 +202,7 @@
   "competitionsPage": {
     "cards": {
       "singleTitle": "Single Photo",
-      "singleDesc": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story — judged by the community.",
+      "singleDesc": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story judged by the community.",
       "singleF0": "Monthly competition",
       "singleF1": "Public community voting",
       "singleF2": "Top 3 win cash prizes",
@@ -195,14 +212,14 @@
       "sixF1": "Community votes",
       "sixF2": "Best story wins",
       "twelveTitle": "12 photos - full Zodiac Story",
-      "twelveDesc": "Create a complete zodiac-themed visual journey across twelve stunning images — our grandest format.",
+      "twelveDesc": "Create a complete zodiac-themed visual journey across twelve stunning images our grandest format.",
       "twelveF0": "12-sign visual arc",
       "twelveF1": "Zodiac-order display",
       "twelveF2": "Grand prize category"
     },
     "steps": {
       "1title": "Create an Account",
-      "1text": "Sign up for free in seconds. No fees, no hidden costs — ever.",
+      "1text": "Sign up for free in seconds. No fees, no hidden costs ever.",
       "2title": "Submit Your Photos",
       "2text": "Choose a competition category and upload your best work before the deadline.",
       "3title": "Earn Votes",
@@ -290,6 +307,8 @@
     "title": "Photo Showcase",
     "filters": "Filters",
     "hideFilters": "Hide Filters",
+    "closeFilters": "Close filters",
+    "filtersTitle": "Filters",
     "albumType": "Album Type",
     "category": "Category",
     "emptyTitle": "No photos match",
@@ -297,9 +316,16 @@
     "firstPage": "First page",
     "previousPage": "Previous page",
     "nextPage": "Next page",
-    "lastPage": "Last page"
+    "lastPage": "Last page",
+    "favorite": "Favorite {{title}}",
+    "unfavorite": "Unfavorite {{title}}"
   },
   "galleryDetail": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home",
+      "gallery": "Gallery"
+    },
     "download": "Download",
     "votesReceived": "VOTES RECEIVED",
     "viewsCounted": "VIEWS COUNTED",
@@ -317,7 +343,7 @@
   },
   "leaderboard": {
     "title": "Top Photographers",
-    "liveStandings": "{{month}} {{year}} — Live standings"
+    "liveStandings": "{{month}} {{year}} Live standings"
   },
   "winners": {
     "title": "Complete Winners Archive",

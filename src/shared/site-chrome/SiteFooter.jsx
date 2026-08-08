@@ -10,14 +10,18 @@ import Shell from './Shell';
 const SOCIAL_ICONS = [SITE_ASSETS.ig, SITE_ASSETS.fb, SITE_ASSETS.x];
 
 const FOOTER_LINK_HREF = {
+  'footer.singlePhoto': `${ROUTES.COMPETITIONS}#single-photo`,
+  'footer.sixPhotoStory': `${ROUTES.COMPETITIONS}#six-photo-story`,
+  'footer.zodiacAlbum': `${ROUTES.COMPETITIONS}#zodiac-album`,
+  'footer.winners': ROUTES.WINNERS,
+  'footer.leaderboard': ROUTES.LEADERBOARD,
+  'footer.gallery': ROUTES.GALLERY,
+  'footer.about': ROUTES.ABOUT,
+  'footer.faq': `${ROUTES.ABOUT}#how-competitions-work`,
+  'footer.contact': ROUTES.CONTACT,
   'footer.privacy': ROUTES.PRIVACY,
   'footer.terms': ROUTES.TERMS,
   'footer.cookies': ROUTES.COOKIES,
-  'footer.gallery': ROUTES.GALLERY,
-  'footer.leaderboard': ROUTES.LEADERBOARD,
-  'footer.about': ROUTES.ABOUT,
-  'footer.contact': ROUTES.CONTACT,
-  'footer.winners': ROUTES.WINNERS,
   'footer.competitions': ROUTES.COMPETITIONS,
 };
 
@@ -29,15 +33,19 @@ const SiteFooter = memo(() => {
       <Shell className="py-14 xl:py-[69px]">
         <div className="grid gap-10 sm:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <div className="relative h-[67px] w-[220px] overflow-hidden">
+            <AppLink
+              href={ROUTES.HOME}
+              className="relative flex h-[67px] w-[220px] items-center"
+              aria-label={t('nav.home')}
+            >
               <img
                 src={SITE_ASSETS.logoFooter}
                 alt="My 12 Photos"
                 width={220}
                 height={68}
-                className="absolute left-0 top-[-110%] h-[326%] w-full max-w-none object-cover"
+                className="h-full w-full object-contain object-left"
               />
-            </div>
+            </AppLink>
             <p className="mt-5 max-w-[320px] text-[16px] leading-[22.75px] text-[#1a1a1a]">
               {t('footer.tagline')}
             </p>

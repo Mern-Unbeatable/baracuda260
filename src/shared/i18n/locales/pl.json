@@ -24,6 +24,8 @@
   "newsletter": {
     "title": "Bądź na bieżąco",
     "subtitle": "Otrzymuj ogłoszenia konkursów, wyniki i wskazówki fotograficzne.",
+    "subtitleLine1": "Otrzymuj ogłoszenia konkursów, wyniki,",
+    "subtitleLine2": "i wskazówki fotograficzne.",
     "placeholder": "Wpisz swój e-mail...",
     "subscribe": "Subskrybuj"
   },
@@ -53,6 +55,7 @@
     "sixPhotoStory": "Historia 6 zdjęć",
     "sixPhotosStory": "Historia 6 zdjęć",
     "twelveZodiac": "12 zdjęć — pełna historia zodiaku",
+    "all": "Wszystkie",
     "allEntries": "Wszystkie zgłoszenia",
     "mostPopular": "NAJPOPULARNIEJSZE",
     "prizeMoney": "/nagroda pieniężna",
@@ -108,7 +111,21 @@
       "editorsChoice": "Wybór redakcji"
     },
     "themeSilentStreets": "MOTYW: CICHE ULICZKI",
-    "categorySingleShort": "Kat.: pojedyncze zdjęcie"
+    "categorySingleShort": "Kat.: pojedyncze zdjęcie",
+    "filtersShort": {
+      "all": "Wszystkie",
+      "single": "Pojedyncze",
+      "six": "6 zdjęć",
+      "zodiac": "Zodiak"
+    },
+    "cities": {
+      "krakow": "Kraków",
+      "warsaw": "Warszawa",
+      "wroclaw": "Wrocław",
+      "poznan": "Poznań",
+      "gdansk": "Gdańsk",
+      "lodz": "Łódź"
+    }
   },
   "home": {
     "hero": {
@@ -143,7 +160,7 @@
     "leaderboard": {
       "eyebrow": "Ranking",
       "title": "Najlepsi fotografowie",
-      "liveStandings": "Lipiec 2026 — na żywo",
+      "liveStandings": "Lipiec 2026 na żywo",
       "fullLeaderboard": "Pełny ranking"
     },
     "winners": {
@@ -177,7 +194,7 @@
       "a1quote": "Dzięki My12Photos moje prace zobaczyły tysiące osób. To najlepsza społeczność fotograficzna, w jakiej brałam udział.",
       "a1role": "Zwyciężczyni lipca 2025",
       "a2quote": "Platforma jest wyjątkowo czysta i elegancka. Głosowanie to przyjemność, a nagrody naprawdę motywują do rozwoju.",
-      "a2role": "Trójka najlepszych — czerwiec 2025",
+      "a2role": "Trójka najlepszych czerwiec 2025",
       "a3quote": "Otrzymałam tu więcej wartościowych opinii niż na wszystkich innych platformach razem. Polecam każdemu fotografowi.",
       "a3role": "Zwyciężczyni albumu zodiakalnego"
     }
@@ -185,7 +202,7 @@
   "competitionsPage": {
     "cards": {
       "singleTitle": "Pojedyncze zdjęcie",
-      "singleDesc": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia — oceniane przez społeczność.",
+      "singleDesc": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia oceniane przez społeczność.",
       "singleF0": "Miesięczny konkurs",
       "singleF1": "Publiczne głosowanie społeczności",
       "singleF2": "Trójka najlepszych wygrywa nagrody pieniężne",
@@ -195,7 +212,7 @@
       "sixF1": "Głosy społeczności",
       "sixF2": "Najlepsza historia wygrywa",
       "twelveTitle": "12 zdjęć — pełna historia zodiaku",
-      "twelveDesc": "Stwórz pełną zodiakalną podróż wizualną w dwunastu zdjęciach — nasz największy format.",
+      "twelveDesc": "Stwórz pełną zodiakalną podróż wizualną w dwunastu zdjęciach nasz największy format.",
       "twelveF0": "Łuk wizualny 12 znaków",
       "twelveF1": "Wyświetlanie w kolejności zodiaku",
       "twelveF2": "Kategoria głównej nagrody"
@@ -290,6 +307,8 @@
     "title": "Prezentacja zdjęć",
     "filters": "Filtry",
     "hideFilters": "Ukryj filtry",
+    "closeFilters": "Zamknij filtry",
+    "filtersTitle": "Filtry",
     "albumType": "Typ albumu",
     "category": "Kategoria",
     "emptyTitle": "Brak pasujących zdjęć",
@@ -297,9 +316,16 @@
     "firstPage": "Pierwsza strona",
     "previousPage": "Poprzednia strona",
     "nextPage": "Następna strona",
-    "lastPage": "Ostatnia strona"
+    "lastPage": "Ostatnia strona",
+    "favorite": "Dodaj do ulubionych: {{title}}",
+    "unfavorite": "Usuń z ulubionych: {{title}}"
   },
   "galleryDetail": {
+    "breadcrumb": {
+      "aria": "Ścieżka nawigacji",
+      "home": "Strona główna",
+      "gallery": "Galeria"
+    },
     "download": "Pobierz",
     "votesReceived": "OTRZYMANE GŁOSY",
     "viewsCounted": "WYŚWIETLENIA",
@@ -317,7 +343,7 @@
   },
   "leaderboard": {
     "title": "Najlepsi fotografowie",
-    "liveStandings": "{{month}} {{year}} — na żywo"
+    "liveStandings": "{{month}} {{year}} na żywo"
   },
   "winners": {
     "title": "Pełne archiwum zwycięzców",

@@ -1,22 +1,17 @@
-import React, { memo, useMemo, useState } from 'react';
+﻿import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, X } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
-import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
+import { AppLink, Shell, SitePageLayout } from '@/shared/site-chrome';
 import { GALLERY_PHOTOS, galleryDetailPath } from '@/shared/data/galleryPhotos';
+import {
+  ALBUM_TYPE_LABEL_KEYS,
+  ALBUM_TYPE_VALUES,
+  matchesAlbumType,
+} from '@/shared/data/albumTypes';
+import FavoriteHeartButton from './FavoriteHeartButton';
 
 const A = '/assets/home';
-
-const normalize = (value = '') =>
-  value.toLowerCase().replace(/[-–—]/g, ' ').replace(/\s+/g, ' ').trim();
-
-const matchesAlbumType = (badge, albumType) => {
-  const b = normalize(badge);
-  const t = normalize(albumType);
-  if (t.includes('12')) return b.includes('12') && b.includes('zodiac');
-  if (t.includes('6')) return b.includes('6') && b.includes('story');
-  if (t.includes('single')) return b.includes('single');
-  return b === t;
-};
 
 const ASSETS = {
   logo: `${A}/logo.png`,
@@ -27,22 +22,14 @@ const ASSETS = {
   fb: `${A}/icon-fb.svg`,
   x: `${A}/icon-x.svg`,
   newsletterBg: `${A}/newsletter-bg.png`,
-  heart: `${A}/icon-heart.svg`,
   checkbox: `${A}/icon-checkbox.svg`,
-  pageFirst: `${A}/icon-page-first.svg`,
-  pagePrev: `${A}/icon-page-prev.svg`,
-  pageNext: `${A}/icon-page-next.svg`,
-};
-
-const ALBUM_TYPES = ['Single Photo', '6 Photo Story', '12 photos - Full Zodiac Story'];
-
-const ALBUM_TYPE_LABEL_KEYS = {
-  'Single Photo': 'common.singlePhoto',
-  '6 Photo Story': 'common.sixPhotosStory',
-  '12 photos - Full Zodiac Story': 'common.twelveZodiac',
 };
 
 const PAGE_SIZE = 9;
+/** Figma pagination chrome ΓÇö sliding window + ellipsis + last page. */
+const PAGINATION_TOTAL_PAGES = 10;
+const PAGINATION_WINDOW = 3;
+const PAGINATION_ICON_SIZE = 16;
 
 const CATEGORIES = [
   'Nature',
@@ -65,7 +52,7 @@ const PHOTOS = GALLERY_PHOTOS;
 
 const FilterGroup = memo(({ title, options, selected, onToggle, getLabel }) => (
   <div>
-    <h3 className="text-[18px] font-bold leading-6 text-[#0d0d14] sm:text-[20px]">{title}</h3>
+    <h3 className="text-[18px] font-semibold leading-6 text-[#3a3a42] sm:text-[20px]">{title}</h3>
     <ul className="mt-4 flex flex-col gap-4">
       {options.map((option) => {
         const checked = selected.includes(option);
@@ -100,6 +87,27 @@ const FilterGroup = memo(({ title, options, selected, onToggle, getLabel }) => (
 ));
 FilterGroup.displayName = 'FilterGroup';
 
+const GalleryFiltersPanel = memo(({ albumTypes, categories, onToggleAlbum, onToggleCategory, t }) => (
+  <div className="flex flex-col gap-10">
+    <FilterGroup
+      title={t('gallery.albumType')}
+      options={ALBUM_TYPE_VALUES}
+      selected={albumTypes}
+      onToggle={onToggleAlbum}
+      getLabel={(value) => t(ALBUM_TYPE_LABEL_KEYS[value])}
+    />
+    <FilterGroup
+      title={t('gallery.category')}
+      options={CATEGORIES}
+      selected={categories}
+      onToggle={onToggleCategory}
+      getLabel={(value) => t(`common.categories.${value}`, { defaultValue: value })}
+    />
+  </div>
+));
+
+GalleryFiltersPanel.displayName = 'GalleryFiltersPanel';
+
 const GalleryContent = memo(() => {
   const { t } = useTranslation();
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -114,6 +122,25 @@ const GalleryContent = memo(() => {
     setPage(1);
   };
 
+  const closeFilters = () => setFiltersOpen(false);
+
+  useEffect(() => {
+    if (!filtersOpen) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') closeFilters();
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [filtersOpen]);
+
   const filteredPhotos = useMemo(() => {
     return PHOTOS.filter((photo) => {
       const albumOk =
@@ -123,10 +150,40 @@ const GalleryContent = memo(() => {
     });
   }, [albumTypes, categories]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredPhotos.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const pagedPhotos = filteredPhotos.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  const pageNumbers = Array.from({ length: Math.min(totalPages, 3) }, (_, i) => i + 1);
+  const totalPages = PAGINATION_TOTAL_PAGES;
+  const currentPage = Math.min(Math.max(1, page), totalPages);
+  const pagedPhotos = filteredPhotos.slice(0, PAGE_SIZE);
+
+  // Sliding window: 1,2,3ΓÇª10 ΓåÆ 2,3,4ΓÇª10 ΓåÆ ΓÇª and reverse on prev
+  const windowStart = Math.min(
+    currentPage,
+    Math.max(1, totalPages - PAGINATION_WINDOW + 1),
+  );
+  const windowPages = Array.from(
+    { length: PAGINATION_WINDOW },
+    (_, i) => windowStart + i,
+  ).filter((n) => n <= totalPages);
+  const showEllipsis = windowPages[windowPages.length - 1] < totalPages;
+
+  const pageBtnClass = (active) =>
+    `inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] border text-[13px] font-semibold leading-none transition ${
+      active
+        ? 'border-[#ee1c25] bg-[#ee1c25] text-white'
+        : 'border-[#f1f1f1] bg-white text-[#333333] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
+    }`;
+
+  const navBtnClass =
+    'inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] border border-[#f1f1f1] bg-white transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40';
+
+  const goToPage = (next) => setPage(Math.min(Math.max(1, next), totalPages));
+
+  const filterPanelProps = {
+    albumTypes,
+    categories,
+    onToggleAlbum: (value) => toggle(setAlbumTypes, value),
+    onToggleCategory: (value) => toggle(setCategories, value),
+    t,
+  };
 
   return (
     <SitePageLayout
@@ -143,38 +200,23 @@ const GalleryContent = memo(() => {
               <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
                 {t('gallery.eyebrow')}
               </p>
-              <h1 className="mt-1 text-[32px] font-extrabold text-[#0d0d14]">{t('gallery.title')}</h1>
+              <h1 className="mt-1 text-[32px] font-bold text-[#3a3a42]">{t('gallery.title')}</h1>
             </div>
             <button
               type="button"
-              onClick={() => setFiltersOpen((v) => !v)}
-              className="rounded-full border border-black/15 px-4 py-2 text-sm font-semibold text-[#0d0d14]"
+              onClick={() => setFiltersOpen(true)}
+              aria-expanded={filtersOpen}
+              aria-controls="gallery-filters-drawer"
+              className="cursor-pointer rounded-full border border-black/15 px-4 py-2 text-sm font-semibold text-[#0d0d14]"
             >
-              {filtersOpen ? t('gallery.hideFilters') : t('gallery.filters')}
+              {t('gallery.filters')}
             </button>
           </div>
 
-          <div className="flex flex-col gap-8 lg:flex-row lg:gap-[103px]">
-            {/* Sidebar */}
-            <aside
-              className={`w-full shrink-0 lg:w-[285px] ${filtersOpen ? 'block' : 'hidden lg:block'}`}
-            >
-              <div className="flex flex-col gap-10">
-                <FilterGroup
-                  title={t('gallery.albumType')}
-                  options={ALBUM_TYPES}
-                  selected={albumTypes}
-                  onToggle={(value) => toggle(setAlbumTypes, value)}
-                  getLabel={(value) => t(ALBUM_TYPE_LABEL_KEYS[value])}
-                />
-                <FilterGroup
-                  title={t('gallery.category')}
-                  options={CATEGORIES}
-                  selected={categories}
-                  onToggle={(value) => toggle(setCategories, value)}
-                  getLabel={(value) => t(`common.categories.${value}`, { defaultValue: value })}
-                />
-              </div>
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-[103px]">
+            {/* Desktop sidebar */}
+            <aside className="hidden w-full shrink-0 lg:sticky lg:top-[calc(var(--site-chrome-height,118px)+1.5rem)] lg:block lg:w-[285px] lg:self-start">
+              <GalleryFiltersPanel {...filterPanelProps} />
             </aside>
 
             {/* Grid */}
@@ -183,7 +225,7 @@ const GalleryContent = memo(() => {
                 <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
                   {t('gallery.eyebrow')}
                 </p>
-                <h1 className="mt-2 text-[48px] font-extrabold leading-[66px] text-[#0d0d14]">
+                <h1 className="mt-2 text-[48px] font-bold leading-[66px] text-[#3a3a42]">
                   {t('gallery.title')}
                 </h1>
               </div>
@@ -196,12 +238,11 @@ const GalleryContent = memo(() => {
               ) : (
                 <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                   {pagedPhotos.map((photo) => (
-                    <AppLink
+                    <article
                       key={photo.id}
-                      href={galleryDetailPath(photo.id)}
-                      className="block overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
+                      className="overflow-hidden rounded-[12px] border border-black/10 bg-white transition hover:border-black/20 hover:shadow-sm"
                     >
-                      <article>
+                      <AppLink href={galleryDetailPath(photo.id)} className="block">
                         <div className="relative h-[220px] sm:h-[252px]">
                           <img
                             src={photo.image}
@@ -214,93 +255,161 @@ const GalleryContent = memo(() => {
                             {photo.badge}
                           </span>
                         </div>
-                        <div className="p-4">
+                        <div className="px-4 pt-4">
                           <h2 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h2>
-                          <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
-                            <span>{photo.author}</span>
-                            <span className="inline-flex items-center gap-1.5">
-                              <ImgIcon src={ASSETS.heart} size={24} />
-                              {photo.votes}
-                            </span>
-                          </div>
                         </div>
-                      </article>
-                    </AppLink>
+                      </AppLink>
+                      <div className="flex items-center justify-between px-4 pb-4 pt-2 text-[14px] text-[#6b7280]">
+                        <span>{photo.author}</span>
+                        <FavoriteHeartButton
+                          initialVotes={photo.votes}
+                          title={photo.title}
+                        />
+                      </div>
+                    </article>
                   ))}
                 </div>
               )}
 
-              {/* Pagination */}
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-[5px]">
+              {/* Figma pagination ΓÇö sliding window: 1,2,3ΓÇª10 ΓåÆ 2,3,4ΓÇª10 */}
+              <nav
+                aria-label={t('gallery.paginationAria', { defaultValue: 'Gallery pagination' })}
+                className="mt-9 flex flex-wrap items-center justify-center gap-[5px]"
+              >
                 <button
                   type="button"
                   aria-label={t('gallery.firstPage')}
-                  onClick={() => setPage(1)}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage <= 1}
+                  onClick={() => goToPage(1)}
+                  className={navBtnClass}
                 >
-                  <ImgIcon src={ASSETS.pageFirst} size={14} />
+                  <ChevronsLeft
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
                 <button
                   type="button"
                   aria-label={t('gallery.previousPage')}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage <= 1}
+                  onClick={() => goToPage(currentPage - 1)}
+                  className={navBtnClass}
                 >
-                  <ImgIcon src={ASSETS.pagePrev} size={14} />
+                  <ChevronLeft
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
-                {pageNumbers.map((n) => (
+                {windowPages.map((n) => (
                   <button
                     key={n}
                     type="button"
-                    onClick={() => setPage(n)}
-                    className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
-                      currentPage === n
-                        ? 'bg-[#ee1c25] text-white'
-                        : 'border border-[#e5e7eb] text-[#0d0d14]'
-                    }`}
+                    aria-label={t('gallery.page', { page: n, defaultValue: `Page ${n}` })}
+                    aria-current={currentPage === n ? 'page' : undefined}
+                    onClick={() => goToPage(n)}
+                    className={pageBtnClass(currentPage === n)}
                   >
                     {n}
                   </button>
                 ))}
-                {totalPages > 3 && (
+                {showEllipsis ? (
                   <>
-                    <span className="px-1 text-[14px] text-[#6b7280]">…</span>
+                    <span
+                      className="inline-flex size-8 items-center justify-center text-[14px] leading-none text-[#6b7280]"
+                      aria-hidden="true"
+                    >
+                      ΓÇª
+                    </span>
                     <button
                       type="button"
-                      onClick={() => setPage(totalPages)}
-                      className={`flex size-8 items-center justify-center rounded-full text-[14px] font-semibold ${
-                        currentPage === totalPages
-                          ? 'bg-[#ee1c25] text-white'
-                          : 'border border-[#e5e7eb] text-[#0d0d14]'
-                      }`}
+                      aria-label={t('gallery.page', {
+                        page: totalPages,
+                        defaultValue: `Page ${totalPages}`,
+                      })}
+                      aria-current={currentPage === totalPages ? 'page' : undefined}
+                      onClick={() => goToPage(totalPages)}
+                      className={pageBtnClass(currentPage === totalPages)}
                     >
                       {totalPages}
                     </button>
                   </>
-                )}
+                ) : null}
                 <button
                   type="button"
                   aria-label={t('gallery.nextPage')}
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => goToPage(currentPage + 1)}
+                  className={navBtnClass}
                 >
-                  <ImgIcon src={ASSETS.pageNext} size={14} />
+                  <ChevronRight
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
                 <button
                   type="button"
                   aria-label={t('gallery.lastPage')}
-                  onClick={() => setPage(totalPages)}
-                  className="flex size-8 items-center justify-center rounded-full border border-[#e5e7eb]"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => goToPage(totalPages)}
+                  className={navBtnClass}
                 >
-                  <span className="inline-flex scale-x-[-1]">
-                    <ImgIcon src={ASSETS.pageFirst} size={14} />
-                  </span>
+                  <ChevronsRight
+                    size={PAGINATION_ICON_SIZE}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#333333]"
+                  />
                 </button>
-              </div>
+              </nav>
             </div>
           </div>
         </Shell>
       </section>
+
+      {/* Mobile / tablet filters drawer ΓÇö slides in from left */}
+      <div
+        className={`fixed inset-0 z-[120] lg:hidden ${filtersOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+        aria-hidden={!filtersOpen}
+      >
+        <button
+          type="button"
+          aria-label={t('gallery.closeFilters')}
+          onClick={closeFilters}
+          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
+            filtersOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+        <aside
+          id="gallery-filters-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t('gallery.filtersTitle')}
+          className={`absolute inset-y-0 left-0 flex w-[min(100%,320px)] flex-col bg-white shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out sm:w-[360px] ${
+            filtersOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
+            <h2 className="text-[18px] font-bold text-[#3a3a42]">{t('gallery.filtersTitle')}</h2>
+            <button
+              type="button"
+              onClick={closeFilters}
+              aria-label={t('gallery.closeFilters')}
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-black/10 text-[#0d0d14] transition hover:bg-[#f3f4f6]"
+            >
+              <X size={18} strokeWidth={2} aria-hidden="true" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto px-5 py-6">
+            <GalleryFiltersPanel {...filterPanelProps} />
+          </div>
+        </aside>
+      </div>
     </SitePageLayout>
   );
 });

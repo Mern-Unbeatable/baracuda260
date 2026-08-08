@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
-import GalleryDetailContent from '@/modules/public/views/GalleryDetailContent';
+import GalleryDetailView from '@/modules/public/views/GalleryDetailView';
 import { getGalleryPhotoById } from '@/shared/data/galleryPhotos';
 
 const GalleryDetail = memo(() => {
@@ -14,7 +14,7 @@ const GalleryDetail = memo(() => {
     keywords: ['gallery', photo.title, 'my12photos', 'photo details'],
   });
 
-  return <GalleryDetailContent />;
+  return <GalleryDetailView entry={photo} variant="single" />;
 });
 
 GalleryDetail.displayName = 'GalleryDetail';

@@ -4,6 +4,7 @@ import { homeAsset } from '@/shared/site-chrome/siteAssets';
 
 export const COMPETITION_CARDS = [
   {
+    id: 'single-photo',
     icon: homeAsset('icon-camera.svg'),
     titleKey: 'competitionsPage.cards.singleTitle',
     descriptionKey: 'competitionsPage.cards.singleDesc',
@@ -16,6 +17,7 @@ export const COMPETITION_CARDS = [
     check: homeAsset('icon-check.svg'),
   },
   {
+    id: 'six-photo-story',
     icon: homeAsset('icon-book.svg'),
     titleKey: 'competitionsPage.cards.sixTitle',
     descriptionKey: 'competitionsPage.cards.sixDesc',
@@ -29,6 +31,7 @@ export const COMPETITION_CARDS = [
     check: homeAsset('icon-check-alt.svg'),
   },
   {
+    id: 'zodiac-album',
     icon: homeAsset('icon-sparkle.svg'),
     titleKey: 'competitionsPage.cards.twelveTitle',
     descriptionKey: 'competitionsPage.cards.twelveDesc',

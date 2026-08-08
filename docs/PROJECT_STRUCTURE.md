@@ -37,6 +37,10 @@ src/
 
 Use `@/modules/<module>/...` or `@/shared/...` — avoid deep relative paths across modules.
 
+## Public module (main additions)
+
+Shared marketing sections live in `modules/public/views/` (e.g. `ActiveCompetitions`, `HowItWorks`, `CommunityWork`, `TopPhotographers`, `GalleryDetailView`). Gallery detail routes use one view with variants (`single`, `six`, `sixBlue`, `twelve`).
+
 ## Scripts
 
 - `scripts/migrate-to-modules.js` — one-time structure move

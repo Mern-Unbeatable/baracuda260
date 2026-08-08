@@ -18,7 +18,10 @@ const AboutHowItWorks = memo(() => {
   };
 
   return (
-    <section id="how-competitions-work" className="bg-[#ecedfa] py-14 sm:py-16 xl:py-[60px]">
+    <section
+      id="how-competitions-work"
+      className="scroll-mt-[140px] bg-[#ecedfa] py-14 sm:py-16 xl:py-[60px]"
+    >
       <Shell>
         <div className="mx-auto mb-10 max-w-[694px] text-center xl:mb-14">
           <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#4048cd]">

@@ -2,7 +2,7 @@ import React, { memo, useLayoutEffect, useRef, useState } from 'react';
 import useSitePageStyles from './useSitePageStyles';
 import SiteAnnouncement from './SiteAnnouncement';
 import SiteHeader from './SiteHeader';
-import SiteNewsletter from './SiteNewsletter';
+import StayUpdated from './StayUpdated';
 import SiteFooter from './SiteFooter';
 
 /**
@@ -36,14 +36,17 @@ const SitePageLayout = memo(
     }, []);
 
     return (
-      <div className={`site-page-root ${rootClassName} w-full overflow-x-hidden bg-white`.trim()}>
+      <div
+        className={`site-page-root ${rootClassName} w-full overflow-x-clip bg-white`.trim()}
+        style={{ '--site-chrome-height': `${chromeHeight}px` }}
+      >
         <div ref={chromeRef} className="fixed inset-x-0 top-0 z-[100]">
           <SiteAnnouncement tone={announcementTone} />
           <SiteHeader activeHref={activeHref} />
         </div>
         <div style={{ height: chromeHeight }} aria-hidden="true" />
         {children}
-        <SiteNewsletter variant={newsletterVariant} />
+        <StayUpdated variant={newsletterVariant} />
         <SiteFooter />
       </div>
     );

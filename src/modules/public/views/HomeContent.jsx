@@ -1,9 +1,12 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
-import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
-import { COMPETITION_CARDS, COMPETITION_STEPS } from '@/shared/data/competitionsMarketing';
+import { ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
 import HomeHero from '@/modules/public/components/marketing-home/HomeHero';
+import ActiveCompetitions from '@/modules/public/views/ActiveCompetitions';
+import HowItWorks from '@/modules/public/views/HowItWorks';
+import CommunityWork from '@/modules/public/views/CommunityWork';
+import TopPhotographers from '@/modules/public/views/TopPhotographers';
 
 const A = '/assets/home';
 
@@ -19,9 +22,6 @@ const ASSETS = {
   check: `${A}/icon-check.svg`,
   checkAlt: `${A}/icon-check-alt.svg`,
   arrow: `${A}/icon-arrow.svg`,
-  arrowRed: `${A}/icon-arrow-red.svg`,
-  arrowGallery: `${A}/icon-arrow-gallery.svg`,
-  heart: `${A}/icon-heart.svg`,
   trophy: `${A}/icon-trophy.svg`,
   users: `${A}/icon-users.svg`,
   formats: `${A}/icon-formats.svg`,
@@ -41,141 +41,7 @@ const ASSETS = {
   winnerEmma: `${A}/winner-emma.jpg`,
   winnerDavid: `${A}/winner-david.jpg`,
   winnerMarie: `${A}/winner-marie.jpg`,
-  photoGolden: `${A}/photo-golden.jpg`,
-  photoAutumn: `${A}/photo-autumn.jpg`,
-  photoWings: `${A}/photo-wings.jpg`,
-  photoCity: `${A}/photo-city.jpg`,
-  photoTidal: `${A}/photo-tidal.jpg`,
-  photoForest: `${A}/photo-forest.jpg`,
-  photoMorning: `${A}/photo-morning.jpg`,
-  photoZodiac: `${A}/photo-zodiac.jpg`,
 };
-
-const FILTERS = ['Single Photo', '6 Photo story', '12 photos - full Zodiac Story'];
-
-const FILTER_LABEL_KEYS = {
-  'Single Photo': 'common.singlePhoto',
-  '6 Photo story': 'common.sixPhotoStory',
-  '12 photos - full Zodiac Story': 'common.twelveZodiac',
-};
-
-const SHOWCASE = [
-  {
-    title: 'Golden Hour Silence',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoGolden,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'Autumn Sequence',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '6 PHOTOS STORY',
-    image: ASSETS.photoAutumn,
-    filter: '6 Photo story',
-  },
-  {
-    title: 'Winqs Over the Marsh',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoWings,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'City After Midniqht',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '6 PHOTOS STORY',
-    image: ASSETS.photoCity,
-    filter: '6 Photo story',
-  },
-  {
-    title: 'Tidal Memory',
-    author: 'Sofia R. · Italy',
-    votes: '1,488',
-    badge: '12 Photos - Full Zodiac Story',
-    image: ASSETS.photoTidal,
-    filter: '12 photos - full Zodiac Story',
-  },
-  {
-    title: 'Forest Cathedral',
-    author: 'Jan M. · Czech',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoForest,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'Morninq Fields',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: 'Single Photo',
-    image: ASSETS.photoMorning,
-    filter: 'Single Photo',
-  },
-  {
-    title: 'Zodiac Journey',
-    author: 'Kasia L. · Poland',
-    votes: '1,488',
-    badge: '12 Photos - Full Zodiac Story',
-    image: ASSETS.photoZodiac,
-    filter: '12 photos - full Zodiac Story',
-  },
-];
-
-const LEADERBOARD = [
-  {
-    rank: '🥇',
-    name: 'Anna Kowalska',
-    city: 'Kraków',
-    votes: '4,821',
-    points: '9,640',
-    avatar: ASSETS.avatarAnna,
-  },
-  {
-    rank: '🥈',
-    name: 'Piotr Mazur',
-    city: 'Warsaw',
-    votes: '4,203',
-    points: '8,406',
-    avatar: ASSETS.avatarPiotr,
-  },
-  {
-    rank: '🥉',
-    name: 'Marta Wiśniewska',
-    city: 'Wrocław',
-    votes: '3,981',
-    points: '7,962',
-    avatar: ASSETS.avatarMarta,
-  },
-  {
-    rank: '4',
-    name: 'Kamil Zając',
-    city: 'Poznań',
-    votes: '3,542',
-    points: '7,084',
-    initial: 'K',
-  },
-  {
-    rank: '5',
-    name: 'Ewa Krawczyk',
-    city: 'Gdańsk',
-    votes: '3,218',
-    points: '6,436',
-    initial: 'E',
-  },
-  {
-    rank: '6',
-    name: 'Tomasz Nowak',
-    city: 'Łódź',
-    votes: '2,967',
-    points: '5,934',
-    initial: 'T',
-  },
-];
 
 const WINNERS = [
   {
@@ -261,12 +127,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const SHOWCASE_BADGE_KEYS = {
-  'Single Photo': 'common.badges.singlePhoto',
-  '6 PHOTOS STORY': 'common.badges.sixPhotosStory',
-  '12 Photos - Full Zodiac Story': 'common.badges.twelveZodiacFull',
-};
-
 const STATS = [
   { value: '14,820+', labelKey: 'home.stats.photographers' },
   { value: '89,450+', labelKey: 'home.stats.photos' },
@@ -276,14 +136,11 @@ const STATS = [
 
 const HomeContent = memo(() => {
   const { t } = useTranslation();
-  const [filter, setFilter] = useState(FILTERS[0]);
-
-  const photos = filter === FILTERS[0] ? SHOWCASE : SHOWCASE.filter((p) => p.filter === filter);
 
   return (
     <SitePageLayout
       activeHref={ROUTES.HOME}
-      rootclassName="home-page-root"
+      rootClassName="home-page-root"
       announcementTone="navy"
       newsletterVariant="home"
     >
@@ -307,327 +164,13 @@ const HomeContent = memo(() => {
         </Shell>
       </section>
 
-      {/* Active Competitions */}
-      <section className="bg-[#f7f8fa] py-16 sm:py-20 xl:py-[114px]">
-        <Shell>
-          <div className="mx-auto mb-11 max-w-[682px] text-center">
-            <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-              {t('home.competitions.eyebrow')}
-            </p>
-            <h2 className="mt-5 text-[32px] font-extrabold leading-tight text-[#0d0d14] sm:text-[40px] xl:text-[48px] xl:leading-[48px]">
-              {t('home.competitions.title')}
-            </h2>
-            <p className="mt-2.5 text-[16px] leading-[1.45] text-[#6b7280] sm:text-[20px] sm:leading-[29.25px]">
-              {t('home.competitions.subtitle')}
-            </p>
-          </div>
+      <ActiveCompetitions />
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {COMPETITION_CARDS.map((card) => (
-              <article
-                key={card.titleKey}
-                className="relative flex h-full flex-col justify-between rounded-[20px] border border-black/16 bg-white p-6 sm:p-8"
-              >
-                {card.popular && (
-                  <span className="absolute left-1/2 top-[-12px] -translate-x-1/2 rounded-full bg-[#4048cd] px-3 py-1 text-[10px] font-extrabold tracking-[0.5px] text-white">
-                    {t('common.mostPopular')}
-                  </span>
-                )}
-                <div className="flex flex-col gap-4">
-                  <div className="flex size-14 items-center justify-center rounded-lg bg-[#fde8e9]">
-                    <ImgIcon src={card.icon} size={32} />
-                  </div>
-                  <div className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-4">
-                      <h3 className="text-[24px] font-semibold capitalize leading-7 text-[#0d0d14] sm:text-[32px]">
-                        {t(card.titleKey)}
-                      </h3>
-                      <p className="text-[16px] leading-normal text-[#6b7280]">
-                        {t(card.descriptionKey)}
-                      </p>
-                    </div>
-                    <ul className="flex flex-col gap-2.5">
-                      {card.featureKeys.map((featureKey) => (
-                        <li
-                          key={featureKey}
-                          className="flex items-center gap-2 text-[14px] text-[#111827]"
-                        >
-                          <ImgIcon src={card.check} size={13} />
-                          {t(featureKey)}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <p className="text-[16px] text-[#1b1e56]">
-                    <span className="text-[28px] font-semibold text-[#4048cd] sm:text-[32px]">
-                      {card.prize}
-                    </span>
-                    {t('common.prizeMoney')}
-                  </p>
-                </div>
-                <a
-                  href="#"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white"
-                >
-                  {t('common.enterNow')}
-                  <ImgIcon src={ASSETS.arrow} size={16} />
-                </a>
-              </article>
-            ))}
-          </div>
-        </Shell>
-      </section>
+      <HowItWorks />
 
-      {/* How It Works */}
-      <section className="bg-white py-16 sm:py-20 xl:py-[112px]">
-        <Shell>
-          <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-            <div className="max-w-[576px]">
-              <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-                {t('home.howItWorks.eyebrow')}
-              </p>
-              <h2 className="mt-2.5 text-[36px] font-extrabold leading-[1.1] text-[#0d0d14] sm:text-[48px] sm:leading-[48px]">
-                {t('home.howItWorks.titleLine1')}
-                <br />
-                {t('home.howItWorks.titleLine2')}
-              </h2>
-              <p className="mt-2.5 text-[16px] leading-[1.45] text-[#6b7280] sm:text-[20px] sm:leading-[29.25px]">
-                {t('home.howItWorks.subtitle')}
-              </p>
-            </div>
+      <CommunityWork />
 
-            <div className="flex flex-col">
-              {COMPETITION_STEPS.map((step, i) => (
-                <div key={step.num} className="flex gap-5">
-                  <div className="flex w-11 flex-col items-center">
-                    <div className="flex size-11 items-center justify-center rounded-2xl bg-[rgba(227,24,55,0.08)] text-[12px] font-extrabold text-[#e31837]">
-                      {step.num}
-                    </div>
-                    {i < COMPETITION_STEPS.length - 1 && (
-                      <div className="my-2 min-h-10 w-px flex-1 bg-black/8" />
-                    )}
-                  </div>
-                  <div className="pb-8">
-                    <h3 className="text-[20px] font-extrabold leading-6 text-[#0d0d14]">
-                      {t(step.titleKey)}
-                    </h3>
-                    <p className="mt-1.5 text-[16px] leading-normal text-[#6b7280]">
-                      {t(step.textKey)}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Shell>
-      </section>
-
-      {/* Photo Showcase */}
-      <section className="bg-white py-16 sm:py-20">
-        <Shell>
-          <div className="mb-8 flex flex-col gap-6 lg:mb-[52px] lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[14px] font-bold uppercase tracking-[1.2px] text-[#666dd7]">
-                {t('home.showcase.eyebrow')}
-              </p>
-              <h2 className="mt-2 text-[36px] font-extrabold text-[#0d0d14] sm:text-[48px] sm:leading-[66px]">
-                {t('home.showcase.title')}
-              </h2>
-            </div>
-            <div className="flex gap-3 overflow-x-auto pb-1">
-              {FILTERS.map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => setFilter(item)}
-                  className={`shrink-0 rounded-full px-4 py-2 text-[14px] font-semibold transition ${
-                    filter === item ? 'bg-[#4048cd] text-white' : 'bg-[#f3f4f6] text-[#6b7280]'
-                  }`}
-                >
-                  {t(FILTER_LABEL_KEYS[item])}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {photos.map((photo) => (
-              <article
-                key={photo.title}
-                className="overflow-hidden rounded-[12px] border border-black/10 bg-white"
-              >
-                <div className="relative h-[220px] sm:h-[252px]">
-                  <img
-                    src={photo.image}
-                    alt={photo.title}
-                    width={368}
-                    height={252}
-                    className="h-full w-full object-cover"
-                  />
-                  <span className="absolute left-3 top-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0d0d14]">
-                    {t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
-                      defaultValue: photo.badge,
-                    })}
-                  </span>
-                </div>
-                <div className="p-4">
-                  <h3 className="text-[16px] font-bold text-[#0d0d14]">{photo.title}</h3>
-                  <div className="mt-2 flex items-center justify-between text-[14px] text-[#6b7280]">
-                    <span>{photo.author}</span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <ImgIcon src={ASSETS.heart} size={24} />
-                      {photo.votes}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-10 flex justify-center">
-            <AppLink
-              href={ROUTES.GALLERY}
-              className="inline-flex items-center gap-2 rounded-full bg-[#ee1c25] px-8 py-3.5 text-[16px] font-bold text-white"
-            >
-              {t('home.showcase.viewFullGallery')}
-              <ImgIcon src={ASSETS.arrowGallery} size={16} />
-            </AppLink>
-          </div>
-        </Shell>
-      </section>
-
-      {/* Leaderboard */}
-      <section className="bg-[#f7f8fa] py-16 sm:py-20 xl:py-[114px]">
-        <Shell>
-          <div className="mb-11 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[12px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
-                {t('home.leaderboard.eyebrow')}
-              </p>
-              <h2 className="mt-3 text-[36px] font-extrabold text-[#0d0d14] sm:text-[48px] sm:leading-[48px]">
-                {t('home.leaderboard.title')}
-              </h2>
-              <p className="mt-2 text-[16px] text-[#6b7280]">{t('home.leaderboard.liveStandings')}</p>
-            </div>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 text-[14px] font-bold text-[#e31837]"
-            >
-              {t('home.leaderboard.fullLeaderboard')}
-              <ImgIcon src={ASSETS.arrowRed} size={16} />
-            </a>
-          </div>
-
-          <div className="mb-9 flex items-end justify-center gap-6 sm:gap-10">
-            {[
-              {
-                emoji: '🥈',
-                name: 'Piotr',
-                city: 'Warsaw',
-                votesCount: '4,203',
-                avatar: ASSETS.avatarPiotr,
-                size: 64,
-                border: 'border-[#e5e7eb]',
-              },
-              {
-                emoji: '🥇',
-                name: 'Anna',
-                city: 'Kraków',
-                votesCount: '4,821',
-                avatar: ASSETS.avatarAnna,
-                size: 80,
-                border: 'border-[#fdc700]',
-                lift: true,
-              },
-              {
-                emoji: '🥉',
-                name: 'Marta',
-                city: 'Wrocław',
-                votesCount: '3,981',
-                avatar: ASSETS.avatarMarta,
-                size: 56,
-                border: 'border-[#fee685]',
-              },
-            ].map((p) => (
-              <div
-                key={p.name}
-                className={`flex w-[80px] flex-col items-center text-center ${p.lift ? '-mt-4' : 'mt-2'}`}
-              >
-                <span className="text-[30px] leading-9">{p.emoji}</span>
-                <div
-                  className={`mt-2 overflow-hidden rounded-full border-2 bg-[#f3f4f6] ${p.border}`}
-                  style={{ width: p.size, height: p.size }}
-                >
-                  <img
-                    src={p.avatar}
-                    alt={p.name}
-                    width={p.size}
-                    height={p.size}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <p
-                  className={`mt-2 font-bold text-[#0d0d14] ${p.lift ? 'text-[16px]' : 'text-[14px]'}`}
-                >
-                  {p.name}
-                </p>
-                <p className="text-[12px] text-[#6b7280]">{p.city}</p>
-                <p className="mt-1 text-[14px] font-bold text-[#e31837]">
-                  {t('home.winners.votesLabel', { count: p.votesCount })}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="overflow-x-auto rounded-2xl border border-black/20 bg-white">
-            <table className="min-w-[720px] w-full text-left">
-              <thead className="bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
-                <tr className="border-b border-black/20">
-                  <th className="px-6 py-4">{t('common.rank')}</th>
-                  <th className="px-6 py-4">{t('common.photographer')}</th>
-                  <th className="px-6 py-4">{t('common.city')}</th>
-                  <th className="px-6 py-4 text-right">{t('common.votes')}</th>
-                  <th className="px-6 py-4 text-right">{t('common.points')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {LEADERBOARD.map((row) => (
-                  <tr key={row.name} className="border-b border-black/20 last:border-b-0">
-                    <td className="px-6 py-5 text-[14px] font-extrabold text-[#e31837]">
-                      {row.rank}
-                    </td>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-3">
-                        {row.avatar ? (
-                          <img
-                            src={row.avatar}
-                            alt=""
-                            width={36}
-                            height={36}
-                            className="size-9 rounded-full object-cover"
-                          />
-                        ) : (
-                          <span className="flex size-9 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
-                            {row.initial}
-                          </span>
-                        )}
-                        <span className="text-[14px] font-bold text-[#0d0d14]">{row.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 text-[14px] text-[#6b7280]">{row.city}</td>
-                    <td className="px-6 py-5 text-right text-[14px] font-extrabold text-[#0d0d14]">
-                      {row.votes}
-                    </td>
-                    <td className="px-6 py-5 text-right text-[14px] text-[#6b7280]">
-                      {row.points}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Shell>
-      </section>
+      <TopPhotographers />
 
       {/* Monthly Winners */}
       <section className="bg-white py-16 sm:py-20">
@@ -637,7 +180,7 @@ const HomeContent = memo(() => {
               <p className="text-center text-[11px] font-bold uppercase tracking-[1.65px] text-white">
                 {t('home.winners.monthLabel')}
               </p>
-              <h2 className="mt-3 text-center text-[32px] font-extrabold tracking-[-0.9px] text-white sm:text-[36px]">
+              <h2 className="mt-3 text-center text-[32px] font-bold tracking-[-0.9px] text-white/90 sm:text-[36px]">
                 {t('home.winners.title')}
               </h2>
               <p className="mt-2 text-center text-[16px] text-white">{t('home.winners.subtitle')}</p>
@@ -656,12 +199,12 @@ const HomeContent = memo(() => {
                       height={64}
                       className="mt-3 size-16 rounded-full border-2 border-white/20 object-cover"
                     />
-                    <h3 className="mt-3 text-[18px] font-extrabold">{w.name}</h3>
+                    <h3 className="mt-3 text-[18px] font-semibold text-white/90">{w.name}</h3>
                     <p className="text-[14px]">{w.work}</p>
                     <p className="mt-1 text-[12px]">
                       {t('home.winners.votesLabel', { count: w.votesCount })}
                     </p>
-                    <p className="mt-4 text-[24px] font-extrabold">{w.prize}</p>
+                    <p className="mt-4 text-[24px] font-semibold text-white/90">{w.prize}</p>
                     <p className="mb-4 text-[12px]">{t('home.winners.cashPrize')}</p>
                     <a
                       href="#"
@@ -686,11 +229,11 @@ const HomeContent = memo(() => {
       {/* Why My12Photos */}
       <section className="bg-white py-16 sm:py-20">
         <Shell>
-          <div className="mb-11 max-w-[290px]">
+          <div className="mb-11">
             <p className="text-[16px] font-bold uppercase tracking-[1.65px] text-[#3f51b5]">
               {t('home.features.eyebrow')}
             </p>
-            <h2 className="mt-[18px] text-[36px] font-extrabold tracking-[-0.9px] text-[#111827]">
+            <h2 className="mt-[18px] whitespace-nowrap text-[36px] font-bold tracking-[-0.9px] text-[#3a3a42]">
               {t('home.features.title')}
             </h2>
           </div>
@@ -700,7 +243,7 @@ const HomeContent = memo(() => {
                 <div className="mb-2.5 flex size-10 items-center justify-center rounded-[14px] bg-[#eef2ff]">
                   <ImgIcon src={f.icon} size={18} />
                 </div>
-                <h3 className="text-[24px] font-extrabold leading-[27px] text-[#111827]">
+                <h3 className="text-[24px] font-semibold leading-[27px] text-[#3a3a42]">
                   {t(f.titleKey)}
                 </h3>
                 <p className="mt-2.5 max-w-[324px] text-[16px] leading-[22.75px] text-[#6b7280]">
@@ -719,7 +262,7 @@ const HomeContent = memo(() => {
             <p className="text-[16px] font-bold uppercase tracking-[1.2px] text-[#e31837]">
               {t('home.testimonials.eyebrow')}
             </p>
-            <h2 className="mt-3 text-[32px] font-extrabold tracking-[-0.96px] text-[#0d0d14] sm:text-[48px]">
+            <h2 className="mt-3 text-[32px] font-bold tracking-[-0.96px] text-[#3a3a42] sm:text-[48px]">
               {t('home.testimonials.title')}
             </h2>
           </div>

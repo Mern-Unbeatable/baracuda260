@@ -5,6 +5,19 @@ const DEFAULT_DESCRIPTION =
 
 export const GALLERY_PHOTOS = [
   {
+    id: 'golden-hour-silence',
+    title: 'Golden Hour Silence',
+    author: 'Kasia L. · Poland',
+    photographer: 'Kasia L.',
+    votes: '1,488',
+    views: '8,420',
+    badge: 'Single Photo',
+    category: 'Landscape',
+    image: `${A}/photo-golden.jpg`,
+    description:
+      'Warm golden-hour light settles over a quiet scene. Soft shadows and a cinematic glow create a peaceful, story-rich atmosphere.',
+  },
+  {
     id: 'autumn-sequence',
     title: 'Autumn Sequence',
     author: 'Kasia L. · Poland',
@@ -44,6 +57,19 @@ export const GALLERY_PHOTOS = [
     image: `${A}/photo-city.jpg`,
     description:
       'Night city lights stretch across glass towers and wet streets. Cool blues and neon highlights build a cinematic after-midnight mood.',
+  },
+  {
+    id: 'tidal-memory',
+    title: 'Tidal Memory',
+    author: 'Sofia R. · Italy',
+    photographer: 'Sofia R.',
+    votes: '1,488',
+    views: '11,080',
+    badge: '12 photos - full Zodiac Story',
+    category: 'Fine Art',
+    image: `${A}/photo-tidal.jpg`,
+    description:
+      'A tidal shoreline story told across connected zodiac frames. Soft sea light and layered horizons guide the viewer through memory and motion.',
   },
   {
     id: 'forest-cathedral',
