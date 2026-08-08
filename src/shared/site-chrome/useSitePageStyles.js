@@ -30,7 +30,7 @@ export default function useSitePageStyles() {
           margin: 0 !important;
         }
         .min-h-screen:has(.site-page-root) { background: #fff !important; }
-        .site-page-root { font-family: Manrope, sans-serif; color: #0d0d14; }
+        .site-page-root { font-family: Manrope, sans-serif; color: var(--primary-text-heading-color, #212133); }
         @keyframes site-marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
