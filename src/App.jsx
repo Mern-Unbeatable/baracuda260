@@ -2,10 +2,10 @@ import React from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
-import ErrorBoundary from './components/ErrorBoundary';
-import router from './router/router';
-import store from './store/store';
-import { TOAST_CONFIG } from './config';
+import ErrorBoundary from '@/shared/ui/ErrorBoundary';
+import router from '@/app/router';
+import store from '@/app/store/store';
+import { TOAST_CONFIG } from '@/shared/config';
 
 function App() {
   return (
