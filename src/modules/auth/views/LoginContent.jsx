@@ -175,7 +175,7 @@ const LoginContent = memo(() => {
               </p>
             </header>
 
-            <div className="mb-6 flex flex-col gap-3">
+            {/* <div className="mb-6 flex flex-col gap-3">
               <p className="text-center text-[13px] leading-5 text-[#7a7484]">{t('login.demoHint')}</p>
               <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                 <button
@@ -195,7 +195,7 @@ const LoginContent = memo(() => {
                   {t('login.demoAdmin')}
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {errors.form ? (
               <div
