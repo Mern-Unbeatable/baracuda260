@@ -174,7 +174,7 @@ function migrateFeatures() {
 function rewriteImports(content) {
   let c = content;
 
-  c = c.replace(/@\/pages\/public\//g, '@/modules/public/pages/');
+  c = c.replace(/@\/pages\/public\//g, '@/modules/public/');
   c = c.replace(/@\/pages\/auth\//g, '@/modules/auth/pages/');
 
   const memberPages = [...MEMBER_PAGE_NAMES];

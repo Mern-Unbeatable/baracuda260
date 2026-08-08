@@ -318,7 +318,9 @@
     "nextPage": "Next page",
     "lastPage": "Last page",
     "favorite": "Favorite {{title}}",
-    "unfavorite": "Unfavorite {{title}}"
+    "unfavorite": "Unfavorite {{title}}",
+    "paginationAria": "Gallery pagination",
+    "page": "Page {{page}}"
   },
   "galleryDetail": {
     "breadcrumb": {
@@ -346,11 +348,25 @@
     "liveStandings": "{{month}} {{year}} Live standings"
   },
   "winners": {
+    "eyebrow": "Winners",
     "title": "Complete Winners Archive",
     "subtitle": "Review past legendary lens achievements, themes, and winning statistics.",
     "historicRecords": "HISTORIC RECORDS: {{count}} ITEMS",
     "emptyTitle": "No winners found",
-    "emptyBody": "Try another album type or month to see more historic records."
+    "emptyBody": "Try another album type or month to see more historic records.",
+    "paginationAria": "Winners pagination"
+  },
+  "winnersDetail": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "winners": "Winners"
+    },
+    "summary": "Archive record for {{title}} — a winning entry from a past My12Photos competition.",
+    "albumType": "Album type",
+    "category": "Category",
+    "votes": "Community votes",
+    "competitionMonth": "Competition month",
+    "backToArchive": "← Back to winners archive"
   },
   "contact": {
     "title": "Contact Us",

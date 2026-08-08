@@ -318,7 +318,9 @@
     "nextPage": "Następna strona",
     "lastPage": "Ostatnia strona",
     "favorite": "Dodaj do ulubionych: {{title}}",
-    "unfavorite": "Usuń z ulubionych: {{title}}"
+    "unfavorite": "Usuń z ulubionych: {{title}}",
+    "paginationAria": "Paginacja galerii",
+    "page": "Strona {{page}}"
   },
   "galleryDetail": {
     "breadcrumb": {
@@ -346,11 +348,25 @@
     "liveStandings": "{{month}} {{year}} na żywo"
   },
   "winners": {
+    "eyebrow": "Zwycięzcy",
     "title": "Pełne archiwum zwycięzców",
     "subtitle": "Przeglądaj osiągnięcia, motywy i statystyki zwycięskich prac.",
     "historicRecords": "REKORDY HISTORYCZNE: {{count}} POZYCJI",
     "emptyTitle": "Nie znaleziono zwycięzców",
-    "emptyBody": "Spróbuj innego typu albumu lub miesiąca."
+    "emptyBody": "Spróbuj innego typu albumu lub miesiąca.",
+    "paginationAria": "Paginacja zwycięzców"
+  },
+  "winnersDetail": {
+    "breadcrumb": {
+      "aria": "Okruszki nawigacji",
+      "winners": "Zwycięzcy"
+    },
+    "summary": "Wpis archiwum dla {{title}} — zwycięska praca z minionych konkursów My12Photos.",
+    "albumType": "Typ albumu",
+    "category": "Kategoria",
+    "votes": "Głosy społeczności",
+    "competitionMonth": "Miesiąc konkursu",
+    "backToArchive": "← Wróć do archiwum zwycięzców"
   },
   "contact": {
     "title": "Kontakt",

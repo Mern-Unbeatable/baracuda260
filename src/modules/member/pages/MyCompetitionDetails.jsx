@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useSEO } from '@/shared/hooks/useSEO';
 import { selectUser } from '@/app/store/slices/authSlice';
 import AdminCompetitionDetailContent from '@/modules/admin/views/AdminCompetitionDetailContent';
-import CompetitionDetailsContent from '@/modules/public/views/CompetitionDetailsContent';
+import CompetitionDetailsContent from '@/modules/public/competition-details/CompetitionDetailsContent';
 
 const MyCompetitionDetails = memo(() => {
   const user = useSelector(selectUser);
