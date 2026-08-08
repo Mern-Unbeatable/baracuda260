@@ -25,18 +25,18 @@ export default function SectionHeader({
     <div className={wrap}>
       {badge ? (
         <p
-          className={`text-[14px] font-semibold uppercase leading-4 tracking-[1.2px] ${BADGE_COLOR[badgeTone] ?? BADGE_COLOR.red}`}
+          className={`text-[12px] font-semibold uppercase leading-4 tracking-[1.2px] sm:text-[14px] ${BADGE_COLOR[badgeTone] ?? BADGE_COLOR.red}`}
         >
           {badge}
         </p>
       ) : null}
       {title ? (
-        <h2 className="text-[36px] font-semibold leading-tight text-[var(--primary-text-heading-color)] sm:text-[48px] sm:leading-[48px]">
+        <h2 className="text-[26px] font-semibold leading-tight text-[var(--primary-text-heading-color)] sm:text-[36px] sm:leading-[1.15] lg:text-[48px] lg:leading-[48px]">
           {title}
         </h2>
       ) : null}
       {description ? (
-        <p className="text-[20px] font-normal leading-[29px] text-[var(--primary-text-color)]">
+        <p className="text-[16px] font-normal leading-[24px] text-[var(--primary-text-color)] sm:text-[18px] sm:leading-[27px] lg:text-[20px] lg:leading-[29px]">
           {description}
         </p>
       ) : null}

@@ -47,7 +47,7 @@ const SiteHeader = memo(({ activeHref }) => {
 
   return (
     <header className="relative border-b border-black/[0.04] bg-white">
-      <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-4 px-4 py-2.5 sm:px-6 md:px-10 xl:px-[192px]">
+      <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-3 py-2.5 pl-4 pr-3 sm:gap-4 sm:px-6 md:px-10 lg:px-12 2xl:gap-6 2xl:px-16 min-[1920px]:px-[192px]">
         <AppLink
           href="/"
           className="relative flex h-[52px] w-[170px] shrink-0 items-center sm:h-[67px] sm:w-[220px]"
@@ -61,12 +61,12 @@ const SiteHeader = memo(({ activeHref }) => {
           />
         </AppLink>
 
-        <nav className="hidden items-center gap-4 2xl:flex" aria-label="Primary">
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex 2xl:gap-3 min-[1920px]:gap-4" aria-label="Primary">
           {navLinks.map(({ labelKey, href, active }) => (
             <AppLink
               key={href}
               href={href}
-              className={`px-3 py-2 text-center text-[14px] font-semibold leading-5 ${
+              className={`whitespace-nowrap px-2 py-2 text-center text-[13px] font-semibold leading-5 min-[1920px]:px-3 min-[1920px]:text-[14px] ${
                 active ? 'text-[#ee1c25]' : 'text-[#6b7280]'
               }`}
               aria-current={active ? 'page' : undefined}
@@ -76,14 +76,16 @@ const SiteHeader = memo(({ activeHref }) => {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 xl:flex">
+        <div className="hidden shrink-0 items-center gap-2 sm:gap-3 2xl:flex 2xl:gap-4">
           <LanguageSwitcher />
-          <div className="flex items-center gap-4">{authActions}</div>
+          <div className="flex items-center gap-2 2xl:gap-4 [&_a]:px-4 [&_a]:py-2.5 [&_a]:text-[14px] min-[1920px]:[&_a]:px-6 min-[1920px]:[&_a]:py-3 min-[1920px]:[&_a]:text-[16px]">
+            {authActions}
+          </div>
         </div>
 
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-[#1b1e56] xl:hidden"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-black/10 text-[#1b1e56] 2xl:hidden"
           aria-label={menuOpen ? t('header.closeMenu') : t('header.openMenu')}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
@@ -103,7 +105,7 @@ const SiteHeader = memo(({ activeHref }) => {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-black/5 bg-white px-4 py-4 xl:hidden">
+        <div className="border-t border-black/5 bg-white px-4 py-4 2xl:hidden">
           <nav className="flex flex-col gap-1">
             {navLinks.map(({ labelKey, href, active }) => (
               <AppLink
