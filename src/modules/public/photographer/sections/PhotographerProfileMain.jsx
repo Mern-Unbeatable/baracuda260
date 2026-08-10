@@ -38,11 +38,12 @@ const displayBadge = (badge = '', t) => {
 
 const PhotographerProfileContent = memo(() => {
   const { t } = useTranslation();
-  const { currentPage, setPage, totalPages, pagedItems: pagedPhotos } = usePaginatedSlice(
-    GALLERY_PHOTOS,
-    PAGE_SIZE,
-    [],
-  );
+  const {
+    currentPage,
+    setPage,
+    totalPages,
+    pagedItems: pagedPhotos,
+  } = usePaginatedSlice(GALLERY_PHOTOS, PAGE_SIZE, []);
   return (
     <SitePageLayout
       activeHref={''}
@@ -59,7 +60,7 @@ const PhotographerProfileContent = memo(() => {
               alt={PROFILE.name}
               width={86}
               height={87}
-              className="size-[72px] shrink-0 rounded-full object-cover sm:h-[87px] sm:w-[86px]"
+              className="size-18 shrink-0 rounded-full object-cover sm:h-21.75 sm:w-21.5"
             />
             <div className="min-w-0 flex flex-col gap-2">
               <h1 className="text-[18px] font-bold leading-normal text-[#111827] sm:text-[20px]">
@@ -75,7 +76,7 @@ const PhotographerProfileContent = memo(() => {
           </div>
 
           <div className="mt-8 sm:mt-10">
-            <div className="grid gap-[19px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-4.75 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {pagedPhotos.map((photo) => (
                 <AppLink
                   key={photo.id}
@@ -83,7 +84,7 @@ const PhotographerProfileContent = memo(() => {
                   className="block overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white transition hover:border-black/20 hover:shadow-sm"
                 >
                   <article>
-                    <div className="relative h-[220px] bg-[#f3f4f6] sm:h-[252px]">
+                    <div className="relative h-55 bg-[#f3f4f6] sm:h-63">
                       <img
                         src={photo.image}
                         alt={photo.title}

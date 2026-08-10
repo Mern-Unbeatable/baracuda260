@@ -15,7 +15,7 @@ const HowItWorks = memo(() => {
       <Shell>
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
           <SectionHeader
-            className="max-w-[576px]"
+            className="max-w-xl"
             align="left"
             badge={t('home.howItWorks.eyebrow')}
             title={
@@ -40,10 +40,10 @@ const HowItWorks = memo(() => {
                   ) : null}
                 </div>
                 <div className="pb-8">
-                  <h3 className="text-[20px] font-semibold leading-6 text-[var(--primary-text-heading-color)]">
+                  <h3 className="text-[20px] font-semibold leading-6 text-(--primary-text-heading-color)">
                     {t(step.titleKey)}
                   </h3>
-                  <p className="mt-1.5 text-[16px] leading-normal text-[var(--primary-text-color)]">
+                  <p className="mt-1.5 text-[16px] leading-normal text-(--primary-text-color)">
                     {t(step.textKey)}
                   </p>
                 </div>

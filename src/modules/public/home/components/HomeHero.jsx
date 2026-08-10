@@ -29,7 +29,7 @@ const HomeHero = memo(() => {
   }, [slideCount]);
 
   return (
-    <section className="relative min-h-[560px] w-full overflow-hidden md:min-h-[720px] xl:min-h-[890px]">
+    <section className="relative min-h-140 w-full overflow-hidden md:min-h-180 xl:min-h-222.5">
       {HOME_HERO_SLIDES.map((src, index) => (
         <img
           key={src}
@@ -42,19 +42,19 @@ const HomeHero = memo(() => {
           }`}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1b1e56] from-[28%] via-[#1b1e56]/70 to-transparent" />
-      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-4 sm:h-6 bg-gradient-to-t from-white via-white/30 to-transparent z-10" />
-      <div className="relative z-20 mx-auto flex min-h-[560px] w-full max-w-[1920px] items-center px-4 py-16 sm:px-6 md:min-h-[720px] md:px-10 xl:min-h-[890px] xl:px-[192px]">
-        <div className="flex w-full max-w-[900px] flex-col gap-9">
+      <div className="absolute inset-0 bg-linear-to-r from-[#1b1e56] from-28% via-[#1b1e56]/70 to-transparent" />
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-4 sm:h-6 bg-linear-to-t from-white via-white/30 to-transparent z-10" />
+      <div className="relative z-20 mx-auto flex min-h-140 w-full max-w-480 items-center px-4 py-16 sm:px-6 md:min-h-180 md:px-10 xl:min-h-222.5 xl:px-48">
+        <div className="flex w-full max-w-225 flex-col gap-9">
           <div className="flex flex-col gap-3">
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-[17px] py-[7px]">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4.25 py-1.75">
               <span className="size-2 rounded-full bg-[#05df72]" />
               <span className="text-sm font-semibold text-white">{t('home.hero.badge')}</span>
             </div>
             <h1 className="text-[36px] font-extrabold uppercase leading-[1.15] tracking-[-1.44px] text-white sm:text-[48px] xl:text-[64px] xl:leading-[77.76px]">
               {t('home.hero.title')}
             </h1>
-            <p className="max-w-[720px] text-[16px] leading-[1.6] text-white sm:text-[20px] sm:leading-[32.5px]">
+            <p className="max-w-180 text-[16px] leading-[1.6] text-white sm:text-[20px] sm:leading-[32.5px]">
               {t('home.hero.subtitle')}
             </p>
           </div>
@@ -76,7 +76,7 @@ const HomeHero = memo(() => {
       </div>
 
       <div
-        className="absolute bottom-[35px] left-1/2 z-20 flex -translate-x-1/2 items-center gap-[7px]"
+        className="absolute bottom-8.75 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.75"
         role="tablist"
         aria-label={t('common.heroSlides')}
       >

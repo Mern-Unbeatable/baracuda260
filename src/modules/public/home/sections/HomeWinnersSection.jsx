@@ -10,14 +10,16 @@ const HomeWinnersSection = memo(() => {
     <section className="bg-white section-py">
       <Shell>
         <div className="rounded-[20px] bg-[#4048cd] px-4 py-8 sm:px-8 sm:py-12 lg:py-16 xl:px-6">
-          <div className="mx-auto max-w-[896px]">
+          <div className="mx-auto max-w-4xl">
             <p className="text-center text-[10px] font-bold uppercase tracking-[1.65px] text-white sm:text-[11px]">
               {t('home.winners.monthLabel')}
             </p>
             <h2 className="mt-2 text-center text-[24px] font-semibold tracking-[-0.9px] text-white/90 sm:mt-3 sm:text-[30px] lg:text-[36px]">
               {t('home.winners.title')}
             </h2>
-            <p className="mt-2 text-center text-[14px] text-white sm:text-[16px]">{t('home.winners.subtitle')}</p>
+            <p className="mt-2 text-center text-[14px] text-white sm:text-[16px]">
+              {t('home.winners.subtitle')}
+            </p>
 
             <div className="mt-8 grid gap-4 sm:mt-10 sm:gap-5 md:grid-cols-3 lg:mt-12">
               {HOME_WINNERS.map((w) => (
@@ -25,7 +27,9 @@ const HomeWinnersSection = memo(() => {
                   key={w.name}
                   className="flex flex-col items-center rounded-2xl bg-[#666dd7] p-4 text-center text-white sm:p-6"
                 >
-                  <span className="text-[28px] leading-8 sm:text-[36px] sm:leading-10">{w.medal}</span>
+                  <span className="text-[28px] leading-8 sm:text-[36px] sm:leading-10">
+                    {w.medal}
+                  </span>
                   <img
                     src={w.image}
                     alt={w.name}
@@ -38,11 +42,15 @@ const HomeWinnersSection = memo(() => {
                   <p className="mt-1 text-[12px]">
                     {t('home.winners.votesLabel', { count: w.votesCount })}
                   </p>
-                  <p className="mt-3 text-[20px] font-semibold text-white/90 sm:mt-4 sm:text-[24px]">{w.prize}</p>
-                  <p className="mb-3 text-[11px] sm:mb-4 sm:text-[12px]">{t('home.winners.cashPrize')}</p>
+                  <p className="mt-3 text-[20px] font-semibold text-white/90 sm:mt-4 sm:text-[24px]">
+                    {w.prize}
+                  </p>
+                  <p className="mb-3 text-[11px] sm:mb-4 sm:text-[12px]">
+                    {t('home.winners.cashPrize')}
+                  </p>
                   <a
                     href="#"
-                    className="inline-flex h-[34px] w-full items-center justify-center rounded-[14px] border border-white/20 bg-white/8 text-[12px] font-bold"
+                    className="inline-flex h-8.5 w-full items-center justify-center rounded-[14px] border border-white/20 bg-white/8 text-[12px] font-bold"
                   >
                     {t('home.winners.viewAlbum')}
                   </a>

@@ -30,12 +30,12 @@ const SiteFooter = memo(() => {
 
   return (
     <footer className="bg-[#ecedfa]">
-      <Shell className="py-14 xl:py-[69px]">
+      <Shell className="py-14 xl:py-17.25">
         <div className="grid gap-10 sm:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <AppLink
               href={ROUTES.HOME}
-              className="relative flex h-[67px] w-[220px] items-center"
+              className="relative flex h-16.75 w-55 items-center"
               aria-label={t('nav.home')}
             >
               <img

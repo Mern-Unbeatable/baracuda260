@@ -37,27 +37,23 @@ const SlideThumb = memo(({ slide, active, onSelect, name }) => (
             alt=""
             width={24}
             height={21}
-            className="h-[21px] w-6 object-contain"
+            className="h-5.25 w-6 object-contain"
           />
         </span>
         <span className="truncate text-[16px] text-[#2b2b2b] sm:text-[20px] lg:text-[24px]">
           {name}
         </span>
       </span>
-      <span className="inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[16px] text-[#ee1c25] sm:text-[20px]">
+      <span className="inline-flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[16px] text-[#ee1c25] sm:text-[20px]">
         {slide.number}
       </span>
     </div>
     <span
-      className={`relative block h-[100px] w-full overflow-hidden rounded-lg sm:h-[120px] ${
+      className={`relative block h-25 w-full overflow-hidden rounded-lg sm:h-30 ${
         active ? 'border-[3px] border-[#ee1c25]' : ''
       }`}
     >
-      <img
-        src={slide.image}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+      <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
     </span>
   </button>
 ));
@@ -78,16 +74,11 @@ const RankingRow = memo(({ row }) => {
   return (
     <div
       className={`relative ${RANKINGS_GRID} items-center border-b border-[rgba(203,195,213,0.3)] ${
-        row.highlighted
-          ? 'border-b-[#532aa8] bg-[rgba(83,42,168,0.05)]'
-          : ''
+        row.highlighted ? 'border-b-[#532aa8] bg-[rgba(83,42,168,0.05)]' : ''
       }`}
     >
       {row.highlighted ? (
-        <span
-          className="absolute inset-y-0 left-0 w-1 bg-[#532aa8]"
-          aria-hidden="true"
-        />
+        <span className="absolute inset-y-0 left-0 w-1 bg-[#532aa8]" aria-hidden="true" />
       ) : null}
 
       <div className={`${RANKINGS_CELL_X} flex items-center py-7`}>
@@ -151,7 +142,7 @@ const CompetitionDetailsContent = memo(() => {
   const typeClass = TYPE_STYLES[detail.type] || TYPE_STYLES.story6;
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-6 sm:gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-6 sm:gap-8">
       <Link
         to={ROUTES.ADMIN_MY_COMPETITIONS}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
@@ -159,39 +150,32 @@ const CompetitionDetailsContent = memo(() => {
         <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
         {t('competitionDetails.back')}
       </Link>
-
-      <section className="relative h-[220px] w-full overflow-hidden rounded-[16px] sm:h-[320px] sm:rounded-[20px] lg:h-[446px] lg:rounded-[24px]">
+      <section className="relative h-55 w-full overflow-hidden rounded-2xl sm:h-80 sm:rounded-[20px] lg:h-111.5 lg:rounded-3xl">
         <img
           src={activeSlide.hero}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-[rgba(22,28,39,0.6)] to-transparent"
+          className="absolute inset-0 bg-linear-to-t from-[rgba(22,28,39,0.6)] to-transparent"
           aria-hidden="true"
         />
-        <div className="absolute left-3 top-3 flex items-end gap-2 rounded-[20px] bg-[#ee1c25] px-4 py-1 sm:left-6 sm:top-6 sm:px-5 sm:py-[5px]">
+        <div className="absolute left-3 top-3 flex items-end gap-2 rounded-[20px] bg-[#ee1c25] px-4 py-1 sm:left-6 sm:top-6 sm:px-5 sm:py-1.25">
           <img
             src={activeSlide.icon}
             alt=""
             width={24}
             height={21}
-            className="h-[21px] w-6 shrink-0 object-contain"
+            className="h-5.25 w-6 shrink-0 object-contain"
           />
           <span className="text-[16px] leading-none text-white sm:text-[20px]">
             {t(activeSlide.nameKey)}
           </span>
         </div>
       </section>
-
-      <div className="relative h-8 w-full sm:h-10 lg:h-[52px]" aria-hidden="true">
-        <img
-          src={COMPETITION_DETAILS_ASSETS.wave}
-          alt=""
-          className="h-full w-full object-fill"
-        />
+      <div className="relative h-8 w-full sm:h-10 lg:h-13" aria-hidden="true">
+        <img src={COMPETITION_DETAILS_ASSETS.wave} alt="" className="h-full w-full object-fill" />
       </div>
-
       <section
         aria-label={t('competitionDetails.slidesAria')}
         className="flex gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0 lg:grid-cols-6 lg:gap-3 xl:gap-4"
@@ -206,7 +190,6 @@ const CompetitionDetailsContent = memo(() => {
           />
         ))}
       </section>
-
       <section className="flex flex-col gap-4 sm:gap-5">
         <div className="flex flex-wrap gap-2">
           <span
@@ -225,60 +208,59 @@ const CompetitionDetailsContent = memo(() => {
         </div>
 
         <div className="flex flex-col gap-3 sm:gap-4">
-          <h1 className="text-[28px] font-semibold leading-[32px] text-[#161c27] sm:text-[32px] sm:leading-[36px] lg:text-[36px] lg:leading-[40px]">
+          <h1 className="text-[28px] font-semibold leading-8 text-[#161c27] sm:text-[32px] sm:leading-9 lg:text-[36px] lg:leading-10">
             {t(detail.titleKey)}
           </h1>
-          <p className="text-[15px] font-medium leading-6 text-[#3e3f40] sm:text-[18px] sm:leading-7 lg:text-[20px] lg:leading-[30px]">
+          <p className="text-[15px] font-medium leading-6 text-[#3e3f40] sm:text-[18px] sm:leading-7 lg:text-[20px] lg:leading-7.5">
             {t(detail.descriptionKey)}
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <article className="flex flex-col items-center justify-center rounded-2xl border border-[rgba(203,195,213,0.2)] bg-[#ecedfa] p-5 sm:p-[25px]">
+          <article className="flex flex-col items-center justify-center rounded-2xl border border-[rgba(203,195,213,0.2)] bg-[#ecedfa] p-5 sm:p-6.25">
             <img
               src={COMPETITION_DETAILS_ASSETS.votes}
               alt=""
               width={20}
               height={16}
-              className="h-[16px] w-5 object-contain"
+              className="h-4 w-5 object-contain"
             />
             <p className="mt-2 text-[12px] font-medium uppercase leading-4 tracking-[1.2px] text-[#494453]">
               {t('competitionDetails.metrics.votes')}
             </p>
-            <p className="text-[28px] font-black tracking-[-0.3px] text-[#161c27] sm:text-[30px] sm:leading-[38px]">
+            <p className="text-[28px] font-black tracking-[-0.3px] text-[#161c27] sm:text-[30px] sm:leading-9.5">
               {detail.votes}
             </p>
           </article>
-          <article className="flex flex-col items-center justify-center rounded-2xl border border-[rgba(203,195,213,0.2)] bg-[#ecedfa] p-5 sm:p-[25px]">
+          <article className="flex flex-col items-center justify-center rounded-2xl border border-[rgba(203,195,213,0.2)] bg-[#ecedfa] p-5 sm:p-6.25">
             <img
               src={COMPETITION_DETAILS_ASSETS.position}
               alt=""
               width={20}
               height={18}
-              className="h-[18px] w-5 object-contain"
+              className="h-4.5 w-5 object-contain"
             />
             <p className="mt-2 text-[12px] font-medium uppercase leading-4 tracking-[1.2px] text-[#494453]">
               {t('competitionDetails.metrics.position')}
             </p>
-            <p className="text-[28px] font-black tracking-[-0.3px] text-[#161c27] sm:text-[30px] sm:leading-[38px]">
+            <p className="text-[28px] font-black tracking-[-0.3px] text-[#161c27] sm:text-[30px] sm:leading-9.5">
               {detail.position}
             </p>
           </article>
         </div>
       </section>
-
       <section
         aria-label={t('competitionDetails.rankingsAria')}
-        className="overflow-hidden rounded-[20px] border border-[#e2e8f0] bg-[rgba(255,255,255,0.8)] shadow-[0px_4px_20px_-2px_rgba(83,42,168,0.04),0px_2px_12px_-4px_rgba(83,42,168,0.02)] backdrop-blur-[6px] sm:rounded-[24px]"
+        className="overflow-hidden rounded-[20px] border border-[#e2e8f0] bg-[rgba(255,255,255,0.8)] shadow-[0px_4px_20px_-2px_rgba(83,42,168,0.04),0px_2px_12px_-4px_rgba(83,42,168,0.02)] backdrop-blur-[6px] sm:rounded-3xl"
       >
-        <div className="border-b border-[#cbc3d5] bg-[#f9f9ff] px-4 py-5 sm:px-8 sm:pb-[25px] sm:pt-6">
+        <div className="border-b border-[#cbc3d5] bg-[#f9f9ff] px-4 py-5 sm:px-8 sm:pb-6.25 sm:pt-6">
           <h2 className="text-[20px] font-semibold leading-8 text-[#161c27] sm:text-[24px]">
             {t('competitionDetails.rankingsTitle')}
           </h2>
         </div>
 
         <div className="w-full overflow-x-auto">
-          <div className="min-w-[760px]">
+          <div className="min-w-190">
             <div className={`${RANKINGS_GRID} bg-[rgba(241,243,255,0.5)]`}>
               <div className={`${RANKINGS_CELL_X} py-5`}>
                 <p className="text-[12px] font-medium uppercase leading-4 tracking-[0.6px] text-[#494453]">
@@ -328,7 +310,7 @@ const CompetitionDetailsContent = memo(() => {
                 alt=""
                 width={8}
                 height={12}
-                className="h-3 w-[8px] object-contain"
+                className="h-3 w-2 object-contain"
               />
             </button>
             <button
@@ -342,12 +324,13 @@ const CompetitionDetailsContent = memo(() => {
                 alt=""
                 width={8}
                 height={12}
-                className="h-3 w-[8px] object-contain"
+                className="h-3 w-2 object-contain"
               />
             </button>
           </div>
         </div>
-      </section>    </div>
+      </section>{' '}
+    </div>
   );
 });
 

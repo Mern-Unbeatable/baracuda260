@@ -146,7 +146,7 @@ const CommunityWork = memo(() => {
     <section className="bg-white section-py">
       <Shell>
         <SectionHeader
-          className="mb-8 lg:mb-[52px]"
+          className="mb-8 lg:mb-13"
           align="left"
           badge={t('home.showcase.eyebrow')}
           badgeTone="indigo"
