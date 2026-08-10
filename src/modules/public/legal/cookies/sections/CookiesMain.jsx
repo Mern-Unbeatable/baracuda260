@@ -11,8 +11,8 @@ const bodyClassName =
   'text-[16px] font-normal leading-7 text-[#2d2d2d] sm:text-[18px] sm:leading-8 md:text-[20px]';
 
 const CookiesSection = memo(({ section }) => (
-  <section className="flex w-full max-w-[1200px] flex-col gap-3">
-    <h2 className="font-[family-name:Manrope,sans-serif] text-[24px] font-medium leading-normal text-[#0d0d0d] sm:text-[28px] md:text-[32px] xl:text-[36px]">
+  <section className="flex w-full max-w-300 flex-col gap-3">
+    <h2 className="font-[Manrope,sans-serif] text-[24px] font-medium leading-normal text-[#0d0d0d] sm:text-[28px] md:text-[32px] xl:text-[36px]">
       {section.title}
     </h2>
 
@@ -31,7 +31,7 @@ const CookiesSection = memo(({ section }) => (
     {section.listIntro ? <p className={bodyClassName}>{section.listIntro}</p> : null}
 
     {section.bullets.length ? (
-      <ul className="list-disc space-y-0 pl-[30px] text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px]">
+      <ul className="list-disc space-y-0 pl-7.5 text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px]">
         {section.bullets.map((item) => (
           <li key={item}>
             <span className="leading-8">{item}</span>
@@ -67,11 +67,11 @@ const CookiesContent = memo(() => {
     >
       <main className="bg-[#f9fafb]">
         <Shell className="pb-16 pt-8 sm:pb-20 sm:pt-10 xl:pb-24 xl:pt-12">
-          <header className="mb-6 flex max-w-[570px] flex-col gap-2 sm:mb-8">
-            <h1 className="font-[family-name:Manrope,sans-serif] text-[28px] font-semibold leading-normal text-black sm:text-[34px] xl:text-[40px]">
+          <header className="mb-6 flex max-w-142.5 flex-col gap-2 sm:mb-8">
+            <h1 className="font-[Manrope,sans-serif] text-[28px] font-semibold leading-normal text-black sm:text-[34px] xl:text-[40px]">
               {page.title}
             </h1>
-            <div className="flex items-center gap-[9px]">
+            <div className="flex items-center gap-2.25">
               <span
                 className="inline-block size-2.5 shrink-0 rounded-full bg-[#ee1c25]"
                 aria-hidden="true"
@@ -83,7 +83,7 @@ const CookiesContent = memo(() => {
           </header>
 
           <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
-            {page.intro ? <p className={`max-w-[1200px] ${bodyClassName}`}>{page.intro}</p> : null}
+            {page.intro ? <p className={`max-w-300 ${bodyClassName}`}>{page.intro}</p> : null}
 
             {page.sections.map((section) => (
               <CookiesSection key={section.id} section={section} />

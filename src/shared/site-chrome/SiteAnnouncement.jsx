@@ -8,8 +8,8 @@ const SiteAnnouncement = memo(({ tone = 'blue' }) => {
   const announcement = t('announcement');
 
   return (
-    <div className={`flex h-[46px] items-center overflow-hidden ${bg}`}>
-      <div className="site-marquee-track flex w-max whitespace-nowrap text-[14px] leading-[22px] text-white">
+    <div className={`flex h-11.5 items-center overflow-hidden ${bg}`}>
+      <div className="site-marquee-track flex w-max whitespace-nowrap text-[14px] leading-5.5 text-white">
         <span className="px-4">{announcement}</span>
         <span className="px-4" aria-hidden="true">
           {announcement}

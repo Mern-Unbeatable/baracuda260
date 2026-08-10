@@ -12,10 +12,10 @@ const AboutStats = memo(() => {
         <div className="grid gap-8 rounded-[20px] border border-black/20 bg-white p-8 text-center sm:grid-cols-3 sm:gap-6 sm:p-11">
           {ABOUT_STATS.map(({ value, labelKey }) => (
             <div key={labelKey} className="text-center">
-              <p className="text-[32px] font-bold leading-none text-[var(--primary-text-heading-color)] sm:text-[40px]">
+              <p className="text-[32px] font-bold leading-none text-(--primary-text-heading-color) sm:text-[40px]">
                 {value}
               </p>
-              <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-[var(--primary-text-color)] sm:text-[12px]">
+              <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-(--primary-text-color) sm:text-[12px]">
                 {t(labelKey)}
               </p>
             </div>

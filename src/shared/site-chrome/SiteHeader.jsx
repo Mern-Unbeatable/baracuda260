@@ -46,11 +46,11 @@ const SiteHeader = memo(({ activeHref }) => {
   );
 
   return (
-    <header className="relative border-b border-black/[0.04] bg-white">
-      <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-3 py-2.5 pl-4 pr-3 sm:gap-4 sm:px-6 md:px-10 lg:px-12 2xl:gap-6 2xl:px-16 min-[1920px]:px-[192px]">
+    <header className="relative border-b border-black/4 bg-white">
+      <div className="mx-auto flex w-full max-w-480 items-center justify-between gap-3 py-2.5 pl-4 pr-3 sm:gap-4 sm:px-6 md:px-10 lg:px-12 2xl:gap-6 2xl:px-16 min-[1920px]:px-48">
         <AppLink
           href="/"
-          className="relative flex h-[52px] w-[170px] shrink-0 items-center sm:h-[67px] sm:w-[220px]"
+          className="relative flex h-13 w-42.5 shrink-0 items-center sm:h-16.75 sm:w-55"
         >
           <img
             src={SITE_ASSETS.logo}
@@ -61,7 +61,10 @@ const SiteHeader = memo(({ activeHref }) => {
           />
         </AppLink>
 
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex 2xl:gap-3 min-[1920px]:gap-4" aria-label="Primary">
+        <nav
+          className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex 2xl:gap-3 min-[1920px]:gap-4"
+          aria-label="Primary"
+        >
           {navLinks.map(({ labelKey, href, active }) => (
             <AppLink
               key={href}
@@ -123,9 +126,7 @@ const SiteHeader = memo(({ activeHref }) => {
           </nav>
           <div className="mt-4 flex flex-col gap-2 border-t border-black/5 pt-4">
             <LanguageSwitcher className="w-full [&_button]:w-full [&_button]:justify-between" />
-            <div className="flex flex-col gap-2 [&_a]:text-center [&_a]:text-sm">
-              {authActions}
-            </div>
+            <div className="flex flex-col gap-2 [&_a]:text-center [&_a]:text-sm">{authActions}</div>
           </div>
         </div>
       )}

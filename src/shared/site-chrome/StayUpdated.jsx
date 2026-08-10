@@ -47,7 +47,7 @@ const StayUpdated = memo(({ variant = 'page' }) => {
               </p>
             </div>
             <form
-              className="flex w-full max-w-[520px] flex-col gap-3 rounded-[33px] bg-white/24 p-3 sm:flex-row sm:items-center"
+              className="flex w-full max-w-130 flex-col gap-3 rounded-[33px] bg-white/24 p-3 sm:flex-row sm:items-center"
               onSubmit={(event) => event.preventDefault()}
             >
               <label className="flex flex-1 items-center gap-1 rounded-3xl bg-white px-4 py-3">

@@ -19,13 +19,10 @@ const AboutHowItWorks = memo(() => {
   };
 
   return (
-    <section
-      id="how-competitions-work"
-      className="scroll-mt-[140px] bg-[#ecedfa] section-py"
-    >
+    <section id="how-competitions-work" className="scroll-mt-35 bg-[#ecedfa] section-py">
       <Shell>
         <SectionHeader
-          className="mb-10 mx-auto max-w-[694px] xl:mb-14"
+          className="mb-10 mx-auto max-w-173.5 xl:mb-14"
           badge={t('about.howItWorks.eyebrow')}
           badgeTone="brand"
           title={t('about.howItWorks.title')}
@@ -41,13 +38,13 @@ const AboutHowItWorks = memo(() => {
                   key={step.id}
                   type="button"
                   onClick={() => setActiveId(step.id)}
-                  className={`flex w-full items-center gap-[22px] rounded-xl border p-5 text-left transition sm:p-6 ${
+                  className={`flex w-full items-center gap-5.5 rounded-xl border p-5 text-left transition sm:p-6 ${
                     selected
                       ? 'border-[#4048cd]/40 bg-white shadow-[0_8px_24px_rgba(13,13,20,0.06)]'
                       : 'border-black/17 bg-white hover:border-black/30'
                   }`}
                 >
-                  <span className="inline-flex h-[33px] w-8 shrink-0 items-center justify-center rounded bg-[#fde8e9] text-[20px] text-[#4d4f53]">
+                  <span className="inline-flex h-8.25 w-8 shrink-0 items-center justify-center rounded bg-[#fde8e9] text-[20px] text-[#4d4f53]">
                     {step.id}
                   </span>
                   <span className="min-w-0 flex-1">
@@ -63,11 +60,11 @@ const AboutHowItWorks = memo(() => {
             })}
           </div>
 
-          <div className="rounded-2xl border border-black/20 bg-white px-5 py-8 sm:px-8 sm:py-8 xl:min-h-[476px]">
-            <div className="flex h-full min-h-[360px] flex-col justify-between gap-10 xl:min-h-[412px]">
+          <div className="rounded-2xl border border-black/20 bg-white px-5 py-8 sm:px-8 sm:py-8 xl:min-h-119">
+            <div className="flex h-full min-h-90 flex-col justify-between gap-10 xl:min-h-103">
               <div className="flex flex-col gap-4">
-                <div className="flex w-full max-w-[363px] items-center gap-[22px] rounded-xl border border-black/17 bg-[#fde8e9] p-6">
-                  <span className="inline-flex h-[33px] w-8 shrink-0 items-center justify-center rounded bg-white">
+                <div className="flex w-full max-w-90.75 items-center gap-5.5 rounded-xl border border-black/17 bg-[#fde8e9] p-6">
+                  <span className="inline-flex h-8.25 w-8 shrink-0 items-center justify-center rounded bg-white">
                     <ImgIcon src={ABOUT_ASSETS.userOutlined} size={16} />
                   </span>
                   <div>

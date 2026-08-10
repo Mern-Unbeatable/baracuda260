@@ -11,7 +11,7 @@ const AboutStory = memo(() => {
     <section className="bg-white section-py">
       <Shell>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-          <div className="relative h-[360px] overflow-hidden rounded-[20px] sm:h-[480px] lg:h-[604px]">
+          <div className="relative h-90 overflow-hidden rounded-[20px] sm:h-120 lg:h-151">
             <img
               src={ABOUT_ASSETS.story}
               alt=""

@@ -54,27 +54,27 @@ const MONTHS = [
 const WinnerCard = memo(({ item, t }) => (
   <AppLink
     href={winnerDetailPath(item.id)}
-    className="group flex flex-col overflow-hidden rounded-xl bg-[#f4f4f4] transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4048cd]"
+    className="group flex flex-col overflow-hidden rounded-xl bg-[#f4f4f4] transition hover:shadow-md focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#4048cd]"
   >
     <article className="flex h-full flex-col">
-      <div className="relative h-[220px] overflow-hidden sm:h-[254px]">
-      <img
-        src={item.image}
-        alt={item.title}
-        width={369}
-        height={254}
-        className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-black/20" />
-      <div className="absolute left-[13px] top-[15px] inline-flex items-center gap-2 rounded bg-black/50 px-[7px] py-1">
-        <ImgIcon src={item.badgeIcon === 'trophy' ? ASSETS.trophy : ASSETS.badge} size={18} />
-        <span className="text-[14px] leading-6 text-[#fdc700]">
-          {t(WINNER_BADGE_KEYS[item.badge] || item.badge, { defaultValue: item.badge })}
-        </span>
-      </div>
-      <div className="absolute bottom-4 right-4 rounded-lg bg-black/55 px-2 py-1">
-        <span className="text-[14px] leading-6 text-white sm:text-[16px]">{item.date}</span>
-      </div>
+      <div className="relative h-55 overflow-hidden sm:h-63.5">
+        <img
+          src={item.image}
+          alt={item.title}
+          width={369}
+          height={254}
+          className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-black/20" />
+        <div className="absolute left-3.25 top-3.75 inline-flex items-center gap-2 rounded bg-black/50 px-1.75 py-1">
+          <ImgIcon src={item.badgeIcon === 'trophy' ? ASSETS.trophy : ASSETS.badge} size={18} />
+          <span className="text-[14px] leading-6 text-[#fdc700]">
+            {t(WINNER_BADGE_KEYS[item.badge] || item.badge, { defaultValue: item.badge })}
+          </span>
+        </div>
+        <div className="absolute bottom-4 right-4 rounded-lg bg-black/55 px-2 py-1">
+          <span className="text-[14px] leading-6 text-white sm:text-[16px]">{item.date}</span>
+        </div>
       </div>
       <div className="flex flex-col gap-6 px-4 py-6">
         <div>
@@ -168,7 +168,7 @@ const WinnersContent = memo(() => {
                   <ul
                     role="listbox"
                     aria-label={t('common.selectMonth')}
-                    className="absolute right-0 z-30 mt-2 max-h-64 w-[180px] overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
+                    className="absolute right-0 z-30 mt-2 max-h-64 w-45 overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
                   >
                     {MONTHS.map((name) => {
                       const selected = name === month;

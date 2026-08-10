@@ -19,14 +19,14 @@ const HomeFeaturesSection = memo(() => {
         />
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {HOME_FEATURES.map((f) => (
-            <article key={f.titleKey} className="rounded-2xl border border-black/17 p-[25px]">
+            <article key={f.titleKey} className="rounded-2xl border border-black/17 p-6.25">
               <div className="mb-2.5 flex size-10 items-center justify-center rounded-[14px] bg-[#eef2ff]">
                 <ImgIcon src={f.icon} size={18} />
               </div>
-              <h3 className="text-[24px] font-semibold leading-[27px] text-[#3a3a42]">
+              <h3 className="text-[24px] font-semibold leading-6.75 text-[#3a3a42]">
                 {t(f.titleKey)}
               </h3>
-              <p className="mt-2.5 max-w-[324px] text-[16px] leading-[22.75px] text-[#6b7280]">
+              <p className="mt-2.5 max-w-81 text-[16px] leading-[22.75px] text-[#6b7280]">
                 {t(f.textKey)}
               </p>
             </article>

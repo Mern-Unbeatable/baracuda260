@@ -40,24 +40,26 @@ const CATEGORIES = [
 
 const PHOTOS = GALLERY_PHOTOS;
 
-const GalleryFiltersPanel = memo(({ albumTypes, categories, onToggleAlbum, onToggleCategory, t }) => (
-  <div className="flex flex-col gap-10">
-    <FilterCheckboxGroup
-      title={t('gallery.albumType')}
-      options={ALBUM_TYPE_VALUES}
-      selected={albumTypes}
-      onToggle={onToggleAlbum}
-      getLabel={(value) => t(ALBUM_TYPE_LABEL_KEYS[value])}
-    />
-    <FilterCheckboxGroup
-      title={t('gallery.category')}
-      options={CATEGORIES}
-      selected={categories}
-      onToggle={onToggleCategory}
-      getLabel={(value) => t(`common.categories.${value}`, { defaultValue: value })}
-    />
-  </div>
-));
+const GalleryFiltersPanel = memo(
+  ({ albumTypes, categories, onToggleAlbum, onToggleCategory, t }) => (
+    <div className="flex flex-col gap-10">
+      <FilterCheckboxGroup
+        title={t('gallery.albumType')}
+        options={ALBUM_TYPE_VALUES}
+        selected={albumTypes}
+        onToggle={onToggleAlbum}
+        getLabel={(value) => t(ALBUM_TYPE_LABEL_KEYS[value])}
+      />
+      <FilterCheckboxGroup
+        title={t('gallery.category')}
+        options={CATEGORIES}
+        selected={categories}
+        onToggle={onToggleCategory}
+        getLabel={(value) => t(`common.categories.${value}`, { defaultValue: value })}
+      />
+    </div>
+  ),
+);
 
 GalleryFiltersPanel.displayName = 'GalleryFiltersPanel';
 
@@ -147,9 +149,9 @@ const GalleryContent = memo(() => {
             />
           </div>
 
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-[103px]">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-25.75">
             {/* Desktop sidebar */}
-            <aside className="hidden w-full shrink-0 lg:sticky lg:top-[calc(var(--site-chrome-height,118px)+1.5rem)] lg:block lg:w-[285px] lg:self-start">
+            <aside className="hidden w-full shrink-0 lg:sticky lg:top-[calc(var(--site-chrome-height,118px)+1.5rem)] lg:block lg:w-71.25 lg:self-start">
               <GalleryFiltersPanel {...filterPanelProps} />
             </aside>
 
@@ -183,10 +185,7 @@ const GalleryContent = memo(() => {
                       footer={
                         <>
                           <span>{photo.author}</span>
-                          <FavoriteHeartButton
-                            initialVotes={photo.votes}
-                            title={photo.title}
-                          />
+                          <FavoriteHeartButton initialVotes={photo.votes} title={photo.title} />
                         </>
                       }
                     />
@@ -208,7 +207,7 @@ const GalleryContent = memo(() => {
 
       {/* Mobile / tablet filters drawer ΓÇö slides in from left */}
       <div
-        className={`fixed inset-0 z-[120] lg:hidden ${filtersOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+        className={`fixed inset-0 z-120 lg:hidden ${filtersOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
         aria-hidden={!filtersOpen}
       >
         <button
@@ -224,7 +223,7 @@ const GalleryContent = memo(() => {
           role="dialog"
           aria-modal="true"
           aria-label={t('gallery.filtersTitle')}
-          className={`absolute inset-y-0 left-0 flex w-[min(100%,320px)] flex-col bg-white shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out sm:w-[360px] ${
+          className={`absolute inset-y-0 left-0 flex w-[min(100%,320px)] flex-col bg-white shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out sm:w-90 ${
             filtersOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >

@@ -26,7 +26,7 @@ const LeaderboardPodium = memo(() => {
       {LEADERBOARD_PODIUM.map((p) => (
         <div
           key={p.name}
-          className={`flex w-[88px] flex-col items-center text-center ${
+          className={`flex w-22 flex-col items-center text-center ${
             p.lift ? '-translate-y-5' : ''
           }`}
         >
@@ -106,7 +106,7 @@ const LeaderboardStandings = memo(() => {
       </div>
 
       <div className="hidden overflow-x-auto rounded-2xl border border-black/20 bg-white md:block">
-        <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
+        <table className="w-full min-w-160 table-fixed border-collapse text-left">
           <thead>
             <tr className="border-b border-black/20 bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
               <th className="w-1/5 px-6 py-4 font-extrabold">{t('common.rank')}</th>
@@ -141,7 +141,9 @@ const LeaderboardStandings = memo(() => {
                         {row.initial}
                       </span>
                     )}
-                    <span className="truncate text-[14px] font-bold text-[#0d0d14]">{row.name}</span>
+                    <span className="truncate text-[14px] font-bold text-[#0d0d14]">
+                      {row.name}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-5 text-[14px] text-[#6b7280]">
@@ -200,7 +202,7 @@ const LeaderboardPageFilters = memo(({ albumTab, onAlbumTabChange, monthMenu }) 
           <ul
             role="listbox"
             aria-label={t('common.selectMonth')}
-            className="absolute right-0 z-30 mt-2 max-h-64 w-[180px] overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
+            className="absolute right-0 z-30 mt-2 max-h-64 w-45 overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
           >
             {LEADERBOARD_MONTHS.map((name) => {
               const selected = name === month;
@@ -213,9 +215,7 @@ const LeaderboardPageFilters = memo(({ albumTab, onAlbumTabChange, monthMenu }) 
                       setMonthOpen(false);
                     }}
                     className={`flex w-full cursor-pointer items-center gap-2 px-3 py-2.5 text-left text-[14px] font-medium transition ${
-                      selected
-                        ? 'bg-[#4048cd]/10 text-[#4048cd]'
-                        : 'text-[#222] hover:bg-[#f7f8fa]'
+                      selected ? 'bg-[#4048cd]/10 text-[#4048cd]' : 'text-[#222] hover:bg-[#f7f8fa]'
                     }`}
                   >
                     <ImgIcon src={ASSETS.calendar} size={12} />

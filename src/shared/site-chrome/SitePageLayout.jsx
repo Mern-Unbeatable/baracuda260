@@ -40,7 +40,7 @@ const SitePageLayout = memo(
         className={`site-page-root ${rootClassName} w-full overflow-x-clip bg-white`.trim()}
         style={{ '--site-chrome-height': `${chromeHeight}px` }}
       >
-        <div ref={chromeRef} className="fixed inset-x-0 top-0 z-[100]">
+        <div ref={chromeRef} className="fixed inset-x-0 top-0 z-100">
           <SiteAnnouncement tone={announcementTone} />
           <SiteHeader activeHref={activeHref} />
         </div>
