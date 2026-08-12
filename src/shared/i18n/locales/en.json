@@ -132,11 +132,12 @@
       "badge": "Competitions live — July 2026",
       "title": "12 Photos - Full Zodiac Story",
       "subtitle": "Join over 12,000 photographers. Free competitions, community voting, cash prizes every month.",
+      "searchPlaceholder": "Search",
       "ctaJoin": "Join a Competition",
       "ctaGallery": "Explore Gallery"
     },
     "stats": {
-      "photographers": "Registered Photographers",
+      "photographers": "Photographers",
       "photos": "Photos Submitted",
       "votes": "Votes Cast",
       "prizes": "Cash Prizes Awarded"
@@ -313,6 +314,7 @@
     "category": "Category",
     "emptyTitle": "No photos match",
     "emptyBody": "Clear or change Album Type / Category filters to see more results.",
+    "searchPlaceholder": "Search",
     "firstPage": "First page",
     "previousPage": "Previous page",
     "nextPage": "Next page",
@@ -341,7 +343,93 @@
     "postComment": "Post a comment",
     "submit": "Submit",
     "previousPhoto": "Previous photo",
-    "nextPhoto": "Next photo"
+    "nextPhoto": "Next photo",
+    "playVideo": "Play video",
+    "pauseVideo": "Pause video",
+    "share": "Share",
+    "donation": {
+      "supportTitle": "Support {{name}}",
+      "defaultBio": "Digital Illustrator & Concept Artist. Your support helps {{name}} create new photos and tools for the community.",
+      "close": "Close donation form",
+      "selectAmount": "Select Amount",
+      "customAmount": "Custom Amount",
+      "yourDetails": "Your Details",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Jane Doe",
+      "email": "Email Address",
+      "emailPlaceholder": "jane@example.com",
+      "cancel": "Cancel",
+      "payNow": "Pay Now",
+      "reopen": "Support {{name}}"
+    }
+  },
+  "photographerProfile": {
+    "follow": "Follow",
+    "following": "Following",
+    "message": "Message",
+    "aboutTitle": "About & Biography",
+    "competitionTag": "Competition",
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Profile Visitor",
+      "totalArtwork": "Total Artwork",
+      "competitionEntries": "Competition Entries",
+      "totalHearts": "Total Hearts"
+    },
+    "statsShort": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Visitors",
+      "totalArtwork": "Artwork",
+      "competitionEntries": "Entries",
+      "totalHearts": "Hearts"
+    },
+    "featured": {
+      "badge": "Currently in Competition",
+      "uploaded": "Uploaded {{date}}",
+      "votes": "{{count}} Votes",
+      "rank": "Rank #{{rank}}",
+      "votingEnds": "Voting ends: {{date}}",
+      "inspect": "Inspect Entry Details",
+      "previous": "Previous featured entry",
+      "next": "Next featured entry"
+    },
+    "artwork": {
+      "title": "My Artwork",
+      "subtitle": "Explore single photography prints, 6-photo sets, and 12-photo Zodiac Story editorial albums."
+    },
+    "premium": {
+      "title": "Premium Photos",
+      "subtitle": "Explore single photography prints, 6-photo sets, and 12-photo Zodiac Story premium albums."
+    },
+    "filters": {
+      "allArtwork": "All Artwork",
+      "allArtworkShort": "All"
+    },
+    "sort": {
+      "label": "Sort artwork",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "mostLiked": "Most liked",
+      "mostViewed": "Most viewed"
+    },
+    "messages": {
+      "title": "My Messages",
+      "subtitle": "Photographer announcements, behind-the-scenes logs, and exhibition news.",
+      "publishedCount": "{{count}} Published Updates",
+      "noteBadge": "Photographer Note",
+      "likes": "{{count}} Likes"
+    },
+    "shareBanner": {
+      "badge": "Community Support",
+      "title": "Support this photographer by sharing their profile with your friends!",
+      "subtitle": "Share their profile on social media and help them get more visibility and votes.",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "x": "X",
+      "copyLink": "Copy Profile Link"
+    }
   },
   "leaderboard": {
     "title": "Top Photographers",

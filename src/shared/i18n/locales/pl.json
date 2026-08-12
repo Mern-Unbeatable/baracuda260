@@ -132,11 +132,12 @@
       "badge": "Konkursy trwają — lipiec 2026",
       "title": "12 zdjęć — pełna historia zodiaku",
       "subtitle": "Dołącz do ponad 12 000 fotografów. Darmowe konkursy, głosowanie społeczności, nagrody pieniężne co miesiąc.",
+      "searchPlaceholder": "Szukaj",
       "ctaJoin": "Dołącz do konkursu",
       "ctaGallery": "Przeglądaj galerię"
     },
     "stats": {
-      "photographers": "Zarejestrowani fotografowie",
+      "photographers": "Fotografowie",
       "photos": "Przesłane zdjęcia",
       "votes": "Oddane głosy",
       "prizes": "Przyznane nagrody"
@@ -313,6 +314,7 @@
     "category": "Kategoria",
     "emptyTitle": "Brak pasujących zdjęć",
     "emptyBody": "Wyczyść lub zmień filtry typu albumu / kategorii, by zobaczyć więcej wyników.",
+    "searchPlaceholder": "Szukaj",
     "firstPage": "Pierwsza strona",
     "previousPage": "Poprzednia strona",
     "nextPage": "Następna strona",
@@ -341,7 +343,93 @@
     "postComment": "Opublikuj komentarz",
     "submit": "Wyślij",
     "previousPhoto": "Poprzednie zdjęcie",
-    "nextPhoto": "Następne zdjęcie"
+    "nextPhoto": "Następne zdjęcie",
+    "playVideo": "Odtwórz wideo",
+    "pauseVideo": "Wstrzymaj wideo",
+    "share": "Udostępnij",
+    "donation": {
+      "supportTitle": "Wesprzyj {{name}}",
+      "defaultBio": "Ilustrator cyfrowy i artysta koncepcyjny. Twoje wsparcie pomaga {{name}} tworzyć nowe zdjęcia i narzędzia dla społeczności.",
+      "close": "Zamknij formularz darowizny",
+      "selectAmount": "Wybierz kwotę",
+      "customAmount": "Inna kwota",
+      "yourDetails": "Twoje dane",
+      "fullName": "Imię i nazwisko",
+      "fullNamePlaceholder": "Jan Kowalski",
+      "email": "Adres e-mail",
+      "emailPlaceholder": "jan@example.com",
+      "cancel": "Anuluj",
+      "payNow": "Zapłać teraz",
+      "reopen": "Wesprzyj {{name}}"
+    }
+  },
+  "photographerProfile": {
+    "follow": "Obserwuj",
+    "following": "Obserwujesz",
+    "message": "Wiadomość",
+    "aboutTitle": "O mnie i biografia",
+    "competitionTag": "Konkurs",
+    "stats": {
+      "followers": "Obserwujący",
+      "following": "Obserwowani",
+      "profileVisitors": "Odwiedziny profilu",
+      "totalArtwork": "Wszystkie prace",
+      "competitionEntries": "Zgłoszenia konkursowe",
+      "totalHearts": "Suma serduszek"
+    },
+    "statsShort": {
+      "followers": "Obserwujący",
+      "following": "Obserwowani",
+      "profileVisitors": "Odwiedziny",
+      "totalArtwork": "Prace",
+      "competitionEntries": "Konkursy",
+      "totalHearts": "Serduszka"
+    },
+    "featured": {
+      "badge": "Obecnie w konkursie",
+      "uploaded": "Dodano {{date}}",
+      "votes": "{{count}} głosów",
+      "rank": "Miejsce #{{rank}}",
+      "votingEnds": "Głosowanie do: {{date}}",
+      "inspect": "Zobacz szczegóły zgłoszenia",
+      "previous": "Poprzednie wyróżnione zgłoszenie",
+      "next": "Następne wyróżnione zgłoszenie"
+    },
+    "artwork": {
+      "title": "Moje prace",
+      "subtitle": "Przeglądaj pojedyncze zdjęcia, zestawy 6 zdjęć i albumy Zodiac Story z 12 zdjęciami."
+    },
+    "premium": {
+      "title": "Zdjęcia premium",
+      "subtitle": "Przeglądaj pojedyncze zdjęcia, zestawy 6 zdjęć i premium albumy Zodiac Story z 12 zdjęciami."
+    },
+    "filters": {
+      "allArtwork": "Wszystkie prace",
+      "allArtworkShort": "Wszystkie"
+    },
+    "sort": {
+      "label": "Sortuj prace",
+      "newest": "Najnowsze",
+      "oldest": "Najstarsze",
+      "mostLiked": "Najbardziej lubiane",
+      "mostViewed": "Najczęściej oglądane"
+    },
+    "messages": {
+      "title": "Moje wiadomości",
+      "subtitle": "Ogłoszenia fotografa, kulisy pracy i informacje o wystawach.",
+      "publishedCount": "{{count}} opublikowanych aktualizacji",
+      "noteBadge": "Notatka fotografa",
+      "likes": "{{count}} polubień"
+    },
+    "shareBanner": {
+      "badge": "Wsparcie społeczności",
+      "title": "Wesprzyj tego fotografa, udostępniając jego profil znajomym!",
+      "subtitle": "Udostępnij profil w mediach społecznościowych i pomóż mu zdobyć większą widoczność oraz głosy.",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "x": "X",
+      "copyLink": "Kopiuj link do profilu"
+    }
   },
   "leaderboard": {
     "title": "Najlepsi fotografowie",

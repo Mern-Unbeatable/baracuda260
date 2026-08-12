@@ -26,39 +26,49 @@ const FilterPillGroup = memo(
     onChange,
     ariaLabel,
     density = 'default',
+    layout = 'default',
     className = '',
     renderLabel,
-  }) => (
-    <div
-      className={[
-        density === 'default'
+  }) => {
+    const layoutClass =
+      layout === 'scroll'
+        ? 'flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible sm:gap-3'
+        : density === 'default'
           ? 'grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:gap-3 lg:justify-end'
-          : 'flex flex-wrap items-center gap-2 sm:gap-4',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      role="tablist"
-      aria-label={ariaLabel}
-    >
-      {items.map((item) => {
-        const active = value === item.value;
-        const label = renderLabel ? renderLabel(item, active) : item.label;
-        return (
-          <button
-            key={item.id ?? item.value}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange(item.value)}
-            className={density === 'compact' ? pillClassCompact(active) : pillClass(active)}
-          >
-            {label}
-          </button>
-        );
-      })}
-    </div>
-  ),
+          : 'flex flex-wrap items-center gap-2 sm:gap-4';
+
+    const pillLayoutClass = layout === 'scroll' ? 'shrink-0 whitespace-nowrap' : '';
+
+    return (
+      <div
+        className={[layoutClass, className].filter(Boolean).join(' ')}
+        role="tablist"
+        aria-label={ariaLabel}
+      >
+        {items.map((item) => {
+          const active = value === item.value;
+          const label = renderLabel ? renderLabel(item, active) : item.label;
+          return (
+            <button
+              key={item.id ?? item.value}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => onChange(item.value)}
+              className={[
+                density === 'compact' ? pillClassCompact(active) : pillClass(active),
+                pillLayoutClass,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+    );
+  },
 );
 
 FilterPillGroup.displayName = 'FilterPillGroup';

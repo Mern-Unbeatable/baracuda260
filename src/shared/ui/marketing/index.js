@@ -1,3 +1,4 @@
+export { default as MarketingSearchBar } from './MarketingSearchBar';
 export { default as MarketingPagination } from './MarketingPagination';
 export { marketingPaginationLabels, MARKETING_PAGINATION_WINDOW } from './marketingPaginationLabels';
 export { default as SectionHeader } from './SectionHeader';
