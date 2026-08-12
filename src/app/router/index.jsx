@@ -16,11 +16,16 @@ import NotFound from './ui/NotFound';
 const seg = (route) => route.replace(`${ROUTES.ADMIN}/`, '');
 
 const Home = lazy(() => import('@/portals/public/home/Home'));
+const PublicAlbumTypes = lazy(() => import('@/portals/public/album-types/AlbumTypes'));
 const About = lazy(() => import('@/portals/public/about/About'));
 const Contact = lazy(() => import('@/portals/public/contact/Contact'));
 const Services = lazy(() => import('@/portals/public/services/Services'));
 const Competitions = lazy(() => import('@/portals/public/competitions/Competitions'));
 const Gallery = lazy(() => import('@/portals/public/gallery/Gallery'));
+const BuyPhotos = lazy(() => import('@/portals/public/buy-photos/BuyPhotos'));
+const BuyPhotoDetail = lazy(() => import('@/portals/public/buy-photos/detail/BuyPhotoDetail'));
+const BuyPhotosCheckout = lazy(() => import('@/portals/public/buy-photos/checkout/BuyPhotosCheckout'));
+const BuyPhotosSuccess = lazy(() => import('@/portals/public/buy-photos/success/BuyPhotosSuccess'));
 const GalleryDetail = lazy(() => import('@/portals/public/gallery/detail/GalleryDetail'));
 const GallerySixDetail = lazy(() => import('@/portals/public/gallery/detail/GallerySixDetail'));
 const GallerySixBlueDetail = lazy(() => import('@/portals/public/gallery/detail/GallerySixBlueDetail'));
@@ -73,6 +78,11 @@ const router = createBrowserRouter(
         <Route path={ROUTES.CONTACT} element={<Contact />} />
         <Route path={ROUTES.COMPETITIONS} element={<Competitions />} />
         <Route path={ROUTES.GALLERY} element={<Gallery />} />
+        <Route path={ROUTES.ALBUM_TYPES} element={<PublicAlbumTypes />} />
+        <Route path={ROUTES.BUY_PHOTOS} element={<BuyPhotos />} />
+        <Route path={ROUTES.BUY_PHOTOS_CHECKOUT} element={<BuyPhotosCheckout />} />
+        <Route path={ROUTES.BUY_PHOTOS_SUCCESS} element={<BuyPhotosSuccess />} />
+        <Route path={ROUTES.BUY_PHOTOS_DETAIL} element={<BuyPhotoDetail />} />
         <Route path={ROUTES.GALLERY_SIX_DETAIL} element={<GallerySixDetail />} />
         <Route path={ROUTES.GALLERY_SIX_BLUE_DETAIL} element={<GallerySixBlueDetail />} />
         <Route path={ROUTES.GALLERY_TWELVE_DETAIL} element={<GalleryTwelveDetail />} />

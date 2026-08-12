@@ -5,6 +5,7 @@ export { default as SectionHeader } from './SectionHeader';
 export { default as MarketingCard } from './MarketingCard';
 export { default as PlanCard } from './PlanCard';
 export { default as PhotoShowcaseCard } from './PhotoShowcaseCard';
+export { default as PhotoShowcasePageContent } from './PhotoShowcasePageContent';
 export { default as MarketingButton } from './MarketingButton';
 export { default as FilterPillGroup } from './FilterPillGroup';
 export { default as FilterCheckboxGroup } from './FilterCheckboxGroup';

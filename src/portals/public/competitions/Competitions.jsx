@@ -1,29 +1,17 @@
 import React, { memo } from 'react';
 import { useSEO } from '@/shared/hooks/useSEO';
 import { ROUTES } from '@/shared/config';
-import { SitePageLayout } from '@/shared/site-chrome';
-import ActiveCompetitions from '@/portals/public/shared/sections/ActiveCompetitions';
-import HowItWorks from '@/portals/public/shared/sections/HowItWorks';
+import GalleryMain from '@/portals/public/gallery/sections/GalleryMain';
 
 const Competitions = memo(() => {
   useSEO({
     title: 'Competitions',
     description:
-      'Choose your album type and enter My12Photos competitions — Single Photo, 6-Photos Story, and Zodiac Story.',
-    keywords: ['competitions', 'photography', 'my12photos', 'prizes'],
+      'Browse the My12Photos community photo showcase — filter by album type and category.',
+    keywords: ['competitions', 'gallery', 'photo showcase', 'my12photos', 'photography'],
   });
 
-  return (
-    <SitePageLayout
-      activeHref={ROUTES.COMPETITIONS}
-      rootClassName="competitions-page-root"
-      announcementTone="navy"
-      newsletterVariant="page"
-    >
-      <ActiveCompetitions />
-      <HowItWorks />
-    </SitePageLayout>
-  );
+  return <GalleryMain activeHref={ROUTES.COMPETITIONS} />;
 });
 
 Competitions.displayName = 'Competitions';

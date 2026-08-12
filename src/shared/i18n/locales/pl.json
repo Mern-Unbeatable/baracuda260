@@ -3,6 +3,8 @@
     "home": "Strona główna",
     "competitions": "Konkursy",
     "gallery": "Galeria",
+    "buyPhotos": "Kup zdjęcia",
+    "albumTypes": "Typy albumów",
     "leaderboard": "Ranking",
     "winners": "Zwycięzcy",
     "about": "O nas",
@@ -324,6 +326,86 @@
     "paginationAria": "Paginacja galerii",
     "page": "Strona {{page}}"
   },
+  "buyPhotos": {
+    "eyebrow": "Rynek premium",
+    "title": "Przeglądaj i kup zdjęcia premium",
+    "filters": "Filtry",
+    "hideFilters": "Ukryj filtry",
+    "closeFilters": "Zamknij filtry",
+    "filtersTitle": "Filtry",
+    "albumType": "Typ albumu",
+    "category": "Kategoria",
+    "emptyTitle": "Brak pasujących zdjęć",
+    "emptyBody": "Wyczyść lub zmień filtry typu albumu / kategorii, by zobaczyć więcej wyników.",
+    "searchPlaceholder": "Szukaj",
+    "paginationAria": "Paginacja kup zdjęć",
+    "detail": {
+      "breadcrumb": {
+        "aria": "Ścieżka nawigacji",
+        "home": "Strona główna",
+        "buyPhotos": "Kup zdjęcia"
+      },
+      "purchase": {
+        "title": "Zakup",
+        "subtitle": "Cyfrowe pobranie w wysokiej rozdzielczości",
+        "buyPhoto": "Kup zdjęcie"
+      },
+      "creator": {
+        "title": "Twórca",
+        "role": "Profesjonalny fotograf krajobrazowy",
+        "viewProfile": "Zobacz profil"
+      },
+      "specs": {
+        "title": "Szczegóły",
+        "resolution": "Rozdzielczość",
+        "format": "Format",
+        "camera": "Aparat"
+      },
+      "likesReceived": "Polubienia",
+      "viewsCounted": "Wyświetlenia",
+      "like": "Lubię to",
+      "share": "Udostępnij"
+    },
+    "checkout": {
+      "title": "Kasa",
+      "defaultBuyerName": "Gość",
+      "defaultBuyerEmail": "gosc@example.com",
+      "summary": {
+        "title": "Podsumowanie zamówienia",
+        "by": "autor: {{name}}",
+        "subtotal": "Suma częściowa",
+        "total": "Razem"
+      },
+      "securityNotice": "Bezpieczna płatność przez PayPal. Twoje dane są szyfrowane.",
+      "buyer": {
+        "title": "Dane kupującego",
+        "fullName": "Imię i nazwisko",
+        "fullNamePlaceholder": "Jan Kowalski",
+        "email": "Adres e-mail",
+        "emailPlaceholder": "jan.kowalski@example.com",
+        "emailHint": "Wyślemy link do pobrania w wysokiej rozdzielczości na ten adres."
+      },
+      "payment": {
+        "title": "Metoda płatności",
+        "paypalDescription": "Płać bezpiecznie kontem PayPal lub kartą kredytową.",
+        "continuePaypal": "Kontynuuj z PayPal",
+        "termsNotice": "Klikając „Kontynuuj z PayPal”, akceptujesz nasz Regulamin."
+      }
+    },
+    "success": {
+      "title": "Zakup zakończony powodzeniem!",
+      "subtitle": "Dziękujemy za zakup. Twoje zdjęcie jest już dostępne na koncie.",
+      "by": "autor: {{name}}",
+      "downloadPhoto": "Pobierz zdjęcie",
+      "transaction": {
+        "title": "Szczegóły transakcji",
+        "id": "ID transakcji",
+        "date": "Data",
+        "paymentMethod": "Metoda płatności",
+        "license": "Licencja"
+      }
+    }
+  },
   "galleryDetail": {
     "breadcrumb": {
       "aria": "Ścieżka nawigacji",
@@ -440,6 +522,8 @@
     "title": "Pełne archiwum zwycięzców",
     "subtitle": "Przeglądaj osiągnięcia, motywy i statystyki zwycięskich prac.",
     "historicRecords": "REKORDY HISTORYCZNE: {{count}} POZYCJI",
+    "extraPhotos": "+{{count}} zdjęć",
+    "filterAria": "Filtruj zwycięzców według typu albumu",
     "emptyTitle": "Nie znaleziono zwycięzców",
     "emptyBody": "Spróbuj innego typu albumu lub miesiąca.",
     "paginationAria": "Paginacja zwycięzców"

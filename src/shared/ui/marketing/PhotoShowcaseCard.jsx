@@ -1,8 +1,10 @@
 import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Calendar, Eye, Heart } from 'lucide-react';
-import { AppLink } from '@/shared/site-chrome';
+import { Calendar, Eye, Heart, Images } from 'lucide-react';
+import { AppLink, ImgIcon } from '@/shared/site-chrome';
 import MarketingCard from './MarketingCard';
+
+const TROPHY_ICON = '/assets/home/icon-trophy-cup.svg';
 
 const parseCount = (value) => {
   const n = Number(String(value ?? '0').replace(/,/g, ''));
@@ -25,6 +27,8 @@ const PhotoShowcaseCard = memo(
     date,
     price,
     competitionLabel,
+    winnerRank,
+    extraPhotosLabel,
     className = '',
   }) => {
     const { t } = useTranslation();
@@ -60,6 +64,20 @@ const PhotoShowcaseCard = memo(
             {competitionLabel ? (
               <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-md bg-[#facc15] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-[#422006]">
                 {competitionLabel}
+              </span>
+            ) : null}
+            {winnerRank ? (
+              <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-lg bg-black/55 px-2 py-1">
+                <ImgIcon src={TROPHY_ICON} size={16} />
+                <span className="text-[11px] font-bold uppercase leading-none tracking-[0.35px] text-[#fdc700]">
+                  {winnerRank}
+                </span>
+              </span>
+            ) : null}
+            {extraPhotosLabel ? (
+              <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg bg-black/55 px-2 py-1 text-[11px] font-semibold leading-none text-white">
+                <Images size={14} strokeWidth={2} aria-hidden="true" />
+                {extraPhotosLabel}
               </span>
             ) : null}
             <button

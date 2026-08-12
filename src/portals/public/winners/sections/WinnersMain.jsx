@@ -1,39 +1,28 @@
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
-import { ImgIcon, Shell, SitePageLayout, useMonthMenu, AppLink } from '@/shared/site-chrome';
+import { ImgIcon, Shell, SitePageLayout, useMonthMenu } from '@/shared/site-chrome';
 import {
+  matchesWinnerAlbumFilter,
+  SHOWCASE_BADGE_KEYS,
   WINNER_BADGE_KEYS,
+  WINNER_FILTER_TABS,
   WINNERS_ARCHIVE as WINNERS,
   winnerDetailPath,
 } from '@/portals/public/winners/data/winnersArchive';
-import { MarketingPagination, SectionHeader } from '@/shared/ui/marketing';
+import {
+  FilterPillGroup,
+  MarketingPagination,
+  PhotoShowcaseCard,
+  SectionHeader,
+} from '@/shared/ui/marketing';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
-const A = '/assets/home';
 const PAGE_SIZE = 8;
 
 const ASSETS = {
-  logo: `${A}/logo.png`,
-  logoFooter: `${A}/logo-footer.png`,
-  chevron: `${A}/chevron-down.svg`,
-  mail: `${A}/icon-mail.svg`,
-  ig: `${A}/icon-ig.svg`,
-  fb: `${A}/icon-fb.svg`,
-  x: `${A}/icon-x.svg`,
-  newsletterBg: `${A}/newsletter-bg.png`,
-  calendar: `${A}/icon-calendar.svg`,
-  trophy: `${A}/icon-trophy-cup.svg`,
-  badge: `${A}/icon-badge.svg`,
-};
-
-const FILTER_TABS = ['All Entries', 'Single Photo', '6 Photos', '12 photos - full Zodiac Story'];
-
-const FILTER_TAB_LABEL_KEYS = {
-  'All Entries': 'common.allEntries',
-  'Single Photo': 'common.singlePhoto',
-  '6 Photos': 'common.sixPhotos',
-  '12 photos - full Zodiac Story': 'common.twelveZodiac',
+  chevron: '/assets/home/chevron-down.svg',
+  calendar: '/assets/home/icon-calendar.svg',
 };
 
 const MONTHS = [
@@ -51,57 +40,6 @@ const MONTHS = [
   'December',
 ];
 
-const WinnerCard = memo(({ item, t }) => (
-  <AppLink
-    href={winnerDetailPath(item.id)}
-    className="group flex flex-col overflow-hidden rounded-xl bg-[#f4f4f4] transition hover:shadow-md focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#4048cd]"
-  >
-    <article className="flex h-full flex-col">
-      <div className="relative h-55 overflow-hidden sm:h-63.5">
-        <img
-          src={item.image}
-          alt={item.title}
-          width={369}
-          height={254}
-          className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-black/20" />
-        <div className="absolute left-3.25 top-3.75 inline-flex items-center gap-2 rounded bg-black/50 px-1.75 py-1">
-          <ImgIcon src={item.badgeIcon === 'trophy' ? ASSETS.trophy : ASSETS.badge} size={18} />
-          <span className="text-[14px] leading-6 text-[#fdc700]">
-            {t(WINNER_BADGE_KEYS[item.badge] || item.badge, { defaultValue: item.badge })}
-          </span>
-        </div>
-        <div className="absolute bottom-4 right-4 rounded-lg bg-black/55 px-2 py-1">
-          <span className="text-[14px] leading-6 text-white sm:text-[16px]">{item.date}</span>
-        </div>
-      </div>
-      <div className="flex flex-col gap-6 px-4 py-6">
-        <div>
-          <p className="text-[14px] font-medium leading-6 text-[#42444a] sm:text-[16px]">
-            {t('common.themeSilentStreets')}
-          </p>
-          <h2 className="mt-1 text-[22px] font-semibold leading-tight text-[#0d0d14] sm:text-[24px]">
-            {item.title}
-          </h2>
-        </div>
-        <div>
-          <div className="h-px w-full bg-black/15" />
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <p className="text-[14px] leading-6 text-[#2c2e30] sm:text-[16px]">
-              {t('common.categorySingleShort')}
-            </p>
-            <p className="shrink-0 text-[16px] font-semibold text-[#25252b] sm:text-[18px]">
-              {item.votes}
-            </p>
-          </div>
-        </div>
-      </div>
-    </article>
-  </AppLink>
-));
-WinnerCard.displayName = 'WinnerCard';
-
 const WinnersContent = memo(() => {
   const { t } = useTranslation();
   const [filterTab, setFilterTab] = useState('All Entries');
@@ -113,14 +51,13 @@ const WinnersContent = memo(() => {
     ref: monthRef,
   } = useMonthMenu('July');
 
-  const filteredWinners = useMemo(() => {
-    return WINNERS.filter((item) => {
-      const albumOk = filterTab === 'All Entries' || item.album === filterTab;
-      const monthOk = item.month === month || month === 'July';
-      if (month === 'July') return albumOk;
-      return albumOk && monthOk;
-    });
-  }, [filterTab, month]);
+  const filteredWinners = useMemo(
+    () =>
+      WINNERS.filter(
+        (item) => item.month === month && matchesWinnerAlbumFilter(item, filterTab),
+      ),
+    [filterTab, month],
+  );
 
   const {
     currentPage,
@@ -129,6 +66,11 @@ const WinnersContent = memo(() => {
     pagedItems: pagedWinners,
   } = usePaginatedSlice(filteredWinners, PAGE_SIZE, [filterTab, month]);
 
+  const filterItems = WINNER_FILTER_TABS.map((tab) => ({
+    value: tab.value,
+    label: t(tab.labelKey),
+  }));
+
   return (
     <SitePageLayout
       activeHref={ROUTES.WINNERS}
@@ -136,7 +78,6 @@ const WinnersContent = memo(() => {
       announcementTone="blue"
       newsletterVariant="page"
     >
-      {/* Archive */}
       <section className="bg-white section-py">
         <Shell>
           <SectionHeader
@@ -164,7 +105,7 @@ const WinnersContent = memo(() => {
                   </span>
                 </button>
 
-                {monthOpen && (
+                {monthOpen ? (
                   <ul
                     role="listbox"
                     aria-label={t('common.selectMonth')}
@@ -193,36 +134,25 @@ const WinnersContent = memo(() => {
                       );
                     })}
                   </ul>
-                )}
+                ) : null}
               </div>
             }
           />
 
           <div className="mt-6 flex flex-col gap-4 lg:mt-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="inline-flex items-center gap-2.5 text-[16px] font-medium text-[#222]">
-              <ImgIcon src={ASSETS.calendar} size={13} />
-              <span>{t('winners.historicRecords', { count: filteredWinners.length })}</span>
-            </div>
+            <p className="text-[16px] font-medium uppercase tracking-[0.5px] text-[#222]">
+              {t('winners.historicRecords', { count: filteredWinners.length })}
+            </p>
 
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-              {FILTER_TABS.map((tab) => {
-                const active = filterTab === tab;
-                return (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => setFilterTab(tab)}
-                    className={`rounded-full px-4 py-2 text-[14px] font-semibold capitalize transition ${
-                      active
-                        ? 'bg-[#4048cd] text-white'
-                        : 'bg-[#f2f2f2] text-[#6b7280] hover:text-[#0d0d14]'
-                    } ${tab.startsWith('12') && !active ? 'text-[#0d0d14]' : ''}`}
-                  >
-                    {t(FILTER_TAB_LABEL_KEYS[tab])}
-                  </button>
-                );
-              })}
-            </div>
+            <FilterPillGroup
+              items={filterItems}
+              value={filterTab}
+              onChange={setFilterTab}
+              density="compact"
+              layout="scroll"
+              ariaLabel={t('winners.filterAria', { defaultValue: 'Filter winners by album type' })}
+              className="lg:justify-end"
+            />
           </div>
 
           {filteredWinners.length === 0 ? (
@@ -234,7 +164,29 @@ const WinnersContent = memo(() => {
             <>
               <div className="mt-11 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
                 {pagedWinners.map((item) => (
-                  <WinnerCard key={item.id} item={item} t={t} />
+                  <PhotoShowcaseCard
+                    key={item.id}
+                    href={winnerDetailPath(item.id)}
+                    image={item.image}
+                    imageAlt={item.title}
+                    title={item.title}
+                    titleAs="h2"
+                    badge={t(SHOWCASE_BADGE_KEYS[item.albumBadge] || item.albumBadge, {
+                      defaultValue: item.albumBadge,
+                    })}
+                    description={item.description}
+                    likes={item.votes}
+                    views={item.views}
+                    date={item.date}
+                    winnerRank={t(WINNER_BADGE_KEYS[item.rank] || item.rank, {
+                      defaultValue: item.rank,
+                    })}
+                    extraPhotosLabel={
+                      item.extraPhotoCount != null
+                        ? t('winners.extraPhotos', { count: item.extraPhotoCount })
+                        : undefined
+                    }
+                  />
                 ))}
               </div>
               <MarketingPagination
@@ -242,7 +194,7 @@ const WinnersContent = memo(() => {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setPage}
-                ariaLabel={t('winners.paginationAria', { defaultValue: 'Winners pagination' })}
+                ariaLabel={t('winners.paginationAria')}
               />
             </>
           )}

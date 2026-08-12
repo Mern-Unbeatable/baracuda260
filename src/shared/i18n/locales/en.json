@@ -3,6 +3,8 @@
     "home": "Home",
     "competitions": "Competitions",
     "gallery": "Gallery",
+    "buyPhotos": "Buy Photos",
+    "albumTypes": "Album Types",
     "leaderboard": "Leaderboard",
     "winners": "Winners",
     "about": "About",
@@ -324,6 +326,86 @@
     "paginationAria": "Gallery pagination",
     "page": "Page {{page}}"
   },
+  "buyPhotos": {
+    "eyebrow": "Premium Marketplace",
+    "title": "Explore & Buy Premium Photos",
+    "filters": "Filters",
+    "hideFilters": "Hide Filters",
+    "closeFilters": "Close filters",
+    "filtersTitle": "Filters",
+    "albumType": "Album Type",
+    "category": "Category",
+    "emptyTitle": "No photos match",
+    "emptyBody": "Clear or change Album Type / Category filters to see more results.",
+    "searchPlaceholder": "Search",
+    "paginationAria": "Buy photos pagination",
+    "detail": {
+      "breadcrumb": {
+        "aria": "Breadcrumb",
+        "home": "Home",
+        "buyPhotos": "Buy Photos"
+      },
+      "purchase": {
+        "title": "Purchase",
+        "subtitle": "High-Resolution Digital Download",
+        "buyPhoto": "Buy Photo"
+      },
+      "creator": {
+        "title": "Creator",
+        "role": "Professional Landscape Photographer",
+        "viewProfile": "View Profile"
+      },
+      "specs": {
+        "title": "Details",
+        "resolution": "Resolution",
+        "format": "Format",
+        "camera": "Camera"
+      },
+      "likesReceived": "Likes Received",
+      "viewsCounted": "Views Counted",
+      "like": "Like",
+      "share": "Share"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "defaultBuyerName": "Guest Buyer",
+      "defaultBuyerEmail": "guest@example.com",
+      "summary": {
+        "title": "Order Summary",
+        "by": "by {{name}}",
+        "subtotal": "Subtotal",
+        "total": "Total"
+      },
+      "securityNotice": "Secure payment processed through PayPal. Your information is encrypted.",
+      "buyer": {
+        "title": "Buyer Information",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Jane Doe",
+        "email": "Email Address",
+        "emailPlaceholder": "jane.doe@example.com",
+        "emailHint": "We'll send your high-resolution download link here."
+      },
+      "payment": {
+        "title": "Payment Method",
+        "paypalDescription": "Pay securely with your PayPal account or credit card.",
+        "continuePaypal": "Continue with PayPal",
+        "termsNotice": "By clicking \"Continue with PayPal\", you agree to our Terms of Service."
+      }
+    },
+    "success": {
+      "title": "Purchase Successful!",
+      "subtitle": "Thank you for your purchase. Your photo is now available in your account.",
+      "by": "by {{name}}",
+      "downloadPhoto": "Download Photo",
+      "transaction": {
+        "title": "Transaction Details",
+        "id": "Transaction ID",
+        "date": "Date",
+        "paymentMethod": "Payment Method",
+        "license": "License"
+      }
+    }
+  },
   "galleryDetail": {
     "breadcrumb": {
       "aria": "Breadcrumb",
@@ -440,6 +522,8 @@
     "title": "Complete Winners Archive",
     "subtitle": "Review past legendary lens achievements, themes, and winning statistics.",
     "historicRecords": "HISTORIC RECORDS: {{count}} ITEMS",
+    "extraPhotos": "+{{count}} photos",
+    "filterAria": "Filter winners by album type",
     "emptyTitle": "No winners found",
     "emptyBody": "Try another album type or month to see more historic records.",
     "paginationAria": "Winners pagination"

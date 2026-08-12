@@ -30,7 +30,7 @@ const AboutHero = memo(() => {
         />
       ))}
       <div className="absolute inset-0 bg-linear-to-r from-[#1b1e56] from-28% via-[#1b1e56]/70 to-transparent" />
-      <div className="relative mx-auto flex min-h-130 w-full max-w-480 items-center px-4 py-16 sm:px-6 md:min-h-170 md:px-10 xl:min-h-222.5 xl:px-48">
+      <div className="relative mx-auto flex min-h-130 w-full max-w-480 items-center px-4 py-16 sm:px-6 md:min-h-170 md:px-10 xl:min-h-200 xl:px-48">
         <div className="flex w-full max-w-171.75 flex-col gap-9">
           <div className="flex flex-col gap-3">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4.25 py-1.75">
