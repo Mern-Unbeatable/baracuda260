@@ -2,12 +2,14 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { FOCUS_RING } from './sectionStyles';
-import { marketingPaginationLabels, MARKETING_PAGINATION_WINDOW } from './marketingPaginationLabels';
+import {
+  marketingPaginationLabels,
+  MARKETING_PAGINATION_WINDOW,
+} from './marketingPaginationLabels';
 
 const ICON = 16;
 
-const navBtn =
-  `inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[#333333] transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS_RING}`;
+const navBtn = `inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[#333333] transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS_RING}`;
 
 function pageBtn(active) {
   return active
@@ -42,9 +44,15 @@ export default function MarketingPagination({
   return (
     <nav
       aria-label={ariaLabel}
-      className={`flex flex-wrap items-center justify-center gap-[5px] ${className}`.trim()}
+      className={`flex flex-wrap items-center justify-center gap-1.25 ${className}`.trim()}
     >
-      <button type="button" aria-label={i18n.firstPage} disabled={page <= 1} onClick={() => go(1)} className={navBtn}>
+      <button
+        type="button"
+        aria-label={i18n.firstPage}
+        disabled={page <= 1}
+        onClick={() => go(1)}
+        className={navBtn}
+      >
         <ChevronsLeft size={ICON} strokeWidth={2} aria-hidden="true" />
       </button>
       <button
@@ -70,7 +78,10 @@ export default function MarketingPagination({
       ))}
       {showEllipsis ? (
         <>
-          <span className="inline-flex size-8 items-center justify-center text-[14px] text-[#6b7280]" aria-hidden="true">
+          <span
+            className="inline-flex size-8 items-center justify-center text-[14px] text-[#6b7280]"
+            aria-hidden="true"
+          >
             …
           </span>
           <button

@@ -3,6 +3,8 @@
     "home": "Home",
     "competitions": "Competitions",
     "gallery": "Gallery",
+    "buyPhotos": "Buy Photos",
+    "albumTypes": "Album Types",
     "leaderboard": "Leaderboard",
     "winners": "Winners",
     "about": "About",
@@ -132,11 +134,12 @@
       "badge": "Competitions live — July 2026",
       "title": "12 Photos - Full Zodiac Story",
       "subtitle": "Join over 12,000 photographers. Free competitions, community voting, cash prizes every month.",
+      "searchPlaceholder": "Search",
       "ctaJoin": "Join a Competition",
       "ctaGallery": "Explore Gallery"
     },
     "stats": {
-      "photographers": "Registered Photographers",
+      "photographers": "Photographers",
       "photos": "Photos Submitted",
       "votes": "Votes Cast",
       "prizes": "Cash Prizes Awarded"
@@ -313,6 +316,7 @@
     "category": "Category",
     "emptyTitle": "No photos match",
     "emptyBody": "Clear or change Album Type / Category filters to see more results.",
+    "searchPlaceholder": "Search",
     "firstPage": "First page",
     "previousPage": "Previous page",
     "nextPage": "Next page",
@@ -321,6 +325,86 @@
     "unfavorite": "Unfavorite {{title}}",
     "paginationAria": "Gallery pagination",
     "page": "Page {{page}}"
+  },
+  "buyPhotos": {
+    "eyebrow": "Premium Marketplace",
+    "title": "Explore & Buy Premium Photos",
+    "filters": "Filters",
+    "hideFilters": "Hide Filters",
+    "closeFilters": "Close filters",
+    "filtersTitle": "Filters",
+    "albumType": "Album Type",
+    "category": "Category",
+    "emptyTitle": "No photos match",
+    "emptyBody": "Clear or change Album Type / Category filters to see more results.",
+    "searchPlaceholder": "Search",
+    "paginationAria": "Buy photos pagination",
+    "detail": {
+      "breadcrumb": {
+        "aria": "Breadcrumb",
+        "home": "Home",
+        "buyPhotos": "Buy Photos"
+      },
+      "purchase": {
+        "title": "Purchase",
+        "subtitle": "High-Resolution Digital Download",
+        "buyPhoto": "Buy Photo"
+      },
+      "creator": {
+        "title": "Creator",
+        "role": "Professional Landscape Photographer",
+        "viewProfile": "View Profile"
+      },
+      "specs": {
+        "title": "Details",
+        "resolution": "Resolution",
+        "format": "Format",
+        "camera": "Camera"
+      },
+      "likesReceived": "Likes Received",
+      "viewsCounted": "Views Counted",
+      "like": "Like",
+      "share": "Share"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "defaultBuyerName": "Guest Buyer",
+      "defaultBuyerEmail": "guest@example.com",
+      "summary": {
+        "title": "Order Summary",
+        "by": "by {{name}}",
+        "subtotal": "Subtotal",
+        "total": "Total"
+      },
+      "securityNotice": "Secure payment processed through PayPal. Your information is encrypted.",
+      "buyer": {
+        "title": "Buyer Information",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Jane Doe",
+        "email": "Email Address",
+        "emailPlaceholder": "jane.doe@example.com",
+        "emailHint": "We'll send your high-resolution download link here."
+      },
+      "payment": {
+        "title": "Payment Method",
+        "paypalDescription": "Pay securely with your PayPal account or credit card.",
+        "continuePaypal": "Continue with PayPal",
+        "termsNotice": "By clicking \"Continue with PayPal\", you agree to our Terms of Service."
+      }
+    },
+    "success": {
+      "title": "Purchase Successful!",
+      "subtitle": "Thank you for your purchase. Your photo is now available in your account.",
+      "by": "by {{name}}",
+      "downloadPhoto": "Download Photo",
+      "transaction": {
+        "title": "Transaction Details",
+        "id": "Transaction ID",
+        "date": "Date",
+        "paymentMethod": "Payment Method",
+        "license": "License"
+      }
+    }
   },
   "galleryDetail": {
     "breadcrumb": {
@@ -341,7 +425,93 @@
     "postComment": "Post a comment",
     "submit": "Submit",
     "previousPhoto": "Previous photo",
-    "nextPhoto": "Next photo"
+    "nextPhoto": "Next photo",
+    "playVideo": "Play video",
+    "pauseVideo": "Pause video",
+    "share": "Share",
+    "donation": {
+      "supportTitle": "Support {{name}}",
+      "defaultBio": "Digital Illustrator & Concept Artist. Your support helps {{name}} create new photos and tools for the community.",
+      "close": "Close donation form",
+      "selectAmount": "Select Amount",
+      "customAmount": "Custom Amount",
+      "yourDetails": "Your Details",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Jane Doe",
+      "email": "Email Address",
+      "emailPlaceholder": "jane@example.com",
+      "cancel": "Cancel",
+      "payNow": "Pay Now",
+      "reopen": "Support {{name}}"
+    }
+  },
+  "photographerProfile": {
+    "follow": "Follow",
+    "following": "Following",
+    "message": "Message",
+    "aboutTitle": "About & Biography",
+    "competitionTag": "Competition",
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Profile Visitor",
+      "totalArtwork": "Total Artwork",
+      "competitionEntries": "Competition Entries",
+      "totalHearts": "Total Hearts"
+    },
+    "statsShort": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Visitors",
+      "totalArtwork": "Artwork",
+      "competitionEntries": "Entries",
+      "totalHearts": "Hearts"
+    },
+    "featured": {
+      "badge": "Currently in Competition",
+      "uploaded": "Uploaded {{date}}",
+      "votes": "{{count}} Votes",
+      "rank": "Rank #{{rank}}",
+      "votingEnds": "Voting ends: {{date}}",
+      "inspect": "Inspect Entry Details",
+      "previous": "Previous featured entry",
+      "next": "Next featured entry"
+    },
+    "artwork": {
+      "title": "My Artwork",
+      "subtitle": "Explore single photography prints, 6-photo sets, and 12-photo Zodiac Story editorial albums."
+    },
+    "premium": {
+      "title": "Premium Photos",
+      "subtitle": "Explore single photography prints, 6-photo sets, and 12-photo Zodiac Story premium albums."
+    },
+    "filters": {
+      "allArtwork": "All Artwork",
+      "allArtworkShort": "All"
+    },
+    "sort": {
+      "label": "Sort artwork",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "mostLiked": "Most liked",
+      "mostViewed": "Most viewed"
+    },
+    "messages": {
+      "title": "My Messages",
+      "subtitle": "Photographer announcements, behind-the-scenes logs, and exhibition news.",
+      "publishedCount": "{{count}} Published Updates",
+      "noteBadge": "Photographer Note",
+      "likes": "{{count}} Likes"
+    },
+    "shareBanner": {
+      "badge": "Community Support",
+      "title": "Support this photographer by sharing their profile with your friends!",
+      "subtitle": "Share their profile on social media and help them get more visibility and votes.",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "x": "X",
+      "copyLink": "Copy Profile Link"
+    }
   },
   "leaderboard": {
     "title": "Top Photographers",
@@ -352,6 +522,8 @@
     "title": "Complete Winners Archive",
     "subtitle": "Review past legendary lens achievements, themes, and winning statistics.",
     "historicRecords": "HISTORIC RECORDS: {{count}} ITEMS",
+    "extraPhotos": "+{{count}} photos",
+    "filterAria": "Filter winners by album type",
     "emptyTitle": "No winners found",
     "emptyBody": "Try another album type or month to see more historic records.",
     "paginationAria": "Winners pagination"

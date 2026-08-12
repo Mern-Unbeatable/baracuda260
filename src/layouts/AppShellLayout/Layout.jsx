@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import { Menu } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { selectUser } from '@/app/store/slices/authSlice';
-import { DASHBOARD_ASSETS } from '@/modules/member/data/dashboardAssets';
-import AdminComingSoonContent from '@/modules/admin/views/AdminComingSoonContent';
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
+import AdminComingSoonContent from '@/portals/admin/views/AdminComingSoonContent';
 import Sidebar from '@/layouts/AppShellLayout/adminSidebar/Sidebar';
 
 const normalizePath = (pathname) => pathname.replace(/\/+$/, '') || '/';

@@ -60,7 +60,7 @@ const StayUpdated = memo(({ variant = 'page' }) => {
               </label>
               <button
                 type="submit"
-                className="cursor-pointer rounded-[27px] bg-[#ee1c25] px-10 py-3 text-[16px] text-white"
+                className="cursor-pointer rounded-[27px] bg-[#ee1c25] px-8 py-2 text-[15px] font-semibold leading-tight text-white"
               >
                 {t('newsletter.subscribe')}
               </button>

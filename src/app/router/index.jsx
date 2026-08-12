@@ -15,47 +15,52 @@ import NotFound from './ui/NotFound';
 
 const seg = (route) => route.replace(`${ROUTES.ADMIN}/`, '');
 
-const Home = lazy(() => import('@/modules/public/home/Home'));
-const About = lazy(() => import('@/modules/public/about/About'));
-const Contact = lazy(() => import('@/modules/public/contact/Contact'));
-const Services = lazy(() => import('@/modules/public/services/Services'));
-const Competitions = lazy(() => import('@/modules/public/competitions/Competitions'));
-const Gallery = lazy(() => import('@/modules/public/gallery/Gallery'));
-const GalleryDetail = lazy(() => import('@/modules/public/gallery/detail/GalleryDetail'));
-const GallerySixDetail = lazy(() => import('@/modules/public/gallery/detail/GallerySixDetail'));
-const GallerySixBlueDetail = lazy(() => import('@/modules/public/gallery/detail/GallerySixBlueDetail'));
-const GalleryTwelveDetail = lazy(() => import('@/modules/public/gallery/detail/GalleryTwelveDetail'));
-const PhotographerProfile = lazy(() => import('@/modules/public/photographer/PhotographerProfile'));
-const Leaderboard = lazy(() => import('@/modules/public/leaderboard/Leaderboard'));
-const Winners = lazy(() => import('@/modules/public/winners/Winners'));
-const WinnerDetail = lazy(() => import('@/modules/public/winners/WinnerDetail'));
-const Privacy = lazy(() => import('@/modules/public/legal/privacy/Privacy'));
-const Terms = lazy(() => import('@/modules/public/legal/terms/Terms'));
-const Cookies = lazy(() => import('@/modules/public/legal/cookies/Cookies'));
-const Login = lazy(() => import('@/modules/auth/pages/Login'));
-const SignUp = lazy(() => import('@/modules/auth/pages/SignUp'));
+const Home = lazy(() => import('@/portals/public/home/Home'));
+const PublicAlbumTypes = lazy(() => import('@/portals/public/album-types/AlbumTypes'));
+const About = lazy(() => import('@/portals/public/about/About'));
+const Contact = lazy(() => import('@/portals/public/contact/Contact'));
+const Services = lazy(() => import('@/portals/public/services/Services'));
+const Competitions = lazy(() => import('@/portals/public/competitions/Competitions'));
+const Gallery = lazy(() => import('@/portals/public/gallery/Gallery'));
+const BuyPhotos = lazy(() => import('@/portals/public/buy-photos/BuyPhotos'));
+const BuyPhotoDetail = lazy(() => import('@/portals/public/buy-photos/detail/BuyPhotoDetail'));
+const BuyPhotosCheckout = lazy(() => import('@/portals/public/buy-photos/checkout/BuyPhotosCheckout'));
+const BuyPhotosSuccess = lazy(() => import('@/portals/public/buy-photos/success/BuyPhotosSuccess'));
+const GalleryDetail = lazy(() => import('@/portals/public/gallery/detail/GalleryDetail'));
+const GallerySixDetail = lazy(() => import('@/portals/public/gallery/detail/GallerySixDetail'));
+const GallerySixBlueDetail = lazy(() => import('@/portals/public/gallery/detail/GallerySixBlueDetail'));
+const GalleryTwelveDetail = lazy(() => import('@/portals/public/gallery/detail/GalleryTwelveDetail'));
+const PhotographerProfile = lazy(() => import('@/portals/public/photographer/PhotographerProfile'));
+const Leaderboard = lazy(() => import('@/portals/public/leaderboard/Leaderboard'));
+const Winners = lazy(() => import('@/portals/public/winners/Winners'));
+const WinnerDetail = lazy(() => import('@/portals/public/winners/WinnerDetail'));
+const Privacy = lazy(() => import('@/portals/public/legal/privacy/Privacy'));
+const Terms = lazy(() => import('@/portals/public/legal/terms/Terms'));
+const Cookies = lazy(() => import('@/portals/public/legal/cookies/Cookies'));
+const Login = lazy(() => import('@/portals/auth/pages/Login'));
+const SignUp = lazy(() => import('@/portals/auth/pages/SignUp'));
 
-const Dashboard = lazy(() => import('@/modules/member/pages/Dashboard'));
-const UploadPhotos = lazy(() => import('@/modules/member/pages/UploadPhotos'));
-const SinglePhoto = lazy(() => import('@/modules/member/pages/SinglePhoto'));
-const SixPhoto = lazy(() => import('@/modules/member/pages/SixPhoto'));
-const Zodiac12 = lazy(() => import('@/modules/member/pages/Zodiac12'));
-const MyCompetitions = lazy(() => import('@/modules/member/pages/MyCompetitions'));
-const MyCompetitionDetails = lazy(() => import('@/modules/member/pages/MyCompetitionDetails'));
-const Submissions = lazy(() => import('@/modules/admin/pages/Submissions'));
-const Users = lazy(() => import('@/modules/admin/pages/Users'));
-const Categories = lazy(() => import('@/modules/admin/pages/Categories'));
-const AlbumTypes = lazy(() => import('@/modules/admin/pages/AlbumTypes'));
-const AdminWinners = lazy(() => import('@/modules/admin/pages/Winners'));
-const AdminPayouts = lazy(() => import('@/modules/admin/pages/Payouts'));
-const AdminSupport = lazy(() => import('@/modules/admin/pages/Support'));
-const BusinessPhotos = lazy(() => import('@/modules/admin/pages/BusinessPhotos'));
-const BusinessLinkDetails = lazy(() => import('@/modules/admin/pages/BusinessLinkDetails'));
-const AdminNewsletter = lazy(() => import('@/modules/admin/pages/Newsletter'));
-const AdminComment = lazy(() => import('@/modules/admin/pages/Comment'));
-const Chat = lazy(() => import('@/modules/member/pages/Chat'));
-const PrizePayments = lazy(() => import('@/modules/member/pages/PrizePayments'));
-const Profile = lazy(() => import('@/modules/member/pages/Profile'));
+const Dashboard = lazy(() => import('@/portals/member/pages/Dashboard'));
+const UploadPhotos = lazy(() => import('@/portals/member/pages/UploadPhotos'));
+const SinglePhoto = lazy(() => import('@/portals/member/pages/SinglePhoto'));
+const SixPhoto = lazy(() => import('@/portals/member/pages/SixPhoto'));
+const Zodiac12 = lazy(() => import('@/portals/member/pages/Zodiac12'));
+const MyCompetitions = lazy(() => import('@/portals/member/pages/MyCompetitions'));
+const MyCompetitionDetails = lazy(() => import('@/portals/member/pages/MyCompetitionDetails'));
+const Submissions = lazy(() => import('@/portals/admin/pages/Submissions'));
+const Users = lazy(() => import('@/portals/admin/pages/Users'));
+const Categories = lazy(() => import('@/portals/admin/pages/Categories'));
+const AlbumTypes = lazy(() => import('@/portals/admin/pages/AlbumTypes'));
+const AdminWinners = lazy(() => import('@/portals/admin/pages/Winners'));
+const AdminPayouts = lazy(() => import('@/portals/admin/pages/Payouts'));
+const AdminSupport = lazy(() => import('@/portals/admin/pages/Support'));
+const BusinessPhotos = lazy(() => import('@/portals/admin/pages/BusinessPhotos'));
+const BusinessLinkDetails = lazy(() => import('@/portals/admin/pages/BusinessLinkDetails'));
+const AdminNewsletter = lazy(() => import('@/portals/admin/pages/Newsletter'));
+const AdminComment = lazy(() => import('@/portals/admin/pages/Comment'));
+const Chat = lazy(() => import('@/portals/member/pages/Chat'));
+const PrizePayments = lazy(() => import('@/portals/member/pages/PrizePayments'));
+const Profile = lazy(() => import('@/portals/member/pages/Profile'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -73,6 +78,11 @@ const router = createBrowserRouter(
         <Route path={ROUTES.CONTACT} element={<Contact />} />
         <Route path={ROUTES.COMPETITIONS} element={<Competitions />} />
         <Route path={ROUTES.GALLERY} element={<Gallery />} />
+        <Route path={ROUTES.ALBUM_TYPES} element={<PublicAlbumTypes />} />
+        <Route path={ROUTES.BUY_PHOTOS} element={<BuyPhotos />} />
+        <Route path={ROUTES.BUY_PHOTOS_CHECKOUT} element={<BuyPhotosCheckout />} />
+        <Route path={ROUTES.BUY_PHOTOS_SUCCESS} element={<BuyPhotosSuccess />} />
+        <Route path={ROUTES.BUY_PHOTOS_DETAIL} element={<BuyPhotoDetail />} />
         <Route path={ROUTES.GALLERY_SIX_DETAIL} element={<GallerySixDetail />} />
         <Route path={ROUTES.GALLERY_SIX_BLUE_DETAIL} element={<GallerySixBlueDetail />} />
         <Route path={ROUTES.GALLERY_TWELVE_DETAIL} element={<GalleryTwelveDetail />} />

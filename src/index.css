@@ -36,6 +36,14 @@
   .section-py {
     @apply py-8 sm:py-12 lg:py-14;
   }
+
+  .section-py-top {
+    @apply pt-8 sm:pt-12 lg:pt-14;
+  }
+
+  .section-py-bottom {
+    @apply pb-8 sm:pb-12 lg:pb-14;
+  }
 }
 
 /* ── Chat bubble backgrounds ─────────────────────────────────────────────── */

@@ -1,9 +1,11 @@
 const A = '/assets/home';
 
+export const GALLERY_DEFAULT_DATE = 'August 9, 2026';
+
 const DEFAULT_DESCRIPTION =
   'Captured in a cinematic, photorealistic style with shallow depth of field, ultra-realistic, high detail, 8K quality. Soft light, natural composition, and strong visual storytelling define this entry.';
 
-export const GALLERY_PHOTOS = [
+const GALLERY_PHOTOS_RAW = [
   {
     id: 'golden-hour-silence',
     title: 'Golden Hour Silence',
@@ -23,13 +25,13 @@ export const GALLERY_PHOTOS = [
     author: 'Kasia L. · Poland',
     photographer: 'Kasia L.',
     votes: '1,488',
-    views: '9,240',
+    views: '1,400',
     badge: '6 Photos Story',
-    sixStoryVariant: 'aries', // signs 1–6 (red)
+    sixStoryVariant: 'aries',
     category: 'Nature',
     image: `${A}/photo-autumn.jpg`,
     description:
-      'A serene autumn forest sequence following a quiet yoga practice among orange and gold leaves. Warm seasonal light and layered foliage create a calm, story-driven atmosphere.',
+      "I'm excited to share my new Summer Collection from the Polish countryside — misty forests, golden light, and quiet seasonal detail.",
   },
   {
     id: 'wings-over-the-marsh',
@@ -52,7 +54,7 @@ export const GALLERY_PHOTOS = [
     votes: '1,488',
     views: '12,400',
     badge: '6 Photos Story',
-    sixStoryVariant: 'libra', // signs 7–12 (blue)
+    sixStoryVariant: 'libra',
     category: 'Street Photography',
     image: `${A}/photo-city.jpg`,
     description:
@@ -150,6 +152,11 @@ export const GALLERY_PHOTOS = [
       'A full zodiac story told through twelve connected frames. Symbolic motifs, rich color, and careful pacing guide the viewer through the journey.',
   },
 ];
+
+export const GALLERY_PHOTOS = GALLERY_PHOTOS_RAW.map((photo) => ({
+  ...photo,
+  date: photo.date ?? GALLERY_DEFAULT_DATE,
+}));
 
 export const getGalleryPhotoById = (id) =>
   GALLERY_PHOTOS.find((photo) => photo.id === id) || GALLERY_PHOTOS[0];

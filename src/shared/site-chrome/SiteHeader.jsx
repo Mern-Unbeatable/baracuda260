@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { ROUTES, SITE_NAV_LINKS } from '@/shared/config';
+import { ACTION_BTN_PRIMARY } from '@/shared/ui/actionStyles';
 import { selectIsAuthenticated } from '@/app/store/slices/authSlice';
 import { SITE_ASSETS } from './siteAssets';
 import AppLink from './AppLink';
@@ -18,11 +19,13 @@ const SiteHeader = memo(({ activeHref }) => {
     active: href === activeHref,
   }));
 
+  const headerBtnClass = `${ACTION_BTN_PRIMARY} whitespace-nowrap`;
+
   const authActions = isAuthenticated ? (
     <AppLink
       href={ROUTES.ADMIN_DASHBOARD}
       onClick={() => setMenuOpen(false)}
-      className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
+      className={headerBtnClass}
     >
       {t('header.dashboard')}
     </AppLink>
@@ -31,14 +34,14 @@ const SiteHeader = memo(({ activeHref }) => {
       <AppLink
         href={ROUTES.LOGIN}
         onClick={() => setMenuOpen(false)}
-        className="rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
+        className={`${headerBtnClass} bg-[#4048cd] hover:bg-[#363eb8]`}
       >
         {t('header.logIn')}
       </AppLink>
       <AppLink
         href={ROUTES.SIGNUP}
         onClick={() => setMenuOpen(false)}
-        className="rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
+        className={headerBtnClass}
       >
         {t('header.registerFree')}
       </AppLink>
@@ -49,7 +52,7 @@ const SiteHeader = memo(({ activeHref }) => {
     <header className="relative border-b border-black/4 bg-white">
       <div className="mx-auto flex w-full max-w-480 items-center justify-between gap-3 py-2.5 pl-4 pr-3 sm:gap-4 sm:px-6 md:px-10 lg:px-12 2xl:gap-6 2xl:px-16 min-[1920px]:px-48">
         <AppLink
-          href="/"
+          href={ROUTES.HOME}
           className="relative flex h-13 w-42.5 shrink-0 items-center sm:h-16.75 sm:w-55"
         >
           <img

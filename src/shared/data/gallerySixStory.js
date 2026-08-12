@@ -64,6 +64,7 @@ export const GALLERY_SIX_STORIES = [
     cover: `${A}/photo-autumn.jpg`,
     description:
       'A serene autumn forest sequence following a quiet yoga practice among orange and gold leaves. Warm seasonal light and layered foliage create a calm, story-driven atmosphere across six connected frames.',
+    videoPoster: `${A}/six-hero-aries.jpg`,
     slides: SIX_STORY_SLIDES,
   },
 ];

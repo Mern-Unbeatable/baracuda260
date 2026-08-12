@@ -10,6 +10,11 @@ export const ROUTES = {
   CONTACT: '/contact',
   COMPETITIONS: '/competitions',
   GALLERY: '/gallery',
+  ALBUM_TYPES: '/album-types',
+  BUY_PHOTOS: '/buy-photos',
+  BUY_PHOTOS_DETAIL: '/buy-photos/:id',
+  BUY_PHOTOS_CHECKOUT: '/buy-photos/checkout',
+  BUY_PHOTOS_SUCCESS: '/buy-photos/success',
   GALLERY_DETAIL: '/gallery/:id',
   GALLERY_SIX_DETAIL: '/gallery/story/:id',
   GALLERY_SIX_BLUE_DETAIL: '/gallery/story-blue/:id',
@@ -49,9 +54,10 @@ export const ROUTES = {
 
 /** Site header nav — add new pages here AND register them in router.jsx */
 export const SITE_NAV_LINKS = [
-  { labelKey: 'nav.home', href: ROUTES.HOME, end: true },
   { labelKey: 'nav.competitions', href: ROUTES.COMPETITIONS },
   { labelKey: 'nav.gallery', href: ROUTES.GALLERY },
+  { labelKey: 'nav.buyPhotos', href: ROUTES.BUY_PHOTOS },
+  { labelKey: 'nav.albumTypes', href: ROUTES.ALBUM_TYPES },
   { labelKey: 'nav.leaderboard', href: ROUTES.LEADERBOARD },
   { labelKey: 'nav.winners', href: ROUTES.WINNERS },
   { labelKey: 'nav.about', href: ROUTES.ABOUT },

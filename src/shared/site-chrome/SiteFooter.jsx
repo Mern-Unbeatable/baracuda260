@@ -10,9 +10,9 @@ import Shell from './Shell';
 const SOCIAL_ICONS = [SITE_ASSETS.ig, SITE_ASSETS.fb, SITE_ASSETS.x];
 
 const FOOTER_LINK_HREF = {
-  'footer.singlePhoto': `${ROUTES.COMPETITIONS}#single-photo`,
-  'footer.sixPhotoStory': `${ROUTES.COMPETITIONS}#six-photo-story`,
-  'footer.zodiacAlbum': `${ROUTES.COMPETITIONS}#zodiac-album`,
+  'footer.singlePhoto': `${ROUTES.ALBUM_TYPES}#single-photo`,
+  'footer.sixPhotoStory': `${ROUTES.ALBUM_TYPES}#six-photo-story`,
+  'footer.zodiacAlbum': `${ROUTES.ALBUM_TYPES}#zodiac-album`,
   'footer.winners': ROUTES.WINNERS,
   'footer.leaderboard': ROUTES.LEADERBOARD,
   'footer.gallery': ROUTES.GALLERY,

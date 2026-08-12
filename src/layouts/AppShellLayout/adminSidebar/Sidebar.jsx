@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { ROUTES } from '@/shared/config';
 import { logout, selectUser } from '@/app/store/slices/authSlice';
-import { DASHBOARD_ASSETS } from '@/modules/member/data/dashboardAssets';
-import { ADMIN_OVERVIEW_ASSETS } from '@/modules/admin/data/adminOverviewData';
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
+import { ADMIN_OVERVIEW_ASSETS } from '@/portals/admin/data/adminOverviewData';
 import {
   LayoutDashboard,
   Camera,
@@ -45,8 +45,16 @@ const ADMIN_NAV_GROUPS = [
     id: 'workspace',
     labelKey: 'adminOverview.nav.groups.workspace',
     items: [
-      { labelKey: 'adminOverview.nav.overview', path: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-      { labelKey: 'adminOverview.nav.competitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
+      {
+        labelKey: 'adminOverview.nav.overview',
+        path: ROUTES.ADMIN_DASHBOARD,
+        icon: LayoutDashboard,
+      },
+      {
+        labelKey: 'adminOverview.nav.competitions',
+        path: ROUTES.ADMIN_MY_COMPETITIONS,
+        icon: Trophy,
+      },
       { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
       { labelKey: 'adminOverview.nav.users', path: ROUTES.ADMIN_USERS, icon: Users },
     ],
@@ -55,22 +63,36 @@ const ADMIN_NAV_GROUPS = [
     id: 'manage',
     labelKey: 'adminOverview.nav.groups.manage',
     items: [
-      { labelKey: 'adminOverview.nav.categories', path: ROUTES.ADMIN_CATEGORIES, icon: ChartColumnStacked },
+      {
+        labelKey: 'adminOverview.nav.categories',
+        path: ROUTES.ADMIN_CATEGORIES,
+        icon: ChartColumnStacked,
+      },
       { labelKey: 'adminOverview.nav.albumTypes', path: ROUTES.ADMIN_ALBUM_TYPES, icon: BookImage },
       { labelKey: 'adminOverview.nav.winners', path: ROUTES.ADMIN_WINNERS, icon: Crown },
       { labelKey: 'adminOverview.nav.payouts', path: ROUTES.ADMIN_PAYOUTS, icon: CreditCard },
-      { labelKey: 'adminOverview.nav.support', path: ROUTES.ADMIN_SUPPORT, icon: MessageCircleQuestion },
-      { labelKey: 'adminOverview.nav.businessPhotos', path: ROUTES.ADMIN_BUSINESS_PHOTOS, icon: Link2 },
+      {
+        labelKey: 'adminOverview.nav.support',
+        path: ROUTES.ADMIN_SUPPORT,
+        icon: MessageCircleQuestion,
+      },
+      {
+        labelKey: 'adminOverview.nav.businessPhotos',
+        path: ROUTES.ADMIN_BUSINESS_PHOTOS,
+        icon: Link2,
+      },
       { labelKey: 'adminOverview.nav.newsletter', path: ROUTES.ADMIN_NEWSLETTER, icon: Newspaper },
-      { labelKey: 'adminOverview.nav.comment', path: ROUTES.ADMIN_COMMENT, icon: MessageSquareText },
+      {
+        labelKey: 'adminOverview.nav.comment',
+        path: ROUTES.ADMIN_COMMENT,
+        icon: MessageSquareText,
+      },
     ],
   },
   {
     id: 'system',
     labelKey: 'adminOverview.nav.groups.system',
-    items: [
-      { labelKey: 'adminOverview.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
-    ],
+    items: [{ labelKey: 'adminOverview.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound }],
   },
 ];
 
@@ -82,24 +104,16 @@ const NAV_ACTIVE =
 const NAV_INACTIVE =
   'text-[#5d687b] border-transparent hover:bg-[#fde8e9]/50 hover:text-[#161c27] hover:border-[#fde8e9]';
 
-const getNavClass = ({ isActive }) =>
-  `${NAV_BASE} ${isActive ? NAV_ACTIVE : NAV_INACTIVE}`;
+const getNavClass = ({ isActive }) => `${NAV_BASE} ${isActive ? NAV_ACTIVE : NAV_INACTIVE}`;
 
-const Sidebar = ({
-  onClose,
-  onDesktopClose,
-  onAutoCollapse,
-  isCollapsed,
-  onExpand,
-}) => {
+const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpand }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const isAdmin = user?.role === 'admin';
 
-  const displayName =
-    user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
+  const displayName = user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
   const avatarInitial = displayName.trim().charAt(0).toUpperCase() || 'U';
   const avatarSrc = isAdmin ? ADMIN_OVERVIEW_ASSETS.avatar : DASHBOARD_ASSETS.avatar;
 
@@ -181,7 +195,7 @@ const Sidebar = ({
             alt="My12Photos"
             width={200}
             height={56}
-            className="h-12 w-auto max-w-[200px] object-contain object-left"
+            className="h-12 w-auto max-w-50 object-contain object-left"
             onError={(event) => {
               event.currentTarget.style.display = 'none';
             }}
@@ -276,9 +290,7 @@ const Sidebar = ({
                           size={20}
                           aria-hidden="true"
                           className={`shrink-0 transition-colors ${
-                            isActive
-                              ? 'text-[#ee1c25]'
-                              : 'text-gray-400 group-hover:text-gray-500'
+                            isActive ? 'text-[#ee1c25]' : 'text-gray-400 group-hover:text-gray-500'
                           }`}
                         />
                         <span className="flex-1 truncate">{t(labelKey)}</span>
@@ -301,7 +313,7 @@ const Sidebar = ({
 
       <div className="shrink-0 space-y-1.5 border-t border-gray-100 px-3 py-3">
         <div className="flex items-center gap-3 rounded-lg bg-[#f6f6f6] px-3 py-2.5">
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-[#ee1c25] sm:size-[50px] sm:rounded-lg">
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-[#ee1c25] sm:size-12.5 sm:rounded-lg">
             <span className="absolute inset-0 flex items-center justify-center text-base font-bold text-white">
               {avatarInitial}
             </span>
