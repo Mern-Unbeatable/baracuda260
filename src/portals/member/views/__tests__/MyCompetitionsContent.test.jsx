@@ -28,7 +28,7 @@ describe('My Competitions page', () => {
     expect(screen.getByText(i18n.t('myCompetitions.subtitle'))).toBeInTheDocument();
     expect(screen.getByRole('link', { name: i18n.t('myCompetitions.newEntry') })).toHaveAttribute(
       'href',
-      '/admin/upload-photos',
+      '/admin/my-artwork/upload',
     );
     expect(screen.getByText('12')).toBeInTheDocument();
     expect(screen.getByText('842')).toBeInTheDocument();

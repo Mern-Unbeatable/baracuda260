@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ChevronDown, Sparkles as SparklesLucide } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
+import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
+import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_CATEGORY,
@@ -124,16 +126,26 @@ ZodiacSlotCard.displayName = 'ZodiacSlotCard';
  * 6 Photo Story upload workspace — Figma node 190:237 (file kE9g2eZmAoSco81PgZNlj2).
  * Theme accent → wave → 6 slots grid → metadata form + copyright + submit.
  */
-const SixPhotoContent = memo(() => {
+const SixPhotoContent = memo(({
+  backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+  uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+  purpose = 'artwork',
+  defaultPrice = '$5.00',
+}) => {
   const { t } = useTranslation();
   const fileInputRef = useRef(null);
   const activeSlotRef = useRef(null);
+  const isSell = purpose === 'sell';
 
   const [themeId, setThemeId] = useState(DEFAULT_THEME_ID);
   const [category, setCategory] = useState(DEFAULT_CATEGORY);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [story, setStory] = useState('');
+  const [price, setPrice] = useState(defaultPrice);
+  const [resolution, setResolution] = useState(BUY_PHOTO_DEFAULT_SPECS.resolution);
+  const [format, setFormat] = useState(BUY_PHOTO_DEFAULT_SPECS.format);
+  const [camera, setCamera] = useState(BUY_PHOTO_DEFAULT_SPECS.camera);
   const [copyrightOk, setCopyrightOk] = useState(false);
   const [previews, setPreviews] = useState({});
   const [errors, setErrors] = useState({});
@@ -189,7 +201,11 @@ const SixPhotoContent = memo(() => {
   const validate = () => {
     const nextErrors = {};
     if (!title.trim()) nextErrors.title = t('sixPhoto.errors.titleRequired');
-    if (!story.trim()) nextErrors.story = t('sixPhoto.errors.storyRequired');
+    if (isSell) {
+      if (!price.trim()) nextErrors.price = t('sellPhotos.errors.priceRequired');
+    } else if (!story.trim()) {
+      nextErrors.story = t('sixPhoto.errors.storyRequired');
+    }
     const missingPhotos = slots.some((slot) => !previews[slot.id]);
     if (missingPhotos) nextErrors.photos = t('sixPhoto.errors.photosRequired');
     if (!copyrightOk) nextErrors.copyright = t('sixPhoto.errors.copyrightRequired');
@@ -211,7 +227,7 @@ const SixPhotoContent = memo(() => {
   return (
     <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
       <Link
-        to={ROUTES.ADMIN_UPLOAD_PHOTOS}
+        to={backHref}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#202020] transition hover:text-[#ee1c25]"
       >
         <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
@@ -397,28 +413,43 @@ const SixPhotoContent = memo(() => {
             ) : null}
           </div>
 
-          <div className="flex flex-col gap-2.5">
-            <label
-              htmlFor="six-photo-story"
-              className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
-            >
-              {t('sixPhoto.storyLabel')}
-            </label>
-            <textarea
-              id="six-photo-story"
-              value={story}
-              onChange={(event) => setStory(event.target.value)}
-              placeholder={t('sixPhoto.storyPlaceholder')}
-              rows={5}
-              aria-invalid={Boolean(errors.story)}
-              className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+          {isSell ? (
+            <MemberSellPhotoFields
+              idPrefix="six-photo"
+              price={price}
+              resolution={resolution}
+              format={format}
+              camera={camera}
+              onPriceChange={setPrice}
+              onResolutionChange={setResolution}
+              onFormatChange={setFormat}
+              onCameraChange={setCamera}
+              errors={errors}
             />
-            {errors.story ? (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.story}
-              </p>
-            ) : null}
-          </div>
+          ) : (
+            <div className="flex flex-col gap-2.5">
+              <label
+                htmlFor="six-photo-story"
+                className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
+              >
+                {t('sixPhoto.storyLabel')}
+              </label>
+              <textarea
+                id="six-photo-story"
+                value={story}
+                onChange={(event) => setStory(event.target.value)}
+                placeholder={t('sixPhoto.storyPlaceholder')}
+                rows={5}
+                aria-invalid={Boolean(errors.story)}
+                className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              />
+              {errors.story ? (
+                <p className="text-sm text-red-600" role="alert">
+                  {errors.story}
+                </p>
+              ) : null}
+            </div>
+          )}
         </div>
 
         <label className="flex cursor-pointer items-start gap-3">
@@ -469,7 +500,11 @@ const SixPhotoContent = memo(() => {
         onChange={handleFileChange}
       />
 
-      <PhotoSubmitSuccessModal open={successOpen} onClose={() => setSuccessOpen(false)} />
+      <PhotoSubmitSuccessModal
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        uploadAnotherHref={uploadAnotherHref}
+      />
     </div>
   );
 });

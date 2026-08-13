@@ -41,10 +41,24 @@ const Login = lazy(() => import('@/portals/auth/pages/Login'));
 const SignUp = lazy(() => import('@/portals/auth/pages/SignUp'));
 
 const Dashboard = lazy(() => import('@/portals/member/pages/Dashboard'));
-const UploadPhotos = lazy(() => import('@/portals/member/pages/UploadPhotos'));
-const SinglePhoto = lazy(() => import('@/portals/member/pages/SinglePhoto'));
-const SixPhoto = lazy(() => import('@/portals/member/pages/SixPhoto'));
-const Zodiac12 = lazy(() => import('@/portals/member/pages/Zodiac12'));
+const MyArtwork = lazy(() => import('@/portals/member/pages/MyArtwork'));
+const MyArtworkContent = lazy(() => import('@/portals/member/views/MyArtworkContent'));
+const MyArtworkUploadHub = lazy(() => import('@/portals/member/pages/my-artwork/MyArtworkUploadHub'));
+const MyArtworkUploadSingle = lazy(() => import('@/portals/member/pages/my-artwork/MyArtworkUploadSingle'));
+const MyArtworkUploadSix = lazy(() => import('@/portals/member/pages/my-artwork/MyArtworkUploadSix'));
+const MyArtworkUploadZodiac = lazy(() => import('@/portals/member/pages/my-artwork/MyArtworkUploadZodiac'));
+const MyArtworkDetail = lazy(() => import('@/portals/member/pages/my-artwork/MyArtworkDetail'));
+const NewsMessages = lazy(() => import('@/portals/member/pages/NewsMessages'));
+const MyMessagesContent = lazy(() => import('@/portals/member/views/MyMessagesContent'));
+const MyMessageUpload = lazy(() => import('@/portals/member/pages/news-messages/MyMessageUpload'));
+const SellPhotos = lazy(() => import('@/portals/member/pages/SellPhotos'));
+const SellPhotosContent = lazy(() => import('@/portals/member/views/SellPhotosContent'));
+const SellPhotosUploadHub = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosUploadHub'));
+const SellPhotosUploadSingle = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosUploadSingle'));
+const SellPhotosUploadSix = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosUploadSix'));
+const SellPhotosUploadZodiac = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosUploadZodiac'));
+const SellPhotosDetail = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosDetail'));
+const FavouritePhotographers = lazy(() => import('@/portals/member/pages/FavouritePhotographers'));
 const MyCompetitions = lazy(() => import('@/portals/member/pages/MyCompetitions'));
 const MyCompetitionDetails = lazy(() => import('@/portals/member/pages/MyCompetitionDetails'));
 const Submissions = lazy(() => import('@/portals/admin/pages/Submissions'));
@@ -59,8 +73,15 @@ const BusinessLinkDetails = lazy(() => import('@/portals/admin/pages/BusinessLin
 const AdminNewsletter = lazy(() => import('@/portals/admin/pages/Newsletter'));
 const AdminComment = lazy(() => import('@/portals/admin/pages/Comment'));
 const Chat = lazy(() => import('@/portals/member/pages/Chat'));
+const Notifications = lazy(() => import('@/portals/member/pages/Notifications'));
 const PrizePayments = lazy(() => import('@/portals/member/pages/PrizePayments'));
+const ContactUs = lazy(() => import('@/portals/member/pages/ContactUs'));
 const Profile = lazy(() => import('@/portals/member/pages/Profile'));
+const ProfileFollowing = lazy(() => import('@/portals/member/pages/profile/ProfileFollowing'));
+const ProfileFollowers = lazy(() => import('@/portals/member/pages/profile/ProfileFollowers'));
+const ProfileSettings = lazy(() => import('@/portals/member/pages/profile/ProfileSettings'));
+const ProfileMainContent = lazy(() => import('@/portals/member/views/ProfileMainContent'));
+const Settings = lazy(() => import('@/portals/member/pages/Settings'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -126,10 +147,43 @@ const router = createBrowserRouter(
       >
         <Route index element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
         <Route path={seg(ROUTES.ADMIN_DASHBOARD)} element={<Dashboard />} />
-        <Route path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)} element={<UploadPhotos />} />
-        <Route path={seg(ROUTES.ADMIN_UPLOAD_SINGLE)} element={<SinglePhoto />} />
-        <Route path={seg(ROUTES.ADMIN_UPLOAD_SIX)} element={<SixPhoto />} />
-        <Route path={seg(ROUTES.ADMIN_UPLOAD_ZODIAC12)} element={<Zodiac12 />} />
+        <Route path={seg(ROUTES.ADMIN_MY_ARTWORK)} element={<MyArtwork />}>
+          <Route index element={<MyArtworkContent />} />
+          <Route path="upload" element={<MyArtworkUploadHub />} />
+          <Route path="upload/single" element={<MyArtworkUploadSingle />} />
+          <Route path="upload/six" element={<MyArtworkUploadSix />} />
+          <Route path="upload/zodiac" element={<MyArtworkUploadZodiac />} />
+          <Route path=":id" element={<MyArtworkDetail />} />
+        </Route>
+        <Route path={seg(ROUTES.ADMIN_NEWS_MESSAGES)} element={<NewsMessages />}>
+          <Route index element={<MyMessagesContent />} />
+          <Route path="upload" element={<MyMessageUpload />} />
+        </Route>
+        <Route path={seg(ROUTES.ADMIN_SELL_PHOTOS)} element={<SellPhotos />}>
+          <Route index element={<SellPhotosContent />} />
+          <Route path="upload" element={<SellPhotosUploadHub />} />
+          <Route path="upload/single" element={<SellPhotosUploadSingle />} />
+          <Route path="upload/six" element={<SellPhotosUploadSix />} />
+          <Route path="upload/zodiac" element={<SellPhotosUploadZodiac />} />
+          <Route path=":id" element={<SellPhotosDetail />} />
+        </Route>
+        <Route path={seg(ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS)} element={<FavouritePhotographers />} />
+        <Route
+          path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)}
+          element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD} replace />}
+        />
+        <Route
+          path={seg(ROUTES.ADMIN_UPLOAD_SINGLE)}
+          element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD_SINGLE} replace />}
+        />
+        <Route
+          path={seg(ROUTES.ADMIN_UPLOAD_SIX)}
+          element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD_SIX} replace />}
+        />
+        <Route
+          path={seg(ROUTES.ADMIN_UPLOAD_ZODIAC12)}
+          element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD_ZODIAC12} replace />}
+        />
         <Route path={seg(ROUTES.ADMIN_MY_COMPETITIONS)} element={<MyCompetitions />} />
         <Route path={seg(ROUTES.ADMIN_MY_COMPETITION_DETAIL)} element={<MyCompetitionDetails />} />
         <Route path={seg(ROUTES.ADMIN_SUBMISSIONS)} element={<Submissions />} />
@@ -142,8 +196,16 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_BUSINESS_PHOTOS)} element={<BusinessPhotos />} />
         <Route path={seg(ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL)} element={<BusinessLinkDetails />} />
         <Route path={seg(ROUTES.ADMIN_CHAT)} element={<Chat />} />
+        <Route path={seg(ROUTES.ADMIN_NOTIFICATIONS)} element={<Notifications />} />
         <Route path={seg(ROUTES.ADMIN_PRIZE_PAYMENTS)} element={<PrizePayments />} />
-        <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<Profile />} />
+        <Route path={seg(ROUTES.ADMIN_CONTACT_US)} element={<ContactUs />} />
+        <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<Profile />}>
+          <Route index element={<ProfileMainContent />} />
+          <Route path="following" element={<ProfileFollowing />} />
+          <Route path="followers" element={<ProfileFollowers />} />
+          <Route path="settings" element={<ProfileSettings />} />
+        </Route>
+        <Route path={seg(ROUTES.ADMIN_SETTINGS)} element={<Settings />} />
         <Route path={seg(ROUTES.ADMIN_NEWSLETTER)} element={<AdminNewsletter />} />
         <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComment />} />
       </Route>

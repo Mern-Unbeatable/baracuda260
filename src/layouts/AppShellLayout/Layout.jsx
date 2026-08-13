@@ -34,6 +34,7 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_NEWSLETTER) ||
     currentPath === normalizePath(ROUTES.ADMIN_COMMENT) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROFILE) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROFILE)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS)}/`);
 
@@ -61,7 +62,7 @@ const Layout = memo(() => {
   }, [sidebarOpen]);
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-[#f9fafb]">
+    <div className="fixed inset-0 flex overflow-hidden bg-[#f9fafb]">
       <div
         className={`fixed inset-0 z-20 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
           sidebarOpen
@@ -115,8 +116,11 @@ const Layout = memo(() => {
           />
         </header>
 
-        <div className="scrollbar-white min-h-0 flex-1 overflow-y-auto" data-lenis-prevent>
-          <div className="flex min-h-full w-full flex-col px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
+        <div className="flex min-h-0 flex-1 flex-col bg-[#f9fafb]">
+          <div
+            className="scrollbar-white min-h-0 w-full flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8"
+            data-lenis-prevent
+          >
             {isAdmin && !isAdminReadyPage ? <AdminComingSoonContent /> : <Outlet />}
           </div>
         </div>

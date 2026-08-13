@@ -622,90 +622,248 @@
       }
     }
   },
+  "memberChat": {
+    "title": "Wiadomości",
+    "compose": "Nowa wiadomość",
+    "searchPlaceholder": "Szukaj...",
+    "listAria": "Lista rozmów",
+    "addNewChat": "Dodaj nowy czat +",
+    "backToList": "Wróć do wiadomości",
+    "selectConversation": "Wybierz rozmowę, aby rozpocząć czat.",
+    "online": "Online",
+    "moreActions": "Więcej akcji",
+    "attach": "Dołącz plik",
+    "emoji": "Wstaw emoji",
+    "voice": "Nagraj wiadomość głosową",
+    "send": "Wyślij wiadomość",
+    "inputPlaceholder": "Wyślij wiadomość...",
+    "downloadFile": "Pobierz plik",
+    "playVideo": "Odtwórz wideo",
+    "playVoice": "Odtwórz wiadomość głosową",
+    "previews": {
+      "default": "Wpisz opis wiadomości tutaj...",
+      "azunyan": "Czy możesz przejrzeć najnowszy projekt?"
+    },
+    "dates": {
+      "august19": "19 sierpnia",
+      "today": "Dziś"
+    },
+    "messages": {
+      "receivedIntro": "Hej! Przesłałam najnowszy projekt i krótkie wideo z omówieniem ramy zodiaku.",
+      "sentReply": "Wygląda świetnie — przejrzę dokument dziś wieczorem i jutro wyślę uwagi."
+    }
+  },
+  "memberNotifications": {
+    "title": "Powiadomienia",
+    "empty": "Nie masz jeszcze żadnych powiadomień.",
+    "listAria": "Lista powiadomień",
+    "items": {
+      "reviewPublic": "Elena Vance zostawiła opinię o Twoim albumie Autumn Sequence. Obie opinie z tej wymiany są już publiczne.",
+      "cohostAccepted": "Michael Brown zaakceptował Twoje zaproszenie do współprowadzenia galerii konkursu August Photography Competition.",
+      "emailConfirm": "Potwierdź swój adres e-mail, klikając link, który właśnie wysłaliśmy. Jeśli go nie widzisz, sprawdź folder spam.",
+      "competitionVote": "Twoje zgłoszenie Golden Hour Silence otrzymało 42 nowe głosy w konkursie August Photography Competition.",
+      "saleComplete": "Anna Kowalska kupiła Twoje pojedyncze zdjęcie Morning Fields za 2,00 USD.",
+      "followBack": "Sofia Reyes zaczęła Cię obserwować i zostawiła notatkę przy Twoim najnowszym zgłoszeniu zodiaku."
+    }
+  },
   "prizePayments": {
     "title": "Nagrody i płatności",
-    "subtitle": "Bezpiecznie zarządzaj zarobkami, oczekującymi nagrodami i metodami wypłat.",
+    "subtitle": "Śledź nagrody konkursowe, darowizny, sprzedaż zdjęć i historię wypłat.",
     "requestPayout": "Poproś o wypłatę",
     "payoutRequested": "Wniosek o wypłatę został wysłany pomyślnie!",
     "pagination": {
       "previous": "Poprzednia",
       "next": "Następna"
     },
+    "tabs": {
+      "aria": "Widoki nagród i płatności",
+      "prizeMoney": "Nagrody pieniężne",
+      "donations": "Darowizny",
+      "photoSales": "Sprzedaż zdjęć"
+    },
     "status": {
-      "success": "Sukces",
-      "completed": "Zakończono",
-      "pending": "Oczekujące"
+      "approved": "Zatwierdzono",
+      "available": "Dostępne",
+      "paid": "Wypłacono"
     },
     "summary": {
-      "aria": "Podsumowanie nagród i płatności",
-      "wallet": "Saldo portfela",
-      "walletValue": "$1,240.00",
-      "earned": "Łączne zarobki",
-      "earnedValue": "$8,450.00",
-      "pending": "Oczekujące wypłaty",
-      "pendingValue": "$450.00"
+      "aria": "Podsumowanie nagród i płatności"
+    },
+    "prizeMoney": {
+      "summary": {
+        "total": "Łączne nagrody",
+        "totalValue": "$2,500.00",
+        "totalHint": "Łączne zarobki z konkursów",
+        "available": "Dostępne",
+        "availableValue": "$300.00",
+        "availableHint": "Dostępne do wypłaty",
+        "paidOut": "Wypłacono",
+        "paidOutValue": "$1,500.00",
+        "paidOutHint": "Już wypłacone"
+      }
+    },
+    "donations": {
+      "summary": {
+        "total": "Łączne darowizny",
+        "totalValue": "$1,240.00",
+        "totalHint": "Darowizny brutto",
+        "platformFee": "Prowizja platformy",
+        "platformFeeValue": "$124.00",
+        "platformFeeHint": "10% prowizji platformy",
+        "yourEarnings": "Twoje zarobki",
+        "yourEarningsValue": "$1,116.00",
+        "yourEarningsHint": "90% darowizn"
+      },
+      "commissionBanner": "Prowizja platformy: 10% od każdej darowizny. Otrzymujesz 90% każdej otrzymanej darowizny.",
+      "title": "Transakcje darowizn",
+      "subtitle": "Wszystkie darowizny otrzymane od Twoich wspierających.",
+      "showing": "Wyświetlanie 1–7 z 7 wyników",
+      "columns": {
+        "date": "Data",
+        "donor": "Imię darczyńcy",
+        "email": "E-mail",
+        "donation": "Darowizna",
+        "platformFee": "Prowizja platformy",
+        "yourEarnings": "Twoje zarobki",
+        "status": "Status"
+      },
+      "items": {
+        "aug10": "10 sie 2026",
+        "aug8": "8 sie 2026",
+        "aug5": "5 sie 2026",
+        "jul28": "28 lip 2026",
+        "jul20": "20 lip 2026",
+        "jul12": "12 lip 2026",
+        "jul1": "1 lip 2026",
+        "johnSmith": "John Smith",
+        "mariaLopez": "Maria Lopez",
+        "alexKim": "Alex Kim",
+        "sarahNguyen": "Sarah Nguyen",
+        "tomBaker": "Tom Baker",
+        "emmaClark": "Emma Clark",
+        "davidWu": "David Wu"
+      }
+    },
+    "photoSales": {
+      "summary": {
+        "totalSales": "Łączna sprzedaż",
+        "totalSalesValue": "$1,850.00",
+        "totalSalesHint": "Sprzedaż brutto zdjęć",
+        "photosSold": "Sprzedane zdjęcia",
+        "photosSoldValue": "24",
+        "photosSoldHint": "Łączna liczba zakupów",
+        "availableEarnings": "Dostępne zarobki",
+        "availableEarningsValue": "$850.00",
+        "availableEarningsHint": "Gotowe do wypłaty"
+      },
+      "title": "Sprzedaż zdjęć",
+      "searchPlaceholder": "Szukaj kupującego, e-maila lub nazwy zdjęcia...",
+      "export": "Eksport",
+      "details": "Szczegóły",
+      "showing": "Wyświetlanie 1–7 z 7 wyników",
+      "filters": {
+        "allStatuses": "Wszystkie statusy"
+      },
+      "columns": {
+        "date": "Data",
+        "buyer": "Kupujący",
+        "email": "E-mail",
+        "photo": "Zdjęcie",
+        "salePrice": "Cena sprzedaży",
+        "yourEarnings": "Twoje zarobki",
+        "status": "Status",
+        "action": "Akcja"
+      },
+      "items": {
+        "aug12": "12 sie 2026",
+        "aug10": "10 sie 2026",
+        "aug8": "8 sie 2026",
+        "aug5": "5 sie 2026",
+        "aug2": "2 sie 2026",
+        "jul28": "28 lip 2026",
+        "jul20": "20 lip 2026",
+        "buyerAnna": "Anna Kowalska",
+        "buyerMark": "Mark Thompson",
+        "buyerLisa": "Lisa Patel",
+        "buyerJames": "James Hughes",
+        "buyerNina": "Nina Rodriguez",
+        "buyerChris": "Chris Miller",
+        "buyerOlivia": "Olivia Sanders",
+        "photoMorningFields": "Morning Fields",
+        "photoNeonStream": "Chasing the Neon Stream",
+        "photoGoldenHour": "Golden Hour Silence",
+        "photoAutumnSequence": "Autumn Sequence",
+        "photoCoastalLight": "Coastal Light"
+      }
     },
     "prizing": {
       "title": "Moje nagrody",
       "showing": "Wyświetlanie 1–7 z 7 wyników",
       "columns": {
+        "month": "Miesiąc",
         "name": "Nazwa konkursu",
+        "category": "Kategoria",
+        "albumType": "Typ albumu",
         "position": "Pozycja",
         "votes": "Łączna liczba głosów",
         "prize": "Nagroda pieniężna"
       },
+      "months": {
+        "august2026": "Sierpień 2026",
+        "july2026": "Lipiec 2026",
+        "june2026": "Czerwiec 2026",
+        "october2026": "Październik 2026",
+        "january2026": "Styczeń 2026",
+        "march2026": "Marzec 2026",
+        "may2026": "Maj 2026"
+      },
+      "categories": {
+        "nature": "Natura",
+        "portrait": "Portret",
+        "landscape": "Krajobraz",
+        "animal": "Zwierzęta",
+        "lifestyle": "Styl życia",
+        "street": "Ulica"
+      },
+      "albumTypes": {
+        "singlePhoto": "Pojedyncze zdjęcie",
+        "sixPhotos": "6 zdjęć",
+        "zodiacAlbum": "Album zodiaku — 12 zdjęć"
+      },
       "positions": {
-        "first": "1. miejsce",
-        "second": "2. miejsce",
-        "third": "3. miejsce"
+        "first": "1.",
+        "second": "2.",
+        "third": "3."
       },
       "items": {
-        "celestial": "Celestial Wonders 2024",
-        "celestialLine1": "Celestial Wonders",
-        "celestialLine2": "2024"
+        "celestial": "Celestial Wonders 2024"
       }
     },
-    "transactions": {
-      "title": "Historia transakcji",
-      "subtitle": "Ostatnie 6 miesięcy wygranych nagród i wypłat",
+    "paymentHistory": {
+      "title": "Historia płatności",
       "showing": "Wyświetlanie 1–7 z 7 wyników",
       "columns": {
-        "competition": "Konkurs / ID",
         "date": "Data",
+        "type": "Typ",
+        "accountType": "Typ konta",
+        "accountNumber": "Numer konta",
         "amount": "Kwota",
         "status": "Status"
       },
+      "types": {
+        "withdrawal": "Wypłata"
+      },
+      "accountTypes": {
+        "stripe": "Stripe"
+      },
       "items": {
-        "golden": {
-          "title": "Golden Hour Portraits",
-          "id": "TXN-90281-PH",
-          "date": "12 paź 2023",
-          "amount": "+$1,500.00"
-        },
-        "macro": {
-          "title": "Macro World Weekly",
-          "id": "TXN-88412-PH",
-          "date": "28 wrz 2023",
-          "amount": "+$250.00"
-        },
-        "paypal": {
-          "title": "Wypłata na PayPal",
-          "id": "TXN-WTH-5512",
-          "date": "15 wrz 2023",
-          "amount": "-$2,000.00"
-        },
-        "wild": {
-          "title": "Wild Nature Annual",
-          "id": "TXN-77310-PH",
-          "date": "05 sie 2023",
-          "amount": "+$5,000.00"
-        },
-        "urban": {
-          "title": "Urban Dusk Challenge",
-          "id": "Przetwarzanie...",
-          "date": "Oczekujące",
-          "amount": "+$450.00"
-        }
+        "jul12": "12 lip 2025",
+        "jul11": "11 lip 2025",
+        "jul10": "10 lip 2025",
+        "jul9": "9 lip 2025",
+        "jul7": "7 lip 2025",
+        "jul5": "5 lip 2025",
+        "jul3": "3 lip 2025"
       }
     }
   },
@@ -1132,12 +1290,19 @@
     },
     "nav": {
       "dashboard": "Panel",
+      "artworkManagement": "Zarządzanie pracami",
+      "newsMessages": "Aktualności i wiadomości",
+      "sellPhotos": "Sprzedaj zdjęcia",
+      "favouritePhotographers": "Ulubieni fotografowie",
       "uploadPhotos": "Prześlij zdjęcia",
       "myCompetitions": "Moje konkursy",
       "businessPhotos": "Zdjęcia biznesowe",
-      "chat": "Kontakt",
+      "chat": "Czat",
+      "notifications": "Powiadomienia",
       "prizePayments": "Nagrody i płatności",
+      "contactUs": "Kontakt",
       "profile": "Profil",
+      "settings": "Ustawienia",
       "logOut": "Wyloguj się"
     },
     "stats": {
@@ -1426,6 +1591,321 @@
       "capricorn": { "name": "Koziorożec", "range": "22 gru – 19 sty" },
       "aquarius": { "name": "Wodnik", "range": "20 sty – 18 lut" },
       "pisces": { "name": "Ryby", "range": "19 lut – 20 mar" }
+    }
+  },
+  "myArtwork": {
+    "title": "Moje prace",
+    "subtitle": "Zarządzaj zdjęciami i albumami, kontroluj zgłoszenia konkursowe i prezentuj prace na profilu.",
+    "uploadCta": "Prześlij pracę",
+    "empty": "Brak prac pasujących do filtrów.",
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} pozycji",
+    "paginationAria": "Paginacja prac",
+    "gridAria": "Siatka prac",
+    "statusFilterAria": "Filtruj według statusu",
+    "sortFilterAria": "Sortuj prace",
+    "sortByPrefix": "Sortuj:",
+    "stats": {
+      "aria": "Statystyki prac",
+      "total": "Wszystkie prace",
+      "single": "Pojedyncze zdjęcia",
+      "six": "Albumy 6 zdjęć",
+      "twelve": "Albumy 12 zdjęć",
+      "entries": "Zgłoszenia konkursowe"
+    },
+    "filters": {
+      "aria": "Filtruj prace według typu",
+      "all": "Wszystkie prace",
+      "promoted": "Promowane"
+    },
+    "statusOptions": {
+      "all": "Wszystkie statusy",
+      "profileOnly": "Tylko profil",
+      "inCompetition": "W konkursie",
+      "ended": "Konkurs zakończony"
+    },
+    "sortOptions": {
+      "newest": "Najnowsze",
+      "oldest": "Najstarsze"
+    },
+    "actions": {
+      "menuAria": "Akcje pracy",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "promote": "Promuj"
+    },
+    "promote": {
+      "title": "Sponsorowane zdjęcie",
+      "priceLabel": "Cena",
+      "days": "{{count}} dni",
+      "confirm": "Promuj pracę",
+      "cancel": "Anuluj",
+      "close": "Zamknij panel promocji"
+    },
+    "detail": {
+      "back": "Wróć do wyboru",
+      "totalReact": "Łączne reakcje",
+      "badges": {
+        "twelveZodiac": "Historia 12 zdjęć zodiaku"
+      },
+      "description": "Młody mężczyzna idący pewnie spokojną miejską ulicą o złotej godzinie, w casualowej białej koszulce, czarnych jeansach i czystych białych sneakersach. Jego dłonie swobodnie opadają wzdłuż ciała, z naturalną postawą chodu i spokojnym wyrazem twarzy. Miękkie światło słoneczne tworzy ciepłe refleksy i długie cienie na chodniku. Nowoczesne budynki, zielone drzewa i lekko rozmyte miejskie tło dodają głębi scenie. Ujęcie w kinowym, fotorealistycznym stylu z płytką głębią ostrości, ultra-realistyczne, wysoka szczegółowość, jakość 8K."
+    },
+    "card": {
+      "options": "Opcje pracy",
+      "promoted": "Promowane",
+      "extraPhotos": "+{{count}} zdjęć",
+      "uploaded": "Przesłano {{date}}",
+      "views": "{{count}} wyświetleń",
+      "hearts": "{{count}} serce",
+      "expiry": "Wygasa {{date}}",
+      "live": "Na żywo",
+      "votes": "Głosy",
+      "rank": "Pozycja",
+      "votingEnds": "Głosowanie kończy się: {{date}}",
+      "activeEntry": "Aktywne zgłoszenie",
+      "profileOnly": "Tylko profil",
+      "notInContest": "Nie bierze udziału w konkursie miesięcznym.",
+      "addToCompetition": "Dodaj do konkursu",
+      "competitionEnded": "Konkurs zakończony",
+      "endedVotes": "{{count}} głosów",
+      "submitAgain": "Zgłoś ponownie"
+    }
+  },
+  "myMessages": {
+    "title": "Moje wiadomości",
+    "subtitle": "Zarządzaj wiadomościami i prezentuj swoją pracę na profilu.",
+    "uploadCta": "Prześlij wiadomość",
+    "gridAria": "Lista wiadomości",
+    "paginationAria": "Paginacja wiadomości",
+    "card": {
+      "badge": "Notatka fotografa",
+      "likes": "{{count}} polubień",
+      "share": "Udostępnij"
+    },
+    "items": {
+      "summerCollection": {
+        "body": "Z radością dzielę się moją nową letnią kolekcją z polskiej wsi, ukazującą wczesne poranne mgły nad dolinami Tatr. Warunki światła o 4:30 były naprawdę magiczne!"
+      }
+    },
+    "upload": {
+      "back": "Wróć do wyboru",
+      "messageLabel": "Wiadomość",
+      "messagePlaceholder": "Podziel się kreatywną narracją stojącą za tą serią...",
+      "mediaTitle": "Prześlij zdjęcia / filmy",
+      "mediaHint": "Pomóż profesjonalistom przygotować się, pokazując miejsce pracy. Opcjonalne, ale bardzo zalecane.",
+      "dropLabel": "Kliknij, aby przesłać zdjęcia, lub przeciągnij i upuść",
+      "dropHint": "JPG, PNG, MP4 — maks. 20 MB każdy",
+      "copyrightConfirm": "Potwierdzam, że posiadam pełne prawa autorskie do wszystkich przesłanych zdjęć i że nie zawierają one ani nie promują niczego nielegalnego.",
+      "submit": "Wyślij wiadomość",
+      "success": "Wiadomość została wysłana pomyślnie.",
+      "errors": {
+        "messageRequired": "Wprowadź treść wiadomości.",
+        "mediaRequired": "Prześlij co najmniej jedno zdjęcie lub wideo.",
+        "copyrightRequired": "Potwierdź oświadczenie o prawach autorskich."
+      }
+    }
+  },
+  "sellPhotos": {
+    "title": "Zarządzaj sprzedawanymi zdjęciami",
+    "subtitle": "Zarządzaj swoimi zdjęciami i prezentuj swoje prace na profilu.",
+    "uploadCta": "Prześlij zdjęcia",
+    "empty": "Brak zdjęć na sprzedaż pasujących do filtrów.",
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} pozycji",
+    "paginationAria": "Paginacja zdjęć na sprzedaż",
+    "gridAria": "Siatka zdjęć na sprzedaż",
+    "filters": {
+      "aria": "Filtruj zdjęcia na sprzedaż według typu",
+      "all": "Wszystkie prace",
+      "promoted": "Promowane"
+    },
+    "uploadMenu": {
+      "aria": "Wybierz format pracy",
+      "heading": "Wybierz format pracy",
+      "single": {
+        "title": "Prześlij pojedyncze zdjęcie",
+        "description": "Prześlij jedno zdjęcie w wysokiej rozdzielczości"
+      },
+      "six": {
+        "title": "Prześlij 6 zdjęć",
+        "description": "Utwórz spójną historię albumu z 6 zdjęć"
+      },
+      "zodiac": {
+        "title": "Prześlij 12 zdjęć",
+        "description": "Pełna historia Zodiaku z 12 znakami"
+      }
+    },
+    "fields": {
+      "price": "Cena",
+      "pricePlaceholder": "$2.00",
+      "resolution": "Rozdzielczość",
+      "resolutionPlaceholder": "6000 × 4000 px",
+      "format": "Format",
+      "formatPlaceholder": "JPEG, PDF, PNG",
+      "camera": "Aparat",
+      "cameraPlaceholder": "SONY"
+    },
+    "errors": {
+      "priceRequired": "Wprowadź cenę."
+    },
+    "card": {
+      "promoted": "Promowane",
+      "extraPhotos": "+{{count}} zdjęć",
+      "expiry": "Wygasa: {{date}}"
+    },
+    "detail": {
+      "back": "Wróć do wyboru",
+      "listingTitle": "Oferta",
+      "totalSell": "Łączna sprzedaż",
+      "badges": {
+        "twelveZodiac": "12 zdjęć — historia Zodiaku"
+      }
+    }
+  },
+  "favouritePhotographers": {
+    "title": "Ulubieni fotografowie",
+    "subtitle": "Fotografowie, którzy Cię obserwują i których prace masz na oku.",
+    "empty": "Brak ulubionych fotografów.",
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} fotografów",
+    "paginationAria": "Paginacja ulubionych fotografów",
+    "gridAria": "Siatka ulubionych fotografów",
+    "specialties": {
+      "nature": "Fotograf przyrody",
+      "landscape": "Fotograf krajobrazu",
+      "portrait": "Fotograf portretowy",
+      "wildlife": "Fotograf dzikiej przyrody",
+      "street": "Fotograf uliczny",
+      "travel": "Fotograf podróżniczy",
+      "architecture": "Fotograf architektury",
+      "fineArt": "Fotograf sztuki"
+    },
+    "locations": {
+      "unitedKingdom": "Wielka Brytania",
+      "poland": "Polska",
+      "spain": "Hiszpania",
+      "germany": "Niemcy",
+      "italy": "Włochy",
+      "singapore": "Singapur",
+      "japan": "Japonia"
+    },
+    "quotes": {
+      "michaelBrown": "Gonię za światłem w lasach i nad wybrzeżem, budując ciche historie klatka po klatce.",
+      "elenaVance": "Sezonowe światło i filmowa kompozycja prowadzą każdy album, który publikuję na My12Photos.",
+      "annaKowalska": "Portret powinien być szczery — szukam chwili tuż przed pojawieniem się uśmiechu.",
+      "piotrMazur": "Fotografia dzikiej przyrody to cierpliwość ujawniona w kadrze. Każda fotografia to długa rozmowa z naturą.",
+      "martaWisniewska": "Geometria miasta i rytm ludzi — to napięcie sprawia, że fotografuję po zmroku.",
+      "sofiaReyes": "Podróże nauczyły mnie, że najlepsze historie dzieją się między miejscami, a nie w nich.",
+      "janMuller": "Linie, symetria i cień — architektura ujawnia charakter, gdy światło jest niskie.",
+      "kasiaLewandowska": "Makro i łąkowe światło — dokumentuję małe światy, które większość ludzi mija obok.",
+      "lucasFernandez": "Przełęcze górskie o świcie wciąż przypominają mi pierwsze zdjęcie, jakie kiedykolwiek zrobiłem.",
+      "emmaClark": "Miękkie światło, szczere twarze i cisza między słowami — to moja praca portretowa.",
+      "tomaszNowak": "Każdy sezon na mokradłach przynosi nowe zachowania. Wracam na te same tereny co roku.",
+      "isabellaRossi": "Sztuka to nie dekoracja — to pamięć skondensowana w kolorze i formie.",
+      "davidChen": "Uliczne kadry to zderzenia przypadku. Czekam, aż miasto ułoży się samo.",
+      "ninaPetrov": "Mgła, brzozy i rzeczna para — północne krajobrazy to mój rodzimy język.",
+      "oliverHughes": "Nadmorskie burze i złote przerwy — Brytyjskie Wyspy nie przestają dawać kontrastu.",
+      "yukiTanaka": "Od ogrodów świątynnych po neonowe alejki — Japonia uczy powściągliwości i niespodzianki."
+    },
+    "card": {
+      "followedYou": "Obserwuje Cię od: {{date}}",
+      "followers": "Obserwujący",
+      "artworks": "Prace",
+      "following": "Obserwujesz",
+      "follow": "Obserwuj",
+      "viewProfile": "Zobacz profil"
+    }
+  },
+  "memberProfile": {
+    "editProfile": "Edytuj profil",
+    "stats": {
+      "followers": "Obserwujący",
+      "following": "Obserwowani",
+      "profileVisitors": "Odwiedziny profilu",
+      "totalArtwork": "Wszystkie prace",
+      "competitionEntries": "Zgłoszenia konkursowe",
+      "totalHearts": "Suma serduszek",
+      "premiumPhotos": "Zdjęcia premium"
+    },
+    "statsShort": {
+      "followers": "Obserw.",
+      "following": "Obserw.",
+      "profileVisitors": "Odwiedz.",
+      "totalArtwork": "Prace",
+      "competitionEntries": "Konkursy",
+      "totalHearts": "Serduszka",
+      "premiumPhotos": "Premium"
+    }
+  },
+  "profileConnections": {
+    "backToSelection": "Wróć do profilu",
+    "empty": "Brak fotografów do wyświetlenia.",
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} fotografów",
+    "paginationAria": "Paginacja połączeń profilu",
+    "gridAria": "Siatka połączeń profilu",
+    "selection": {
+      "title": "Profil",
+      "subtitle": "Zarządzaj połączeniami społecznościowymi i ustawieniami konta.",
+      "open": "Otwórz"
+    },
+    "following": {
+      "title": "Obserwowani",
+      "subtitle": "Fotografowie, których obserwujesz w My12Photos."
+    },
+    "followers": {
+      "title": "Obserwujący",
+      "subtitle": "Fotografowie, którzy Cię obserwują i angażują się w Twoje prace."
+    },
+    "settings": {
+      "title": "Ustawienia konta",
+      "subtitle": "Zaktualizuj dane profilu i hasło."
+    }
+  },
+  "memberSettings": {
+    "title": "Edytor szczegółów profilu",
+    "subtitle": "Zarządzaj tożsamością artystyczną i ustawieniami bezpieczeństwa konta.",
+    "save": "Zapisz",
+    "profile": {
+      "title": "Twój profil fotografa",
+      "subtitle": "Kontroluj, jak inni fotografowie i jurorzy widzą Twój publiczny profil.",
+      "fullName": "Imię i nazwisko",
+      "username": "Nazwa użytkownika",
+      "phone": "Numer telefonu",
+      "email": "Adres e-mail",
+      "saved": "Szczegóły profilu zostały zapisane!"
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "subtitle": "Dodaj linki do portfolio i mediów społecznościowych.",
+      "website": "Adres strony WWW",
+      "facebook": "Adres Facebook",
+      "instagram": "Adres Instagram",
+      "twitter": "Adres Twitter",
+      "linkedin": "Adres LinkedIn",
+      "saved": "Linki portfolio zostały zapisane!"
+    },
+    "coverPhoto": {
+      "title": "Zdjęcie w tle"
+    },
+    "profilePhoto": {
+      "title": "Zdjęcie profilowe"
+    },
+    "upload": {
+      "title": "Prześlij zdjęcia",
+      "coverHint": "Pomóż innym lepiej poznać Twoją przestrzenię twórczą. Opcjonalne, ale zalecane.",
+      "profileHint": "Dodaj wyraźne zdjęcie portretowe, aby inni fotografowie mogli Cię rozpoznać.",
+      "dropLabel": "Kliknij, aby przesłać zdjęcia, lub przeciągnij i upuść",
+      "dropHint": "JPG, PNG — maks. 20 MB każde"
+    },
+    "security": {
+      "title": "Bezpieczeństwo konta",
+      "subtitle": "Zarządzaj dostępem i chroń swoje portfolio.",
+      "formTitle": "Ustaw nowe hasło",
+      "saved": "Hasło zostało zmienione!"
+    },
+    "errors": {
+      "fullNameRequired": "Imię i nazwisko jest wymagane.",
+      "usernameRequired": "Nazwa użytkownika jest wymagana.",
+      "phoneRequired": "Numer telefonu jest wymagany.",
+      "emailRequired": "Adres e-mail jest wymagany.",
+      "emailInvalid": "Wprowadź prawidłowy adres e-mail."
     }
   },
   "myCompetitions": {

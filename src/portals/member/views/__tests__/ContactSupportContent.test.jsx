@@ -112,9 +112,9 @@ describe('Contact Support page', () => {
       screen.getByLabelText(i18n.t('contactSupport.email')),
       'atik@example.com',
     );
-    await user.type(
+    await user.selectOptions(
       screen.getByLabelText(i18n.t('contactSupport.subject')),
-      'Export issue',
+      'technical',
     );
     await user.type(
       screen.getByLabelText(i18n.t('contactSupport.message')),

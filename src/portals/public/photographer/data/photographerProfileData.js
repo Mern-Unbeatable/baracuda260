@@ -47,13 +47,13 @@ export const PHOTOGRAPHER_FEATURED = {
 
 const ARTWORK_META = {
   'golden-hour-silence': { inCompetition: false, premium: false },
-  'autumn-sequence': { inCompetition: true, premium: false },
+  'autumn-sequence': { inCompetition: true, premium: false, extraPhotoCount: 5 },
   'wings-over-the-marsh': { inCompetition: false, premium: false },
-  'city-after-midnight': { inCompetition: true, premium: false },
-  'tidal-memory': { inCompetition: false, premium: true, price: '$5.00' },
+  'city-after-midnight': { inCompetition: true, premium: false, extraPhotoCount: 5 },
+  'tidal-memory': { inCompetition: false, premium: true, price: '$5.00', extraPhotoCount: 11 },
   'forest-cathedral': { inCompetition: false, premium: true, price: '$2.00' },
   'morning-fields': { inCompetition: false, premium: true, price: '$2.00' },
-  'zodiac-journey': { inCompetition: false, premium: true, price: '$5.00' },
+  'zodiac-journey': { inCompetition: false, premium: true, price: '$5.00', extraPhotoCount: 11 },
 };
 
 const galleryById = Object.fromEntries(GALLERY_PHOTOS.map((photo) => [photo.id, photo]));
@@ -74,7 +74,7 @@ export const PHOTOGRAPHER_MESSAGES = [
     date: 'Aug 07, 2026',
     time: '09:45 AM',
     badge: 'PHOTOGRAPHER NOTE',
-    text: 'Golden-hour light over open fields has always felt like a pause button — a brief moment where the world slows down just enough to breathe. This frame is from an early summer morning in the Tatra foothills.',
+    text: "I'm excited to share my new Summer Collection from the Polish countryside featuring early sunrise mists over the Tatra valleys. The light conditions at 4:30 AM were truly magical!",
     image: PHOTOGRAPHER_ASSETS.messageHero,
     likes: 124,
   },

@@ -13,6 +13,15 @@ export const CONTACT_SUPPORT_ASSETS = {
 
 export const FILTERS = ['all', 'pending', 'replied'];
 
+export const SUBJECT_OPTIONS = [
+  { value: '', labelKey: 'contactSupport.subjectPlaceholder' },
+  { value: 'technical', labelKey: 'contactSupport.subjects.technical' },
+  { value: 'billing', labelKey: 'contactSupport.subjects.billing' },
+  { value: 'competition', labelKey: 'contactSupport.subjects.competition' },
+  { value: 'account', labelKey: 'contactSupport.subjects.account' },
+  { value: 'other', labelKey: 'contactSupport.subjects.other' },
+];
+
 export const CONVERSATIONS = [
   {
     id: 'conv-1',

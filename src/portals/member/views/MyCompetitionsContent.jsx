@@ -284,7 +284,7 @@ const MyCompetitionsContent = memo(() => {
           </p>
         </div>
         <Link
-          to={ROUTES.ADMIN_UPLOAD_PHOTOS}
+          to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD}
           className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-5 py-2.5 text-[16px] leading-6 text-white shadow-sm transition hover:bg-[#d41921]"
         >
           <img

@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useSEO } from '@/shared/hooks/useSEO';
+import { ROUTES } from '@/shared/config';
 import { selectUser } from '@/app/store/slices/authSlice';
 import AdminCompetitionsContent from '@/portals/admin/views/AdminCompetitionsContent';
-import MyCompetitionsContent from '@/portals/member/views/MyCompetitionsContent';
+// import MyCompetitionsContent from '@/portals/member/views/MyCompetitionsContent';
 
 const MyCompetitions = memo(() => {
   const user = useSelector(selectUser);
@@ -25,7 +27,11 @@ const MyCompetitions = memo(() => {
         },
   );
 
-  return isAdmin ? <AdminCompetitionsContent /> : <MyCompetitionsContent />;
+  if (!isAdmin) {
+    return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />;
+  }
+
+  return <AdminCompetitionsContent />;
 });
 
 MyCompetitions.displayName = 'MyCompetitions';

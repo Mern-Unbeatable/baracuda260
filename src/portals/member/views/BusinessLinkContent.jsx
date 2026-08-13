@@ -208,32 +208,25 @@ const BusinessLinkContent = memo(() => {
     setSuccessOpen(true);
   };
 
-  const gridSlots = [
-    ...RED_SLOTS.slice(0, 3),
-    ...BLUE_SLOTS.slice(0, 3),
-    ...RED_SLOTS.slice(3, 6),
-    ...BLUE_SLOTS.slice(3, 6),
-  ];
-
-  const slotOrderClass = {
-    1: 'order-1 xl:order-none',
-    2: 'order-2 xl:order-none',
-    3: 'order-3 xl:order-none',
-    4: 'order-4 xl:order-none',
-    5: 'order-5 xl:order-none',
-    6: 'order-6 xl:order-none',
-    7: 'order-7 xl:order-none',
-    8: 'order-8 xl:order-none',
-    9: 'order-9 xl:order-none',
-    10: 'order-10 xl:order-none',
-    11: 'order-11 xl:order-none',
-    12: 'order-12 xl:order-none',
-  };
+  const renderSlotGrid = (slots) => (
+    <div className="grid w-full grid-cols-1 items-stretch gap-[14px] sm:grid-cols-2 lg:grid-cols-3">
+      {slots.map((slot) => (
+        <BusinessSlotCard
+          key={slot.id}
+          slot={slot}
+          preview={previews[slot.id]}
+          onAddPhoto={() => handlePickPhoto(slot.id)}
+          addLabel={t('businessLink.addPhoto')}
+          changeLabel={t('businessLink.changePhoto')}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
       <Link
-        to={ROUTES.ADMIN_UPLOAD_PHOTOS}
+        to={ROUTES.ADMIN_DASHBOARD}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
       >
         <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
@@ -273,18 +266,9 @@ const BusinessLinkContent = memo(() => {
           {t('businessLink.gridTitle')}
         </h2>
 
-        <div className="grid w-full grid-cols-1 items-stretch gap-[14px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-          {gridSlots.map((slot) => (
-            <div key={slot.id} className={`min-w-0 ${slotOrderClass[slot.number]}`}>
-              <BusinessSlotCard
-                slot={slot}
-                preview={previews[slot.id]}
-                onAddPhoto={() => handlePickPhoto(slot.id)}
-                addLabel={t('businessLink.addPhoto')}
-                changeLabel={t('businessLink.changePhoto')}
-              />
-            </div>
-          ))}
+        <div className="flex w-full flex-col items-stretch gap-5 xl:flex-row">
+          <div className="min-w-0 flex-1">{renderSlotGrid(RED_SLOTS)}</div>
+          <div className="min-w-0 flex-1">{renderSlotGrid(BLUE_SLOTS)}</div>
         </div>
         {errors.photos ? (
           <p className="text-sm text-red-600" role="alert">

@@ -166,6 +166,11 @@ const PhotographerArtworkGrid = memo(
                   ? t('photographerProfile.competitionTag')
                   : undefined
               }
+              extraPhotosLabel={
+                photo.extraPhotoCount
+                  ? t('winners.extraPhotos', { count: photo.extraPhotoCount })
+                  : undefined
+              }
             />
           ))}
         </div>

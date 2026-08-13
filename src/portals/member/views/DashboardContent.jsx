@@ -118,6 +118,7 @@ const CompetitionRow = memo(({ item }) => {
             {t(item.statusValueKey)}
           </p>
         </div>
+        {/* My Competitions page temporarily disabled
         <Link
           to={ROUTES.ADMIN_MY_COMPETITIONS}
           aria-label={t('dashboard.competitions.openItem')}
@@ -125,6 +126,7 @@ const CompetitionRow = memo(({ item }) => {
         >
           <ArrowUpRight size={16} aria-hidden="true" />
         </Link>
+        */}
       </div>
     </article>
   );
@@ -154,7 +156,7 @@ const UserDashboardView = memo(() => {
           </p>
           <div className="pt-3 sm:pt-4">
             <Link
-              to={ROUTES.ADMIN_UPLOAD_PHOTOS}
+              to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD}
               className="inline-flex items-center gap-2 rounded-full bg-[#ee1c25] px-6 py-3 text-[13px] font-semibold tracking-[0.28px] text-white transition hover:bg-[#d41921] sm:px-8 sm:text-[14px]"
             >
               <Camera size={18} aria-hidden="true" />
@@ -183,6 +185,7 @@ const UserDashboardView = memo(() => {
               {t('dashboard.competitions.subtitle')}
             </p>
           </div>
+          {/* My Competitions page temporarily disabled
           <Link
             to={ROUTES.ADMIN_MY_COMPETITIONS}
             className="inline-flex items-center gap-1 text-[14px] font-bold text-[#532aa8] transition hover:text-[#432089] sm:text-[16px]"
@@ -190,6 +193,7 @@ const UserDashboardView = memo(() => {
             {t('dashboard.competitions.viewAll')}
             <ChevronRight size={14} aria-hidden="true" />
           </Link>
+          */}
         </div>
 
         <div className="flex flex-col gap-4">

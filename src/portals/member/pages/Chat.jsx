@@ -1,16 +1,15 @@
 import React, { memo } from 'react';
 import { useSEO } from '@/shared/hooks/useSEO';
-import ContactSupportContent from '@/portals/member/views/ContactSupportContent';
+import MemberChatContent from '@/portals/member/views/MemberChatContent';
 
 const Chat = memo(() => {
   useSEO({
-    title: 'Contact Us',
-    description:
-      'Contact My12Photos support and track your previous support conversations.',
-    keywords: ['contact', 'support', 'help', 'My12Photos'],
+    title: 'Chat',
+    description: 'Message photographers and manage your conversations on My12Photos.',
+    keywords: ['chat', 'messages', 'conversations', 'My12Photos'],
   });
 
-  return <ContactSupportContent />;
+  return <MemberChatContent />;
 });
 
 Chat.displayName = 'Chat';

@@ -8,7 +8,6 @@ import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import { ADMIN_OVERVIEW_ASSETS } from '@/portals/admin/data/adminOverviewData';
 import {
   LayoutDashboard,
-  Camera,
   Trophy,
   Link2,
   MessageSquare,
@@ -28,16 +27,26 @@ import {
   MessageCircleQuestion,
   Newspaper,
   MessageSquareText,
+  Store,
+  Star,
+  Bell,
+  Settings,
 } from 'lucide-react';
 
 const USER_NAV_ITEMS = [
   { labelKey: 'dashboard.nav.dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-  { labelKey: 'dashboard.nav.uploadPhotos', path: ROUTES.ADMIN_UPLOAD_PHOTOS, icon: Camera },
-  { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
+  { labelKey: 'dashboard.nav.artworkManagement', path: ROUTES.ADMIN_MY_ARTWORK, icon: Images },
+  { labelKey: 'dashboard.nav.newsMessages', path: ROUTES.ADMIN_NEWS_MESSAGES, icon: Newspaper },
+  { labelKey: 'dashboard.nav.sellPhotos', path: ROUTES.ADMIN_SELL_PHOTOS, icon: Store },
+  { labelKey: 'dashboard.nav.favouritePhotographers', path: ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS, icon: Star },
+  // { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
   { labelKey: 'dashboard.nav.businessPhotos', path: ROUTES.ADMIN_BUSINESS_PHOTOS, icon: Link2 },
   { labelKey: 'dashboard.nav.chat', path: ROUTES.ADMIN_CHAT, icon: MessageSquare },
+  { labelKey: 'dashboard.nav.notifications', path: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
   { labelKey: 'dashboard.nav.prizePayments', path: ROUTES.ADMIN_PRIZE_PAYMENTS, icon: Wallet },
+  { labelKey: 'dashboard.nav.contactUs', path: ROUTES.ADMIN_CONTACT_US, icon: MessageCircleQuestion },
   { labelKey: 'dashboard.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
+  { labelKey: 'dashboard.nav.settings', path: ROUTES.ADMIN_SETTINGS, icon: Settings },
 ];
 
 const ADMIN_NAV_GROUPS = [

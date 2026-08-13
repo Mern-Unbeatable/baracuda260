@@ -6,6 +6,7 @@ import {
   CONVERSATIONS,
   CONTACT_SUPPORT_ASSETS,
   FILTERS,
+  SUBJECT_OPTIONS,
 } from '@/portals/member/data/contactSupportData';
 
 const inputClassName =
@@ -198,15 +199,23 @@ const ContactSupportContent = memo(() => {
               >
                 {t('contactSupport.subject')}
               </label>
-              <input
+              <select
                 id="contact-support-subject"
-                type="text"
                 value={subject}
                 onChange={(event) => setSubject(event.target.value)}
-                placeholder={t('contactSupport.subjectPlaceholder')}
                 aria-invalid={Boolean(errors.subject)}
-                className={inputClassName}
-              />
+                className={`${inputClassName} appearance-none bg-[length:16px] bg-[right_15px_center] bg-no-repeat pr-11`}
+                style={{
+                  backgroundImage:
+                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7484' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+                }}
+              >
+                {SUBJECT_OPTIONS.map((option) => (
+                  <option key={option.value || 'placeholder'} value={option.value} disabled={!option.value}>
+                    {t(option.labelKey)}
+                  </option>
+                ))}
+              </select>
               {errors.subject ? (
                 <p className="text-sm text-red-600" role="alert">
                   {errors.subject}
