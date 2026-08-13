@@ -19,6 +19,7 @@ import {
   ChevronsRight,
   ChevronsLeft,
   Images,
+  Image,
   Users,
   ChartColumnStacked,
   BookImage,
@@ -31,6 +32,9 @@ import {
   Star,
   Bell,
   Settings,
+  Sparkles,
+  Megaphone,
+  UserCircle2,
 } from 'lucide-react';
 
 const USER_NAV_ITEMS = [
@@ -64,7 +68,22 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_MY_COMPETITIONS,
         icon: Trophy,
       },
-      { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
+      {
+        labelKey: 'adminOverview.nav.gallery',
+        path: ROUTES.ADMIN_GALLERY,
+        icon: Image,
+      },
+      {
+        labelKey: 'adminOverview.nav.premiumPhotos',
+        path: ROUTES.ADMIN_PREMIUM_PHOTOS,
+        icon: Sparkles,
+      },
+      {
+        labelKey: 'adminOverview.nav.promotedAlbums',
+        path: ROUTES.ADMIN_PROMOTED_PRODUCTS,
+        icon: Megaphone,
+      },
+      // { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
       { labelKey: 'adminOverview.nav.users', path: ROUTES.ADMIN_USERS, icon: Users },
     ],
   },
@@ -96,12 +115,20 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_COMMENT,
         icon: MessageSquareText,
       },
+      {
+        labelKey: 'adminOverview.nav.demoProfile',
+        path: ROUTES.ADMIN_DEMO_PROFILES,
+        icon: UserCircle2,
+      },
     ],
   },
   {
     id: 'system',
     labelKey: 'adminOverview.nav.groups.system',
-    items: [{ labelKey: 'adminOverview.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound }],
+    items: [
+      { labelKey: 'adminOverview.nav.settings', path: ROUTES.ADMIN_SETTINGS, icon: Settings },
+      { labelKey: 'adminOverview.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
+    ],
   },
 ];
 

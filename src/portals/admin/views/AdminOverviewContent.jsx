@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
 import { selectUser } from '@/app/store/slices/authSlice';
 import {
   ADMIN_OVERVIEW_ASSETS,
@@ -10,10 +10,26 @@ import {
   CHART_MONTHS,
   CHART_Y_LABELS,
   COMMUNITY_COUNTRIES,
-  OVERVIEW_STATS,
+  OVERVIEW_STATS_PRIMARY,
+  OVERVIEW_STATS_SECONDARY,
   PENDING_SUBMISSIONS,
+  REVENUE_CHART,
+  REVENUE_PERIODS,
 } from '@/portals/admin/data/adminOverviewData';
 import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+
+/** Smooth line path (horizontal-tangent cubic beziers) through equally spaced points. */
+const buildLinePath = (values, width) => {
+  const step = width / (values.length - 1);
+  return values.reduce((acc, y, i) => {
+    const x = i * step;
+    if (i === 0) return `M ${x} ${y}`;
+    const prevX = (i - 1) * step;
+    const prevY = values[i - 1];
+    const midX = (prevX + x) / 2;
+    return `${acc} C ${midX} ${prevY}, ${midX} ${y}, ${x} ${y}`;
+  }, '');
+};
 
 const StatCard = memo(({ labelKey, valueKey }) => {
   const { t } = useTranslation();
@@ -266,6 +282,275 @@ const CommunityReachCard = memo(() => {
 
 CommunityReachCard.displayName = 'CommunityReachCard';
 
+const REVENUE_COMMISSION_COLOR = '#F5A623';
+const REVENUE_PROMOTED_COLOR = '#34C759';
+
+const RevenueLegendItem = memo(({ color, label, value }) => (
+  <span className="inline-flex items-center gap-2">
+    <span className="size-2.5 rounded-full" style={{ backgroundColor: color }} aria-hidden="true" />
+    <span className="text-[13px] font-semibold text-[#172033] sm:text-[14px]">{label}</span>
+    {value ? <span className="text-[13px] text-[#8993a5] sm:text-[14px]">{value}</span> : null}
+  </span>
+));
+
+RevenueLegendItem.displayName = 'RevenueLegendItem';
+
+const RevenuePeriodDropdown = memo(() => {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(REVENUE_PERIODS[0].id);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open]);
+
+  const selectedOption = REVENUE_PERIODS.find((option) => option.id === selected);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-[#e8ebf1] bg-white px-3 py-2 text-[13px] font-semibold text-[#4a5568] transition hover:bg-[#f6f8fb] sm:text-[14px]"
+      >
+        {t(selectedOption.labelKey)}
+        <ChevronDown
+          size={15}
+          aria-hidden="true"
+          className={`transition-transform ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {open ? (
+        <ul
+          role="listbox"
+          className="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-xl border border-[#e8ebf1] bg-white py-1 shadow-[0px_12px_32px_rgba(23,32,51,0.14)]"
+        >
+          {REVENUE_PERIODS.map((option) => {
+            const isSelected = option.id === selected;
+            return (
+              <li key={option.id}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => {
+                    setSelected(option.id);
+                    setOpen(false);
+                  }}
+                  className={`flex w-full items-center justify-between gap-2 px-3.5 py-2 text-left text-[13px] transition hover:bg-[#f6f8fb] sm:text-[14px] ${
+                    isSelected ? 'font-semibold text-[#172033]' : 'text-[#4a5568]'
+                  }`}
+                >
+                  {t(option.labelKey)}
+                  {isSelected ? <Check size={15} className="text-[#3374E6]" aria-hidden="true" /> : null}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+    </div>
+  );
+});
+
+RevenuePeriodDropdown.displayName = 'RevenuePeriodDropdown';
+
+const RevenueTrendCard = memo(() => {
+  const { t } = useTranslation();
+  const { viewBox, markerIndex, yLabels, commission, promoted } = REVENUE_CHART;
+  const { width, height } = viewBox;
+  const step = width / (commission.length - 1);
+  const markerX = markerIndex * step;
+  const commissionPath = buildLinePath(commission, width);
+  const promotedPath = buildLinePath(promoted, width);
+  const commissionValue = t('adminOverview.revenueTrend.commissionValue');
+  const promotedValue = t('adminOverview.revenueTrend.promotedValue');
+  const tooltipLeft = `${(markerX / width) * 100}%`;
+
+  return (
+    <article
+      className={`flex flex-col rounded-[18px] bg-white p-5 sm:p-7 ${CARD_BORDER} ${CARD_SHADOW}`}
+    >
+      <header className="flex flex-wrap items-center justify-between gap-3">
+
+        
+        <h2 className="text-[18px] font-semibold leading-7 tracking-[-0.5px] text-[#172033] sm:text-[20px]">
+          {t('adminOverview.revenueTrend.title')}
+        </h2>
+        <div className="flex items-center gap-4">
+          <div className="hidden items-center gap-4 sm:flex">
+            <RevenueLegendItem
+              color={REVENUE_COMMISSION_COLOR}
+              label={t('adminOverview.revenueTrend.commission')}
+            />
+            <RevenueLegendItem
+              color={REVENUE_PROMOTED_COLOR}
+              label={t('adminOverview.revenueTrend.promoted')}
+            />
+          </div>
+          <RevenuePeriodDropdown />
+        </div>
+      </header>
+
+      <div className="relative mt-6 pl-11 sm:mt-7 sm:pl-14">
+        <div className="absolute inset-y-0 left-0 flex w-9 flex-col justify-between py-1 sm:w-12">
+          {yLabels.map((label) => (
+            <span key={label} className="text-[10px] leading-4 text-[#a2a9b7] sm:text-[11px]">
+              {label}
+            </span>
+          ))}
+        </div>
+
+        <div className="relative h-56 w-full sm:h-64">
+          <div
+            className="pointer-events-none absolute inset-0 flex flex-col justify-between py-1"
+            aria-hidden="true"
+          >
+            {yLabels.map((label) => (
+              <div key={label} className="h-px w-full bg-[#edf0f5]" />
+            ))}
+          </div>
+
+          <svg
+            viewBox={`0 0 ${width} ${height}`}
+            className="absolute inset-0 h-full w-full overflow-visible"
+            preserveAspectRatio="none"
+            role="img"
+            aria-label={t('adminOverview.revenueTrend.title')}
+          >
+            <defs>
+              <linearGradient id="revenue-commission-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={REVENUE_COMMISSION_COLOR} stopOpacity="0.16" />
+                <stop offset="100%" stopColor={REVENUE_COMMISSION_COLOR} stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="revenue-promoted-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={REVENUE_PROMOTED_COLOR} stopOpacity="0.14" />
+                <stop offset="100%" stopColor={REVENUE_PROMOTED_COLOR} stopOpacity="0" />
+              </linearGradient>
+            </defs>
+
+            <path d={`${commissionPath} L ${width} ${height} L 0 ${height} Z`} fill="url(#revenue-commission-fill)" />
+            <path d={`${promotedPath} L ${width} ${height} L 0 ${height} Z`} fill="url(#revenue-promoted-fill)" />
+
+            <line
+              x1={markerX}
+              y1="0"
+              x2={markerX}
+              y2={height}
+              stroke="#c9ced8"
+              strokeWidth="1.5"
+              strokeDasharray="7 7"
+              vectorEffect="non-scaling-stroke"
+            />
+
+            <path
+              d={promotedPath}
+              fill="none"
+              stroke={REVENUE_PROMOTED_COLOR}
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              d={commissionPath}
+              fill="none"
+              stroke={REVENUE_COMMISSION_COLOR}
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+
+            <circle
+              cx={markerX}
+              cy={promoted[markerIndex]}
+              r="6"
+              fill="white"
+              stroke={REVENUE_PROMOTED_COLOR}
+              strokeWidth="3"
+              vectorEffect="non-scaling-stroke"
+            />
+            <circle
+              cx={markerX}
+              cy={commission[markerIndex]}
+              r="6"
+              fill="white"
+              stroke={REVENUE_COMMISSION_COLOR}
+              strokeWidth="3"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+
+          <div
+            className="pointer-events-none absolute top-2 z-10 w-max -translate-x-1/2 rounded-xl border border-[#eef0f4] bg-white px-3.5 py-2.5 shadow-[0px_8px_24px_rgba(23,32,51,0.12)]"
+            style={{ left: tooltipLeft }}
+          >
+            <p className="text-[11px] font-medium leading-4 text-[#8993a5]">
+              {t('adminOverview.revenueTrend.commission')}
+            </p>
+            <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_COMMISSION_COLOR }}>
+              {commissionValue}
+            </p>
+            <p className="mt-1.5 text-[11px] font-medium leading-4 text-[#8993a5]">
+              {t('adminOverview.revenueTrend.promoted')}
+            </p>
+            <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_PROMOTED_COLOR }}>
+              {promotedValue}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-2 flex items-start justify-between gap-1">
+          {CHART_MONTHS.map((month, index) => (
+            <span
+              key={month}
+              className={`text-[10px] leading-4 sm:text-[11px] ${
+                index === markerIndex ? 'font-semibold text-[#172033]' : 'text-[#a2a9b7]'
+              }`}
+            >
+              {t(`adminOverview.analytics.months.${month}`)}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center gap-5 sm:hidden">
+        <RevenueLegendItem
+          color={REVENUE_COMMISSION_COLOR}
+          label={t('adminOverview.revenueTrend.commission')}
+        />
+        <RevenueLegendItem
+          color={REVENUE_PROMOTED_COLOR}
+          label={t('adminOverview.revenueTrend.promoted')}
+        />
+      </div>
+    </article>
+  );
+});
+
+RevenueTrendCard.displayName = 'RevenueTrendCard';
+
 /**
  * Admin Overview main content — Figma node 339:1136 (content column).
  */
@@ -287,19 +572,25 @@ const AdminOverviewContent = memo(() => {
         description={t('adminOverview.subtitle')}
       />
 
-      <section
-        aria-label={t('adminOverview.stats.aria')}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5"
-      >
-        {OVERVIEW_STATS.map((stat) => (
-          <StatCard key={stat.id} labelKey={stat.labelKey} valueKey={stat.valueKey} />
-        ))}
+      <section aria-label={t('adminOverview.stats.aria')} className="flex flex-col gap-4 xl:gap-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
+          {OVERVIEW_STATS_PRIMARY.map((stat) => (
+            <StatCard key={stat.id} labelKey={stat.labelKey} valueKey={stat.valueKey} />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:gap-5">
+          {OVERVIEW_STATS_SECONDARY.map((stat) => (
+            <StatCard key={stat.id} labelKey={stat.labelKey} valueKey={stat.valueKey} />
+          ))}
+        </div>
       </section>
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-5">
         <VisitorChart />
         <PendingReviewCard />
       </section>
+
+      <RevenueTrendCard />
 
       <CommunityReachCard />
     </div>

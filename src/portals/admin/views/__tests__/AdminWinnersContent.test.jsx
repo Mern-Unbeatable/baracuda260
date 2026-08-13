@@ -4,6 +4,11 @@ import userEvent from '@testing-library/user-event';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '@/shared/i18n';
 import AdminWinnersContent from '@/portals/admin/views/AdminWinnersContent';
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+}));
+
 describe('Admin Winners content', () => {
   afterEach(async () => {
     localStorage.removeItem(LOCALE_STORAGE_KEY);
@@ -71,6 +76,18 @@ describe('Admin Winners content', () => {
         name: i18n.t('adminWinners.view', { name: i18n.t('adminWinners.people.tomasz.name') }),
       }).length,
     ).toBeGreaterThan(0);
+  });
+
+  it('navigates to competition detail when view button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<AdminWinnersContent />);
+
+    const viewButtons = screen.getAllByRole('button', {
+      name: i18n.t('adminWinners.view', { name: i18n.t('adminWinners.people.anna.name') }),
+    });
+    await user.click(viewButtons[0]);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/admin/my-competitions/wings');
   });
 
   it('switches winners copy to Polish', async () => {

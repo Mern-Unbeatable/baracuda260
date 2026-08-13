@@ -70,6 +70,7 @@ const JULY_SIX_WINNERS = [
     votes: 4821,
     points: 9640,
     avatarKey: 'anna',
+    photoId: 'wings',
   },
   {
     id: 'piotr-mazur',
@@ -80,6 +81,7 @@ const JULY_SIX_WINNERS = [
     votes: 4203,
     points: 8406,
     avatarKey: 'piotr',
+    photoId: 'city',
   },
   {
     id: 'marta-wisniewska',
@@ -90,6 +92,7 @@ const JULY_SIX_WINNERS = [
     votes: 3981,
     points: 7962,
     avatarKey: 'marta',
+    photoId: 'zodiac',
   },
   {
     id: 'kamil-zajac',
@@ -100,6 +103,7 @@ const JULY_SIX_WINNERS = [
     votes: 3542,
     points: 7084,
     initial: 'K',
+    photoId: 'autumn',
   },
   {
     id: 'ewa-krawczyk',
@@ -110,6 +114,7 @@ const JULY_SIX_WINNERS = [
     votes: 3218,
     points: 6436,
     initial: 'E',
+    photoId: 'forest',
   },
   {
     id: 'tomasz-nowak',
@@ -120,6 +125,7 @@ const JULY_SIX_WINNERS = [
     votes: 2967,
     points: 5934,
     initial: 'T',
+    photoId: 'harbor',
   },
 ];
 

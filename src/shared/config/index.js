@@ -49,6 +49,12 @@ export const ROUTES = {
   ADMIN_FAVOURITE_PHOTOGRAPHERS: '/admin/favourite-photographers',
   ADMIN_MY_COMPETITIONS: '/admin/my-competitions',
   ADMIN_MY_COMPETITION_DETAIL: '/admin/my-competitions/:id',
+  ADMIN_GALLERY: '/admin/gallery',
+  ADMIN_GALLERY_DETAIL: '/admin/gallery/:id',
+  ADMIN_PREMIUM_PHOTOS: '/admin/premium-photos',
+  ADMIN_PREMIUM_PHOTOS_DETAIL: '/admin/premium-photos/:id',
+  ADMIN_PROMOTED_PRODUCTS: '/admin/promoted-products',
+  ADMIN_PROMOTED_PRODUCTS_DETAIL: '/admin/promoted-products/:id',
   ADMIN_SUBMISSIONS: '/admin/submissions',
   ADMIN_BUSINESS_PHOTOS: '/admin/business-link-photos',
   ADMIN_BUSINESS_PHOTOS_DETAIL: '/admin/business-link-photos/:id',
@@ -69,6 +75,8 @@ export const ROUTES = {
   ADMIN_SUPPORT: '/admin/support',
   ADMIN_NEWSLETTER: '/admin/newsletter',
   ADMIN_COMMENT: '/admin/comment',
+  ADMIN_DEMO_PROFILES: '/admin/demo-profiles',
+  ADMIN_DEMO_PROFILES_CREATE: '/admin/demo-profiles/create',
 };
 
 /** Site header nav — add new pages here AND register them in router.jsx */

@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '@/shared/i18n';
 import { isSuspendReasonValid } from '@/portals/admin/data/adminUsersData';
@@ -86,14 +86,18 @@ describe('Admin Users content with suspend popup', () => {
     });
   });
 
-  it('opens suspend popup from trash action and suspends after confirm', async () => {
+  const johnMenuLabel = () =>
+    i18n.t('adminUsers.actions.menu', { name: i18n.t('adminUsers.rows.john.name') });
+
+  it('opens suspend popup from action menu and suspends after confirm', async () => {
     const user = userEvent.setup();
     render(<AdminUsersContent />);
 
-    const suspendLabel = i18n.t('adminUsers.actions.suspend', {
-      name: i18n.t('adminUsers.rows.john.name'),
-    });
-    await user.click(screen.getAllByRole('button', { name: suspendLabel })[0]);
+    const table = screen.getByRole('table');
+    await user.click(within(table).getAllByRole('button', { name: johnMenuLabel() })[0]);
+
+    const suspendBtn = within(table).getByRole('menuitem', { name: i18n.t('adminUsers.actions.suspendOption') });
+    fireEvent.click(suspendBtn);
 
     expect(
       screen.getByRole('heading', { level: 2, name: i18n.t('adminUsers.suspendModal.title') }),
@@ -109,17 +113,8 @@ describe('Admin Users content with suspend popup', () => {
       screen.queryByRole('heading', { level: 2, name: i18n.t('adminUsers.suspendModal.title') }),
     ).not.toBeInTheDocument();
 
-    expect(
-      screen.getAllByRole('button', {
-        name: i18n.t('adminUsers.actions.reactivate', {
-          name: i18n.t('adminUsers.rows.john.name'),
-        }),
-      }).length,
-    ).toBeGreaterThan(0);
-
-    const section = screen.getByLabelText(i18n.t('adminUsers.tableAria'));
-    const johnNode = within(section).getAllByText(i18n.t('adminUsers.rows.john.name'))[0];
-    const johnRow = johnNode.closest('tr') || johnNode.closest('article');
+    const johnNode = within(table).getAllByText(i18n.t('adminUsers.rows.john.name'))[0];
+    const johnRow = johnNode.closest('tr');
     expect(within(johnRow).getByText(i18n.t('adminUsers.status.suspended'))).toBeInTheDocument();
   });
 
@@ -127,17 +122,20 @@ describe('Admin Users content with suspend popup', () => {
     const user = userEvent.setup();
     render(<AdminUsersContent />);
 
-    const suspendLabel = i18n.t('adminUsers.actions.suspend', {
-      name: i18n.t('adminUsers.rows.john.name'),
-    });
-    await user.click(screen.getAllByRole('button', { name: suspendLabel })[0]);
+    const table = screen.getByRole('table');
+    await user.click(within(table).getAllByRole('button', { name: johnMenuLabel() })[0]);
+
+    const suspendBtn = within(table).getByRole('menuitem', { name: i18n.t('adminUsers.actions.suspendOption') });
+    fireEvent.click(suspendBtn);
+
     await user.click(screen.getByRole('button', { name: i18n.t('adminUsers.suspendModal.cancel') }));
 
     expect(
       screen.queryByRole('heading', { level: 2, name: i18n.t('adminUsers.suspendModal.title') }),
     ).not.toBeInTheDocument();
-    expect(
-      screen.getAllByRole('button', { name: suspendLabel }).length,
-    ).toBeGreaterThan(0);
+
+    const johnNode = within(table).getAllByText(i18n.t('adminUsers.rows.john.name'))[0];
+    const johnRow = johnNode.closest('tr');
+    expect(within(johnRow).getByText(i18n.t('adminUsers.status.active'))).toBeInTheDocument();
   });
 });

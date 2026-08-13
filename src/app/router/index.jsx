@@ -61,7 +61,12 @@ const SellPhotosDetail = lazy(() => import('@/portals/member/pages/sell-photos/S
 const FavouritePhotographers = lazy(() => import('@/portals/member/pages/FavouritePhotographers'));
 const MyCompetitions = lazy(() => import('@/portals/member/pages/MyCompetitions'));
 const MyCompetitionDetails = lazy(() => import('@/portals/member/pages/MyCompetitionDetails'));
-const Submissions = lazy(() => import('@/portals/admin/pages/Submissions'));
+const AdminGallery = lazy(() => import('@/portals/admin/pages/Gallery'));
+const AdminGalleryDetail = lazy(() => import('@/portals/admin/pages/GalleryDetail'));
+const PremiumPhotos = lazy(() => import('@/portals/admin/pages/PremiumPhotos'));
+const PremiumPhotosDetail = lazy(() => import('@/portals/admin/pages/PremiumPhotosDetail'));
+const PromotedProducts = lazy(() => import('@/portals/admin/pages/PromotedProducts'));
+// const Submissions = lazy(() => import('@/portals/admin/pages/Submissions'));
 const Users = lazy(() => import('@/portals/admin/pages/Users'));
 const Categories = lazy(() => import('@/portals/admin/pages/Categories'));
 const AlbumTypes = lazy(() => import('@/portals/admin/pages/AlbumTypes'));
@@ -72,6 +77,8 @@ const BusinessPhotos = lazy(() => import('@/portals/admin/pages/BusinessPhotos')
 const BusinessLinkDetails = lazy(() => import('@/portals/admin/pages/BusinessLinkDetails'));
 const AdminNewsletter = lazy(() => import('@/portals/admin/pages/Newsletter'));
 const AdminComment = lazy(() => import('@/portals/admin/pages/Comment'));
+const DemoProfiles = lazy(() => import('@/portals/admin/pages/DemoProfiles'));
+const DemoProfilesCreate = lazy(() => import('@/portals/admin/pages/DemoProfilesCreate'));
 const Chat = lazy(() => import('@/portals/member/pages/Chat'));
 const Notifications = lazy(() => import('@/portals/member/pages/Notifications'));
 const PrizePayments = lazy(() => import('@/portals/member/pages/PrizePayments'));
@@ -81,7 +88,7 @@ const ProfileFollowing = lazy(() => import('@/portals/member/pages/profile/Profi
 const ProfileFollowers = lazy(() => import('@/portals/member/pages/profile/ProfileFollowers'));
 const ProfileSettings = lazy(() => import('@/portals/member/pages/profile/ProfileSettings'));
 const ProfileMainContent = lazy(() => import('@/portals/member/views/ProfileMainContent'));
-const Settings = lazy(() => import('@/portals/member/pages/Settings'));
+const SettingsRoute = lazy(() => import('@/portals/admin/pages/SettingsRoute'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -186,7 +193,13 @@ const router = createBrowserRouter(
         />
         <Route path={seg(ROUTES.ADMIN_MY_COMPETITIONS)} element={<MyCompetitions />} />
         <Route path={seg(ROUTES.ADMIN_MY_COMPETITION_DETAIL)} element={<MyCompetitionDetails />} />
-        <Route path={seg(ROUTES.ADMIN_SUBMISSIONS)} element={<Submissions />} />
+        <Route path={seg(ROUTES.ADMIN_GALLERY)} element={<AdminGallery />} />
+        <Route path={seg(ROUTES.ADMIN_GALLERY_DETAIL)} element={<AdminGalleryDetail />} />
+        <Route path={seg(ROUTES.ADMIN_PREMIUM_PHOTOS)} element={<PremiumPhotos />} />
+        <Route path={seg(ROUTES.ADMIN_PREMIUM_PHOTOS_DETAIL)} element={<PremiumPhotosDetail />} />
+        <Route path={seg(ROUTES.ADMIN_PROMOTED_PRODUCTS)} element={<PromotedProducts />} />
+        <Route path={seg(ROUTES.ADMIN_PROMOTED_PRODUCTS_DETAIL)} element={<PromotedProducts />} />
+        {/* <Route path={seg(ROUTES.ADMIN_SUBMISSIONS)} element={<Submissions />} /> */}
         <Route path={seg(ROUTES.ADMIN_USERS)} element={<Users />} />
         <Route path={seg(ROUTES.ADMIN_CATEGORIES)} element={<Categories />} />
         <Route path={seg(ROUTES.ADMIN_ALBUM_TYPES)} element={<AlbumTypes />} />
@@ -205,9 +218,11 @@ const router = createBrowserRouter(
           <Route path="followers" element={<ProfileFollowers />} />
           <Route path="settings" element={<ProfileSettings />} />
         </Route>
-        <Route path={seg(ROUTES.ADMIN_SETTINGS)} element={<Settings />} />
+        <Route path={seg(ROUTES.ADMIN_SETTINGS)} element={<SettingsRoute />} />
         <Route path={seg(ROUTES.ADMIN_NEWSLETTER)} element={<AdminNewsletter />} />
         <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComment />} />
+        <Route path={seg(ROUTES.ADMIN_DEMO_PROFILES)} element={<DemoProfiles />} />
+        <Route path={seg(ROUTES.ADMIN_DEMO_PROFILES_CREATE)} element={<DemoProfilesCreate />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -24,7 +24,13 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_DASHBOARD) ||
     currentPath === normalizePath(ROUTES.ADMIN_MY_COMPETITIONS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_MY_COMPETITIONS)}/`) ||
-    currentPath === normalizePath(ROUTES.ADMIN_SUBMISSIONS) ||
+    currentPath === normalizePath(ROUTES.ADMIN_GALLERY) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_GALLERY)}/`) ||
+    currentPath === normalizePath(ROUTES.ADMIN_PREMIUM_PHOTOS) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PREMIUM_PHOTOS)}/`) ||
+    currentPath === normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS)}/`) ||
+    // currentPath === normalizePath(ROUTES.ADMIN_SUBMISSIONS) ||
     currentPath === normalizePath(ROUTES.ADMIN_USERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_CATEGORIES) ||
     currentPath === normalizePath(ROUTES.ADMIN_ALBUM_TYPES) ||
@@ -33,6 +39,9 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_SUPPORT) ||
     currentPath === normalizePath(ROUTES.ADMIN_NEWSLETTER) ||
     currentPath === normalizePath(ROUTES.ADMIN_COMMENT) ||
+    currentPath === normalizePath(ROUTES.ADMIN_DEMO_PROFILES) ||
+    currentPath === normalizePath(ROUTES.ADMIN_DEMO_PROFILES_CREATE) ||
+    currentPath === normalizePath(ROUTES.ADMIN_SETTINGS) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROFILE) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROFILE)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS) ||

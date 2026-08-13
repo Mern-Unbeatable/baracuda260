@@ -1,4 +1,4 @@
-/** Admin Payouts — Figma node 339:4423. */
+/** Admin Payouts — three-section payout tables (Prize, Donation, Premium). */
 
 const A = '/assets/admin-payouts';
 
@@ -11,24 +11,7 @@ export const MORE_ICON_SIZE = 20;
 
 export const PAYOUT_STATUS = {
   PENDING: 'pending',
-  PROCESSING: 'processing',
-  PAID: 'paid',
-};
-
-export const STATUS_FILTERS = [
-  { id: 'all', labelKey: 'adminPayouts.filters.all' },
-  { id: PAYOUT_STATUS.PENDING, labelKey: 'adminPayouts.filters.pending' },
-  { id: PAYOUT_STATUS.PROCESSING, labelKey: 'adminPayouts.filters.processing' },
-  { id: PAYOUT_STATUS.PAID, labelKey: 'adminPayouts.filters.paid' },
-];
-
-/** Row action menu — same status choices as the filter (without "all"). */
-export const ACTION_STATUS_OPTIONS = STATUS_FILTERS.filter((filter) => filter.id !== 'all');
-
-export const STATUS_LABEL_KEYS = {
-  [PAYOUT_STATUS.PENDING]: 'adminPayouts.status.pending',
-  [PAYOUT_STATUS.PROCESSING]: 'adminPayouts.status.processing',
-  [PAYOUT_STATUS.PAID]: 'adminPayouts.status.paid',
+  APPROVED: 'approved',
 };
 
 export const STATUS_STYLES = {
@@ -37,160 +20,102 @@ export const STATUS_STYLES = {
     dot: 'bg-[#bd7b25]',
     text: 'text-[#bd7b25]',
   },
-  [PAYOUT_STATUS.PROCESSING]: {
-    bg: 'bg-[#edf3ff]',
-    dot: 'bg-[#3d72c8]',
-    text: 'text-[#3d72c8]',
-  },
-  [PAYOUT_STATUS.PAID]: {
+  [PAYOUT_STATUS.APPROVED]: {
     bg: 'bg-[#eef7f3]',
     dot: 'bg-[#268262]',
     text: 'text-[#268262]',
   },
 };
 
-export const AVATAR_STYLES = {
-  indigo: { bg: 'bg-[#e4e5fb]', text: 'text-[#435176]' },
-  peach: { bg: 'bg-[#fce7df]', text: 'text-[#435176]' },
-  green: { bg: 'bg-[#e7f4df]', text: 'text-[#435176]' },
+export const STATUS_LABEL_KEYS = {
+  [PAYOUT_STATUS.PENDING]: 'adminPayouts.status.pending',
+  [PAYOUT_STATUS.APPROVED]: 'adminPayouts.status.approved',
 };
 
-export const PAYOUTS_PAGE_SIZE = 7;
-/** Figma footer total for page chrome. */
-export const PAYOUTS_TOTAL_RESULTS = 2480;
-export const CHEVRON_ICON_SIZE = 24;
-export const AVATAR_SIZE = 39;
+export const ACTION_STATUS_OPTIONS = [
+  { id: PAYOUT_STATUS.PENDING, labelKey: 'adminPayouts.status.pending' },
+  { id: PAYOUT_STATUS.APPROVED, labelKey: 'adminPayouts.status.approved' },
+];
 
-/** Mock rows matching Figma 339:4423. */
-export const ADMIN_PAYOUT_ROWS = [
+export const PAYOUTS_PAGE_SIZE = 7;
+
+const SHARED_ROWS = [
   {
-    id: 'kofi-agyeman',
-    nameKey: 'adminPayouts.rows.kofi.name',
-    email: 'kofi@frame.work',
-    initials: 'KA',
-    avatarTone: 'indigo',
-    totalEarn: '$12000.00',
-    withdrawAmount: '$1,647',
-    paypalNumber: '+1 (555) 010-1001',
-    requestedKey: 'adminPayouts.rows.kofi.requested',
-    status: PAYOUT_STATUS.PENDING,
+    id: 'row-1',
+    dateKey: 'adminPayouts.rows.r1.date',
+    typeKey: 'adminPayouts.columns.withdrawal',
+    accountTypeKey: 'adminPayouts.columns.paypal',
+    accountNumber: '(702) 555-0122',
+    amount: '$1,250.00',
+    status: PAYOUT_STATUS.APPROVED,
   },
   {
-    id: 'b-nguyen',
-    nameKey: 'adminPayouts.rows.nguyen.name',
-    email: 'bn@atelier.vn',
-    initials: 'BN',
-    avatarTone: 'peach',
-    totalEarn: '$12000.00',
-    withdrawAmount: '$1,827',
-    paypalNumber: '+1 (555) 010-1054',
-    requestedKey: 'adminPayouts.rows.nguyen.requested',
-    status: PAYOUT_STATUS.PROCESSING,
+    id: 'row-2',
+    dateKey: 'adminPayouts.rows.r2.date',
+    typeKey: 'adminPayouts.columns.withdrawal',
+    accountTypeKey: 'adminPayouts.columns.paypal',
+    accountNumber: '(406) 555-0120',
+    amount: '$1,250.00',
+    status: PAYOUT_STATUS.APPROVED,
   },
   {
-    id: 'tara-cole-1',
-    nameKey: 'adminPayouts.rows.tara.name',
-    email: 'tara@cole.studio',
-    initials: 'TC',
-    avatarTone: 'green',
-    totalEarn: '$12000.00',
-    withdrawAmount: '$984',
-    paypalNumber: '+1 (555) 010-5322',
-    requestedKey: 'adminPayouts.rows.tara.requested',
-    status: PAYOUT_STATUS.PAID,
+    id: 'row-3',
+    dateKey: 'adminPayouts.rows.r3.date',
+    typeKey: 'adminPayouts.columns.withdrawal',
+    accountTypeKey: 'adminPayouts.columns.paypal',
+    accountNumber: '(205) 555-0100',
+    amount: '$1,250.00',
+    status: PAYOUT_STATUS.APPROVED,
   },
   {
-    id: 'tara-cole-2',
-    nameKey: 'adminPayouts.rows.tara.name',
-    email: 'tara@cole.studio',
-    initials: 'TC',
-    avatarTone: 'green',
-    totalEarn: '$12000.00',
-    withdrawAmount: '$984',
-    paypalNumber: '+1 (555) 010-5322',
-    requestedKey: 'adminPayouts.rows.tara.requested',
-    status: PAYOUT_STATUS.PAID,
+    id: 'row-4',
+    dateKey: 'adminPayouts.rows.r4.date',
+    typeKey: 'adminPayouts.columns.withdrawal',
+    accountTypeKey: 'adminPayouts.columns.paypal',
+    accountNumber: '(229) 555-0109',
+    amount: '$1,250.00',
+    status: PAYOUT_STATUS.APPROVED,
   },
   {
-    id: 'tara-cole-3',
-    nameKey: 'adminPayouts.rows.tara.name',
-    email: 'tara@cole.studio',
-    initials: 'TC',
-    avatarTone: 'green',
-    totalEarn: '$12000.00',
-    withdrawAmount: '$984',
-    paypalNumber: '+1 (555) 010-5322',
-    requestedKey: 'adminPayouts.rows.tara.requested',
-    status: PAYOUT_STATUS.PAID,
+    id: 'row-5',
+    dateKey: 'adminPayouts.rows.r5.date',
+    typeKey: 'adminPayouts.columns.withdrawal',
+    accountTypeKey: 'adminPayouts.columns.paypal',
+    accountNumber: '(319) 555-0115',
+    amount: '$1,250.00',
+    status: PAYOUT_STATUS.APPROVED,
   },
   {
-    id: 'tara-cole-4',
-    nameKey: 'adminPayouts.rows.tara.name',
-    email: 'tara@cole.studio',
-    initials: 'TC',
-    avatarTone: 'green',
-    totalEarn: '$12000.00',
-    withdrawAmount: '$984',
-    paypalNumber: '+1 (555) 010-5322',
-    requestedKey: 'adminPayouts.rows.tara.requested',
-    status: PAYOUT_STATUS.PAID,
-  },
-  {
-    id: 'tara-cole-5',
-    nameKey: 'adminPayouts.rows.tara.name',
-    email: 'tara@cole.studio',
-    initials: 'TC',
-    avatarTone: 'green',
-    totalEarn: '$12000.00',
-    withdrawAmount: '$984',
-    paypalNumber: '+1 (555) 010-5322',
-    requestedKey: 'adminPayouts.rows.tara.requested',
-    status: PAYOUT_STATUS.PAID,
+    id: 'row-6',
+    dateKey: 'adminPayouts.rows.r6.date',
+    typeKey: 'adminPayouts.columns.withdrawal',
+    accountTypeKey: 'adminPayouts.columns.paypal',
+    accountNumber: '(317) 555-0113',
+    amount: '$1,250.00',
+    status: PAYOUT_STATUS.APPROVED,
   },
 ];
 
-/**
- * @param {typeof ADMIN_PAYOUT_ROWS} rows
- * @param {string} filterId
- */
-export const filterPayoutsByStatus = (rows, filterId) => {
-  if (!filterId || filterId === 'all') return rows;
-  return rows.filter((row) => row.status === filterId);
-};
+const prefixRows = (rows, prefix) =>
+  rows.map((r) => ({ ...r, id: `${prefix}-${r.id}` }));
 
-/**
- * @param {typeof ADMIN_PAYOUT_ROWS} rows
- * @param {number} page
- * @param {number} pageSize
- */
-export const paginatePayouts = (rows, page, pageSize) => {
-  const safePage = Math.max(1, page);
-  const start = (safePage - 1) * pageSize;
-  return rows.slice(start, start + pageSize);
-};
-
-/**
- * @param {typeof ADMIN_PAYOUT_ROWS} rows
- * @param {string} rowId
- * @param {string} nextStatus
- */
-export const updatePayoutStatus = (rows, rowId, nextStatus) =>
-  rows.map((row) => (row.id === rowId ? { ...row, status: nextStatus } : row));
-
-/**
- * Visible page numbers around the current page (Figma shows 1–3).
- * @param {number} page
- * @param {number} totalPages
- * @param {number} [windowSize]
- */
-export const getPayoutPageNumbers = (page, totalPages, windowSize = 3) => {
-  const safeTotal = Math.max(1, totalPages);
-  const safePage = Math.min(Math.max(1, page), safeTotal);
-  const half = Math.floor(windowSize / 2);
-  let start = Math.max(1, safePage - half);
-  let end = Math.min(safeTotal, start + windowSize - 1);
-  start = Math.max(1, end - windowSize + 1);
-  const pages = [];
-  for (let n = start; n <= end; n += 1) pages.push(n);
-  return pages;
-};
+export const PAYOUT_SECTIONS = [
+  {
+    id: 'prize',
+    titleKey: 'adminPayouts.sections.prize.title',
+    subtitleKey: 'adminPayouts.sections.prize.subtitle',
+    rows: prefixRows(SHARED_ROWS, 'prize'),
+  },
+  {
+    id: 'donation',
+    titleKey: 'adminPayouts.sections.donation.title',
+    subtitleKey: 'adminPayouts.sections.donation.subtitle',
+    rows: prefixRows(SHARED_ROWS, 'donation'),
+  },
+  {
+    id: 'premium',
+    titleKey: 'adminPayouts.sections.premium.title',
+    subtitleKey: 'adminPayouts.sections.premium.subtitle',
+    rows: prefixRows(SHARED_ROWS, 'premium'),
+  },
+];
