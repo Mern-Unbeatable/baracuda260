@@ -27,25 +27,30 @@ describe('Admin Competition Detail content', () => {
   it('renders single photo details', () => {
     render(<AdminCompetitionDetailContent />);
 
-    expect(
-      screen.getByRole('heading', { level: 1, name: i18n.t('adminCompetitionDetail.title') }),
-    ).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitionDetail.back'))).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
-        level: 2,
+        level: 1,
         name: i18n.t('adminCompetitionDetail.entries.wings.title'),
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminCompetitions.types.single'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitionDetail.typeBadges.single'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminCompetitionDetail.categories.nature'))).toBeInTheDocument();
     expect(screen.getByText('2150')).toBeInTheDocument();
     expect(screen.getByText('12400')).toBeInTheDocument();
     expect(
       screen.getByText(i18n.t('adminCompetitionDetail.photographerName')),
     ).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitionDetail.viewProfile'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminCompetitionDetail.signs.aries'))).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('competitionDetails.rankingsTitle') }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('adminCompetitionDetail.commentsTitle') }),
+    ).toBeInTheDocument();
     expect(screen.queryByLabelText(i18n.t('adminCompetitionDetail.slidesAria'))).not.toBeInTheDocument();
-    expect(document.querySelector('img[src="/assets/admin-competitions/wings.jpg"]')).toBeInTheDocument();
+    expect(document.querySelector('img[src="/assets/home/detail-hero.jpg"]')).toBeInTheDocument();
   });
 
   it('renders six-photo red story strip and switches slides', () => {
@@ -54,7 +59,7 @@ describe('Admin Competition Detail content', () => {
 
     expect(
       screen.getByRole('heading', {
-        level: 2,
+        level: 1,
         name: i18n.t('adminCompetitionDetail.entries.autumn.title'),
       }),
     ).toBeInTheDocument();
@@ -81,7 +86,7 @@ describe('Admin Competition Detail content', () => {
 
     expect(
       screen.getByRole('heading', {
-        level: 2,
+        level: 1,
         name: i18n.t('adminCompetitionDetail.entries.zodiac.title'),
       }),
     ).toBeInTheDocument();
@@ -120,11 +125,9 @@ describe('Admin Competition Detail content', () => {
       await changeAppLanguage('pl');
     });
 
-    expect(
-      screen.getByRole('heading', { level: 1, name: 'Zarządzanie konkursami' }),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Szczegóły zdjęcia')).toBeInTheDocument();
-    expect(screen.getByText('Otrzymane głosy')).toBeInTheDocument();
+    expect(screen.getByText('Powrót do wyboru')).toBeInTheDocument();
+    expect(screen.getByText('OTRZYMANE GŁOSY')).toBeInTheDocument();
     expect(screen.getByText('Fotograf')).toBeInTheDocument();
+    expect(screen.getByText('Komentarze')).toBeInTheDocument();
   });
 });

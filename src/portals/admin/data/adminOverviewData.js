@@ -8,7 +8,8 @@ export const ADMIN_OVERVIEW_ASSETS = {
   avatar: `${A}/avatar.jpg`,
 };
 
-export const OVERVIEW_STATS = [
+/** First stats row — 5 cards (Figma). */
+export const OVERVIEW_STATS_PRIMARY = [
   {
     id: 'users',
     labelKey: 'adminOverview.stats.registeredUsers',
@@ -20,14 +21,43 @@ export const OVERVIEW_STATS = [
     valueKey: 'adminOverview.stats.photosSubmittedValue',
   },
   {
-    id: 'pending',
-    labelKey: 'adminOverview.stats.pendingApproval',
-    valueKey: 'adminOverview.stats.pendingApprovalValue',
-  },
-  {
     id: 'votes',
     labelKey: 'adminOverview.stats.votesCast',
     valueKey: 'adminOverview.stats.votesCastValue',
+  },
+  {
+    id: 'totalCommission',
+    labelKey: 'adminOverview.stats.totalCommission',
+    valueKey: 'adminOverview.stats.totalCommissionValue',
+  },
+  {
+    id: 'thisMonthCommission',
+    labelKey: 'adminOverview.stats.thisMonthCommission',
+    valueKey: 'adminOverview.stats.thisMonthCommissionValue',
+  },
+];
+
+/** Second stats row — 4 cards (Figma). */
+export const OVERVIEW_STATS_SECONDARY = [
+  {
+    id: 'totalPromoted',
+    labelKey: 'adminOverview.stats.totalPromoted',
+    valueKey: 'adminOverview.stats.totalPromotedValue',
+  },
+  {
+    id: 'thisMonthPromoted',
+    labelKey: 'adminOverview.stats.thisMonthPromoted',
+    valueKey: 'adminOverview.stats.thisMonthPromotedValue',
+  },
+  {
+    id: 'totalRevenue',
+    labelKey: 'adminOverview.stats.totalRevenue',
+    valueKey: 'adminOverview.stats.totalRevenueValue',
+  },
+  {
+    id: 'totalPayouts',
+    labelKey: 'adminOverview.stats.totalPayouts',
+    valueKey: 'adminOverview.stats.totalPayoutsValue',
   },
 ];
 
@@ -47,6 +77,25 @@ export const CHART_MONTHS = [
 ];
 
 export const CHART_Y_LABELS = ['12k', '8k', '4k', '0'];
+
+/**
+ * Revenue Trend — Commission vs Promoted, plotted in a 900×240 viewBox.
+ * y values are viewBox coordinates (lower = higher revenue). Marker sits on Aug (index 7).
+ */
+export const REVENUE_CHART = {
+  viewBox: { width: 900, height: 240 },
+  markerIndex: 7,
+  yLabels: ['60000', '45000', '30000', '15000', '0'],
+  commission: [190, 172, 178, 150, 156, 120, 128, 92, 100, 66, 78, 52],
+  promoted: [206, 197, 201, 183, 177, 151, 159, 129, 139, 111, 121, 97],
+};
+
+export const REVENUE_PERIODS = [
+  { id: 'thisYear', labelKey: 'adminOverview.revenueTrend.periodOptions.thisYear' },
+  { id: 'sixMonths', labelKey: 'adminOverview.revenueTrend.periodOptions.sixMonths' },
+  { id: 'thisMonth', labelKey: 'adminOverview.revenueTrend.periodOptions.thisMonth' },
+  { id: 'lastYear', labelKey: 'adminOverview.revenueTrend.periodOptions.lastYear' },
+];
 
 export const PENDING_SUBMISSIONS = [
   {

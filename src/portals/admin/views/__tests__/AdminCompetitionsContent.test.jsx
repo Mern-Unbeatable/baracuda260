@@ -29,10 +29,11 @@ describe('Admin Competitions content', () => {
     expect(screen.getByRole('button', { name: i18n.t('adminCompetitions.filters.single') })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: i18n.t('adminCompetitions.filters.six') })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: i18n.t('adminCompetitions.filters.zodiac') })).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.autumn.title'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.zodiac.title'))).toBeInTheDocument();
+    expect(screen.getAllByText(i18n.t('adminCompetitions.cards.autumn.title')).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(i18n.t('adminCompetitions.cards.autumn.description')).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('button', { name: i18n.t('adminCompetitions.delete') }).length).toBeGreaterThan(0);
     expect(
-      screen.getByRole('link', { name: i18n.t('adminCompetitions.cards.autumn.title') }),
+      screen.getAllByRole('link', { name: i18n.t('adminCompetitions.cards.autumn.title') })[0],
     ).toHaveAttribute('href', '/admin/my-competitions/autumn');
     expect(screen.getByLabelText(i18n.t('adminCompetitions.pagination.aria'))).toBeInTheDocument();
     expect(screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 1 }) })).toHaveAttribute(
@@ -47,8 +48,8 @@ describe('Admin Competitions content', () => {
 
     await user.click(screen.getByRole('button', { name: i18n.t('adminCompetitions.filters.zodiac') }));
 
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.zodiac.title'))).toBeInTheDocument();
-    expect(screen.queryByText(i18n.t('adminCompetitions.cards.autumn.title'))).not.toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminCompetitions.types.zodiac'))).toBeInTheDocument();
+    expect(screen.getAllByRole('article')).toHaveLength(1);
     expect(screen.getByRole('button', { name: i18n.t('adminCompetitions.filters.zodiac') })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -59,16 +60,13 @@ describe('Admin Competitions content', () => {
     const user = userEvent.setup();
     render(<AdminCompetitionsContent />);
 
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.autumn.title'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.zodiac.title'))).toBeInTheDocument();
+    expect(screen.getAllByRole('article')).toHaveLength(8);
 
     await user.click(
       screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 2 }) }),
     );
 
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.autumn.title'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.wings.title'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminCompetitions.cards.zodiac.title'))).toBeInTheDocument();
+    expect(screen.getAllByRole('article')).toHaveLength(8);
     expect(
       screen.getByRole('button', { name: i18n.t('adminCompetitions.pagination.page', { page: 2 }) }),
     ).toHaveAttribute('aria-current', 'page');
@@ -81,9 +79,9 @@ describe('Admin Competitions content', () => {
       await changeAppLanguage('pl');
     });
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Galeria zdjęć' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Konkurs' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Pojedyncze zdjęcie' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Historia 6 zdjęć' })).toBeInTheDocument();
-    expect(screen.getByText('Autumn Sequence')).toBeInTheDocument();
+    expect(screen.getAllByText('Autumn Sequence').length).toBeGreaterThan(0);
   });
 });

@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, render, screen } from '@testing-library/react';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '@/shared/i18n';
 import AdminPayoutsContent from '@/portals/admin/views/AdminPayoutsContent';
 
@@ -12,75 +11,53 @@ describe('Admin Payouts content', () => {
     });
   });
 
-  it('renders English header, table, and pagination', () => {
+  it('renders all three payout sections with headings', () => {
     render(<AdminPayoutsContent />);
 
     expect(
-      screen.getByRole('heading', { level: 1, name: i18n.t('adminPayouts.title') }),
-    ).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminPayouts.eyebrow'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminPayouts.subtitle'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('adminPayouts.sortBy'))).toBeInTheDocument();
-    expect(
-      screen.getByRole('columnheader', { name: i18n.t('adminPayouts.columns.winner') }),
+      screen.getByRole('heading', { level: 2, name: i18n.t('adminPayouts.sections.prize.title') }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('columnheader', { name: i18n.t('adminPayouts.columns.withdrawAmount') }),
+      screen.getByRole('heading', { level: 2, name: i18n.t('adminPayouts.sections.donation.title') }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText(i18n.t('adminPayouts.rows.kofi.name')).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(i18n.t('adminPayouts.rows.nguyen.name')).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(i18n.t('adminPayouts.rows.tara.name')).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(i18n.t('adminPayouts.status.pending')).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(i18n.t('adminPayouts.status.processing')).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(i18n.t('adminPayouts.status.paid')).length).toBeGreaterThan(0);
-    expect(screen.getByTestId('payouts-mobile-cards')).toBeInTheDocument();
     expect(
-      screen.getByText(i18n.t('adminPayouts.pagination.showing', { count: 7, total: '2,480' })),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: i18n.t('adminPayouts.pagination.page', { page: 1 }) })).toHaveAttribute(
-      'aria-current',
-      'page',
-    );
-    expect(screen.getByRole('button', { name: i18n.t('adminPayouts.pagination.page', { page: 2 }) })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: i18n.t('adminPayouts.pagination.page', { page: 3 }) })).toBeInTheDocument();
-  });
-
-  it('filters the table by pending status', async () => {
-    const user = userEvent.setup();
-    render(<AdminPayoutsContent />);
-
-    await user.click(screen.getByRole('button', { name: i18n.t('adminPayouts.filters.aria') }));
-    await user.click(screen.getByRole('option', { name: i18n.t('adminPayouts.filters.pending') }));
-
-    expect(screen.getAllByText(i18n.t('adminPayouts.rows.kofi.name')).length).toBeGreaterThan(0);
-    expect(screen.queryByText(i18n.t('adminPayouts.rows.nguyen.name'))).not.toBeInTheDocument();
-    expect(
-      screen.getByText(i18n.t('adminPayouts.pagination.showing', { count: 1, total: '1' })),
+      screen.getByRole('heading', { level: 2, name: i18n.t('adminPayouts.sections.premium.title') }),
     ).toBeInTheDocument();
   });
 
-  it('opens action menu and updates row status', async () => {
-    const user = userEvent.setup();
+  it('renders PAYOUTS eyebrow for each section', () => {
     render(<AdminPayoutsContent />);
 
-    const actionLabel = i18n.t('adminPayouts.actions.menu', {
-      name: i18n.t('adminPayouts.rows.kofi.name'),
-    });
-    await user.click(screen.getAllByRole('button', { name: actionLabel })[0]);
+    expect(screen.getAllByText(i18n.t('adminPayouts.eyebrow'))).toHaveLength(3);
+  });
 
-    const menu = screen.getAllByRole('listbox', {
-      name: i18n.t('adminPayouts.actions.menuAria', {
-        name: i18n.t('adminPayouts.rows.kofi.name'),
-      }),
-    })[0];
+  it('renders table column headers', () => {
+    render(<AdminPayoutsContent />);
 
-    expect(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.pending') })).toBeInTheDocument();
-    expect(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.processing') })).toBeInTheDocument();
-    expect(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.paid') })).toBeInTheDocument();
+    expect(screen.getAllByText(i18n.t('adminPayouts.columns.date')).length).toBeGreaterThanOrEqual(3);
+    expect(screen.getAllByText(i18n.t('adminPayouts.columns.type')).length).toBeGreaterThanOrEqual(3);
+    expect(screen.getAllByText(i18n.t('adminPayouts.columns.accountType')).length).toBeGreaterThanOrEqual(3);
+    expect(screen.getAllByText(i18n.t('adminPayouts.columns.amount')).length).toBeGreaterThanOrEqual(3);
+  });
 
-    await user.click(within(menu).getByRole('option', { name: i18n.t('adminPayouts.filters.paid') }));
+  it('renders Approved status and row data', () => {
+    render(<AdminPayoutsContent />);
 
-    expect(screen.getAllByText(i18n.t('adminPayouts.status.paid')).length).toBeGreaterThan(5);
+    expect(screen.getAllByText(i18n.t('adminPayouts.status.approved')).length).toBeGreaterThan(0);
+    expect(screen.getAllByText('$1,250.00').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('(702) 555-0122').length).toBeGreaterThan(0);
+  });
+
+  it('renders showing text and Previous/Next buttons for each section', () => {
+    render(<AdminPayoutsContent />);
+
+    expect(
+      screen.getAllByText(
+        i18n.t('adminPayouts.pagination.showing', { from: 1, to: 6, total: 6 }),
+      ).length,
+    ).toBe(3);
+    expect(screen.getAllByRole('button', { name: i18n.t('adminPayouts.pagination.previous') })).toHaveLength(3);
+    expect(screen.getAllByRole('button', { name: i18n.t('adminPayouts.pagination.next') })).toHaveLength(3);
   });
 
   it('switches payouts copy to Polish', async () => {
@@ -90,10 +67,12 @@ describe('Admin Payouts content', () => {
       await changeAppLanguage('pl');
     });
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Wypłaty nagród' })).toBeInTheDocument();
-    expect(screen.getByText('WYPŁATY')).toBeInTheDocument();
-    expect(screen.getByText('Sortuj według:')).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: 'Zwycięzca' })).toBeInTheDocument();
-    expect(screen.getAllByText('Kofi Agyeman').length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Wypłaty nagród' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Wypłata darowizn' }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('WYPŁATY')).toHaveLength(3);
   });
 });

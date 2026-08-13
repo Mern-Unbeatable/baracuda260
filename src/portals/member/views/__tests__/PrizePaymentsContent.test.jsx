@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import toast from 'react-hot-toast';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '@/shared/i18n';
 import PrizePaymentsContent from '@/portals/member/views/PrizePaymentsContent';
-import { PRIZING_ROWS, TRANSACTION_ROWS } from '@/portals/member/data/prizePaymentsData';
+import { PRIZING_ROWS, PAYMENT_HISTORY_ROWS } from '@/portals/member/data/prizePaymentsData';
 
 jest.mock('react-hot-toast', () => ({
   __esModule: true,
@@ -23,7 +23,7 @@ describe('Prize & Payments page', () => {
     });
   });
 
-  it('renders English header, summary cards, and tables', () => {
+  it('renders English header, prize money tab, and tables', () => {
     render(<PrizePaymentsContent />);
 
     expect(
@@ -34,39 +34,53 @@ describe('Prize & Payments page', () => {
       screen.getByRole('button', { name: i18n.t('prizePayments.requestPayout') }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText(i18n.t('prizePayments.summary.wallet'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('prizePayments.summary.walletValue'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('prizePayments.summary.earned'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('prizePayments.summary.pending'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('prizePayments.prizeMoney.summary.total'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('prizePayments.prizeMoney.summary.availableValue'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('prizePayments.prizeMoney.summary.paidOut'))).toBeInTheDocument();
 
     expect(
       screen.getByRole('heading', { level: 2, name: i18n.t('prizePayments.prizing.title') }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', {
-        level: 2,
-        name: i18n.t('prizePayments.transactions.title'),
-      }),
+      screen.getByRole('heading', { level: 2, name: i18n.t('prizePayments.paymentHistory.title') }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getAllByText(i18n.t('prizePayments.prizing.items.celestialLine1')),
+      screen.getAllByText(i18n.t('prizePayments.prizing.items.celestial')),
     ).toHaveLength(PRIZING_ROWS.length);
-    expect(
-      screen.getAllByText(i18n.t('prizePayments.prizing.items.celestialLine2')),
-    ).toHaveLength(PRIZING_ROWS.length);
-    expect(
-      screen.getByText(i18n.t('prizePayments.transactions.items.golden.title')),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(i18n.t('prizePayments.transactions.items.paypal.amount')),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(i18n.t('prizePayments.status.success')).length).toBeGreaterThan(
-      0,
-    );
+    expect(screen.getAllByText('Approved')).toHaveLength(PAYMENT_HISTORY_ROWS.length);
     expect(screen.getAllByRole('button', { name: i18n.t('prizePayments.pagination.next') })).toHaveLength(
       2,
     );
+  });
+
+  it('switches to donations tab content', async () => {
+    const user = userEvent.setup();
+    render(<PrizePaymentsContent />);
+
+    await user.click(screen.getByRole('tab', { name: i18n.t('prizePayments.tabs.donations') }));
+
+    expect(screen.getByText(i18n.t('prizePayments.donations.commissionBanner'))).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('prizePayments.donations.title') }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('prizePayments.donations.items.johnSmith'))).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { level: 2, name: i18n.t('prizePayments.prizing.title') }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('switches to photo sales tab content', async () => {
+    const user = userEvent.setup();
+    render(<PrizePaymentsContent />);
+
+    await user.click(screen.getByRole('tab', { name: i18n.t('prizePayments.tabs.photoSales') }));
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('prizePayments.photoSales.title') }),
+    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(i18n.t('prizePayments.photoSales.searchPlaceholder'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('prizePayments.photoSales.items.buyerAnna'))).toBeInTheDocument();
   });
 
   it('switches copy to Polish', async () => {
@@ -83,11 +97,9 @@ describe('Prize & Payments page', () => {
       screen.getByRole('button', { name: 'Poproś o wypłatę' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Moje nagrody' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { level: 2, name: 'Historia transakcji' }),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Saldo portfela')).toBeInTheDocument();
-    expect(screen.getByText('Wypłata na PayPal')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Historia płatności' })).toBeInTheDocument();
+    expect(screen.getByText('Łączne nagrody')).toBeInTheDocument();
+    expect(screen.getAllByText('Zatwierdzono')).toHaveLength(PAYMENT_HISTORY_ROWS.length);
   });
 
   it('shows payout toast when Request Payout is clicked', async () => {
@@ -99,14 +111,5 @@ describe('Prize & Payments page', () => {
     );
 
     expect(toast.success).toHaveBeenCalledWith(i18n.t('prizePayments.payoutRequested'));
-  });
-
-  it('renders all transaction rows from data', () => {
-    render(<PrizePaymentsContent />);
-
-    TRANSACTION_ROWS.forEach((row) => {
-      expect(screen.getByText(i18n.t(row.titleKey))).toBeInTheDocument();
-      expect(screen.getByText(i18n.t(row.idKey))).toBeInTheDocument();
-    });
   });
 });

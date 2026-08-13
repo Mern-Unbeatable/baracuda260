@@ -622,90 +622,248 @@
       }
     }
   },
+  "memberChat": {
+    "title": "Messages",
+    "compose": "Compose message",
+    "searchPlaceholder": "Search...",
+    "listAria": "Conversation list",
+    "addNewChat": "Add New Chat +",
+    "backToList": "Back to messages",
+    "selectConversation": "Select a conversation to start chatting.",
+    "online": "Online",
+    "moreActions": "More actions",
+    "attach": "Attach file",
+    "emoji": "Insert emoji",
+    "voice": "Record voice message",
+    "send": "Send message",
+    "inputPlaceholder": "Send a message...",
+    "downloadFile": "Download file",
+    "playVideo": "Play video",
+    "playVoice": "Play voice message",
+    "previews": {
+      "default": "Enter your message description here...",
+      "azunyan": "Can you review the latest design draft?"
+    },
+    "dates": {
+      "august19": "19 August",
+      "today": "Today"
+    },
+    "messages": {
+      "receivedIntro": "Hey! I uploaded the latest design draft and a short walkthrough video for the zodiac frame.",
+      "sentReply": "Looks great — I'll review the document tonight and send notes tomorrow."
+    }
+  },
+  "memberNotifications": {
+    "title": "Notifications",
+    "empty": "You have no notifications yet.",
+    "listAria": "Notifications list",
+    "items": {
+      "reviewPublic": "Elena Vance left a review on your Autumn Sequence album. Both reviews from this exchange are now public.",
+      "cohostAccepted": "Michael Brown accepted your invite to co-host the August Photography Competition gallery.",
+      "emailConfirm": "Please confirm your email address by clicking on the link we just emailed you. If you don't see it, you may need to check your spam folder.",
+      "competitionVote": "Your entry Golden Hour Silence received 42 new votes in the August Photography Competition.",
+      "saleComplete": "Anna Kowalska purchased your single photo Morning Fields for $2.00.",
+      "followBack": "Sofia Reyes started following you and left a note on your latest zodiac story upload."
+    }
+  },
   "prizePayments": {
     "title": "Prize & Payments",
-    "subtitle": "Manage your earnings, pending rewards, and withdrawal methods securely.",
+    "subtitle": "Track your competition prizes, donations, photo sales, and payout activity.",
     "requestPayout": "Request Payout",
     "payoutRequested": "Payout request submitted successfully!",
     "pagination": {
       "previous": "Previous",
       "next": "Next"
     },
+    "tabs": {
+      "aria": "Prize and payments views",
+      "prizeMoney": "Prize Money",
+      "donations": "Donations",
+      "photoSales": "Photo Sales"
+    },
     "status": {
-      "success": "Success",
-      "completed": "Completed",
-      "pending": "Pending"
+      "approved": "Approved",
+      "available": "Available",
+      "paid": "Paid"
     },
     "summary": {
-      "aria": "Prize payment summary",
-      "wallet": "Wallet Balance",
-      "walletValue": "$1,240.00",
-      "earned": "Total Earned",
-      "earnedValue": "$8,450.00",
-      "pending": "Pending Payouts",
-      "pendingValue": "$450.00"
+      "aria": "Prize payment summary"
+    },
+    "prizeMoney": {
+      "summary": {
+        "total": "Total Prize Money",
+        "totalValue": "$2,500.00",
+        "totalHint": "Total competition earnings",
+        "available": "Available",
+        "availableValue": "$300.00",
+        "availableHint": "Available for payout",
+        "paidOut": "Paid Out",
+        "paidOutValue": "$1,500.00",
+        "paidOutHint": "Already paid"
+      }
+    },
+    "donations": {
+      "summary": {
+        "total": "Total Donations",
+        "totalValue": "$1,240.00",
+        "totalHint": "Gross donations",
+        "platformFee": "Platform Fee",
+        "platformFeeValue": "$124.00",
+        "platformFeeHint": "10% platform commission",
+        "yourEarnings": "Your Earnings",
+        "yourEarningsValue": "$1,116.00",
+        "yourEarningsHint": "90% of donations"
+      },
+      "commissionBanner": "Platform commission: 10% per donation. You earn 90% of each donation received.",
+      "title": "Donation Transactions",
+      "subtitle": "All donations received from your supporters.",
+      "showing": "Showing 1 to 7 of 7 results",
+      "columns": {
+        "date": "Date",
+        "donor": "Donor Name",
+        "email": "Email",
+        "donation": "Donation",
+        "platformFee": "Platform Fee",
+        "yourEarnings": "Your Earnings",
+        "status": "Status"
+      },
+      "items": {
+        "aug10": "Aug 10, 2026",
+        "aug8": "Aug 8, 2026",
+        "aug5": "Aug 5, 2026",
+        "jul28": "Jul 28, 2026",
+        "jul20": "Jul 20, 2026",
+        "jul12": "Jul 12, 2026",
+        "jul1": "Jul 1, 2026",
+        "johnSmith": "John Smith",
+        "mariaLopez": "Maria Lopez",
+        "alexKim": "Alex Kim",
+        "sarahNguyen": "Sarah Nguyen",
+        "tomBaker": "Tom Baker",
+        "emmaClark": "Emma Clark",
+        "davidWu": "David Wu"
+      }
+    },
+    "photoSales": {
+      "summary": {
+        "totalSales": "Total Sales",
+        "totalSalesValue": "$1,850.00",
+        "totalSalesHint": "Gross photo sales",
+        "photosSold": "Photos Sold",
+        "photosSoldValue": "24",
+        "photosSoldHint": "Total purchases",
+        "availableEarnings": "Available Earnings",
+        "availableEarningsValue": "$850.00",
+        "availableEarningsHint": "Ready for payout"
+      },
+      "title": "Photo Sales",
+      "searchPlaceholder": "Search buyer, email, or photo name...",
+      "export": "Export",
+      "details": "Details",
+      "showing": "Showing 1 to 7 of 7 results",
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "columns": {
+        "date": "Date",
+        "buyer": "Buyer",
+        "email": "Email",
+        "photo": "Photo",
+        "salePrice": "Sale Price",
+        "yourEarnings": "Your Earnings",
+        "status": "Status",
+        "action": "Action"
+      },
+      "items": {
+        "aug12": "Aug 12, 2026",
+        "aug10": "Aug 10, 2026",
+        "aug8": "Aug 8, 2026",
+        "aug5": "Aug 5, 2026",
+        "aug2": "Aug 2, 2026",
+        "jul28": "Jul 28, 2026",
+        "jul20": "Jul 20, 2026",
+        "buyerAnna": "Anna Kowalska",
+        "buyerMark": "Mark Thompson",
+        "buyerLisa": "Lisa Patel",
+        "buyerJames": "James Hughes",
+        "buyerNina": "Nina Rodriguez",
+        "buyerChris": "Chris Miller",
+        "buyerOlivia": "Olivia Sanders",
+        "photoMorningFields": "Morning Fields",
+        "photoNeonStream": "Chasing the Neon Stream",
+        "photoGoldenHour": "Golden Hour Silence",
+        "photoAutumnSequence": "Autumn Sequence",
+        "photoCoastalLight": "Coastal Light"
+      }
     },
     "prizing": {
       "title": "My Prizing",
       "showing": "Showing 1 to 7 of 7 results",
       "columns": {
+        "month": "Month",
         "name": "Competitions Name",
+        "category": "Category",
+        "albumType": "Album Type",
         "position": "Position",
         "votes": "Total Vote",
         "prize": "Prize money"
       },
+      "months": {
+        "august2026": "August 2026",
+        "july2026": "July 2026",
+        "june2026": "June 2026",
+        "october2026": "October 2026",
+        "january2026": "January 2026",
+        "march2026": "March 2026",
+        "may2026": "May 2026"
+      },
+      "categories": {
+        "nature": "Nature",
+        "portrait": "Portrait",
+        "landscape": "Landscape",
+        "animal": "Animal",
+        "lifestyle": "Lifestyle",
+        "street": "Street"
+      },
+      "albumTypes": {
+        "singlePhoto": "Single Photo",
+        "sixPhotos": "6 Photos",
+        "zodiacAlbum": "12 Photos Zodiac Album"
+      },
       "positions": {
-        "first": "1 st",
-        "second": "2 nd",
-        "third": "3 rd"
+        "first": "1st",
+        "second": "2nd",
+        "third": "3rd"
       },
       "items": {
-        "celestial": "Celestial Wonders 2024",
-        "celestialLine1": "Celestial Wonders",
-        "celestialLine2": "2024"
+        "celestial": "Celestial Wonders 2024"
       }
     },
-    "transactions": {
-      "title": "Transaction History",
-      "subtitle": "Last 6 months of prize winnings and payouts",
+    "paymentHistory": {
+      "title": "Payment History",
       "showing": "Showing 1 to 7 of 7 results",
       "columns": {
-        "competition": "Competition / ID",
         "date": "Date",
+        "type": "Type",
+        "accountType": "Account Type",
+        "accountNumber": "Account Number",
         "amount": "Amount",
         "status": "Status"
       },
+      "types": {
+        "withdrawal": "Withdrawal"
+      },
+      "accountTypes": {
+        "stripe": "Stripe"
+      },
       "items": {
-        "golden": {
-          "title": "Golden Hour Portraits",
-          "id": "TXN-90281-PH",
-          "date": "Oct 12, 2023",
-          "amount": "+$1,500.00"
-        },
-        "macro": {
-          "title": "Macro World Weekly",
-          "id": "TXN-88412-PH",
-          "date": "Sep 28, 2023",
-          "amount": "+$250.00"
-        },
-        "paypal": {
-          "title": "Payout to PayPal",
-          "id": "TXN-WTH-5512",
-          "date": "Sep 15, 2023",
-          "amount": "-$2,000.00"
-        },
-        "wild": {
-          "title": "Wild Nature Annual",
-          "id": "TXN-77310-PH",
-          "date": "Aug 05, 2023",
-          "amount": "+$5,000.00"
-        },
-        "urban": {
-          "title": "Urban Dusk Challenge",
-          "id": "Processing...",
-          "date": "Pending",
-          "amount": "+$450.00"
-        }
+        "jul12": "Jul 12, 2025",
+        "jul11": "Jul 11, 2025",
+        "jul10": "Jul 10, 2025",
+        "jul9": "Jul 9, 2025",
+        "jul7": "Jul 7, 2025",
+        "jul5": "Jul 5, 2025",
+        "jul3": "Jul 3, 2025"
       }
     }
   },
@@ -1131,12 +1289,19 @@
     },
     "nav": {
       "dashboard": "Dashboard",
+      "artworkManagement": "Artwork Management",
+      "newsMessages": "News & Message",
+      "sellPhotos": "Sell Photos",
+      "favouritePhotographers": "Favourite Photographers",
       "uploadPhotos": "Upload Photos",
       "myCompetitions": "My Competitions",
       "businessPhotos": "Business Link Photos",
-      "chat": "Contact Us",
+      "chat": "Chat",
+      "notifications": "Notifications",
       "prizePayments": "Prize & Payments",
+      "contactUs": "Contact Us",
       "profile": "Profile",
+      "settings": "Settings",
       "logOut": "Log Out"
     },
     "stats": {
@@ -1427,6 +1592,321 @@
       "pisces": { "name": "Pisces", "range": "Feb 19 – Mar 20" }
     }
   },
+  "myArtwork": {
+    "title": "My Artwork",
+    "subtitle": "Manage your photos and albums, control your competition entries, and showcase your work on your profile.",
+    "uploadCta": "Upload Artwork",
+    "empty": "No artwork matches these filters.",
+    "showing": "Showing {{from}}–{{to}} of {{total}} items",
+    "paginationAria": "Artwork pagination",
+    "gridAria": "Artwork grid",
+    "statusFilterAria": "Filter by status",
+    "sortFilterAria": "Sort artwork",
+    "sortByPrefix": "Sort by:",
+    "stats": {
+      "aria": "Artwork stats",
+      "total": "Total Artwork",
+      "single": "Single Photos",
+      "six": "6 Photo Albums",
+      "twelve": "12 Photo Albums",
+      "entries": "Competition Entries"
+    },
+    "filters": {
+      "aria": "Filter artwork by type",
+      "all": "All Artwork",
+      "promoted": "Promoted"
+    },
+    "statusOptions": {
+      "all": "All Status",
+      "profileOnly": "Profile only",
+      "inCompetition": "In Competition",
+      "ended": "Competition Ended"
+    },
+    "sortOptions": {
+      "newest": "Newest First",
+      "oldest": "Oldest"
+    },
+    "actions": {
+      "menuAria": "Artwork actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "promote": "Promote"
+    },
+    "promote": {
+      "title": "Sponsored Photo",
+      "priceLabel": "Price",
+      "days": "{{count}} days",
+      "confirm": "Promote Artwork",
+      "cancel": "Cancel",
+      "close": "Close promote panel"
+    },
+    "detail": {
+      "back": "Back to Selection",
+      "totalReact": "Total React",
+      "badges": {
+        "twelveZodiac": "12 Photos Zodiac Story"
+      },
+      "description": "A young man walking confidently along a quiet city street during golden hour, wearing a casual white t-shirt, black jeans, and clean white sneakers. His hands are relaxed by his sides, with a natural walking posture and a calm expression. Soft sunlight creates warm highlights and long shadows on the pavement. Modern buildings, green trees, and a slightly blurred urban background add depth to the scene. Captured in a cinematic, photorealistic style with shallow depth of field, ultra-realistic, high detail, 8K quality."
+    },
+    "card": {
+      "options": "Artwork options",
+      "promoted": "Promoted",
+      "extraPhotos": "+{{count}} photos",
+      "uploaded": "Uploaded {{date}}",
+      "views": "{{count}} Views",
+      "hearts": "{{count}} Heart",
+      "expiry": "Expiry {{date}}",
+      "live": "Live",
+      "votes": "Votes",
+      "rank": "Rank",
+      "votingEnds": "Voting ends: {{date}}",
+      "activeEntry": "Active Entry",
+      "profileOnly": "Profile Only",
+      "notInContest": "Not in monthly contest.",
+      "addToCompetition": "Add to Competition",
+      "competitionEnded": "Competition Ended",
+      "endedVotes": "{{count}} votes",
+      "submitAgain": "Submit Again"
+    }
+  },
+  "myMessages": {
+    "title": "My Message",
+    "subtitle": "Manage your message and showcase your work on your profile.",
+    "uploadCta": "Upload Message",
+    "gridAria": "Message feed",
+    "paginationAria": "Messages pagination",
+    "card": {
+      "badge": "Photographer Note",
+      "likes": "{{count}} Likes",
+      "share": "Share"
+    },
+    "items": {
+      "summerCollection": {
+        "body": "I'm excited to share my new Summer Collection from the Polish countryside featuring early sunrise mists over the Tatra valleys. The light conditions at 4:30 AM were truly magical!"
+      }
+    },
+    "upload": {
+      "back": "Back to Selection",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Share the creative narrative behind this cosmological series...",
+      "mediaTitle": "Upload Photos / Videos",
+      "mediaHint": "Help your pro prepare by showing them the work area. Optional but highly recommended.",
+      "dropLabel": "Click to upload photos or drag & drop",
+      "dropHint": "JPG, PNG, MP4 — max 20MB each",
+      "copyrightConfirm": "I confirm that I own the full copyright for all uploaded photos and that they do not contain or promote anything illegal.",
+      "submit": "Submit your Message",
+      "success": "Your message was submitted successfully.",
+      "errors": {
+        "messageRequired": "Please enter a message.",
+        "mediaRequired": "Please upload at least one photo or video.",
+        "copyrightRequired": "Please confirm the copyright statement."
+      }
+    }
+  },
+  "sellPhotos": {
+    "title": "Manage Your Selling Photos",
+    "subtitle": "Manage your photos and showcase your work on your profile.",
+    "uploadCta": "Upload Photos",
+    "empty": "No selling photos match these filters.",
+    "showing": "Showing {{from}}–{{to}} of {{total}} items",
+    "paginationAria": "Selling photos pagination",
+    "gridAria": "Selling photos grid",
+    "filters": {
+      "aria": "Filter selling photos by type",
+      "all": "All Artwork",
+      "promoted": "Promoted"
+    },
+    "uploadMenu": {
+      "aria": "Select artwork format",
+      "heading": "Select Artwork Format",
+      "single": {
+        "title": "Upload Single Photo",
+        "description": "Upload one high-resolution photograph"
+      },
+      "six": {
+        "title": "Upload 6 Photos",
+        "description": "Create a cohesive 6-photo album story"
+      },
+      "zodiac": {
+        "title": "Upload 12 Photos",
+        "description": "Full Zodiac Story mapped to 12 signs"
+      }
+    },
+    "fields": {
+      "price": "Price",
+      "pricePlaceholder": "$2.00",
+      "resolution": "Resolution",
+      "resolutionPlaceholder": "6000 × 4000 px",
+      "format": "Format",
+      "formatPlaceholder": "JPEG, PDF, PNG",
+      "camera": "Camera",
+      "cameraPlaceholder": "SONY"
+    },
+    "errors": {
+      "priceRequired": "Please enter a price."
+    },
+    "card": {
+      "promoted": "Promoted",
+      "extraPhotos": "+{{count}} photos",
+      "expiry": "Expiry: {{date}}"
+    },
+    "detail": {
+      "back": "Back to Selection",
+      "listingTitle": "Listing",
+      "totalSell": "Total Sell",
+      "badges": {
+        "twelveZodiac": "12 Photos Zodiac Story"
+      }
+    }
+  },
+  "favouritePhotographers": {
+    "title": "Favourite Photographers",
+    "subtitle": "Photographers who follow you and whose work you keep close.",
+    "empty": "No favourite photographers yet.",
+    "showing": "Showing {{from}}–{{to}} of {{total}} photographers",
+    "paginationAria": "Favourite photographers pagination",
+    "gridAria": "Favourite photographers grid",
+    "specialties": {
+      "nature": "Nature Photographer",
+      "landscape": "Landscape Photographer",
+      "portrait": "Portrait Photographer",
+      "wildlife": "Wildlife Photographer",
+      "street": "Street Photographer",
+      "travel": "Travel Photographer",
+      "architecture": "Architecture Photographer",
+      "fineArt": "Fine Art Photographer"
+    },
+    "locations": {
+      "unitedKingdom": "United Kingdom",
+      "poland": "Poland",
+      "spain": "Spain",
+      "germany": "Germany",
+      "italy": "Italy",
+      "singapore": "Singapore",
+      "japan": "Japan"
+    },
+    "quotes": {
+      "michaelBrown": "I chase light through forests and coastlines, building quiet stories one frame at a time.",
+      "elenaVance": "Seasonal light and cinematic composition guide every album I publish on My12Photos.",
+      "annaKowalska": "Portraits should feel honest — I look for the moment just before the smile breaks.",
+      "piotrMazur": "Wildlife photography is patience made visible. Every frame is a long conversation with nature.",
+      "martaWisniewska": "City geometry and human rhythm — that tension is what keeps me shooting after dark.",
+      "sofiaReyes": "Travel taught me that the best stories live between destinations, not at them.",
+      "janMuller": "Lines, symmetry, and shadow — architecture reveals character when the light is low.",
+      "kasiaLewandowska": "Macro and meadow light — I document the small worlds most people walk past.",
+      "lucasFernandez": "Mountain passes at dawn still feel like the first photograph I ever made.",
+      "emmaClark": "Soft light, honest faces, and the stillness between words — that is my portrait work.",
+      "tomaszNowak": "Every wetland season brings new behaviour. I return to the same marshes year after year.",
+      "isabellaRossi": "Fine art is not decoration — it is memory distilled into colour and form.",
+      "davidChen": "Street frames are collisions of chance. I wait for the city to arrange itself.",
+      "ninaPetrov": "Fog, birch trees, and river mist — northern landscapes are my native language.",
+      "oliverHughes": "Coastal storms and golden breaks — the British Isles never stop offering contrast.",
+      "yukiTanaka": "From temple gardens to neon alleys — Japan teaches restraint and surprise in equal measure."
+    },
+    "card": {
+      "followedYou": "Followed you: {{date}}",
+      "followers": "Followers",
+      "artworks": "Artworks",
+      "following": "Following",
+      "follow": "Follow",
+      "viewProfile": "View Profile"
+    }
+  },
+  "memberProfile": {
+    "editProfile": "Edit profile",
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Profile Visitor",
+      "totalArtwork": "Total Artwork",
+      "competitionEntries": "Competition Entries",
+      "totalHearts": "Total Hearts",
+      "premiumPhotos": "Premium Photos"
+    },
+    "statsShort": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Visitors",
+      "totalArtwork": "Artwork",
+      "competitionEntries": "Entries",
+      "totalHearts": "Hearts",
+      "premiumPhotos": "Premium"
+    }
+  },
+  "profileConnections": {
+    "backToSelection": "Back to Profile",
+    "empty": "No photographers to show yet.",
+    "showing": "Showing {{from}}–{{to}} of {{total}} photographers",
+    "paginationAria": "Profile connections pagination",
+    "gridAria": "Profile connections grid",
+    "selection": {
+      "title": "Profile",
+      "subtitle": "Manage your community connections and account settings.",
+      "open": "Open"
+    },
+    "following": {
+      "title": "Following",
+      "subtitle": "Photographers you follow and keep up with across My12Photos."
+    },
+    "followers": {
+      "title": "Followers",
+      "subtitle": "Photographers who follow you and engage with your work."
+    },
+    "settings": {
+      "title": "Account Settings",
+      "subtitle": "Update your profile information and password."
+    }
+  },
+  "memberSettings": {
+    "title": "Profile Details Editor",
+    "subtitle": "Manage your artistic identity and account security settings.",
+    "save": "Save",
+    "profile": {
+      "title": "Your Photographer Profile",
+      "subtitle": "Control how other photographers and judges see your public bio portfolio.",
+      "fullName": "Full Name",
+      "username": "Username",
+      "phone": "Phone Number",
+      "email": "Email ID",
+      "saved": "Profile details saved successfully!"
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "subtitle": "Upload your portfolio and social media links.",
+      "website": "Website URL",
+      "facebook": "Facebook URL",
+      "instagram": "Instagram URL",
+      "twitter": "Twitter URL",
+      "linkedin": "LinkedIn URL",
+      "saved": "Portfolio links saved successfully!"
+    },
+    "coverPhoto": {
+      "title": "Cover Photo"
+    },
+    "profilePhoto": {
+      "title": "Profile Photo"
+    },
+    "upload": {
+      "title": "Upload Photos",
+      "coverHint": "Help your pro prepare by showing them the work area. Optional but highly recommended.",
+      "profileHint": "Add a clear portrait so other photographers can recognize you across the platform.",
+      "dropLabel": "Click to upload photos or drag & drop",
+      "dropHint": "JPG, PNG — max 20MB each"
+    },
+    "security": {
+      "title": "Account Security",
+      "subtitle": "Manage your access and safeguard your creative portfolio.",
+      "formTitle": "Set New Password",
+      "saved": "Password changed successfully!"
+    },
+    "errors": {
+      "fullNameRequired": "Full name is required.",
+      "usernameRequired": "Username is required.",
+      "phoneRequired": "Phone number is required.",
+      "emailRequired": "Email address is required.",
+      "emailInvalid": "Please enter a valid email address."
+    }
+  },
   "myCompetitions": {
     "title": "My Competition Submissions",
     "subtitle": "Track your artistic journey, view live voting results, and manage your elite photography entries.",
@@ -1554,6 +2034,9 @@
       },
       "overview": "Overview",
       "competitions": "Competitions",
+      "gallery": "Gallery",
+      "premiumPhotos": "Premium Photos",
+      "promotedAlbums": "Promoted Albums",
       "submissions": "Submissions",
       "users": "Users",
       "categories": "Categories",
@@ -1564,6 +2047,8 @@
       "businessPhotos": "Business Link Photos",
       "newsletter": "Newsletter",
       "comment": "Comment",
+      "demoProfile": "Demo Profile",
+      "settings": "Settings",
       "profile": "Profile"
     },
     "stats": {
@@ -1575,7 +2060,33 @@
       "pendingApproval": "Pending approval",
       "pendingApprovalValue": "128",
       "votesCast": "Votes cast",
-      "votesCastValue": "1.24M"
+      "votesCastValue": "1.24M",
+      "totalCommission": "Total Commission",
+      "totalCommissionValue": "$13000.00",
+      "thisMonthCommission": "This Month Commission",
+      "thisMonthCommissionValue": "$1300.00",
+      "totalPromoted": "Total Promoted",
+      "totalPromotedValue": "$16000.00",
+      "thisMonthPromoted": "This Month Promoted",
+      "thisMonthPromotedValue": "$160.00",
+      "totalRevenue": "Total Revenue",
+      "totalRevenueValue": "$26985.00",
+      "totalPayouts": "Total Payouts",
+      "totalPayoutsValue": "$16985.00"
+    },
+    "revenueTrend": {
+      "title": "Revenue Trend",
+      "period": "This year",
+      "periodOptions": {
+        "thisYear": "This year",
+        "sixMonths": "Last 6 months",
+        "thisMonth": "This month",
+        "lastYear": "Last year"
+      },
+      "commission": "Commission",
+      "commissionValue": "$5600.00",
+      "promoted": "Promoted",
+      "promotedValue": "$5900.00"
     },
     "analytics": {
       "title": "Visitor analytics",
@@ -1597,11 +2108,11 @@
       }
     },
     "pending": {
-      "title": "Pending review",
+      "title": "Recent Competition",
       "subtitle": "128 submissions need a decision",
       "reviewAll": "Review all",
       "badge": "Pending",
-      "openQueue": "Open review queue",
+      "openQueue": "Open Competition",
       "items": {
         "river": {
           "title": "When the river sleeps",
@@ -1638,19 +2149,21 @@
     }
   },
   "adminCompetitions": {
-    "title": "Photo Showcase",
+    "title": "Competition",
     "gridAria": "Competition photo showcase",
     "empty": "No submissions match this filter.",
+    "delete": "Delete",
+    "extraPhotos": "+{{count}} photos",
     "filters": {
       "aria": "Filter by album type",
       "single": "Single Photo",
-      "six": "6 Photo Story",
+      "six": "6 Photos Story",
       "zodiac": "12 photos - full Zodiac Story"
     },
     "types": {
-      "single": "Single Photo",
-      "six": "6 Photo Story",
-      "zodiac": "12 photos - full Zodiac Story"
+      "single": "SINGLE PHOTO",
+      "six": "6 PHOTOS STORY",
+      "zodiac": "12 Photos-Full Zodiac Story"
     },
     "pagination": {
       "aria": "Competitions pagination",
@@ -1663,55 +2176,73 @@
     "cards": {
       "autumn": {
         "title": "Autumn Sequence",
-        "meta": "Kasia L. · Poland"
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       },
       "wings": {
-        "title": "Wings Over the Marsh",
-        "meta": "Kasia L. · Poland"
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       },
       "city": {
-        "title": "City After Midnight",
-        "meta": "Kasia L. · Poland"
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       },
       "forest": {
-        "title": "Forest Cathedral",
-        "meta": "Jan M. · Czech"
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       },
       "morning": {
-        "title": "Morning Fields",
-        "meta": "Anna K. · Poland"
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       },
       "harbor": {
-        "title": "Harbor Lights",
-        "meta": "Piotr W. · Poland"
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       },
       "silent": {
-        "title": "Silent Shore",
-        "meta": "Eva N. · Germany"
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       },
       "zodiac": {
-        "title": "Zodiac Journey",
-        "meta": "Kasia L. · Poland"
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
       }
     }
   },
   "adminCompetitionDetail": {
-    "breadcrumb": {
-      "competitions": "COMPETITIONS",
-      "details": "Photo Details"
-    },
-    "title": "Competition management",
-    "subtitle": "Set the rules, schedule, and visibility of every live photography call.",
+    "back": "Back to Selection",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
     "heroAria": "Competition photo",
     "slidesAria": "Story photo slides",
-    "votesReceived": "Votes received",
-    "viewsCounted": "Views counted",
+    "votesReceived": "VOTES RECEIVED",
+    "viewsCounted": "VIEWS COUNTED",
     "photographerLabel": "Photographer",
     "photographerName": "Wong Kar-Wai",
     "photographerKasia": "Kasia L.",
+    "viewProfile": "View Profile",
+    "verified": "Verified",
+    "commentsTitle": "Comments",
     "description": "A young man walking confidently along a quiet city street during golden hour, wearing a casual white t-shirt, black jeans, and clean white sneakers. His hands are relaxed by his sides, with a natural walking posture and a calm expression. Soft sunlight creates warm highlights and long shadows on the pavement. Modern buildings, green trees, and a slightly blurred urban background add depth to the scene. Captured in a cinematic, photorealistic style with shallow depth of field, ultra-realistic, high detail, 8K quality.",
+    "typeBadges": {
+      "single": "SINGLE PHOTO",
+      "six": "6 PHOTOS",
+      "zodiac": "12 PHOTOS ZODIAC STORY"
+    },
+    "comments": {
+      "darrell": "Darrell Steward",
+      "text1": "I really like the composition and the colors. Amazing work!",
+      "text2": "Your creativity really stands out. Best of luck in the competition!"
+    },
     "categories": {
-      "nature": "Nature"
+      "nature": "NATURE"
     },
     "signs": {
       "aries": "Aries",
@@ -1729,13 +2260,261 @@
     },
     "entries": {
       "wings": { "title": "Chasing the Neon Stream" },
-      "forest": { "title": "Forest Cathedral" },
-      "morning": { "title": "Morning Fields" },
-      "harbor": { "title": "Harbor Lights" },
-      "silent": { "title": "Silent Shore" },
-      "autumn": { "title": "Autumn Sequence" },
-      "city": { "title": "City After Midnight" },
-      "zodiac": { "title": "Zodiac Journey" }
+      "forest": { "title": "Chasing the Neon Stream" },
+      "morning": { "title": "Chasing the Neon Stream" },
+      "harbor": { "title": "Chasing the Neon Stream" },
+      "silent": { "title": "Chasing the Neon Stream" },
+      "autumn": { "title": "Chasing the Neon Stream" },
+      "city": { "title": "Chasing the Neon Stream" },
+      "zodiac": { "title": "Chasing the Neon Stream" }
+    }
+  },
+  "adminGallery": {
+    "title": "Gallery",
+    "gridAria": "Gallery photo showcase",
+    "empty": "No entries match this filter.",
+    "delete": "Delete",
+    "extraPhotos": "+{{count}} photos",
+    "filters": {
+      "aria": "Filter by album type",
+      "all": "All",
+      "single": "Single Photo",
+      "six": "6 Photo story",
+      "zodiac": "12 photos - full Zodiac Story"
+    },
+    "types": {
+      "single": "SINGLE PHOTO",
+      "six": "6 PHOTOS STORY",
+      "zodiac": "12 Photos-Full Zodiac Story"
+    },
+    "pagination": {
+      "aria": "Gallery pagination",
+      "first": "First page",
+      "prev": "Previous page",
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {{page}}"
+    },
+    "cards": {
+      "autumn": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "wings": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "city": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "forest": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "morning": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "harbor": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "silent": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "zodiac": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "golden": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "tidal": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      }
+    }
+  },
+  "adminGalleryDetail": {
+    "back": "Back to Selection",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "heroAria": "Gallery photo",
+    "slidesAria": "Story photo slides",
+    "totalReact": "TOTAL REACT",
+    "viewsCounted": "VIEWS COUNTED",
+    "photographerLabel": "Photographer",
+    "photographerName": "Wong Kar-Wai",
+    "viewProfile": "View Profile",
+    "verified": "Verified",
+    "commentsTitle": "Comments",
+    "comments": {
+      "darrell": "Darrell Steward",
+      "text1": "I really like the composition and the colors. Amazing work!",
+      "text2": "Your creativity really stands out. Best of luck in the competition!"
+    }
+  },
+  "adminPremiumPhotos": {
+    "title": "Premium Photos",
+    "gridAria": "Premium photo showcase",
+    "empty": "No entries match this filter.",
+    "delete": "Delete",
+    "extraPhotos": "+{{count}} photos",
+    "filters": {
+      "aria": "Filter by album type",
+      "all": "All",
+      "single": "Single Photo",
+      "six": "6 Photo story",
+      "zodiac": "12 photos - full Zodiac Story"
+    },
+    "types": {
+      "single": "SINGLE PHOTO",
+      "six": "6 PHOTOS STORY",
+      "zodiac": "12 Photos-Full Zodiac Story"
+    },
+    "pagination": {
+      "aria": "Premium photos pagination",
+      "first": "First page",
+      "prev": "Previous page",
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {{page}}"
+    },
+    "cards": {
+      "autumn": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "wings": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "city": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "forest": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "morning": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "harbor": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "silent": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "zodiac": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "golden": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      },
+      "tidal": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "August 9, 2026"
+      }
+    }
+  },
+  "adminPremiumPhotosDetail": {
+    "back": "Back to Selection",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "heroAria": "Premium photo",
+    "slidesAria": "Story photo slides",
+    "subtitle": "High-Resolution Digital Download",
+    "detailsTitle": "Details",
+    "likesReceived": "LIKES RECEIVED",
+    "viewsCounted": "VIEWS COUNTED",
+    "totalSell": "TOTAL SELL",
+    "photographerLabel": "Photographer",
+    "viewProfile": "View Profile",
+    "specs": {
+      "resolution": "Resolution",
+      "format": "Format",
+      "camera": "Camera",
+      "resolutionSingle": "6000 × 4000 px",
+      "resolutionStory": "8000 × 4000 px",
+      "formatValue": "JPG, RAW",
+      "cameraValue": "Sony A7R IV"
+    }
+  },
+  "adminPromoted": {
+    "title": "Promoted Products",
+    "gridAria": "Promoted products showcase",
+    "empty": "No entries match this filter.",
+    "extraPhotos": "+{{count}} photos",
+    "badge": {
+      "promoted": "Promoted"
+    },
+    "uploadedLabel": "Uploaded",
+    "viewsLabel": "Views",
+    "heartLabel": "Heart",
+    "expiryLabel": "Expiry",
+    "filters": {
+      "aria": "Filter by album type",
+      "all": "All",
+      "single": "Single Photo",
+      "six": "6 Photo story",
+      "zodiac": "12 photos - full Zodiac Story"
+    },
+    "types": {
+      "single": "SINGLE PHOTO",
+      "six": "6 PHOTOS STORY",
+      "zodiac": "12 Photos-Full Zodiac Story"
+    },
+    "pagination": {
+      "aria": "Promoted products pagination",
+      "first": "First page",
+      "prev": "Previous page",
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {{page}}"
+    },
+    "cards": {
+      "nordic": {
+        "title": "Nordic Solitude - 6 Chapter Journey",
+        "description": "Golden Hour Reflections Along The Rugged Coastline Of Big Sur During Summer….",
+        "category": "Landscape",
+        "uploadDate": "Aug 9,2026",
+        "uploadTime": "12:03 PM",
+        "expiry": "8/12/2026"
+      },
+      "autumn": {
+        "title": "Autumn Sequence",
+        "date": "August 9, 2026",
+        "expiry": "8/12/2026"
+      }
     }
   },
   "adminSubmissions": {
@@ -1829,8 +2608,9 @@
       "suspended": "Suspended"
     },
     "actions": {
-      "suspend": "Suspend {{name}}",
-      "reactivate": "Reactivate {{name}}"
+      "menu": "Actions for {{name}}",
+      "active": "Active",
+      "suspendOption": "Suspend"
     },
     "suspendModal": {
       "title": "Suspend User",
@@ -1948,56 +2728,51 @@
   },
   "adminPayouts": {
     "eyebrow": "PAYOUTS",
-    "title": "Prize payouts",
-    "subtitle": "Review withdrawal requests and reconcile manual payments.",
-    "tableAria": "Prize payouts table",
-    "empty": "No payouts match this filter.",
-    "sortBy": "Sort By:",
-    "filters": {
-      "aria": "Filter payouts by status",
-      "all": "All Status",
-      "pending": "Pending",
-      "processing": "Processing",
-      "paid": "Paid"
+    "sections": {
+      "prize": {
+        "title": "Prize payouts",
+        "subtitle": "Review withdrawal requests and reconcile manual payments."
+      },
+      "donation": {
+        "title": "Donation Payout",
+        "subtitle": "Review withdrawal requests and reconcile manual payments."
+      },
+      "premium": {
+        "title": "Premium Photos Payout",
+        "subtitle": "Review withdrawal requests and reconcile manual payments."
+      }
     },
     "columns": {
-      "winner": "Winner",
-      "totalEarn": "Total Earn",
-      "withdrawAmount": "Wthdraw Amount",
-      "paypalNumber": "PayPal Number",
-      "requested": "Requested",
+      "date": "Date",
+      "type": "Type",
+      "accountType": "Account Type",
+      "accountNumber": "Account Number",
+      "amount": "Amount",
       "status": "Status",
-      "action": "Action"
+      "action": "Action",
+      "withdrawal": "Withdrawal",
+      "paypal": "payPal"
     },
     "status": {
       "pending": "Pending",
-      "processing": "Processing",
-      "paid": "Paid"
+      "approved": "Approved"
     },
     "actions": {
-      "menu": "Open actions for {{name}}",
-      "menuAria": "Change status for {{name}}"
+      "menu": "Actions",
+      "menuAria": "Change status"
     },
     "pagination": {
-      "showing": "Showing {{count}} of {{total}} results",
-      "aria": "Payouts pagination",
-      "previous": "Previous page",
-      "next": "Next page",
-      "page": "Page {{page}}"
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "previous": "Previous",
+      "next": "Next"
     },
     "rows": {
-      "kofi": {
-        "name": "Kofi Agyeman",
-        "requested": "18 May 2026"
-      },
-      "nguyen": {
-        "name": "B. Nguyen",
-        "requested": "17 May 2026"
-      },
-      "tara": {
-        "name": "Tara Cole",
-        "requested": "15 May 2026"
-      }
+      "r1": { "date": "Jul 5, 2025" },
+      "r2": { "date": "Jul 7, 2025" },
+      "r3": { "date": "Jul 8, 2025" },
+      "r4": { "date": "Jul 9, 2025" },
+      "r5": { "date": "Jul 10, 2025" },
+      "r6": { "date": "Jul 12, 2025" }
     }
   },
   "adminBusinessLink": {
@@ -2216,6 +2991,359 @@
       }
     }
   },
+  "adminDemoProfiles": {
+    "title": "Demo Profiles",
+    "subtitle": "Create and manage demo profiles for your photography platform.",
+    "addButton": "Add Demo Profile",
+    "addComingSoon": "Add demo profile will be available soon.",
+    "sortBy": "Sort By:",
+    "tableAria": "Demo profiles table",
+    "empty": "No demo profiles match this filter.",
+    "stats": {
+      "total": "Total Profiles",
+      "active": "Active Profiles",
+      "inactive": "Inactive Profiles"
+    },
+    "filters": {
+      "aria": "Filter demo profiles by status",
+      "all": "All Status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "profile": "Profile",
+      "username": "Username",
+      "phone": "Phone Number",
+      "email": "Email",
+      "status": "Status",
+      "action": "Action"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "menu": "Actions for {{name}}",
+      "seeDetails": "See Details",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "title": "Profile Details",
+      "close": "Close profile details",
+      "closeButton": "Close",
+      "deactivate": "Deactivate Profile",
+      "contactTitle": "Contact Information",
+      "phoneLabel": "Phone Number",
+      "emailLabel": "Email",
+      "aboutTitle": "About",
+      "socialTitle": "Social Media"
+    },
+    "create": {
+      "back": "Back to Selection",
+      "title": "Add Demo Profile",
+      "subtitle": "Create a new demo profile for the platform.",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter full name",
+      "fullNameRequired": "Full name is required.",
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
+      "usernameRequired": "Username is required.",
+      "phone": "Phone Number",
+      "phonePlaceholder": "Enter phone number",
+      "phoneRequired": "Phone number is required.",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter email address",
+      "emailRequired": "Enter a valid email address.",
+      "bio": "Short Bio",
+      "bioPlaceholder": "Write a short introduction about this photographer...",
+      "bioCount": "{{count}}/{{max}}",
+      "socialTitle": "Social Media Link",
+      "socialPlaceholder": "https://instagram.com/username",
+      "addSocial": "Add Another",
+      "removeSocial": "Remove social link",
+      "profilePhoto": "Profile Photo",
+      "profilePhotoTitle": "Upload Profile Photo",
+      "profilePhotoHint": "JPG, PNG or WebP • 400x400px",
+      "coverPhoto": "Cover Photo",
+      "coverPhotoTitle": "Upload Cover Photo",
+      "coverPhotoHint": "JPG, PNG or WebP • 1600x800px",
+      "statusTitle": "Profile Status",
+      "statusHint": "Inactive profiles will not be displayed as active demo profiles on the platform.",
+      "statusToggle": "Toggle profile status",
+      "cancel": "Cancel",
+      "submit": "Create Profile",
+      "formInvalid": "Please fill in all required fields.",
+      "success": "Demo profile created successfully."
+    },
+    "profiles": {
+      "elena": {
+        "name": "Elena Vasquez",
+        "username": "@elenavasquez",
+        "about": "Award-winning landscape photographer with a decade of experience capturing the raw beauty of untouched wilderness. Based in the Pacific Northwest."
+      },
+      "marcus": {
+        "name": "Marcus Chen",
+        "username": "@marcuschen",
+        "about": "Urban and street photographer documenting city life through candid moments and architectural geometry."
+      },
+      "sofia": {
+        "name": "Sofia Rodriguez",
+        "username": "@sofiarod",
+        "about": "Portrait specialist blending natural light with bold color palettes for editorial and commercial work."
+      },
+      "james": {
+        "name": "James Okafor",
+        "username": "@jamesokafor",
+        "about": "Documentary photographer focused on cultural heritage and everyday stories across West Africa."
+      },
+      "priya": {
+        "name": "Priya Sharma",
+        "username": "@priyasharma",
+        "about": "Fine-art photographer exploring texture, motion, and light in abstract nature compositions."
+      },
+      "liam": {
+        "name": "Liam O'Brien",
+        "username": "@liamobrien",
+        "about": "Coastal photographer capturing dramatic seascapes and long-exposure shoreline studies."
+      },
+      "yuki": {
+        "name": "Yuki Tanaka",
+        "username": "@yukitanaka",
+        "about": "Minimalist photographer inspired by Japanese aesthetics and quiet seasonal transitions."
+      },
+      "amara": {
+        "name": "Amara Okonkwo",
+        "username": "@amarao",
+        "about": "Fashion and lifestyle photographer creating vibrant editorial stories for emerging brands."
+      },
+      "carlos": {
+        "name": "Carlos Mendez",
+        "username": "@carlosm",
+        "about": "Adventure photographer documenting mountain expeditions and remote landscapes across Latin America."
+      },
+      "nina": {
+        "name": "Nina Kowalski",
+        "username": "@ninak",
+        "about": "Black-and-white photographer specializing in architectural forms and urban symmetry."
+      }
+    }
+  },
+  "adminAnnouncements": {
+    "title": "Ads & Announcements",
+    "subtitle": "Create and manage announcements displayed above the website navigation.",
+    "createButton": "Create Announcement",
+    "tableAria": "Announcements table",
+    "empty": "No announcements found.",
+    "stats": {
+      "total": { "label": "Total Announcements", "hint": "All announcements" },
+      "active": { "label": "Active", "hint": "Currently visible" },
+      "scheduled": { "label": "Scheduled", "hint": "Scheduled to appear" },
+      "expired": { "label": "Expired", "hint": "No longer active" }
+    },
+    "columns": {
+      "announcement": "Announcement",
+      "type": "Type",
+      "schedule": "Schedule",
+      "priority": "Priority",
+      "status": "Status",
+      "action": "Action"
+    },
+    "schedule": {
+      "start": "Start:",
+      "end": "End:",
+      "manual": "Manual"
+    },
+    "types": {
+      "winner": "Winner Announcement",
+      "competition": "Competition",
+      "promotion": "Promotion",
+      "general": "General",
+      "important": "Important Notice"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "status": {
+      "active": "Active",
+      "scheduled": "Scheduled",
+      "expired": "Expired",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "menu": "Actions for {{title}}",
+      "edit": "Edit",
+      "setActive": "Set Active",
+      "setInactive": "Set Inactive",
+      "delete": "Delete"
+    },
+    "pagination": {
+      "showing": "Showing {{from}}-{{to}} of {{total}} announcements",
+      "aria": "Announcements pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{page}}"
+    },
+    "modal": {
+      "title": "Create Announcement",
+      "subtitle": "Create a short announcement that will appear above the website navigation.",
+      "close": "Close create announcement dialog",
+      "messageLabel": "Announcement Message",
+      "messagePlaceholder": "Enter announcement message...",
+      "messageRequired": "Announcement message is required.",
+      "messageCount": "{{count}} / {{max}}",
+      "emojiLabel": "Icon / Emoji (optional)",
+      "typeLabel": "Type",
+      "linkLabel": "Link",
+      "scheduleTitle": "Display Schedule",
+      "startDate": "Start Date",
+      "startTime": "Start Time",
+      "endDate": "End Date",
+      "endTime": "End Time",
+      "noEndDate": "No End Date — runs until manually deactivated",
+      "statusLabel": "Status",
+      "statusHint": "Active announcements can appear on the website when their schedule is valid.",
+      "priorityLabel": "Display Priority",
+      "priorityHint": "Higher priority announcements appear first in the scrolling bar.",
+      "cancel": "Cancel",
+      "submit": "Create Announcement",
+      "links": {
+        "none": "No Link",
+        "competitions": "Competitions",
+        "gallery": "Gallery",
+        "winners": "Winners"
+      }
+    },
+    "rows": {
+      "mayWinners": {
+        "title": "May 2026 Winners Announced",
+        "start": "May 1, 2026",
+        "end": "Jun 30, 2026"
+      },
+      "juneCompetition": {
+        "title": "June Competition Now Open",
+        "start": "Jun 1, 2026",
+        "end": "Jul 31, 2026"
+      },
+      "prizePool": {
+        "title": "Prize Pool Increased to $500",
+        "start": "Jul 1, 2026",
+        "end": "Aug 31, 2026"
+      },
+      "maintenance": {
+        "title": "Platform Maintenance Notice",
+        "start": "Jun 15, 2026",
+        "end": "Jun 16, 2026"
+      },
+      "deadline": {
+        "title": "Important: Submission Deadline Extended",
+        "start": "Jun 10, 2026",
+        "end": "Jun 20, 2026"
+      },
+      "summerGallery": {
+        "title": "Summer Gallery Collection Live",
+        "start": "May 10, 2026",
+        "end": "May 31, 2026"
+      },
+      "aprilWinners": {
+        "title": "April 2026 Winners Announced",
+        "start": "Apr 1, 2026",
+        "end": "Apr 30, 2026"
+      },
+      "julyCompetition": {
+        "title": "July Competition Preview",
+        "start": "Jul 1, 2026",
+        "end": "Aug 15, 2026"
+      },
+      "premiumLaunch": {
+        "title": "Premium Photos Launch Offer",
+        "start": "Mar 1, 2026",
+        "end": "Mar 31, 2026"
+      },
+      "newsletter": {
+        "title": "Newsletter Signup Reminder",
+        "start": "Feb 1, 2026",
+        "end": "Feb 28, 2026"
+      },
+      "policyUpdate": {
+        "title": "Privacy Policy Update",
+        "start": "Jan 5, 2026",
+        "end": "Jan 20, 2026"
+      },
+      "goldenHour": {
+        "title": "Golden Hour Challenge Open",
+        "start": "Dec 1, 2025",
+        "end": "Dec 31, 2025"
+      },
+      "referral": {
+        "title": "Refer a Friend Bonus",
+        "start": "Nov 1, 2025",
+        "end": "Nov 30, 2025"
+      },
+      "calendar": {
+        "title": "2026 Competition Calendar",
+        "start": "Oct 1, 2025",
+        "end": "Oct 31, 2025"
+      },
+      "marchWinners": {
+        "title": "March 2026 Winners Announced",
+        "start": "Mar 1, 2026",
+        "end": "Mar 31, 2026"
+      },
+      "featureLaunch": {
+        "title": "New Gallery Features Live",
+        "start": "Sep 1, 2025",
+        "end": "Sep 30, 2025"
+      },
+      "community": {
+        "title": "Community Spotlight Week",
+        "start": "Aug 1, 2025",
+        "end": "Aug 31, 2025"
+      },
+      "votingReminder": {
+        "title": "Voting Ends in 48 Hours",
+        "start": "Jul 10, 2025",
+        "end": "Jul 12, 2025"
+      },
+      "seascape": {
+        "title": "Seascape Competition Open",
+        "start": "Jun 1, 2025",
+        "end": "Jun 30, 2025"
+      },
+      "spotlight": {
+        "title": "Photographer Spotlight Series",
+        "start": "May 1, 2025",
+        "end": "May 31, 2025"
+      },
+      "submissionTips": {
+        "title": "Submission Tips & Guidelines",
+        "start": "Apr 1, 2025",
+        "end": "Apr 30, 2025"
+      },
+      "anniversary": {
+        "title": "My12Photos Anniversary Celebration",
+        "start": "Mar 1, 2025",
+        "end": "Mar 15, 2025"
+      },
+      "tools": {
+        "title": "New Admin Tools Available",
+        "start": "Feb 1, 2025",
+        "end": "Feb 28, 2025"
+      },
+      "flashSale": {
+        "title": "Flash Sale on Premium Albums",
+        "start": "Jan 1, 2025",
+        "end": "Jan 7, 2025"
+      }
+    }
+  },
   "adminNewsletter": {
     "title": "Newsletter",
     "subtitle": "Manage newsletter subscribers and email campaigns.",
@@ -2244,9 +3372,21 @@
       "ctaUrl": "CTA Button URL",
       "ctaUrlPlaceholder": "https://yoursite.com/post"
     },
+    "send": {
+      "button": "Send Newsletter",
+      "sending": "Sending…",
+      "success": "Newsletter sent successfully!",
+      "validationError": "Please fill in the required fields.",
+      "subjectRequired": "Subject is required.",
+      "contentRequired": "Content is required.",
+      "recipientsRequired": "Select at least one subscriber."
+    },
     "recipients": {
       "title": "Recipients",
       "subtitle": "Choose who receives this campaign.",
+      "selectHint": "Select subscribers from the list",
+      "selectedCount": "{{count}} selected",
+      "selectSubscriber": "Select {{email}}",
       "everyone": {
         "title": "Send to Everyone",
         "subtitle": "All 18,420 subscribers"

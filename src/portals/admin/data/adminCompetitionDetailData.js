@@ -1,13 +1,14 @@
 /** Admin Competition Photo Details — Figma 339:1796 / 339:1936 / 339:2155 / 339:2375. */
 
 const DETAIL = '/assets/admin-competition-detail';
-const SHOWCASE = '/assets/admin-competitions';
 const HOME = '/assets/home';
-const CD = '/assets/competition-details';
 
 export const ADMIN_DETAIL_ASSETS = {
   divider: `${DETAIL}/divider.svg`,
-  photographer: `${DETAIL}/photographer.jpg`,
+  photographer: `${HOME}/avatar-photographer.jpg`,
+  commentAvatar: `${HOME}/avatar-comment.jpg`,
+  verified: `${HOME}/icon-verified.svg`,
+  arrow: `${HOME}/icon-arrow-nav.svg`,
   curves: {
     red: `${DETAIL}/curve-red.svg`,
     blue: `${DETAIL}/curve-blue.svg`,
@@ -15,17 +16,90 @@ export const ADMIN_DETAIL_ASSETS = {
   },
 };
 
+export const ADMIN_COMPETITION_VIDEO =
+  'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
+
+export const ADMIN_COMPETITION_COMMENTS = [
+  {
+    id: 'comment-1',
+    nameKey: 'adminCompetitionDetail.comments.darrell',
+    textKey: 'adminCompetitionDetail.comments.text1',
+  },
+  {
+    id: 'comment-2',
+    nameKey: 'adminCompetitionDetail.comments.darrell',
+    textKey: 'adminCompetitionDetail.comments.text2',
+  },
+];
+
+export const ADMIN_COMPETITION_RANKINGS = [
+  {
+    id: 'alessandro',
+    rank: 1,
+    nameKey: 'competitionDetails.rankings.alessandro',
+    wins: '14',
+    votes: '12,450',
+    avatar: `${HOME}/winner-klaus.jpg`,
+    highlighted: false,
+  },
+  {
+    id: 'elena',
+    rank: 2,
+    nameKey: 'competitionDetails.rankings.elena',
+    wins: '11',
+    votes: '11,820',
+    avatar: `${HOME}/winner-emma.jpg`,
+    highlighted: false,
+  },
+  {
+    id: 'sarah',
+    rank: 3,
+    nameKey: 'competitionDetails.rankings.sarah',
+    wins: '09',
+    votes: '8,940',
+    avatar: `${HOME}/winner-dawn.jpg`,
+    highlighted: true,
+  },
+  {
+    id: 'julian',
+    rank: 4,
+    nameKey: 'competitionDetails.rankings.julian',
+    wins: '07',
+    votes: '10,910',
+    avatar: `${HOME}/winner-david.jpg`,
+    highlighted: false,
+  },
+  {
+    id: 'marcus',
+    rank: 5,
+    nameKey: 'competitionDetails.rankings.marcus',
+    wins: '05',
+    votes: '9,420',
+    avatar: `${HOME}/winner-marie.jpg`,
+    highlighted: false,
+  },
+];
+
+export const ADMIN_COMPETITION_RANKINGS_META = {
+  showingCount: 5,
+  showingTotal: '24,802',
+};
+
 /** Showcase card cover used as the hero for that entry. */
 const CARD_COVER = {
-  autumn: `${SHOWCASE}/autumn.jpg`,
-  wings: `${SHOWCASE}/wings.jpg`,
-  city: `${SHOWCASE}/city.jpg`,
-  forest: `${SHOWCASE}/forest.jpg`,
-  morning: `${SHOWCASE}/morning.jpg`,
-  harbor: `${SHOWCASE}/harbor.jpg`,
-  silent: `${SHOWCASE}/silent.jpg`,
-  zodiac: `${SHOWCASE}/zodiac.jpg`,
+  autumn: `${HOME}/photo-autumn.jpg`,
+  wings: `${HOME}/photo-wings.jpg`,
+  city: `${HOME}/photo-city.jpg`,
+  forest: `${HOME}/photo-forest.jpg`,
+  morning: `${HOME}/photo-morning.jpg`,
+  harbor: `${HOME}/photo-harbor.jpg`,
+  silent: `${HOME}/photo-silent.jpg`,
+  zodiac: `${HOME}/photo-zodiac.jpg`,
 };
+
+const RED_HERO = `${HOME}/six-hero-aries.jpg`;
+const BLUE_HERO = `${HOME}/blue-hero-libra.jpg`;
+const SINGLE_HERO = `${HOME}/detail-hero.jpg`;
 
 const buildRedSlides = (coverHero) => [
   {
@@ -33,7 +107,7 @@ const buildRedSlides = (coverHero) => [
     number: 1,
     nameKey: 'adminCompetitionDetail.signs.aries',
     icon: `${HOME}/icon-aries.svg`,
-    thumb: `${DETAIL}/thumb-1.jpg`,
+    thumb: `${HOME}/six-thumb-1.jpg`,
     hero: coverHero,
     theme: 'red',
   },
@@ -42,8 +116,8 @@ const buildRedSlides = (coverHero) => [
     number: 2,
     nameKey: 'adminCompetitionDetail.signs.taurus',
     icon: `${HOME}/icon-taurus.svg`,
-    thumb: `${DETAIL}/thumb-2.jpg`,
-    hero: `${DETAIL}/thumb-2.jpg`,
+    thumb: `${HOME}/six-thumb-2.jpg`,
+    hero: `${HOME}/six-thumb-2.jpg`,
     theme: 'red',
   },
   {
@@ -51,8 +125,8 @@ const buildRedSlides = (coverHero) => [
     number: 3,
     nameKey: 'adminCompetitionDetail.signs.gemini',
     icon: `${HOME}/icon-gemini.svg`,
-    thumb: `${DETAIL}/thumb-3.jpg`,
-    hero: `${DETAIL}/thumb-3.jpg`,
+    thumb: `${HOME}/six-thumb-3.jpg`,
+    hero: `${HOME}/six-thumb-3.jpg`,
     theme: 'red',
   },
   {
@@ -60,8 +134,8 @@ const buildRedSlides = (coverHero) => [
     number: 4,
     nameKey: 'adminCompetitionDetail.signs.cancer',
     icon: `${HOME}/icon-cancer.svg`,
-    thumb: `${DETAIL}/thumb-4.jpg`,
-    hero: `${DETAIL}/thumb-4.jpg`,
+    thumb: `${HOME}/six-thumb-4.jpg`,
+    hero: `${HOME}/six-thumb-4.jpg`,
     theme: 'red',
   },
   {
@@ -69,8 +143,8 @@ const buildRedSlides = (coverHero) => [
     number: 5,
     nameKey: 'adminCompetitionDetail.signs.leo',
     icon: `${HOME}/icon-leo.svg`,
-    thumb: `${DETAIL}/thumb-5.jpg`,
-    hero: `${DETAIL}/thumb-5.jpg`,
+    thumb: `${HOME}/six-thumb-5.jpg`,
+    hero: `${HOME}/six-thumb-5.jpg`,
     theme: 'red',
   },
   {
@@ -78,8 +152,8 @@ const buildRedSlides = (coverHero) => [
     number: 6,
     nameKey: 'adminCompetitionDetail.signs.virgo',
     icon: `${HOME}/icon-virgo.svg`,
-    thumb: `${CD}/thumb-6.jpg`,
-    hero: `${CD}/thumb-6.jpg`,
+    thumb: `${HOME}/photo-morning.jpg`,
+    hero: `${HOME}/photo-morning.jpg`,
     theme: 'red',
   },
 ];
@@ -90,7 +164,7 @@ const buildBlueSlides = (coverHero) => [
     number: 7,
     nameKey: 'adminCompetitionDetail.signs.libra',
     icon: `${HOME}/icon-libra.svg`,
-    thumb: `${DETAIL}/blue-thumb-1.jpg`,
+    thumb: `${HOME}/blue-thumb-1.jpg`,
     hero: coverHero,
     theme: 'blue',
     iconBoxed: true,
@@ -100,8 +174,8 @@ const buildBlueSlides = (coverHero) => [
     number: 8,
     nameKey: 'adminCompetitionDetail.signs.scorpio',
     icon: `${HOME}/icon-scorpio.svg`,
-    thumb: `${DETAIL}/blue-thumb-2.jpg`,
-    hero: `${DETAIL}/blue-thumb-2.jpg`,
+    thumb: `${HOME}/blue-thumb-2.jpg`,
+    hero: `${HOME}/blue-thumb-2.jpg`,
     theme: 'blue',
     iconBoxed: true,
   },
@@ -110,8 +184,8 @@ const buildBlueSlides = (coverHero) => [
     number: 9,
     nameKey: 'adminCompetitionDetail.signs.sagittarius',
     icon: `${HOME}/icon-sagittarius.svg`,
-    thumb: `${DETAIL}/blue-thumb-3.jpg`,
-    hero: `${DETAIL}/blue-thumb-3.jpg`,
+    thumb: `${HOME}/blue-thumb-3.jpg`,
+    hero: `${HOME}/blue-thumb-3.jpg`,
     theme: 'blue',
   },
   {
@@ -119,8 +193,8 @@ const buildBlueSlides = (coverHero) => [
     number: 10,
     nameKey: 'adminCompetitionDetail.signs.capricorn',
     icon: `${HOME}/icon-capricorn.svg`,
-    thumb: `${DETAIL}/blue-thumb-4.jpg`,
-    hero: `${DETAIL}/blue-thumb-4.jpg`,
+    thumb: `${HOME}/blue-thumb-4.jpg`,
+    hero: `${HOME}/blue-thumb-4.jpg`,
     theme: 'blue',
   },
   {
@@ -128,8 +202,8 @@ const buildBlueSlides = (coverHero) => [
     number: 11,
     nameKey: 'adminCompetitionDetail.signs.aquarius',
     icon: `${HOME}/icon-aquarius.svg`,
-    thumb: `${DETAIL}/blue-thumb-5.jpg`,
-    hero: `${DETAIL}/blue-thumb-5.jpg`,
+    thumb: `${HOME}/blue-thumb-5.jpg`,
+    hero: `${HOME}/blue-thumb-5.jpg`,
     theme: 'blue',
     iconBoxed: true,
   },
@@ -138,8 +212,8 @@ const buildBlueSlides = (coverHero) => [
     number: 12,
     nameKey: 'adminCompetitionDetail.signs.pisces',
     icon: `${HOME}/icon-pisces.svg`,
-    thumb: `${DETAIL}/blue-thumb-6.jpg`,
-    hero: `${DETAIL}/blue-thumb-6.jpg`,
+    thumb: `${HOME}/photo-tidal.jpg`,
+    hero: `${HOME}/photo-tidal.jpg`,
     theme: 'blue',
   },
 ];
@@ -156,9 +230,11 @@ const SHARED_COPY = {
 const singleEntry = (id, titleKey) => ({
   id,
   variant: 'single',
-  typeKey: 'adminCompetitions.types.single',
+  typeKey: 'adminCompetitionDetail.typeBadges.single',
   titleKey,
-  hero: CARD_COVER[id],
+  hero: id === 'wings' ? SINGLE_HERO : CARD_COVER[id],
+  videoPoster: id === 'wings' ? SINGLE_HERO : CARD_COVER[id],
+  videoSrc: ADMIN_COMPETITION_VIDEO,
   sign: {
     id: 'aries',
     number: 1,
@@ -168,6 +244,9 @@ const singleEntry = (id, titleKey) => ({
   },
   slides: [],
   curve: null,
+  rankings: ADMIN_COMPETITION_RANKINGS,
+  ...ADMIN_COMPETITION_RANKINGS_META,
+  comments: ADMIN_COMPETITION_COMMENTS,
   ...SHARED_COPY,
 });
 
@@ -181,40 +260,55 @@ export const ADMIN_COMPETITION_DETAILS = {
   autumn: {
     id: 'autumn',
     variant: 'six-red',
-    typeKey: 'adminCompetitions.types.six',
+    typeKey: 'adminCompetitionDetail.typeBadges.six',
     titleKey: 'adminCompetitionDetail.entries.autumn.title',
     hero: null,
+    videoPoster: CARD_COVER.autumn,
+    videoSrc: ADMIN_COMPETITION_VIDEO,
     sign: null,
-    slides: buildRedSlides(CARD_COVER.autumn),
+    slides: buildRedSlides(RED_HERO),
     curve: ADMIN_DETAIL_ASSETS.curves.red,
+    rankings: ADMIN_COMPETITION_RANKINGS,
+    ...ADMIN_COMPETITION_RANKINGS_META,
+    comments: ADMIN_COMPETITION_COMMENTS,
     ...SHARED_COPY,
-    votes: '1488',
-    views: '9240',
+    votes: '2150',
+    views: '12400',
     photographerKey: 'adminCompetitionDetail.photographerKasia',
   },
   city: {
     id: 'city',
     variant: 'six-blue',
-    typeKey: 'adminCompetitions.types.six',
+    typeKey: 'adminCompetitionDetail.typeBadges.six',
     titleKey: 'adminCompetitionDetail.entries.city.title',
     hero: null,
+    videoPoster: CARD_COVER.city,
+    videoSrc: ADMIN_COMPETITION_VIDEO,
     sign: null,
-    slides: buildBlueSlides(CARD_COVER.city),
+    slides: buildBlueSlides(BLUE_HERO),
     curve: ADMIN_DETAIL_ASSETS.curves.blue,
+    rankings: ADMIN_COMPETITION_RANKINGS,
+    ...ADMIN_COMPETITION_RANKINGS_META,
+    comments: ADMIN_COMPETITION_COMMENTS,
     ...SHARED_COPY,
   },
   zodiac: {
     id: 'zodiac',
     variant: 'twelve',
-    typeKey: 'adminCompetitions.types.zodiac',
+    typeKey: 'adminCompetitionDetail.typeBadges.zodiac',
     titleKey: 'adminCompetitionDetail.entries.zodiac.title',
     hero: null,
+    videoPoster: CARD_COVER.zodiac,
+    videoSrc: ADMIN_COMPETITION_VIDEO,
     sign: null,
     slides: [
-      ...buildRedSlides(CARD_COVER.zodiac),
-      ...buildBlueSlides(`${DETAIL}/hero-six-blue.jpg`),
+      ...buildRedSlides(RED_HERO),
+      ...buildBlueSlides(BLUE_HERO),
     ],
     curve: ADMIN_DETAIL_ASSETS.curves.twelve,
+    rankings: ADMIN_COMPETITION_RANKINGS,
+    ...ADMIN_COMPETITION_RANKINGS_META,
+    comments: ADMIN_COMPETITION_COMMENTS,
     ...SHARED_COPY,
   },
 };

@@ -1,15 +1,15 @@
 import React, { memo } from 'react';
+import { Outlet } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
-import ProfileContent from '@/portals/member/views/ProfileContent';
 
 const Profile = memo(() => {
   useSEO({
-    title: 'My Profile',
-    description: 'Admin My Profile — manage account information and password on My12Photos.',
-    keywords: ['profile', 'account', 'password', 'admin', 'My12Photos'],
+    title: 'Profile',
+    description: 'View and manage your My12Photos public profile, artwork, messages, and portfolio.',
+    keywords: ['profile', 'following', 'followers', 'account', 'My12Photos'],
   });
 
-  return <ProfileContent />;
+  return <Outlet />;
 });
 
 Profile.displayName = 'Profile';

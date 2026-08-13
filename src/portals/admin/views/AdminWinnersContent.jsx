@@ -1,5 +1,7 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '@/shared/config';
 import {
   ADMIN_WINNERS_ASSETS,
   ALBUM_FORMATS,
@@ -459,9 +461,16 @@ const AdminWinnersContent = memo(() => {
     handleSelectMonth,
   } = useAdminWinners();
 
-  const handleViewWinner = () => {
-    // Placeholder for future photographer detail navigation.
-  };
+  const navigate = useNavigate();
+  const handleViewWinner = useCallback(
+    (winnerId) => {
+      const winner = winners.find((w) => w.id === winnerId);
+      if (winner?.photoId) {
+        navigate(ROUTES.ADMIN_MY_COMPETITION_DETAIL.replace(':id', winner.photoId));
+      }
+    },
+    [winners, navigate],
+  );
 
   return (
     <div className="flex w-full flex-col gap-8 py-4 sm:gap-11 sm:py-8">

@@ -46,7 +46,7 @@ const PhotographerProfileMain = memo(() => (
           showPrice
         />
         <PhotographerMessagesSection messages={PHOTOGRAPHER_MESSAGES} />
-        <PhotographerShareBanner profileName={PHOTOGRAPHER_PROFILE.name} />
+        <PhotographerShareBanner />
       </Shell>
     </section>
   </SitePageLayout>

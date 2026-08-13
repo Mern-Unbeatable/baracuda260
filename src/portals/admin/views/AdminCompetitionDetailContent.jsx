@@ -1,15 +1,18 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { ArrowLeft } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
   ADMIN_DETAIL_ASSETS,
   getAdminCompetitionDetailById,
 } from '@/portals/admin/data/adminCompetitionDetailData';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import GalleryDetailVideo from '@/portals/public/gallery/detail/components/GalleryDetailVideo';
+import MemberArtworkGlobalRankings from '@/portals/member/components/member-artwork/MemberArtworkGlobalRankings';
 
 /** Auto-advance interval for multi-photo story strip (ms). */
 const ADMIN_DETAIL_SLIDE_MS = 6000;
+
 const SignBadge = memo(({ slide, name }) => {
   const isBlue = slide.theme === 'blue';
 
@@ -34,7 +37,7 @@ const SignBadge = memo(({ slide, name }) => {
           }`}
         />
       </span>
-      <span className="text-[20px] leading-none text-white">{name}</span>
+      <span className="text-[16px] leading-none text-white sm:text-[20px]">{name}</span>
     </div>
   );
 });
@@ -49,7 +52,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
     return (
       <div className="flex flex-col items-center gap-2">
         <span
-          className={`inline-flex size-7.5 items-center justify-center rounded-full bg-[#fde8e9] text-[18px] ${
+          className={`inline-flex size-7.5 items-center justify-center rounded-full bg-[#fde8e9] text-[16px] sm:text-[18px] ${
             isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
           }`}
         >
@@ -69,12 +72,11 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
             alt=""
             width={35}
             height={35}
-            className={`object-contain ${
-              slide.iconBoxed || !isBlue
-                ? 'h-5 w-5'
-                : 'h-full w-full'
-            }`}
+            className={`object-contain ${slide.iconBoxed || !isBlue ? 'h-5 w-5' : 'h-full w-full'}`}
           />
+        </span>
+        <span className="max-w-full truncate text-center text-[12px] leading-none text-[#2b2b2b] sm:text-[14px] lg:text-[16px] xl:text-[18px]">
+          {name}
         </span>
         <button
           type="button"
@@ -120,10 +122,12 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
               className="h-5.25 w-6 object-contain"
             />
           </span>
-          <span className="truncate text-[24px] text-[#2b2b2b]">{name}</span>
+          <span className="truncate text-[18px] text-[#2b2b2b] sm:text-[22px] lg:text-[24px]">
+            {name}
+          </span>
         </span>
         <span
-          className={`inline-flex size-7.5 shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[20px] ${
+          className={`inline-flex size-7.5 shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[18px] sm:text-[20px] ${
             isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
           }`}
         >
@@ -148,6 +152,57 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
 });
 
 StoryThumb.displayName = 'StoryThumb';
+
+const DetailComments = memo(({ comments }) => {
+  const { t } = useTranslation();
+
+  return (
+    <section className="overflow-hidden rounded-[20px] bg-[#f8fafc] p-4 sm:rounded-3xl sm:p-6">
+      <h2 className="text-[20px] font-semibold leading-8 text-[#161c27] sm:text-[24px]">
+        {t('adminCompetitionDetail.commentsTitle')}
+      </h2>
+
+      <ul className="mt-5 flex flex-col sm:mt-6">
+        {comments.map((item) => (
+          <li
+            key={item.id}
+            className="border-b border-[#c8c8c8] pb-4 pt-0 not-first:pt-4 last:border-b-0"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src={ADMIN_DETAIL_ASSETS.commentAvatar}
+                  alt=""
+                  width={48}
+                  height={48}
+                  className="size-12 rounded-full object-cover"
+                />
+                <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
+                  {t(item.nameKey)}
+                </p>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-2 py-0.5 text-[13px] text-white sm:text-[14px]">
+                <img
+                  src={ADMIN_DETAIL_ASSETS.verified}
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="size-4 object-contain"
+                />
+                {t('adminCompetitionDetail.verified')}
+              </span>
+            </div>
+            <p className="mt-2.5 text-[14px] leading-5 text-[#475156] sm:text-[15px]">
+              {t(item.textKey)}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+});
+
+DetailComments.displayName = 'DetailComments';
 
 /**
  * Admin competition photo details — Figma nodes 339:1796 / 339:1936 / 339:2155 / 339:2375.
@@ -179,170 +234,197 @@ const AdminCompetitionDetailContent = memo(() => {
     : detail.sign;
   const heroSrc = hasSlides ? activeSlide.hero : detail.hero;
   const isTwelve = detail.variant === 'twelve';
-  const curveHeight = isTwelve
-    ? 'h-10 sm:h-[72px] xl:h-[103px]'
-    : 'h-8 sm:h-[52px]';
+  const curveHeight = isTwelve ? 'h-10 sm:h-[72px] xl:h-[103px]' : 'h-8 sm:h-[52px]';
+
+  const goPrev = () => setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
+  const goNext = () => setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
 
   return (
-    <div className="mx-auto flex w-full max-w-384 flex-col">
-      <AdminPageHeader
-        eyebrow={
-          <>
-            <Link
-              to={ROUTES.ADMIN_MY_COMPETITIONS}
-              className="transition hover:text-[#ee1c25]"
-            >
-              {t('adminCompetitionDetail.breadcrumb.competitions')}
-            </Link>
-            <span aria-hidden="true">{' > '}</span>
-            <span className="font-bold text-[#2d3392]">
-              {t('adminCompetitionDetail.breadcrumb.details')}
-            </span>
-          </>
-        }
-        title={t('adminCompetitionDetail.title')}
-        description={t('adminCompetitionDetail.subtitle')}
-      />
+    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8 sm:gap-10">
+      <Link
+        to={ROUTES.ADMIN_MY_COMPETITIONS}
+        className="inline-flex w-fit items-center gap-2 text-[15px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25] sm:text-[16px]"
+      >
+        <ArrowLeft size={22} aria-hidden="true" className="shrink-0" />
+        {t('adminCompetitionDetail.back')}
+      </Link>
 
-      <div className="flex flex-col gap-8 py-10 sm:gap-9 sm:py-12 lg:gap-8.75 lg:py-13">
-        <section
-          aria-label={t('adminCompetitionDetail.heroAria')}
-          className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]"
-        >
-          <img
-            src={heroSrc}
-            alt=""
-            width={1536}
-            height={653}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          {activeSlide ? (
-            <SignBadge slide={activeSlide} name={t(activeSlide.nameKey)} />
-          ) : null}
-        </section>
+      <section
+        aria-label={t('adminCompetitionDetail.heroAria')}
+        className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]"
+      >
+        <img
+          src={heroSrc}
+          alt=""
+          width={1536}
+          height={653}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        {activeSlide ? (
+          <SignBadge slide={activeSlide} name={t(activeSlide.nameKey)} />
+        ) : null}
 
         {hasSlides ? (
           <>
-            <div className={`relative w-full overflow-hidden ${curveHeight}`} aria-hidden="true">
-              <img
-                src={detail.curve}
-                alt=""
-                className={`h-full w-full object-top ${
-                  isTwelve ? 'object-contain' : 'object-fill'
-                }`}
-              />
-            </div>
-
-            <section
-              aria-label={t('adminCompetitionDetail.slidesAria')}
-              className={
-                isTwelve
-                  ? 'w-full overflow-x-auto pb-2'
-                  : 'w-full overflow-x-auto pb-2'
-              }
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label={t('adminCompetitionDetail.previousPhoto')}
+              className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-6 sm:size-12"
             >
-              {isTwelve ? (
-                <div className="grid min-w-275 grid-cols-12 gap-2 xl:min-w-0 xl:gap-3">
-                  {detail.slides.map((slide, index) => (
-                    <StoryThumb
-                      key={slide.id}
-                      slide={slide}
-                      name={t(slide.nameKey)}
-                      active={index === activeIndex}
-                      onSelect={() => setActiveIndex(index)}
-                      variant={detail.variant}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid min-w-245 grid-cols-6 gap-3 xl:min-w-0 xl:gap-5">
-                  {detail.slides.map((slide, index) => (
-                    <StoryThumb
-                      key={slide.id}
-                      slide={slide}
-                      name={t(slide.nameKey)}
-                      active={index === activeIndex}
-                      onSelect={() => setActiveIndex(index)}
-                      variant={detail.variant}
-                    />
-                  ))}
-                </div>
-              )}
-            </section>
+              <img
+                src={ADMIN_DETAIL_ASSETS.arrow}
+                alt=""
+                width={16}
+                height={32}
+                className="h-7 w-3.5 rotate-180 object-contain"
+              />
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label={t('adminCompetitionDetail.nextPhoto')}
+              className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-6 sm:size-12"
+            >
+              <img
+                src={ADMIN_DETAIL_ASSETS.arrow}
+                alt=""
+                width={16}
+                height={32}
+                className="h-7 w-3.5 object-contain"
+              />
+            </button>
           </>
         ) : null}
+      </section>
 
-        {/* Figma export — tags + title + description (exact text sizes) */}
-        <section className="flex w-full flex-col gap-9">
-          <div className="flex w-full flex-col gap-8">
-            <div className="inline-flex w-full flex-col items-start justify-start gap-4">
-              <div className="inline-flex items-start justify-start gap-8">
-                <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-1.25">
-                  <div className="font-['Manrope'] text-base font-bold uppercase leading-6 tracking-wider text-indigo-700">
-                    {t(detail.typeKey)}
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-1.25">
-                  <div className="font-['Manrope'] text-base font-bold uppercase leading-6 tracking-wider text-indigo-700">
-                    {t(detail.categoryKey)}
-                  </div>
-                </div>
-              </div>
-              <div className="flex w-full flex-col items-start justify-start gap-4 self-stretch">
-                <h2 className="w-full self-stretch font-['Manrope'] text-4xl font-extrabold text-gray-900">
-                  {t(detail.titleKey)}
-                </h2>
-                <p className="w-full self-stretch font-['Manrope'] text-xl font-medium leading-8 text-neutral-700">
-                  {t(detail.descriptionKey)}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col items-start justify-center">
-              <div className="flex w-full items-center gap-5.25">
-                <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-3.75 rounded-2xl border border-[rgba(0,0,0,0.08)] bg-[#f5f5f5] p-3 text-center">
-                  <p className="admin-detail-meta__stat-label w-full">
-                    {t('adminCompetitionDetail.votesReceived')}
-                  </p>
-                  <p className="admin-detail-meta__stat-value w-full">{detail.votes}</p>
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-3.75 rounded-2xl border border-[rgba(0,0,0,0.08)] bg-[#f5f5f5] p-3 text-center">
-                  <p className="admin-detail-meta__stat-label w-full">
-                    {t('adminCompetitionDetail.viewsCounted')}
-                  </p>
-                  <p className="admin-detail-meta__stat-value w-full">{detail.views}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="h-0 w-full" aria-hidden="true">
-              <img
-                src={ADMIN_DETAIL_ASSETS.divider}
-                alt=""
-                className="block h-px w-full max-w-none"
-              />
-            </div>
+      {hasSlides ? (
+        <>
+          <div className={`relative w-full overflow-hidden ${curveHeight}`} aria-hidden="true">
+            <img
+              src={detail.curve}
+              alt=""
+              className={`h-full w-full object-top ${
+                isTwelve ? 'object-contain' : 'object-fill'
+              }`}
+            />
           </div>
 
-          <div className="flex items-start gap-3">
+          <section
+            aria-label={t('adminCompetitionDetail.slidesAria')}
+            className="w-full overflow-x-auto pb-2"
+          >
+            {isTwelve ? (
+              <div className="grid min-w-[1100px] grid-cols-12 gap-2 xl:min-w-0 xl:gap-3">
+                {detail.slides.map((slide, index) => (
+                  <StoryThumb
+                    key={slide.id}
+                    slide={slide}
+                    name={t(slide.nameKey)}
+                    active={index === activeIndex}
+                    onSelect={() => setActiveIndex(index)}
+                    variant={detail.variant}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="grid min-w-[980px] grid-cols-6 gap-3 xl:min-w-0 xl:gap-5">
+                {detail.slides.map((slide, index) => (
+                  <StoryThumb
+                    key={slide.id}
+                    slide={slide}
+                    name={t(slide.nameKey)}
+                    active={index === activeIndex}
+                    onSelect={() => setActiveIndex(index)}
+                    variant={detail.variant}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        </>
+      ) : null}
+
+      <GalleryDetailVideo
+        poster={detail.videoPoster || heroSrc}
+        src={detail.videoSrc}
+        title={t(detail.titleKey)}
+      />
+
+      <section className="flex w-full flex-col gap-8 sm:gap-9">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <span className="rounded-full bg-violet-100 px-4 py-1.5 text-[13px] font-bold uppercase tracking-wider text-indigo-700 sm:text-[14px]">
+              {t(detail.typeKey)}
+            </span>
+            <span className="rounded-full bg-violet-100 px-4 py-1.5 text-[13px] font-bold uppercase tracking-wider text-indigo-700 sm:text-[14px]">
+              {t(detail.categoryKey)}
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <h1 className="font-manrope text-[32px] font-semibold leading-tight text-[#111827] sm:text-[36px]">
+              {t(detail.titleKey)}
+            </h1>
+            <p className="font-manrope text-[18px] font-medium leading-8 text-neutral-700 sm:text-[20px]">
+              {t(detail.descriptionKey)}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+            <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
+              <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
+                {t('adminCompetitionDetail.votesReceived')}
+              </p>
+              <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
+                {detail.votes}
+              </p>
+            </article>
+            <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
+              <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
+                {t('adminCompetitionDetail.viewsCounted')}
+              </p>
+              <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
+                {detail.views}
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf0] bg-white p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div className="flex items-center gap-3">
             <img
               src={detail.photographerAvatar}
               alt=""
               width={57}
               height={57}
-              className="size-14.25 shrink-0 rounded-full object-cover"
+              className="size-14 shrink-0 rounded-full object-cover"
             />
-            <div className="flex w-34.75 flex-col gap-1">
-              <p className="admin-detail-meta__photographer-label w-full">
+            <div>
+              <p className="text-[14px] leading-5 text-[#6b7280] sm:text-[15px]">
                 {t('adminCompetitionDetail.photographerLabel')}
               </p>
-              <p className="admin-detail-meta__photographer-name w-full">
+              <p className="text-[18px] font-semibold leading-6 text-[#111827] sm:text-[20px]">
                 {t(detail.photographerKey)}
               </p>
             </div>
           </div>
-        </section>
-      </div>
+          <Link
+            to={ROUTES.PHOTOGRAPHER_PROFILE}
+            className="inline-flex items-center justify-center rounded-xl bg-[#4048cd] px-5 py-3 text-[14px] font-semibold text-white transition hover:bg-[#333bb0] sm:text-[15px]"
+          >
+            {t('adminCompetitionDetail.viewProfile')}
+          </Link>
+        </div>
+      </section>
+
+      <MemberArtworkGlobalRankings
+        rankings={detail.rankings}
+        showingCount={detail.showingCount}
+        showingTotal={detail.showingTotal}
+      />
+
+      <DetailComments comments={detail.comments} />
     </div>
   );
 });

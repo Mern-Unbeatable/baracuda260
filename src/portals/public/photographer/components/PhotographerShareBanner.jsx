@@ -8,7 +8,7 @@ const SHARE_ACTIONS = [
   { id: 'x', labelKey: 'x', className: 'bg-[#0f172a] text-white' },
 ];
 
-const PhotographerShareBanner = memo(({ profileName }) => {
+const PhotographerShareBanner = memo(() => {
   const { t } = useTranslation();
 
   const copyProfileLink = useCallback(async () => {
@@ -27,7 +27,7 @@ const PhotographerShareBanner = memo(({ profileName }) => {
           {t('photographerProfile.shareBanner.badge')}
         </span>
         <h2 className="mt-4 max-w-2xl text-[22px] font-bold leading-snug text-white sm:text-[26px]">
-          {t('photographerProfile.shareBanner.title', { name: profileName })}
+          {t('photographerProfile.shareBanner.title')}
         </h2>
         <p className="mt-2 max-w-2xl text-[15px] leading-6 text-white/80 sm:text-[16px]">
           {t('photographerProfile.shareBanner.subtitle')}

@@ -71,12 +71,18 @@ describe('User Dashboard sidebar', () => {
 
     expect(screen.getByText(i18n.t('dashboard.sidebar.mainMenu'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('dashboard.nav.dashboard'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('dashboard.nav.uploadPhotos'))).toBeInTheDocument();
-    expect(screen.getByText(i18n.t('dashboard.nav.myCompetitions'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('dashboard.nav.artworkManagement'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('dashboard.nav.newsMessages'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('dashboard.nav.sellPhotos'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('dashboard.nav.favouritePhotographers'))).toBeInTheDocument();
+    // expect(screen.getByText(i18n.t('dashboard.nav.myCompetitions'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('dashboard.nav.businessPhotos'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('dashboard.nav.chat'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('dashboard.nav.notifications'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('dashboard.nav.prizePayments'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('dashboard.nav.contactUs'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('dashboard.nav.profile'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('dashboard.nav.settings'))).toBeInTheDocument();
     expect(screen.getByText('Atik Adnan')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: i18n.t('dashboard.nav.logOut') })).toBeInTheDocument();
   });
@@ -89,8 +95,8 @@ describe('User Dashboard sidebar', () => {
     });
 
     expect(screen.getByText('Menu główne')).toBeInTheDocument();
-    expect(screen.getByText('Prześlij zdjęcia')).toBeInTheDocument();
-    expect(screen.getByText('Moje konkursy')).toBeInTheDocument();
+    expect(screen.getByText('Zarządzanie pracami')).toBeInTheDocument();
+    // expect(screen.getByText('Moje konkursy')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Wyloguj się' })).toBeInTheDocument();
   });
 });

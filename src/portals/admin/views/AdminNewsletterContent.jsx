@@ -103,9 +103,18 @@ const AdminNewsletterContent = memo(() => {
     handleBannerChange,
     recipientId,
     setRecipientId,
+    selectedSubscriberIds,
+    handleToggleSubscriber,
     composerOpen,
     setComposerOpen,
+    sending,
+    attempted,
+    isRecipientsValid,
+    handleSend,
   } = useAdminNewsletter();
+
+  const isSelectMode = recipientId === 'selected';
+  const selectedCount = selectedSubscriberIds.length;
 
   return (
     <div className="flex w-full flex-col gap-6 py-2 sm:gap-6 sm:py-4">
@@ -118,30 +127,64 @@ const AdminNewsletterContent = memo(() => {
         {/* Subscriber list — natural height on mobile; capped scroll on xl only */}
         <section
           aria-label={t('adminNewsletter.tableAria')}
-          className="w-full self-start overflow-hidden rounded-xl bg-white xl:max-w-188.25 xl:flex-1"
+          className={`w-full self-start overflow-hidden rounded-xl bg-white xl:max-w-188.25 xl:flex-1 ${
+            isSelectMode ? 'ring-2 ring-[#4048cd]/40' : ''
+          }`}
         >
           <div className="flex items-center justify-between rounded-t-xl bg-[#f6fbff] px-4">
-            <div className="min-w-0 flex-1 px-2.5 py-3 text-[16px] leading-6 text-black">
-              {t('adminNewsletter.columns.email')}
-            </div>
+            {isSelectMode ? (
+              <div className="min-w-0 flex-1 px-2.5 py-3">
+                <p className="text-[14px] font-semibold leading-5 text-[#4048cd]">
+                  {t('adminNewsletter.recipients.selectHint')}
+                </p>
+                <p className="text-[13px] leading-5 text-[#64748b]">
+                  {t('adminNewsletter.recipients.selectedCount', { count: selectedCount })}
+                </p>
+              </div>
+            ) : (
+              <div className="min-w-0 flex-1 px-2.5 py-3 text-[16px] leading-6 text-black">
+                {t('adminNewsletter.columns.email')}
+              </div>
+            )}
             <div className="w-35 shrink-0 px-2.5 py-3 text-right text-[16px] leading-6 text-black sm:w-45 sm:text-left">
               {t('adminNewsletter.columns.subscribedDate')}
             </div>
           </div>
           <ul className="scrollbar-newsletter flex flex-col overflow-y-auto xl:max-h-[calc(100dvh-11rem)] xl:overflow-y-scroll">
-            {subscribers.map((row) => (
-              <li
-                key={row.id}
-                className="flex items-center justify-between border-b border-[#e4e4e4] px-4 last:border-b-0"
-              >
-                <div className="min-w-0 flex-1 px-2.5 py-4 text-[14px] leading-6 text-[#0c0c0c] sm:py-6 sm:text-[16px]">
-                  <span className="break-all">{row.email}</span>
-                </div>
-                <div className="w-35 shrink-0 px-2.5 py-4 text-right text-[14px] leading-6 text-[#0c0c0c] sm:w-45 sm:py-6 sm:text-left sm:text-[16px]">
-                  {row.subscribedDate}
-                </div>
-              </li>
-            ))}
+            {subscribers.map((row) => {
+              const isSelected = selectedSubscriberIds.includes(row.id);
+
+              return (
+                <li
+                  key={row.id}
+                  className={`flex items-center justify-between border-b border-[#e4e4e4] px-4 last:border-b-0 ${
+                    isSelectMode && isSelected ? 'bg-[rgba(239,246,255,0.45)]' : ''
+                  }`}
+                >
+                  {isSelectMode ? (
+                    <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-2.5 py-4 sm:py-6">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => handleToggleSubscriber(row.id)}
+                        className="size-4 shrink-0 cursor-pointer accent-[#4048cd]"
+                        aria-label={t('adminNewsletter.recipients.selectSubscriber', { email: row.email })}
+                      />
+                      <span className="break-all text-[14px] leading-6 text-[#0c0c0c] sm:text-[16px]">
+                        {row.email}
+                      </span>
+                    </label>
+                  ) : (
+                    <div className="min-w-0 flex-1 px-2.5 py-4 text-[14px] leading-6 text-[#0c0c0c] sm:py-6 sm:text-[16px]">
+                      <span className="break-all">{row.email}</span>
+                    </div>
+                  )}
+                  <div className="w-35 shrink-0 px-2.5 py-4 text-right text-[14px] leading-6 text-[#0c0c0c] sm:w-45 sm:py-6 sm:text-left sm:text-[16px]">
+                    {row.subscribedDate}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </section>
 
@@ -334,6 +377,29 @@ const AdminNewsletterContent = memo(() => {
                     />
                   </label>
                 </div>
+
+                {attempted && !subject.trim() ? (
+                  <p className="text-[13px] text-[#ee1c25]">{t('adminNewsletter.send.subjectRequired')}</p>
+                ) : null}
+                {attempted && !content.trim() ? (
+                  <p className="text-[13px] text-[#ee1c25]">{t('adminNewsletter.send.contentRequired')}</p>
+                ) : null}
+                {attempted && isSelectMode && !isRecipientsValid ? (
+                  <p className="text-[13px] text-[#ee1c25]">
+                    {t('adminNewsletter.send.recipientsRequired')}
+                  </p>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={handleSend}
+                  disabled={sending}
+                  className="w-full cursor-pointer rounded-xl bg-[#4048cd] px-6 py-4 text-[16px] font-bold leading-6 text-white shadow-[0px_4px_12px_rgba(64,72,205,0.3)] transition hover:bg-[#363db8] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {sending
+                    ? t('adminNewsletter.send.sending')
+                    : t('adminNewsletter.send.button')}
+                </button>
               </div>
             </section>
           ) : (

@@ -2,20 +2,16 @@ import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Check } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import { UPLOAD_TIERS } from '@/portals/member/data/uploadPhotosAssets';
+import {
+  getUploadTierHref,
+  UPLOAD_ROUTE_SETS,
+  UPLOAD_TIERS,
+} from '@/portals/member/data/uploadPhotosAssets';
 
-const UploadTierCard = memo(({ tier }) => {
+const UploadTierCard = memo(({ tier, routeSet }) => {
   const { t } = useTranslation();
   const Icon = tier.icon;
-  const href =
-    tier.id === 'single'
-      ? ROUTES.ADMIN_UPLOAD_SINGLE
-      : tier.id === 'story6'
-        ? ROUTES.ADMIN_UPLOAD_SIX
-        : tier.id === 'zodiac12'
-          ? ROUTES.ADMIN_UPLOAD_ZODIAC12
-          : null;
+  const href = getUploadTierHref(tier.id, routeSet);
 
   const ctaClassName =
     'mt-8 inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-bold text-white transition hover:bg-[#d41921]';
@@ -98,7 +94,7 @@ UploadTierCard.displayName = 'UploadTierCard';
 /**
  * Upload Photos page content — Figma node 111:1692 (Creative Upload Hub).
  */
-const UploadPhotosContent = memo(() => {
+const UploadPhotosContent = memo(({ routeSet = UPLOAD_ROUTE_SETS.standalone }) => {
   const { t } = useTranslation();
 
   return (
@@ -117,7 +113,7 @@ const UploadPhotosContent = memo(() => {
         className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
       >
         {UPLOAD_TIERS.map((tier) => (
-          <UploadTierCard key={tier.id} tier={tier} />
+          <UploadTierCard key={tier.id} tier={tier} routeSet={routeSet} />
         ))}
       </section>
     </div>

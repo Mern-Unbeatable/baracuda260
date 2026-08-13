@@ -1,8 +1,16 @@
 import React from 'react';
-import { act, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18n, { changeAppLanguage, DEFAULT_LOCALE, LOCALE_STORAGE_KEY } from '@/shared/i18n';
 import AdminUsersContent from '@/portals/admin/views/AdminUsersContent';
+
+const johnMenuLabel = () =>
+  i18n.t('adminUsers.actions.menu', { name: i18n.t('adminUsers.rows.john.name') });
+
+const openJohnMenu = async (user, table) => {
+  const btns = within(table).getAllByRole('button', { name: johnMenuLabel() });
+  await user.click(btns[0]);
+};
 
 describe('Admin Users content', () => {
   afterEach(async () => {
@@ -47,14 +55,27 @@ describe('Admin Users content', () => {
     ).toBeInTheDocument();
   });
 
-  it('suspends an active user through the Suspend User popup', async () => {
+  it('opens action menu with Active and Suspend options', async () => {
     const user = userEvent.setup();
     render(<AdminUsersContent />);
 
-    const suspendLabel = i18n.t('adminUsers.actions.suspend', {
-      name: i18n.t('adminUsers.rows.john.name'),
-    });
-    await user.click(screen.getAllByRole('button', { name: suspendLabel })[0]);
+    const table = screen.getByRole('table');
+    await openJohnMenu(user, table);
+
+    const menu = within(table).getByRole('menu');
+    expect(within(menu).getByRole('menuitem', { name: i18n.t('adminUsers.actions.active') })).toBeInTheDocument();
+    expect(within(menu).getByRole('menuitem', { name: i18n.t('adminUsers.actions.suspendOption') })).toBeInTheDocument();
+  });
+
+  it('suspends an active user through the action menu and Suspend User popup', async () => {
+    const user = userEvent.setup();
+    render(<AdminUsersContent />);
+
+    const table = screen.getByRole('table');
+    await openJohnMenu(user, table);
+
+    const suspendBtn = within(table).getByRole('menuitem', { name: i18n.t('adminUsers.actions.suspendOption') });
+    fireEvent.click(suspendBtn);
 
     expect(
       screen.getByRole('heading', { level: 2, name: i18n.t('adminUsers.suspendModal.title') }),
@@ -66,18 +87,27 @@ describe('Admin Users content', () => {
     );
     await user.click(screen.getByRole('button', { name: i18n.t('adminUsers.suspendModal.confirm') }));
 
-    expect(
-      screen.getAllByRole('button', {
-        name: i18n.t('adminUsers.actions.reactivate', {
-          name: i18n.t('adminUsers.rows.john.name'),
-        }),
-      }).length,
-    ).toBeGreaterThan(0);
-
-    const section = screen.getByLabelText(i18n.t('adminUsers.tableAria'));
-    const johnNode = within(section).getAllByText(i18n.t('adminUsers.rows.john.name'))[0];
-    const johnRow = johnNode.closest('tr') || johnNode.closest('article');
+    const johnNode = within(table).getAllByText(i18n.t('adminUsers.rows.john.name'))[0];
+    const johnRow = johnNode.closest('tr');
     expect(within(johnRow).getByText(i18n.t('adminUsers.status.suspended'))).toBeInTheDocument();
+  });
+
+  it('reactivates a suspended user from the action menu', async () => {
+    const user = userEvent.setup();
+    render(<AdminUsersContent />);
+
+    const table = screen.getByRole('table');
+    const emilyMenuLabel = i18n.t('adminUsers.actions.menu', {
+      name: i18n.t('adminUsers.rows.emily.name'),
+    });
+    await user.click(within(table).getAllByRole('button', { name: emilyMenuLabel })[0]);
+
+    const activeBtn = within(table).getByRole('menuitem', { name: i18n.t('adminUsers.actions.active') });
+    fireEvent.click(activeBtn);
+
+    const emilyNode = within(table).getAllByText(i18n.t('adminUsers.rows.emily.name'))[0];
+    const emilyRow = emilyNode.closest('tr');
+    expect(within(emilyRow).getByText(i18n.t('adminUsers.status.active'))).toBeInTheDocument();
   });
 
   it('switches users copy to Polish', async () => {

@@ -6,7 +6,6 @@ import {
   filterUsersByStatus,
   getUsersPageRange,
   paginateUsers,
-  toggleUserStatus,
 } from '@/portals/admin/data/adminUsersData';
 
 /**
@@ -20,6 +19,7 @@ export default function useAdminUsers(
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [sortOpen, setSortOpen] = useState(false);
+  const [openActionMenuId, setOpenActionMenuId] = useState(null);
   const [suspendTargetId, setSuspendTargetId] = useState(null);
 
   const filteredUsers = filterUsersByStatus(users, statusFilter);
@@ -51,20 +51,38 @@ export default function useAdminUsers(
     setPage((current) => Math.min(totalPages, current + 1));
   };
 
-  const handleUserAction = (userId) => {
-    const target = users.find((user) => user.id === userId);
-    if (!target) return;
+  const handleToggleActionMenu = (userId) => {
+    setOpenActionMenuId((current) => (current === userId ? null : userId));
+  };
 
-    if (target.status === USER_STATUS.ACTIVE) {
-      setSuspendTargetId(userId);
+  const handleCloseActionMenu = () => {
+    setOpenActionMenuId(null);
+  };
+
+  const handleActivateUser = (userId) => {
+    const target = users.find((user) => user.id === userId);
+    if (!target || target.status === USER_STATUS.ACTIVE) {
+      setOpenActionMenuId(null);
       return;
     }
 
     setUsers((current) =>
       current.map((user) =>
-        user.id === userId ? { ...user, status: toggleUserStatus(user.status) } : user,
+        user.id === userId ? { ...user, status: USER_STATUS.ACTIVE, suspendReason: undefined } : user,
       ),
     );
+    setOpenActionMenuId(null);
+  };
+
+  const handleRequestSuspend = (userId) => {
+    const target = users.find((user) => user.id === userId);
+    if (!target || target.status === USER_STATUS.SUSPENDED) {
+      setOpenActionMenuId(null);
+      return;
+    }
+
+    setSuspendTargetId(userId);
+    setOpenActionMenuId(null);
   };
 
   const handleCloseSuspendModal = () => {
@@ -94,13 +112,17 @@ export default function useAdminUsers(
     isFirstPage: safePage <= 1,
     isLastPage: safePage >= totalPages,
     suspendTarget,
+    openActionMenuId,
     isSuspendModalOpen: Boolean(suspendTarget),
     handleStatusFilterChange,
     handleToggleSort,
     handleCloseSort,
     handlePreviousPage,
     handleNextPage,
-    handleUserAction,
+    handleToggleActionMenu,
+    handleCloseActionMenu,
+    handleActivateUser,
+    handleRequestSuspend,
     handleCloseSuspendModal,
     handleConfirmSuspend,
   };

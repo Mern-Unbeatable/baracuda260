@@ -1,4 +1,5 @@
 import { BookOpen, Camera, Sparkles } from 'lucide-react';
+import { ROUTES } from '@/shared/config';
 
 /** Upload Photos tier cards — Figma node 111:1692. */
 export const UPLOAD_TIERS = [
@@ -45,3 +46,31 @@ export const UPLOAD_TIERS = [
     titleUppercase: true,
   },
 ];
+
+export const UPLOAD_ROUTE_SETS = {
+  standalone: {
+    hub: ROUTES.ADMIN_UPLOAD_PHOTOS,
+    single: ROUTES.ADMIN_UPLOAD_SINGLE,
+    story6: ROUTES.ADMIN_UPLOAD_SIX,
+    zodiac12: ROUTES.ADMIN_UPLOAD_ZODIAC12,
+  },
+  artwork: {
+    hub: ROUTES.ADMIN_MY_ARTWORK_UPLOAD,
+    single: ROUTES.ADMIN_MY_ARTWORK_UPLOAD_SINGLE,
+    story6: ROUTES.ADMIN_MY_ARTWORK_UPLOAD_SIX,
+    zodiac12: ROUTES.ADMIN_MY_ARTWORK_UPLOAD_ZODIAC12,
+  },
+  sell: {
+    hub: ROUTES.ADMIN_SELL_PHOTOS_UPLOAD,
+    single: ROUTES.ADMIN_SELL_PHOTOS_UPLOAD_SINGLE,
+    story6: ROUTES.ADMIN_SELL_PHOTOS_UPLOAD_SIX,
+    zodiac12: ROUTES.ADMIN_SELL_PHOTOS_UPLOAD_ZODIAC12,
+  },
+};
+
+export const getUploadTierHref = (tierId, routeSet = UPLOAD_ROUTE_SETS.artwork) => {
+  if (tierId === 'single') return routeSet.single;
+  if (tierId === 'story6') return routeSet.story6;
+  if (tierId === 'zodiac12') return routeSet.zodiac12;
+  return null;
+};

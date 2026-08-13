@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MoreVertical } from 'lucide-react';
 import {
-  ACTION_ICON_SIZE,
   ADMIN_USERS_ASSETS,
   CHEVRON_ICON_SIZE,
   STATUS_FILTERS,
@@ -142,56 +142,87 @@ StatusSortSelect.displayName = 'StatusSortSelect';
  *   user: {
  *     id: string,
  *     nameKey: string,
- *     email: string,
- *     phone: string,
- *     registeredDate: string,
  *     status: string,
  *   },
+ *   isOpen: boolean,
+ *   onToggle: () => void,
+ *   onClose: () => void,
+ *   onActivate: () => void,
+ *   onSuspend: () => void,
  * }} props
  */
-const getUserActionLabel = (t, user) => {
-  const isActive = user.status === USER_STATUS.ACTIVE;
-  return isActive
-    ? t('adminUsers.actions.suspend', { name: t(user.nameKey) })
-    : t('adminUsers.actions.reactivate', { name: t(user.nameKey) });
-};
-
-/**
- * @param {{
- *   user: {
- *     id: string,
- *     nameKey: string,
- *     email: string,
- *     phone: string,
- *     registeredDate: string,
- *     status: string,
- *   },
- *   onUserAction: (id: string) => void,
- * }} props
- */
-const UserActionButton = memo(({ user, onUserAction }) => {
+const UserActionMenu = memo(({ user, isOpen, onToggle, onClose, onActivate, onSuspend }) => {
   const { t } = useTranslation();
+  const rootRef = useRef(null);
   const isActive = user.status === USER_STATUS.ACTIVE;
+  const menuLabel = t('adminUsers.actions.menu', { name: t(user.nameKey) });
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   return (
-    <button
-      type="button"
-      aria-label={getUserActionLabel(t, user)}
-      onClick={() => onUserAction(user.id)}
-      className="inline-flex size-6 cursor-pointer items-center justify-center"
-    >
-      <img
-        src={isActive ? ADMIN_USERS_ASSETS.trash : ADMIN_USERS_ASSETS.reactivate}
-        alt=""
-        width={ACTION_ICON_SIZE}
-        height={ACTION_ICON_SIZE}
-        className="size-6"
-      />
-    </button>
+    <div className="relative inline-flex" ref={rootRef}>
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        aria-label={menuLabel}
+        onClick={onToggle}
+        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-[6px] text-[#373737] transition hover:bg-[#f6fbff]"
+      >
+        <MoreVertical size={20} aria-hidden="true" />
+      </button>
+
+      {isOpen ? (
+        <div
+          role="menu"
+          aria-label={menuLabel}
+          className="absolute right-0 top-full z-30 mt-1 min-w-[140px] overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
+        >
+          <span className="block h-[3px] w-full bg-[#4048cd]" aria-hidden="true" />
+          <button
+            type="button"
+            role="menuitem"
+            disabled={isActive}
+            onClick={onActivate}
+            className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
+          >
+            {t('adminUsers.actions.active')}
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            disabled={!isActive}
+            onClick={onSuspend}
+            className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
+          >
+            {t('adminUsers.actions.suspendOption')}
+          </button>
+        </div>
+      ) : null}
+    </div>
   );
 });
 
-UserActionButton.displayName = 'UserActionButton';
+UserActionMenu.displayName = 'UserActionMenu';
 
 /**
  * @param {{
@@ -203,10 +234,14 @@ UserActionButton.displayName = 'UserActionButton';
  *     registeredDate: string,
  *     status: string,
  *   },
- *   onUserAction: (id: string) => void,
+ *   onActivate: (id: string) => void,
+ *   onSuspend: (id: string) => void,
+ *   openActionMenuId: string | null,
+ *   onToggleActionMenu: (id: string) => void,
+ *   onCloseActionMenu: () => void,
  * }} props
  */
-const UserTableRow = memo(({ user, onUserAction }) => {
+const UserTableRow = memo(({ user, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => {
   const { t } = useTranslation();
 
   return (
@@ -227,7 +262,14 @@ const UserTableRow = memo(({ user, onUserAction }) => {
         <StatusBadge status={user.status} />
       </td>
       <td className="min-w-[100px] px-[26px] py-6">
-        <UserActionButton user={user} onUserAction={onUserAction} />
+        <UserActionMenu
+          user={user}
+          isOpen={openActionMenuId === user.id}
+          onToggle={() => onToggleActionMenu(user.id)}
+          onClose={onCloseActionMenu}
+          onActivate={() => onActivate(user.id)}
+          onSuspend={() => onSuspend(user.id)}
+        />
       </td>
     </tr>
   );
@@ -246,10 +288,14 @@ UserTableRow.displayName = 'UserTableRow';
  *     registeredDate: string,
  *     status: string,
  *   },
- *   onUserAction: (id: string) => void,
+ *   onActivate: (id: string) => void,
+ *   onSuspend: (id: string) => void,
+ *   openActionMenuId: string | null,
+ *   onToggleActionMenu: (id: string) => void,
+ *   onCloseActionMenu: () => void,
  * }} props
  */
-const UserMobileCard = memo(({ user, onUserAction }) => {
+const UserMobileCard = memo(({ user, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => {
   const { t } = useTranslation();
 
   return (
@@ -259,7 +305,14 @@ const UserMobileCard = memo(({ user, onUserAction }) => {
           <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">{t(user.nameKey)}</p>
           <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">{user.email}</p>
         </div>
-        <UserActionButton user={user} onUserAction={onUserAction} />
+        <UserActionMenu
+          user={user}
+          isOpen={openActionMenuId === user.id}
+          onToggle={() => onToggleActionMenu(user.id)}
+          onClose={onCloseActionMenu}
+          onActivate={() => onActivate(user.id)}
+          onSuspend={() => onSuspend(user.id)}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-2">
@@ -287,13 +340,25 @@ UserMobileCard.displayName = 'UserMobileCard';
 /**
  * @param {{
  *   users: Array<{ id: string, status: string }>,
- *   onUserAction: (id: string) => void,
+ *   onActivate: (id: string) => void,
+ *   onSuspend: (id: string) => void,
+ *   openActionMenuId: string | null,
+ *   onToggleActionMenu: (id: string) => void,
+ *   onCloseActionMenu: () => void,
  * }} props
  */
-const UsersMobileCards = memo(({ users, onUserAction }) => (
+const UsersMobileCards = memo(({ users, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => (
   <div className="flex flex-col md:hidden" data-testid="users-mobile-cards">
     {users.map((user) => (
-      <UserMobileCard key={user.id} user={user} onUserAction={onUserAction} />
+      <UserMobileCard
+        key={user.id}
+        user={user}
+        onActivate={onActivate}
+        onSuspend={onSuspend}
+        openActionMenuId={openActionMenuId}
+        onToggleActionMenu={onToggleActionMenu}
+        onCloseActionMenu={onCloseActionMenu}
+      />
     ))}
   </div>
 ));
@@ -303,10 +368,14 @@ UsersMobileCards.displayName = 'UsersMobileCards';
 /**
  * @param {{
  *   users: Array<{ id: string, status: string }>,
- *   onUserAction: (id: string) => void,
+ *   onActivate: (id: string) => void,
+ *   onSuspend: (id: string) => void,
+ *   openActionMenuId: string | null,
+ *   onToggleActionMenu: (id: string) => void,
+ *   onCloseActionMenu: () => void,
  * }} props
  */
-const UsersTable = memo(({ users, onUserAction }) => {
+const UsersTable = memo(({ users, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => {
   const { t } = useTranslation();
 
   return (
@@ -336,7 +405,15 @@ const UsersTable = memo(({ users, onUserAction }) => {
         </thead>
         <tbody>
           {users.map((user) => (
-            <UserTableRow key={user.id} user={user} onUserAction={onUserAction} />
+            <UserTableRow
+              key={user.id}
+              user={user}
+              onActivate={onActivate}
+              onSuspend={onSuspend}
+              openActionMenuId={openActionMenuId}
+              onToggleActionMenu={onToggleActionMenu}
+              onCloseActionMenu={onCloseActionMenu}
+            />
           ))}
         </tbody>
       </table>
@@ -359,12 +436,16 @@ const AdminUsersContent = memo(() => {
     isFirstPage,
     isLastPage,
     isSuspendModalOpen,
+    openActionMenuId,
     handleStatusFilterChange,
     handleToggleSort,
     handleCloseSort,
     handlePreviousPage,
     handleNextPage,
-    handleUserAction,
+    handleToggleActionMenu,
+    handleCloseActionMenu,
+    handleActivateUser,
+    handleRequestSuspend,
     handleCloseSuspendModal,
     handleConfirmSuspend,
   } = useAdminUsers();
@@ -393,8 +474,22 @@ const AdminUsersContent = memo(() => {
       >
         {visibleUsers.length > 0 ? (
           <>
-            <UsersMobileCards users={visibleUsers} onUserAction={handleUserAction} />
-            <UsersTable users={visibleUsers} onUserAction={handleUserAction} />
+            <UsersMobileCards
+              users={visibleUsers}
+              onActivate={handleActivateUser}
+              onSuspend={handleRequestSuspend}
+              openActionMenuId={openActionMenuId}
+              onToggleActionMenu={handleToggleActionMenu}
+              onCloseActionMenu={handleCloseActionMenu}
+            />
+            <UsersTable
+              users={visibleUsers}
+              onActivate={handleActivateUser}
+              onSuspend={handleRequestSuspend}
+              openActionMenuId={openActionMenuId}
+              onToggleActionMenu={handleToggleActionMenu}
+              onCloseActionMenu={handleCloseActionMenu}
+            />
           </>
         ) : (
           <p className="px-6 py-10 text-center text-[16px] text-[#687186]">{t('adminUsers.empty')}</p>

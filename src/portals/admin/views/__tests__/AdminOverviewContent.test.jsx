@@ -43,6 +43,11 @@ describe('Admin Overview content', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminOverview.stats.registeredUsers'))).toBeInTheDocument();
     expect(screen.getByText(i18n.t('adminOverview.stats.registeredUsersValue'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminOverview.stats.totalCommission'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminOverview.stats.totalRevenue'))).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: i18n.t('adminOverview.revenueTrend.title') }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { level: 2, name: i18n.t('adminOverview.analytics.title') }),
     ).toBeInTheDocument();
@@ -71,8 +76,8 @@ describe('Admin Overview content', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Zarejestrowani użytkownicy')).toBeInTheDocument();
     expect(screen.getByText('Analityka odwiedzin')).toBeInTheDocument();
-    expect(screen.getByText('Oczekujące na przegląd')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Otwórz kolejkę przeglądu' })).toBeInTheDocument();
+    expect(screen.getByText('Ostatni konkurs')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Otwórz konkurs' })).toBeInTheDocument();
     expect(screen.getByText('Zasięg społeczności')).toBeInTheDocument();
   });
 });

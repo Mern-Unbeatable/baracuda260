@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowUpFromLine, ChevronDown, Sparkles } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
+import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
+import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_CATEGORY,
@@ -47,9 +49,15 @@ ZodiacIcon.displayName = 'ZodiacIcon';
  * Single Photo upload workspace — Figma node 190:142 (file kE9g2eZmAoSco81PgZNlj2).
  * Layout: left 930 + gap 71 + right 579; copyright confirm + submit on right panel.
  */
-const SinglePhotoContent = memo(() => {
+const SinglePhotoContent = memo(({
+  backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+  uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+  purpose = 'artwork',
+  defaultPrice = '$2.00',
+}) => {
   const { t } = useTranslation();
   const fileInputRef = useRef(null);
+  const isSell = purpose === 'sell';
 
   const [signId, setSignId] = useState(DEFAULT_SIGN_ID);
   const [signOpen, setSignOpen] = useState(false);
@@ -57,6 +65,10 @@ const SinglePhotoContent = memo(() => {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [story, setStory] = useState('');
+  const [price, setPrice] = useState(defaultPrice);
+  const [resolution, setResolution] = useState(BUY_PHOTO_DEFAULT_SPECS.resolution);
+  const [format, setFormat] = useState(BUY_PHOTO_DEFAULT_SPECS.format);
+  const [camera, setCamera] = useState(BUY_PHOTO_DEFAULT_SPECS.camera);
   const [copyrightOk, setCopyrightOk] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [errors, setErrors] = useState({});
@@ -91,7 +103,11 @@ const SinglePhotoContent = memo(() => {
   const validate = () => {
     const nextErrors = {};
     if (!title.trim()) nextErrors.title = t('singlePhoto.errors.titleRequired');
-    if (!story.trim()) nextErrors.story = t('singlePhoto.errors.storyRequired');
+    if (isSell) {
+      if (!price.trim()) nextErrors.price = t('sellPhotos.errors.priceRequired');
+    } else if (!story.trim()) {
+      nextErrors.story = t('singlePhoto.errors.storyRequired');
+    }
     if (!photoPreview) nextErrors.photo = t('singlePhoto.errors.photoRequired');
     if (!copyrightOk) nextErrors.copyright = t('singlePhoto.errors.copyrightRequired');
     return nextErrors;
@@ -122,7 +138,7 @@ const SinglePhotoContent = memo(() => {
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-[34px]">
               <Link
-                to={ROUTES.ADMIN_UPLOAD_PHOTOS}
+                to={backHref}
                 className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
               >
                 <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
@@ -350,28 +366,43 @@ const SinglePhotoContent = memo(() => {
                 ) : null}
               </div>
 
-              <div className="flex flex-col gap-2.5">
-                <label
-                  htmlFor="single-photo-story"
-                  className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
-                >
-                  {t('singlePhoto.storyLabel')}
-                </label>
-                <textarea
-                  id="single-photo-story"
-                  value={story}
-                  onChange={(event) => setStory(event.target.value)}
-                  placeholder={t('singlePhoto.storyPlaceholder')}
-                  rows={5}
-                  aria-invalid={Boolean(errors.story)}
-                  className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              {isSell ? (
+                <MemberSellPhotoFields
+                  idPrefix="single-photo"
+                  price={price}
+                  resolution={resolution}
+                  format={format}
+                  camera={camera}
+                  onPriceChange={setPrice}
+                  onResolutionChange={setResolution}
+                  onFormatChange={setFormat}
+                  onCameraChange={setCamera}
+                  errors={errors}
                 />
-                {errors.story ? (
-                  <p className="text-sm text-red-600" role="alert">
-                    {errors.story}
-                  </p>
-                ) : null}
-              </div>
+              ) : (
+                <div className="flex flex-col gap-2.5">
+                  <label
+                    htmlFor="single-photo-story"
+                    className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
+                  >
+                    {t('singlePhoto.storyLabel')}
+                  </label>
+                  <textarea
+                    id="single-photo-story"
+                    value={story}
+                    onChange={(event) => setStory(event.target.value)}
+                    placeholder={t('singlePhoto.storyPlaceholder')}
+                    rows={5}
+                    aria-invalid={Boolean(errors.story)}
+                    className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+                  />
+                  {errors.story ? (
+                    <p className="text-sm text-red-600" role="alert">
+                      {errors.story}
+                    </p>
+                  ) : null}
+                </div>
+              )}
             </div>
 
             <label className="flex cursor-pointer items-start gap-3">
@@ -410,7 +441,11 @@ const SinglePhotoContent = memo(() => {
         </aside>
       </div>
 
-      <PhotoSubmitSuccessModal open={successOpen} onClose={handleCloseSuccess} />
+      <PhotoSubmitSuccessModal
+        open={successOpen}
+        onClose={handleCloseSuccess}
+        uploadAnotherHref={uploadAnotherHref}
+      />
     </div>
   );
 });

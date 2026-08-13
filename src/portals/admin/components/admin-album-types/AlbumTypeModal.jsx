@@ -98,7 +98,7 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
   };
 
   const fieldClass = (hasError) =>
-    `w-full rounded-[6px] border bg-white text-[12px] leading-[16.2px] text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd] ${
+    `w-full rounded-lg border bg-white text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd] ${
       hasError ? 'border-[#f31d2c]' : 'border-[#dfe4ea]'
     }`;
 
@@ -117,18 +117,18 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
       >
         <header className="flex items-start justify-between border-b border-[#edf0f3] px-6 pb-5.25 pt-5">
           <div className="min-w-0 flex-1 pr-3">
-            <p className="text-[9px] font-bold uppercase leading-[13.5px] tracking-[1.26px] text-[#f31d2c]">
+            <p className="text-[11px] font-bold uppercase leading-4 tracking-[1.26px] text-[#f31d2c]">
               {t('adminAlbumTypes.modal.eyebrow')}
             </p>
             <h2
               id={titleId}
-              className="font-manrope pt-1 text-[20px] font-bold leading-7 tracking-[-0.5px] text-[#202838]"
+              className="font-manrope pt-1 text-[22px] font-bold leading-8 tracking-[-0.5px] text-[#202838]"
             >
               {isEdit
                 ? t('adminAlbumTypes.modal.editTitle')
                 : t('adminAlbumTypes.modal.createTitle')}
             </h2>
-            <p className="pt-1 text-[12px] leading-4 text-[#788293]">
+            <p className="pt-1 text-[14px] leading-5 text-[#788293]">
               {isEdit
                 ? t('adminAlbumTypes.modal.editSubtitle')
                 : t('adminAlbumTypes.modal.createSubtitle')}
@@ -153,7 +153,7 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
         <form onSubmit={handleSubmit} className="flex flex-col px-6 py-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex min-w-0 flex-col">
-              <label htmlFor={nameId} className="text-[12px] leading-4 text-[#455163]">
+              <label htmlFor={nameId} className="text-[14px] font-medium leading-5 text-[#455163]">
                 {t('adminAlbumTypes.modal.nameLabel')}
                 <span className="text-[#f31d2c]" aria-hidden="true">
                   {' '}
@@ -169,18 +169,18 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
                   onChange={handleFieldChange('name')}
                   aria-invalid={showNameError}
                   aria-describedby={showNameError ? `${nameId}-error` : undefined}
-                  className={`box-border h-8.5 px-2.75 py-2.25 ${fieldClass(showNameError)}`}
+                  className={`box-border h-10 px-3 py-2.5 ${fieldClass(showNameError)}`}
                 />
               </div>
               {showNameError ? (
-                <p id={`${nameId}-error`} className="pt-1 text-[12px] leading-4 text-[#f31d2c]">
+                <p id={`${nameId}-error`} className="pt-1 text-[13px] leading-4 text-[#f31d2c]">
                   {t('adminAlbumTypes.modal.nameRequired')}
                 </p>
               ) : null}
             </div>
 
             <div className="flex min-w-0 flex-col">
-              <label htmlFor={prizeId} className="text-[12px] leading-4 text-[#455163]">
+              <label htmlFor={prizeId} className="text-[14px] font-medium leading-5 text-[#455163]">
                 {t('adminAlbumTypes.modal.prizeLabel')}
                 <span className="text-[#f31d2c]" aria-hidden="true">
                   {' '}
@@ -189,7 +189,7 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
               </label>
               <div className="relative pt-1.5">
                 <span
-                  className="pointer-events-none absolute left-3 top-4 text-[14px] leading-5 text-[#748091]"
+                  className="pointer-events-none absolute left-3 top-4.5 text-[14px] leading-5 text-[#748091]"
                   aria-hidden="true"
                 >
                   $
@@ -203,11 +203,11 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
                   onChange={handleFieldChange('prizeMoney')}
                   aria-invalid={showPrizeError}
                   aria-describedby={showPrizeError ? `${prizeId}-error` : undefined}
-                  className={`box-border h-8.5 py-2.25 pl-7.25 pr-2.75 ${fieldClass(showPrizeError)}`}
+                  className={`box-border h-10 py-2.5 pl-7.25 pr-3 ${fieldClass(showPrizeError)}`}
                 />
               </div>
               {showPrizeError ? (
-                <p id={`${prizeId}-error`} className="pt-1 text-[12px] leading-4 text-[#f31d2c]">
+                <p id={`${prizeId}-error`} className="pt-1 text-[13px] leading-4 text-[#f31d2c]">
                   {t('adminAlbumTypes.modal.prizeRequired')}
                 </p>
               ) : null}
@@ -215,7 +215,7 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
           </div>
 
           <div className="flex w-full flex-col pt-4">
-            <label htmlFor={descriptionId} className="text-[12px] leading-4 text-[#455163]">
+            <label htmlFor={descriptionId} className="text-[14px] font-medium leading-5 text-[#455163]">
               {t('adminAlbumTypes.modal.descriptionLabel')}
               <span className="text-[#f31d2c]" aria-hidden="true">
                 {' '}
@@ -231,13 +231,13 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
                 onChange={handleFieldChange('description')}
                 aria-invalid={showDescriptionError}
                 aria-describedby={showDescriptionError ? `${descriptionId}-error` : undefined}
-                className={`h-16.75 resize-none px-2.75 py-2.25 ${fieldClass(showDescriptionError)}`}
+                className={`h-20 resize-none px-3 py-2.5 ${fieldClass(showDescriptionError)}`}
               />
             </div>
             {showDescriptionError ? (
               <p
                 id={`${descriptionId}-error`}
-                className="pt-1 text-[12px] leading-4 text-[#f31d2c]"
+                className="pt-1 text-[13px] leading-4 text-[#f31d2c]"
               >
                 {t('adminAlbumTypes.modal.descriptionRequired')}
               </p>
@@ -245,7 +245,7 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
           </div>
 
           <div className="flex w-full flex-col pt-4">
-            <label htmlFor={featuredId} className="text-[12px] leading-4 text-[#455163]">
+            <label htmlFor={featuredId} className="text-[14px] font-medium leading-5 text-[#455163]">
               {t('adminAlbumTypes.modal.featuredLabel')}
               <span className="text-[#f31d2c]" aria-hidden="true">
                 {' '}
@@ -262,27 +262,27 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
                 placeholder={t('adminAlbumTypes.modal.featuredPlaceholder')}
                 aria-invalid={showFeaturedError}
                 aria-describedby={showFeaturedError ? `${featuredId}-error` : undefined}
-                className={`h-16.75 resize-none px-2.75 py-2.25 ${fieldClass(showFeaturedError)}`}
+                className={`h-20 resize-none px-3 py-2.5 ${fieldClass(showFeaturedError)}`}
               />
             </div>
             {showFeaturedError ? (
-              <p id={`${featuredId}-error`} className="pt-1 text-[12px] leading-4 text-[#f31d2c]">
+              <p id={`${featuredId}-error`} className="pt-1 text-[13px] leading-4 text-[#f31d2c]">
                 {t('adminAlbumTypes.modal.featuredRequired')}
               </p>
             ) : null}
           </div>
 
-          <div className="flex items-start justify-end gap-2 pt-6">
+          <div className="flex items-start justify-end gap-3 pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-md border border-[#dfe4ea] px-4.25 py-2.25 text-[12px] leading-4 text-[#536070] transition hover:bg-[#f9fafb]"
+              className="cursor-pointer rounded-lg border border-[#dfe4ea] px-5 py-2.5 text-[14px] font-medium leading-5 text-[#536070] transition hover:bg-[#f9fafb]"
             >
               {t('adminAlbumTypes.modal.cancel')}
             </button>
             <button
               type="submit"
-              className="cursor-pointer rounded-md bg-[#f31d2c] px-4 py-2 text-[12px] leading-4 text-white shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
+              className="cursor-pointer rounded-lg bg-[#f31d2c] px-5 py-2.5 text-[14px] font-medium leading-5 text-white shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
             >
               {t('adminAlbumTypes.modal.save')}
             </button>

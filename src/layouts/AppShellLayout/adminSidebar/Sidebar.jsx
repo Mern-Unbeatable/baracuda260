@@ -8,7 +8,6 @@ import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import { ADMIN_OVERVIEW_ASSETS } from '@/portals/admin/data/adminOverviewData';
 import {
   LayoutDashboard,
-  Camera,
   Trophy,
   Link2,
   MessageSquare,
@@ -20,6 +19,7 @@ import {
   ChevronsRight,
   ChevronsLeft,
   Images,
+  Image,
   Users,
   ChartColumnStacked,
   BookImage,
@@ -28,16 +28,29 @@ import {
   MessageCircleQuestion,
   Newspaper,
   MessageSquareText,
+  Store,
+  Star,
+  Bell,
+  Settings,
+  Sparkles,
+  Megaphone,
+  UserCircle2,
 } from 'lucide-react';
 
 const USER_NAV_ITEMS = [
   { labelKey: 'dashboard.nav.dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-  { labelKey: 'dashboard.nav.uploadPhotos', path: ROUTES.ADMIN_UPLOAD_PHOTOS, icon: Camera },
-  { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
+  { labelKey: 'dashboard.nav.artworkManagement', path: ROUTES.ADMIN_MY_ARTWORK, icon: Images },
+  { labelKey: 'dashboard.nav.newsMessages', path: ROUTES.ADMIN_NEWS_MESSAGES, icon: Newspaper },
+  { labelKey: 'dashboard.nav.sellPhotos', path: ROUTES.ADMIN_SELL_PHOTOS, icon: Store },
+  { labelKey: 'dashboard.nav.favouritePhotographers', path: ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS, icon: Star },
+  // { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
   { labelKey: 'dashboard.nav.businessPhotos', path: ROUTES.ADMIN_BUSINESS_PHOTOS, icon: Link2 },
   { labelKey: 'dashboard.nav.chat', path: ROUTES.ADMIN_CHAT, icon: MessageSquare },
+  { labelKey: 'dashboard.nav.notifications', path: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
   { labelKey: 'dashboard.nav.prizePayments', path: ROUTES.ADMIN_PRIZE_PAYMENTS, icon: Wallet },
+  { labelKey: 'dashboard.nav.contactUs', path: ROUTES.ADMIN_CONTACT_US, icon: MessageCircleQuestion },
   { labelKey: 'dashboard.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
+  { labelKey: 'dashboard.nav.settings', path: ROUTES.ADMIN_SETTINGS, icon: Settings },
 ];
 
 const ADMIN_NAV_GROUPS = [
@@ -55,7 +68,22 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_MY_COMPETITIONS,
         icon: Trophy,
       },
-      { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
+      {
+        labelKey: 'adminOverview.nav.gallery',
+        path: ROUTES.ADMIN_GALLERY,
+        icon: Image,
+      },
+      {
+        labelKey: 'adminOverview.nav.premiumPhotos',
+        path: ROUTES.ADMIN_PREMIUM_PHOTOS,
+        icon: Sparkles,
+      },
+      {
+        labelKey: 'adminOverview.nav.promotedAlbums',
+        path: ROUTES.ADMIN_PROMOTED_PRODUCTS,
+        icon: Megaphone,
+      },
+      // { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
       { labelKey: 'adminOverview.nav.users', path: ROUTES.ADMIN_USERS, icon: Users },
     ],
   },
@@ -87,12 +115,20 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_COMMENT,
         icon: MessageSquareText,
       },
+      {
+        labelKey: 'adminOverview.nav.demoProfile',
+        path: ROUTES.ADMIN_DEMO_PROFILES,
+        icon: UserCircle2,
+      },
     ],
   },
   {
     id: 'system',
     labelKey: 'adminOverview.nav.groups.system',
-    items: [{ labelKey: 'adminOverview.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound }],
+    items: [
+      { labelKey: 'adminOverview.nav.settings', path: ROUTES.ADMIN_SETTINGS, icon: Settings },
+      { labelKey: 'adminOverview.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
+    ],
   },
 ];
 

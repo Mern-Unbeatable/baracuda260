@@ -9,7 +9,7 @@ import { SINGLE_PHOTO_ASSETS } from '@/portals/member/data/singlePhotoAssets';
  * Post-submit success modal — Figma 338:574 (Single) / 367:884 (6 Photo) / 367:965 (12 Zodiac).
  * Backdrop blur 6px; card 672×409, radius 24; CTAs red #ee1c25 + blue #4048cd.
  */
-const PhotoSubmitSuccessModal = memo(({ open, onClose }) => {
+const PhotoSubmitSuccessModal = memo(({ open, onClose, uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const PhotoSubmitSuccessModal = memo(({ open, onClose }) => {
             {t('singlePhoto.successModal.goHome')}
           </Link>
           <Link
-            to={ROUTES.ADMIN_UPLOAD_PHOTOS}
+            to={uploadAnotherHref}
             className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#e5e7eb] bg-[#4048cd] px-8 py-[17px] text-center text-[16px] font-normal leading-6 text-white transition hover:bg-[#363db5]"
           >
             {t('singlePhoto.successModal.uploadAnother')}

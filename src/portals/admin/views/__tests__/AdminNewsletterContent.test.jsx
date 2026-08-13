@@ -80,6 +80,87 @@ describe('Admin Newsletter content', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows subscriber checkboxes when Send to Selected Users is chosen', async () => {
+    const user = userEvent.setup();
+    render(<AdminNewsletterContent />);
+
+    await user.click(screen.getByRole('button', { name: /Send to Selected Users/i }));
+
+    expect(screen.getByText(i18n.t('adminNewsletter.recipients.selectHint'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminNewsletter.recipients.selectedCount', { count: 0 }))).toBeInTheDocument();
+    expect(screen.getAllByRole('checkbox').length).toBeGreaterThan(0);
+  });
+
+  it('updates selected subscriber count when checkboxes are toggled', async () => {
+    const user = userEvent.setup();
+    render(<AdminNewsletterContent />);
+
+    await user.click(screen.getByRole('button', { name: /Send to Selected Users/i }));
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: i18n.t('adminNewsletter.recipients.selectSubscriber', {
+          email: 'john.anderson@company.com',
+        }),
+      }),
+    );
+
+    expect(
+      screen.getByText(i18n.t('adminNewsletter.recipients.selectedCount', { count: 1 })),
+    ).toBeInTheDocument();
+  });
+
+  it('requires at least one subscriber when sending to selected users', async () => {
+    const user = userEvent.setup();
+    render(<AdminNewsletterContent />);
+
+    await user.click(screen.getByRole('button', { name: /Send to Selected Users/i }));
+    fireEvent.change(
+      screen.getByPlaceholderText(i18n.t('adminNewsletter.composer.subjectPlaceholder')),
+      { target: { value: 'Test subject' } },
+    );
+    fireEvent.change(
+      screen.getByPlaceholderText(i18n.t('adminNewsletter.composer.contentPlaceholder')),
+      { target: { value: 'Test content' } },
+    );
+    await user.click(screen.getByRole('button', { name: i18n.t('adminNewsletter.send.button') }));
+
+    expect(screen.getByText(i18n.t('adminNewsletter.send.recipientsRequired'))).toBeInTheDocument();
+  });
+
+  it('shows send button and validation errors when fields are empty', async () => {
+    const user = userEvent.setup();
+    render(<AdminNewsletterContent />);
+
+    const sendBtn = screen.getByRole('button', { name: i18n.t('adminNewsletter.send.button') });
+    expect(sendBtn).toBeInTheDocument();
+
+    await user.click(sendBtn);
+
+    expect(screen.getByText(i18n.t('adminNewsletter.send.subjectRequired'))).toBeInTheDocument();
+    expect(screen.getByText(i18n.t('adminNewsletter.send.contentRequired'))).toBeInTheDocument();
+  });
+
+  it('clears validation errors when fields are filled', async () => {
+    render(<AdminNewsletterContent />);
+
+    const sendBtn = screen.getByRole('button', { name: i18n.t('adminNewsletter.send.button') });
+    fireEvent.click(sendBtn);
+
+    expect(screen.getByText(i18n.t('adminNewsletter.send.subjectRequired'))).toBeInTheDocument();
+
+    fireEvent.change(
+      screen.getByPlaceholderText(i18n.t('adminNewsletter.composer.subjectPlaceholder')),
+      { target: { value: 'Test subject' } },
+    );
+    fireEvent.change(
+      screen.getByPlaceholderText(i18n.t('adminNewsletter.composer.contentPlaceholder')),
+      { target: { value: 'Test content' } },
+    );
+
+    expect(screen.queryByText(i18n.t('adminNewsletter.send.subjectRequired'))).not.toBeInTheDocument();
+    expect(screen.queryByText(i18n.t('adminNewsletter.send.contentRequired'))).not.toBeInTheDocument();
+  });
+
   it('switches newsletter copy to Polish', async () => {
     render(<AdminNewsletterContent />);
 

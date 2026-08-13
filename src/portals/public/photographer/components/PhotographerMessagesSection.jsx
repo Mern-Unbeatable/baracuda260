@@ -65,15 +65,15 @@ const PhotographerMessagesSection = memo(({ messages }) => {
                   <img
                     src={message.image}
                     alt=""
-                    className="aspect-16/10 w-full object-cover"
+                    className="h-64 w-full object-cover sm:h-80 lg:h-96"
                   />
                 </div>
               ) : null}
             </div>
 
             <div className="flex items-center justify-between border-t border-black/8 px-4 py-3 sm:px-5">
-              <span className="inline-flex items-center gap-1.5 text-[14px] text-[#6b7280]">
-                <Heart size={16} strokeWidth={2} aria-hidden="true" />
+              <span className="inline-flex items-center gap-1.5 text-[14px] font-medium text-[#4048cd]">
+                <Heart size={16} strokeWidth={2} aria-hidden="true" className="fill-[#4048cd] text-[#4048cd]" />
                 {t('photographerProfile.messages.likes', { count: message.likes })}
               </span>
               <button
