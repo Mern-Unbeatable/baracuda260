@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { Shell } from '@/shared/site-chrome';
 import { SectionHeader } from '@/shared/ui/marketing';
 import { ABOUT_ASSETS } from '@/portals/public/about/data/aboutAssets';

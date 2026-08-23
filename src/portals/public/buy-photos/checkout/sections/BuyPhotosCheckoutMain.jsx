@@ -1,5 +1,5 @@
-import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, CreditCard, Lock } from 'lucide-react';
 import { ROUTES } from '@/shared/config';

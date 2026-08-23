@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { ROUTES } from '@/shared/config';
 import GalleryDetailView from '@/portals/public/gallery/detail/GalleryDetailView';
 import WinnerDetailBreadcrumb from '@/portals/public/winners/detail/WinnerDetailBreadcrumb';

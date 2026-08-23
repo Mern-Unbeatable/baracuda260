@@ -1,5 +1,5 @@
-import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo } from 'react';
 import MemberNotificationItem from '@/portals/member/components/member-notifications/MemberNotificationItem';
 import {
   MEMBER_NOTIFICATIONS,

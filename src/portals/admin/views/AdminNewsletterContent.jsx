@@ -1,5 +1,5 @@
-import React, { memo, useId } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useId } from 'react';
 import {
   ADMIN_NEWSLETTER_ASSETS,
   CHECK_ICON_SIZE,

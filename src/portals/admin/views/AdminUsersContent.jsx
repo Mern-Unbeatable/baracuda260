@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useEffect, useRef } from 'react';
 import { MoreVertical } from 'lucide-react';
 import {
   ADMIN_USERS_ASSETS,

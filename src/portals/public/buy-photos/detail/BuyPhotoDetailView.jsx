@@ -1,5 +1,5 @@
-import React, { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Camera, Heart, Image, Maximize2, Share2, ShoppingCart } from 'lucide-react';
 import { ROUTES } from '@/shared/config';

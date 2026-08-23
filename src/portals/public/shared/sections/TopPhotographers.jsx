@@ -1,5 +1,5 @@
-import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useState } from 'react';
 import { ROUTES } from '@/shared/config';
 import {
   LEADERBOARD_MONTHS,

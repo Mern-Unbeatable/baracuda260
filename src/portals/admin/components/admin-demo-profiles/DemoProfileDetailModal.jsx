@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
 import {
   ADMIN_DEMO_PROFILES_ASSETS,
   CLOSE_ICON_SIZE,

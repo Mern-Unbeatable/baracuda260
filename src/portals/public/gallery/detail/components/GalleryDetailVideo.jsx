@@ -1,5 +1,5 @@
-import React, { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 
 const GalleryDetailVideo = memo(({ poster, src, title }) => {

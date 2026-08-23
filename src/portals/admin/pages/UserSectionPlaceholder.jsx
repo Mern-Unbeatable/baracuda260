@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 
 /**
  * Lightweight placeholder for user-dashboard sections not yet designed in Figma.

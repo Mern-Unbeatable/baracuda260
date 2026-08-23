@@ -1,5 +1,5 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Share2 } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';

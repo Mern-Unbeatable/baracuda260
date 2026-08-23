@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { Heart, Eye, Calendar, Clock } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {

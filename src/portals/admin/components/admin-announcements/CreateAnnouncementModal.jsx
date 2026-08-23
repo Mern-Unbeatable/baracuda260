@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 import {
   ANNOUNCEMENT_EMOJI_OPTIONS,

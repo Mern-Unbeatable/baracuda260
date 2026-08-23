@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import {
   ADMIN_ALBUM_TYPES_ASSETS,
   CHECK_ICON_SIZE,

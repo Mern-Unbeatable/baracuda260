@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { ROUTES } from '@/shared/config';
 import { logout, selectUser } from '@/app/store/slices/authSlice';
@@ -143,11 +143,11 @@ const NAV_INACTIVE =
 const getNavClass = ({ isActive }) => `${NAV_BASE} ${isActive ? NAV_ACTIVE : NAV_INACTIVE}`;
 
 const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpand }) => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const isAdmin = user?.role === 'admin';
+  const { t } = useTranslation();
 
   const displayName = user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
   const avatarInitial = displayName.trim().charAt(0).toUpperCase() || 'U';

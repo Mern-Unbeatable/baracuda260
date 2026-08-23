@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';

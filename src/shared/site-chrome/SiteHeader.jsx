@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { ROUTES, SITE_NAV_LINKS } from '@/shared/config';
 import { ACTION_BTN_PRIMARY } from '@/shared/ui/actionStyles';
 import { selectIsAuthenticated } from '@/app/store/slices/authSlice';

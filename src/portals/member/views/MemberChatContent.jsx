@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import ChatConversationList from '@/portals/member/components/member-chat/ChatConversationList';
 import ChatMessageArea from '@/portals/member/components/member-chat/ChatMessageArea';
 import {

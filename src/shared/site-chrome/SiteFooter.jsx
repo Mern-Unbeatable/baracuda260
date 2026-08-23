@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { ROUTES } from '@/shared/config';
 import { SITE_ASSETS } from './siteAssets';
 import { SITE_FOOTER_COLUMNS, SITE_FOOTER_YEAR } from './siteCopy';

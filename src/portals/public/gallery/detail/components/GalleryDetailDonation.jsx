@@ -1,5 +1,5 @@
-import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useState } from 'react';
 import { ArrowRight, X } from 'lucide-react';
 import { GALLERY_DETAIL_DONATION_AMOUNTS } from '@/portals/public/gallery/detail/galleryDetailShared';
 import { MarketingButton } from '@/shared/ui/marketing';

@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { ChevronLeft, ChevronRight, Heart, Trophy } from 'lucide-react';
 import { AppLink } from '@/shared/site-chrome';
 import { MarketingButton } from '@/shared/ui/marketing';

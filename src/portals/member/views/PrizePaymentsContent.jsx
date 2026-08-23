@@ -1,5 +1,5 @@
-import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ChevronDown, Search } from 'lucide-react';
 import FilterPillGroup from '@/shared/ui/marketing/FilterPillGroup';

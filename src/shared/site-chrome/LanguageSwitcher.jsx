@@ -1,8 +1,8 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SUPPORTED_LOCALES, changeLanguage } from '@/shared/i18n';
 import { SITE_ASSETS } from './siteAssets';
 import ImgIcon from './ImgIcon';
-import { SUPPORTED_LOCALES, changeAppLanguage } from '@/shared/i18n';
 
 const LanguageSwitcher = memo(({ className = '' }) => {
   const { t, i18n } = useTranslation();
@@ -66,7 +66,7 @@ const LanguageSwitcher = memo(({ className = '' }) => {
                       : 'text-[#222] hover:bg-[#f7f8fa]'
                   }`}
                   onClick={() => {
-                    void changeAppLanguage(locale.code);
+                    void changeLanguage(locale.code);
                     setOpen(false);
                   }}
                 >

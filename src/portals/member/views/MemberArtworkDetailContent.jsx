@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ArrowLeft } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import GalleryDetailVideo from '@/portals/public/gallery/detail/components/GalleryDetailVideo';

@@ -1,5 +1,5 @@
-import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useState } from 'react';
 import { MapPin, MessageCircle, UserPlus } from 'lucide-react';
 import { MarketingButton } from '@/shared/ui/marketing';
 

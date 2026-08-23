@@ -1,0 +1,132 @@
+{
+  "nav": {
+    "home": "Home",
+    "competitions": "Competitions",
+    "gallery": "Gallery",
+    "buyPhotos": "Buy Photos",
+    "albumTypes": "Album Types",
+    "leaderboard": "Leaderboard",
+    "winners": "Winners",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "header": {
+    "logIn": "Log IN",
+    "registerFree": "Register Free",
+    "dashboard": "Dashboard",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language"
+  },
+  "languages": {
+    "en": "English",
+    "pl": "Polski"
+  },
+  "announcement": "🎉 May 2026 winners announced — View now · 📢 June competition is now open — Free to enter · 🏆 This month's prize: $500 · 📅 Competition ends in 7 days · ",
+  "newsletter": {
+    "title": "Stay Updated",
+    "subtitle": "Receive competition announcements, winner reveals, and photography tips.",
+    "subtitleLine1": "Receive competition announcements, winner reveals,",
+    "subtitleLine2": "and photography tips.",
+    "placeholder": "Enter your email here...",
+    "subscribe": "Subscribe"
+  },
+  "footer": {
+    "tagline": "A photography platform connecting photo enthusiasts and rewarding the best work every month.",
+    "socialLink": "Social link",
+    "competitions": "Competitions",
+    "platform": "Platform",
+    "legal": "Legal",
+    "singlePhoto": "Single Photo",
+    "sixPhotoStory": "6-Photo Story",
+    "zodiacAlbum": "Zodiac Album",
+    "winners": "Winners",
+    "leaderboard": "Leaderboard",
+    "gallery": "Gallery",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookies",
+    "rights": "© {{year}} My12Photos. All rights reserved."
+  },
+  "common": {
+    "singlePhoto": "Single Photo",
+    "sixPhotos": "6 Photos",
+    "sixPhotoStory": "6 Photo story",
+    "sixPhotosStory": "6-Photos Story",
+    "twelveZodiac": "12 photos - full Zodiac Story",
+    "all": "All",
+    "allEntries": "All Entries",
+    "mostPopular": "MOST POPULAR",
+    "prizeMoney": "/prize money",
+    "enterNow": "Enter Now",
+    "selectMonth": "Select month",
+    "heroSlides": "Hero slides",
+    "showSlide": "Show slide {{n}}",
+    "votes": "Votes",
+    "points": "Points",
+    "photographer": "Photographer",
+    "city": "City",
+    "rank": "#",
+    "months": {
+      "January": "January",
+      "February": "February",
+      "March": "March",
+      "April": "April",
+      "May": "May",
+      "June": "June",
+      "July": "July",
+      "August": "August",
+      "September": "September",
+      "October": "October",
+      "November": "November",
+      "December": "December"
+    },
+    "categories": {
+      "Nature": "Nature",
+      "Portrait": "Portrait",
+      "Wildlife": "Wildlife",
+      "Landscape": "Landscape",
+      "Street Photography": "Street Photography",
+      "Architecture": "Architecture",
+      "Black & White": "Black & White",
+      "Travel": "Travel",
+      "Wedding": "Wedding",
+      "Macro": "Macro",
+      "Fine Art": "Fine Art",
+      "Pets": "Pets",
+      "Sports": "Sports",
+      "Night Photography": "Night Photography"
+    },
+    "badges": {
+      "singlePhoto": "Single Photo",
+      "sixPhotosStory": "6 PHOTOS STORY",
+      "twelveZodiacFull": "TELL US YOUR STORY USING 12 PHOTOS SAME AS THE SUN IS TELLING US HIS USING 12 SIGNS OF THE ZODIAC",
+      "twelvePhotoZodiac": "12 Photo Zodiac",
+      "firstPlace": "1st PLACE",
+      "secondPlace": "2nd PLACE",
+      "thirdPlace": "3rd PLACE",
+      "popularVote": "Popular Vote",
+      "topRated": "Top Rated",
+      "editorsChoice": "Editor's Choice"
+    },
+    "themeSilentStreets": "THEME: SILENT STREETS",
+    "categorySingleShort": "Cat : Single Short",
+    "filtersShort": {
+      "all": "All",
+      "single": "Single Photo",
+      "six": "6 Photos",
+      "zodiac": "Zodiac Story"
+    },
+    "cities": {
+      "krakow": "Krakow",
+      "warsaw": "Warsaw",
+      "wroclaw": "Wroclaw",
+      "poznan": "Poznan",
+      "gdansk": "Gdansk",
+      "lodz": "Lodz"
+    }
+  }
+}

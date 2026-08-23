@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { COMPETITION_STEPS } from '@/shared/data/competitionsMarketing';
 import { Shell } from '@/shared/site-chrome';
 import { SectionHeader } from '@/shared/ui/marketing';

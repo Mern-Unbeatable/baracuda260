@@ -1,5 +1,5 @@
-import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo, useState } from 'react';
 import { ChevronDown, Images } from 'lucide-react';
 import { matchesAlbumType } from '@/shared/data/albumTypes';
 import { galleryDetailPath } from '@/shared/data/galleryPhotos';

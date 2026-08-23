@@ -1,7 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
 import {
   ADMIN_BUSINESS_LINK_ASSETS,

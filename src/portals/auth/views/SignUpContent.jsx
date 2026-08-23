@@ -1,8 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { loginSuccess } from '@/app/store/slices/authSlice';
+import { envVar } from '@/shared/config/env';
 import { ROUTES } from '@/shared/config';
 import { httpMethods } from '@/shared/lib/httpMethods';
 import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
@@ -85,7 +86,7 @@ const SignUpContent = memo(() => {
     };
 
     try {
-      if (process.env.REACT_APP_DEV_MOCK_AUTH === 'true') {
+      if (envVar('DEV_MOCK_AUTH') === 'true') {
         dispatch(
           loginSuccess({
             user: {

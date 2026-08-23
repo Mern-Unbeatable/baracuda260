@@ -1,7 +1,8 @@
 import React, { Component } from "react";
+import { IS_DEV } from "@/shared/config/env";
 
 function reportError(error, errorInfo) {
-  if (process.env.NODE_ENV !== "production") {
+  if (IS_DEV) {
     console.error("[ErrorBoundary] Caught error:", error, errorInfo);
     return;
   }
@@ -52,7 +53,7 @@ class ErrorBoundary extends Component {
             <p className="text-gray-600 mb-2">
               We apologize for the inconvenience.
             </p>
-            {process.env.NODE_ENV !== "production" && this.state.error && (
+            {IS_DEV && this.state.error && (
               <pre className="text-left text-xs bg-gray-100 rounded p-3 mb-4 overflow-auto max-h-40 text-red-700">
                 {this.state.error.message}
               </pre>

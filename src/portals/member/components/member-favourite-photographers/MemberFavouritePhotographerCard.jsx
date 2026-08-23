@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { Calendar, MapPin, Star, UserCheck } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 

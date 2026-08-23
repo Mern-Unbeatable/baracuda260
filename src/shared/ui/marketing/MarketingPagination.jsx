@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { FOCUS_RING } from './sectionStyles';
 import {

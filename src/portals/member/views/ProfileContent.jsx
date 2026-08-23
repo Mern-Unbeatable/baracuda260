@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import toast from 'react-hot-toast';
 import {
   ADMIN_PROFILE_ASSETS,

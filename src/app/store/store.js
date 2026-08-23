@@ -68,7 +68,7 @@ const store = configureStore({
     cart: cartReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(listener.middleware),
-  devTools: process.env.NODE_ENV !== 'production',
+  devTools: import.meta.env.DEV,
 });
 
 applyPrimaryColor(store.getState().theme.primaryColor);

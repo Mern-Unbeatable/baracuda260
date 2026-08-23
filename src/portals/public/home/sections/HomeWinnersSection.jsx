@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { Shell } from '@/shared/site-chrome';
 import { HOME_WINNERS } from '../data/homePageData';
 

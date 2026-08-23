@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Funnel, X } from 'lucide-react';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import {

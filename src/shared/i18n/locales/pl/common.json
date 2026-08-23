@@ -1,0 +1,132 @@
+{
+  "nav": {
+    "home": "Strona główna",
+    "competitions": "Konkursy",
+    "gallery": "Galeria",
+    "buyPhotos": "Kup zdjęcia",
+    "albumTypes": "Typy albumów",
+    "leaderboard": "Ranking",
+    "winners": "Zwycięzcy",
+    "about": "O nas",
+    "contact": "Kontakt"
+  },
+  "header": {
+    "logIn": "Zaloguj się",
+    "registerFree": "Zarejestruj się",
+    "dashboard": "Panel",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu",
+    "language": "Język"
+  },
+  "languages": {
+    "en": "English",
+    "pl": "Polski"
+  },
+  "announcement": "🎉 Ogłoszono zwycięzców maja 2026 — Zobacz teraz · 📢 Konkurs czerwcowy jest otwarty — Wstęp wolny · 🏆 Nagroda miesiąca: 500 $ · 📅 Konkurs kończy się za 7 dni · ",
+  "newsletter": {
+    "title": "Bądź na bieżąco",
+    "subtitle": "Otrzymuj ogłoszenia konkursów, wyniki i wskazówki fotograficzne.",
+    "subtitleLine1": "Otrzymuj ogłoszenia konkursów, wyniki,",
+    "subtitleLine2": "i wskazówki fotograficzne.",
+    "placeholder": "Wpisz swój e-mail...",
+    "subscribe": "Subskrybuj"
+  },
+  "footer": {
+    "tagline": "Platforma fotograficzna łącząca pasjonatów i nagradzająca najlepsze prace co miesiąc.",
+    "socialLink": "Link społecznościowy",
+    "competitions": "Konkursy",
+    "platform": "Platforma",
+    "legal": "Prawne",
+    "singlePhoto": "Pojedyncze zdjęcie",
+    "sixPhotoStory": "Historia 6 zdjęć",
+    "zodiacAlbum": "Album zodiakalny",
+    "winners": "Zwycięzcy",
+    "leaderboard": "Ranking",
+    "gallery": "Galeria",
+    "about": "O nas",
+    "faq": "FAQ",
+    "contact": "Kontakt",
+    "privacy": "Polityka prywatności",
+    "terms": "Regulamin",
+    "cookies": "Pliki cookie",
+    "rights": "© {{year}} My12Photos. Wszelkie prawa zastrzeżone."
+  },
+  "common": {
+    "singlePhoto": "Pojedyncze zdjęcie",
+    "sixPhotos": "6 zdjęć",
+    "sixPhotoStory": "Historia 6 zdjęć",
+    "sixPhotosStory": "Historia 6 zdjęć",
+    "twelveZodiac": "12 zdjęć — pełna historia zodiaku",
+    "all": "Wszystkie",
+    "allEntries": "Wszystkie zgłoszenia",
+    "mostPopular": "NAJPOPULARNIEJSZE",
+    "prizeMoney": "/nagroda pieniężna",
+    "enterNow": "Dołącz teraz",
+    "selectMonth": "Wybierz miesiąc",
+    "heroSlides": "Slajdy główne",
+    "showSlide": "Pokaż slajd {{n}}",
+    "votes": "Głosy",
+    "points": "Punkty",
+    "photographer": "Fotograf",
+    "city": "Miasto",
+    "rank": "#",
+    "months": {
+      "January": "Styczeń",
+      "February": "Luty",
+      "March": "Marzec",
+      "April": "Kwiecień",
+      "May": "Maj",
+      "June": "Czerwiec",
+      "July": "Lipiec",
+      "August": "Sierpień",
+      "September": "Wrzesień",
+      "October": "Październik",
+      "November": "Listopad",
+      "December": "Grudzień"
+    },
+    "categories": {
+      "Nature": "Natura",
+      "Portrait": "Portret",
+      "Wildlife": "Dzika przyroda",
+      "Landscape": "Krajobraz",
+      "Street Photography": "Fotografia uliczna",
+      "Architecture": "Architektura",
+      "Black & White": "Czarno-białe",
+      "Travel": "Podróże",
+      "Wedding": "Ślub",
+      "Macro": "Makro",
+      "Fine Art": "Sztuka",
+      "Pets": "Zwierzęta",
+      "Sports": "Sport",
+      "Night Photography": "Fotografia nocna"
+    },
+    "badges": {
+      "singlePhoto": "Pojedyncze zdjęcie",
+      "sixPhotosStory": "HISTORIA 6 ZDJĘĆ",
+      "twelveZodiacFull": "12 zdjęć — pełna historia zodiaku",
+      "twelvePhotoZodiac": "12 zdjęć — zodiak",
+      "firstPlace": "1. MIEJSCE",
+      "secondPlace": "2. MIEJSCE",
+      "thirdPlace": "3. MIEJSCE",
+      "popularVote": "Głos publiczności",
+      "topRated": "Najwyżej oceniane",
+      "editorsChoice": "Wybór redakcji"
+    },
+    "themeSilentStreets": "MOTYW: CICHĘ ULICZKI",
+    "categorySingleShort": "Kat. : Single Short",
+    "filtersShort": {
+      "all": "Wszystkie",
+      "single": "Pojedyncze",
+      "six": "6 zdjęć",
+      "zodiac": "Zodiak"
+    },
+    "cities": {
+      "krakow": "Kraków",
+      "warsaw": "Warszawa",
+      "wroclaw": "Wrocław",
+      "poznan": "Poznań",
+      "gdansk": "Gdańsk",
+      "lodz": "Łódź"
+    }
+  }
+}

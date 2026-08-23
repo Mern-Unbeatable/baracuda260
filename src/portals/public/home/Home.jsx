@@ -16,7 +16,7 @@ const Home = memo(() => {
   useSEO({
     title: '',
     description: 'Welcome to our React application',
-    keywords: ['react', 'webpack', 'tailwind', 'router'],
+    keywords: ['react', 'vite', 'tailwind', 'router'],
   });
 
   return (
