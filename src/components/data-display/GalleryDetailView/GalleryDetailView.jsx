@@ -255,7 +255,11 @@ const GalleryDetailView = memo(
                     </p>
                   </div>
                 </div>
-                <MarketingButton as={AppLink} href={ROUTES.PHOTOGRAPHER_PROFILE} className="shrink-0">
+                <MarketingButton
+                  as={AppLink}
+                  href={ROUTES.PHOTOGRAPHER_PROFILE}
+                  className="shrink-0 !bg-[#4048CD] hover:!bg-[#333BB0]"
+                >
                   {t('galleryDetail.photographerProfile')}
                 </MarketingButton>
               </div>

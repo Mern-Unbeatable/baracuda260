@@ -50,20 +50,26 @@ const MemberArtworkCardFooter = memo(({ item }) => {
 
   if (item.footerState === 'profileOnly') {
     return (
-      <div className="flex h-full flex-col justify-between gap-3 rounded-xl bg-[#f9fafb] p-3 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0">
+      <div className="flex h-full flex-col justify-between gap-2 rounded-xl bg-[#f9fafb] p-3">
+        <div>
           <span className="inline-flex items-center gap-1 rounded-full bg-[#e5e7eb] px-2.5 py-1 text-[11px] font-semibold text-[#6b7280]">
             <Clock size={12} strokeWidth={2} aria-hidden="true" />
             {t('myArtwork.card.profileOnly')}
           </span>
-          <p className="mt-2 text-[12px] text-[#9ca3af]">{t('myArtwork.card.notInContest')}</p>
+          <p className="mt-1.5 text-[12px] font-medium text-[#6b7280]">Not in any competition</p>
         </div>
+
+        <div className="rounded-lg border border-[#e5e7eb] bg-white p-2">
+          <p className="text-[10px] font-medium uppercase text-[#9ca3af]">Available Competitions</p>
+          <p className="mt-1 text-[13px] font-bold text-[#4048cd]">3 Active</p>
+        </div>
+
         <MarketingButton
           type="button"
-          className="w-full shrink-0 rounded-lg bg-[#4048cd] px-4 py-2 text-[13px] hover:bg-[#363eb8] sm:w-auto"
+          className="w-full rounded-lg bg-[#4048cd] px-4 py-1.5 text-[12px] font-semibold hover:bg-[#363eb8]"
         >
-          <Plus size={16} strokeWidth={2} aria-hidden="true" />
-          {t('myArtwork.card.addToCompetition')}
+          <Plus size={14} strokeWidth={2} aria-hidden="true" />
+          Add to Competition
         </MarketingButton>
       </div>
     );
@@ -71,23 +77,41 @@ const MemberArtworkCardFooter = memo(({ item }) => {
 
   if (item.footerState === 'ended') {
     return (
-      <div className="flex h-full flex-col justify-between gap-3 rounded-xl bg-[#f5f3ff] p-3 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0">
+      <div className="flex h-full flex-col justify-between gap-2 rounded-xl bg-[#f5f3ff] p-3">
+        <div className="flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1 rounded-full bg-[#ede9fe] px-2.5 py-1 text-[11px] font-semibold text-[#7c3aed]">
             <Sparkles size={12} strokeWidth={2} aria-hidden="true" />
             {t('myArtwork.card.competitionEnded')}
           </span>
-          <p className="mt-2 text-[12px] font-medium text-[#a78bfa]">
-            {t('myArtwork.card.endedVotes', { count: item.endedVotes })}
-          </p>
+          <span className="text-base">🏆</span>
         </div>
-        <button
-          type="button"
-          className="inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#7c3aed] px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-[#6d28d9] sm:w-auto"
-        >
-          <RefreshCw size={16} strokeWidth={2} aria-hidden="true" />
-          {t('myArtwork.card.submitAgain')}
-        </button>
+
+        <div className="grid grid-cols-2 gap-1 rounded-lg border border-[#e9d5ff] bg-white/50 p-2">
+          <div className="flex flex-col items-center justify-center text-center">
+            <p className="text-[9px] font-medium uppercase text-[#9ca3af]">Votes</p>
+            <p className="mt-0.5 text-[16px] font-bold text-[#7c3aed]">{item.endedVotes}</p>
+          </div>
+          <div className="flex flex-col items-center justify-center border-l border-[#e9d5ff] text-center">
+            <p className="text-[9px] font-medium uppercase text-[#9ca3af]">Rank</p>
+            <p className="mt-0.5 text-[16px] font-bold text-[#7c3aed]">#{item.finalRank ?? '-'}</p>
+          </div>
+        </div>
+
+        <div className="flex gap-1.5">
+          <button
+            type="button"
+            className="flex-1 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-[#7c3aed] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[#6d28d9]"
+          >
+            <RefreshCw size={14} strokeWidth={2} aria-hidden="true" />
+            Submit
+          </button>
+          <button
+            type="button"
+            className="flex-1 inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#e9d5ff] bg-white/40 px-3 py-1.5 text-[12px] font-semibold text-[#7c3aed] transition hover:bg-white/60"
+          >
+            Results
+          </button>
+        </div>
       </div>
     );
   }

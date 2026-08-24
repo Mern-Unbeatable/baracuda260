@@ -22,26 +22,19 @@ const SHOWCASE_BADGE_KEYS = {
 
 const PAGE_SIZE = 6;
 
-const CATEGORIES = [
-  'Nature',
-  'Portrait',
-  'Wildlife',
-  'Landscape',
-  'Street Photography',
-  'Architecture',
-  'Black & White',
-  'Travel',
-  'Wedding',
-  'Macro',
-  'Fine Art',
-  'Pets',
-  'Sports',
-  'Night Photography',
-];
+const MAIN_CATEGORIES = ['Nature', 'Portrait', 'Landscape', 'Travel', 'Wedding', 'Macro', 'Fine Art', 'Pets', 'Sports', 'Night Photography'];
+
+const CATEGORY_SUBCATEGORIES = {
+  Nature: ['Mountain', 'Forest', 'Wildlife', 'Rivers & Lakes', 'Oceans & Beaches', 'Flowers & Plants', 'Sky & Clouds', 'Weather & Storms'],
+  Landscape: ['Urban', 'Rural', 'Mountains', 'Desert', 'Seascape'],
+  Portrait: ['Professional', 'Lifestyle', 'Fashion'],
+};
+
+const CATEGORIES = MAIN_CATEGORIES;
 
 const ShowcaseFiltersPanel = memo(
   ({ albumTypes, categories, onToggleAlbum, onToggleCategory, i18nPrefix, t }) => (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-5">
       <FilterCheckboxGroup
         title={t(`${i18nPrefix}.albumType`)}
         options={ALBUM_TYPE_VALUES}
@@ -55,6 +48,7 @@ const ShowcaseFiltersPanel = memo(
         selected={categories}
         onToggle={onToggleCategory}
         getLabel={(value) => t(`common.categories.${value}`, { defaultValue: value })}
+        subcategories={CATEGORY_SUBCATEGORIES}
       />
     </div>
   ),

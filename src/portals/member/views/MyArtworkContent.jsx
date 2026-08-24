@@ -146,7 +146,7 @@ const MyArtworkContent = memo(() => {
       ) : (
         <section
           aria-label={t('myArtwork.gridAria')}
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
+          className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
         >
           {pagedItems.map((item) => (
             <MemberArtworkCard
