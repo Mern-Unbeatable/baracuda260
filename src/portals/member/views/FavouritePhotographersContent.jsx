@@ -1,8 +1,8 @@
-import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo } from 'react';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import { MarketingPagination } from '@/shared/ui/marketing';
-import MemberFavouritePhotographerCard from '@/portals/member/components/member-favourite-photographers/MemberFavouritePhotographerCard';
+import Pagination from '@/components/common/Pagination/Pagination';
+import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard';
 import {
   FAVOURITE_PHOTOGRAPHERS,
   FAVOURITE_PHOTOGRAPHERS_PAGE_SIZE,
@@ -54,7 +54,7 @@ const FavouritePhotographersContent = memo(() => {
               total: sortedItems.length,
             })}
           </p>
-          <MarketingPagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setPage}

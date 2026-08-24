@@ -1,7 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { MoreVertical, Plus } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
@@ -17,8 +17,8 @@ import {
 } from '@/portals/admin/data/adminDemoProfilesData';
 import useAdminDemoProfiles from '@/portals/admin/hooks/useAdminDemoProfiles';
 import DemoProfileDetailModal from '@/portals/admin/components/admin-demo-profiles/DemoProfileDetailModal';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 const ACTION_MENU_OFFSET_PX = 6;
 const ACTION_MENU_FALLBACK_HEIGHT_PX = 148;

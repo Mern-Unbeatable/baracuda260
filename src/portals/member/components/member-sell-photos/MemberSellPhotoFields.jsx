@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 
 const inputClassName =
   'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30';

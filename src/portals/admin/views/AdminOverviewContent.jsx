@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
 import { selectUser } from '@/app/store/slices/authSlice';
@@ -16,7 +16,7 @@ import {
   REVENUE_CHART,
   REVENUE_PERIODS,
 } from '@/portals/admin/data/adminOverviewData';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /** Smooth line path (horizontal-tangent cubic beziers) through equally spaced points. */
 const buildLinePath = (values, width) => {

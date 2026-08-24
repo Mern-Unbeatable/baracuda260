@@ -2,7 +2,7 @@ import { matchesAlbumType } from '@/shared/data/albumTypes';
 
 const A = '/assets/home';
 
-export const MY_ARTWORK_PAGE_SIZE = 8;
+export const MY_ARTWORK_PAGE_SIZE = 4;
 
 export const MY_ARTWORK_STATS = [
   {

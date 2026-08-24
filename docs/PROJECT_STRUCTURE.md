@@ -80,9 +80,3 @@ Examples:
 ## Cross-module imports
 
 Use `@/modules/<module>/...` or `@/shared/...`.
-
-## Scripts
-
-- `scripts/restructure-public-by-route.js` — public route-folder migration (already applied)
-- `scripts/migrate-to-modules.js` — legacy module move
-- `scripts/fix-module-imports.js` — repair imports after moves

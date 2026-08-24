@@ -1,5 +1,5 @@
-import React, { useState, useCallback, memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { useState, useCallback, memo } from 'react';
 import { useApi } from '@/shared/hooks/useApi';
 import toast from 'react-hot-toast';
 import { httpMethods } from '@/shared/lib/httpMethods';

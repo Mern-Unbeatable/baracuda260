@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { ImgIcon, Shell } from '@/shared/site-chrome';
-import { SectionHeader } from '@/shared/ui/marketing';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import { HOME_FEATURES } from '../data/homePageData';
 
 const HomeFeaturesSection = memo(() => {

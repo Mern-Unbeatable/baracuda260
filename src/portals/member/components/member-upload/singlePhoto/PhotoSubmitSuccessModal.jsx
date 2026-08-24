@@ -1,7 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
 import { SINGLE_PHOTO_ASSETS } from '@/portals/member/data/singlePhotoAssets';
 

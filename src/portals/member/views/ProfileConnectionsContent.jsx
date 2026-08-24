@@ -1,11 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ChevronLeft } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import { MarketingPagination } from '@/shared/ui/marketing';
-import MemberFavouritePhotographerCard from '@/portals/member/components/member-favourite-photographers/MemberFavouritePhotographerCard';
+import Pagination from '@/components/common/Pagination/Pagination';
+import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard';
 import {
   PROFILE_CONNECTIONS_PAGE_SIZE,
   sortProfileConnections,
@@ -68,7 +68,7 @@ const ProfileConnectionsContent = memo(({ titleKey, subtitleKey, photographers }
               total: sortedItems.length,
             })}
           </p>
-          <MarketingPagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setPage}

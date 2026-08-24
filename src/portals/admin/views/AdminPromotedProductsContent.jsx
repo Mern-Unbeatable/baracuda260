@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { Heart, Eye, Calendar, Clock } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
@@ -11,7 +11,7 @@ import {
   getPromotedDetailPath,
 } from '@/portals/admin/data/adminPromotedProductsData';
 import useAdminPromotedProductsShowcase from '@/portals/admin/hooks/useAdminPromotedProductsShowcase';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 const PromotedCard = memo(({ card }) => {
   const { t } = useTranslation();

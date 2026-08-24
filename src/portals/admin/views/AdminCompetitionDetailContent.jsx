@@ -1,14 +1,14 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ArrowLeft } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
   ADMIN_DETAIL_ASSETS,
   getAdminCompetitionDetailById,
 } from '@/portals/admin/data/adminCompetitionDetailData';
-import GalleryDetailVideo from '@/portals/public/gallery/detail/components/GalleryDetailVideo';
-import MemberArtworkGlobalRankings from '@/portals/member/components/member-artwork/MemberArtworkGlobalRankings';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
 
 /** Auto-advance interval for multi-photo story strip (ms). */
 const ADMIN_DETAIL_SLIDE_MS = 6000;

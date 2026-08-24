@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import React, { memo } from 'react';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /**
  * Placeholder for admin sections that are not built yet.

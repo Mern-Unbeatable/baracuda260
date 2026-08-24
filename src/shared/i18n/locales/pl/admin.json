@@ -1,0 +1,1586 @@
+{
+  "adminOverview": {
+    "defaultName": "Adriana",
+    "greeting": "DZIEŃ DOBRY, {{name}}",
+    "title": "Oto puls Twoich konkursów.",
+    "subtitle": "Miej jasny widok na historie, ludzi i chwile przechodzące przez My12Photos.",
+    "nav": {
+      "groups": {
+        "workspace": "Obszar roboczy",
+        "manage": "Zarządzanie",
+        "system": "System"
+      },
+      "overview": "Przegląd",
+      "competitions": "Konkursy",
+      "gallery": "Galeria",
+      "premiumPhotos": "Zdjęcia premium",
+      "promotedAlbums": "Promowane albumy",
+      "submissions": "Zgłoszenia",
+      "users": "Użytkownicy",
+      "categories": "Kategorie",
+      "albumTypes": "Typy albumów",
+      "winners": "Zwycięzcy",
+      "payouts": "Wypłaty",
+      "support": "Wsparcie",
+      "businessPhotos": "Zdjęcia Business Link",
+      "newsletter": "Newsletter",
+      "comment": "Komentarz",
+      "demoProfile": "Profil demo",
+      "settings": "Ustawienia",
+      "profile": "Profil"
+    },
+    "stats": {
+      "aria": "Statystyki platformy",
+      "registeredUsers": "Zarejestrowani użytkownicy",
+      "registeredUsersValue": "24 892",
+      "photosSubmitted": "Przesłane zdjęcia",
+      "photosSubmittedValue": "184 390",
+      "pendingApproval": "Oczekujące na zatwierdzenie",
+      "pendingApprovalValue": "128",
+      "votesCast": "Oddane głosy",
+      "votesCastValue": "1,24 mln",
+      "totalCommission": "Całkowita prowizja",
+      "totalCommissionValue": "$13000.00",
+      "thisMonthCommission": "Prowizja w tym miesiącu",
+      "thisMonthCommissionValue": "$1300.00",
+      "totalPromoted": "Łącznie promowane",
+      "totalPromotedValue": "$16000.00",
+      "thisMonthPromoted": "Promowane w tym miesiącu",
+      "thisMonthPromotedValue": "$160.00",
+      "totalRevenue": "Całkowity przychód",
+      "totalRevenueValue": "$26985.00",
+      "totalPayouts": "Całkowite wypłaty",
+      "totalPayoutsValue": "$16985.00"
+    },
+    "revenueTrend": {
+      "title": "Trend przychodów",
+      "period": "Ten rok",
+      "periodOptions": {
+        "thisYear": "Ten rok",
+        "sixMonths": "Ostatnie 6 miesięcy",
+        "thisMonth": "Ten miesiąc",
+        "lastYear": "Poprzedni rok"
+      },
+      "commission": "Prowizja",
+      "commissionValue": "$5600.00",
+      "promoted": "Promowane",
+      "promotedValue": "$5900.00"
+    },
+    "analytics": {
+      "title": "Analityka odwiedzin",
+      "subtitle": "Unikalni odwiedzający i sesje powracające",
+      "total": "88 420",
+      "months": {
+        "jan": "Sty",
+        "feb": "Lut",
+        "mar": "Mar",
+        "apr": "Kwi",
+        "may": "Maj",
+        "jun": "Cze",
+        "jul": "Lip",
+        "aug": "Sie",
+        "sep": "Wrz",
+        "oct": "Paź",
+        "nov": "Lis",
+        "dec": "Gru"
+      }
+    },
+    "pending": {
+      "title": "Ostatni konkurs",
+      "subtitle": "128 zgłoszeń wymaga decyzji",
+      "reviewAll": "Przejrzyj wszystkie",
+      "badge": "Oczekujące",
+      "openQueue": "Otwórz konkurs",
+      "items": {
+        "river": {
+          "title": "When the river sleeps",
+          "meta": "Maya Sutanto · Indonezja"
+        },
+        "garden": {
+          "title": "A stranger's garden",
+          "meta": "Jon Bell · Wielka Brytania"
+        },
+        "ceiling": {
+          "title": "The room with no ceiling",
+          "meta": "Sofia Nyström · Szwecja"
+        }
+      }
+    },
+    "community": {
+      "title": "Zasięg społeczności",
+      "subtitle": "Najaktywniejsze kraje według udziału",
+      "countries": {
+        "us": "Stany Zjednoczone",
+        "usValue": "4 283",
+        "uk": "Wielka Brytania",
+        "ukValue": "2 740",
+        "id": "Indonezja",
+        "idValue": "1 958",
+        "jp": "Japonia",
+        "jpValue": "1 421"
+      }
+    },
+    "comingSoon": {
+      "eyebrow": "Administrator",
+      "title": "Wkrótce",
+      "body": "Ta sekcja panelu administratora jest jeszcze w przygotowaniu. Przegląd jest już gotowy — kolejne narzędzia pojawią się wkrótce."
+    }
+  },
+  "adminCompetitions": {
+    "title": "Konkurs",
+    "gridAria": "Galeria konkursowych zdjęć",
+    "empty": "Brak zgłoszeń pasujących do tego filtra.",
+    "delete": "Usuń",
+    "extraPhotos": "+{{count}} zdjęć",
+    "filters": {
+      "aria": "Filtruj według typu albumu",
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "types": {
+      "single": "POJEDYNCZE ZDJĘCIE",
+      "six": "HISTORIA 6 ZDJĘĆ",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "pagination": {
+      "aria": "Paginacja konkursów",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
+    },
+    "cards": {
+      "autumn": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      },
+      "wings": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      },
+      "city": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      },
+      "forest": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      },
+      "morning": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      },
+      "harbor": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      },
+      "silent": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      },
+      "zodiac": {
+        "title": "Autumn Sequence",
+        "description": "Z radością dzielę się moją nową kolekcją letnią z polskiej wsi...",
+        "date": "9 sierpnia 2026"
+      }
+    }
+  },
+  "adminCompetitionDetail": {
+    "breadcrumb": {
+      "competitions": "KONKURSY",
+      "details": "Szczegóły zdjęcia"
+    },
+    "back": "Powrót do wyboru",
+    "previousPhoto": "Poprzednie zdjęcie",
+    "nextPhoto": "Następne zdjęcie",
+    "heroAria": "Zdjęcie konkursowe",
+    "slidesAria": "Slajdy historii zdjęć",
+    "votesReceived": "OTRZYMANE GŁOSY",
+    "viewsCounted": "POLICZONE WYŚWIETLENIA",
+    "photographerLabel": "Fotograf",
+    "photographerName": "Wong Kar-Wai",
+    "photographerKasia": "Kasia L.",
+    "viewProfile": "Zobacz profil",
+    "verified": "Zweryfikowany",
+    "commentsTitle": "Komentarze",
+    "description": "Młody mężczyzna pewnie idący cichą miejską ulicą podczas złotej godziny, w casualowej białej koszulce, czarnych jeansach i czystych białych sneakersach. Ręce swobodnie opuszczone, naturalna postawa i spokojny wyraz twarzy. Miękkie światło słoneczne tworzy ciepłe refleksy i długie cienie na chodniku. Nowoczesne budynki, zielone drzewa i lekko rozmyte miejskie tło dodają głębi. Ujęte w cinematicznym, fotorealistycznym stylu z płytką głębią ostrości, ultra-realistycznie, w wysokiej szczegółowości, jakość 8K.",
+    "typeBadges": {
+      "single": "POJEDYNCZE ZDJĘCIE",
+      "six": "6 ZDJĘĆ",
+      "zodiac": "12 ZDJĘĆ — HISTORIA ZODIAKU"
+    },
+    "comments": {
+      "darrell": "Darrell Steward",
+      "text1": "Bardzo podoba mi się kompozycja i kolory. Wspaniała praca!",
+      "text2": "Twoja kreatywność naprawdę się wyróżnia. Powodzenia w konkursie!"
+    },
+    "categories": {
+      "nature": "NATURA"
+    },
+    "signs": {
+      "aries": "Baran",
+      "taurus": "Byk",
+      "gemini": "Bliźnięta",
+      "cancer": "Rak",
+      "leo": "Lew",
+      "virgo": "Panna",
+      "libra": "Waga",
+      "scorpio": "Skorpion",
+      "sagittarius": "Strzelec",
+      "capricorn": "Koziorożec",
+      "aquarius": "Wodnik",
+      "pisces": "Ryby"
+    },
+    "entries": {
+      "wings": {
+        "title": "Chasing the Neon Stream"
+      },
+      "forest": {
+        "title": "Chasing the Neon Stream"
+      },
+      "morning": {
+        "title": "Chasing the Neon Stream"
+      },
+      "harbor": {
+        "title": "Chasing the Neon Stream"
+      },
+      "silent": {
+        "title": "Chasing the Neon Stream"
+      },
+      "autumn": {
+        "title": "Chasing the Neon Stream"
+      },
+      "city": {
+        "title": "Chasing the Neon Stream"
+      },
+      "zodiac": {
+        "title": "Chasing the Neon Stream"
+      }
+    }
+  },
+  "adminGallery": {
+    "title": "Galeria",
+    "gridAria": "Galeria zdjęć",
+    "empty": "Brak wpisów pasujących do tego filtra.",
+    "delete": "Usuń",
+    "extraPhotos": "+{{count}} zdjęć",
+    "filters": {
+      "aria": "Filtruj według typu albumu",
+      "all": "Wszystkie",
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "types": {
+      "single": "POJEDYNCZE ZDJĘCIE",
+      "six": "HISTORIA 6 ZDJĘĆ",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "pagination": {
+      "aria": "Paginacja galerii",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
+    },
+    "cards": {
+      "autumn": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "wings": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "city": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "forest": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "morning": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "harbor": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "silent": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "zodiac": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "golden": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "tidal": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      }
+    }
+  },
+  "adminGalleryDetail": {
+    "back": "Wróć do wyboru",
+    "previousPhoto": "Poprzednie zdjęcie",
+    "nextPhoto": "Następne zdjęcie",
+    "heroAria": "Zdjęcie z galerii",
+    "slidesAria": "Slajdy historii zdjęć",
+    "totalReact": "ŁĄCZNE REAKCJE",
+    "viewsCounted": "LICZBA WYŚWIETLEŃ",
+    "photographerLabel": "Fotograf",
+    "photographerName": "Wong Kar-Wai",
+    "viewProfile": "Zobacz profil",
+    "verified": "Zweryfikowany",
+    "commentsTitle": "Komentarze",
+    "comments": {
+      "darrell": "Darrell Steward",
+      "text1": "I really like the composition and the colors. Amazing work!",
+      "text2": "Your creativity really stands out. Best of luck in the competition!"
+    }
+  },
+  "adminPremiumPhotos": {
+    "title": "Zdjęcia premium",
+    "gridAria": "Galeria zdjęć premium",
+    "empty": "Brak wpisów pasujących do tego filtra.",
+    "delete": "Usuń",
+    "extraPhotos": "+{{count}} zdjęć",
+    "filters": {
+      "aria": "Filtruj według typu albumu",
+      "all": "Wszystkie",
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "types": {
+      "single": "POJEDYNCZE ZDJĘCIE",
+      "six": "HISTORIA 6 ZDJĘĆ",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "pagination": {
+      "aria": "Paginacja zdjęć premium",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
+    },
+    "cards": {
+      "autumn": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "wings": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "city": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "forest": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "morning": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "harbor": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "silent": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "zodiac": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "golden": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      },
+      "tidal": {
+        "title": "Autumn Sequence",
+        "description": "I'm excited to share my new Summer Collection from the Polish countryside...",
+        "date": "9 sierpnia 2026"
+      }
+    }
+  },
+  "adminPremiumPhotosDetail": {
+    "back": "Wróć do wyboru",
+    "previousPhoto": "Poprzednie zdjęcie",
+    "nextPhoto": "Następne zdjęcie",
+    "heroAria": "Zdjęcie premium",
+    "slidesAria": "Slajdy historii zdjęć",
+    "subtitle": "Cyfrowe pobieranie w wysokiej rozdzielczości",
+    "detailsTitle": "Szczegóły",
+    "likesReceived": "OTRZYMANE POLUBIENIA",
+    "viewsCounted": "LICZBA WYŚWIETLEŃ",
+    "totalSell": "ŁĄCZNA SPRZEDAŻ",
+    "photographerLabel": "Fotograf",
+    "viewProfile": "Zobacz profil",
+    "specs": {
+      "resolution": "Rozdzielczość",
+      "format": "Format",
+      "camera": "Aparat",
+      "resolutionSingle": "6000 × 4000 px",
+      "resolutionStory": "8000 × 4000 px",
+      "formatValue": "JPG, RAW",
+      "cameraValue": "Sony A7R IV"
+    }
+  },
+  "adminPromoted": {
+    "title": "Promowane produkty",
+    "gridAria": "Prezentacja promowanych produktów",
+    "empty": "Brak wyników pasujących do tego filtra.",
+    "extraPhotos": "+{{count}} zdjęć",
+    "badge": {
+      "promoted": "Promowane"
+    },
+    "uploadedLabel": "Przesłano",
+    "viewsLabel": "Wyświetlenia",
+    "heartLabel": "Serca",
+    "expiryLabel": "Wygasa",
+    "filters": {
+      "aria": "Filtruj według typu albumu",
+      "all": "Wszystkie",
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć - pełna historia Zodiaku"
+    },
+    "types": {
+      "single": "POJEDYNCZE ZDJĘCIE",
+      "six": "HISTORIA 6 ZDJĘĆ",
+      "zodiac": "12 zdjęć - pełna historia Zodiaku"
+    },
+    "pagination": {
+      "aria": "Paginacja promowanych produktów",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
+    },
+    "cards": {
+      "nordic": {
+        "title": "Nordic Solitude - 6 Chapter Journey",
+        "description": "Golden Hour Reflections Along The Rugged Coastline Of Big Sur During Summer….",
+        "category": "Krajobraz",
+        "uploadDate": "9 sie 2026",
+        "uploadTime": "12:03",
+        "expiry": "12.08.2026"
+      },
+      "autumn": {
+        "title": "Autumn Sequence",
+        "date": "9 sierpnia 2026",
+        "expiry": "12.08.2026"
+      }
+    }
+  },
+  "adminSubmissions": {
+    "eyebrow": "MODERACJA",
+    "title": "Przegląd zgłoszeń",
+    "subtitle": "Sprawdzaj, proś o poprawki lub publikuj każde zdjęcie, zanim trafi do publicznej galerii.",
+    "gridAria": "Karty przeglądu zgłoszeń",
+    "empty": "Brak zgłoszeń pasujących do tego filtra.",
+    "filters": {
+      "aria": "Filtruj zgłoszenia według typu albumu",
+      "all": "Wszystkie",
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "types": {
+      "single": "Pojedyncze zdjęcie",
+      "six": "Historia 6 zdjęć",
+      "zodiac": "12 zdjęć — pełna historia zodiaku"
+    },
+    "actions": {
+      "approve": "Zatwierdź {{title}}",
+      "reject": "Odrzuć {{title}}"
+    },
+    "pagination": {
+      "aria": "Paginacja zgłoszeń",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
+    },
+    "cards": {
+      "golden": {
+        "title": "Golden Hour Silence",
+        "meta": "Kasia L. · Polska"
+      },
+      "autumn": {
+        "title": "Autumn Sequence",
+        "meta": "Kasia L. · Polska"
+      },
+      "wings": {
+        "title": "Wings Over the Marsh",
+        "meta": "Kasia L. · Polska"
+      },
+      "city": {
+        "title": "City After Midnight",
+        "meta": "Kasia L. · Polska"
+      },
+      "tidal": {
+        "title": "Tidal Memory",
+        "meta": "Kasia L. · Polska"
+      },
+      "forest": {
+        "title": "Forest Cathedral",
+        "meta": "Kasia L. · Polska"
+      },
+      "morning": {
+        "title": "Morning Fields",
+        "meta": "Kasia L. · Polska"
+      },
+      "zodiac": {
+        "title": "Zodiac Journey",
+        "meta": "Kasia L. · Polska"
+      }
+    }
+  },
+  "adminUsers": {
+    "eyebrow": "SPOŁECZNOŚĆ",
+    "title": "Zarządzanie użytkownikami",
+    "subtitle": "Zarządzaj zarejestrowanymi użytkownikami",
+    "tableAria": "Tabela zarejestrowanych użytkowników",
+    "empty": "Brak użytkowników pasujących do tego filtra.",
+    "sortBy": "Sortuj według:",
+    "filters": {
+      "aria": "Filtruj użytkowników według statusu",
+      "all": "Wszystkie statusy",
+      "active": "Aktywny",
+      "suspended": "Zawieszony"
+    },
+    "columns": {
+      "name": "Imię i nazwisko",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "registeredDate": "Data rejestracji",
+      "status": "Status",
+      "action": "Akcja"
+    },
+    "status": {
+      "active": "Aktywny",
+      "suspended": "Zawieszony"
+    },
+    "actions": {
+      "menu": "Akcje dla {{name}}",
+      "active": "Aktywny",
+      "suspendOption": "Zawieś"
+    },
+    "suspendModal": {
+      "title": "Zawieś użytkownika",
+      "close": "Zamknij okno zawieszenia",
+      "reason": "Powód",
+      "reasonPlaceholder": "Dlaczego zawieszasz tego użytkownika",
+      "reasonRequired": "Podaj powód.",
+      "cancel": "Anuluj",
+      "confirm": "Zawieś"
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "rows": {
+      "john": {
+        "name": "John Anderson"
+      },
+      "sarah": {
+        "name": "Sarah Mitchell"
+      },
+      "buildpro": {
+        "name": "BuildPro Corp"
+      },
+      "mike": {
+        "name": "Mike Johnson"
+      },
+      "construction": {
+        "name": "Construction Ltd"
+      },
+      "emily": {
+        "name": "Emily Davis"
+      }
+    }
+  },
+  "adminCategories": {
+    "eyebrow": "TAKSONOMIA",
+    "title": "Kategorie",
+    "subtitle": "Kształtuj miejsca, w których może należeć praca Twoich fotografów.",
+    "panelAria": "Zarządzanie kategoriami",
+    "panelTitle": "Kategoria",
+    "add": "Dodaj kategorię",
+    "remove": "Usuń {{name}}",
+    "empty": "Brak kategorii. Dodaj pierwszą kategorię.",
+    "addModal": {
+      "nameLabel": "Nazwa kategorii",
+      "namePlaceholder": "Nazwa kategorii",
+      "nameRequired": "Podaj nazwę kategorii.",
+      "save": "Zapisz",
+      "close": "Zamknij okno dodawania kategorii"
+    },
+    "items": {
+      "nature": "Natura",
+      "portrait": "Portret",
+      "wildlife": "Dzika przyroda",
+      "landscape": "Krajobraz",
+      "street": "Fotografia uliczna",
+      "architecture": "Architektura",
+      "blackWhite": "Czarno-białe",
+      "travel": "Podróże",
+      "wedding": "Ślub",
+      "macro": "Makro",
+      "fineArt": "Sztuka",
+      "pets": "Zwierzęta",
+      "sports": "Sport",
+      "night": "Fotografia nocna",
+      "newCategory": "Nowa kategoria {{number}}"
+    }
+  },
+  "adminAlbumTypes": {
+    "eyebrow": "FORMAT",
+    "title": "Typy albumów",
+    "subtitle": "Określ, jak historie są składane i oceniane w Twoich konkursach.",
+    "create": "＋ Utwórz typ albumu",
+    "editAlbum": "Edytuj album",
+    "prizeSuffix": "/pula nagród",
+    "gridAria": "Karty typów albumów",
+    "modal": {
+      "eyebrow": "Konfiguracja albumu",
+      "createTitle": "Nowy typ albumu",
+      "editTitle": "Edytuj typ albumu",
+      "createSubtitle": "Wprowadź wymagane dane dla tego formatu konkursu.",
+      "editSubtitle": "Zaktualizuj wymagane dane dla tego formatu konkursu.",
+      "nameLabel": "Nazwa typu albumu",
+      "prizeLabel": "Pula nagród",
+      "descriptionLabel": "Opis",
+      "featuredLabel": "Wyróżnione",
+      "featuredPlaceholder": "Jedna cecha w wierszu",
+      "nameRequired": "Podaj nazwę typu albumu.",
+      "prizeRequired": "Podaj prawidłową kwotę nagrody.",
+      "descriptionRequired": "Podaj opis.",
+      "featuredRequired": "Podaj co najmniej jedną wyróżnioną pozycję.",
+      "cancel": "Anuluj",
+      "save": "Zapisz zmiany",
+      "close": "Zamknij okno typu albumu"
+    },
+    "items": {
+      "single": {
+        "name": "Pojedyncze zdjęcie",
+        "description": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia — oceniane przez społeczność.",
+        "features": {
+          "monthly": "Comiesięczny konkurs",
+          "voting": "Publiczne głosowanie społeczności",
+          "prizes": "Top 3 wygrywa nagrody pieniężne"
+        }
+      },
+      "six": {
+        "name": "Historia 6 zdjęć",
+        "description": "Stwórz wizualną narrację z sześciu starannie ułożonych obrazów, które prowadzą widza przez łuk historii.",
+        "features": {
+          "storytelling": "Sekwencyjne opowiadanie",
+          "votes": "Głosy społeczności",
+          "wins": "Wygrywa najlepsza historia"
+        }
+      },
+      "zodiac": {
+        "name": "12 zdjęć - pełna historia Zodiaku",
+        "description": "Stwórz kompletną, zodiakalną podróż wizualną w dwunastu wspaniałych obrazach — nasz największy format.",
+        "features": {
+          "arc": "Wizualny łuk 12 znaków",
+          "order": "Wyświetlanie w kolejności zodiaku",
+          "grand": "Kategoria nagrody głównej"
+        }
+      }
+    }
+  },
+  "adminPayouts": {
+    "eyebrow": "WYPŁATY",
+    "sections": {
+      "prize": {
+        "title": "Wypłaty nagród",
+        "subtitle": "Przeglądaj wnioski o wypłatę i uzgadniaj płatności ręczne."
+      },
+      "donation": {
+        "title": "Wypłata darowizn",
+        "subtitle": "Przeglądaj wnioski o wypłatę i uzgadniaj płatności ręczne."
+      },
+      "premium": {
+        "title": "Wypłata zdjęć premium",
+        "subtitle": "Przeglądaj wnioski o wypłatę i uzgadniaj płatności ręczne."
+      }
+    },
+    "columns": {
+      "date": "Data",
+      "type": "Typ",
+      "accountType": "Typ konta",
+      "accountNumber": "Numer konta",
+      "amount": "Kwota",
+      "status": "Status",
+      "action": "Akcja",
+      "withdrawal": "Wypłata",
+      "paypal": "payPal"
+    },
+    "status": {
+      "pending": "Oczekujące",
+      "approved": "Zatwierdzono"
+    },
+    "actions": {
+      "menu": "Akcje",
+      "menuAria": "Zmień status"
+    },
+    "pagination": {
+      "showing": "Wyświetlono {{from}} do {{to}} z {{total}} wyników",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "rows": {
+      "r1": {
+        "date": "5 lip 2025"
+      },
+      "r2": {
+        "date": "7 lip 2025"
+      },
+      "r3": {
+        "date": "8 lip 2025"
+      },
+      "r4": {
+        "date": "9 lip 2025"
+      },
+      "r5": {
+        "date": "10 lip 2025"
+      },
+      "r6": {
+        "date": "12 lip 2025"
+      }
+    }
+  },
+  "adminBusinessLink": {
+    "title": "Zdjęcia Business Link",
+    "subtitle": "Przeglądaj przesłane albumy 12-zdjęciowe, generuj linki biznesowe i zarządzaj zgłoszeniami.",
+    "tableAria": "Tabela zgłoszeń Business Link",
+    "empty": "Brak zgłoszeń Business Link.",
+    "columns": {
+      "user": "Użytkownik",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "country": "Kraj",
+      "uploadDate": "Data przesłania",
+      "action": "Akcja"
+    },
+    "actions": {
+      "view": "Zobacz zgłoszenie {{user}}"
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "aria": "Paginacja Business Link",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "rows": {
+      "john": {
+        "user": "John Anderson",
+        "country": "Chiny"
+      },
+      "sarah": {
+        "user": "Sarah Mitchell",
+        "country": "Japonia"
+      },
+      "buildpro": {
+        "user": "BuildPro Corp",
+        "country": "Bangladesz"
+      },
+      "mike": {
+        "user": "Mike Johnson",
+        "country": "USA"
+      },
+      "construction": {
+        "user": "Construction Ltd",
+        "country": "Kanada"
+      },
+      "emily": {
+        "user": "Emily Davis",
+        "country": "Indie"
+      },
+      "david": {
+        "user": "David Chen",
+        "country": "USA"
+      }
+    },
+    "detail": {
+      "back": "Powrót do Zdjęć Business Link",
+      "notFound": "Nie znaleziono tego zgłoszenia Business Link.",
+      "name": "Amelia Carter",
+      "country": "Stany Zjednoczone",
+      "uploaded": "24 lip 2026",
+      "statusBadge": "Zdjęcia Business Link",
+      "phone": "Telefon",
+      "countryLabel": "Kraj",
+      "uploadedLabel": "Przesłano",
+      "albumIdLabel": "ID albumu",
+      "galleryAria": "Galeria albumu 12 zdjęć",
+      "previousPhoto": "Poprzednie zdjęcie",
+      "nextPhoto": "Następne zdjęcie",
+      "selectPhoto": "Wybierz zdjęcie {{number}} {{sign}}",
+      "typeBadge": "Pojedyncze zdjęcie",
+      "categoryBadge": "Natura",
+      "photoTitle": "Chasing the Neon Stream",
+      "photoDescription": "Młody mężczyzna pewnie idący cichą miejską ulicą podczas złotej godziny, w casualowej białej koszulce, czarnych jeansach i czystych białych sneakersach. Ręce swobodnie opuszczone, naturalna postawa i spokojny wyraz twarzy. Miękkie światło słoneczne tworzy ciepłe refleksy i długie cienie na chodniku. Nowoczesne budynki, zielone drzewa i lekko rozmyte miejskie tło dodają głębi. Ujęte w cinematicznym, fotorealistycznym stylu z płytką głębią ostrości, ultra-realistycznie, w wysokiej szczegółowości, jakość 8K.",
+      "linkLabel": "Wygenerowany link biznesowy",
+      "autoGenerated": "Wygenerowano automatycznie",
+      "copyLink": "Kopiuj link",
+      "copySuccess": "Skopiowano link biznesowy",
+      "copyFailed": "Nie udało się skopiować linku biznesowego",
+      "photographerLabel": "Fotograf",
+      "photographer": "Wong Kar-Wai"
+    }
+  },
+  "adminComment": {
+    "title": "Zarządzanie komentarzami",
+    "subtitle": "Zarządzaj, przeglądaj i moderuj wszystkie komentarze użytkowników do zdjęć i albumów.",
+    "tableAria": "Tabela zarządzania komentarzami",
+    "tableTitle": "Wszystkie komentarze",
+    "empty": "Brak komentarzy dla tego filtra.",
+    "selectAll": "Zaznacz wszystkie widoczne komentarze",
+    "selectRow": "Zaznacz komentarz {{code}}",
+    "stats": {
+      "total": {
+        "label": "Wszystkie komentarze",
+        "hint": "+12 dziś"
+      },
+      "approved": {
+        "label": "Zatwierdzone",
+        "hint": "50% wskaźnik"
+      },
+      "pending": {
+        "label": "Do przeglądu",
+        "hint": "Wymaga uwagi"
+      },
+      "hidden": {
+        "label": "Ukryte",
+        "hint": "Przez moderację"
+      }
+    },
+    "filters": {
+      "aria": "Filtruj komentarze według statusu",
+      "all": "Wszystkie",
+      "approved": "Zatwierdzone",
+      "pending": "Oczekujące",
+      "deleted": "Usunięte"
+    },
+    "columns": {
+      "commentId": "ID komentarza",
+      "user": "Użytkownik",
+      "photo": "Zdjęcie",
+      "type": "Typ",
+      "comment": "Komentarz",
+      "date": "Data",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "status": {
+      "approved": "Zatwierdzony",
+      "pending": "Oczekujący",
+      "deleted": "Usunięty",
+      "hidden": "Ukryty"
+    },
+    "types": {
+      "single": "Pojedyncze",
+      "album6": "Album 6",
+      "zodiac": "Zodiak"
+    },
+    "actions": {
+      "menu": "Akcje dla {{name}}",
+      "menuAria": "Akcje komentarza dla {{name}}",
+      "seeDetails": "Zobacz szczegóły",
+      "hide": "Ukryj",
+      "approved": "Zatwierdzony",
+      "pending": "Oczekujący"
+    },
+    "drawer": {
+      "title": "Szczegóły komentarza",
+      "close": "Zamknij szczegóły komentarza",
+      "commentLabel": "Komentarz",
+      "photographerProfile": "Profil fotografa",
+      "followers": "Obserwujący",
+      "uploads": "Przesłania",
+      "visits": "Wizyty",
+      "adminActions": "Akcje administratora",
+      "approve": "✓ Zatwierdź",
+      "hide": "◉ Ukryj",
+      "delete": "🗑 Usuń komentarz"
+    },
+    "pagination": {
+      "showing": "Wyświetlono {{count}} z {{total}} komentarzy",
+      "aria": "Paginacja komentarzy",
+      "previous": "Poprzednia strona",
+      "next": "Następna strona",
+      "page": "Strona {{page}}"
+    },
+    "rows": {
+      "cmt0001": {
+        "name": "Elena Vasquez",
+        "country": "Hiszpania",
+        "photoTitle": "Szczyt złotej godziny",
+        "category": "Krajobraz",
+        "comment": "Absolutnie zapierająca dech kompozycja! Sposób, w jaki światło pada na grzbiet góry, to czysta magia. To zasługuje na galerię."
+      },
+      "cmt0002": {
+        "name": "Marcus Chen",
+        "country": "Singapur",
+        "photoTitle": "Miejska samotność",
+        "category": "Ulica",
+        "comment": "Odbicie w kałuży tworzy idealną symetrię. Uwielbiam monochromatyczne potraktowanie."
+      },
+      "cmt0003": {
+        "name": "Priya Sharma",
+        "country": "Indie",
+        "photoTitle": "Tygrys o zmierzchu",
+        "category": "Dzika przyroda",
+        "comment": "Kup mój pakiet presetów! Dziś tylko 50% taniej. Napisz DM po kod zniżkowy 🔥🔥🔥"
+      },
+      "cmt0004": {
+        "name": "James Okafor",
+        "country": "Nigeria",
+        "photoTitle": "Poranek na rynku",
+        "category": "Ulica",
+        "comment": "Kolory są niesamowicie żywe. Użyłeś filtrów, czy to prosto z aparatu?"
+      },
+      "cmt0005": {
+        "name": "Sofia Andersson",
+        "country": "Szwecja",
+        "photoTitle": "Leśna katedra",
+        "category": "Natura",
+        "comment": "To skradzione od innego fotografa. Widziałam dokładnie to samo zdjęcie na 500px w zeszłym miesiącu."
+      },
+      "cmt0006": {
+        "name": "Yuki Tanaka",
+        "country": "Japonia",
+        "photoTitle": "Deszcz kwiatów wiśni",
+        "category": "Natura",
+        "comment": "Głębia ostrości jest tu idealna. Prawie czuć spadające płatki. Olśniewające mistrzostwo obiektywu 85 mm."
+      },
+      "cmt0007": {
+        "name": "Ahmed Al-Rashid",
+        "country": "Zjednoczone Emiraty Arabskie",
+        "photoTitle": "Abstrakcja wydm",
+        "category": "Krajobraz",
+        "comment": "Okropna edycja. Niebo wygląda całkowicie sztucznie i jest przeprocesowane. Przestań używać presetów jak wszyscy inni."
+      },
+      "cmt0008": {
+        "name": "Isabelle Laurent",
+        "country": "Francja",
+        "photoTitle": "Makro kropla rosy",
+        "category": "Makro",
+        "comment": "Załamanie światła w kropli pokazuje cały krajobraz. To technicznie niezwykłe. Jakiego obiektywu + tubusu pośredniego użyłeś?"
+      },
+      "cmt0009": {
+        "name": "Kofi Mensah",
+        "country": "Ghana",
+        "photoTitle": "Portret w błękicie",
+        "category": "Portret",
+        "comment": "Piękny model i oświetlenie. Catchlighty w oczach są idealnie umieszczone."
+      },
+      "cmt0010": {
+        "name": "Natalia Petrov",
+        "country": "Rosja",
+        "photoTitle": "Studium kryształu lodu",
+        "category": "Makro",
+        "comment": "Obserwuj mnie też proszę, już Cię obserwuję!! Sprawdź moje portfolio!!!"
+      },
+      "cmt0011": {
+        "name": "Luca Bianchi",
+        "country": "Włochy",
+        "photoTitle": "Wenecja o świcie",
+        "category": "Krajobraz",
+        "comment": "Mgła nad kanałem tworzy tak eteryczną atmosferę. To świetnie wyglądałoby jako wielkoformatowy print."
+      },
+      "cmt0012": {
+        "name": "Amara Diallo",
+        "country": "Senegal",
+        "photoTitle": "Sylwetka baobabu",
+        "category": "Natura",
+        "comment": "To drzewo jest koło mojej wioski! Rozpoznaję je od razu. Dumna, że zostało tu wyróżnione."
+      }
+    }
+  },
+  "adminDemoProfiles": {
+    "title": "Profile demo",
+    "subtitle": "Twórz i zarządzaj profilami demo dla platformy fotograficznej.",
+    "addButton": "Dodaj profil demo",
+    "addComingSoon": "Dodawanie profilu demo będzie wkrótce dostępne.",
+    "sortBy": "Sortuj według:",
+    "tableAria": "Tabela profili demo",
+    "empty": "Brak profili demo pasujących do filtra.",
+    "stats": {
+      "total": "Łączna liczba profili",
+      "active": "Aktywne profile",
+      "inactive": "Nieaktywne profile"
+    },
+    "filters": {
+      "aria": "Filtruj profile demo według statusu",
+      "all": "Wszystkie statusy",
+      "active": "Aktywne",
+      "inactive": "Nieaktywne"
+    },
+    "columns": {
+      "profile": "Profil",
+      "username": "Nazwa użytkownika",
+      "phone": "Numer telefonu",
+      "email": "E-mail",
+      "status": "Status",
+      "action": "Akcja"
+    },
+    "status": {
+      "active": "Aktywny",
+      "inactive": "Nieaktywny"
+    },
+    "actions": {
+      "menu": "Akcje dla {{name}}",
+      "seeDetails": "Zobacz szczegóły",
+      "active": "Aktywny",
+      "inactive": "Nieaktywny"
+    },
+    "pagination": {
+      "showing": "Wyświetlono {{from}} do {{to}} z {{total}} wyników",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "detail": {
+      "title": "Szczegóły profilu",
+      "close": "Zamknij szczegóły profilu",
+      "closeButton": "Zamknij",
+      "deactivate": "Dezaktywuj profil",
+      "contactTitle": "Informacje kontaktowe",
+      "phoneLabel": "Numer telefonu",
+      "emailLabel": "E-mail",
+      "aboutTitle": "O mnie",
+      "socialTitle": "Media społecznościowe"
+    },
+    "create": {
+      "back": "Wróć do wyboru",
+      "title": "Dodaj profil demo",
+      "subtitle": "Utwórz nowy profil demo dla platformy.",
+      "fullName": "Imię i nazwisko",
+      "fullNamePlaceholder": "Wpisz imię i nazwisko",
+      "fullNameRequired": "Imię i nazwisko jest wymagane.",
+      "username": "Nazwa użytkownika",
+      "usernamePlaceholder": "Wpisz nazwę użytkownika",
+      "usernameRequired": "Nazwa użytkownika jest wymagana.",
+      "phone": "Numer telefonu",
+      "phonePlaceholder": "Wpisz numer telefonu",
+      "phoneRequired": "Numer telefonu jest wymagany.",
+      "email": "Adres e-mail",
+      "emailPlaceholder": "Wpisz adres e-mail",
+      "emailRequired": "Wpisz poprawny adres e-mail.",
+      "bio": "Krótki opis",
+      "bioPlaceholder": "Napisz krótki opis tego fotografa...",
+      "bioCount": "{{count}}/{{max}}",
+      "socialTitle": "Link do mediów społecznościowych",
+      "socialPlaceholder": "https://instagram.com/username",
+      "addSocial": "Dodaj kolejny",
+      "removeSocial": "Usuń link społecznościowy",
+      "profilePhoto": "Zdjęcie profilowe",
+      "profilePhotoTitle": "Prześlij zdjęcie profilowe",
+      "profilePhotoHint": "JPG, PNG lub WebP • 400x400 px",
+      "coverPhoto": "Zdjęcie w tle",
+      "coverPhotoTitle": "Prześlij zdjęcie w tle",
+      "coverPhotoHint": "JPG, PNG lub WebP • 1600x800 px",
+      "statusTitle": "Status profilu",
+      "statusHint": "Nieaktywne profile nie będą wyświetlane jako aktywne profile demo na platformie.",
+      "statusToggle": "Przełącz status profilu",
+      "cancel": "Anuluj",
+      "submit": "Utwórz profil",
+      "formInvalid": "Wypełnij wszystkie wymagane pola.",
+      "success": "Profil demo został utworzony."
+    },
+    "profiles": {
+      "elena": {
+        "name": "Elena Vasquez",
+        "username": "@elenavasquez",
+        "about": "Nagradzana fotografka krajobrazu z dekadą doświadczenia w uchwytywaniu dzikiej natury. Mieszka na Północno-Zachodnim Wybrzeżu."
+      },
+      "marcus": {
+        "name": "Marcus Chen",
+        "username": "@marcuschen",
+        "about": "Fotograf miejski dokumentujący życie miasta poprzez spontaniczne momenty i geometryczną architekturę."
+      },
+      "sofia": {
+        "name": "Sofia Rodriguez",
+        "username": "@sofiarod",
+        "about": "Specjalistka portretowa łącząca naturalne światło z odważną paletą kolorów."
+      },
+      "james": {
+        "name": "James Okafor",
+        "username": "@jamesokafor",
+        "about": "Fotograf dokumentalny skupiony na dziedzictwie kulturowym i codziennych historiach Afryki Zachodniej."
+      },
+      "priya": {
+        "name": "Priya Sharma",
+        "username": "@priyasharma",
+        "about": "Fotografka fine-art eksplorująca fakturę, ruch i światło w abstrakcyjnych kompozycjach natury."
+      },
+      "liam": {
+        "name": "Liam O'Brien",
+        "username": "@liamobrien",
+        "about": "Fotograf nadmorski uchwytujący dramatyczne pejzaże morskie i długie ekspozycje linii brzegowej."
+      },
+      "yuki": {
+        "name": "Yuki Tanaka",
+        "username": "@yukitanaka",
+        "about": "Minimalistyczny fotograf inspirowany japońską estetyką i cichymi zmianami sezonów."
+      },
+      "amara": {
+        "name": "Amara Okonkwo",
+        "username": "@amarao",
+        "about": "Fotografka mody i stylu życia tworząca żywe historie redakcyjne dla nowych marek."
+      },
+      "carlos": {
+        "name": "Carlos Mendez",
+        "username": "@carlosm",
+        "about": "Fotograf przygodowy dokumentujący wyprawy górskie i odległe krajobrazy Ameryki Łacińskiej."
+      },
+      "nina": {
+        "name": "Nina Kowalski",
+        "username": "@ninak",
+        "about": "Fotografka czarno-biała specjalizująca się w formach architektonicznych i miejskiej symetrii."
+      }
+    }
+  },
+  "adminAnnouncements": {
+    "title": "Reklamy i ogłoszenia",
+    "subtitle": "Twórz i zarządzaj ogłoszeniami wyświetlanymi nad nawigacją strony.",
+    "createButton": "Utwórz ogłoszenie",
+    "tableAria": "Tabela ogłoszeń",
+    "empty": "Nie znaleziono ogłoszeń.",
+    "stats": {
+      "total": {
+        "label": "Łączna liczba ogłoszeń",
+        "hint": "Wszystkie ogłoszenia"
+      },
+      "active": {
+        "label": "Aktywne",
+        "hint": "Obecnie widoczne"
+      },
+      "scheduled": {
+        "label": "Zaplanowane",
+        "hint": "Zaplanowane do wyświetlenia"
+      },
+      "expired": {
+        "label": "Wygasłe",
+        "hint": "Nieaktywne"
+      }
+    },
+    "columns": {
+      "announcement": "Ogłoszenie",
+      "type": "Typ",
+      "schedule": "Harmonogram",
+      "priority": "Priorytet",
+      "status": "Status",
+      "action": "Akcja"
+    },
+    "schedule": {
+      "start": "Start:",
+      "end": "Koniec:",
+      "manual": "Ręcznie"
+    },
+    "types": {
+      "winner": "Ogłoszenie zwycięzcy",
+      "competition": "Konkurs",
+      "promotion": "Promocja",
+      "general": "Ogólne",
+      "important": "Ważna informacja"
+    },
+    "priority": {
+      "high": "Wysoki",
+      "medium": "Średni",
+      "low": "Niski"
+    },
+    "status": {
+      "active": "Aktywne",
+      "scheduled": "Zaplanowane",
+      "expired": "Wygasłe",
+      "inactive": "Nieaktywne"
+    },
+    "actions": {
+      "menu": "Akcje dla {{title}}",
+      "edit": "Edytuj",
+      "setActive": "Ustaw aktywne",
+      "setInactive": "Ustaw nieaktywne",
+      "delete": "Usuń"
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} ogłoszeń",
+      "aria": "Paginacja ogłoszeń",
+      "previous": "Poprzednia",
+      "next": "Następna",
+      "page": "Strona {{page}}"
+    },
+    "modal": {
+      "title": "Utwórz ogłoszenie",
+      "subtitle": "Utwórz krótkie ogłoszenie, które pojawi się nad nawigacją strony.",
+      "close": "Zamknij okno tworzenia ogłoszenia",
+      "messageLabel": "Treść ogłoszenia",
+      "messagePlaceholder": "Wpisz treść ogłoszenia...",
+      "messageRequired": "Treść ogłoszenia jest wymagana.",
+      "messageCount": "{{count}} / {{max}}",
+      "emojiLabel": "Ikona / emoji (opcjonalnie)",
+      "typeLabel": "Typ",
+      "linkLabel": "Link",
+      "scheduleTitle": "Harmonogram wyświetlania",
+      "startDate": "Data rozpoczęcia",
+      "startTime": "Godzina rozpoczęcia",
+      "endDate": "Data zakończenia",
+      "endTime": "Godzina zakończenia",
+      "noEndDate": "Bez daty końcowej — działa do ręcznej dezaktywacji",
+      "statusLabel": "Status",
+      "statusHint": "Aktywne ogłoszenia mogą być widoczne na stronie, gdy ich harmonogram jest ważny.",
+      "priorityLabel": "Priorytet wyświetlania",
+      "priorityHint": "Ogłoszenia o wyższym priorytecie pojawiają się pierwsze na pasku przewijania.",
+      "cancel": "Anuluj",
+      "submit": "Utwórz ogłoszenie",
+      "links": {
+        "none": "Bez linku",
+        "competitions": "Konkursy",
+        "gallery": "Galeria",
+        "winners": "Zwycięzcy"
+      }
+    },
+    "rows": {
+      "mayWinners": {
+        "title": "Ogłoszono zwycięzców maja 2026",
+        "start": "1 maj 2026",
+        "end": "30 cze 2026"
+      },
+      "juneCompetition": {
+        "title": "Konkurs czerwcowy otwarty",
+        "start": "1 cze 2026",
+        "end": "31 lip 2026"
+      },
+      "prizePool": {
+        "title": "Pula nagród zwiększona do 500 $",
+        "start": "1 lip 2026",
+        "end": "31 sie 2026"
+      },
+      "maintenance": {
+        "title": "Planowana konserwacja platformy",
+        "start": "15 cze 2026",
+        "end": "16 cze 2026"
+      },
+      "deadline": {
+        "title": "Ważne: przedłużono termin nadsyłania",
+        "start": "10 cze 2026",
+        "end": "20 cze 2026"
+      },
+      "summerGallery": {
+        "title": "Letnia kolekcja galerii",
+        "start": "10 maj 2026",
+        "end": "31 maj 2026"
+      },
+      "aprilWinners": {
+        "title": "Ogłoszono zwycięzców kwietnia 2026",
+        "start": "1 kwi 2026",
+        "end": "30 kwi 2026"
+      },
+      "julyCompetition": {
+        "title": "Zapowiedź konkursu lipcowego",
+        "start": "1 lip 2026",
+        "end": "15 sie 2026"
+      },
+      "premiumLaunch": {
+        "title": "Oferta premiery zdjęć premium",
+        "start": "1 mar 2026",
+        "end": "31 mar 2026"
+      },
+      "newsletter": {
+        "title": "Przypomnienie o zapisie do newslettera",
+        "start": "1 lut 2026",
+        "end": "28 lut 2026"
+      },
+      "policyUpdate": {
+        "title": "Aktualizacja polityki prywatności",
+        "start": "5 sty 2026",
+        "end": "20 sty 2026"
+      },
+      "goldenHour": {
+        "title": "Otwarty wyzwanie Golden Hour",
+        "start": "1 gru 2025",
+        "end": "31 gru 2025"
+      },
+      "referral": {
+        "title": "Bonus za polecenie znajomego",
+        "start": "1 lis 2025",
+        "end": "30 lis 2025"
+      },
+      "calendar": {
+        "title": "Kalendarz konkursów 2026",
+        "start": "1 paź 2025",
+        "end": "31 paź 2025"
+      },
+      "marchWinners": {
+        "title": "Ogłoszono zwycięzców marca 2026",
+        "start": "1 mar 2026",
+        "end": "31 mar 2026"
+      },
+      "featureLaunch": {
+        "title": "Nowe funkcje galerii",
+        "start": "1 wrz 2025",
+        "end": "30 wrz 2025"
+      },
+      "community": {
+        "title": "Tydzień społeczności",
+        "start": "1 sie 2025",
+        "end": "31 sie 2025"
+      },
+      "votingReminder": {
+        "title": "Głosowanie kończy się za 48 godzin",
+        "start": "10 lip 2025",
+        "end": "12 lip 2025"
+      },
+      "seascape": {
+        "title": "Otwarty konkurs krajobrazu morskiego",
+        "start": "1 cze 2025",
+        "end": "30 cze 2025"
+      },
+      "spotlight": {
+        "title": "Seria Photographer Spotlight",
+        "start": "1 maj 2025",
+        "end": "31 maj 2025"
+      },
+      "submissionTips": {
+        "title": "Wskazówki dotyczące zgłoszeń",
+        "start": "1 kwi 2025",
+        "end": "30 kwi 2025"
+      },
+      "anniversary": {
+        "title": "Rocznica My12Photos",
+        "start": "1 mar 2025",
+        "end": "15 mar 2025"
+      },
+      "tools": {
+        "title": "Nowe narzędzia administracyjne",
+        "start": "1 lut 2025",
+        "end": "28 lut 2025"
+      },
+      "flashSale": {
+        "title": "Flash sale albumów premium",
+        "start": "1 sty 2025",
+        "end": "7 sty 2025"
+      }
+    }
+  },
+  "adminNewsletter": {
+    "title": "Newsletter",
+    "subtitle": "Zarządzaj subskrybentami newslettera i kampaniami e-mail.",
+    "tableAria": "Subskrybenci newslettera",
+    "columns": {
+      "email": "E-mail",
+      "subscribedDate": "Data subskrypcji"
+    },
+    "composer": {
+      "title": "Kompozytor e-mail",
+      "close": "Zamknij kompozytor e-mail",
+      "reopen": "Otwórz kompozytor e-mail",
+      "subject": "Temat",
+      "subjectPlaceholder": "Wpisz temat e-maila...",
+      "emailTitle": "Tytuł e-maila",
+      "emailTitlePlaceholder": "Nagłówek widoczny w e-mailu...",
+      "content": "Treść",
+      "contentPlaceholder": "Zacznij pisać newsletter...",
+      "toolbarAria": "Pasek formatowania",
+      "banner": "Obraz banera",
+      "upload": "Kliknij, aby przesłać",
+      "uploadHint": "PNG, JPG do 4MB · zalecane 1200x400",
+      "bannerInvalid": "Prześlij obraz PNG lub JPG o rozmiarze do 4MB.",
+      "ctaText": "Tekst przycisku CTA",
+      "ctaTextPlaceholder": "Czytaj więcej",
+      "ctaUrl": "URL przycisku CTA",
+      "ctaUrlPlaceholder": "https://yoursite.com/post"
+    },
+    "send": {
+      "button": "Wyślij newsletter",
+      "sending": "Wysyłanie…",
+      "success": "Newsletter wysłany pomyślnie!",
+      "validationError": "Wypełnij wymagane pola.",
+      "subjectRequired": "Temat jest wymagany.",
+      "contentRequired": "Treść jest wymagana.",
+      "recipientsRequired": "Wybierz co najmniej jednego subskrybenta."
+    },
+    "recipients": {
+      "title": "Odbiorcy",
+      "subtitle": "Wybierz, kto otrzyma tę kampanię.",
+      "selectHint": "Wybierz subskrybentów z listy",
+      "selectedCount": "Wybrano: {{count}}",
+      "selectSubscriber": "Wybierz {{email}}",
+      "everyone": {
+        "title": "Wyślij do wszystkich",
+        "subtitle": "Wszyscy 18 420 subskrybentów"
+      },
+      "selected": {
+        "title": "Wyślij do wybranych użytkowników",
+        "subtitle": "Wybierz konkretnych subskrybentów"
+      },
+      "new": {
+        "title": "Wyślij do nowych subskrybentów",
+        "subtitle": "Dołączyli w ciągu ostatnich 7 dni"
+      }
+    }
+  },
+  "adminSupport": {
+    "eyebrow": "SKRZYNKA",
+    "title": "Prośby o wsparcie",
+    "subtitle": "Każda wiadomość z formularza kontaktowego, uporządkowana poza hałasem czatu na żywo.",
+    "pendingTitle": "Oczekujące pytania społeczności",
+    "answeredTitle": "Odpowiedzi na pytania społeczności",
+    "emptyPending": "Brak oczekujących pytań społeczności.",
+    "emptyAnswered": "Brak jeszcze odpowiedzi na pytania społeczności.",
+    "actions": {
+      "answer": "Odpowiedz",
+      "answered": "Odpowiedziano",
+      "viewMessage": "Zobacz wiadomość"
+    },
+    "modal": {
+      "title": "Odpowiedz i opublikuj pytanie",
+      "close": "Zamknij okno odpowiedzi",
+      "originalQuestion": "Oryginalne pytanie konsultanta",
+      "answerLabel": "Treść odpowiedzi",
+      "answerPlaceholder": "Podaj szczegółową odpowiedź dla bazy wiedzy...",
+      "answerRequired": "Wpisz odpowiedź przed publikacją.",
+      "publish": "Opublikuj i powiadom",
+      "backToSupport": "Powrót do wsparcia",
+      "toolbar": {
+        "aria": "Pasek formatowania odpowiedzi",
+        "bold": "Pogrubienie",
+        "italic": "Kursywa",
+        "listUl": "Lista punktowana",
+        "listOl": "Lista numerowana",
+        "link": "Wstaw link",
+        "image": "Wstaw obraz"
+      }
+    },
+    "tickets": {
+      "export": {
+        "title": "Nie można wyeksportować raportu analitycznego",
+        "preview": "Próbuję wyeksportować raport Analytics, ale....",
+        "fullQuestion": "Próbuję wyeksportować raport Analytics, ale nie mogę. Proszę o rozwiązanie",
+        "answer": "Aby wyeksportować dane analityczne, odśwież przeglądarkę, a następnie znajdź „Export data” na pulpicie i kliknij przycisk.",
+        "time": "2 godziny temu"
+      }
+    }
+  },
+  "adminWinners": {
+    "title": "Najlepsi fotografowie",
+    "subtitle": "{{month}} {{year}} — Aktualny ranking",
+    "formatsAria": "Filtry formatu albumu",
+    "monthAria": "Wybierz miesiąc",
+    "podiumAria": "Trzech najlepszych fotografów",
+    "tableAria": "Tabela zwycięzców",
+    "votes": "głosów",
+    "votesLabel": "{{count}} głosów",
+    "points": "punktów",
+    "view": "Zobacz {{name}}",
+    "formats": {
+      "single": "Pojedyncze zdjęcie",
+      "six": "6 zdjęć",
+      "zodiac": "12 zdjęć Zodiak"
+    },
+    "columns": {
+      "rank": "#",
+      "photographer": "Fotograf",
+      "city": "Miasto",
+      "votes": "Głosy",
+      "points": "Punkty",
+      "action": "Akcja"
+    },
+    "months": {
+      "january": "Styczeń",
+      "february": "Luty",
+      "march": "Marzec",
+      "april": "Kwiecień",
+      "may": "Maj",
+      "june": "Czerwiec",
+      "july": "Lipiec",
+      "august": "Sierpień",
+      "september": "Wrzesień",
+      "october": "Październik",
+      "november": "Listopad",
+      "december": "Grudzień"
+    },
+    "cities": {
+      "krakow": "Kraków",
+      "warsaw": "Warszawa",
+      "wroclaw": "Wrocław",
+      "poznan": "Poznań",
+      "gdansk": "Gdańsk",
+      "lodz": "Łódź"
+    },
+    "people": {
+      "anna": {
+        "firstName": "Anna",
+        "name": "Anna Kowalska"
+      },
+      "piotr": {
+        "firstName": "Piotr",
+        "name": "Piotr Mazur"
+      },
+      "marta": {
+        "firstName": "Marta",
+        "name": "Marta Wiśniewska"
+      },
+      "kamil": {
+        "firstName": "Kamil",
+        "name": "Kamil Zając"
+      },
+      "ewa": {
+        "firstName": "Ewa",
+        "name": "Ewa Krawczyk"
+      },
+      "tomasz": {
+        "firstName": "Tomasz",
+        "name": "Tomasz Nowak"
+      }
+    }
+  }
+}

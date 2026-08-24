@@ -1,0 +1,831 @@
+{
+  "home": {
+    "hero": {
+      "badge": "Competitions live — July 2026",
+      "title": "Tell us your story using 12 photos, same as the sun is telling us his using 12 signs of the zodiac",
+      "subtitle": "Join over 12,000 photographers. Free competitions, community voting, cash prizes every month.",
+      "searchPlaceholder": "Search",
+      "ctaJoin": "Join a Competition",
+      "ctaGallery": "Explore Gallery"
+    },
+    "stats": {
+      "photographers": "Photographers",
+      "photos": "Photos Submitted",
+      "votes": "Votes Cast",
+      "prizes": "Cash Prizes Awarded"
+    },
+    "competitions": {
+      "eyebrow": "Active Competitions",
+      "title": "Choose Your Album Type",
+      "subtitle": "Three competition album types. One goal: show your talent and win a prize."
+    },
+    "howItWorks": {
+      "eyebrow": "How It Works",
+      "titleLine1": "From Photo to Prize",
+      "titleLine2": "in 4 Steps",
+      "subtitle": "A simple, transparent process. Join thousands of photographers who have already won."
+    },
+    "showcase": {
+      "eyebrow": "Community Work",
+      "title": "Photo Showcase",
+      "viewFullGallery": "View Full Gallery"
+    },
+    "leaderboard": {
+      "eyebrow": "Leaderboard",
+      "title": "Top Photographers",
+      "liveStandings": "July 2026 Live standings",
+      "fullLeaderboard": "Full leaderboard"
+    },
+    "winners": {
+      "monthLabel": "May 2026",
+      "title": "Monthly Winners",
+      "subtitle": "Congratulations to our May 2026 champions",
+      "cashPrize": "Cash prize via PayPal",
+      "viewAlbum": "View Album",
+      "viewAll": "View all previous winners →",
+      "votesLabel": "{{count}} votes"
+    },
+    "features": {
+      "eyebrow": "The Platform",
+      "title": "Why My12Photos",
+      "prizesTitle": "Monthly Cash Prizes",
+      "prizesText": "Real money paid via PayPal to top 3 finishers every month.",
+      "votingTitle": "Community Voting",
+      "votingText": "Transparent peer voting — every registered user can participate.",
+      "formatsTitle": "3 Competition Formats",
+      "formatsText": "Single photo, story albums, and zodiac series for every style.",
+      "hallTitle": "Hall of Fame",
+      "hallText": "Past winners permanently featured in our winners archive.",
+      "freeTitle": "Always Free",
+      "freeText": "Zero entry fees. Participation is and always will be free.",
+      "globalTitle": "Global Community",
+      "globalText": "Photographers from over 40 countries competing each month."
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "What Photographers Say",
+      "a1quote": "Thanks to My12Photos, my work reached thousands of people. This is the best photography community I have ever been part of.",
+      "a1role": "July 2025 Winner",
+      "a2quote": "The platform is incredibly clean and elegant. Voting is a pleasure, and the prizes genuinely motivate you to push your craft.",
+      "a2role": "Top 3 — June 2025",
+      "a3quote": "I received more meaningful feedback here than on every other platform combined. I recommend it to every photographer.",
+      "a3role": "Zodiac Album Winner"
+    }
+  },
+  "competitionsPage": {
+    "cards": {
+      "singleTitle": "Single Photo",
+      "singleDesc": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story judged by the community.",
+      "singleF0": "Monthly competition",
+      "singleF1": "Public community voting",
+      "singleF2": "Top 3 win cash prizes",
+      "sixTitle": "6-Photos Story",
+      "sixDesc": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
+      "sixF0": "Sequential storytelling",
+      "sixF1": "Community votes",
+      "sixF2": "Best story wins",
+      "twelveTitle": "12 photos - full Zodiac Story",
+      "twelveDesc": "Create a complete zodiac-themed visual journey across twelve stunning images our grandest format.",
+      "twelveF0": "12-sign visual arc",
+      "twelveF1": "Zodiac-order display",
+      "twelveF2": "Grand prize category"
+    },
+    "steps": {
+      "1title": "Create an Account",
+      "1text": "Sign up for free in seconds. No fees, no hidden costs ever.",
+      "2title": "Submit Your Photos",
+      "2text": "Choose a competition category and upload your best work before the deadline.",
+      "3title": "Earn Votes",
+      "3text": "The photography community votes for their favourites. The more votes, the higher your rank.",
+      "4title": "Claim Your Prize",
+      "4text": "Winners receive cash prizes via PayPal. Fast, transparent, and reliable."
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Empowering Creative Visuals",
+      "title": "About My12Photos",
+      "subtitle": "Discover a global photography community where creativity is celebrated, stories are shared, and talented photographers compete for monthly recognition and cash prizes.",
+      "ctaJoin": "Join Now",
+      "ctaLearn": "Learn How It Works"
+    },
+    "stats": {
+      "zodiacThemes": "Zodiac Themes",
+      "monthlyPrizes": "Monthly Prizes",
+      "votersEngaged": "Voters Engaged"
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "My12Photos was created with a simple idea—to give photographers of every skill level a place to showcase their creativity, tell visual stories, and gain recognition. Unlike traditional photo-sharing platforms, My12Photos brings photographers together through exciting monthly competitions, transparent voting, and a supportive global community.",
+      "p2": "Whether you're capturing breathtaking landscapes, unforgettable moments, or creative storytelling through albums, our platform helps your work reach a wider audience.",
+      "quote": "Every photographer should have a fair stage to present their visual timeline. We designed My12Photos as that global amphitheater."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "p1": "Our mission is to inspire creativity by providing a modern, fair, and engaging photography competition platform where every photographer has an equal opportunity to be recognized.",
+      "p2": "We aim to make photography competitions simple, transparent, and enjoyable while rewarding participants for their passion and creativity.",
+      "highlight": "Fair Play, Transparent Voting & High Engagement"
+    },
+    "vision": {
+      "title": "Our Vision",
+      "p1": "We aspire to become one of the world's leading online photography competition platforms, connecting photographers from around the globe and building a vibrant community driven by creativity, recognition, and continuous participation.",
+      "highlight": "Connecting Photographers Worldwide"
+    },
+    "howItWorks": {
+      "eyebrow": "How Competitions Work",
+      "title": "How Our Competitions Work",
+      "subtitle": "Follow our simple, streamlined timeline to submit your art, gather votes, and claim monthly recognition. Click each step below to learn more!",
+      "stepOf": "Step {{current}} of {{total}}",
+      "activeMode": "Active Competition Mode",
+      "nextStep": "Next Step",
+      "s1title": "Create Your Account",
+      "s1summary": "Sign up for free and complete your profile.",
+      "s1detailTitle": "Sign up for free and complete your profile.",
+      "s1detailBody": "Set up your personal gallery, link your photography socials, and tell the community about your artistic style.",
+      "s2title": "Choose Your Competition",
+      "s2summary": "Select one of our competition categories.",
+      "s2detailTitle": "Pick the album format that fits your story.",
+      "s2detailBody": "Enter Single Photo, 6-Photo Story, or the full 12-photo Zodiac Album — each with its own prizes and monthly theme.",
+      "s3title": "Upload Your Work",
+      "s3summary": "Submit your best photographs before the monthly deadline.",
+      "s3detailTitle": "Submit before the monthly deadline.",
+      "s3detailBody": "Upload high-quality images that match the competition rules. You can refine captions and sequence until submissions close.",
+      "s4title": "Receive Community Votes",
+      "s4summary": "Your submission becomes available for public voting.",
+      "s4detailTitle": "Earn votes from photographers worldwide.",
+      "s4detailBody": "Once live in the gallery, your work is open for transparent community voting throughout the competition window.",
+      "s5title": "Win Monthly Prizes",
+      "s5summary": "Top-ranked photographers receive recognition, awards, and prizes.",
+      "s5detailTitle": "Claim recognition and cash prizes.",
+      "s5detailBody": "Top-ranked photographers receive recognition, awards, and monthly cash prizes — with winners featured across the platform."
+    },
+    "community": {
+      "title": "Our Community",
+      "body": "Our growing community consists of photographers, storytellers, hobbyists, and photography enthusiasts from around the world. Members can explore inspiring galleries, discover talented artists, participate in competitions, and celebrate each month's winners together.",
+      "belief": "We believe every photograph tells a story, and every story deserves an audience.",
+      "exchangeTitle": "Global Exchange",
+      "exchangeText": "Connect with visual minds across 150+ countries.",
+      "critiqueTitle": "Empathetic Critique",
+      "critiqueText": "Acquire helpful reviews and votes from peers."
+    },
+    "cta": {
+      "eyebrow": "No Fee to Register",
+      "title": "Ready to Share Your Photography With the World?",
+      "subtitle": "Join thousands of photographers competing every month. Upload your best work, receive community votes, and become our next monthly winner.",
+      "registerFree": "Register Free"
+    }
+  },
+  "gallery": {
+    "eyebrow": "Community Work",
+    "title": "Photo Showcase",
+    "filters": "Filters",
+    "hideFilters": "Hide Filters",
+    "closeFilters": "Close filters",
+    "filtersTitle": "Filters",
+    "albumType": "Album Type",
+    "category": "Category",
+    "emptyTitle": "No photos match",
+    "emptyBody": "Clear or change Album Type / Category filters to see more results.",
+    "searchPlaceholder": "Search",
+    "firstPage": "First page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "lastPage": "Last page",
+    "favorite": "Favorite {{title}}",
+    "unfavorite": "Unfavorite {{title}}",
+    "save": "Save",
+    "saved": "Saved",
+    "saveAction": "Save {{title}}",
+    "unsave": "Unsave {{title}}",
+    "moreActions": "More actions",
+    "reportModal": {
+      "title": "Report This Photo",
+      "subtitle": "Help us keep the community safe. Please tell us what is wrong with this content.",
+      "close": "Close",
+      "cancel": "Cancel",
+      "submit": "Submit Report",
+      "detailsLabel": "Tell us more about the problem",
+      "detailsPlaceholder": "Please briefly explain why you believe this content violates our rules.",
+      "reasonRequired": "Please select a reason before submitting.",
+      "reasons": {
+        "copyright": {
+          "title": "Copyright Infringement",
+          "description": "This photo uses my work without permission."
+        },
+        "illegal": {
+          "title": "Illegal or Prohibited Content",
+          "description": "This content breaks local laws or platform rules."
+        },
+        "harmful": {
+          "title": "Harmful or Dangerous Content",
+          "description": "This content promotes violence or dangerous behavior."
+        },
+        "offensive": {
+          "title": "Offensive or Abusive Content",
+          "description": "This content contains hate speech or harassment."
+        },
+        "nudity": {
+          "title": "Nudity or Sexual Content",
+          "description": "This photo contains explicit or inappropriate material."
+        },
+        "spam": {
+          "title": "Spam or Misleading Content",
+          "description": "This content is fake, promotional, or deceptive."
+        },
+        "stolen": {
+          "title": "Stolen Photo",
+          "description": "This photo was taken from another photographer."
+        },
+        "other": {
+          "title": "Other",
+          "description": "Something else not listed above."
+        }
+      }
+    },
+    "paginationAria": "Gallery pagination",
+    "page": "Page {{page}}"
+  },
+  "buyPhotos": {
+    "eyebrow": "Premium Marketplace",
+    "title": "Explore & Buy Premium Photos",
+    "filters": "Filters",
+    "hideFilters": "Hide Filters",
+    "closeFilters": "Close filters",
+    "filtersTitle": "Filters",
+    "albumType": "Album Type",
+    "category": "Category",
+    "emptyTitle": "No photos match",
+    "emptyBody": "Clear or change Album Type / Category filters to see more results.",
+    "searchPlaceholder": "Search",
+    "paginationAria": "Buy photos pagination",
+    "detail": {
+      "breadcrumb": {
+        "aria": "Breadcrumb",
+        "home": "Home",
+        "buyPhotos": "Buy Photos"
+      },
+      "purchase": {
+        "title": "Purchase",
+        "subtitle": "High-Resolution Digital Download",
+        "buyPhoto": "Buy Photo"
+      },
+      "creator": {
+        "title": "Creator",
+        "role": "Professional Landscape Photographer",
+        "viewProfile": "View Profile"
+      },
+      "specs": {
+        "title": "Details",
+        "resolution": "Resolution",
+        "format": "Format",
+        "camera": "Camera"
+      },
+      "likesReceived": "Likes Received",
+      "viewsCounted": "Views Counted",
+      "like": "Like",
+      "share": "Share"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "defaultBuyerName": "Guest Buyer",
+      "defaultBuyerEmail": "guest@example.com",
+      "summary": {
+        "title": "Order Summary",
+        "by": "by {{name}}",
+        "subtotal": "Subtotal",
+        "total": "Total"
+      },
+      "securityNotice": "Secure payment processed through PayPal. Your information is encrypted.",
+      "buyer": {
+        "title": "Buyer Information",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Jane Doe",
+        "email": "Email Address",
+        "emailPlaceholder": "jane.doe@example.com",
+        "emailHint": "We'll send your high-resolution download link here."
+      },
+      "payment": {
+        "title": "Payment Method",
+        "paypalDescription": "Pay securely with your PayPal account or credit card.",
+        "continuePaypal": "Continue with PayPal",
+        "termsNotice": "By clicking \"Continue with PayPal\", you agree to our Terms of Service."
+      }
+    },
+    "success": {
+      "title": "Purchase Successful!",
+      "subtitle": "Thank you for your purchase. Your photo is now available in your account.",
+      "by": "by {{name}}",
+      "downloadPhoto": "Download Photo",
+      "transaction": {
+        "title": "Transaction Details",
+        "id": "Transaction ID",
+        "date": "Date",
+        "paymentMethod": "Payment Method",
+        "license": "License"
+      }
+    }
+  },
+  "galleryDetail": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home",
+      "gallery": "Gallery"
+    },
+    "download": "Download",
+    "downloadPhoto": "Download Photo",
+    "imageDetails": {
+      "title": "Image Details",
+      "credit": "Credit:",
+      "creativeNumber": "Creative #:",
+      "resolution": "Resolution:",
+      "quality": "Quality:",
+      "fileType": "File Type:",
+      "fileSize": "File size:",
+      "uploadDate": "Upload date:",
+      "categories": "Categories:"
+    },
+    "votesReceived": "VOTES RECEIVED",
+    "viewsCounted": "VIEWS COUNTED",
+    "castVote": "Cast Your Vote",
+    "photographerLabel": "Photographer",
+    "photographerProfile": "Photographer Profile",
+    "comments": "Comments",
+    "verified": "Verified",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Write your comment",
+    "postComment": "Post a comment",
+    "submit": "Submit",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "playVideo": "Play video",
+    "pauseVideo": "Pause video",
+    "share": "Share",
+    "donation": {
+      "supportTitle": "Support {{name}}",
+      "defaultBio": "Digital Illustrator & Concept Artist. Your support helps {{name}} create new photos and tools for the community.",
+      "close": "Close donation form",
+      "selectAmount": "Select Amount",
+      "customAmount": "Custom Amount",
+      "yourDetails": "Your Details",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Jane Doe",
+      "email": "Email Address",
+      "emailPlaceholder": "jane@example.com",
+      "cancel": "Cancel",
+      "payNow": "Pay Now",
+      "reopen": "Support {{name}}"
+    }
+  },
+  "photographerProfile": {
+    "follow": "Follow",
+    "following": "Following",
+    "message": "Message",
+    "aboutTitle": "About & Biography",
+    "competitionTag": "Competition",
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Profile Visitor",
+      "totalArtwork": "Total Artwork",
+      "competitionEntries": "Competition Entries",
+      "totalHearts": "Total Hearts"
+    },
+    "statsShort": {
+      "followers": "Followers",
+      "following": "Following",
+      "profileVisitors": "Visitors",
+      "totalArtwork": "Artwork",
+      "competitionEntries": "Entries",
+      "totalHearts": "Hearts"
+    },
+    "featured": {
+      "badge": "Currently in Competition",
+      "uploaded": "Uploaded {{date}}",
+      "votes": "{{count}} Votes",
+      "rank": "Rank #{{rank}}",
+      "votingEnds": "Voting ends: {{date}}",
+      "inspect": "Inspect Entry Details",
+      "previous": "Previous featured entry",
+      "next": "Next featured entry"
+    },
+    "artwork": {
+      "title": "My Artwork",
+      "subtitle": "Explore single photography prints, 6-photo sets, and 12-photo Zodiac Story editorial albums."
+    },
+    "premium": {
+      "title": "Premium Photos",
+      "subtitle": "Explore single photography prints, 6-photo sets, and 12-photo Zodiac Story premium albums."
+    },
+    "filters": {
+      "allArtwork": "All Artwork",
+      "allArtworkShort": "All"
+    },
+    "sort": {
+      "label": "Sort artwork",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "mostLiked": "Most liked",
+      "mostViewed": "Most viewed"
+    },
+    "messages": {
+      "title": "My Messages",
+      "subtitle": "Photographer announcements, behind-the-scenes logs, and exhibition news.",
+      "publishedCount": "{{count}} Published Updates",
+      "noteBadge": "Photographer Note",
+      "likes": "{{count}} Likes"
+    },
+    "shareBanner": {
+      "badge": "Community Support",
+      "title": "Support this photographer by sharing their profile with your friends!",
+      "subtitle": "Share their profile on social media and help them get more visibility and votes.",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "x": "X",
+      "copyLink": "Copy Profile Link"
+    }
+  },
+  "leaderboard": {
+    "title": "Top Photographers",
+    "liveStandings": "{{month}} {{year}} Live standings"
+  },
+  "winners": {
+    "eyebrow": "Winners",
+    "title": "Complete Winners Archive",
+    "subtitle": "Review past legendary lens achievements, themes, and winning statistics.",
+    "historicRecords": "HISTORIC RECORDS: {{count}} ITEMS",
+    "extraPhotos": "+{{count}} photos",
+    "filterAria": "Filter winners by album type",
+    "emptyTitle": "No winners found",
+    "emptyBody": "Try another album type or month to see more historic records.",
+    "paginationAria": "Winners pagination"
+  },
+  "winnersDetail": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "winners": "Winners"
+    },
+    "summary": "Archive record for {{title}} — a winning entry from a past My12Photos competition.",
+    "albumType": "Album type",
+    "category": "Category",
+    "votes": "Community votes",
+    "competitionMonth": "Competition month",
+    "backToArchive": "← Back to winners archive"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with us",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last Updated: July 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Welcome to My12Photos. Protecting your privacy is one of our highest priorities. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our photography competition platform."
+        ]
+      },
+      {
+        "id": "collect",
+        "title": "2. Information We Collect",
+        "lead": "We may collect the following information:",
+        "bullets": [
+          "Full Name",
+          "Email Address",
+          "Profile Information",
+          "Uploaded Photos and Albums",
+          "Competition Participation Data",
+          "Voting Activity",
+          "Device and Browser Information",
+          "IP Address",
+          "Cookies and Analytics Data"
+        ]
+      },
+      {
+        "id": "use",
+        "title": "3. How We Use Your Information",
+        "lead": "Your information is used to:",
+        "bullets": [
+          "Create and manage your account",
+          "Allow participation in photography competitions",
+          "Display your submitted entries",
+          "Process winner verification and prize payments",
+          "Send newsletters and competition updates",
+          "Improve website performance and user experience",
+          "Prevent fraud and abuse"
+        ]
+      },
+      {
+        "id": "ownership",
+        "title": "4. Photo Ownership",
+        "paragraphs": [
+          "You retain full ownership of every image you upload.",
+          "By submitting photos to My12Photos, you grant us a non-exclusive license to display your images within competitions, galleries, promotional materials, and winner announcements."
+        ]
+      },
+      {
+        "id": "payments",
+        "title": "5. Prize Payments",
+        "paragraphs": [
+          "If you become a winner, we may collect additional payment information, such as your PayPal email address, solely for prize distribution."
+        ]
+      },
+      {
+        "id": "security",
+        "title": "6. Data Security",
+        "paragraphs": [
+          "We use industry-standard security measures to protect your personal information from unauthorized access, disclosure, or misuse."
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "7. Third-Party Services",
+        "lead": "Our platform may use trusted third-party services including:",
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal",
+          "Email Service Providers"
+        ],
+        "footnotes": [
+          "Each service has its own privacy policy."
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "8. Your Rights",
+        "lead": "You may:",
+        "bullets": [
+          "Access your personal information",
+          "Update your profile",
+          "Request deletion of your account",
+          "Withdraw newsletter subscriptions",
+          "Contact us regarding privacy concerns"
+        ],
+        "footnotes": [
+          "Each service has its own privacy policy."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "9. Contact",
+        "paragraphs": [
+          "If you have questions regarding this Privacy Policy, please contact us through our Contact page."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last Updated: July 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Welcome to My12Photos.",
+          "By accessing or using this website, you agree to comply with these Terms of Service."
+        ]
+      },
+      {
+        "id": "eligibility",
+        "title": "2. Eligibility",
+        "leads": [
+          "You must be at least 18 years old or have permission from a parent or legal guardian."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. User Accounts",
+        "leads": [
+          "Users are responsible for:"
+        ],
+        "bullets": [
+          "Maintaining account security",
+          "Providing accurate information",
+          "Keeping login credentials confidential"
+        ]
+      },
+      {
+        "id": "competitions",
+        "title": "4. Photography Competitions",
+        "leads": [
+          "Participation is completely free unless otherwise announced."
+        ],
+        "listIntro": "Users agree to:",
+        "bullets": [
+          "Upload only original content.",
+          "Respect competition rules.",
+          "Avoid copyrighted material owned by others.",
+          "Refrain from offensive, illegal, or inappropriate content."
+        ]
+      },
+      {
+        "id": "voting",
+        "title": "5. Voting",
+        "paragraphs": [
+          "The platform reserves the right to remove fraudulent votes or disqualify users engaging in manipulation."
+        ]
+      },
+      {
+        "id": "ip",
+        "title": "6. Intellectual Property",
+        "paragraphs": [
+          "Users retain ownership of their uploaded photographs.",
+          "By participating, users grant My12Photos permission to display submitted images for competition purposes and promotional activities."
+        ]
+      },
+      {
+        "id": "prizes",
+        "title": "7. Prize Distribution",
+        "leads": [
+          "Cash prizes are distributed through PayPal unless otherwise specified.",
+          "Winners may be required to verify their identity before receiving payments."
+        ]
+      },
+      {
+        "id": "prohibited",
+        "title": "8. Prohibited Activities",
+        "leads": [
+          "Users must not:"
+        ],
+        "bullets": [
+          "Upload illegal content",
+          "Impersonate others",
+          "Use bots or automated voting",
+          "Manipulate rankings",
+          "Attempt unauthorized access",
+          "Abuse the platform"
+        ]
+      },
+      {
+        "id": "suspension",
+        "title": "9. Account Suspension",
+        "leads": [
+          "We reserve the right to suspend or terminate accounts that violate these Terms."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "10. Disclaimer",
+        "leads": [
+          "While we strive to provide uninterrupted service, My12Photos cannot guarantee continuous availability."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "11. Changes",
+        "leads": [
+          "We may update these Terms at any time.",
+          "Continued use of the platform constitutes acceptance of the updated Terms."
+        ]
+      }
+    ]
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Last Updated: July 2026",
+    "intro": "This Cookie Policy explains how My12Photos uses cookies to improve your browsing experience.",
+    "sections": [
+      {
+        "id": "what-are-cookies",
+        "title": "What Are Cookies?",
+        "leads": [
+          "Cookies are small text files stored on your device that help websites remember your preferences and improve functionality."
+        ]
+      },
+      {
+        "id": "types",
+        "title": "Types of Cookies We Use",
+        "leads": [
+          "Required for:"
+        ],
+        "bullets": [
+          "Login",
+          "Account Security",
+          "Session Management",
+          "Language Preferences"
+        ]
+      },
+      {
+        "id": "performance",
+        "title": "Performance Cookies",
+        "listIntro": "Used to:",
+        "bullets": [
+          "Measure website performance",
+          "Improve loading speed",
+          "Analyze visitor behavior"
+        ]
+      },
+      {
+        "id": "analytics",
+        "title": "Analytics Cookies",
+        "leads": [
+          "We use Google Analytics to understand:"
+        ],
+        "bullets": [
+          "Visitor traffic",
+          "Popular pages",
+          "User engagement",
+          "Website performance"
+        ]
+      },
+      {
+        "id": "advertising",
+        "title": "Advertising Cookies",
+        "leads": [
+          "Google Ads may use cookies to display relevant advertisements and measure advertising effectiveness."
+        ]
+      },
+      {
+        "id": "functional",
+        "title": "Functional Cookies",
+        "leads": [
+          "Remember:"
+        ],
+        "bullets": [
+          "Selected language",
+          "User preferences",
+          "Competition filters",
+          "Display settings"
+        ]
+      },
+      {
+        "id": "managing",
+        "title": "Managing Cookies",
+        "leads": [
+          "Most browsers allow you to:"
+        ],
+        "bullets": [
+          "Accept all cookies",
+          "Reject cookies",
+          "Delete stored cookies",
+          "Control cookie preferences"
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "Third-Party Cookies",
+        "leads": [
+          "Some cookies are provided by trusted third-party services including:"
+        ],
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal"
+        ]
+      },
+      {
+        "id": "updates",
+        "title": "Updates",
+        "leads": [
+          "We may update this Cookie Policy periodically to reflect changes in technology or legal requirements."
+        ]
+      }
+    ]
+  },
+  "competitionDetails": {
+    "back": "Back to My Competitions",
+    "slidesAria": "Story photo slides",
+    "rankingsAria": "Global rankings",
+    "rankingsTitle": "Global Rankings",
+    "title": "Minimalist Monochrome",
+    "description": "A young man walking confidently along a quiet city street during golden hour, wearing a casual white t-shirt, black jeans, and clean white sneakers. His hands are relaxed by his sides, with a natural walking posture and a calm expression. Soft sunlight creates warm highlights and long shadows on the pavement. Modern buildings, green trees, and a slightly blurred urban background add depth to the scene. Captured in a cinematic, photorealistic style with shallow depth of field, ultra-realistic, high detail, 8K quality.",
+    "metrics": {
+      "votes": "VOTES",
+      "position": "Position"
+    },
+    "table": {
+      "rank": "RANK",
+      "photographer": "PHOTOGRAPHER",
+      "wins": "COMPETITIONS WON",
+      "votes": "TOTAL Votes"
+    },
+    "showing": "Showing top {{count}} of {{total}} photographers",
+    "prevPage": "Previous rankings page",
+    "nextPage": "Next rankings page",
+    "signs": {
+      "aries": "Aries",
+      "taurus": "Taurus",
+      "gemini": "Gemini",
+      "cancer": "Cancer",
+      "leo": "Leo",
+      "virgo": "Virgo"
+    },
+    "rankings": {
+      "alessandro": "Alessandro Vieri",
+      "elena": "Elena Soros",
+      "sarah": "Sarah Jenkins",
+      "julian": "Julian Thorne",
+      "marcus": "Marcus Chen"
+    }
+  }
+}

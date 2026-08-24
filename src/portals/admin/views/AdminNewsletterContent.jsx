@@ -1,5 +1,5 @@
-import React, { memo, useId } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useId } from 'react';
 import {
   ADMIN_NEWSLETTER_ASSETS,
   CHECK_ICON_SIZE,
@@ -11,7 +11,7 @@ import {
   UPLOAD_ICON_SIZE,
 } from '@/portals/admin/data/adminNewsletterData';
 import useAdminNewsletter from '@/portals/admin/hooks/useAdminNewsletter';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 const fieldLabelClass =
   'text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]';

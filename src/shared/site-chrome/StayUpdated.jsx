@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { SITE_ASSETS } from './siteAssets';
 import ImgIcon from './ImgIcon';
 import Shell from './Shell';

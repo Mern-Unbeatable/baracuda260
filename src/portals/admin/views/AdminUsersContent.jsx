@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useEffect, useRef } from 'react';
 import { MoreVertical } from 'lucide-react';
 import {
   ADMIN_USERS_ASSETS,
@@ -10,8 +10,8 @@ import {
 } from '@/portals/admin/data/adminUsersData';
 import useAdminUsers from '@/portals/admin/hooks/useAdminUsers';
 import SuspendUserModal from '@/portals/admin/components/admin-users/SuspendUserModal';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 /**
  * @param {{ status: string }} props

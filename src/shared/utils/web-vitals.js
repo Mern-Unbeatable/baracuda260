@@ -1,5 +1,6 @@
 import { onCLS, onFCP, onINP, onLCP, onTTFB } from 'web-vitals';
 import { API_CONFIG } from '@/shared/config';
+import { IS_PROD } from '@/shared/config/env';
 
 const vitalsUrl = API_CONFIG.VITALS_ENDPOINT;
 
@@ -69,7 +70,7 @@ const logToConsole = (metric) => {
 const handleMetric = (metric) => {
   logToConsole(metric);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (IS_PROD) {
     sendToAnalytics(metric);
   }
 };

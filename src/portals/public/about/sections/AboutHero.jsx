@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useEffect, useState } from 'react';
 import { ABOUT_HERO_SLIDE_MS, ABOUT_HERO_SLIDES } from '@/portals/public/about/data/aboutAssets';
 
 const AboutHero = memo(() => {

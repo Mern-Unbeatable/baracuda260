@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
 import { CONTACT_SUPPORT_ASSETS, THREAD_DETAILS } from '@/portals/member/data/contactSupportData';
 
 const StatusBadge = memo(({ status }) => {

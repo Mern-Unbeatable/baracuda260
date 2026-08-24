@@ -1,13 +1,15 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Camera, Image, Maximize2 } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
   ADMIN_DETAIL_ASSETS,
   getAdminPremiumPhotoDetailById,
 } from '@/portals/admin/data/adminPremiumPhotosDetailData';
-import GalleryDetailVideo from '@/portals/public/gallery/detail/components/GalleryDetailVideo';
+import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import { resolveGalleryImageDetails } from '@/shared/data/galleryDetail';
 
 /** Auto-advance interval for multi-photo story strip (ms). */
 const ADMIN_DETAIL_SLIDE_MS = 6000;
@@ -200,6 +202,14 @@ const AdminPremiumPhotosDetailContent = memo(() => {
     ? detail.slides[activeIndex] || detail.slides[0]
     : detail.sign;
   const heroSrc = hasSlides ? activeSlide.hero : detail.hero;
+  const imageDetails = resolveGalleryImageDetails({
+    photographer: t(detail.photographerKey),
+    category: t(detail.categoryKey),
+    badge: t(detail.typeKey),
+    resolution: detail.resolution,
+    format: detail.format,
+    date: detail.uploadDate,
+  });
   const isTwelve = detail.variant === 'twelve';
   const curveHeight = isTwelve ? 'h-10 sm:h-[72px] xl:h-[103px]' : 'h-8 sm:h-[52px]';
 
@@ -373,6 +383,8 @@ const AdminPremiumPhotosDetailContent = memo(() => {
             </div>
           </article>
         </div>
+
+        <GalleryDetailImageDetails details={imageDetails} />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
           <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">

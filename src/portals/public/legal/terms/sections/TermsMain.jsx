@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { ROUTES } from '@/shared/config';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { readLegalPage } from '@/portals/public/legal/data/legalI18n';

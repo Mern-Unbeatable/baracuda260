@@ -5,7 +5,7 @@ import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 import {
   GALLERY_DETAIL_ASSETS,
   toGalleryDetailEntry,
-} from '@/portals/public/gallery/detail/galleryDetailShared';
+} from '@/shared/data/galleryDetail';
 import { COMPETITION_DETAILS } from '@/portals/public/competition-details/data/competitionDetailsAssets';
 import { MY_ARTWORK_ITEMS } from '@/portals/member/data/myArtworkData';
 

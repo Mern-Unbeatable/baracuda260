@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
 import {
   ADMIN_PREMIUM_PHOTOS_ASSETS,
@@ -12,7 +12,7 @@ import {
   METRIC_ICON_SIZE,
 } from '@/portals/admin/data/adminPremiumPhotosData';
 import useAdminPremiumPhotosShowcase from '@/portals/admin/hooks/useAdminPremiumPhotosShowcase';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 /** @param {{ icon: string, value: string, tone?: 'default' | 'accent' }} props */
 const MetricStat = memo(({ icon, value, tone = 'default' }) => (

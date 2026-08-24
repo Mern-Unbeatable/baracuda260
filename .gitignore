@@ -3,7 +3,9 @@ dist
 coverage
 
 # Environment files (contain secrets — never commit)
+
 .env
 .env.development
 .env.production
 
+luisfernandeslu_frontend

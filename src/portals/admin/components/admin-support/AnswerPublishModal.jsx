@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
 import {
   ADMIN_SUPPORT_ASSETS,
   ANSWER_MODAL_MODE,

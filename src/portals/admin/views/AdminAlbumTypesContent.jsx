@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import {
   ADMIN_ALBUM_TYPES_ASSETS,
   CHECK_ICON_SIZE,
@@ -11,7 +11,7 @@ import {
 } from '@/portals/admin/data/adminAlbumTypesData';
 import useAdminAlbumTypes from '@/portals/admin/hooks/useAdminAlbumTypes';
 import AlbumTypeModal from '@/portals/admin/components/admin-album-types/AlbumTypeModal';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /**
  * @param {{ albumType: object, onEdit: (id: string) => void }} props

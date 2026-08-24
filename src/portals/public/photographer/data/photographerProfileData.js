@@ -3,10 +3,11 @@ import { GALLERY_PHOTOS } from '@/shared/data/galleryPhotos';
 const A = '/assets/home';
 
 export const PHOTOGRAPHER_ASSETS = {
-  avatar: `${A}/avatar-photographer.jpg`,
+  avatar: `${A}/avatar-marta.jpg`,
   featuredHero: `${A}/photo-morning.jpg`,
   messageHero: `${A}/photo-golden.jpg`,
   messageMushroom: `${A}/photo-forest.jpg`,
+  profileCover: `${A}/photo-silent.jpg`,
 };
 
 export const PHOTOGRAPHER_PROFILE = {
@@ -15,13 +16,13 @@ export const PHOTOGRAPHER_PROFILE = {
   tagline: 'Nature & Landscape Photographer',
   location: 'Poland',
   avatar: PHOTOGRAPHER_ASSETS.avatar,
-  website: 'https://elenavance.photo',
-  websiteLabel: 'elenavance.photo',
-  instagram: '@elenavance',
+  coverImage: PHOTOGRAPHER_ASSETS.profileCover,
+  website: 'https://www.elenavancephotography.com',
+  websiteLabel: 'www.elenavancephotography.com',
+  instagram: '@elenavance_photo',
   twitter: '@elenavance',
   bio: [
-    'Elena Vance is a nature and landscape photographer based in Poland, known for cinematic light, quiet compositions, and story-driven seasonal work across single prints, six-photo sets, and full zodiac albums.',
-    'Her work has been featured in international photography competitions and community showcases, with a focus on mood, texture, and the emotional rhythm of outdoor spaces.',
+    "I'm a passionate photographer who loves turning real moments into timeless visual stories. With a strong eye for detail, composition, and natural emotions, I focus on creating photographs that feel authentic, beautiful, and meaningful. From portraits and weddings to lifestyle and special events, I enjoy capturing the moments that people want to remember forever. My goal is not just to take a photograph, but to tell a story through every frame.",
   ],
   stats: {
     followers: 1260,

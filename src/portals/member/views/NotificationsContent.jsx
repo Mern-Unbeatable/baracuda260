@@ -1,6 +1,6 @@
-import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import MemberNotificationItem from '@/portals/member/components/member-notifications/MemberNotificationItem';
+import React, { memo, useMemo } from 'react';
+import MemberNotificationItem from '@/components/data-display/MemberNotificationItem/MemberNotificationItem';
 import {
   MEMBER_NOTIFICATIONS,
   sortMemberNotifications,

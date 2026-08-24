@@ -1,0 +1,831 @@
+{
+  "home": {
+    "hero": {
+      "badge": "Konkursy trwają — lipiec 2026",
+      "title": "Opowiedz nam swoją historię za pomocą 12 zdjęć — tak, jak słońce opowiada swoją za pomocą 12 znaków zodiaku",
+      "subtitle": "Dołącz do ponad 12 000 fotografów. Darmowe konkursy, głosowanie społeczności, nagrody pieniężne co miesiąc.",
+      "searchPlaceholder": "Szukaj",
+      "ctaJoin": "Dołącz do konkursu",
+      "ctaGallery": "Przeglądaj galerię"
+    },
+    "stats": {
+      "photographers": "Fotografowie",
+      "photos": "Przesłane zdjęcia",
+      "votes": "Oddane głosy",
+      "prizes": "Przyznane nagrody"
+    },
+    "competitions": {
+      "eyebrow": "Aktywne konkursy",
+      "title": "Wybierz typ albumu",
+      "subtitle": "Trzy typy konkursowych albumów. Jeden cel: pokaż talent i wygraj nagrodę."
+    },
+    "howItWorks": {
+      "eyebrow": "Jak to działa",
+      "titleLine1": "Od zdjęcia do nagrody",
+      "titleLine2": "w 4 krokach",
+      "subtitle": "Prosty i przejrzysty proces. Dołącz do tysięcy fotografów, którzy już wygrali."
+    },
+    "showcase": {
+      "eyebrow": "Prace społeczności",
+      "title": "Prezentacja zdjęć",
+      "viewFullGallery": "Zobacz pełną galerię"
+    },
+    "leaderboard": {
+      "eyebrow": "Ranking",
+      "title": "Najlepsi fotografowie",
+      "liveStandings": "Lipiec 2026 na żywo",
+      "fullLeaderboard": "Pełny ranking"
+    },
+    "winners": {
+      "monthLabel": "Maj 2026",
+      "title": "Zwycięzcy miesiąca",
+      "subtitle": "Gratulacje dla mistrzów maja 2026",
+      "cashPrize": "Nagroda pieniężna przez PayPal",
+      "viewAlbum": "Zobacz album",
+      "viewAll": "Zobacz wszystkich poprzednich zwycięzców →",
+      "votesLabel": "{{count}} głosów"
+    },
+    "features": {
+      "eyebrow": "Platforma",
+      "title": "Dlaczego My12Photos",
+      "prizesTitle": "Miesięczne nagrody",
+      "prizesText": "Prawdziwe pieniądze wypłacane przez PayPal trzem najlepszym co miesiąc.",
+      "votingTitle": "Głosowanie społeczności",
+      "votingText": "Przejrzyste głosowanie społeczności — każdy zarejestrowany użytkownik może brać udział.",
+      "formatsTitle": "3 formaty konkursów",
+      "formatsText": "Pojedyncze zdjęcie, historie i serie zodiakalne dla każdego stylu.",
+      "hallTitle": "Galeria sławy",
+      "hallText": "Poprzedni zwycięzcy na stałe w naszym archiwum.",
+      "freeTitle": "Zawsze za darmo",
+      "freeText": "Zero opłat startowych. Udział jest i zawsze będzie darmowy.",
+      "globalTitle": "Globalna społeczność",
+      "globalText": "Fotografowie z ponad 40 krajów startują co miesiąc."
+    },
+    "testimonials": {
+      "eyebrow": "Opinie",
+      "title": "Co mówią fotografowie",
+      "a1quote": "Dzięki My12Photos moje prace zobaczyły tysiące osób. To najlepsza społeczność fotograficzna, w jakiej brałem udział.",
+      "a1role": "Zwycięzca lipca 2025",
+      "a2quote": "Platforma jest wyjątkowo czysta i elegancka. Głosowanie to przyjemność, a nagrody naprawdę motywują do rozwoju.",
+      "a2role": "Top 3 — czerwiec 2025",
+      "a3quote": "Otrzymałem tu więcej wartościowego feedbacku niż na wszystkich innych platformach razem. Polecam każdemu fotografowi.",
+      "a3role": "Zwycięzca albumu zodiakalnego"
+    }
+  },
+  "competitionsPage": {
+    "cards": {
+      "singleTitle": "Pojedyncze zdjęcie",
+      "singleDesc": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia oceniane przez społeczność.",
+      "singleF0": "Miesięczny konkurs",
+      "singleF1": "Publiczne głosowanie społeczności",
+      "singleF2": "Trójka najlepszych wygrywa nagrody pieniężne",
+      "sixTitle": "Historia 6 zdjęć",
+      "sixDesc": "Stwórz wizualną narrację z sześciu starannie ułożonych zdjęć, które prowadzą widza przez historię.",
+      "sixF0": "Opowiadanie sekwencyjne",
+      "sixF1": "Głosy społeczności",
+      "sixF2": "Najlepsza historia wygrywa",
+      "twelveTitle": "12 zdjęć — pełna historia zodiaku",
+      "twelveDesc": "Stwórz pełną zodiakalną podróż wizualną w dwunastu zdjęciach nasz największy format.",
+      "twelveF0": "Łuk wizualny 12 znaków",
+      "twelveF1": "Wyświetlanie w kolejności zodiaku",
+      "twelveF2": "Kategoria głównej nagrody"
+    },
+    "steps": {
+      "1title": "Utwórz konto",
+      "1text": "Zarejestruj się za darmo w kilka sekund. Bez opłat i ukrytych kosztów.",
+      "2title": "Prześlij zdjęcia",
+      "2text": "Wybierz kategorię konkursu i prześlij najlepsze prace przed terminem.",
+      "3title": "Zbieraj głosy",
+      "3text": "Społeczność głosuje na ulubione prace. Im więcej głosów, tym wyższa pozycja.",
+      "4title": "Odbierz nagrodę",
+      "4text": "Zwycięzcy otrzymują nagrody przez PayPal. Szybko, przejrzyście i niezawodnie."
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Wspieramy kreatywne wizje",
+      "title": "O My12Photos",
+      "subtitle": "Odkryj globalną społeczność fotograficzną, w której celebrujemy kreatywność, dzielimy się historiami i nagradzamy utalentowanych fotografów co miesiąc.",
+      "ctaJoin": "Dołącz teraz",
+      "ctaLearn": "Dowiedz się, jak to działa"
+    },
+    "stats": {
+      "zodiacThemes": "Motywy zodiaku",
+      "monthlyPrizes": "Miesięczne nagrody",
+      "votersEngaged": "Zaangażowani głosujący"
+    },
+    "story": {
+      "title": "Nasza historia",
+      "p1": "My12Photos powstało z prostą ideą — dać fotografom na każdym poziomie miejsce do prezentacji kreatywności, opowiadania historii wizualnych i zdobycia uznania. W przeciwieństwie do tradycyjnych platform do dzielenia się zdjęciami łączymy fotografów poprzez ekscytujące miesięczne konkursy, przejrzyste głosowanie i wspierającą globalną społeczność.",
+      "p2": "Niezależnie od tego, czy uwieczniasz zapierające dech krajobrazy, niezapomniane chwile, czy kreatywne historie w albumach — nasza platforma pomaga dotrzeć do szerszej publiczności.",
+      "quote": "Każdy fotograf powinien mieć uczciwą scenę, by zaprezentować swoją wizualną opowieść. My12Photos stworzyliśmy właśnie jako tę globalną scenę."
+    },
+    "mission": {
+      "title": "Nasza misja",
+      "p1": "Naszą misją jest inspirowanie kreatywności poprzez nowoczesną, uczciwą i angażującą platformę konkursów fotograficznych, gdzie każdy ma równą szansę na uznanie.",
+      "p2": "Chcemy, by konkursy były proste, przejrzyste i przyjemne, a uczestnicy byli nagradzani za pasję i kreatywność.",
+      "highlight": "Fair play, przejrzyste głosowanie i wysokie zaangażowanie"
+    },
+    "vision": {
+      "title": "Nasza wizja",
+      "p1": "Chcemy stać się jedną z wiodących światowych platform konkursów fotograficznych online, łącząc fotografów z całego świata i budując społeczność opartą na kreatywności, uznaniu i ciągłym udziale.",
+      "highlight": "Łączymy fotografów na całym świecie"
+    },
+    "howItWorks": {
+      "eyebrow": "Jak działają konkursy",
+      "title": "Jak działają nasze konkursy",
+      "subtitle": "Śledź prosty harmonogram: prześlij pracę, zbieraj głosy i zdobądź miesięczne uznanie. Kliknij każdy krok, by dowiedzieć się więcej!",
+      "stepOf": "Krok {{current}} z {{total}}",
+      "activeMode": "Aktywny tryb konkursu",
+      "nextStep": "Następny krok",
+      "s1title": "Utwórz konto",
+      "s1summary": "Zarejestruj się za darmo i uzupełnij profil.",
+      "s1detailTitle": "Zarejestruj się za darmo i uzupełnij profil.",
+      "s1detailBody": "Skonfiguruj galerię, połącz social media i opowiedz społeczności o swoim stylu.",
+      "s2title": "Wybierz konkurs",
+      "s2summary": "Wybierz jedną z kategorii konkursowych.",
+      "s2detailTitle": "Wybierz format albumu dopasowany do historii.",
+      "s2detailBody": "Dołącz do konkursu Pojedyncze zdjęcie, Historia 6 zdjęć lub pełnego Albumu zodiakalnego — każdy z własnymi nagrodami i motywem miesiąca.",
+      "s3title": "Prześlij pracę",
+      "s3summary": "Prześlij najlepsze zdjęcia przed miesięcznym terminem.",
+      "s3detailTitle": "Prześlij przed miesięcznym terminem.",
+      "s3detailBody": "Prześlij wysokiej jakości zdjęcia zgodne z regulaminem. Możesz dopracować opisy i kolejność do zamknięcia zgłoszeń.",
+      "s4title": "Otrzymaj głosy społeczności",
+      "s4summary": "Twoje zgłoszenie trafia do publicznego głosowania.",
+      "s4detailTitle": "Zdobywaj głosy od fotografów z całego świata.",
+      "s4detailBody": "Po publikacji w galerii praca jest otwarta na przejrzyste głosowanie społeczności przez cały okres konkursu.",
+      "s5title": "Wygraj miesięczne nagrody",
+      "s5summary": "Najlepsi fotografowie otrzymują uznanie, nagrody i wyróżnienia.",
+      "s5detailTitle": "Odbierz uznanie i nagrody pieniężne.",
+      "s5detailBody": "Najlepsi otrzymują uznanie, nagrody i miesięczne premie — a zwycięzcy są prezentowani na całej platformie."
+    },
+    "community": {
+      "title": "Nasza społeczność",
+      "body": "Nasza rosnąca społeczność to fotografowie, narratorzy, hobbyści i entuzjaści fotografii z całego świata. Członkowie przeglądają inspirujące galerie, odkrywają utalentowanych artystów, biorą udział w konkursach i wspólnie świętują zwycięzców miesiąca.",
+      "belief": "Wierzymy, że każde zdjęcie opowiada historię, a każda historia zasługuje na publiczność.",
+      "exchangeTitle": "Globalna wymiana",
+      "exchangeText": "Połącz się z twórcami wizualnymi z ponad 150 krajów.",
+      "critiqueTitle": "Empatyczna krytyka",
+      "critiqueText": "Otrzymuj pomocne opinie i głosy od innych fotografów."
+    },
+    "cta": {
+      "eyebrow": "Bez opłat za rejestrację",
+      "title": "Chcesz dzielić się fotografią ze światem?",
+      "subtitle": "Dołącz do tysięcy fotografów biorących udział w konkursach co miesiąc. Prześlij najlepszą pracę, zbieraj głosy i zostań kolejnym zwycięzcą.",
+      "registerFree": "Zarejestruj się"
+    }
+  },
+  "gallery": {
+    "eyebrow": "Prace społeczności",
+    "title": "Prezentacja zdjęć",
+    "filters": "Filtry",
+    "hideFilters": "Ukryj filtry",
+    "closeFilters": "Zamknij filtry",
+    "filtersTitle": "Filtry",
+    "albumType": "Typ albumu",
+    "category": "Kategoria",
+    "emptyTitle": "Brak pasujących zdjęć",
+    "emptyBody": "Wyczyść lub zmień filtry typu albumu / kategorii, by zobaczyć więcej wyników.",
+    "searchPlaceholder": "Szukaj",
+    "firstPage": "Pierwsza strona",
+    "previousPage": "Poprzednia strona",
+    "nextPage": "Następna strona",
+    "lastPage": "Ostatnia strona",
+    "favorite": "Dodaj do ulubionych: {{title}}",
+    "unfavorite": "Usuń z ulubionych: {{title}}",
+    "save": "Zapisz",
+    "saved": "Zapisano",
+    "saveAction": "Zapisz {{title}}",
+    "unsave": "Usuń z zapisanych {{title}}",
+    "moreActions": "Więcej akcji",
+    "reportModal": {
+      "title": "Zgłoś to zdjęcie",
+      "subtitle": "Pomóż nam dbać o bezpieczeństwo społeczności. Powiedz nam, co jest nie tak z tą treścią.",
+      "close": "Zamknij",
+      "cancel": "Anuluj",
+      "submit": "Wyślij zgłoszenie",
+      "detailsLabel": "Opisz problem dokładniej",
+      "detailsPlaceholder": "Krótko wyjaśnij, dlaczego uważasz, że ta treść narusza nasze zasady.",
+      "reasonRequired": "Wybierz powód przed wysłaniem zgłoszenia.",
+      "reasons": {
+        "copyright": {
+          "title": "Naruszenie praw autorskich",
+          "description": "To zdjęcie wykorzystuje moją pracę bez pozwolenia."
+        },
+        "illegal": {
+          "title": "Treść nielegalna lub zabroniona",
+          "description": "Ta treść łamie lokalne prawo lub zasady platformy."
+        },
+        "harmful": {
+          "title": "Szkodliwa lub niebezpieczna treść",
+          "description": "Ta treść promuje przemoc lub niebezpieczne zachowania."
+        },
+        "offensive": {
+          "title": "Obraźliwa lub nękająca treść",
+          "description": "Ta treść zawiera mowę nienawiści lub nękanie."
+        },
+        "nudity": {
+          "title": "Nagość lub treści seksualne",
+          "description": "To zdjęcie zawiera materiał wulgarny lub nieodpowiedni."
+        },
+        "spam": {
+          "title": "Spam lub wprowadzająca w błąd treść",
+          "description": "Ta treść jest fałszywa, promocyjna lub oszukańcza."
+        },
+        "stolen": {
+          "title": "Skradzione zdjęcie",
+          "description": "To zdjęcie pochodzi od innego fotografa."
+        },
+        "other": {
+          "title": "Inne",
+          "description": "Coś innego, czego nie ma na liście."
+        }
+      }
+    },
+    "paginationAria": "Paginacja galerii",
+    "page": "Strona {{page}}"
+  },
+  "buyPhotos": {
+    "eyebrow": "Rynek premium",
+    "title": "Przeglądaj i kup zdjęcia premium",
+    "filters": "Filtry",
+    "hideFilters": "Ukryj filtry",
+    "closeFilters": "Zamknij filtry",
+    "filtersTitle": "Filtry",
+    "albumType": "Typ albumu",
+    "category": "Kategoria",
+    "emptyTitle": "Brak pasujących zdjęć",
+    "emptyBody": "Wyczyść lub zmień filtry typu albumu / kategorii, by zobaczyć więcej wyników.",
+    "searchPlaceholder": "Szukaj",
+    "paginationAria": "Paginacja kup zdjęć",
+    "detail": {
+      "breadcrumb": {
+        "aria": "Ścieżka nawigacji",
+        "home": "Strona główna",
+        "buyPhotos": "Kup zdjęcia"
+      },
+      "purchase": {
+        "title": "Zakup",
+        "subtitle": "Cyfrowe pobranie w wysokiej rozdzielczości",
+        "buyPhoto": "Kup zdjęcie"
+      },
+      "creator": {
+        "title": "Twórca",
+        "role": "Profesjonalny fotograf krajobrazowy",
+        "viewProfile": "Zobacz profil"
+      },
+      "specs": {
+        "title": "Szczegóły",
+        "resolution": "Rozdzielczość",
+        "format": "Format",
+        "camera": "Aparat"
+      },
+      "likesReceived": "Polubienia",
+      "viewsCounted": "Wyświetlenia",
+      "like": "Lubię to",
+      "share": "Udostępnij"
+    },
+    "checkout": {
+      "title": "Kasa",
+      "defaultBuyerName": "Gość",
+      "defaultBuyerEmail": "gosc@example.com",
+      "summary": {
+        "title": "Podsumowanie zamówienia",
+        "by": "autor: {{name}}",
+        "subtotal": "Suma częściowa",
+        "total": "Razem"
+      },
+      "securityNotice": "Bezpieczna płatność przez PayPal. Twoje dane są szyfrowane.",
+      "buyer": {
+        "title": "Dane kupującego",
+        "fullName": "Imię i nazwisko",
+        "fullNamePlaceholder": "Jan Kowalski",
+        "email": "Adres e-mail",
+        "emailPlaceholder": "jan.kowalski@example.com",
+        "emailHint": "Wyślemy link do pobrania w wysokiej rozdzielczości na ten adres."
+      },
+      "payment": {
+        "title": "Metoda płatności",
+        "paypalDescription": "Płać bezpiecznie kontem PayPal lub kartą kredytową.",
+        "continuePaypal": "Kontynuuj z PayPal",
+        "termsNotice": "Klikając „Kontynuuj z PayPal”, akceptujesz nasz Regulamin."
+      }
+    },
+    "success": {
+      "title": "Zakup zakończony powodzeniem!",
+      "subtitle": "Dziękujemy za zakup. Twoje zdjęcie jest już dostępne na koncie.",
+      "by": "autor: {{name}}",
+      "downloadPhoto": "Pobierz zdjęcie",
+      "transaction": {
+        "title": "Szczegóły transakcji",
+        "id": "ID transakcji",
+        "date": "Data",
+        "paymentMethod": "Metoda płatności",
+        "license": "Licencja"
+      }
+    }
+  },
+  "galleryDetail": {
+    "breadcrumb": {
+      "aria": "Ścieżka nawigacji",
+      "home": "Strona główna",
+      "gallery": "Galeria"
+    },
+    "download": "Pobierz",
+    "downloadPhoto": "Pobierz zdjęcie",
+    "imageDetails": {
+      "title": "Szczegóły zdjęcia",
+      "credit": "Autor:",
+      "creativeNumber": "Numer Creative #:",
+      "resolution": "Rozdzielczość:",
+      "quality": "Jakość:",
+      "fileType": "Typ pliku:",
+      "fileSize": "Rozmiar pliku:",
+      "uploadDate": "Data przesłania:",
+      "categories": "Kategorie:"
+    },
+    "votesReceived": "OTRZYMANE GŁOSY",
+    "viewsCounted": "WYŚWIETLENIA",
+    "castVote": "Oddaj głos",
+    "photographerLabel": "Fotograf",
+    "photographerProfile": "Profil fotografa",
+    "comments": "Komentarze",
+    "verified": "Zweryfikowane",
+    "commentLabel": "Komentarz",
+    "commentPlaceholder": "Napisz komentarz",
+    "postComment": "Opublikuj komentarz",
+    "submit": "Wyślij",
+    "previousPhoto": "Poprzednie zdjęcie",
+    "nextPhoto": "Następne zdjęcie",
+    "playVideo": "Odtwórz wideo",
+    "pauseVideo": "Wstrzymaj wideo",
+    "share": "Udostępnij",
+    "donation": {
+      "supportTitle": "Wesprzyj {{name}}",
+      "defaultBio": "Ilustrator cyfrowy i artysta koncepcyjny. Twoje wsparcie pomaga {{name}} tworzyć nowe zdjęcia i narzędzia dla społeczności.",
+      "close": "Zamknij formularz darowizny",
+      "selectAmount": "Wybierz kwotę",
+      "customAmount": "Inna kwota",
+      "yourDetails": "Twoje dane",
+      "fullName": "Imię i nazwisko",
+      "fullNamePlaceholder": "Jan Kowalski",
+      "email": "Adres e-mail",
+      "emailPlaceholder": "jan@example.com",
+      "cancel": "Anuluj",
+      "payNow": "Zapłać teraz",
+      "reopen": "Wesprzyj {{name}}"
+    }
+  },
+  "photographerProfile": {
+    "follow": "Obserwuj",
+    "following": "Obserwujesz",
+    "message": "Wiadomość",
+    "aboutTitle": "O mnie i biografia",
+    "competitionTag": "Konkurs",
+    "stats": {
+      "followers": "Obserwujący",
+      "following": "Obserwowani",
+      "profileVisitors": "Odwiedziny profilu",
+      "totalArtwork": "Wszystkie prace",
+      "competitionEntries": "Zgłoszenia konkursowe",
+      "totalHearts": "Suma serduszek"
+    },
+    "statsShort": {
+      "followers": "Obserwujący",
+      "following": "Obserwowani",
+      "profileVisitors": "Odwiedziny",
+      "totalArtwork": "Prace",
+      "competitionEntries": "Konkursy",
+      "totalHearts": "Serduszka"
+    },
+    "featured": {
+      "badge": "Obecnie w konkursie",
+      "uploaded": "Dodano {{date}}",
+      "votes": "{{count}} głosów",
+      "rank": "Miejsce #{{rank}}",
+      "votingEnds": "Głosowanie do: {{date}}",
+      "inspect": "Zobacz szczegóły zgłoszenia",
+      "previous": "Poprzednie wyróżnione zgłoszenie",
+      "next": "Następne wyróżnione zgłoszenie"
+    },
+    "artwork": {
+      "title": "Moje prace",
+      "subtitle": "Przeglądaj pojedyncze zdjęcia, zestawy 6 zdjęć i albumy Zodiac Story z 12 zdjęciami."
+    },
+    "premium": {
+      "title": "Zdjęcia premium",
+      "subtitle": "Przeglądaj pojedyncze zdjęcia, zestawy 6 zdjęć i premium albumy Zodiac Story z 12 zdjęciami."
+    },
+    "filters": {
+      "allArtwork": "Wszystkie prace",
+      "allArtworkShort": "Wszystkie"
+    },
+    "sort": {
+      "label": "Sortuj prace",
+      "newest": "Najnowsze",
+      "oldest": "Najstarsze",
+      "mostLiked": "Najbardziej lubiane",
+      "mostViewed": "Najczęściej oglądane"
+    },
+    "messages": {
+      "title": "Moje wiadomości",
+      "subtitle": "Ogłoszenia fotografa, kulisy pracy i informacje o wystawach.",
+      "publishedCount": "{{count}} opublikowanych aktualizacji",
+      "noteBadge": "Notatka fotografa",
+      "likes": "{{count}} polubień"
+    },
+    "shareBanner": {
+      "badge": "Wsparcie społeczności",
+      "title": "Wesprzyj tego fotografa, udostępniając jego profil znajomym!",
+      "subtitle": "Udostępnij profil w mediach społecznościowych i pomóż mu zdobyć większą widoczność oraz głosy.",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "x": "X",
+      "copyLink": "Kopiuj link do profilu"
+    }
+  },
+  "leaderboard": {
+    "title": "Najlepsi fotografowie",
+    "liveStandings": "{{month}} {{year}} na żywo"
+  },
+  "winners": {
+    "eyebrow": "Zwycięzcy",
+    "title": "Pełne archiwum zwycięzców",
+    "subtitle": "Przeglądaj osiągnięcia, motywy i statystyki zwycięskich prac.",
+    "historicRecords": "REKORDY HISTORYCZNE: {{count}} POZYCJI",
+    "extraPhotos": "+{{count}} zdjęć",
+    "filterAria": "Filtruj zwycięzców według typu albumu",
+    "emptyTitle": "Nie znaleziono zwycięzców",
+    "emptyBody": "Spróbuj innego typu albumu lub miesiąca.",
+    "paginationAria": "Paginacja zwycięzców"
+  },
+  "winnersDetail": {
+    "breadcrumb": {
+      "aria": "Okruszki nawigacji",
+      "winners": "Zwycięzcy"
+    },
+    "summary": "Wpis archiwum dla {{title}} — zwycięska praca z minionych konkursów My12Photos.",
+    "albumType": "Typ albumu",
+    "category": "Kategoria",
+    "votes": "Głosy społeczności",
+    "competitionMonth": "Miesiąc konkursu",
+    "backToArchive": "← Wróć do archiwum zwycięzców"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Skontaktuj się z nami",
+    "name": "Imię",
+    "email": "E-mail",
+    "message": "Wiadomość",
+    "send": "Wyślij wiadomość",
+    "sending": "Wysyłanie...",
+    "success": "Wiadomość wysłana!",
+    "error": "Nie udało się wysłać. Spróbuj ponownie."
+  },
+  "privacy": {
+    "title": "Polityka prywatności",
+    "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Wprowadzenie",
+        "paragraphs": [
+          "Witamy w My12Photos. Ochrona Twojej prywatności jest jednym z naszych najwyższych priorytetów. Niniejsza Polityka prywatności wyjaśnia, jak zbieramy, wykorzystujemy, przechowujemy i chronimy Twoje dane osobowe podczas korzystania z naszej platformy konkursów fotograficznych."
+        ]
+      },
+      {
+        "id": "collect",
+        "title": "2. Jakie informacje zbieramy",
+        "lead": "Możemy zbierać następujące informacje:",
+        "bullets": [
+          "Imię i nazwisko",
+          "Adres e-mail",
+          "Informacje o profilu",
+          "Przesłane zdjęcia i albumy",
+          "Dane o udziale w konkursach",
+          "Aktywność głosowania",
+          "Informacje o urządzeniu i przeglądarce",
+          "Adres IP",
+          "Pliki cookie i dane analityczne"
+        ]
+      },
+      {
+        "id": "use",
+        "title": "3. Jak wykorzystujemy Twoje informacje",
+        "lead": "Twoje informacje są wykorzystywane do:",
+        "bullets": [
+          "Tworzenia i zarządzania kontem",
+          "Umożliwienia udziału w konkursach fotograficznych",
+          "Wyświetlania zgłoszonych prac",
+          "Weryfikacji zwycięzców i wypłaty nagród",
+          "Wysyłania newsletterów i aktualizacji konkursów",
+          "Poprawy wydajności strony i doświadczenia użytkownika",
+          "Zapobiegania oszustwom i nadużyciom"
+        ]
+      },
+      {
+        "id": "ownership",
+        "title": "4. Prawa do zdjęć",
+        "paragraphs": [
+          "Zachowujesz pełne prawa własności do każdego przesłanego zdjęcia.",
+          "Przesyłając zdjęcia do My12Photos, udzielasz nam niewyłącznej licencji na wyświetlanie Twoich obrazów w konkursach, galeriach, materiałach promocyjnych oraz ogłoszeniach zwycięzców."
+        ]
+      },
+      {
+        "id": "payments",
+        "title": "5. Wypłaty nagród",
+        "paragraphs": [
+          "Jeśli zostaniesz zwycięzcą, możemy zebrać dodatkowe dane płatnicze, takie jak adres e-mail PayPal, wyłącznie w celu wypłaty nagrody."
+        ]
+      },
+      {
+        "id": "security",
+        "title": "6. Bezpieczeństwo danych",
+        "paragraphs": [
+          "Stosujemy standardowe w branży środki bezpieczeństwa, aby chronić Twoje dane osobowe przed nieuprawnionym dostępem, ujawnieniem lub niewłaściwym użyciem."
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "7. Usługi zewnętrzne",
+        "lead": "Nasza platforma może korzystać z zaufanych usług zewnętrznych, w tym:",
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal",
+          "Dostawcy usług e-mail"
+        ],
+        "footnotes": [
+          "Każda usługa ma własną politykę prywatności."
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "8. Twoje prawa",
+        "lead": "Możesz:",
+        "bullets": [
+          "Uzyskać dostęp do swoich danych osobowych",
+          "Zaktualizować profil",
+          "Poprosić o usunięcie konta",
+          "Zrezygnować z subskrypcji newslettera",
+          "Skontaktować się z nami w sprawach prywatności"
+        ],
+        "footnotes": [
+          "Każda usługa ma własną politykę prywatności."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "9. Kontakt",
+        "paragraphs": [
+          "Jeśli masz pytania dotyczące niniejszej Polityki prywatności, skontaktuj się z nami przez stronę Kontakt."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Regulamin",
+    "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "1. Wprowadzenie",
+        "paragraphs": [
+          "Witamy w My12Photos.",
+          "Korzystając z tej strony, zgadzasz się przestrzegać niniejszego Regulaminu."
+        ]
+      },
+      {
+        "id": "eligibility",
+        "title": "2. Warunki udziału",
+        "leads": [
+          "Musisz mieć ukończone 18 lat lub posiadać zgodę rodzica albo opiekuna prawnego."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. Konta użytkowników",
+        "leads": [
+          "Użytkownicy są odpowiedzialni za:"
+        ],
+        "bullets": [
+          "Utrzymanie bezpieczeństwa konta",
+          "Podawanie prawdziwych informacji",
+          "Zachowanie poufności danych logowania"
+        ]
+      },
+      {
+        "id": "competitions",
+        "title": "4. Konkursy fotograficzne",
+        "leads": [
+          "Udział jest całkowicie bezpłatny, o ile nie ogłoszono inaczej."
+        ],
+        "listIntro": "Użytkownicy zobowiązują się do:",
+        "bullets": [
+          "Przesyłania wyłącznie oryginalnych treści.",
+          "Przestrzegania zasad konkursu.",
+          "Unikania materiałów chronionych prawem autorskim należących do innych.",
+          "Powstrzymania się od treści obraźliwych, nielegalnych lub nieodpowiednich."
+        ]
+      },
+      {
+        "id": "voting",
+        "title": "5. Głosowanie",
+        "paragraphs": [
+          "Platforma zastrzega sobie prawo do usuwania fałszywych głosów lub dyskwalifikacji użytkowników manipulujących wynikami."
+        ]
+      },
+      {
+        "id": "ip",
+        "title": "6. Własność intelektualna",
+        "paragraphs": [
+          "Użytkownicy zachowują prawa do przesłanych fotografii.",
+          "Biorąc udział, użytkownicy udzielają My12Photos zgody na wyświetlanie zgłoszonych obrazów w celach konkursowych i promocyjnych."
+        ]
+      },
+      {
+        "id": "prizes",
+        "title": "7. Wypłata nagród",
+        "leads": [
+          "Nagrody pieniężne są wypłacane przez PayPal, o ile nie wskazano inaczej.",
+          "Zwycięzcy mogą zostać poproszeni o weryfikację tożsamości przed otrzymaniem wypłaty."
+        ]
+      },
+      {
+        "id": "prohibited",
+        "title": "8. Zabronione działania",
+        "leads": [
+          "Użytkownicy nie mogą:"
+        ],
+        "bullets": [
+          "Przesyłać nielegalnych treści",
+          "Podszywać się pod innych",
+          "Używać botów ani automatycznego głosowania",
+          "Manipulować rankingami",
+          "Próbować nieuprawnionego dostępu",
+          "Nadużywać platformy"
+        ]
+      },
+      {
+        "id": "suspension",
+        "title": "9. Zawieszenie konta",
+        "leads": [
+          "Zastrzegamy sobie prawo do zawieszenia lub usunięcia kont naruszających niniejszy Regulamin."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "10. Zastrzeżenie",
+        "leads": [
+          "Choć dążymy do nieprzerwanej dostępności, My12Photos nie gwarantuje ciągłego działania usługi."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "11. Zmiany",
+        "leads": [
+          "Możemy aktualizować niniejszy Regulamin w dowolnym momencie.",
+          "Dalsze korzystanie z platformy oznacza akceptację zaktualizowanego Regulaminu."
+        ]
+      }
+    ]
+  },
+  "cookies": {
+    "title": "Polityka plików cookie",
+    "lastUpdated": "Ostatnia aktualizacja: lipiec 2026",
+    "intro": "Niniejsza Polityka plików cookie wyjaśnia, w jaki sposób My12Photos używa plików cookie, aby poprawić Twoje doświadczenie przeglądania.",
+    "sections": [
+      {
+        "id": "what-are-cookies",
+        "title": "Czym są pliki cookie?",
+        "leads": [
+          "Pliki cookie to małe pliki tekstowe przechowywane na Twoim urządzeniu, które pomagają stronom zapamiętywać preferencje i poprawiać działanie."
+        ]
+      },
+      {
+        "id": "types",
+        "title": "Rodzaje plików cookie, których używamy",
+        "leads": [
+          "Wymagane do:"
+        ],
+        "bullets": [
+          "Logowania",
+          "Bezpieczeństwa konta",
+          "Zarządzania sesją",
+          "Preferencji językowych"
+        ]
+      },
+      {
+        "id": "performance",
+        "title": "Pliki cookie wydajnościowe",
+        "listIntro": "Służą do:",
+        "bullets": [
+          "Pomiaru wydajności strony",
+          "Poprawy szybkości ładowania",
+          "Analizy zachowań odwiedzających"
+        ]
+      },
+      {
+        "id": "analytics",
+        "title": "Pliki cookie analityczne",
+        "leads": [
+          "Używamy Google Analytics, aby zrozumieć:"
+        ],
+        "bullets": [
+          "Ruch odwiedzających",
+          "Popularne strony",
+          "Zaangażowanie użytkowników",
+          "Wydajność witryny"
+        ]
+      },
+      {
+        "id": "advertising",
+        "title": "Pliki cookie reklamowe",
+        "leads": [
+          "Google Ads może używać plików cookie do wyświetlania trafnych reklam i pomiaru skuteczności reklam."
+        ]
+      },
+      {
+        "id": "functional",
+        "title": "Pliki cookie funkcjonalne",
+        "leads": [
+          "Zapamiętują:"
+        ],
+        "bullets": [
+          "Wybrany język",
+          "Preferencje użytkownika",
+          "Filtry konkursów",
+          "Ustawienia wyświetlania"
+        ]
+      },
+      {
+        "id": "managing",
+        "title": "Zarządzanie plikami cookie",
+        "leads": [
+          "Większość przeglądarek pozwala na:"
+        ],
+        "bullets": [
+          "Akceptację wszystkich plików cookie",
+          "Odrzucenie plików cookie",
+          "Usunięcie zapisanych plików cookie",
+          "Kontrolę preferencji cookie"
+        ]
+      },
+      {
+        "id": "third-party",
+        "title": "Pliki cookie stron trzecich",
+        "leads": [
+          "Niektóre pliki cookie pochodzą z zaufanych usług zewnętrznych, w tym:"
+        ],
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal"
+        ]
+      },
+      {
+        "id": "updates",
+        "title": "Aktualizacje",
+        "leads": [
+          "Możemy okresowo aktualizować tę Politykę plików cookie, aby odzwierciedlać zmiany technologiczne lub wymogi prawne."
+        ]
+      }
+    ]
+  },
+  "competitionDetails": {
+    "back": "Powrót do Moich konkursów",
+    "slidesAria": "Slajdy historii zdjęć",
+    "rankingsAria": "Ranking globalny",
+    "rankingsTitle": "Ranking globalny",
+    "title": "Minimalistyczna monochromia",
+    "description": "Młody mężczyzna pewnie idący spokojną ulicą miasta o złotej godzinie, w casualowej białej koszulce, czarnych jeansach i czystych białych sneakersach. Ręce ma swobodnie opuszczone, naturalną postawę i spokojny wyraz twarzy. Miękkie światło tworzy ciepłe refleksy i długie cienie na chodniku. Nowoczesne budynki, zielone drzewa i lekko rozmazane tło miejskie dodają głębi. Ujęte w cinematicznym, fotorealistycznym stylu z płytką głębią ostrości, ultra-realistyczne, wysoka szczegółowość, jakość 8K.",
+    "metrics": {
+      "votes": "GŁOSY",
+      "position": "Pozycja"
+    },
+    "table": {
+      "rank": "RANGA",
+      "photographer": "FOTOGRAF",
+      "wins": "WYGRANE KONKURSY",
+      "votes": "ŁĄCZNE GŁOSY"
+    },
+    "showing": "Wyświetlanie top {{count}} z {{total}} fotografów",
+    "prevPage": "Poprzednia strona rankingu",
+    "nextPage": "Następna strona rankingu",
+    "signs": {
+      "aries": "Baran",
+      "taurus": "Byk",
+      "gemini": "Bliźnięta",
+      "cancer": "Rak",
+      "leo": "Lew",
+      "virgo": "Panna"
+    },
+    "rankings": {
+      "alessandro": "Alessandro Vieri",
+      "elena": "Elena Soros",
+      "sarah": "Sarah Jenkins",
+      "julian": "Julian Thorne",
+      "marcus": "Marcus Chen"
+    }
+  }
+}

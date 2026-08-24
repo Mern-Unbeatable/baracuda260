@@ -1,5 +1,5 @@
-import React, { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowUpFromLine, Globe, Lock, Mail, Phone } from 'lucide-react';
 import {

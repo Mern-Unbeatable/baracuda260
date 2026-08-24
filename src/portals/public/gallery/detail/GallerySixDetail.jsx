@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
-import GalleryDetailView from '@/portals/public/gallery/detail/GalleryDetailView';
+import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
 import { getGallerySixStoryById } from '@/shared/data/gallerySixStory';
 
 const GallerySixDetail = memo(() => {

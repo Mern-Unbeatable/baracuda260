@@ -1,7 +1,9 @@
-import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo } from 'react';
 import { Shell } from '@/shared/site-chrome';
-import { MarketingButton, MarketingCard, SectionHeader } from '@/shared/ui/marketing';
+import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 
 const AboutCta = memo(() => {
   const { t } = useTranslation();

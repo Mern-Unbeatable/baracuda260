@@ -1,8 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { loginSuccess } from '@/app/store/slices/authSlice';
+import { envVar } from '@/shared/config/env';
 import { ROUTES } from '@/shared/config';
 import { httpMethods } from '@/shared/lib/httpMethods';
 import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
@@ -20,8 +21,8 @@ const LoginContent = memo(() => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState(process.env.REACT_APP_DEV_DEFAULT_EMAIL || '');
-  const [password, setPassword] = useState(process.env.REACT_APP_DEV_DEFAULT_PASSWORD || '');
+  const [email, setEmail] = useState(envVar('DEV_DEFAULT_EMAIL', ''));
+  const [password, setPassword] = useState(envVar('DEV_DEFAULT_PASSWORD', ''));
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -92,7 +93,7 @@ const LoginContent = memo(() => {
         return;
       }
 
-      if (process.env.REACT_APP_DEV_MOCK_AUTH === 'true') {
+      if (envVar('DEV_MOCK_AUTH') === 'true') {
         dispatch(
           loginSuccess({
             user: { email, rememberMe, role: 'user', fullName: email },

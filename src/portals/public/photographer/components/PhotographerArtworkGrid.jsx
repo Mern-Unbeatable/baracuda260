@@ -1,13 +1,11 @@
-import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo, useState } from 'react';
 import { ChevronDown, Images } from 'lucide-react';
 import { matchesAlbumType } from '@/shared/data/albumTypes';
 import { galleryDetailPath } from '@/shared/data/galleryPhotos';
-import {
-  FilterPillGroup,
-  MarketingPagination,
-  PhotoShowcaseCard,
-} from '@/shared/ui/marketing';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
+import Pagination from '@/components/common/Pagination/Pagination';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 import { PROFILE_ALBUM_FILTERS, PROFILE_SORT_OPTIONS } from '@/portals/public/photographer/data/photographerProfileData';
 
@@ -175,7 +173,7 @@ const PhotographerArtworkGrid = memo(
           ))}
         </div>
 
-        <MarketingPagination
+        <Pagination
           className="mt-8"
           currentPage={currentPage}
           totalPages={totalPages}

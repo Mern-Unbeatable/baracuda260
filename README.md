@@ -83,14 +83,13 @@ This is an **enterprise-grade, production-ready React frontend application** bui
 
 | Package                                | Purpose                            |
 | -------------------------------------- | ---------------------------------- |
-| `webpack` ^5                           | Advanced bundler with tree-shaking |
-| `babel-loader`                         | JSX/ES2022+ transpilation          |
-| `tailwindcss` / `@tailwindcss/postcss` | Utility-first CSS                  |
-| `postcss`                              | CSS transformation pipeline        |
+| `vite`                                 | Dev server and production bundler  |
+| `@vitejs/plugin-react`                 | Fast Refresh + JSX                 |
+| `tailwindcss` / `@tailwindcss/vite`    | Tailwind CSS v4 (CSS-first config) |
 | `jest`                                 | Unit test runner                   |
 | `@testing-library/react`               | Component integration testing      |
 | `@testing-library/jest-dom`            | DOM assertion matchers             |
-| `eslint` + `eslint-config-airbnb`      | Code linting (Airbnb standard)     |
+| `eslint`                               | Code linting (flat config)         |
 | `prettier`                             | Automated code formatting          |
 
 ### Prohibited Dependencies
@@ -105,88 +104,54 @@ This is an **enterprise-grade, production-ready React frontend application** bui
 ## 3. Project Structure
 
 ```
-Project/
-├── public/
-│   └── index.html                    # HTML entry — meta tags, preload hints
+my12photos/
+├── index.html                 # HTML entry (Vite)
+├── vite.config.js             # Vite + React + Tailwind v4
+├── jsconfig.json              # `@/` path alias for the editor
+├── public/                    # Static assets served as-is (/assets/…)
 │
 ├── src/
-│   ├── index.jsx                     # App bootstrap, web-vitals init
-│   ├── index.css                     # Global styles (Tailwind @layer)
-│   ├── App.jsx                       # Root: Provider > ErrorBoundary > Router
+│   ├── main.jsx               # App bootstrap
+│   ├── App.jsx                # Root: Redux Provider + Router + Toasts
+│   ├── index.css              # Tailwind v4 + global CSS
 │   │
-│   ├── components/                   # Reusable UI components
-│   │   ├── ErrorBoundary.jsx         # Global error handler with fallback UI
-│   │   ├── Layout.jsx                # Main layout wrapper (nav + outlet)
-│   │   ├── ThemeToggle.jsx           # Dark/light theme switcher
-│   │   ├── CartExample.jsx           # Cart demo (Redux integration)
-│   │   ├── LoginExample.jsx          # Auth demo (Redux integration)
-│   │   │
-│   │   ├── home/                     # Home page feature components
-│   │   │   └── HomeContent.jsx
-│   │   ├── about/                    # About page feature components
-│   │   │   └── AboutContent.jsx
-│   │   ├── contact/                  # Contact page feature components
-│   │   │   └── ContactContent.jsx
-│   │   ├── services/                 # Services page feature components
-│   │   │   └── ServicesContent.jsx
-│   │   │
-│   │   └── layout/                   # Role-based layout shells
-│   │       ├── admin/                # Admin dashboard layout
-│   │       ├── auth/                 # Unauthenticated layout
-│   │       └── user/                 # Authenticated user layout
+│   ├── app/
+│   │   ├── router/            # All routes (split by portal)
+│   │   └── store/             # Redux store + slices
 │   │
-│   ├── pages/                        # Route-level page components (thin wrappers)
-│   │   ├── Home.jsx
-│   │   ├── About.jsx
-│   │   ├── Contact.jsx
-│   │   ├── Services.jsx
-│   │   └── ReduxDemo.jsx
+│   ├── layouts/               # PublicLayout, AppShellLayout, etc.
 │   │
-│   ├── router/
-│   │   └── router.jsx                # Centralized route definitions
+│   ├── portals/               # Feature areas by audience
+│   │   ├── public/            # Marketing site (home, gallery, …)
+│   │   ├── member/            # Logged-in member dashboard
+│   │   ├── admin/             # Admin panel
+│   │   └── auth/              # Login / signup
 │   │
-│   ├── store/                        # Redux state management
-│   │   ├── store.js                  # Configured Redux store
-│   │   └── slices/
-│   │       ├── authSlice.js          # Auth state (login/logout/user)
-│   │       ├── themeSlice.js         # Theme state (dark/light)
-│   │       └── cartSlice.js          # Cart state (items/total)
-│   │
-│   ├── services/                     # API integration layer
-│   │   ├── axiosInstance.js          # Axios with interceptors + auth headers
-│   │   ├── httpEndpoint.js           # Centralized API endpoint constants
-│   │   └── httpMethods.js            # Abstracted HTTP CRUD methods
-│   │
-│   ├── hooks/                        # Custom React hooks
-│   │   ├── useApi.js                 # Data fetching with loading/error state
-│   │   └── useSEO.js                 # Dynamic meta tag management
-│   │
-│   ├── i18n/
-│   │   └── locales/
-│   │       ├── en.json               # English translations
-│   │       └── fr.json               # French translations
-│   │
-│   ├── utils/                        # Pure utility functions
-│   │   ├── auth.js                   # Token/cookie auth helpers
-│   │   ├── seo.js                    # Structured data + meta generators
-│   │   └── web-vitals.js             # RUM + performance monitoring
-│   │
-│   └── config/
-│       └── index.js                  # Env-based app config (API URLs, routes)
+│   └── shared/                # Reused across portals
+│       ├── config/            # Routes, API URLs, env helpers
+│       ├── hooks/
+│       ├── i18n/locales/
+│       ├── lib/               # axios, HTTP helpers
+│       ├── site-chrome/       # Header, footer, nav
+│       └── ui/                # Buttons, ErrorBoundary, …
 │
-
-├── package.json
-├── webpack.config.js                 # Webpack 5 with content-hashing + splits
-├── postcss.config.js                 # Tailwind CSS pipeline
-├── .env.example                      # Environment variable template
-├── .eslintrc.js                      # Airbnb ESLint rules
-├── .prettierrc                       # Prettier formatting rules
-├── README.md                         # This file — read before contributing
-├── REDUX_GUIDE.md                    # Redux patterns reference
-└── frontend-architecture.md         # Deep architecture documentation
+├── .env.example               # Copy to `.env` — use `VITE_` prefix
+├── jest.config.js
+├── eslint.config.mjs
+└── package.json
 ```
 
-### Why Feature-Based? Anti-Pattern vs. This Project
+**Import rule:** use `@/` for anything outside the current folder (e.g. `@/shared/config`, `@/portals/public/home/Home`).
+
+### Why This Layout?
+
+| Folder | When to add code here |
+| --- | --- |
+| `portals/[name]/pages/` | Route-level page (thin wrapper) |
+| `portals/[name]/views/` | Page content / sections |
+| `portals/[name]/components/` | UI used only inside that portal |
+| `shared/` | Used by two or more portals |
+| `app/router/` | New URL → register route here |
 
 Organizing by feature — not by file type alone — keeps the project navigable as it grows. Never dump unrelated files into a flat folder.
 
@@ -240,23 +205,26 @@ npm install
 cp .env.example .env
 
 # 3. Start development server (http://localhost:5173)
-npm start
+npm run dev
 
 # 4. Run tests
 npm test
 
 # 5. Production build (output: /dist)
 npm run build
+
+# Preview production build
+npm run preview
 ```
 
 ### Environment Variables
 
+Use the `VITE_` prefix (see `.env.example`). Read values through `@/shared/config` or `@/shared/config/env` — do not use `process.env` in app code.
+
 ```env
-# .env.example
-NODE_ENV=development
-REACT_APP_API_URL=https://api.example.com
-REACT_APP_ANALYTICS_ID=your_ga_id
-REACT_APP_DEFAULT_LOCALE=en
+VITE_API_BASE_URL=https://api.example.com
+VITE_SEO_TITLE=My12Photos
+VITE_SOCKET_URL=https://api.example.com
 ```
 
 ---
@@ -871,7 +839,7 @@ export const ROUTES = {
 
 ### Rules
 
-- `historyApiFallback: true` in webpack dev server (already configured)
+- Vite dev server handles SPA routing in development
 - Server must redirect all routes to `index.html` in production (SPA routing)
 - Protected routes must check `isAuthenticated` from Redux before rendering
 - All page components lazy-loaded for performance (code splitting)

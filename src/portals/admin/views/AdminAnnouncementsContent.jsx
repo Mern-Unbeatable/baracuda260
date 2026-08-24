@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
 import { Clock, Plus, Square, X } from 'lucide-react';
 import {
   ACTION_MENU_OPTIONS,
@@ -21,8 +21,8 @@ import {
 } from '@/portals/admin/data/adminAnnouncementsData';
 import useAdminAnnouncements from '@/portals/admin/hooks/useAdminAnnouncements';
 import CreateAnnouncementModal from '@/portals/admin/components/admin-announcements/CreateAnnouncementModal';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 const ACTION_MENU_OFFSET_PX = 6;
 const ACTION_MENU_FALLBACK_HEIGHT_PX = 148;

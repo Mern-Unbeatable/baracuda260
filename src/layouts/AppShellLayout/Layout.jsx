@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { useState, useEffect, memo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Menu } from 'lucide-react';
 import { ROUTES } from '@/shared/config';

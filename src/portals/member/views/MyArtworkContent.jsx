@@ -1,14 +1,15 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import { FilterPillGroup, MarketingPagination } from '@/shared/ui/marketing';
-import MemberArtworkCard from '@/portals/member/components/member-artwork/MemberArtworkCard';
-import MemberArtworkStatCard from '@/portals/member/components/member-artwork/MemberArtworkStatCard';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import Pagination from '@/components/common/Pagination/Pagination';
+import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
+import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard';
 import MemberFilterSelect from '@/portals/member/components/member-artwork/MemberFilterSelect';
-import MemberPromotePanel from '@/portals/member/components/member-artwork/MemberPromotePanel';
+import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
 import {
   matchesMyArtworkFilter,
   matchesMyArtworkStatus,
@@ -145,7 +146,7 @@ const MyArtworkContent = memo(() => {
       ) : (
         <section
           aria-label={t('myArtwork.gridAria')}
-          className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4"
+          className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
         >
           {pagedItems.map((item) => (
             <MemberArtworkCard
@@ -171,7 +172,7 @@ const MyArtworkContent = memo(() => {
               total: filteredItems.length,
             })}
           </p>
-          <MarketingPagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setPage}

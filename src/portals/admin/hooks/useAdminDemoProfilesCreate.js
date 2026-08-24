@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { ROUTES } from '@/shared/config';
 import {

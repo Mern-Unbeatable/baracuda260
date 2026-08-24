@@ -1,5 +1,5 @@
-import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo, useState } from 'react';
 import { ROUTES } from '@/shared/config';
 import { ImgIcon, Shell, SitePageLayout, useMonthMenu } from '@/shared/site-chrome';
 import {
@@ -10,12 +10,10 @@ import {
   WINNERS_ARCHIVE as WINNERS,
   winnerDetailPath,
 } from '@/portals/public/winners/data/winnersArchive';
-import {
-  FilterPillGroup,
-  MarketingPagination,
-  PhotoShowcaseCard,
-  SectionHeader,
-} from '@/shared/ui/marketing';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
+import Pagination from '@/components/common/Pagination/Pagination';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const PAGE_SIZE = 8;
@@ -189,7 +187,7 @@ const WinnersContent = memo(() => {
                   />
                 ))}
               </div>
-              <MarketingPagination
+              <Pagination
                 className="mt-10"
                 currentPage={currentPage}
                 totalPages={totalPages}

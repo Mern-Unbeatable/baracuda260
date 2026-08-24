@@ -7,7 +7,6 @@ export { default as SiteHeader } from './SiteHeader';
 export { default as SiteNewsletter } from './StayUpdated';
 export { default as StayUpdated } from './StayUpdated';
 export { default as SiteFooter } from './SiteFooter';
-export { default as LanguageSwitcher } from './LanguageSwitcher';
 export { default as useSitePageStyles } from './useSitePageStyles';
 export { default as useMonthMenu } from './useMonthMenu';
 export { SITE_ASSETS, SITE_ASSET_BASE, homeAsset } from './siteAssets';

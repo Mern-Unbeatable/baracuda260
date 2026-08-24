@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
 import {
   ADMIN_WINNERS_ASSETS,
@@ -19,7 +19,7 @@ import {
   isMedalRank,
 } from '@/portals/admin/data/adminWinnersData';
 import useAdminWinners from '@/portals/admin/hooks/useAdminWinners';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /**
  * @param {{
