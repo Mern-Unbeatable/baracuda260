@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import PublicLayout from '@/layouts/PublicLayout';
 import AppShellLayout from '@/layouts/AppShellLayout/Layout';
-import ScrollToTop from '@/shared/ui/ScrollToTop';
+import ScrollToTop from '@/components/common/ScrollToTop/ScrollToTop';
 import { ROUTES } from '@/shared/config';
 import ProtectedRoute from './guards/ProtectedRoute';
 import PageLoader from './ui/PageLoader';
@@ -37,6 +37,7 @@ const WinnerDetail = lazy(() => import('@/portals/public/winners/WinnerDetail'))
 const Privacy = lazy(() => import('@/portals/public/legal/privacy/Privacy'));
 const Terms = lazy(() => import('@/portals/public/legal/terms/Terms'));
 const Cookies = lazy(() => import('@/portals/public/legal/cookies/Cookies'));
+const DeveloperPage = lazy(() => import('@/pages/DeveloperPage'));
 const Login = lazy(() => import('@/portals/auth/pages/Login'));
 const SignUp = lazy(() => import('@/portals/auth/pages/SignUp'));
 
@@ -138,6 +139,23 @@ const router = createBrowserRouter(
         element={
           <Suspense fallback={<PageLoader />}>
             <SignUp />
+          </Suspense>
+        }
+      />
+
+      <Route
+        path={ROUTES.DEVELOPER}
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <DeveloperPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path={ROUTES.DEVELOPER_COMPONENT}
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <DeveloperPage />
           </Suspense>
         }
       />

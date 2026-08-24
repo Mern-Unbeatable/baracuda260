@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
-import { MarketingSearchBar } from '@/shared/ui/marketing';
+import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
 
 const SLIDES = ['/assets/hero/hero.png', '/assets/hero/hero1.png'];
 const SLIDE_MS = 6000;

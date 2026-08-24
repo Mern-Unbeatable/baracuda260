@@ -4,7 +4,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Check, Download } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { loadLastBuyPurchase } from '@/shared/data/buyPhotos';
-import { MarketingButton, MarketingCard } from '@/shared/ui/marketing';
+import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 
 const BuyPhotosSuccessMain = memo(() => {

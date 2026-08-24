@@ -16,7 +16,7 @@ import {
   REVENUE_CHART,
   REVENUE_PERIODS,
 } from '@/portals/admin/data/adminOverviewData';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /** Smooth line path (horizontal-tangent cubic beziers) through equally spaced points. */
 const buildLinePath = (values, width) => {

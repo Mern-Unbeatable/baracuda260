@@ -3,19 +3,19 @@ import React, { memo, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
-import GalleryDetailVideo from '@/portals/public/gallery/detail/components/GalleryDetailVideo';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
 import {
   GALLERY_DETAIL_ASSETS,
   GALLERY_DETAIL_SLIDE_MS,
   GALLERY_DETAIL_VARIANTS,
   resolveGalleryDetailMedia,
+  resolveGalleryImageDetails,
   isBlueSlide,
-} from '@/portals/public/gallery/detail/galleryDetailShared';
-import {
-  SignBadge,
-  SixStoryStrip,
-  TwelveStoryStrip,
-} from '@/portals/public/gallery/detail/galleryDetailStrips';
+} from '@/shared/data/galleryDetail';
+import SignBadge from '@/components/data-display/SignBadge/SignBadge';
+import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
+import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
 import { getSellPhotoDetailById } from '@/portals/member/data/sellPhotosDetailData';
 
 const SHOWCASE_BADGE_KEYS = {
@@ -71,6 +71,12 @@ const MemberSellPhotoDetailContent = memo(() => {
   const heroSrc = activeSlide?.hero || detail.image;
   const heroAlt = activeSlide?.sign ? `${detail.title} — ${activeSlide.sign}` : detail.title;
   const { videoPoster, videoSrc } = resolveGalleryDetailMedia(detail, heroSrc);
+  const imageDetails = resolveGalleryImageDetails({
+    ...detail,
+    photographer: detail.photographer ?? detail.author,
+    badge: detail.badge,
+    date: detail.uploadedDate,
+  });
 
   const badgeLabel =
     detail.variant === 'twelve'
@@ -186,6 +192,8 @@ const MemberSellPhotoDetailContent = memo(() => {
           </span>
         ))}
       </div>
+
+      <GalleryDetailImageDetails details={imageDetails} />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <DetailPanel title={t('sellPhotos.detail.listingTitle')}>

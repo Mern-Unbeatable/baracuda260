@@ -2,8 +2,8 @@ import React, { memo } from 'react';
 import { useSEO } from '@/shared/hooks/useSEO';
 import { ROUTES } from '@/shared/config';
 import { SitePageLayout } from '@/shared/site-chrome';
-import ActiveCompetitions from '@/portals/public/shared/sections/ActiveCompetitions';
-import HowItWorks from '@/portals/public/shared/sections/HowItWorks';
+import ActiveCompetitions from '@/components/marketing/ActiveCompetitions/ActiveCompetitions';
+import HowItWorks from '@/components/marketing/HowItWorks/HowItWorks';
 
 const AlbumTypes = memo(() => {
   useSEO({

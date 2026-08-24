@@ -4,7 +4,7 @@ import ChatPanel from '@/portals/member/components/member-support/chat/ChatPanel
 
 const Messages = memo(() => {
   useSEO({
-    title: 'Messages | Admin",
+    title: 'Messages | Admin',
     description: "Manage conversations with users and clients.",
     keywords: ["messages", "chat", "admin", "conversations"],
   });

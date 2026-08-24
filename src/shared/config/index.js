@@ -28,6 +28,8 @@ export const ROUTES = {
   PRIVACY: '/privacy',
   TERMS: '/terms',
   COOKIES: '/cookies',
+  DEVELOPER: '/developer',
+  DEVELOPER_COMPONENT: '/developer/:componentId',
   LOGIN: '/login',
   SIGNUP: '/signup',
   ADMIN: '/admin',

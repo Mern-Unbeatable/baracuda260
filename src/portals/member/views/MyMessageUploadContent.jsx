@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowUpFromLine, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { ROUTES } from '@/shared/config';
-import { MarketingButton } from '@/shared/ui/marketing';
+import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 
 const MyMessageUploadContent = memo(() => {
   const { t } = useTranslation();

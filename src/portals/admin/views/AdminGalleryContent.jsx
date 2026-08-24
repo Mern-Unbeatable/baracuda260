@@ -12,7 +12,7 @@ import {
   METRIC_ICON_SIZE,
 } from '@/portals/admin/data/adminGalleryData';
 import useAdminGalleryShowcase from '@/portals/admin/hooks/useAdminGalleryShowcase';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 /** @param {{ icon: string, value: string, tone?: 'default' | 'accent' }} props */
 const MetricStat = memo(({ icon, value, tone = 'default' }) => (

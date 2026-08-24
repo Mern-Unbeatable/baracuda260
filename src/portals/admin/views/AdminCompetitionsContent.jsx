@@ -12,7 +12,7 @@ import {
   METRIC_ICON_SIZE,
 } from '@/portals/admin/data/adminCompetitionsData';
 import useAdminCompetitionsShowcase from '@/portals/admin/hooks/useAdminCompetitionsShowcase';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 /** @param {{ icon: string, value: string, tone?: 'default' | 'accent' }} props */
 const MetricStat = memo(({ icon, value, tone = 'default' }) => (

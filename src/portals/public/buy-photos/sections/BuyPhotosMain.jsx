@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { ROUTES } from '@/shared/config';
 import { BUY_PHOTOS, buyPhotoDetailPath } from '@/shared/data/buyPhotos';
-import PhotoShowcasePageContent from '@/shared/ui/marketing/PhotoShowcasePageContent';
+import PhotoShowcasePageContent from '@/components/marketing/PhotoShowcasePageContent/PhotoShowcasePageContent';
 
 const BuyPhotosMain = memo(() => (
   <PhotoShowcasePageContent

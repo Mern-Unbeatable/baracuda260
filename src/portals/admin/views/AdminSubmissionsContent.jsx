@@ -9,8 +9,8 @@ import {
   SUBMISSION_TYPE_KEYS,
 } from '@/portals/admin/data/adminSubmissionsData';
 import useAdminSubmissions from '@/portals/admin/hooks/useAdminSubmissions';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 /**
  * @param {{

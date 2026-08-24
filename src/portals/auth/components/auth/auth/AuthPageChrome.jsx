@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
-import { LanguageSwitcher } from '@/shared/site-chrome';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher/LanguageSwitcher';
 
 /**
  * Shared auth chrome: back-home + language switcher (login / signup).

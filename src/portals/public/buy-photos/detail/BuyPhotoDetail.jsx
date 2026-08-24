@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
 import { ROUTES } from '@/shared/config';
 import { getBuyPhotoById } from '@/shared/data/buyPhotos';
-import BuyPhotoDetailView from '@/portals/public/buy-photos/detail/BuyPhotoDetailView';
+import BuyPhotoDetailView from '@/components/data-display/BuyPhotoDetailView/BuyPhotoDetailView';
 
 const BuyPhotoDetail = memo(() => {
   const { id } = useParams();

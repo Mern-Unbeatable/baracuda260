@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import { MarketingPagination } from '@/shared/ui/marketing';
-import MemberMessageCard from '@/portals/member/components/member-messages/MemberMessageCard';
+import Pagination from '@/components/common/Pagination/Pagination';
+import MemberMessageCard from '@/components/data-display/MemberMessageCard/MemberMessageCard';
 import { MY_MESSAGES, MY_MESSAGES_PAGE_SIZE } from '@/portals/member/data/myMessagesData';
 
 const MyMessagesContent = memo(() => {
@@ -46,7 +46,7 @@ const MyMessagesContent = memo(() => {
 
       {MY_MESSAGES.length > 0 ? (
         <footer className="flex flex-col items-center gap-4">
-          <MarketingPagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setPage}

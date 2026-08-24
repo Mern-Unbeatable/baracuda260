@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import { FilterPillGroup, MarketingPagination } from '@/shared/ui/marketing';
-import MemberSellPhotoCard from '@/portals/member/components/member-sell-photos/MemberSellPhotoCard';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import Pagination from '@/components/common/Pagination/Pagination';
+import MemberSellPhotoCard from '@/components/data-display/MemberSellPhotoCard/MemberSellPhotoCard';
 import MemberUploadFormatMenu from '@/portals/member/components/member-sell-photos/MemberUploadFormatMenu';
-import MemberPromotePanel from '@/portals/member/components/member-artwork/MemberPromotePanel';
+import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
 import {
   matchesSellPhotosFilter,
   SELL_PHOTOS_FILTER_TABS,
@@ -99,7 +100,7 @@ const SellPhotosContent = memo(() => {
               total: filteredItems.length,
             })}
           </p>
-          <MarketingPagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setPage}

@@ -7,7 +7,7 @@ import {
 } from '@/portals/admin/data/adminCategoriesData';
 import useAdminCategories from '@/portals/admin/hooks/useAdminCategories';
 import AddCategoryModal from '@/portals/admin/components/admin-categories/AddCategoryModal';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /**
  * @param {{

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import { ImgIcon, Shell } from '@/shared/site-chrome';
-import { SectionHeader } from '@/shared/ui/marketing';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import { ABOUT_ASSETS } from '@/portals/public/about/data/aboutAssets';
 import { ABOUT_STEPS } from '@/portals/public/about/data/aboutData';
 

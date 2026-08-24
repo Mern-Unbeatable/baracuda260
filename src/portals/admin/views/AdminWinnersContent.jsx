@@ -19,7 +19,7 @@ import {
   isMedalRank,
 } from '@/portals/admin/data/adminWinnersData';
 import useAdminWinners from '@/portals/admin/hooks/useAdminWinners';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /**
  * @param {{

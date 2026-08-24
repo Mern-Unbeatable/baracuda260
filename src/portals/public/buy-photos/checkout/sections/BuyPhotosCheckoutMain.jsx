@@ -9,7 +9,8 @@ import {
   saveLastBuyPurchase,
 } from '@/shared/data/buyPhotos';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
-import { MarketingButton, MarketingCard } from '@/shared/ui/marketing';
+import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 
 const INPUT_CLASS =

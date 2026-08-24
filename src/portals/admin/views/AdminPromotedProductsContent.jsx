@@ -11,7 +11,7 @@ import {
   getPromotedDetailPath,
 } from '@/portals/admin/data/adminPromotedProductsData';
 import useAdminPromotedProductsShowcase from '@/portals/admin/hooks/useAdminPromotedProductsShowcase';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 const PromotedCard = memo(({ card }) => {
   const { t } = useTranslation();

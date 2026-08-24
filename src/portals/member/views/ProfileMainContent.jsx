@@ -4,8 +4,8 @@ import PhotographerArtworkGrid from '@/portals/public/photographer/components/Ph
 import PhotographerFeaturedCompetition from '@/portals/public/photographer/components/PhotographerFeaturedCompetition';
 import PhotographerMessagesSection from '@/portals/public/photographer/components/PhotographerMessagesSection';
 import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
-import MemberProfileCoverHeader from '@/portals/member/components/member-profile/MemberProfileCoverHeader';
-import MemberProfileStatsBar from '@/portals/member/components/member-profile/MemberProfileStatsBar';
+import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader';
+import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar';
 import {
   MEMBER_ARTWORK,
   MEMBER_FEATURED,

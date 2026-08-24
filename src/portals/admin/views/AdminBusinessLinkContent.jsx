@@ -8,8 +8,8 @@ import {
   getBusinessLinkDetailPath,
 } from '@/portals/admin/data/adminBusinessLinkData';
 import useAdminBusinessLink from '@/portals/admin/hooks/useAdminBusinessLink';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
-import AdminPagination from '@/portals/admin/components/ui/AdminPagination';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 /**
  * @param {{

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { ImgIcon, Shell } from '@/shared/site-chrome';
-import { SectionHeader } from '@/shared/ui/marketing';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import { ABOUT_COMMUNITY_FEATURES, ABOUT_COMMUNITY_IMAGES } from '@/portals/public/about/data/aboutData';
 
 const AboutCommunity = memo(() => {

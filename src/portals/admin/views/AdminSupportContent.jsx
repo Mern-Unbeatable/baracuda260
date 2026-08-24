@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import AnswerPublishModal from '@/portals/admin/components/admin-support/AnswerPublishModal';
-import AdminPageHeader from '@/portals/admin/components/ui/AdminPageHeader';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import {
   ADMIN_SUPPORT_ASSETS,
   AVATAR_SIZE,

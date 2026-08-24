@@ -6,7 +6,7 @@ import { ACTION_BTN_PRIMARY } from '@/shared/ui/actionStyles';
 import { selectIsAuthenticated } from '@/app/store/slices/authSlice';
 import { SITE_ASSETS } from './siteAssets';
 import AppLink from './AppLink';
-import LanguageSwitcher from './LanguageSwitcher';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher/LanguageSwitcher';
 
 const SiteHeader = memo(({ activeHref }) => {
   const { t } = useTranslation();
