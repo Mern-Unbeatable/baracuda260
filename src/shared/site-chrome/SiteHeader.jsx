@@ -34,7 +34,7 @@ const SiteHeader = memo(({ activeHref }) => {
       <AppLink
         href={ROUTES.LOGIN}
         onClick={() => setMenuOpen(false)}
-        className={`${headerBtnClass} bg-[#4048cd] hover:bg-[#363eb8]`}
+        className={`${headerBtnClass} !bg-[#4048CD] !hover:bg-[#333BB0]`}
       >
         {t('header.logIn')}
       </AppLink>
@@ -82,7 +82,7 @@ const SiteHeader = memo(({ activeHref }) => {
           ))}
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-2 sm:gap-3 2xl:flex 2xl:gap-4">
+      <div className="hidden shrink-0 items-center gap-2 sm:gap-3 2xl:flex 2xl:gap-4">
           <LanguageSwitcher />
           <div className="flex items-center gap-2 2xl:gap-4 [&_a]:px-4 [&_a]:py-2.5 [&_a]:text-[14px] min-[1920px]:[&_a]:px-6 min-[1920px]:[&_a]:py-3 min-[1920px]:[&_a]:text-[16px]">
             {authActions}

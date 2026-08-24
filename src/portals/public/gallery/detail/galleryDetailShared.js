@@ -37,6 +37,35 @@ export const resolveGalleryDetailMedia = (story, heroSrc) => ({
   donationBio: story.donationBio || null,
 });
 
+export const DEFAULT_GALLERY_IMAGE_DETAILS = {
+  credit: 'Wong kar-wai',
+  creativeNumber: '2278500954',
+  resolution: '1200×800',
+  quality: '4K',
+  fileType: 'JPEG',
+  fileSize: '125 KB',
+  uploadDate: '01 June, 2026',
+  categories: 'Stock Photos Flower',
+};
+
+export const resolveGalleryImageDetails = (story) => {
+  const fromStory = story.imageDetails ?? {};
+  const categories = [story.category, story.badge].filter(Boolean).join(' ');
+
+  return {
+    credit: fromStory.credit ?? story.photographer ?? DEFAULT_GALLERY_IMAGE_DETAILS.credit,
+    creativeNumber:
+      fromStory.creativeNumber ?? story.creativeNumber ?? DEFAULT_GALLERY_IMAGE_DETAILS.creativeNumber,
+    resolution: fromStory.resolution ?? story.resolution ?? DEFAULT_GALLERY_IMAGE_DETAILS.resolution,
+    quality: fromStory.quality ?? DEFAULT_GALLERY_IMAGE_DETAILS.quality,
+    fileType: fromStory.fileType ?? story.format ?? DEFAULT_GALLERY_IMAGE_DETAILS.fileType,
+    fileSize: fromStory.fileSize ?? DEFAULT_GALLERY_IMAGE_DETAILS.fileSize,
+    uploadDate: fromStory.uploadDate ?? story.date ?? DEFAULT_GALLERY_IMAGE_DETAILS.uploadDate,
+    categories:
+      fromStory.categories ?? (categories || DEFAULT_GALLERY_IMAGE_DETAILS.categories),
+  };
+};
+
 /**
  * @typedef {'single' | 'six' | 'sixBlue' | 'twelve'} GalleryDetailVariantId
  */

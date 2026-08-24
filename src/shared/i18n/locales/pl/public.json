@@ -2,7 +2,7 @@
   "home": {
     "hero": {
       "badge": "Konkursy trwają — lipiec 2026",
-      "title": "12 zdjęć — pełna historia zodiaku",
+      "title": "Opowiedz nam swoją historię za pomocą 12 zdjęć — tak, jak słońce opowiada swoją za pomocą 12 znaków zodiaku",
       "subtitle": "Dołącz do ponad 12 000 fotografów. Darmowe konkursy, głosowanie społeczności, nagrody pieniężne co miesiąc.",
       "searchPlaceholder": "Szukaj",
       "ctaJoin": "Dołącz do konkursu",
@@ -193,6 +193,55 @@
     "lastPage": "Ostatnia strona",
     "favorite": "Dodaj do ulubionych: {{title}}",
     "unfavorite": "Usuń z ulubionych: {{title}}",
+    "save": "Zapisz",
+    "saved": "Zapisano",
+    "saveAction": "Zapisz {{title}}",
+    "unsave": "Usuń z zapisanych {{title}}",
+    "moreActions": "Więcej akcji",
+    "reportModal": {
+      "title": "Zgłoś to zdjęcie",
+      "subtitle": "Pomóż nam dbać o bezpieczeństwo społeczności. Powiedz nam, co jest nie tak z tą treścią.",
+      "close": "Zamknij",
+      "cancel": "Anuluj",
+      "submit": "Wyślij zgłoszenie",
+      "detailsLabel": "Opisz problem dokładniej",
+      "detailsPlaceholder": "Krótko wyjaśnij, dlaczego uważasz, że ta treść narusza nasze zasady.",
+      "reasonRequired": "Wybierz powód przed wysłaniem zgłoszenia.",
+      "reasons": {
+        "copyright": {
+          "title": "Naruszenie praw autorskich",
+          "description": "To zdjęcie wykorzystuje moją pracę bez pozwolenia."
+        },
+        "illegal": {
+          "title": "Treść nielegalna lub zabroniona",
+          "description": "Ta treść łamie lokalne prawo lub zasady platformy."
+        },
+        "harmful": {
+          "title": "Szkodliwa lub niebezpieczna treść",
+          "description": "Ta treść promuje przemoc lub niebezpieczne zachowania."
+        },
+        "offensive": {
+          "title": "Obraźliwa lub nękająca treść",
+          "description": "Ta treść zawiera mowę nienawiści lub nękanie."
+        },
+        "nudity": {
+          "title": "Nagość lub treści seksualne",
+          "description": "To zdjęcie zawiera materiał wulgarny lub nieodpowiedni."
+        },
+        "spam": {
+          "title": "Spam lub wprowadzająca w błąd treść",
+          "description": "Ta treść jest fałszywa, promocyjna lub oszukańcza."
+        },
+        "stolen": {
+          "title": "Skradzione zdjęcie",
+          "description": "To zdjęcie pochodzi od innego fotografa."
+        },
+        "other": {
+          "title": "Inne",
+          "description": "Coś innego, czego nie ma na liście."
+        }
+      }
+    },
     "paginationAria": "Paginacja galerii",
     "page": "Strona {{page}}"
   },
@@ -283,6 +332,18 @@
       "gallery": "Galeria"
     },
     "download": "Pobierz",
+    "downloadPhoto": "Pobierz zdjęcie",
+    "imageDetails": {
+      "title": "Szczegóły zdjęcia",
+      "credit": "Autor:",
+      "creativeNumber": "Numer Creative #:",
+      "resolution": "Rozdzielczość:",
+      "quality": "Jakość:",
+      "fileType": "Typ pliku:",
+      "fileSize": "Rozmiar pliku:",
+      "uploadDate": "Data przesłania:",
+      "categories": "Kategorie:"
+    },
     "votesReceived": "OTRZYMANE GŁOSY",
     "viewsCounted": "WYŚWIETLENIA",
     "castVote": "Oddaj głos",

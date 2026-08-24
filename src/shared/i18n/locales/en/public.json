@@ -2,7 +2,7 @@
   "home": {
     "hero": {
       "badge": "Competitions live — July 2026",
-      "title": "12 Photos - Full Zodiac Story",
+      "title": "Tell us your story using 12 photos, same as the sun is telling us his using 12 signs of the zodiac",
       "subtitle": "Join over 12,000 photographers. Free competitions, community voting, cash prizes every month.",
       "searchPlaceholder": "Search",
       "ctaJoin": "Join a Competition",
@@ -193,6 +193,55 @@
     "lastPage": "Last page",
     "favorite": "Favorite {{title}}",
     "unfavorite": "Unfavorite {{title}}",
+    "save": "Save",
+    "saved": "Saved",
+    "saveAction": "Save {{title}}",
+    "unsave": "Unsave {{title}}",
+    "moreActions": "More actions",
+    "reportModal": {
+      "title": "Report This Photo",
+      "subtitle": "Help us keep the community safe. Please tell us what is wrong with this content.",
+      "close": "Close",
+      "cancel": "Cancel",
+      "submit": "Submit Report",
+      "detailsLabel": "Tell us more about the problem",
+      "detailsPlaceholder": "Please briefly explain why you believe this content violates our rules.",
+      "reasonRequired": "Please select a reason before submitting.",
+      "reasons": {
+        "copyright": {
+          "title": "Copyright Infringement",
+          "description": "This photo uses my work without permission."
+        },
+        "illegal": {
+          "title": "Illegal or Prohibited Content",
+          "description": "This content breaks local laws or platform rules."
+        },
+        "harmful": {
+          "title": "Harmful or Dangerous Content",
+          "description": "This content promotes violence or dangerous behavior."
+        },
+        "offensive": {
+          "title": "Offensive or Abusive Content",
+          "description": "This content contains hate speech or harassment."
+        },
+        "nudity": {
+          "title": "Nudity or Sexual Content",
+          "description": "This photo contains explicit or inappropriate material."
+        },
+        "spam": {
+          "title": "Spam or Misleading Content",
+          "description": "This content is fake, promotional, or deceptive."
+        },
+        "stolen": {
+          "title": "Stolen Photo",
+          "description": "This photo was taken from another photographer."
+        },
+        "other": {
+          "title": "Other",
+          "description": "Something else not listed above."
+        }
+      }
+    },
     "paginationAria": "Gallery pagination",
     "page": "Page {{page}}"
   },
@@ -283,6 +332,18 @@
       "gallery": "Gallery"
     },
     "download": "Download",
+    "downloadPhoto": "Download Photo",
+    "imageDetails": {
+      "title": "Image Details",
+      "credit": "Credit:",
+      "creativeNumber": "Creative #:",
+      "resolution": "Resolution:",
+      "quality": "Quality:",
+      "fileType": "File Type:",
+      "fileSize": "File size:",
+      "uploadDate": "Upload date:",
+      "categories": "Categories:"
+    },
     "votesReceived": "VOTES RECEIVED",
     "viewsCounted": "VIEWS COUNTED",
     "castVote": "Cast Your Vote",

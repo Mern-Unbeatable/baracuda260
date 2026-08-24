@@ -47,11 +47,11 @@ const HomeHero = memo(() => {
       <div className="relative z-20 mx-auto flex min-h-140 w-full max-w-480 items-center px-4 py-16 sm:px-6 md:min-h-180 md:px-10 xl:min-h-200 xl:px-48">
         <div className="flex w-full max-w-225 flex-col gap-9">
           <div className="flex flex-col gap-3">
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4.25 py-1.75">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1">
               <span className="size-2 rounded-full bg-[#05df72]" />
               <span className="text-sm font-semibold text-white">{t('home.hero.badge')}</span>
             </div>
-            <h1 className="text-[36px] font-bold uppercase leading-[1.15] tracking-[-1.44px] text-white sm:text-[48px] xl:text-[64px] xl:leading-[77.76px]">
+            <h1 className="text-[36px] leading-[1.15] font-bold tracking-tight text-white sm:text-[48px] xl:text-[54px] xl:leading-[64.8px] xl:mb-6">
               {t('home.hero.title')}
             </h1>
             <p className="max-w-180 text-[16px] leading-[1.6] text-white sm:text-[20px] sm:leading-[32.5px]">

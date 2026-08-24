@@ -7,6 +7,7 @@ import { MarketingButton } from '@/shared/ui/marketing';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
 import GalleryDetailBreadcrumb from '@/portals/public/gallery/detail/GalleryDetailBreadcrumb';
 import GalleryDetailDonation from '@/portals/public/gallery/detail/components/GalleryDetailDonation';
+import GalleryDetailImageDetails from '@/portals/public/gallery/detail/components/GalleryDetailImageDetails';
 import GalleryDetailVideo from '@/portals/public/gallery/detail/components/GalleryDetailVideo';
 import {
   SignBadge,
@@ -20,6 +21,7 @@ import {
   GALLERY_DETAIL_VARIANTS,
   isBlueSlide,
   resolveGalleryDetailMedia,
+  resolveGalleryImageDetails,
   toGalleryDetailEntry,
 } from '@/portals/public/gallery/detail/galleryDetailShared';
 
@@ -52,6 +54,7 @@ const GalleryDetailView = memo(
       story,
       heroSrc,
     );
+    const imageDetails = resolveGalleryImageDetails(story);
 
     useEffect(() => {
       setActiveIndex(0);
@@ -192,6 +195,8 @@ const GalleryDetailView = memo(
                 </p>
               </div>
 
+              <GalleryDetailImageDetails details={imageDetails} />
+
               <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
                 {[
                   {
@@ -222,8 +227,14 @@ const GalleryDetailView = memo(
                   <ImgIcon src={ASSETS.voteHeart} size={20} />
                   {t('galleryDetail.castVote')}
                 </MarketingButton>
-                <MarketingButton type="button" variant="secondary" onClick={handleShare}>
-                  <Share2 size={18} strokeWidth={2} aria-hidden="true" />
+                <MarketingButton
+                  type="button"
+                  className="!bg-[#4048CD] !hover:bg-[#333BB0] active:scale-[0.98]"
+                >
+                  {t('galleryDetail.downloadPhoto')}
+                </MarketingButton>
+                <MarketingButton type="button" variant="outline" onClick={handleShare}>
+                  <Share2 size={18} strokeWidth={2} aria-hidden="true" className="text-[#e53935]" />
                   {t('galleryDetail.share')}
                 </MarketingButton>
               </div>

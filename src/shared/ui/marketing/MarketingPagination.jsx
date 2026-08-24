@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 import { FOCUS_RING } from './sectionStyles';
 import {
   marketingPaginationLabels,
@@ -39,7 +40,12 @@ export default function MarketingPagination({
 
   const showEllipsis = windowPages.length > 0 && windowPages[windowPages.length - 1] < totalPages;
 
-  const go = (next) => onPageChange(Math.min(Math.max(1, next), totalPages));
+  const go = (next) => {
+    const target = Math.min(Math.max(1, next), totalPages);
+    if (target === page) return;
+    onPageChange(target);
+    scrollToPageTop();
+  };
 
   return (
     <nav
