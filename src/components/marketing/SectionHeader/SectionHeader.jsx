@@ -16,10 +16,10 @@ const badgeClass = (badgeTone) =>
   `text-[12px] font-semibold uppercase leading-4 tracking-[1.2px] sm:text-[14px] ${BADGE_COLOR[badgeTone] ?? BADGE_COLOR.red}`;
 
 const titleClass =
-  'text-[26px] font-semibold leading-tight text-(--primary-text-heading-color) sm:text-[36px] sm:leading-[1.15] lg:text-[48px] lg:leading-12';
+  'text-[26px] font-semibold leading-tight text-(--primary-text-heading-color) sm:text-[36px] sm:leading-[1.15] lg:text-[40px] lg:leading-12';
 
 const descriptionClass =
-  'text-[16px] font-normal leading-6 text-(--primary-text-color) sm:text-[18px] sm:leading-6.75 lg:text-[20px] lg:leading-7.25';
+  'text-[16px] font-normal leading-6 text-(--primary-text-color) sm:text-[18px] sm:leading-6.75 lg:leading-7.25';
 
 function CopyStack({ badge, badgeTone, title, description, align = 'left', className = '' }) {
   const left = align === 'left';

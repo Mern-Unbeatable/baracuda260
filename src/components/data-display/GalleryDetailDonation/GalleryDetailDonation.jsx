@@ -1,22 +1,22 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
-import { ArrowRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { GALLERY_DETAIL_DONATION_AMOUNTS } from '@/shared/data/galleryDetail';
-import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 
 const amountButtonClass = (selected) =>
   [
-    'inline-flex min-w-14 flex-1 cursor-pointer items-center justify-center rounded-lg border px-3 py-2.5 text-[15px] font-semibold transition sm:min-w-0 sm:flex-none sm:px-5',
+    'inline-flex min-w-12 flex-1 cursor-pointer items-center justify-center rounded-lg border px-3 py-2 text-[14px] font-semibold transition sm:min-w-0 sm:flex-none',
     selected
-      ? 'border-[#ee1c25] bg-[#fde8e9] text-[#ee1c25]'
-      : 'border-black/10 bg-white text-[#0d0d14] hover:border-black/20 hover:bg-[#fafafa]',
+      ? 'border-[#ee1c25] bg-[#fee]  text-[#ee1c25]'
+      : 'border-[#d1d5db] bg-white text-[#6b7280] hover:border-[#9ca3af]',
   ].join(' ');
 
 const fieldClass =
-  'w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-[15px] text-[#0d0d14] outline-none transition placeholder:text-[#9ca3af] focus:border-[#4048cd] focus:ring-2 focus:ring-[#4048cd]/20';
+  'w-full rounded-lg border border-[#e5e7eb] bg-white px-3 py-2.5 text-[14px] text-[#374151] outline-none transition placeholder:text-[#9ca3af] focus:border-[#4048cd] focus:ring-2 focus:ring-[#4048cd]/10';
 
 const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
   const { t } = useTranslation();
+  const [supportType, setSupportType] = useState('one-time');
   const [selectedAmount, setSelectedAmount] = useState(25);
   const [customAmount, setCustomAmount] = useState('');
   const [fullName, setFullName] = useState('');
@@ -38,21 +38,21 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#fafafa]">
-      <div className="flex items-start justify-between gap-4 border-b border-black/8 px-4 py-4 sm:px-6 sm:py-5">
-        <div className="flex min-w-0 items-start gap-3">
+    <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white">
+      <div className="flex items-center justify-between gap-4 border-b border-[#e5e7eb] px-6 py-4">
+        <div className="flex min-w-0 items-center gap-3">
           <img
             src={avatar}
             alt=""
-            width={48}
-            height={48}
-            className="size-12 shrink-0 rounded-full object-cover"
+            width={40}
+            height={40}
+            className="size-10 shrink-0 rounded-full object-cover"
           />
           <div className="min-w-0">
-            <p className="text-[16px] font-semibold leading-snug text-[#0d0d14] sm:text-[18px]">
+            <p className="text-[14px] font-semibold text-[#111827]">
               {t('galleryDetail.donation.supportTitle', { name: photographer })}
             </p>
-            <p className="mt-1 text-[13px] leading-5 text-[#6b7280] sm:text-[14px]">
+            <p className="text-[13px] leading-5 text-[#6b7280]">
               {bio || t('galleryDetail.donation.defaultBio', { name: photographer })}
             </p>
           </div>
@@ -61,18 +61,48 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
           type="button"
           onClick={onClose}
           aria-label={t('galleryDetail.donation.close')}
-          className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-black/5 hover:text-[#0d0d14]"
+          className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded text-[#6b7280] transition hover:text-[#111827]"
         >
-          <X size={20} strokeWidth={2} aria-hidden="true" />
+          <X size={18} strokeWidth={2} aria-hidden="true" />
         </button>
       </div>
 
-      <form className="flex flex-col gap-6 px-4 py-5 sm:px-6 sm:py-6" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-5 px-6 py-5" onSubmit={handleSubmit}>
         <div>
-          <p className="text-[15px] font-semibold text-[#0d0d14] sm:text-[16px]">
+          <p className="text-[16px] font-semibold text-[#111827]">
+            {t('galleryDetail.donation.supportType', { defaultValue: 'Choose How You\'d Like to Support' })}
+          </p>
+          <div className="mt-3 flex items-center gap-5">
+            <label className="flex cursor-pointer items-center gap-2.5">
+              <input
+                type="radio"
+                name="support-type"
+                value="one-time"
+                checked={supportType === 'one-time'}
+                onChange={(e) => setSupportType(e.target.value)}
+                className="size-5 cursor-pointer"
+              />
+              <span className="text-[15px] text-[#6b7280]">One-Time Support</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2.5">
+              <input
+                type="radio"
+                name="support-type"
+                value="monthly"
+                checked={supportType === 'monthly'}
+                onChange={(e) => setSupportType(e.target.value)}
+                className="size-5 cursor-pointer"
+              />
+              <span className="text-[15px] text-[#6b7280]">Monthly Support</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <p className="text-[16px] font-semibold text-[#111827]">
             {t('galleryDetail.donation.selectAmount')}
           </p>
-          <div className="mt-3 flex flex-wrap gap-2 sm:gap-3">
+          <div className="mt-3 flex flex-wrap gap-2">
             {GALLERY_DETAIL_DONATION_AMOUNTS.map((amount) => (
               <button
                 key={amount}
@@ -84,8 +114,8 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
               </button>
             ))}
           </div>
-          <div className="mt-3 flex items-center overflow-hidden rounded-lg border border-black/10 bg-white">
-            <span className="shrink-0 pl-3 text-[15px] font-medium text-[#6b7280]">$</span>
+          <div className="mt-3 flex items-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3 py-2.5">
+            <span className="shrink-0 text-[14px] font-medium text-[#6b7280]">$</span>
             <input
               type="text"
               inputMode="decimal"
@@ -93,21 +123,21 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
               onChange={handleCustomAmountChange}
               placeholder={t('galleryDetail.donation.customAmount')}
               aria-label={t('galleryDetail.donation.customAmount')}
-              className="min-w-0 flex-1 border-0 bg-transparent px-2 py-2.5 text-[15px] text-[#0d0d14] outline-none placeholder:text-[#9ca3af]"
+              className="min-w-0 flex-1 border-0 bg-transparent text-[14px] text-[#111827] outline-none placeholder:text-[#d1d5db]"
             />
-            <span className="shrink-0 pr-3 text-[13px] font-medium uppercase tracking-wide text-[#9ca3af]">
+            <span className="shrink-0 text-[12px] font-medium uppercase tracking-wide text-[#9ca3af]">
               USD
             </span>
           </div>
         </div>
 
         <div>
-          <p className="text-[15px] font-semibold text-[#0d0d14] sm:text-[16px]">
+          <p className="text-[16px] font-semibold text-[#111827]">
             {t('galleryDetail.donation.yourDetails')}
           </p>
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="gallery-donation-name" className="text-[13px] font-medium text-[#374151]">
+              <label htmlFor="gallery-donation-name" className="text-[13px] font-medium text-[#6b7280]">
                 {t('galleryDetail.donation.fullName')}
               </label>
               <input
@@ -121,7 +151,7 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="gallery-donation-email" className="text-[13px] font-medium text-[#374151]">
+              <label htmlFor="gallery-donation-email" className="text-[13px] font-medium text-[#6b7280]">
                 {t('galleryDetail.donation.email')}
               </label>
               <input
@@ -137,14 +167,20 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
           </div>
         </div>
 
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <MarketingButton type="button" variant="outline" onClick={onClose}>
+        <div className="flex gap-2 sm:justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 rounded-lg border border-[#d1d5db] bg-white px-4 py-2.5 text-[14px] font-semibold text-[#374151] transition hover:bg-[#f9fafb] sm:flex-none"
+          >
             {t('galleryDetail.donation.cancel')}
-          </MarketingButton>
-          <MarketingButton type="submit">
-            {t('galleryDetail.donation.payNow')}
-            <ArrowRight size={18} strokeWidth={2.5} aria-hidden="true" />
-          </MarketingButton>
+          </button>
+          <button
+            type="submit"
+            className="flex-1 rounded-lg bg-[#ee1c25] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:bg-[#d91921] sm:flex-none"
+          >
+            {t('galleryDetail.donation.payNow')} →
+          </button>
         </div>
       </form>
     </div>

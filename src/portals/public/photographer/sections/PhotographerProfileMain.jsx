@@ -22,7 +22,7 @@ const PhotographerProfileMain = memo(() => (
     announcementTone="blue"
     newsletterVariant="page"
   >
-    <section className="bg-[#f9fafb] section-py-top pb-8 sm:pb-10">
+    <section className="bg-white section-py-top pb-8 sm:pb-10">
       <Shell>
         <PhotographerProfileHeader profile={PHOTOGRAPHER_PROFILE} />
         <PhotographerStatsBar stats={PHOTOGRAPHER_PROFILE.stats} />

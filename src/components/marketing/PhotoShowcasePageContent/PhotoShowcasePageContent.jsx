@@ -26,8 +26,15 @@ const MAIN_CATEGORIES = ['Nature', 'Portrait', 'Landscape', 'Travel', 'Wedding',
 
 const CATEGORY_SUBCATEGORIES = {
   Nature: ['Mountain', 'Forest', 'Wildlife', 'Rivers & Lakes', 'Oceans & Beaches', 'Flowers & Plants', 'Sky & Clouds', 'Weather & Storms'],
+  Portrait: ['Professional', 'Lifestyle', 'Fashion', 'Headshots'],
   Landscape: ['Urban', 'Rural', 'Mountains', 'Desert', 'Seascape'],
-  Portrait: ['Professional', 'Lifestyle', 'Fashion'],
+  Travel: ['Urban', 'Rural', 'Beach', 'Mountains', 'Cultural'],
+  Wedding: ['Ceremony', 'Reception', 'Candid', 'Details'],
+  Macro: ['Insects', 'Flowers', 'Textures', 'Water Drops'],
+  'Fine Art': ['Abstract', 'Experimental', 'Artistic'],
+  Pets: ['Dogs', 'Cats', 'Wildlife', 'Birds'],
+  Sports: ['Action', 'Team Sports', 'Individual'],
+  'Night Photography': ['Cityscape', 'Starry Sky', 'Light Trails'],
 };
 
 const CATEGORIES = MAIN_CATEGORIES;
