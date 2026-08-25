@@ -25,7 +25,9 @@
       "businessPhotos": "Business Link Photos",
       "newsletter": "Newsletter",
       "comment": "Comment",
+      "adsManagement": "Ads Management",
       "demoProfile": "Demo Profile",
+      "reportsResolved": "Reports Resolved",
       "settings": "Settings",
       "profile": "Profile"
     },
@@ -1039,6 +1041,265 @@
         "photoTitle": "Baobab Silhouette",
         "category": "Nature",
         "comment": "This tree is near my village! I recognize it immediately. So proud to see it featured here."
+      }
+    }
+  },
+  "adminAds": {
+    "title": "Ads Management",
+    "subtitle": "Donor Advertisement Management Dashboard",
+    "tableAria": "Ads management table",
+    "empty": "No advertisements to display.",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "businessType": "Business Type",
+      "pageName": "Page Name",
+      "price": "Price",
+      "uploadedDate": "Uploaded Date",
+      "actions": "Actions"
+    },
+    "businessTypes": {
+      "online": "Online Business",
+      "local": "Local Business"
+    },
+    "pageNames": {
+      "premiumPhotos": "Premium Photos",
+      "buyPhotos": "Buy Photos",
+      "gallery": "Gallery",
+      "competitions": "Competitions",
+      "leaderboard": "Leaderboard"
+    },
+    "actions": {
+      "menuTitle": "action",
+      "menu": "Actions for {{name}}",
+      "menuAria": "Advertisement actions for {{name}}",
+      "seeDetails": "See Details",
+      "hide": "Hide",
+      "delete": "Delete"
+    },
+    "drawer": {
+      "title": "Advertise Details",
+      "close": "Close advertisement details",
+      "businessName": "Business Name",
+      "businessLocation": "Business Location",
+      "description": "Description",
+      "customerName": "Customer Name",
+      "adsStartDate": "Ads Start Date",
+      "adsEndDate": "Ads End Date",
+      "totalDays": "Total Days",
+      "subtotal": "Subtotal",
+      "totalDaysValue": "14 Days",
+      "totalDaysValueAlt": "17 Days",
+      "sampleDescription": "Absolutely breathtaking composition! The way the light hits the mountain ridge is pure magic. This deserves to be in a gallery."
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "aria": "Ads pagination",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "rows": {
+      "elena": {
+        "name": "Elena Vasquez",
+        "businessName": "Laz Pharma",
+        "businessLocation": "Dhaka 1201"
+      },
+      "marcus": {
+        "name": "Marcus Klein",
+        "businessName": "Urban Lens Studio",
+        "businessLocation": "Berlin 10115"
+      },
+      "sofia": {
+        "name": "Sofia Rivera",
+        "businessName": "Cloud Nine Cafe",
+        "businessLocation": "Madrid 28001"
+      },
+      "james": {
+        "name": "James Porter",
+        "businessName": "Peak Gear Co.",
+        "businessLocation": "Denver 80202"
+      },
+      "amira": {
+        "name": "Amira Hassan",
+        "businessName": "Desert Bloom Spa",
+        "businessLocation": "Dubai 00000"
+      },
+      "luca": {
+        "name": "Luca Moretti",
+        "businessName": "Vista Travel",
+        "businessLocation": "Rome 00118"
+      },
+      "nina": {
+        "name": "Nina Weber",
+        "businessName": "Frame & Focus",
+        "businessLocation": "Vienna 1010"
+      }
+    }
+  },
+  "adminReports": {
+    "title": "Reports & Moderation",
+    "subtitle": "Review reported content and users, take appropriate action, and manage moderation cases. Keep the community safe and compliant with platform policies.",
+    "tableAria": "Reports and moderation table",
+    "empty": "No reports match this filter.",
+    "reportCount": "{{count}} Reports",
+    "columns": {
+      "reportedBy": "Reported By",
+      "reportedItem": "Reported Item",
+      "type": "Type",
+      "reason": "Reason",
+      "reportedUser": "Reported User",
+      "reportedDate": "Reported Date",
+      "status": "Status",
+      "action": "Action"
+    },
+    "filters": {
+      "aria": "Filter reports by status",
+      "all": "All Statuses",
+      "pending": "Pending",
+      "underReview": "Under Review",
+      "resolved": "Resolved"
+    },
+    "status": {
+      "pending": "Pending",
+      "underReview": "Under Review",
+      "resolved": "Resolved"
+    },
+    "types": {
+      "single": "single photo",
+      "album6": "6 photos",
+      "zodiac": "12 photos zodiac story"
+    },
+    "reasons": {
+      "copyright": "Copyright Infringement",
+      "harmful": "Harmful or Dangerous Content",
+      "stolen": "Stolen Photo"
+    },
+    "actions": {
+      "menu": "Actions for {{name}}",
+      "viewReport": "View Report",
+      "markResolved": "Mark Resolved",
+      "markUnderReview": "Mark Under Review"
+    },
+    "stats": {
+      "total": {
+        "label": "Total Reports",
+        "hint": "All time"
+      },
+      "pending": {
+        "label": "Pending Reports",
+        "hint": "Needs attention"
+      },
+      "underReview": {
+        "label": "Under Review",
+        "hint": "Being investigated"
+      },
+      "resolved": {
+        "label": "Resolved Reports",
+        "hint": "Closed cases"
+      }
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "people": {
+      "albert": "Albert Flores",
+      "albertRole": "Photographer",
+      "albertLocation": "Toronto, Canada",
+      "marvin": "Marvin McKinney",
+      "marvinRole": "Editor",
+      "marvinLocation": "Austin, USA",
+      "ronald": "Ronald Richards",
+      "ronaldRole": "Curator",
+      "ronaldLocation": "London, UK",
+      "claire": {
+        "name": "Claire Moreau",
+        "role": "Lab Manager",
+        "location": "Halifax, Canada"
+      },
+      "victor": {
+        "name": "Dr. Victor Vance",
+        "role": "Independent Broker",
+        "location": "United Kingdom"
+      }
+    },
+    "items": {
+      "morningLight": "Morning Light in the Valley",
+      "neonStream": "Chasing the Neon Stream"
+    },
+    "detail": {
+      "back": "Back to Reports",
+      "notFound": "This report could not be found.",
+      "reportReason": "Report Reason",
+      "reasonComment": "This image appears identical to a photograph published on another platform in 2024. The composition, lighting, and subject placement match exactly. I believe this is unauthorized use of copyrighted work.",
+      "reasonCommentHarmful": "This content contains imagery that could encourage unsafe behavior and should be reviewed immediately by the moderation team.",
+      "reasonCommentStolen": "This photo was previously published by another photographer and appears to have been reposted without permission.",
+      "reporterInfo": "Reporter Information",
+      "reportedUser": "Reported User",
+      "viewReporterProfile": "View Reporter Profile",
+      "userProfile": "User Profile",
+      "auditHistory": "Audit History",
+      "userReports": "{{count}} Report",
+      "userWarnings": "{{count}} Warnings",
+      "playPreview": "Play preview",
+      "sixPhotos": "6 PHOTOS",
+      "singlePhoto": "SINGLE PHOTO",
+      "zodiacStory": "12 PHOTOS ZODIAC",
+      "natureTag": "NATURE",
+      "mediaTitle": "Chasing the Neon Stream",
+      "mediaDescription": "A young man walks through the city during golden hour, surrounded by warm light and long shadows. The scene captures the quiet rhythm of urban life as day transitions into night.",
+      "credit": "Credit",
+      "creativeNumber": "Creative #",
+      "resolution": "Resolution",
+      "quality": "Quality",
+      "format": "Format",
+      "fileSize": "File size",
+      "uploadDate": "Upload date",
+      "categories": "Categories",
+      "votesReceived": "Votes Received",
+      "viewsCounted": "Views Counted",
+      "moderationTitle": "Admin Moderation Decision Actions",
+      "moderationHint": "Choose appropriate decision based on evidence.",
+      "actions": {
+        "remove": "Remove Content",
+        "warn": "Warn User",
+        "suspend": "Suspend User",
+        "block": "Block User",
+        "resolve": "Mark Resolved",
+        "removeSuccess": "Content marked for removal.",
+        "warnSuccess": "Warning issued to user.",
+        "suspendSuccess": "User suspended.",
+        "blockSuccess": "User blocked.",
+        "resolveSuccess": "Report marked as resolved."
+      }
+    },
+    "history": {
+      "title": "User Moderation History",
+      "subtitle": "Complete historical record and infractions audit",
+      "active": "Active",
+      "close": "Close moderation history",
+      "memberSince": "Member since {{date}}",
+      "recentReports": "7 Reports in past 30 days",
+      "stats": {
+        "totalReports": "Total Reports",
+        "warnings": "Official Warnings",
+        "suspensions": "Suspensions",
+        "bans": "Bans"
+      },
+      "casesTitle": "Cases Involving {{name}} (4)",
+      "open": "Open",
+      "caseTypes": {
+        "fraud": "Fraud / Scam",
+        "harassment": "Harassment",
+        "copyright": "Copyright Infringement"
+      },
+      "cases": {
+        "case1": "\"This is a scam listing. The seller asked for payment outside the platform and sent fake verification links.\"",
+        "case2": "\"User sent repeated abusive messages after their listing was declined.\"",
+        "case3": "\"Photo matches a copyrighted image found on another stock platform.\"",
+        "case4": "\"Profile bio contains targeted harassment toward another member.\""
       }
     }
   },

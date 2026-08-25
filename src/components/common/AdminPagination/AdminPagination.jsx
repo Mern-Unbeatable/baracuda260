@@ -95,6 +95,19 @@ PaginationControl.displayName = 'PaginationControl';
  *   nextAriaLabel: string,
  *   pageAriaLabel: (page: number) => string,
  * } | {
+ *   variant: 'ads',
+ *   from: number,
+ *   to: number,
+ *   total: number,
+ *   isFirstPage: boolean,
+ *   isLastPage: boolean,
+ *   onPrevious: () => void,
+ *   onNext: () => void,
+ *   showingText: string,
+ *   previousLabel: string,
+ *   nextLabel: string,
+ *   navAriaLabel: string,
+ * } | {
  *   variant: 'submissions',
  *   page: number,
  *   totalPages: number,
@@ -254,6 +267,41 @@ const AdminPagination = memo((props) => {
             className={`${pageBtnBase} text-[#7b8596] hover:bg-[#f6fbff] disabled:cursor-not-allowed disabled:opacity-40`}
           >
             →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (props.variant === 'ads') {
+    const {
+      isFirstPage,
+      isLastPage,
+      onPrevious,
+      onNext,
+      showingText,
+      previousLabel,
+      nextLabel,
+      navAriaLabel,
+    } = props;
+    const btnClass =
+      'inline-flex cursor-pointer items-center justify-center rounded-[12px] border border-[#c8960c] px-4 py-2 text-[16px] font-medium capitalize text-[#c8960c] transition hover:bg-[#fffbeb] disabled:cursor-not-allowed disabled:opacity-40';
+
+    return (
+      <div className="flex flex-col items-center gap-3 px-5 py-4 sm:flex-row sm:justify-between">
+        <p className="text-center text-[16px] leading-normal text-[#c8960c] sm:text-left">
+          {showingText}
+        </p>
+        <div
+          className="flex items-center justify-center gap-2"
+          role="navigation"
+          aria-label={navAriaLabel}
+        >
+          <button type="button" disabled={isFirstPage} onClick={onPrevious} className={btnClass}>
+            {previousLabel}
+          </button>
+          <button type="button" disabled={isLastPage} onClick={onNext} className={btnClass}>
+            {nextLabel}
           </button>
         </div>
       </div>

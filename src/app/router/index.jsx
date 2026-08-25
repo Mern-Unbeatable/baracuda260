@@ -79,6 +79,9 @@ const BusinessPhotos = lazy(() => import('@/portals/admin/pages/BusinessPhotos')
 const BusinessLinkDetails = lazy(() => import('@/portals/admin/pages/BusinessLinkDetails'));
 const AdminNewsletter = lazy(() => import('@/portals/admin/pages/Newsletter'));
 const AdminComment = lazy(() => import('@/portals/admin/pages/Comment'));
+const AdsManagement = lazy(() => import('@/portals/admin/pages/AdsManagement'));
+const Reports = lazy(() => import('@/portals/admin/pages/Reports'));
+const ReportDetail = lazy(() => import('@/portals/admin/pages/ReportDetail'));
 const DemoProfiles = lazy(() => import('@/portals/admin/pages/DemoProfiles'));
 const DemoProfilesCreate = lazy(() => import('@/portals/admin/pages/DemoProfilesCreate'));
 const Chat = lazy(() => import('@/portals/member/pages/Chat'));
@@ -241,8 +244,11 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_SETTINGS)} element={<SettingsRoute />} />
         <Route path={seg(ROUTES.ADMIN_NEWSLETTER)} element={<AdminNewsletter />} />
         <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComment />} />
+        <Route path={seg(ROUTES.ADMIN_ADS)} element={<AdsManagement />} />
         <Route path={seg(ROUTES.ADMIN_DEMO_PROFILES)} element={<DemoProfiles />} />
         <Route path={seg(ROUTES.ADMIN_DEMO_PROFILES_CREATE)} element={<DemoProfilesCreate />} />
+        <Route path={seg(ROUTES.ADMIN_REPORTS)} element={<Reports />} />
+        <Route path={seg(ROUTES.ADMIN_REPORTS_DETAIL)} element={<ReportDetail />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
