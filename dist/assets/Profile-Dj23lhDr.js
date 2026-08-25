@@ -1,0 +1,1 @@
+import{r as o,j as r,B as e}from"./index-DoazmNEH.js";import{u as s}from"./useSEO-tudr6Rpe.js";const t=o.memo(()=>(s({title:"Profile",description:"View and manage your My12Photos public profile, artwork, messages, and portfolio.",keywords:["profile","following","followers","account","My12Photos"]}),r.jsx(e,{})));t.displayName="Profile";export{t as default};
