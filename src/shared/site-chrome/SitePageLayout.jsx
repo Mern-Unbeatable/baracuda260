@@ -4,6 +4,7 @@ import SiteAnnouncement from './SiteAnnouncement';
 import SiteHeader from './SiteHeader';
 import StayUpdated from './StayUpdated';
 import SiteFooter from './SiteFooter';
+import PromoBanner from '@/components/marketing/PromoBanner/PromoBanner';
 
 /**
  * Shared chrome for Figma marketing pages: styles, announcement, header,
@@ -15,6 +16,7 @@ const SitePageLayout = memo(
     rootClassName = '',
     announcementTone = 'blue',
     newsletterVariant = 'page',
+    showPromoBanner = true,
     children,
   }) => {
     useSitePageStyles();
@@ -46,6 +48,13 @@ const SitePageLayout = memo(
         </div>
         <div style={{ height: chromeHeight }} aria-hidden="true" />
         {children}
+        {showPromoBanner ? (
+          <PromoBanner
+            subtitle="Turn your website traffic into revenue by enabling targeted advertising. Our platform allows businesses to showcase their products and services directly to your audience through strategically placed ads."
+            ctaLabel="www.e-commerce.com"
+            href="#"
+          />
+        ) : null}
         <StayUpdated variant={newsletterVariant} />
         <SiteFooter />
       </div>

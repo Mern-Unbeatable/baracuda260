@@ -9,6 +9,7 @@ import MarketingButton from '@/components/marketing/MarketingButton/MarketingBut
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
 import PlanCard from '@/components/marketing/PlanCard/PlanCard';
+import PromoBanner from '@/components/marketing/PromoBanner/PromoBanner';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
 import FilterCheckboxGroup from '@/components/marketing/FilterCheckboxGroup/FilterCheckboxGroup';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
@@ -28,6 +29,7 @@ import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCard
 import MemberSellPhotoCard from '@/components/data-display/MemberSellPhotoCard/MemberSellPhotoCard';
 import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard';
 import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
+import AdvertiseBusinessForm from '@/components/forms/AdvertiseBusinessForm/AdvertiseBusinessForm';
 import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
 import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
 import MemberMessageCard from '@/components/data-display/MemberMessageCard/MemberMessageCard';
@@ -371,6 +373,32 @@ function MemberPromotePanelPreview() {
   );
 }
 
+function AdvertiseBusinessFormPreview() {
+  return (
+    <ScrollPreview className="max-h-[900px]">
+      <div className="mx-auto w-full max-w-[1200px] space-y-6">
+        <section className="rounded-2xl bg-[radial-gradient(circle_at_top_left,_#fde8e9,_#eef0ff_58%,_#f8fbff)] px-6 py-16 text-center sm:px-12">
+          <p className="mx-auto inline-flex rounded-full border border-[#f3c1c4] bg-white/70 px-3 py-1 text-[11px] font-medium text-[#5b6270]">
+            Official Lumina Advertising Network
+          </p>
+          <h2 className="mt-4 text-[34px] font-semibold leading-tight text-[#202531] sm:text-[54px]">
+            <span className="text-[#ee1c25]">Promote</span> Your Business to
+            <br />
+            Our Photography <span className="text-[#4048cd]">Community</span>
+          </h2>
+          <p className="mx-auto mt-3 max-w-[760px] text-[18px] leading-[1.45] text-[#555b68] sm:text-[20px]">
+            Reach photographers, artists, and photography enthusiasts by displaying your business on
+            our platform. High-intent audience, verified placements, and instant transparent
+            analytics.
+          </p>
+        </section>
+
+        <AdvertiseBusinessForm />
+      </div>
+    </ScrollPreview>
+  );
+}
+
 const PREVIEWS = {
   'photo-showcase-card': PhotoShowcaseCardPreview,
   'gallery-detail-image-details': () => <GalleryDetailImageDetails details={DEMO_IMAGE_DETAILS} />,
@@ -400,6 +428,17 @@ const PREVIEWS = {
     </ScrollPreview>
   ),
   'home-stats-section': () => <HomeStatsSection />,
+  'promo-banner': () => (
+    <div className="max-w-4xl mx-auto">
+      <PromoBanner
+        title="Promote your work to buyers"
+        subtitle="Turn your website traffic into revenue by enabling targeted advertising."
+        ctaLabel="Learn more"
+        href="#"
+        image="/assets/home/hero.jpg"
+      />
+    </div>
+  ),
   'gallery-detail-view': GalleryDetailViewPreview,
   'gallery-detail-donation': () => (
     <GalleryDetailDonation
@@ -435,6 +474,7 @@ const PREVIEWS = {
     </div>
   ),
   'member-promote-panel': MemberPromotePanelPreview,
+  'advertise-business-form': AdvertiseBusinessFormPreview,
   'photographer-profile-header': () => (
     <PhotographerProfileHeader profile={DEMO_PHOTOGRAPHER_PROFILE} />
   ),

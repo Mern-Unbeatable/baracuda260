@@ -17,6 +17,7 @@ const seg = (route) => route.replace(`${ROUTES.ADMIN}/`, '');
 
 const Home = lazy(() => import('@/portals/public/home/Home'));
 const PublicAlbumTypes = lazy(() => import('@/portals/public/album-types/AlbumTypes'));
+const AdvertiseWithUs = lazy(() => import('@/portals/public/advertise-with-us/AdvertiseWithUs'));
 const About = lazy(() => import('@/portals/public/about/About'));
 const Contact = lazy(() => import('@/portals/public/contact/Contact'));
 const Services = lazy(() => import('@/portals/public/services/Services'));
@@ -108,6 +109,7 @@ const router = createBrowserRouter(
         <Route path={ROUTES.COMPETITIONS} element={<Competitions />} />
         <Route path={ROUTES.GALLERY} element={<Gallery />} />
         <Route path={ROUTES.ALBUM_TYPES} element={<PublicAlbumTypes />} />
+        <Route path={ROUTES.ADVERTISE_WITH_US} element={<AdvertiseWithUs />} />
         <Route path={ROUTES.BUY_PHOTOS} element={<BuyPhotos />} />
         <Route path={ROUTES.BUY_PHOTOS_CHECKOUT} element={<BuyPhotosCheckout />} />
         <Route path={ROUTES.BUY_PHOTOS_SUCCESS} element={<BuyPhotosSuccess />} />

@@ -11,14 +11,18 @@ const AboutCta = memo(() => {
   return (
     <section className="bg-white section-py">
       <Shell>
+        {/* Promo banner above CTA */}
+        <div className="mb-6">
+          <SectionHeader
+            badge={t('about.cta.eyebrow')}
+            badgeTone="brand"
+            title={t('about.cta.title')}
+            description={t('about.cta.subtitle')}
+          />
+        </div>
+
         <MarketingCard variant="inset" className="px-6 py-12 sm:px-10 ">
           <div className="mx-auto flex max-w-170.5 flex-col items-center gap-8">
-            <SectionHeader
-              badge={t('about.cta.eyebrow')}
-              badgeTone="brand"
-              title={t('about.cta.title')}
-              description={t('about.cta.subtitle')}
-            />
             <MarketingButton as="a" href="#" className="font-medium">
               {t('about.cta.registerFree')}
             </MarketingButton>
