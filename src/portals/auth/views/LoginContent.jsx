@@ -21,8 +21,12 @@ const LoginContent = memo(() => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState(envVar('DEV_DEFAULT_EMAIL', ''));
-  const [password, setPassword] = useState(envVar('DEV_DEFAULT_PASSWORD', ''));
+  const [email, setEmail] = useState(
+    envVar('DEV_DEFAULT_EMAIL', '') || DEMO_ACCOUNTS.user.email,
+  );
+  const [password, setPassword] = useState(
+    envVar('DEV_DEFAULT_PASSWORD', '') || DEMO_PASSWORD,
+  );
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -188,14 +192,14 @@ const LoginContent = memo(() => {
                 >
                   {t('login.demoUser')}
                 </button>
-                <button
+                {/* <button
                   type="button"
                   disabled={isLoading}
                   onClick={() => handleDemoQuickLogin('admin')}
                   className="flex-1 rounded-lg border border-[#cbc3d5] bg-white px-4 py-3 text-[14px] font-semibold text-[#161c27] transition hover:border-[#ee1c25] hover:text-[#ee1c25] disabled:opacity-60"
                 >
                   {t('login.demoAdmin')}
-                </button>
+                </button> */}
               </div>
             </div>
 
