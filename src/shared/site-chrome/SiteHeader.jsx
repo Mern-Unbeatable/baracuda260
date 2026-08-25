@@ -72,8 +72,8 @@ const SiteHeader = memo(({ activeHref }) => {
             <AppLink
               key={href}
               href={href}
-              className={`whitespace-nowrap px-2 py-2 text-center text-[13px] font-semibold leading-5 min-[1920px]:px-3 min-[1920px]:text-[14px] ${
-                active ? 'text-[#ee1c25]' : 'text-[#6b7280]'
+              className={`whitespace-nowrap px-2 py-2 text-center text-[13px] font-semibold leading-5 min-[1920px]:px-3 min-[1920px]:text-[14px] transition-colors duration-300 ${
+                active ? 'text-[#ee1c25]' : 'text-[#6b7280] hover:text-[#4049CD] hover:underline'
               }`}
               aria-current={active ? 'page' : undefined}
             >
@@ -84,7 +84,7 @@ const SiteHeader = memo(({ activeHref }) => {
 
       <div className="hidden shrink-0 items-center gap-2 sm:gap-3 2xl:flex 2xl:gap-4">
           <LanguageSwitcher />
-          <div className="flex items-center gap-2 2xl:gap-4 [&_a]:px-4 [&_a]:py-2.5 [&_a]:text-[14px] min-[1920px]:[&_a]:px-6 min-[1920px]:[&_a]:py-3 min-[1920px]:[&_a]:text-[16px]">
+          <div className="flex items-center gap-2 2xl:gap-3 [&_a]:px-4 [&_a]:py-2 [&_a]:text-[14px] min-[1920px]:[&_a]:px-6 min-[1920px]:[&_a]:py-2 min-[1920px]:[&_a]:text-[16px]">
             {authActions}
           </div>
         </div>

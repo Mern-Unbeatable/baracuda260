@@ -1,0 +1,1 @@
+import{r as t,j as e,R as r}from"./index-C39lRS8-.js";import{G as s,g as l}from"./galleryPhotos-DLfJsSkB.js";import{P as i}from"./PhotoShowcasePageContent-cx-mWh48.js";const m=t.memo(({activeHref:a=r.GALLERY})=>e.jsx(i,{photos:s,i18nPrefix:"gallery",activeHref:a,rootClassName:"gallery-page-root",getDetailPath:o=>l(o.id)}));m.displayName="GalleryMain";export{m as G};

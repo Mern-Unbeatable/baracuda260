@@ -11,6 +11,7 @@ import HomeStatsSection from '@/components/marketing/HomeStatsSection/HomeStatsS
 import HomeWinnersSection from './sections/HomeWinnersSection';
 import HomeFeaturesSection from './sections/HomeFeaturesSection';
 import HomeTestimonialsSection from './sections/HomeTestimonialsSection';
+import InViewWrapper from '@/components/common/InViewWrapper';
 
 const Home = memo(() => {
   useSEO({
@@ -26,15 +27,15 @@ const Home = memo(() => {
       announcementTone="navy"
       newsletterVariant="home"
     >
-      <HomeHero />
-      <HomeStatsSection />
-      <ActiveCompetitions />
-      <HowItWorks />
-      <CommunityWork />
-      <TopPhotographers />
-      <HomeWinnersSection />
-      <HomeFeaturesSection />
-      <HomeTestimonialsSection />
+      <InViewWrapper><HomeHero /></InViewWrapper>
+      <InViewWrapper><HomeStatsSection /></InViewWrapper>
+      <InViewWrapper><ActiveCompetitions /></InViewWrapper>
+      <InViewWrapper><HowItWorks /></InViewWrapper>
+      <InViewWrapper><CommunityWork /></InViewWrapper>
+      <InViewWrapper><TopPhotographers /></InViewWrapper>
+      <InViewWrapper><HomeWinnersSection /></InViewWrapper>
+      <InViewWrapper><HomeFeaturesSection /></InViewWrapper>
+      <InViewWrapper><HomeTestimonialsSection /></InViewWrapper>
     </SitePageLayout>
   );
 });
