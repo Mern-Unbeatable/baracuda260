@@ -9,6 +9,7 @@ import AboutMissionVision from './sections/AboutMissionVision';
 import AboutHowItWorks from './sections/AboutHowItWorks';
 import AboutCommunity from './sections/AboutCommunity';
 import AboutCta from './sections/AboutCta';
+import InViewWrapper from '@/components/common/InViewWrapper';
 
 const About = memo(() => {
   useSEO({
@@ -25,13 +26,13 @@ const About = memo(() => {
       announcementTone="blue"
       newsletterVariant="page"
     >
-      <AboutHero />
-      <AboutStats />
-      <AboutStory />
-      <AboutMissionVision />
-      <AboutHowItWorks />
-      <AboutCommunity />
-      <AboutCta />
+      <InViewWrapper><AboutHero /></InViewWrapper>
+      <InViewWrapper><AboutStats /></InViewWrapper>
+      <InViewWrapper><AboutStory /></InViewWrapper>
+      <InViewWrapper><AboutMissionVision /></InViewWrapper>
+      <InViewWrapper><AboutHowItWorks /></InViewWrapper>
+      <InViewWrapper><AboutCommunity /></InViewWrapper>
+      <InViewWrapper><AboutCta /></InViewWrapper>
     </SitePageLayout>
   );
 });

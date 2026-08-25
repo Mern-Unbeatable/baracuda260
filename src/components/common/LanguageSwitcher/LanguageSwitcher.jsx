@@ -40,7 +40,7 @@ const LanguageSwitcher = memo(({ className = '' }) => {
         aria-expanded={open}
         aria-label={t('header.language')}
         onClick={() => setOpen((value) => !value)}
-        className="flex items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222]"
+        className="flex items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-1.5 text-[16px] font-medium text-[#222]"
       >
         {t(active.labelKey)}
         <span className={`inline-flex transition ${open ? 'rotate-180' : ''}`} aria-hidden="true">
