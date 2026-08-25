@@ -1,11 +1,12 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
-import { ArrowLeft, ChevronDown } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
+import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
 import {
   ALL_SLOTS,
   ARTISTIC_CATEGORIES,
@@ -134,13 +135,16 @@ const Zodiac12Content = memo(({
   const isSell = purpose === 'sell';
 
   const [category, setCategory] = useState(DEFAULT_CATEGORY);
-  const [categoryOpen, setCategoryOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [story, setStory] = useState('');
+  const [subCategory, setSubCategory] = useState('');
   const [price, setPrice] = useState(defaultPrice);
   const [resolution, setResolution] = useState(BUY_PHOTO_DEFAULT_SPECS.resolution);
+  const [fileSize, setFileSize] = useState('125 KB');
+  const [quality, setQuality] = useState('4K');
   const [format, setFormat] = useState(BUY_PHOTO_DEFAULT_SPECS.format);
   const [camera, setCamera] = useState(BUY_PHOTO_DEFAULT_SPECS.camera);
+  const [publishTarget, setPublishTarget] = useState('competition');
   const [copyrightOk, setCopyrightOk] = useState(false);
   const [previews, setPreviews] = useState({});
   const [errors, setErrors] = useState({});
@@ -282,160 +286,54 @@ const Zodiac12Content = memo(({
         ) : null}
       </section>
 
-      <form
+      <ZodiacStoryFormPanel
+        t={t}
+        i18nPrefix="zodiac12"
         onSubmit={handleSubmit}
-        noValidate
-        className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5"
-      >
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-2.5">
-            <label
-              htmlFor="zodiac12-title"
-              className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
-            >
-              {t('zodiac12.collectionTitle')}
-            </label>
-            <input
-              id="zodiac12-title"
-              type="text"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              placeholder={t('zodiac12.collectionTitlePlaceholder')}
-              aria-invalid={Boolean(errors.title)}
-              className="w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
-            />
-            {errors.title ? (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.title}
-              </p>
-            ) : null}
-          </div>
-
-          <div className="relative flex flex-col gap-2.5">
-            <p className="text-[16px] font-medium uppercase leading-6 text-[#494453]">
-              {t('zodiac12.artisticCategory')}
-            </p>
-            <button
-              type="button"
-              aria-expanded={categoryOpen}
-              aria-haspopup="listbox"
-              onClick={() => setCategoryOpen((open) => !open)}
-              className="flex w-full cursor-pointer items-center justify-between rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-left"
-            >
-              <span className="text-[16px] leading-6 text-[#707070]">
-                {t(`zodiac12.categories.${category}`)}
-              </span>
-              <ChevronDown
-                size={18}
-                className={`shrink-0 text-[#494453] transition ${categoryOpen ? 'rotate-180' : ''}`}
-                aria-hidden="true"
-              />
-            </button>
-            {categoryOpen ? (
-              <ul
-                role="listbox"
-                className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-[rgba(0,0,0,0.08)] bg-white shadow-lg"
-              >
-                {ARTISTIC_CATEGORIES.map((item) => (
-                  <li key={item}>
-                    <button
-                      type="button"
-                      role="option"
-                      aria-selected={item === category}
-                      onClick={() => {
-                        setCategory(item);
-                        setCategoryOpen(false);
-                      }}
-                      className={`w-full cursor-pointer px-[17px] py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
-                        item === category ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#494453]'
-                      }`}
-                    >
-                      {t(`zodiac12.categories.${item}`)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-
-          {isSell ? (
-            <MemberSellPhotoFields
-              idPrefix="zodiac12"
-              price={price}
-              resolution={resolution}
-              format={format}
-              camera={camera}
-              onPriceChange={setPrice}
-              onResolutionChange={setResolution}
-              onFormatChange={setFormat}
-              onCameraChange={setCamera}
-              errors={errors}
-            />
-          ) : (
-            <div className="flex flex-col gap-2.5">
-              <label
-                htmlFor="zodiac12-story"
-                className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
-              >
-                {t('zodiac12.storyLabel')}
-              </label>
-              <textarea
-                id="zodiac12-story"
-                value={story}
-                onChange={(event) => setStory(event.target.value)}
-                placeholder={t('zodiac12.storyPlaceholder')}
-                rows={5}
-                aria-invalid={Boolean(errors.story)}
-                className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
-              />
-              {errors.story ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {errors.story}
-                </p>
-              ) : null}
-            </div>
-          )}
-        </div>
-
-        <label className="flex cursor-pointer items-start gap-3">
-          <input
-            type="checkbox"
-            checked={copyrightOk}
-            onChange={(event) => {
-              setCopyrightOk(event.target.checked);
-              if (event.target.checked) {
-                setErrors((current) => {
-                  const { copyright: _copyright, ...rest } = current;
-                  return rest;
-                });
-              }
-            }}
-            className="mt-1 size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+        title={title}
+        onTitleChange={setTitle}
+        category={category}
+        onCategoryChange={setCategory}
+        categoryOptions={ARTISTIC_CATEGORIES}
+        subCategory={subCategory}
+        onSubCategoryChange={setSubCategory}
+        story={story}
+        onStoryChange={setStory}
+        resolution={resolution}
+        onResolutionChange={setResolution}
+        fileSize={fileSize}
+        onFileSizeChange={setFileSize}
+        quality={quality}
+        onQualityChange={setQuality}
+        publishTarget={publishTarget}
+        onPublishTargetChange={setPublishTarget}
+        copyrightOk={copyrightOk}
+        onCopyrightChange={(checked) => {
+          setCopyrightOk(checked);
+          if (checked) {
+            setErrors((current) => {
+              const { copyright: _copyright, ...rest } = current;
+              return rest;
+            });
+          }
+        }}
+        errors={errors}
+        isSell={isSell}
+        sellFields={
+          <MemberSellPhotoFields
+            idPrefix="zodiac12"
+            price={price}
+            resolution={resolution}
+            format={format}
+            camera={camera}
+            onPriceChange={setPrice}
+            onResolutionChange={setResolution}
+            onFormatChange={setFormat}
+            onCameraChange={setCamera}
+            errors={errors}
           />
-          <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
-            {t('zodiac12.copyrightConfirm')}
-          </span>
-        </label>
-        {errors.copyright ? (
-          <p className="-mt-3 text-sm text-red-600" role="alert">
-            {errors.copyright}
-          </p>
-        ) : null}
-
-        <button
-          type="submit"
-          className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
-        >
-          <img
-            src={ZODIAC12_ASSETS.sparkles}
-            alt=""
-            width={24}
-            height={24}
-            className="size-6 shrink-0 brightness-0 invert"
-          />
-          {t('zodiac12.submit')}
-        </button>
-      </form>
+        }
+      />
 
       <input
         ref={fileInputRef}
