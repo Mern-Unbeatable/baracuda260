@@ -1,0 +1,1 @@
+const o="rounded-xl border border-[#e5e7eb] bg-white shadow-[0_1px_3px_rgba(13,13,20,0.06)] transition-[box-shadow,border-color] duration-200 hover:border-[#d1d5db] hover:shadow-[0_8px_24px_rgba(13,13,20,0.08)]",r="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4048cd]/40 focus-visible:ring-offset-2";export{o as C,r as F};
