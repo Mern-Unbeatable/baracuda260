@@ -86,7 +86,7 @@ const SiteFooter = memo(() => {
       </Shell>
       <div className="border-t border-black/5 px-4 py-6 sm:px-6 md:px-8 lg:px-10 xl:px-0">
         <Shell>
-          <p className="text-[16px] font-medium text-[#191818] sm:text-[20px]">
+          <p className="text-sm font-medium text-[#191818]">
             {t('footer.rights', { year: SITE_FOOTER_YEAR })}
           </p>
         </Shell>

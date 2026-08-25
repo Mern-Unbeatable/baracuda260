@@ -76,7 +76,7 @@ const ReportPhotoModal = memo(({ open, onClose, photoTitle = '', onSubmit }) => 
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="flex max-h-[min(92vh,900px)] w-full max-w-225 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_22px_70px_rgba(14,20,35,0.25)]"
+        className="flex max-h-[min(92vh,900px)] w-full max-w-[700px] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_22px_70px_rgba(14,20,35,0.25)]"
         onClick={(event) => event.stopPropagation()}
       >
         <header className="border-b border-[#edf0f3] px-6 pb-5 pt-6 sm:px-8">

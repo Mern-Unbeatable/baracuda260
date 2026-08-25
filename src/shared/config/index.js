@@ -1,7 +1,7 @@
 import { envInt, envVar } from '@/shared/config/env';
 
 export const APP_CONFIG = {
-  NAME: envVar('NAME', 'Gairewele'),
+  NAME: envVar('NAME', 'My12Photos'),
   VERSION: envVar('VERSION', '1.0.0'),
 };
 
@@ -103,7 +103,7 @@ export const API_CONFIG = {
 };
 
 export const SEO_CONFIG = {
-  DEFAULT_TITLE: envVar('SEO_TITLE', 'Gairewele'),
+  DEFAULT_TITLE: envVar('SEO_TITLE', 'My12Photos'),
   DEFAULT_DESCRIPTION: envVar('SEO_DESCRIPTION', 'A professional React application'),
   DEFAULT_KEYWORDS: envVar('SEO_KEYWORDS', 'react,vite,tailwind').split(','),
   SITE_URL: typeof window !== 'undefined' ? window.location.origin : '',
