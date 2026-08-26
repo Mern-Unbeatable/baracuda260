@@ -80,8 +80,11 @@ export const ROUTES = {
   ADMIN_SUPPORT: '/admin/support',
   ADMIN_NEWSLETTER: '/admin/newsletter',
   ADMIN_COMMENT: '/admin/comment',
+  ADMIN_ADS: '/admin/ads',
   ADMIN_DEMO_PROFILES: '/admin/demo-profiles',
   ADMIN_DEMO_PROFILES_CREATE: '/admin/demo-profiles/create',
+  ADMIN_REPORTS: '/admin/reports',
+  ADMIN_REPORTS_DETAIL: '/admin/reports/:id',
 };
 
 /** Site header nav — add new pages here AND register them in router.jsx */

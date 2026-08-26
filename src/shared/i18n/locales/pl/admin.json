@@ -25,7 +25,9 @@
       "businessPhotos": "Zdjęcia Business Link",
       "newsletter": "Newsletter",
       "comment": "Komentarz",
+      "adsManagement": "Zarządzanie reklamami",
       "demoProfile": "Profil demo",
+      "reportsResolved": "Rozwiązane zgłoszenia",
       "settings": "Ustawienia",
       "profile": "Profil"
     },
@@ -1043,6 +1045,265 @@
         "photoTitle": "Sylwetka baobabu",
         "category": "Natura",
         "comment": "To drzewo jest koło mojej wioski! Rozpoznaję je od razu. Dumna, że zostało tu wyróżnione."
+      }
+    }
+  },
+  "adminAds": {
+    "title": "Zarządzanie reklamami",
+    "subtitle": "Panel zarządzania reklamami darczyńców",
+    "tableAria": "Tabela zarządzania reklamami",
+    "empty": "Brak reklam do wyświetlenia.",
+    "columns": {
+      "name": "Imię i nazwisko",
+      "email": "E-mail",
+      "phone": "Numer telefonu",
+      "businessType": "Typ działalności",
+      "pageName": "Nazwa strony",
+      "price": "Cena",
+      "uploadedDate": "Data przesłania",
+      "actions": "Akcje"
+    },
+    "businessTypes": {
+      "online": "Biznes online",
+      "local": "Biznes lokalny"
+    },
+    "pageNames": {
+      "premiumPhotos": "Zdjęcia premium",
+      "buyPhotos": "Kup zdjęcia",
+      "gallery": "Galeria",
+      "competitions": "Konkursy",
+      "leaderboard": "Ranking"
+    },
+    "actions": {
+      "menuTitle": "akcja",
+      "menu": "Akcje dla {{name}}",
+      "menuAria": "Akcje reklamy dla {{name}}",
+      "seeDetails": "Zobacz szczegóły",
+      "hide": "Ukryj",
+      "delete": "Usuń"
+    },
+    "drawer": {
+      "title": "Szczegóły reklamy",
+      "close": "Zamknij szczegóły reklamy",
+      "businessName": "Nazwa firmy",
+      "businessLocation": "Lokalizacja firmy",
+      "description": "Opis",
+      "customerName": "Imię klienta",
+      "adsStartDate": "Data rozpoczęcia reklamy",
+      "adsEndDate": "Data zakończenia reklamy",
+      "totalDays": "Łączna liczba dni",
+      "subtotal": "Suma częściowa",
+      "totalDaysValue": "14 dni",
+      "totalDaysValueAlt": "17 dni",
+      "sampleDescription": "Absolutnie zapierająca dech kompozycja! Sposób, w jaki światło pada na grzbiet góry, to czysta magia. To zasługuje na galerię."
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "aria": "Paginacja reklam",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "rows": {
+      "elena": {
+        "name": "Elena Vasquez",
+        "businessName": "Laz Pharma",
+        "businessLocation": "Dhaka 1201"
+      },
+      "marcus": {
+        "name": "Marcus Klein",
+        "businessName": "Urban Lens Studio",
+        "businessLocation": "Berlin 10115"
+      },
+      "sofia": {
+        "name": "Sofia Rivera",
+        "businessName": "Cloud Nine Cafe",
+        "businessLocation": "Madrid 28001"
+      },
+      "james": {
+        "name": "James Porter",
+        "businessName": "Peak Gear Co.",
+        "businessLocation": "Denver 80202"
+      },
+      "amira": {
+        "name": "Amira Hassan",
+        "businessName": "Desert Bloom Spa",
+        "businessLocation": "Dubai 00000"
+      },
+      "luca": {
+        "name": "Luca Moretti",
+        "businessName": "Vista Travel",
+        "businessLocation": "Rome 00118"
+      },
+      "nina": {
+        "name": "Nina Weber",
+        "businessName": "Frame & Focus",
+        "businessLocation": "Wiedeń 1010"
+      }
+    }
+  },
+  "adminReports": {
+    "title": "Zgłoszenia i moderacja",
+    "subtitle": "Przeglądaj zgłoszone treści i użytkowników, podejmuj odpowiednie działania i zarządzaj sprawami moderacyjnymi. Dbaj o bezpieczeństwo społeczności i zgodność z zasadami platformy.",
+    "tableAria": "Tabela zgłoszeń i moderacji",
+    "empty": "Brak zgłoszeń pasujących do filtra.",
+    "reportCount": "{{count}} zgłoszeń",
+    "columns": {
+      "reportedBy": "Zgłoszone przez",
+      "reportedItem": "Zgłoszony element",
+      "type": "Typ",
+      "reason": "Powód",
+      "reportedUser": "Zgłoszony użytkownik",
+      "reportedDate": "Data zgłoszenia",
+      "status": "Status",
+      "action": "Akcja"
+    },
+    "filters": {
+      "aria": "Filtruj zgłoszenia według statusu",
+      "all": "Wszystkie statusy",
+      "pending": "Oczekujące",
+      "underReview": "W trakcie weryfikacji",
+      "resolved": "Rozwiązane"
+    },
+    "status": {
+      "pending": "Oczekujące",
+      "underReview": "W trakcie weryfikacji",
+      "resolved": "Rozwiązane"
+    },
+    "types": {
+      "single": "pojedyncze zdjęcie",
+      "album6": "6 zdjęć",
+      "zodiac": "12 zdjęć zodiak"
+    },
+    "reasons": {
+      "copyright": "Naruszenie praw autorskich",
+      "harmful": "Szkodliwe lub niebezpieczne treści",
+      "stolen": "Skradzione zdjęcie"
+    },
+    "actions": {
+      "menu": "Akcje dla {{name}}",
+      "viewReport": "Zobacz zgłoszenie",
+      "markResolved": "Oznacz jako rozwiązane",
+      "markUnderReview": "Oznacz jako w trakcie weryfikacji"
+    },
+    "stats": {
+      "total": {
+        "label": "Łączna liczba zgłoszeń",
+        "hint": "Od początku"
+      },
+      "pending": {
+        "label": "Oczekujące zgłoszenia",
+        "hint": "Wymaga uwagi"
+      },
+      "underReview": {
+        "label": "W trakcie weryfikacji",
+        "hint": "W trakcie analizy"
+      },
+      "resolved": {
+        "label": "Rozwiązane zgłoszenia",
+        "hint": "Zamknięte sprawy"
+      }
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "people": {
+      "albert": "Albert Flores",
+      "albertRole": "Fotograf",
+      "albertLocation": "Toronto, Kanada",
+      "marvin": "Marvin McKinney",
+      "marvinRole": "Redaktor",
+      "marvinLocation": "Austin, USA",
+      "ronald": "Ronald Richards",
+      "ronaldRole": "Kurator",
+      "ronaldLocation": "Londyn, Wielka Brytania",
+      "claire": {
+        "name": "Claire Moreau",
+        "role": "Kierownik laboratorium",
+        "location": "Halifax, Kanada"
+      },
+      "victor": {
+        "name": "Dr Victor Vance",
+        "role": "Niezależny broker",
+        "location": "Wielka Brytania"
+      }
+    },
+    "items": {
+      "morningLight": "Poranne światło w dolinie",
+      "neonStream": "Chasing the Neon Stream"
+    },
+    "detail": {
+      "back": "Powrót do zgłoszeń",
+      "notFound": "Nie znaleziono tego zgłoszenia.",
+      "reportReason": "Powód zgłoszenia",
+      "reasonComment": "To zdjęcie wygląda identycznie jak fotografia opublikowana na innej platformie w 2024 roku. Kompozycja, oświetlenie i rozmieszczenie obiektu są identyczne. Uważam, że to nieautoryzowane wykorzystanie prac chronionych prawem autorskim.",
+      "reasonCommentHarmful": "Ta treść zawiera materiały, które mogą zachęcać do niebezpiecznych zachowań i powinna zostać natychmiast sprawdzona przez zespół moderacji.",
+      "reasonCommentStolen": "To zdjęcie zostało wcześniej opublikowane przez innego fotografa i wygląda na ponowne opublikowanie bez zgody.",
+      "reporterInfo": "Informacje o zgłaszającym",
+      "reportedUser": "Zgłoszony użytkownik",
+      "viewReporterProfile": "Zobacz profil zgłaszającego",
+      "userProfile": "Profil użytkownika",
+      "auditHistory": "Historia audytu",
+      "userReports": "{{count}} zgłoszenie",
+      "userWarnings": "{{count}} ostrzeżeń",
+      "playPreview": "Odtwórz podgląd",
+      "sixPhotos": "6 ZDJĘĆ",
+      "singlePhoto": "POJEDYNCZE ZDJĘCIE",
+      "zodiacStory": "12 ZDJĘĆ ZODIAK",
+      "natureTag": "NATURA",
+      "mediaTitle": "Chasing the Neon Stream",
+      "mediaDescription": "Młody mężczyzna przechodzi przez miasto o złotej godzinie, otoczony ciepłym światłem i długimi cieniami. Scena oddaje cichy rytm życia miejskiego, gdy dzień przechodzi w noc.",
+      "credit": "Autor",
+      "creativeNumber": "Nr kreatywny",
+      "resolution": "Rozdzielczość",
+      "quality": "Jakość",
+      "format": "Format",
+      "fileSize": "Rozmiar pliku",
+      "uploadDate": "Data przesłania",
+      "categories": "Kategorie",
+      "votesReceived": "Otrzymane głosy",
+      "viewsCounted": "Liczba wyświetleń",
+      "moderationTitle": "Decyzje moderacyjne administratora",
+      "moderationHint": "Wybierz odpowiednią decyzję na podstawie dowodów.",
+      "actions": {
+        "remove": "Usuń treść",
+        "warn": "Ostrzeż użytkownika",
+        "suspend": "Zawieś użytkownika",
+        "block": "Zablokuj użytkownika",
+        "resolve": "Oznacz jako rozwiązane",
+        "removeSuccess": "Treść oznaczona do usunięcia.",
+        "warnSuccess": "Wystawiono ostrzeżenie użytkownikowi.",
+        "suspendSuccess": "Użytkownik zawieszony.",
+        "blockSuccess": "Użytkownik zablokowany.",
+        "resolveSuccess": "Zgłoszenie oznaczone jako rozwiązane."
+      }
+    },
+    "history": {
+      "title": "Historia moderacji użytkownika",
+      "subtitle": "Pełna historia naruszeń i audyt",
+      "active": "Aktywny",
+      "close": "Zamknij historię moderacji",
+      "memberSince": "Członek od {{date}}",
+      "recentReports": "7 zgłoszeń w ostatnich 30 dniach",
+      "stats": {
+        "totalReports": "Łączna liczba zgłoszeń",
+        "warnings": "Oficjalne ostrzeżenia",
+        "suspensions": "Zawieszenia",
+        "bans": "Bany"
+      },
+      "casesTitle": "Sprawy dotyczące {{name}} (4)",
+      "open": "Otwórz",
+      "caseTypes": {
+        "fraud": "Oszustwo / scam",
+        "harassment": "Nękanie",
+        "copyright": "Naruszenie praw autorskich"
+      },
+      "cases": {
+        "case1": "\"To oszukańcze ogłoszenie. Sprzedawca prosił o płatność poza platformą i wysłał fałszywe linki weryfikacyjne.\"",
+        "case2": "\"Użytkownik wysyłał powtarzające się obraźliwe wiadomości po odrzuceniu ogłoszenia.\"",
+        "case3": "\"Zdjęcie odpowiada obrazowi chronionemu prawem autorskim znalezionemu na innej platformie stockowej.\"",
+        "case4": "\"Bio profilu zawiera ukierunkowane nękanie wobec innego członka.\""
       }
     }
   },

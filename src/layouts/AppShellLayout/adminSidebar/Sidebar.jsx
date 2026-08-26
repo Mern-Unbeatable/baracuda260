@@ -28,12 +28,13 @@ import {
   MessageCircleQuestion,
   Newspaper,
   MessageSquareText,
+  Megaphone,
   Store,
   Star,
   Bell,
   Settings,
   Sparkles,
-  Megaphone,
+  ShieldCheck,
   UserCircle2,
 } from 'lucide-react';
 
@@ -116,9 +117,19 @@ const ADMIN_NAV_GROUPS = [
         icon: MessageSquareText,
       },
       {
+        labelKey: 'adminOverview.nav.adsManagement',
+        path: ROUTES.ADMIN_ADS,
+        icon: Megaphone,
+      },
+      {
         labelKey: 'adminOverview.nav.demoProfile',
         path: ROUTES.ADMIN_DEMO_PROFILES,
         icon: UserCircle2,
+      },
+      {
+        labelKey: 'adminOverview.nav.reportsResolved',
+        path: ROUTES.ADMIN_REPORTS,
+        icon: ShieldCheck,
       },
     ],
   },

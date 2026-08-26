@@ -39,8 +39,11 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_SUPPORT) ||
     currentPath === normalizePath(ROUTES.ADMIN_NEWSLETTER) ||
     currentPath === normalizePath(ROUTES.ADMIN_COMMENT) ||
+    currentPath === normalizePath(ROUTES.ADMIN_ADS) ||
     currentPath === normalizePath(ROUTES.ADMIN_DEMO_PROFILES) ||
     currentPath === normalizePath(ROUTES.ADMIN_DEMO_PROFILES_CREATE) ||
+    currentPath === normalizePath(ROUTES.ADMIN_REPORTS) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_REPORTS)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_SETTINGS) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROFILE) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROFILE)}/`) ||
