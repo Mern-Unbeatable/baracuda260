@@ -51,7 +51,7 @@ const HomeHero = memo(() => {
               <span className="size-2 rounded-full bg-[#05df72]" />
               <span className="text-sm font-semibold text-white">{t('home.hero.badge')}</span>
             </div>
-            <h1 className="text-[36px] leading-[1.15] font-bold tracking-tight text-white sm:text-[48px] xl:text-[54px] xl:leading-[64.8px] xl:mb-6">
+            <h1 className="text-[36px] leading-[1.15] uppercase [word-spacing:4px] font-bold tracking-tight text-white sm:text-[48px] xl:text-[54px] xl:leading-[64.8px] xl:mb-6">
               {t('home.hero.title')}
             </h1>
             <p className="max-w-180 text-[16px] leading-[1.6] text-white sm:text-[20px] sm:leading-[32.5px]">
