@@ -207,6 +207,7 @@
       "detailsLabel": "Opisz problem dokładniej",
       "detailsPlaceholder": "Krótko wyjaśnij, dlaczego uważasz, że ta treść narusza nasze zasady.",
       "reasonRequired": "Wybierz powód przed wysłaniem zgłoszenia.",
+      "priorityLabel": "Priorytet",
       "reasons": {
         "copyright": {
           "title": "Naruszenie praw autorskich",
@@ -235,6 +236,10 @@
         "stolen": {
           "title": "Skradzione zdjęcie",
           "description": "To zdjęcie pochodzi od innego fotografa."
+        },
+        "childPrivacy": {
+          "title": "Prywatność dziecka / naruszenie COPPA",
+          "description": "Treść, która może naruszać prawa dziecka do prywatności online"
         },
         "other": {
           "title": "Inne",
