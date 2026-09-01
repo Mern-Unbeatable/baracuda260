@@ -11,14 +11,14 @@ export const ADS_PAGE_SIZE = 12;
 
 export const ADS_STATUS = {
   ACTIVE: 'active',
-  HIDDEN: 'hidden',
-  DELETED: 'deleted',
+  PUBLISHED: 'published',
+  REJECTED: 'rejected',
 };
 
 export const ACTION_MENU_OPTIONS = [
   { id: 'details', labelKey: 'adminAds.actions.seeDetails', kind: 'details' },
-  { id: ADS_STATUS.HIDDEN, labelKey: 'adminAds.actions.hide', kind: 'status' },
-  { id: ADS_STATUS.DELETED, labelKey: 'adminAds.actions.delete', kind: 'status' },
+  { id: ADS_STATUS.PUBLISHED, labelKey: 'adminAds.actions.publish', kind: 'status' },
+  { id: ADS_STATUS.REJECTED, labelKey: 'adminAds.actions.reject', kind: 'status' },
 ];
 
 const SHARED_IMAGE = '/assets/competition-details/hero.jpg';
@@ -176,11 +176,11 @@ export const ADMIN_ADS_ROWS = [
 
 export const paginateAds = (rows, page, pageSize) => {
   const start = (page - 1) * pageSize;
-  return rows.filter((row) => row.status !== ADS_STATUS.DELETED).slice(start, start + pageSize);
+  return rows.filter((row) => row.status !== ADS_STATUS.REJECTED).slice(start, start + pageSize);
 };
 
 export const getAdsTotal = (rows) =>
-  rows.filter((row) => row.status !== ADS_STATUS.DELETED).length;
+  rows.filter((row) => row.status !== ADS_STATUS.REJECTED).length;
 
 export const updateAdStatus = (rows, rowId, nextStatus) =>
   rows.map((row) => (row.id === rowId ? { ...row, status: nextStatus } : row));

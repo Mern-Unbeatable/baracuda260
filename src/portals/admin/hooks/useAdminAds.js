@@ -17,7 +17,7 @@ export default function useAdminAds(initialRows = ADMIN_ADS_ROWS, pageSize = ADS
   const [openActionId, setOpenActionId] = useState(null);
   const [detailsId, setDetailsId] = useState(null);
 
-  const activeRows = rows.filter((row) => row.status !== ADS_STATUS.DELETED);
+  const activeRows = rows.filter((row) => row.status !== ADS_STATUS.REJECTED);
   const resultsTotal = getAdsTotal(rows);
   const totalPages = Math.max(1, Math.ceil(resultsTotal / pageSize));
   const safePage = Math.min(page, totalPages);
@@ -35,7 +35,7 @@ export default function useAdminAds(initialRows = ADMIN_ADS_ROWS, pageSize = ADS
   const handleRowStatusChange = (rowId, nextStatus) => {
     setRows((current) => updateAdStatus(current, rowId, nextStatus));
     setOpenActionId(null);
-    if (detailsId === rowId && nextStatus === ADS_STATUS.DELETED) {
+    if (detailsId === rowId && nextStatus === ADS_STATUS.REJECTED) {
       setDetailsId(null);
     }
   };

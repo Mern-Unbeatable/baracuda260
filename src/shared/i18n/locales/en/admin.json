@@ -1075,8 +1075,8 @@
       "menu": "Actions for {{name}}",
       "menuAria": "Advertisement actions for {{name}}",
       "seeDetails": "See Details",
-      "hide": "Hide",
-      "delete": "Delete"
+      "publish": "Publish",
+      "reject": "Reject"
     },
     "drawer": {
       "title": "Advertise Details",

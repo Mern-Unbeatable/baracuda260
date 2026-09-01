@@ -207,6 +207,7 @@
       "detailsLabel": "Tell us more about the problem",
       "detailsPlaceholder": "Please briefly explain why you believe this content violates our rules.",
       "reasonRequired": "Please select a reason before submitting.",
+      "priorityLabel": "Priority",
       "reasons": {
         "copyright": {
           "title": "Copyright Infringement",
@@ -235,6 +236,10 @@
         "stolen": {
           "title": "Stolen Photo",
           "description": "This photo was taken from another photographer."
+        },
+        "childPrivacy": {
+          "title": "Child Privacy / COPPA Violation",
+          "description": "Content that may violate children's online privacy rights"
         },
         "other": {
           "title": "Other",

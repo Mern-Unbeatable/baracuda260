@@ -3,6 +3,7 @@ import React, { memo, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   AlertTriangle,
+  Baby,
   Ban,
   Camera,
   Copyright,
@@ -23,6 +24,7 @@ const REPORT_REASONS = [
   { id: 'nudity', icon: EyeOff },
   { id: 'spam', icon: Megaphone },
   { id: 'stolen', icon: Camera },
+  { id: 'childPrivacy', icon: Baby, priority: true },
   { id: 'other', icon: MoreHorizontal },
 ];
 
@@ -106,7 +108,7 @@ const ReportPhotoModal = memo(({ open, onClose, photoTitle = '', onSubmit }) => 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-8">
             <div className="grid gap-3 sm:grid-cols-2">
-              {REPORT_REASONS.map(({ id, icon: Icon }) => {
+              {REPORT_REASONS.map(({ id, icon: Icon, priority }) => {
                 const selected = selectedReason === id;
                 return (
                   <button
@@ -128,8 +130,15 @@ const ReportPhotoModal = memo(({ open, onClose, photoTitle = '', onSubmit }) => 
                       <Icon size={18} strokeWidth={2} aria-hidden="true" />
                     </span>
                     <span>
-                      <span className="block text-[14px] font-bold text-[#0d0d14]">
-                        {t(`gallery.reportModal.reasons.${id}.title`)}
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="text-[14px] font-bold text-[#0d0d14]">
+                          {t(`gallery.reportModal.reasons.${id}.title`)}
+                        </span>
+                        {priority ? (
+                          <span className="rounded bg-[#fee2e2] px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none tracking-[0.04em] text-[#ee1c25]">
+                            {t('gallery.reportModal.priorityLabel', { defaultValue: 'Priority' })}
+                          </span>
+                        ) : null}
                       </span>
                       <span className="mt-1 block text-[12px] leading-[1.45] text-[#6b7280]">
                         {t(`gallery.reportModal.reasons.${id}.description`)}

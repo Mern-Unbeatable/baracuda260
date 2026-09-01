@@ -129,5 +129,14 @@
       "gdansk": "Gdańsk",
       "lodz": "Łódź"
     }
+  },
+  "uploadForm": {
+    "selectSubcategory": "Wybierz podkategorię",
+    "aiCreatedQuestion": "Czy to zdjęcie lub wideo zostało stworzone przez AI?",
+    "aiCreatedYes": "Tak",
+    "aiCreatedNo": "Nie",
+    "resolution": "Rozdzielczość",
+    "fileSize": "Rozmiar pliku",
+    "quality": "Jakość"
   }
 }
