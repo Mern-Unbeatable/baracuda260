@@ -3,7 +3,6 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowUpFromLine, ChevronDown, Upload } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
-import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
 import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
@@ -70,10 +69,9 @@ const SinglePhotoContent = memo(({
   const [resolution, setResolution] = useState('6000*6000');
   const [fileSize, setFileSize] = useState('125 KB');
   const [quality, setQuality] = useState('4K');
-  const [format, setFormat] = useState(BUY_PHOTO_DEFAULT_SPECS.format);
-  const [camera, setCamera] = useState(BUY_PHOTO_DEFAULT_SPECS.camera);
   const [publishTarget, setPublishTarget] = useState('competition');
   const [copyrightOk, setCopyrightOk] = useState(false);
+  const [aiCreated, setAiCreated] = useState('');
   const [photoPreview, setPhotoPreview] = useState(null);
   const [errors, setErrors] = useState({});
   const [successOpen, setSuccessOpen] = useState(false);
@@ -336,6 +334,8 @@ const SinglePhotoContent = memo(({
                 });
               }
             }}
+            aiCreated={aiCreated}
+            onAiCreatedChange={setAiCreated}
             errors={errors}
             isSell={isSell}
             sellFields={
@@ -343,12 +343,12 @@ const SinglePhotoContent = memo(({
                 idPrefix="single-photo"
                 price={price}
                 resolution={resolution}
-                format={format}
-                camera={camera}
+                fileSize={fileSize}
+                quality={quality}
                 onPriceChange={setPrice}
                 onResolutionChange={setResolution}
-                onFormatChange={setFormat}
-                onCameraChange={setCamera}
+                onFileSizeChange={setFileSize}
+                onQualityChange={setQuality}
                 errors={errors}
               />
             }

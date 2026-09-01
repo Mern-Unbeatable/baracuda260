@@ -173,10 +173,10 @@ AdsActionMenu.displayName = 'AdsActionMenu';
 const AdsTableRow = memo(
   ({ row, openActionId, onToggleAction, onCloseAction, onSeeDetails, onSelectStatus }) => {
     const { t } = useTranslation();
-    const hidden = row.status === ADS_STATUS.HIDDEN;
+    const rejected = row.status === ADS_STATUS.REJECTED;
 
     return (
-      <tr className={`border-b border-[#e4e4e4] ${hidden ? 'opacity-50' : ''}`}>
+      <tr className={`border-b border-[#e4e4e4] ${rejected ? 'opacity-50' : ''}`}>
         <td className="min-w-[160px] px-[26px] py-6 text-[16px] leading-6 text-[#0c0c0c]">
           {t(row.nameKey)}
         </td>
@@ -298,7 +298,7 @@ const AdsMobileCards = memo(
           <article
             key={row.id}
             className={`flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0 ${
-              row.status === ADS_STATUS.HIDDEN ? 'opacity-50' : ''
+              row.status === ADS_STATUS.REJECTED ? 'opacity-50' : ''
             }`}
           >
             <div className="flex items-start justify-between gap-3">

@@ -1079,8 +1079,8 @@
       "menu": "Akcje dla {{name}}",
       "menuAria": "Akcje reklamy dla {{name}}",
       "seeDetails": "Zobacz szczegóły",
-      "hide": "Ukryj",
-      "delete": "Usuń"
+      "publish": "Opublikuj",
+      "reject": "Odrzuć"
     },
     "drawer": {
       "title": "Szczegóły reklamy",

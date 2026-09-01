@@ -28,6 +28,8 @@ const ZodiacStoryFormPanel = memo(
     onPublishTargetChange,
     copyrightOk,
     onCopyrightChange,
+    aiCreated = '',
+    onAiCreatedChange,
     errors = {},
     isSell = false,
     sellFields = null,
@@ -62,7 +64,7 @@ const ZodiacStoryFormPanel = memo(
             </select>
 
             <select value={subCategory} onChange={(event) => onSubCategoryChange(event.target.value)} className={fieldClass}>
-              <option value="">{t('common.selectSubcategory', { defaultValue: 'Select subcategory' })}</option>
+              <option value="">{t('uploadForm.selectSubcategory', { defaultValue: 'Select subcategory' })}</option>
               <option value="night-sky">Night Sky</option>
               <option value="constellation">Constellation</option>
               <option value="deep-space">Deep Space</option>
@@ -92,15 +94,15 @@ const ZodiacStoryFormPanel = memo(
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium text-[#494453]">Resolution</span>
+                <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.resolution')}</span>
                 <input value={resolution} onChange={(event) => onResolutionChange(event.target.value)} className={fieldClass} />
               </label>
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium text-[#494453]">File Size</span>
+                <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.fileSize')}</span>
                 <input value={fileSize} onChange={(event) => onFileSizeChange(event.target.value)} className={fieldClass} />
               </label>
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium text-[#494453]">Quality</span>
+                <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.quality')}</span>
                 <input value={quality} onChange={(event) => onQualityChange(event.target.value)} className={fieldClass} />
               </label>
             </div>
@@ -143,6 +145,36 @@ const ZodiacStoryFormPanel = memo(
             </div>
           </>
         )}
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-[16px] font-medium leading-6 text-[#323030]">
+          {t('uploadForm.aiCreatedQuestion')}
+        </p>
+        <div className="flex flex-wrap items-center gap-6">
+          <label className="flex cursor-pointer items-center gap-2.5">
+            <input
+              type="checkbox"
+              checked={aiCreated === 'yes'}
+              onChange={() => onAiCreatedChange?.(aiCreated === 'yes' ? '' : 'yes')}
+              className="size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+            />
+            <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+              {t('uploadForm.aiCreatedYes')}
+            </span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2.5">
+            <input
+              type="checkbox"
+              checked={aiCreated === 'no'}
+              onChange={() => onAiCreatedChange?.(aiCreated === 'no' ? '' : 'no')}
+              className="size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+            />
+            <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+              {t('uploadForm.aiCreatedNo')}
+            </span>
+          </label>
+        </div>
       </div>
 
       <label className="flex cursor-pointer items-start gap-3">

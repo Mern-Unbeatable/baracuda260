@@ -10,12 +10,12 @@ const MemberSellPhotoFields = memo(({
   idPrefix,
   price,
   resolution,
-  format,
-  camera,
+  fileSize,
+  quality,
   onPriceChange,
   onResolutionChange,
-  onFormatChange,
-  onCameraChange,
+  onFileSizeChange,
+  onQualityChange,
   errors = {},
 }) => {
   const { t } = useTranslation();
@@ -45,7 +45,7 @@ const MemberSellPhotoFields = memo(({
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         <div className="flex flex-col gap-2.5">
           <label htmlFor={`${idPrefix}-resolution`} className={labelClassName}>
-            {t('sellPhotos.fields.resolution')}
+            {t('uploadForm.resolution')}
           </label>
           <input
             id={`${idPrefix}-resolution`}
@@ -64,41 +64,41 @@ const MemberSellPhotoFields = memo(({
         </div>
 
         <div className="flex flex-col gap-2.5">
-          <label htmlFor={`${idPrefix}-format`} className={labelClassName}>
-            {t('sellPhotos.fields.format')}
+          <label htmlFor={`${idPrefix}-file-size`} className={labelClassName}>
+            {t('uploadForm.fileSize')}
           </label>
           <input
-            id={`${idPrefix}-format`}
+            id={`${idPrefix}-file-size`}
             type="text"
-            value={format}
-            onChange={(event) => onFormatChange(event.target.value)}
-            placeholder={t('sellPhotos.fields.formatPlaceholder')}
-            aria-invalid={Boolean(errors.format)}
+            value={fileSize}
+            onChange={(event) => onFileSizeChange(event.target.value)}
+            placeholder="125 KB"
+            aria-invalid={Boolean(errors.fileSize)}
             className={inputClassName}
           />
-          {errors.format ? (
+          {errors.fileSize ? (
             <p className="text-sm text-red-600" role="alert">
-              {errors.format}
+              {errors.fileSize}
             </p>
           ) : null}
         </div>
 
         <div className="flex flex-col gap-2.5">
-          <label htmlFor={`${idPrefix}-camera`} className={labelClassName}>
-            {t('sellPhotos.fields.camera')}
+          <label htmlFor={`${idPrefix}-quality`} className={labelClassName}>
+            {t('uploadForm.quality')}
           </label>
           <input
-            id={`${idPrefix}-camera`}
+            id={`${idPrefix}-quality`}
             type="text"
-            value={camera}
-            onChange={(event) => onCameraChange(event.target.value)}
-            placeholder={t('sellPhotos.fields.cameraPlaceholder')}
-            aria-invalid={Boolean(errors.camera)}
+            value={quality}
+            onChange={(event) => onQualityChange(event.target.value)}
+            placeholder="4K"
+            aria-invalid={Boolean(errors.quality)}
             className={inputClassName}
           />
-          {errors.camera ? (
+          {errors.quality ? (
             <p className="text-sm text-red-600" role="alert">
-              {errors.camera}
+              {errors.quality}
             </p>
           ) : null}
         </div>
