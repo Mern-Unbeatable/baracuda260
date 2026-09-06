@@ -88,7 +88,7 @@ const ZodiacStoryFormPanel = memo(
                 placeholder={t(`${i18nPrefix}.storyPlaceholder`)}
                 rows={5}
                 aria-invalid={Boolean(errors.story)}
-                className={`${fieldClass} min-h-[147px] resize-y`}
+                className={`${fieldClass} min-h-36.75 resize-y`}
               />
               {errors.story ? <p className="text-sm text-red-600" role="alert">{errors.story}</p> : null}
             </div>
@@ -158,7 +158,7 @@ const ZodiacStoryFormPanel = memo(
               type="checkbox"
               checked={aiCreated === 'yes'}
               onChange={() => onAiCreatedChange?.(aiCreated === 'yes' ? '' : 'yes')}
-              className="size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+              className="size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
             />
             <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
               {t('uploadForm.aiCreatedYes')}
@@ -169,7 +169,7 @@ const ZodiacStoryFormPanel = memo(
               type="checkbox"
               checked={aiCreated === 'no'}
               onChange={() => onAiCreatedChange?.(aiCreated === 'no' ? '' : 'no')}
-              className="size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+              className="size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
             />
             <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
               {t('uploadForm.aiCreatedNo')}
@@ -189,7 +189,7 @@ const ZodiacStoryFormPanel = memo(
           type="checkbox"
           checked={copyrightOk}
           onChange={(event) => onCopyrightChange(event.target.checked)}
-          className="mt-1 size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+          className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
         />
         <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
           {t(`${i18nPrefix}.copyrightConfirm`)}

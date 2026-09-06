@@ -100,7 +100,7 @@ const MemberArtworkDetailContent = memo(() => {
         ];
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-6 sm:gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-6 sm:gap-8">
       <Link
         to={ROUTES.ADMIN_MY_ARTWORK}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"

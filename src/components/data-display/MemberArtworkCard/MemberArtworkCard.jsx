@@ -101,7 +101,7 @@ const MemberArtworkCard = memo(({ item, badgeLabel, onEdit, onDelete, onPromote 
           ) : null}
         </div>
 
-        <div className="mt-4 min-h-[170px]">
+        <div className="mt-4 min-h-42.5">
           <MemberArtworkCardFooter item={item} />
         </div>
       </div>

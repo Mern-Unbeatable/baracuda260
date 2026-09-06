@@ -19,18 +19,18 @@ import {
 const SlotIcon = memo(({ slot }) => {
   if (slot.iconBg && slot.iconOverlay) {
     return (
-      <span className="relative size-[35px] shrink-0 overflow-hidden">
+      <span className="relative size-8.75 shrink-0 overflow-hidden">
         <img
           src={slot.iconBg}
           alt=""
           width={35}
           height={35}
-          className="absolute inset-0 size-[35px] object-contain"
+          className="absolute inset-0 size-8.75 object-contain"
         />
         <img
           src={slot.iconOverlay}
           alt=""
-          className="absolute left-1/2 top-1/2 max-h-[26px] max-w-[26px] -translate-x-1/2 -translate-y-1/2 object-contain"
+          className="absolute left-1/2 top-1/2 max-h-6.5 max-w-6.5 -translate-x-1/2 -translate-y-1/2 object-contain"
         />
       </span>
     );
@@ -43,7 +43,7 @@ const SlotIcon = memo(({ slot }) => {
         alt=""
         width={35}
         height={35}
-        className="size-[35px] shrink-0 object-contain"
+        className="size-8.75 shrink-0 object-contain"
       />
     );
   }
@@ -62,7 +62,7 @@ const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLab
 
   return (
     <article
-      className={`flex h-full min-w-0 flex-col gap-[27px] rounded-[12px] border bg-white p-5 ${themeStyles.cardBorder}`}
+      className={`flex h-full min-w-0 flex-col gap-6.75 rounded-xl border bg-white p-5 ${themeStyles.cardBorder}`}
     >
       <div className="flex w-full flex-1 flex-col items-center gap-5">
         <div className="flex w-full items-center justify-between whitespace-nowrap">
@@ -107,7 +107,7 @@ const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLab
         <button
           type="button"
           onClick={onAddPhoto}
-          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/[0.02] ${themeStyles.buttonBorder} ${themeStyles.buttonText}`}
+          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${themeStyles.buttonBorder} ${themeStyles.buttonText}`}
         >
           <img
             src={themeStyles.upload}
@@ -230,7 +230,7 @@ const SixPhotoContent = memo(({
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <Link
         to={backHref}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#202020] transition hover:text-[#ee1c25]"
@@ -312,7 +312,7 @@ const SixPhotoContent = memo(({
         </div>
 
         <section className="flex w-full flex-col gap-7">
-          <div className="flex max-w-[485px] flex-col gap-3">
+          <div className="flex max-w-121.25 flex-col gap-3">
             <h2 className="text-[20px] font-semibold leading-6 text-[#0b0b0b]">
               {t('sixPhoto.slotsTitle')}
             </h2>
@@ -321,7 +321,7 @@ const SixPhotoContent = memo(({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 items-stretch gap-[14px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid grid-cols-1 items-stretch gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {slots.map((slot) => (
               <ZodiacSlotCard
                 key={slot.id}
@@ -349,7 +349,7 @@ const SixPhotoContent = memo(({
           </p>
           <button
             type="button"
-            className="mt-4 flex h-[112px] w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
+            className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
           >
             <Upload size={24} className="mb-2 text-[#b1b6c5]" />
             <span className="text-[16px] leading-6">Click to upload Videos or drag &amp; drop</span>

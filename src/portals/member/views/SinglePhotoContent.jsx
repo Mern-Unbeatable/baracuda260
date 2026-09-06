@@ -133,13 +133,13 @@ const SinglePhotoContent = memo(({
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1580px]">
+    <div className="mx-auto w-full max-w-395">
       {/* Figma: left 930 | gap ~71 | right 579 */}
-      <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-10 xl:gap-[71px]">
+      <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-10 xl:gap-17.75">
         {/* LEFT */}
         <div className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-[34px]">
+            <div className="flex flex-col gap-8.5">
               <Link
                 to={backHref}
                 className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
@@ -148,7 +148,7 @@ const SinglePhotoContent = memo(({
                 {t('singlePhoto.backToSelection')}
               </Link>
 
-              <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-[26px]">
+              <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-6.5">
                 <p className="mb-5 whitespace-pre-wrap text-[16px] font-medium uppercase tracking-[0.28em] text-[#28252f]">
                   {t('singlePhoto.selectSign')}
                 </p>
@@ -160,7 +160,7 @@ const SinglePhotoContent = memo(({
                     onClick={() => {
                       setSignOpen((open) => !open);
                     }}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-[14px] text-left"
+                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-3.5 text-left"
                   >
                     <span className="flex min-w-0 items-center gap-1.5">
                       <ZodiacIcon sign={selectedSign} />
@@ -207,15 +207,15 @@ const SinglePhotoContent = memo(({
               </section>
             </div>
 
-            <div className="relative h-[46px] w-full overflow-visible" aria-hidden="true">
+            <div className="relative h-11.5 w-full overflow-visible" aria-hidden="true">
               <img
                 src={SINGLE_PHOTO_ASSETS.wave}
                 alt=""
-                className="absolute inset-x-0 top-0 h-[58px] w-full object-fill"
+                className="absolute inset-x-0 top-0 h-14.5 w-full object-fill"
               />
             </div>
 
-            <div className="flex w-full max-w-[485px] flex-col gap-4">
+            <div className="flex w-full max-w-121.25 flex-col gap-4">
               <h1 className="text-[24px] font-semibold leading-6 text-[#2a282d]">
                 {t('singlePhoto.slotsTitle')}
               </h1>
@@ -225,7 +225,7 @@ const SinglePhotoContent = memo(({
             </div>
           </div>
 
-          <article className="flex w-full flex-col items-center gap-[27px] rounded-xl border border-[#c4c6f0] bg-white p-5">
+          <article className="flex w-full flex-col items-center gap-6.75 rounded-xl border border-[#c4c6f0] bg-white p-5">
             <div className="flex w-full flex-col items-center gap-5">
               <div className="flex w-full items-center justify-between">
                 <p className="text-[20px] font-semibold leading-6 text-[#4048cd]">
@@ -236,7 +236,7 @@ const SinglePhotoContent = memo(({
                 </p>
               </div>
 
-              <div className="flex w-[149px] flex-col items-center gap-3">
+              <div className="flex w-37.25 flex-col items-center gap-3">
                 <ZodiacIcon sign={selectedSign} variant="slot" />
                 <div className="flex w-full flex-col items-center gap-1 text-center">
                   <p className="w-full text-[20px] font-medium leading-6 text-[#1b1e56]">
@@ -298,7 +298,7 @@ const SinglePhotoContent = memo(({
             </p>
             <button
               type="button"
-              className="mt-4 flex h-[112px] w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
+              className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
             >
               <Upload size={24} className="mb-2 text-[#b1b6c5]" />
               <span className="text-[16px] leading-6">Click to upload Videos or drag &amp; drop</span>
@@ -308,7 +308,7 @@ const SinglePhotoContent = memo(({
         </div>
 
         {/* RIGHT — Figma y=170 aligns with select card (after back link) */}
-        <aside className="w-full min-w-0 lg:mt-[58px] lg:sticky lg:top-0">
+        <aside className="w-full min-w-0 lg:mt-14.5 lg:sticky lg:top-0">
           <ZodiacStoryFormPanel
             t={t}
             i18nPrefix="singlePhoto"

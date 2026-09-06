@@ -100,7 +100,7 @@ function usePlanCardProps(index) {
   };
 }
 
-function ScrollPreview({ children, className = 'max-h-[640px]' }) {
+function ScrollPreview({ children, className = 'max-h-160' }) {
   return <div className={`overflow-auto ${className}`}>{children}</div>;
 }
 
@@ -277,7 +277,7 @@ function GalleryDetailViewPreview({ variantId }) {
   };
   const cfg = configs[variantId] ?? configs.single;
   return (
-    <ScrollPreview className="max-h-[720px]">
+    <ScrollPreview className="max-h-180">
       <GalleryDetailView entry={cfg.entry} variant={cfg.variant} />
     </ScrollPreview>
   );
@@ -375,9 +375,9 @@ function MemberPromotePanelPreview() {
 
 function AdvertiseBusinessFormPreview() {
   return (
-    <ScrollPreview className="max-h-[900px]">
-      <div className="mx-auto w-full max-w-[1200px] space-y-6">
-        <section className="rounded-2xl bg-[radial-gradient(circle_at_top_left,_#fde8e9,_#eef0ff_58%,_#f8fbff)] px-6 py-16 text-center sm:px-12">
+    <ScrollPreview className="max-h-225">
+      <div className="mx-auto w-full max-w-300 space-y-6">
+        <section className="rounded-2xl bg-[radial-gradient(circle_at_top_left,#fde8e9,#eef0ff_58%,#f8fbff)] px-6 py-16 text-center sm:px-12">
           <p className="mx-auto inline-flex rounded-full border border-[#f3c1c4] bg-white/70 px-3 py-1 text-[11px] font-medium text-[#5b6270]">
             Official Lumina Advertising Network
           </p>
@@ -386,7 +386,7 @@ function AdvertiseBusinessFormPreview() {
             <br />
             Our Photography <span className="text-[#4048cd]">Community</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-[760px] text-[18px] leading-[1.45] text-[#555b68] sm:text-[20px]">
+          <p className="mx-auto mt-3 max-w-190 text-[18px] leading-[1.45] text-[#555b68] sm:text-[20px]">
             Reach photographers, artists, and photography enthusiasts by displaying your business on
             our platform. High-intent audience, verified placements, and instant transparent
             analytics.
@@ -454,7 +454,7 @@ const PREVIEWS = {
   'six-story-strip': SixStoryStripPreview,
   'twelve-story-strip': TwelveStoryStripPreview,
   'buy-photo-detail-view': () => (
-    <ScrollPreview className="max-h-[720px]">
+    <ScrollPreview className="max-h-180">
       <BuyPhotoDetailView photo={DEMO_BUY_PHOTO} />
     </ScrollPreview>
   ),
@@ -508,7 +508,7 @@ const PREVIEWS = {
   ),
   'overlay-badge': () => <OverlayBadge>Single Photo</OverlayBadge>,
   'photo-showcase-page-content': () => (
-    <ScrollPreview className="max-h-[720px]">
+    <ScrollPreview className="max-h-180">
       <PhotoShowcasePageContent photos={GALLERY_PHOTOS} i18nPrefix="gallery" />
     </ScrollPreview>
   ),

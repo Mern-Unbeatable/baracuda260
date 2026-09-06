@@ -57,7 +57,7 @@ const AdvertiseBusinessForm = memo(({ className = '', defaultDuration = 14, onSu
           </div>
         </div>
 
-        <div className="grid w-full max-w-[420px] grid-cols-2 rounded-full border border-[#e5e7eb] bg-[#f5f6fa] p-1">
+        <div className="grid w-full max-w-105 grid-cols-2 rounded-full border border-[#e5e7eb] bg-[#f5f6fa] p-1">
           <button
             type="button"
             onClick={() => setBusinessType('local')}
@@ -192,7 +192,7 @@ const AdvertiseBusinessForm = memo(({ className = '', defaultDuration = 14, onSu
           <MarketingButton
             type="submit"
             variant="muted"
-            className="!rounded-[8px] !bg-[#4048CD] !px-10 !py-2.5 !text-white hover:!bg-[#333BB0]"
+            className="rounded-lg! bg-[#4048CD]! px-10! py-2.5! text-white! hover:bg-[#333BB0]!"
           >
             Pay Now
           </MarketingButton>

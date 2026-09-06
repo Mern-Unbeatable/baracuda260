@@ -20,18 +20,18 @@ import {
 const SlotIcon = memo(({ slot }) => {
   if (slot.iconBg && slot.iconOverlay) {
     return (
-      <span className="relative size-[35px] shrink-0 overflow-hidden">
+      <span className="relative size-8.75 shrink-0 overflow-hidden">
         <img
           src={slot.iconBg}
           alt=""
           width={35}
           height={35}
-          className="absolute inset-0 size-[35px] object-contain"
+          className="absolute inset-0 size-8.75 object-contain"
         />
         <img
           src={slot.iconOverlay}
           alt=""
-          className="absolute left-1/2 top-1/2 max-h-[26px] max-w-[26px] -translate-x-1/2 -translate-y-1/2 object-contain"
+          className="absolute left-1/2 top-1/2 max-h-6.5 max-w-6.5 -translate-x-1/2 -translate-y-1/2 object-contain"
         />
       </span>
     );
@@ -44,7 +44,7 @@ const SlotIcon = memo(({ slot }) => {
         alt=""
         width={35}
         height={35}
-        className="size-[35px] shrink-0 object-contain"
+        className="size-8.75 shrink-0 object-contain"
       />
     );
   }
@@ -60,7 +60,7 @@ const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel,
 
   return (
     <article
-      className={`flex h-full min-w-0 w-full flex-col gap-[27px] rounded-[12px] border bg-white p-5 ${theme.cardBorder}`}
+      className={`flex h-full min-w-0 w-full flex-col gap-6.75 rounded-xl border bg-white p-5 ${theme.cardBorder}`}
     >
       <div className="flex w-full flex-1 flex-col items-center gap-5">
         <div className="flex w-full items-center justify-between whitespace-nowrap">
@@ -105,7 +105,7 @@ const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel,
         <button
           type="button"
           onClick={onAddPhoto}
-          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/[0.02] ${theme.buttonBorder} ${theme.buttonText}`}
+          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${theme.buttonBorder} ${theme.buttonText}`}
         >
           <img
             src={theme.upload}
@@ -210,7 +210,7 @@ const Zodiac12Content = memo(({
   };
 
   const renderSlotGrid = (slots) => (
-    <div className="grid w-full grid-cols-1 items-stretch gap-[14px] sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid w-full grid-cols-1 items-stretch gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
       {slots.map((slot) => (
         <ZodiacSlotCard
           key={slot.id}
@@ -226,7 +226,7 @@ const Zodiac12Content = memo(({
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <Link
         to={backHref}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
@@ -235,7 +235,7 @@ const Zodiac12Content = memo(({
         {t('zodiac12.backToSelection')}
       </Link>
 
-      <div className="relative h-[64px] w-full overflow-visible sm:h-[80px] lg:h-[103px]" aria-hidden="true">
+      <div className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75" aria-hidden="true">
         <img
           src={ZODIAC12_ASSETS.dualWave}
           alt=""
@@ -243,16 +243,16 @@ const Zodiac12Content = memo(({
         />
       </div>
 
-      <section className="flex w-full flex-col items-center gap-6 rounded-[20px] bg-[#ecedfa] px-5 py-6 sm:px-10 lg:flex-row lg:justify-center lg:gap-[84px] lg:px-16 xl:px-[208px]">
+      <section className="flex w-full flex-col items-center gap-6 rounded-[20px] bg-[#ecedfa] px-5 py-6 sm:px-10 lg:flex-row lg:justify-center lg:gap-21 lg:px-16 xl:px-52">
         <img
           src={ZODIAC12_ASSETS.sun}
           alt=""
           width={132}
           height={132}
-          className="size-20 shrink-0 object-contain sm:size-28 lg:size-[132px]"
+          className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
         />
-        <div className="flex max-w-[736px] flex-col items-center gap-2 text-center">
-          <h1 className="text-[24px] font-semibold leading-[1.35] text-black sm:text-[30px] lg:text-[36px] lg:leading-[50px]">
+        <div className="flex max-w-184 flex-col items-center gap-2 text-center">
+          <h1 className="text-[24px] font-semibold leading-[1.35] text-black sm:text-[30px] lg:text-[36px] lg:leading-12.5">
             <Trans
               i18nKey="zodiac12.bannerTitle"
               components={{
@@ -270,7 +270,7 @@ const Zodiac12Content = memo(({
           alt=""
           width={132}
           height={132}
-          className="size-20 shrink-0 object-contain sm:size-28 lg:size-[132px]"
+          className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
         />
       </section>
 
