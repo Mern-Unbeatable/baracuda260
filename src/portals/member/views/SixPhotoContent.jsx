@@ -6,6 +6,7 @@ import { ROUTES } from '@/shared/config';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
 import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
+import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_CATEGORY,
@@ -56,7 +57,7 @@ SlotIcon.displayName = 'SlotIcon';
  * Zodiac slot card — Figma 190:331 (red) / 190:872 (blue).
  * Equal-height row; date band reserved so CTAs share one baseline.
  */
-const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLabel, addLabel }) => {
+const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLabel, addLabel, showAiBadge = false }) => {
   const { t } = useTranslation();
 
   return (
@@ -89,8 +90,11 @@ const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLab
       </div>
 
       {preview ? (
-        <div className="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10">
-          <img src={preview} alt="" className="h-24 w-full object-cover" />
+        <UploadedPhotoPreview
+          src={preview}
+          frameClassName="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10"
+          showAiBadge={showAiBadge}
+        >
           <button
             type="button"
             onClick={onAddPhoto}
@@ -98,7 +102,7 @@ const ZodiacSlotCard = memo(({ slot, themeStyles, preview, onAddPhoto, changeLab
           >
             {changeLabel}
           </button>
-        </div>
+        </UploadedPhotoPreview>
       ) : (
         <button
           type="button"
@@ -327,6 +331,7 @@ const SixPhotoContent = memo(({
                 onAddPhoto={() => handlePickPhoto(slot.id)}
                 addLabel={t('sixPhoto.addPhoto')}
                 changeLabel={t('sixPhoto.changePhoto')}
+                showAiBadge={aiCreated === 'yes'}
               />
             ))}
           </div>

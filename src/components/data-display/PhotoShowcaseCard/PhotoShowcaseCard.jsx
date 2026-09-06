@@ -4,6 +4,7 @@ import { Bookmark, Calendar, Eye, Heart, Images, MoreVertical } from 'lucide-rea
 import { AppLink, ImgIcon } from '@/shared/site-chrome';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
+import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
 
 const TROPHY_ICON = '/assets/home/icon-trophy-cup.svg';
 
@@ -46,6 +47,7 @@ const PhotoShowcaseCard = memo(
     competitionLabel,
     winnerRank,
     extraPhotosLabel,
+    isAiGenerated = false,
     className = '',
     onMenuClick,
   }) => {
@@ -96,6 +98,8 @@ const PhotoShowcaseCard = memo(
                 {badge}
               </ImageOverlayBadge>
             ) : null}
+
+            <PhotoAiBadgeOverlay show={isAiGenerated} placement="card-end" size="sm" />
 
             <button
               type="button"

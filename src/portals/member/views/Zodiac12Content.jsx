@@ -7,6 +7,7 @@ import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
 import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
+import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
 import {
   ALL_SLOTS,
   ARTISTIC_CATEGORIES,
@@ -53,7 +54,7 @@ const SlotIcon = memo(({ slot }) => {
 
 SlotIcon.displayName = 'SlotIcon';
 
-const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel }) => {
+const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel, showAiBadge = false }) => {
   const { t } = useTranslation();
   const theme = slot.theme;
 
@@ -87,8 +88,11 @@ const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel 
       </div>
 
       {preview ? (
-        <div className="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10">
-          <img src={preview} alt="" className="h-24 w-full object-cover" />
+        <UploadedPhotoPreview
+          src={preview}
+          frameClassName="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10"
+          showAiBadge={showAiBadge}
+        >
           <button
             type="button"
             onClick={onAddPhoto}
@@ -96,7 +100,7 @@ const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel 
           >
             {changeLabel}
           </button>
-        </div>
+        </UploadedPhotoPreview>
       ) : (
         <button
           type="button"
@@ -215,6 +219,7 @@ const Zodiac12Content = memo(({
           onAddPhoto={() => handlePickPhoto(slot.id)}
           addLabel={t('zodiac12.addPhoto')}
           changeLabel={t('zodiac12.changePhoto')}
+          showAiBadge={aiCreated === 'yes'}
         />
       ))}
     </div>

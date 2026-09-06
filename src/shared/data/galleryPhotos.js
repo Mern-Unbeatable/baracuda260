@@ -18,6 +18,7 @@ const GALLERY_PHOTOS_RAW = [
     image: `${A}/photo-golden.jpg`,
     description:
       'Warm golden-hour light settles over a quiet scene. Soft shadows and a cinematic glow create a peaceful, story-rich atmosphere.',
+    isAiGenerated: true,
   },
   {
     id: 'autumn-sequence',
@@ -59,6 +60,7 @@ const GALLERY_PHOTOS_RAW = [
     image: `${A}/photo-city.jpg`,
     description:
       'Night city lights stretch across glass towers and wet streets. Cool blues and neon highlights build a cinematic after-midnight mood.',
+    isAiGenerated: true,
   },
   {
     id: 'tidal-memory',
@@ -72,6 +74,7 @@ const GALLERY_PHOTOS_RAW = [
     image: `${A}/photo-tidal.jpg`,
     description:
       'A tidal shoreline story told across connected zodiac frames. Soft sea light and layered horizons guide the viewer through memory and motion.',
+    isAiGenerated: true,
   },
   {
     id: 'forest-cathedral',

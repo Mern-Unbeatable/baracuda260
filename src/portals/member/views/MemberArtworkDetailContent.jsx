@@ -15,6 +15,9 @@ import {
   isBlueSlide,
 } from '@/shared/data/galleryDetail';
 import SignBadge from '@/components/data-display/SignBadge/SignBadge';
+import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
+import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
 import { ImgIcon } from '@/shared/site-chrome';
@@ -71,6 +74,7 @@ const MemberArtworkDetailContent = memo(() => {
     photographer: detail.photographer ?? detail.author,
     badge: detail.badge ?? detail.albumBadge,
     date: detail.uploadedDate,
+    isAiGenerated: detail.isAiGenerated,
   });
 
   const badgeLabel =
@@ -114,6 +118,7 @@ const MemberArtworkDetailContent = memo(() => {
           className="absolute inset-0 h-full w-full object-cover"
         />
         {activeSlide ? <SignBadge slide={activeSlide} blue={blueBadge} /> : null}
+        <PhotoAiBadgeOverlay show={detail.isAiGenerated} placement="hero-end" size="lg" />
 
         {showStoryChrome || slideCount > 1 ? (
           <>
@@ -183,12 +188,14 @@ const MemberArtworkDetailContent = memo(() => {
             {tag}
           </span>
         ))}
+        {detail.isAiGenerated ? <AiGeneratedPhotoBadge variant="inline" size="md" /> : null}
       </div>
 
       <div>
         <h1 className="text-[28px] font-semibold leading-tight text-[#161c27] sm:text-[32px]">
           {detail.title}
         </h1>
+        {detail.isAiGenerated ? <AiGeneratedDetailNotice className="mt-4" /> : null}
         <p className="mt-3 max-w-4xl text-[16px] leading-6 text-[#494453] sm:mt-4 sm:text-[17px] sm:leading-7">
           {t(detail.descriptionKey)}
         </p>

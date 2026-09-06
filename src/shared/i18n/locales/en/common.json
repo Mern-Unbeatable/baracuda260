@@ -135,6 +135,9 @@
     "aiCreatedQuestion": "Was that photo or video created by AI?",
     "aiCreatedYes": "Yes",
     "aiCreatedNo": "No",
+    "aiGeneratedBadge": "AI",
+    "aiGeneratedBadgeLabel": "AI-generated content",
+    "aiCreatedConfirmed": "This artwork will be labeled as AI-generated in the gallery and on your profile.",
     "resolution": "Resolution",
     "fileSize": "File Size",
     "quality": "Quality"

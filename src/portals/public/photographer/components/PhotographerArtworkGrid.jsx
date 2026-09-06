@@ -159,6 +159,7 @@ const PhotographerArtworkGrid = memo(
               views={photo.views}
               date={photo.date}
               price={showPrice ? photo.price : undefined}
+              isAiGenerated={photo.isAiGenerated}
               competitionLabel={
                 showCompetitionTag && photo.inCompetition
                   ? t('photographerProfile.competitionTag')

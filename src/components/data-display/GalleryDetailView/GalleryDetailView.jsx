@@ -10,6 +10,9 @@ import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonati
 import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
 import SignBadge from '@/components/data-display/SignBadge/SignBadge';
+import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
+import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
 import {
@@ -102,6 +105,7 @@ const GalleryDetailView = memo(
                 className="absolute inset-0 h-full w-full object-cover"
               />
               {activeSlide ? <SignBadge slide={activeSlide} blue={blueBadge} /> : null}
+              <PhotoAiBadgeOverlay show={story.isAiGenerated} placement="hero-end" size="lg" />
 
               {showStoryChrome ? (
                 <>
@@ -183,11 +187,17 @@ const GalleryDetailView = memo(
                       {tag}
                     </span>
                   ))}
+                  {story.isAiGenerated ? (
+                    <AiGeneratedPhotoBadge variant="inline" size="md" />
+                  ) : null}
                 </div>
 
                 <h1 className="mt-3 text-[26px] font-semibold leading-tight text-(--primary-text-heading-color) sm:mt-4 sm:text-[30px] xl:text-[32px]">
                   {story.title}
                 </h1>
+                {story.isAiGenerated ? (
+                  <AiGeneratedDetailNotice className="mt-4" />
+                ) : null}
                 <p className="mt-3 max-w-3xl text-[16px] font-normal leading-6 text-(--primary-text-color) sm:mt-4 sm:text-[17px] sm:leading-6.75">
                   {story.description}
                 </p>

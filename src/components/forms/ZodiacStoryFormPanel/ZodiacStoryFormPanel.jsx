@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { MapPin, Sparkles } from 'lucide-react';
+import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 
 const fieldClass =
   'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[14px] leading-6 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30';
@@ -175,6 +176,12 @@ const ZodiacStoryFormPanel = memo(
             </span>
           </label>
         </div>
+        {aiCreated === 'yes' ? (
+          <p className="flex items-center gap-2.5 rounded-lg border border-[#4048cd]/15 bg-[#eef0ff] px-3.5 py-2.5 text-[13px] leading-5 text-[#4048cd]">
+            <AiGeneratedPhotoBadge variant="inline" size="sm" />
+            <span>{t('uploadForm.aiCreatedConfirmed')}</span>
+          </p>
+        ) : null}
       </div>
 
       <label className="flex cursor-pointer items-start gap-3">

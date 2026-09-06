@@ -1,5 +1,7 @@
 /** Shared assets + variant config for gallery detail pages. */
 
+import { GALLERY_PHOTOS } from './galleryPhotos';
+
 const A = '/assets/home';
 
 export const GALLERY_DETAIL_ASSETS = {
@@ -63,6 +65,7 @@ export const resolveGalleryImageDetails = (story) => {
     uploadDate: fromStory.uploadDate ?? story.date ?? DEFAULT_GALLERY_IMAGE_DETAILS.uploadDate,
     categories:
       fromStory.categories ?? (categories || DEFAULT_GALLERY_IMAGE_DETAILS.categories),
+    isAiGenerated: Boolean(fromStory.isAiGenerated ?? story.isAiGenerated),
   };
 };
 
@@ -116,6 +119,16 @@ export const GALLERY_DETAIL_VARIANTS = {
     commentFieldId: 'gallery-twelve-comment',
     stripAccent: 'mixed',
   },
+};
+
+/** Merge listing metadata (e.g. AI flag) when the detail id matches a gallery photo. */
+export const mergeGalleryPhotoMeta = (id, entry) => {
+  const photo = GALLERY_PHOTOS.find((item) => item.id === id);
+  if (!photo || !entry) return entry;
+  return {
+    ...entry,
+    isAiGenerated: entry.isAiGenerated ?? photo.isAiGenerated ?? false,
+  };
 };
 
 /** Normalize a single-photo gallery entry into the shared story shape. */

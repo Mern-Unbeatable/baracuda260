@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState } from 'react';
+import { Trans } from 'react-i18next';
 import { Globe, MapPin, Store, Upload } from 'lucide-react';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 
@@ -180,7 +181,14 @@ const AdvertiseBusinessForm = memo(({ className = '', defaultDuration = 14, onSu
           </div>
         </div>
 
-        <div className="pt-1">
+        <div className="space-y-4 pt-1">
+          <p className="rounded-lg bg-[#f9fafb] px-4 py-3 text-[13px] leading-relaxed text-[#6b7280] sm:text-[14px]">
+            <Trans
+              i18nKey="advertiseWithUs.reviewNote"
+              components={{ strong: <strong className="font-semibold text-[#374151]" /> }}
+            />
+          </p>
+
           <MarketingButton
             type="submit"
             variant="muted"

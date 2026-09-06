@@ -2,11 +2,12 @@ import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
 import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
+import { mergeGalleryPhotoMeta } from '@/shared/data/galleryDetail';
 import { getGallerySixStoryById } from '@/shared/data/gallerySixStory';
 
 const GallerySixDetail = memo(() => {
   const { id } = useParams();
-  const story = getGallerySixStoryById(id);
+  const story = mergeGalleryPhotoMeta(id, getGallerySixStoryById(id));
 
   useSEO({
     title: `${story.title} — 6 Photo Story`,

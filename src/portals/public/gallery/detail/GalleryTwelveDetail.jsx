@@ -2,11 +2,12 @@ import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
 import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
+import { mergeGalleryPhotoMeta } from '@/shared/data/galleryDetail';
 import { getGalleryTwelveStoryById } from '@/shared/data/galleryTwelveStory';
 
 const GalleryTwelveDetail = memo(() => {
   const { id } = useParams();
-  const story = getGalleryTwelveStoryById(id);
+  const story = mergeGalleryPhotoMeta(id, getGalleryTwelveStoryById(id));
 
   useSEO({
     title: `${story.title} — 12 Photo Zodiac`,
