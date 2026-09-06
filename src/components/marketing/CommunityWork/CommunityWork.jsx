@@ -117,6 +117,7 @@ const CommunityWork = memo(() => {
               views={photo.views}
               date={photo.date}
               price={photo.price}
+              isAiGenerated={photo.isAiGenerated}
             />
           ))}
         </div>

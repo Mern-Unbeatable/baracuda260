@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { ROUTES } from '@/shared/config';
 import { AppLink } from '@/shared/site-chrome';
+import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 
 const DetailRow = memo(({ label, children }) => (
   <div className="flex items-start gap-4 text-[14px] lg:text-[15px] leading-5 sm:gap-8">
@@ -67,6 +68,19 @@ const GalleryDetailImageDetails = memo(({ details }) => {
       value: details.categories,
     },
   ];
+
+  if (details.isAiGenerated) {
+    leftRows.push({
+      key: 'aiGenerated',
+      label: t('galleryDetail.imageDetails.aiGenerated'),
+      value: (
+        <span className="inline-flex items-center gap-2">
+          <AiGeneratedPhotoBadge variant="inline" size="sm" />
+          <span>{t('uploadForm.aiCreatedYes')}</span>
+        </span>
+      ),
+    });
+  }
 
   return (
     <div className="rounded-xl bg-[#F8FAFC] px-5 py-5 sm:px-8 sm:py-6">

@@ -338,6 +338,7 @@
     },
     "download": "Pobierz",
     "downloadPhoto": "Pobierz zdjęcie",
+    "aiGeneratedNotice": "Ten obraz został stworzony przy użyciu sztucznej inteligencji i jest odpowiednio oznaczony w celu zapewnienia przejrzystości.",
     "imageDetails": {
       "title": "Szczegóły zdjęcia",
       "credit": "Autor:",
@@ -347,7 +348,8 @@
       "fileType": "Typ pliku:",
       "fileSize": "Rozmiar pliku:",
       "uploadDate": "Data przesłania:",
-      "categories": "Kategorie:"
+      "categories": "Kategorie:",
+      "aiGenerated": "Wygenerowane przez AI:"
     },
     "votesReceived": "OTRZYMANE GŁOSY",
     "viewsCounted": "WYŚWIETLENIA",
@@ -796,6 +798,9 @@
         ]
       }
     ]
+  },
+  "advertiseWithUs": {
+    "reviewNote": "Prosimy o do <strong>48 godzin</strong> na sprawdzenie i weryfikację Twojej reklamy. Upewnimy się, że treść jest autentyczna i nie zawiera niczego nielegalnego ani nie narusza obowiązujących przepisów."
   },
   "competitionDetails": {
     "back": "Powrót do Moich konkursów",

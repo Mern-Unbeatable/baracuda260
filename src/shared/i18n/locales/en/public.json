@@ -338,6 +338,7 @@
     },
     "download": "Download",
     "downloadPhoto": "Download Photo",
+    "aiGeneratedNotice": "This image was created using artificial intelligence and is labeled accordingly for transparency.",
     "imageDetails": {
       "title": "Image Details",
       "credit": "Credit:",
@@ -347,7 +348,8 @@
       "fileType": "File Type:",
       "fileSize": "File size:",
       "uploadDate": "Upload date:",
-      "categories": "Categories:"
+      "categories": "Categories:",
+      "aiGenerated": "AI-generated:"
     },
     "votesReceived": "VOTES RECEIVED",
     "viewsCounted": "VIEWS COUNTED",
@@ -796,6 +798,9 @@
         ]
       }
     ]
+  },
+  "advertiseWithUs": {
+    "reviewNote": "Please allow us up to <strong>48 hours</strong> to review and verify your advertisement. We'll make sure the content is authentic and does not contain anything illegal or violate applicable laws."
   },
   "competitionDetails": {
     "back": "Back to My Competitions",

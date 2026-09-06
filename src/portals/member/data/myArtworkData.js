@@ -89,6 +89,7 @@ export const MY_ARTWORK_ITEMS = [
     votingEnds: '2026-08-31',
     progress: 75,
     createdAt: 8,
+    isAiGenerated: true,
   },
   {
     id: 'artwork-six-profile',
@@ -146,6 +147,7 @@ export const MY_ARTWORK_ITEMS = [
     votingEnds: '2026-08-31',
     progress: 62,
     createdAt: 5,
+    isAiGenerated: true,
   },
   {
     id: 'artwork-forest-profile',

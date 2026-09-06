@@ -6,6 +6,7 @@ import { ROUTES } from '@/shared/config';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
 import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
+import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_CATEGORY,
@@ -249,8 +250,13 @@ const SinglePhotoContent = memo(({
             </div>
 
             {photoPreview ? (
-              <div className="relative w-full overflow-hidden rounded-lg border border-[#c4c6f0]">
-                <img src={photoPreview} alt="" className="max-h-72 w-full object-cover" />
+              <UploadedPhotoPreview
+                src={photoPreview}
+                imageClassName="max-h-72 w-full object-cover"
+                frameClassName="relative w-full overflow-hidden rounded-lg border border-[#c4c6f0]"
+                showAiBadge={aiCreated === 'yes'}
+                badgeSize="md"
+              >
                 <button
                   type="button"
                   onClick={handlePickPhoto}
@@ -258,7 +264,7 @@ const SinglePhotoContent = memo(({
                 >
                   {t('singlePhoto.changePhoto')}
                 </button>
-              </div>
+              </UploadedPhotoPreview>
             ) : (
               <button
                 type="button"

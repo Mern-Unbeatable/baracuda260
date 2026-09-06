@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, Clock, Eye, Heart, Images } from 'lucide-react';
 import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu';
 import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCardFooter/MemberArtworkCardFooter';
+import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
 import { myArtworkDetailPath } from '@/portals/member/data/myArtworkDetailData';
 
 const BADGE_STYLES = {
@@ -34,6 +35,7 @@ const MemberArtworkCard = memo(({ item, badgeLabel, onEdit, onDelete, onPromote 
         >
           {badgeLabel}
         </span>
+        <PhotoAiBadgeOverlay show={item.isAiGenerated} placement="card-end" size="sm" />
         <MemberArtworkActionsMenu
           item={item}
           onEdit={onEdit}
