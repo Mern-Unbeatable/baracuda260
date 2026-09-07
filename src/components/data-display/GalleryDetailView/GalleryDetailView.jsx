@@ -237,7 +237,7 @@ const GalleryDetailView = memo(
                 </MarketingButton>
                 <MarketingButton
                   type="button"
-                  className="!bg-[#4048CD] !hover:bg-[#333BB0] active:scale-[0.98]"
+                  className="bg-[#4048CD]! !hover:bg-[#333BB0] active:scale-[0.98]"
                 >
                   {t('galleryDetail.downloadPhoto')}
                 </MarketingButton>
@@ -268,7 +268,7 @@ const GalleryDetailView = memo(
                 <MarketingButton
                   as={AppLink}
                   href={ROUTES.PHOTOGRAPHER_PROFILE}
-                  className="shrink-0 !bg-[#4048CD] hover:!bg-[#333BB0]"
+                  className="shrink-0 bg-[#4048CD]! hover:bg-[#333BB0]!"
                 >
                   {t('galleryDetail.photographerProfile')}
                 </MarketingButton>

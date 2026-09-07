@@ -163,7 +163,7 @@ const PhotoShowcaseCard = memo(
             </TitleTag>
 
             {description ? (
-              <p className="mt-2 line-clamp-2 text-[14px] leading-[1.5] text-[#6b7280]">{description}</p>
+              <p className="mt-2 line-clamp-2 text-[14px] leading-normal text-[#6b7280]">{description}</p>
             ) : null}
 
             <div className="mt-3 flex w-full items-center justify-between gap-2 text-[12px] font-medium">
