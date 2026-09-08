@@ -27,7 +27,7 @@
     },
     "showcase": {
       "eyebrow": "Community Work",
-      "title": "Photo Showcase",
+      "title": "Trending now",
       "viewFullGallery": "View Full Gallery"
     },
     "leaderboard": {
@@ -177,7 +177,7 @@
   },
   "gallery": {
     "eyebrow": "Community Work",
-    "title": "Trending now",
+    "title": "Photo Showcase",
     "filters": "Filters",
     "hideFilters": "Hide Filters",
     "closeFilters": "Close filters",

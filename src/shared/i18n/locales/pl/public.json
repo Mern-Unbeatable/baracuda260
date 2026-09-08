@@ -27,7 +27,7 @@
     },
     "showcase": {
       "eyebrow": "Prace społeczności",
-      "title": "Prezentacja zdjęć",
+      "title": "Popularne teraz",
       "viewFullGallery": "Zobacz pełną galerię"
     },
     "leaderboard": {
@@ -177,7 +177,7 @@
   },
   "gallery": {
     "eyebrow": "Prace społeczności",
-    "title": "Trending now",
+    "title": "Prezentacja zdjęć",
     "filters": "Filtry",
     "hideFilters": "Ukryj filtry",
     "closeFilters": "Zamknij filtry",
