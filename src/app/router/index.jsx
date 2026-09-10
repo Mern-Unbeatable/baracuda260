@@ -41,6 +41,7 @@ const Cookies = lazy(() => import('@/portals/public/legal/cookies/Cookies'));
 const DeveloperPage = lazy(() => import('@/pages/DeveloperPage'));
 const Login = lazy(() => import('@/portals/auth/pages/Login'));
 const SignUp = lazy(() => import('@/portals/auth/pages/SignUp'));
+const PromoJoin = lazy(() => import('@/portals/public/promo-join/PromoJoin'));
 
 const Dashboard = lazy(() => import('@/portals/member/pages/Dashboard'));
 const MyArtwork = lazy(() => import('@/portals/member/pages/MyArtwork'));
@@ -84,6 +85,7 @@ const Reports = lazy(() => import('@/portals/admin/pages/Reports'));
 const ReportDetail = lazy(() => import('@/portals/admin/pages/ReportDetail'));
 const DemoProfiles = lazy(() => import('@/portals/admin/pages/DemoProfiles'));
 const DemoProfilesCreate = lazy(() => import('@/portals/admin/pages/DemoProfilesCreate'));
+const PromoLinks = lazy(() => import('@/portals/admin/pages/PromoLinks'));
 const Chat = lazy(() => import('@/portals/member/pages/Chat'));
 const Notifications = lazy(() => import('@/portals/member/pages/Notifications'));
 const PrizePayments = lazy(() => import('@/portals/member/pages/PrizePayments'));
@@ -144,6 +146,15 @@ const router = createBrowserRouter(
         element={
           <Suspense fallback={<PageLoader />}>
             <SignUp />
+          </Suspense>
+        }
+      />
+
+      <Route
+        path={ROUTES.JOIN_PROMO}
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <PromoJoin />
           </Suspense>
         }
       />
@@ -247,6 +258,7 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_ADS)} element={<AdsManagement />} />
         <Route path={seg(ROUTES.ADMIN_DEMO_PROFILES)} element={<DemoProfiles />} />
         <Route path={seg(ROUTES.ADMIN_DEMO_PROFILES_CREATE)} element={<DemoProfilesCreate />} />
+        <Route path={seg(ROUTES.ADMIN_PROMO_LINKS)} element={<PromoLinks />} />
         <Route path={seg(ROUTES.ADMIN_REPORTS)} element={<Reports />} />
         <Route path={seg(ROUTES.ADMIN_REPORTS_DETAIL)} element={<ReportDetail />} />
       </Route>

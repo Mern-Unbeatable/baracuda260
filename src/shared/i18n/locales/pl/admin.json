@@ -28,6 +28,7 @@
       "adsManagement": "Zarządzanie reklamami",
       "demoProfile": "Profil demo",
       "reportsResolved": "Rozwiązane zgłoszenia",
+      "promoLinks": "Linki promocyjne",
       "settings": "Ustawienia",
       "profile": "Profil"
     },
@@ -1842,6 +1843,121 @@
         "firstName": "Tomasz",
         "name": "Tomasz Nowak"
       }
+    }
+  },
+  "adminPromoLinks": {
+    "title": "Zarządzanie linkami promocyjnymi",
+    "subtitle": "Generuj i śledź jednorazowe linki promocyjne dla nowych uczestników.",
+    "generateButton": "Wygeneruj nowy link",
+    "tableAria": "Tabela linków promocyjnych",
+    "empty": "Brak linków pasujących do tych filtrów.",
+    "copyAria": "Kopiuj URL promocyjny",
+    "copySuccess": "Skopiowano link promocyjny.",
+    "copyFailed": "Nie udało się skopiować linku.",
+    "stats": {
+      "total": "Wszystkie linki",
+      "active": "Aktywne linki",
+      "used": "Użyte linki",
+      "expired": "Wygasłe linki",
+      "incomplete": "Niekompletne wym."
+    },
+    "filters": {
+      "status": {
+        "aria": "Filtruj według statusu",
+        "all": "Wszystkie statusy",
+        "active": "Aktywne",
+        "used": "Użyte",
+        "expired": "Wygasłe"
+      },
+      "date": {
+        "aria": "Filtruj według daty utworzenia",
+        "last30": "Ostatnie 30 dni",
+        "last7": "Ostatnie 7 dni",
+        "last90": "Ostatnie 90 dni",
+        "all": "Cały okres"
+      },
+      "requirements": {
+        "aria": "Filtruj według wymagań",
+        "all": "Wszystkie etapy",
+        "incomplete": "Niekompletne",
+        "completed": "Ukończone",
+        "none": "Bez checklisty"
+      },
+      "reward": {
+        "aria": "Filtruj według statusu nagrody",
+        "all": "Wszystkie wypłaty",
+        "paid": "Wypłacone",
+        "underReview": "W trakcie weryfikacji",
+        "notEligible": "Niewykwalifikowane"
+      }
+    },
+    "columns": {
+      "linkId": "ID linku",
+      "url": "URL promocyjny",
+      "dateIssued": "Data wydania",
+      "validity": "Ważność",
+      "status": "Status",
+      "checklist": "Checklista",
+      "reward": "Nagroda",
+      "action": "Akcja"
+    },
+    "status": {
+      "active": "Aktywny",
+      "used": "Użyty",
+      "expired": "Wygasły"
+    },
+    "reward": {
+      "paid": "Wypłacone",
+      "underReview": "W trakcie weryfikacji",
+      "notEligible": "Niewykwalifikowane"
+    },
+    "validity": {
+      "used": "użyty",
+      "expired": "0 dni",
+      "daysLeft": "pozostało {{count}} dni"
+    },
+    "checklist": {
+      "none": "---",
+      "incomplete": "Niekompletne ({{done}}/{{total}})",
+      "completed": "Ukończone ({{done}}/{{total}})"
+    },
+    "actions": {
+      "menu": "Akcje dla {{id}}",
+      "seeDetails": "Zobacz szczegóły",
+      "reward": "Nagroda"
+    },
+    "pagination": {
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "previous": "Poprzednia",
+      "next": "Następna"
+    },
+    "generate": {
+      "title": "Wygeneruj link promocyjny",
+      "subtitle": "Utwórz bezpieczne, jednorazowe zaproszenie dla nowego uczestnika.",
+      "close": "Zamknij okno generowania linku",
+      "settingsLabel": "USTAWIENIA LINKU",
+      "validityLabel": "WAŻNOŚĆ",
+      "validityValue": "{{days}} dni",
+      "validityHint": "Link wygasa automatycznie po {{days}} dniach.",
+      "usageLabel": "UŻYCIE",
+      "usageValue": "Jednorazowe",
+      "usageHint": "Tylko jeden uczestnik może użyć tego linku.",
+      "info": "Po wygenerowaniu skopiuj link i wyślij go ręcznie do uczestnika. Link wiąże się z sesją przy pierwszej weryfikacji.",
+      "ready": "Gotowe do produkcji",
+      "cancel": "Anuluj",
+      "confirm": "Wygeneruj link"
+    },
+    "created": {
+      "title": "Twój link promocyjny",
+      "subtitle": "Udostępnij ten unikalny link uczestnikowi, aby zapewnić priorytetowe dołączanie do konkursu i nagrody.",
+      "close": "Zamknij okno linku promocyjnego",
+      "copy": "Kopiuj link",
+      "copied": "Skopiowano"
+    },
+    "detail": {
+      "title": "Szczegóły linku promocyjnego",
+      "close": "Zamknij szczegóły linku",
+      "closeButton": "Zamknij"
     }
   }
 }

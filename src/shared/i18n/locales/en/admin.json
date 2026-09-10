@@ -28,6 +28,7 @@
       "adsManagement": "Ads Management",
       "demoProfile": "Demo Profile",
       "reportsResolved": "Reports Resolved",
+      "promoLinks": "Promo Links",
       "settings": "Settings",
       "profile": "Profile"
     },
@@ -1838,6 +1839,121 @@
         "firstName": "Tomasz",
         "name": "Tomasz Nowak"
       }
+    }
+  },
+  "adminPromoLinks": {
+    "title": "Promo Link Management",
+    "subtitle": "Generate and track one-time promotional links for new participants.",
+    "generateButton": "Generate new link",
+    "tableAria": "Promo links table",
+    "empty": "No promo links match these filters.",
+    "copyAria": "Copy promotional URL",
+    "copySuccess": "Promotional link copied.",
+    "copyFailed": "Could not copy the link.",
+    "stats": {
+      "total": "Total Links",
+      "active": "Active Links",
+      "used": "Used Links",
+      "expired": "Expired Links",
+      "incomplete": "Incomplete Req."
+    },
+    "filters": {
+      "status": {
+        "aria": "Filter by status",
+        "all": "All Statuses",
+        "active": "Active",
+        "used": "Used",
+        "expired": "Expired"
+      },
+      "date": {
+        "aria": "Filter by date created",
+        "last30": "Last 30 Days",
+        "last7": "Last 7 Days",
+        "last90": "Last 90 Days",
+        "all": "All Time"
+      },
+      "requirements": {
+        "aria": "Filter by requirements",
+        "all": "All Stages",
+        "incomplete": "Incomplete",
+        "completed": "Completed",
+        "none": "No checklist"
+      },
+      "reward": {
+        "aria": "Filter by reward status",
+        "all": "All Payouts",
+        "paid": "Paid",
+        "underReview": "Under Review",
+        "notEligible": "Not Eligible"
+      }
+    },
+    "columns": {
+      "linkId": "Link ID",
+      "url": "Promotional URL",
+      "dateIssued": "Date Issued",
+      "validity": "Validity",
+      "status": "Status",
+      "checklist": "Checklist",
+      "reward": "Reward",
+      "action": "Action"
+    },
+    "status": {
+      "active": "Active",
+      "used": "Used",
+      "expired": "Expired"
+    },
+    "reward": {
+      "paid": "Paid",
+      "underReview": "Under Review",
+      "notEligible": "Not Eligible"
+    },
+    "validity": {
+      "used": "used",
+      "expired": "0 days",
+      "daysLeft": "{{count}} days left"
+    },
+    "checklist": {
+      "none": "---",
+      "incomplete": "Incomplete ({{done}}/{{total}})",
+      "completed": "Completed ({{done}}/{{total}})"
+    },
+    "actions": {
+      "menu": "Actions for {{id}}",
+      "seeDetails": "See Details",
+      "reward": "Reward"
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "generate": {
+      "title": "Generate Promotional Link",
+      "subtitle": "Create a secure, one-time invite for a new participant.",
+      "close": "Close generate link dialog",
+      "settingsLabel": "LINK SETTINGS",
+      "validityLabel": "VALIDITY",
+      "validityValue": "{{days}} Days",
+      "validityHint": "Link expires automatically after {{days}} days.",
+      "usageLabel": "USAGE",
+      "usageValue": "One-time use",
+      "usageHint": "Only one participant can use this link.",
+      "info": "After generating the link, copy and manually send it to the participant. The link becomes bound to their session upon initial verification.",
+      "ready": "Production Ready",
+      "cancel": "Cancel",
+      "confirm": "Generate Link"
+    },
+    "created": {
+      "title": "Your Promotional Link",
+      "subtitle": "Share this unique link with the participant to grant prioritized contest onboarding & rewards.",
+      "close": "Close promotional link dialog",
+      "copy": "Copy Link",
+      "copied": "Copied"
+    },
+    "detail": {
+      "title": "Promo Link Details",
+      "close": "Close promo link details",
+      "closeButton": "Close"
     }
   }
 }

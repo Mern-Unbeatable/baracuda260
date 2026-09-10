@@ -837,5 +837,103 @@
       "julian": "Julian Thorne",
       "marcus": "Marcus Chen"
     }
+  },
+  "promoJoin": {
+    "badge": "Zaproszenie promocyjne",
+    "title": "Utwórz konto",
+    "codeLabel": "Kod zaproszenia {{code}}",
+    "unknownCode": "Nie znaleziono kodu {{code}} w tej sesji — możesz kontynuować.",
+    "backHome": "Powrót do strony głównej",
+    "addPhoto": "Dodaj zdjęcie",
+    "changePhoto": "Zmień",
+    "submit": "Wyślij zdjęcia",
+    "submitting": "Wysyłanie…",
+    "submitted": "Wysłano",
+    "success": "Twoje zgłoszenie promocyjne zostało wysłane.",
+    "slotsHint": "Uzupełnij dane konta oraz sloty 6 i 12 zdjęć, aby zakończyć.",
+    "account": {
+      "fullName": "Imię i nazwisko",
+      "fullNamePh": "Wpisz imię i nazwisko",
+      "username": "Nazwa użytkownika",
+      "usernamePh": "@username",
+      "email": "E-mail",
+      "emailPh": "Wpisz e-mail..",
+      "phone": "Numer telefonu",
+      "phonePh": "Wpisz numer telefonu..",
+      "country": "Kraj",
+      "countryPh": "Nazwa kraju",
+      "paypal": "Konto PayPal",
+      "paypalPh": "Wpisz numer konta",
+      "about": "O sobie ( MAX 150 SŁÓW )",
+      "aboutPh": "napisz o sobie",
+      "social": "Link do mediów społecznościowych",
+      "socialExtra": "Link do mediów społecznościowych {{n}}",
+      "socialPh": "https://instagram.com/username",
+      "addAnother": "Dodaj kolejny",
+      "profilePhoto": "Prześlij zdjęcie profilowe",
+      "profileHint": "JPG, PNG lub WebP • 400x400px",
+      "coverPhoto": "Prześlij zdjęcie w tle",
+      "coverHint": "JPG, PNG lub WebP • 1600x600px",
+      "video": "Prześlij wideo",
+      "videoHint": "MP4 • maksymalnie 3 minuty",
+      "password": "Hasło",
+      "passwordPh": "napisz silne hasło"
+    },
+    "single": {
+      "title": "Pojedyncze zdjęcie",
+      "selectSign": "WYBIERZ ZNAK ZODIAKU"
+    },
+    "six": {
+      "title": "6 zdjęć",
+      "selectTheme": "Wybierz motyw Astro-Acoustic",
+      "or": "LUB",
+      "gridTitle": "Siatka slotów zodiaku",
+      "gridSubtitle": "Kliknij dowolny slot, aby przypisać lub przesłać obraz."
+    },
+    "twelve": {
+      "title": "Historia 12 zdjęć zodiaku",
+      "bannerTitle": "Wiosna, Lato, Jesień i Zima – Czerwona i Niebieska pełna historia 12 znaków",
+      "bannerSubtitle": "Prześlij 12 zdjęć — po jednym dla każdego znaku zodiaku",
+      "gridTitle": "Profesjonalna ramka 12 znaków zodiaku",
+      "bannerTitleRich": "Wiosna, Lato, Jesień i Zima – <red>Czerwona</red> i <blue>Niebieska</blue> pełna historia 12 znaków"
+    },
+    "video": {
+      "title": "Prześlij wideo",
+      "subtitle": "Pomóż przygotować materiał. Opcjonalne, ale mocno zalecane.",
+      "click": "Kliknij, aby przesłać wideo lub przeciągnij i upuść",
+      "hint": "MP4 — max 100MB każde",
+      "selected": "Wybrano {{count}} wideo"
+    },
+    "meta": {
+      "collectionTitle": "TYTUŁ KOLEKCJI",
+      "collectionPlaceholder": "np. Niebiańskie archetypy ognia",
+      "artisticCategory": "KATEGORIA ARTYSTYCZNA",
+      "subcategory": "Podkategoria",
+      "subcategoryPlaceholder": "Wybierz podkategorię",
+      "story": "HISTORIA / KONCEPT / DZIENNIK",
+      "storyPlaceholder": "Opisz narrację kreatywną tej serii...",
+      "resolution": "Rozdzielczość",
+      "fileSize": "Rozmiar pliku",
+      "quality": "Jakość",
+      "aiQuestion": "Czy to zdjęcie lub wideo zostało stworzone przez AI?",
+      "yes": "Tak",
+      "no": "Nie",
+      "copyright": "Potwierdzam, że posiadam pełne prawa autorskie do wszystkich przesłanych zdjęć i nie zawierają one treści nielegalnych.",
+      "categories": {
+        "astrophotography": "Astrofotografia",
+        "portrait": "Portret",
+        "landscape": "Krajobraz",
+        "street": "Ulica",
+        "abstract": "Abstrakcja"
+      }
+    },
+    "errors": {
+      "fullName": "Imię i nazwisko jest wymagane.",
+      "username": "Nazwa użytkownika jest wymagana.",
+      "email": "Wymagany jest prawidłowy e-mail.",
+      "password": "Hasło musi mieć co najmniej 8 znaków.",
+      "about": "Tekst O sobie może mieć maksymalnie 150 słów.",
+      "copyright": "Potwierdź prawa autorskie przed wysłaniem."
+    }
   }
 }
