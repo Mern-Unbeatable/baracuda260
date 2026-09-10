@@ -33,6 +33,7 @@ export const ROUTES = {
   DEVELOPER_COMPONENT: '/developer/:componentId',
   LOGIN: '/login',
   SIGNUP: '/signup',
+  JOIN_PROMO: '/join/promo/:code',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_UPLOAD_PHOTOS: '/admin/upload-photos',
@@ -83,6 +84,7 @@ export const ROUTES = {
   ADMIN_ADS: '/admin/ads',
   ADMIN_DEMO_PROFILES: '/admin/demo-profiles',
   ADMIN_DEMO_PROFILES_CREATE: '/admin/demo-profiles/create',
+  ADMIN_PROMO_LINKS: '/admin/promo-links',
   ADMIN_REPORTS: '/admin/reports',
   ADMIN_REPORTS_DETAIL: '/admin/reports/:id',
 };

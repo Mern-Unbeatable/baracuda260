@@ -837,5 +837,103 @@
       "julian": "Julian Thorne",
       "marcus": "Marcus Chen"
     }
+  },
+  "promoJoin": {
+    "badge": "Promotional invite",
+    "title": "Create your Account",
+    "codeLabel": "Invite code {{code}}",
+    "unknownCode": "Invite code {{code}} was not found in this session — you can still continue.",
+    "backHome": "Back to home",
+    "addPhoto": "Add Photo",
+    "changePhoto": "Change",
+    "submit": "Submit your photos",
+    "submitting": "Submitting…",
+    "submitted": "Submitted",
+    "success": "Your promo onboarding was submitted.",
+    "slotsHint": "Complete account details plus 6-photo and 12-photo slots to finish.",
+    "account": {
+      "fullName": "Full Name",
+      "fullNamePh": "Enter your full name",
+      "username": "Username",
+      "usernamePh": "@username",
+      "email": "Email",
+      "emailPh": "Enter your email..",
+      "phone": "Phone Number",
+      "phonePh": "Enter your Phone number..",
+      "country": "Country",
+      "countryPh": "Country Name",
+      "paypal": "Paypal Account",
+      "paypalPh": "Write account number",
+      "about": "About ( MAX 150 WORDS )",
+      "aboutPh": "write about your information",
+      "social": "Social Media Link",
+      "socialExtra": "Social Media Link {{n}}",
+      "socialPh": "https://instagram.com/username",
+      "addAnother": "Add Another",
+      "profilePhoto": "Upload Profile Photo",
+      "profileHint": "JPG, PNG or WebP • 400x400px",
+      "coverPhoto": "Upload Cover Photo",
+      "coverHint": "JPG, PNG or WebP • 1600x600px",
+      "video": "Upload Video",
+      "videoHint": "MP4 • maximum 3 minute video",
+      "password": "Password",
+      "passwordPh": "write a strong password"
+    },
+    "single": {
+      "title": "Single Photo",
+      "selectSign": "SELECT ASTRO SIGN"
+    },
+    "six": {
+      "title": "6 Photos",
+      "selectTheme": "Select Astro-Acoustic Theme Accent",
+      "or": "OR",
+      "gridTitle": "Zodiac Photo Slots Grid",
+      "gridSubtitle": "Click any slot to assign or upload a visual representational image."
+    },
+    "twelve": {
+      "title": "12 Photos Zodiac story",
+      "bannerTitle": "Spring, Summer, Autumn and Winter – Red and Blue Full 12 Zodiac Story",
+      "bannerSubtitle": "Upload 12 photo- One for each zodiac sign to complete your story",
+      "gridTitle": "Professional 12-Zodiac Visual Frame",
+      "bannerTitleRich": "Spring, Summer, Autumn and Winter – <red>Red</red> and <blue>Blue</blue> Full 12 Zodiac Story"
+    },
+    "video": {
+      "title": "Upload Videos",
+      "subtitle": "Help your pro prepare by showing them the work area. Optional but highly recommended.",
+      "click": "Click to upload Videos or drag & drop",
+      "hint": "MP4 — max 100MB each",
+      "selected": "{{count}} video(s) selected"
+    },
+    "meta": {
+      "collectionTitle": "COLLECTION TITLE",
+      "collectionPlaceholder": "e.g., Celestial Archetypes of Fire",
+      "artisticCategory": "ARTISTIC CATEGORY",
+      "subcategory": "Subcategory",
+      "subcategoryPlaceholder": "Select subcategory",
+      "story": "STORY / CONCEPT / CREATIVE LOG",
+      "storyPlaceholder": "Share the creative narrative behind this cosmological series...",
+      "resolution": "Resolution",
+      "fileSize": "File Size",
+      "quality": "Quality",
+      "aiQuestion": "Was that photo or video created by AI?",
+      "yes": "Yes",
+      "no": "No",
+      "copyright": "I confirm that I own the full copyright for all uploaded photos and that they do not contain or promote anything illegal.",
+      "categories": {
+        "astrophotography": "Astrophotography",
+        "portrait": "Portrait",
+        "landscape": "Landscape",
+        "street": "Street",
+        "abstract": "Abstract"
+      }
+    },
+    "errors": {
+      "fullName": "Full name is required.",
+      "username": "Username is required.",
+      "email": "A valid email is required.",
+      "password": "Password must be at least 8 characters.",
+      "about": "About text must be 150 words or fewer.",
+      "copyright": "Please confirm copyright ownership before submitting."
+    }
   }
 }
