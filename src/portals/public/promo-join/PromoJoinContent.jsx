@@ -28,7 +28,7 @@ import {
 } from '@/portals/public/promo-join/components/PromoJoinUi';
 
 const SectionCard = memo(({ title, subtitle, children, className = '' }) => (
-  <section className={`rounded-[16px] border border-[#e8eaf3] bg-white p-4 sm:p-6 ${className}`}>
+  <section className={`rounded-2xl border border-[#e8eaf3] bg-white p-4 sm:p-6 ${className}`}>
     {title ? (
       <div className="mb-4">
         <h2 className="text-[18px] font-bold text-[#151e31] sm:text-[20px]">{title}</h2>
@@ -270,7 +270,7 @@ const PromoJoinContent = memo(({ code }) => {
             <h2 className="text-[18px] font-bold text-[#151e31] sm:text-[20px]">
               {t('promoJoin.twelve.title')}
             </h2>
-            <WaveDivider src={ZODIAC12_ASSETS.dualWave} className="mt-3 h-[46px]" />
+            <WaveDivider src={ZODIAC12_ASSETS.dualWave} className="mt-3 h-11.5" />
             <div className="mt-4">
               <Zodiac12Banner />
             </div>
