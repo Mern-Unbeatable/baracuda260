@@ -31,6 +31,7 @@ import {
   Megaphone,
   Store,
   Star,
+  ShoppingBag,
   Bell,
   Settings,
   Sparkles,
@@ -51,6 +52,7 @@ const USER_NAV_ITEMS = [
   { labelKey: 'dashboard.nav.notifications', path: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
   { labelKey: 'dashboard.nav.prizePayments', path: ROUTES.ADMIN_PRIZE_PAYMENTS, icon: Wallet },
   { labelKey: 'dashboard.nav.contactUs', path: ROUTES.ADMIN_CONTACT_US, icon: MessageCircleQuestion },
+  { labelKey: 'dashboard.nav.purchasePhotos', path: ROUTES.ADMIN_PURCHASE_PHOTOS, icon: ShoppingBag },
   { labelKey: 'dashboard.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
   { labelKey: 'dashboard.nav.settings', path: ROUTES.ADMIN_SETTINGS, icon: Settings },
 ];

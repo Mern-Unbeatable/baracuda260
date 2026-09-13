@@ -62,6 +62,7 @@ const SellPhotosUploadSix = lazy(() => import('@/portals/member/pages/sell-photo
 const SellPhotosUploadZodiac = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosUploadZodiac'));
 const SellPhotosDetail = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosDetail'));
 const FavouritePhotographers = lazy(() => import('@/portals/member/pages/FavouritePhotographers'));
+const PurchasePhotos = lazy(() => import('@/portals/member/pages/PurchasePhotos'));
 const MyCompetitions = lazy(() => import('@/portals/member/pages/MyCompetitions'));
 const MyCompetitionDetails = lazy(() => import('@/portals/member/pages/MyCompetitionDetails'));
 const AdminGallery = lazy(() => import('@/portals/admin/pages/Gallery'));
@@ -209,6 +210,7 @@ const router = createBrowserRouter(
           <Route path=":id" element={<SellPhotosDetail />} />
         </Route>
         <Route path={seg(ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS)} element={<FavouritePhotographers />} />
+        <Route path={seg(ROUTES.ADMIN_PURCHASE_PHOTOS)} element={<PurchasePhotos />} />
         <Route
           path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)}
           element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD} replace />}

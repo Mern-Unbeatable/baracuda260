@@ -384,7 +384,8 @@
       "contactUs": "Contact Us",
       "profile": "Profile",
       "settings": "Settings",
-      "logOut": "Log Out"
+      "logOut": "Log Out",
+      "purchasePhotos": "Purchase Photo"
     },
     "stats": {
       "aria": "Quick stats",
@@ -1210,5 +1211,28 @@
         "submitted": "Submitted Today,\n08:45"
       }
     }
+  },
+  "purchasePhotos": {
+    "title": "My Purchase",
+    "subtitle": "View and manage all the photos you've purchased.",
+    "empty": "You have not purchased any photos yet.",
+    "showing": "Showing {{from}}-{{to}} of {{total}} purchases",
+    "perPage": "Per page:",
+    "paginationAria": "Purchase photos pagination",
+    "gridAria": "Purchased photos grid",
+    "download": "Download",
+    "downloadStarted": "Download started for {{title}}.",
+    "downloadUnavailable": "This download is no longer available.",
+    "detailsAria": "View details for {{title}}",
+    "detailsSoon": "Purchase details for {{title}} will be available soon.",
+    "stats": {
+      "aria": "Purchase summary",
+      "total": "Total Purchases",
+      "spent": "Total Spent",
+      "spentHint": "USD Vault",
+      "downloads": "Available Downloads"
+    },
+    "invoiceAria": "Download invoice for {{title}}",
+    "invoiceStarted": "Invoice download started for {{title}}."
   }
 }

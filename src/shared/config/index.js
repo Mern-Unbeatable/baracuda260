@@ -53,6 +53,7 @@ export const ROUTES = {
   ADMIN_SELL_PHOTOS_UPLOAD_SIX: '/admin/sell-photos/upload/six',
   ADMIN_SELL_PHOTOS_UPLOAD_ZODIAC12: '/admin/sell-photos/upload/zodiac',
   ADMIN_FAVOURITE_PHOTOGRAPHERS: '/admin/favourite-photographers',
+  ADMIN_PURCHASE_PHOTOS: '/admin/purchase-photos',
   ADMIN_MY_COMPETITIONS: '/admin/my-competitions',
   ADMIN_MY_COMPETITION_DETAIL: '/admin/my-competitions/:id',
   ADMIN_GALLERY: '/admin/gallery',

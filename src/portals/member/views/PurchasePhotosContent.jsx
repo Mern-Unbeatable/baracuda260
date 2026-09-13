@@ -1,0 +1,140 @@
+import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo, useState } from 'react';
+import { CloudDownload, Image, Wallet } from 'lucide-react';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import Pagination from '@/components/common/Pagination/Pagination';
+import MemberPurchasePhotoCard from '@/components/data-display/MemberPurchasePhotoCard/MemberPurchasePhotoCard';
+import {
+  PURCHASE_PHOTOS,
+  PURCHASE_PHOTOS_PAGE_SIZE,
+  PURCHASE_PHOTOS_PAGE_SIZE_OPTIONS,
+  PURCHASE_STAT_CARDS,
+  computePurchaseStats,
+} from '@/portals/member/data/purchasePhotosData';
+
+const STAT_ICONS = {
+  Image,
+  Wallet,
+  CloudDownload,
+};
+
+const PurchaseStatCards = memo(({ stats }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div
+      aria-label={t('purchasePhotos.stats.aria')}
+      className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+    >
+      {PURCHASE_STAT_CARDS.map((card) => {
+        const Icon = STAT_ICONS[card.icon] || Image;
+        return (
+          <article
+            key={card.id}
+            className="rounded-[14px] border border-[#f3f4f6] bg-white px-5 py-4 shadow-[0px_1px_2px_rgba(0,0,0,0.06)]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[12px] font-semibold leading-4.5 tracking-[0.24px] text-[#6b7280]">
+                  {t(card.labelKey)}
+                </p>
+                {card.hintKey ? (
+                  <p className="mt-1 text-[11px] font-medium text-[#9aa3b5]">{t(card.hintKey)}</p>
+                ) : null}
+              </div>
+              <span
+                className={`inline-flex size-8.5 shrink-0 items-center justify-center rounded-[9px] ${card.iconBg}`}
+                aria-hidden="true"
+              >
+                <Icon size={16} />
+              </span>
+            </div>
+            <p className="pt-3 text-[28px] font-extrabold leading-8 text-[#111827] sm:text-[32px]">
+              {stats[card.id]}
+            </p>
+          </article>
+        );
+      })}
+    </div>
+  );
+});
+PurchaseStatCards.displayName = 'PurchaseStatCards';
+
+const PurchasePhotosContent = memo(() => {
+  const { t } = useTranslation();
+  const [pageSize, setPageSize] = useState(PURCHASE_PHOTOS_PAGE_SIZE);
+
+  const items = useMemo(() => PURCHASE_PHOTOS, []);
+  const stats = useMemo(() => computePurchaseStats(items), [items]);
+  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(items, pageSize, [
+    pageSize,
+  ]);
+
+  const from = items.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const to = Math.min(currentPage * pageSize, items.length);
+
+  return (
+    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+      <header className="flex flex-col gap-3 sm:gap-4">
+        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+          {t('purchasePhotos.title')}
+        </h1>
+        <p className="max-w-[960px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+          {t('purchasePhotos.subtitle')}
+        </p>
+      </header>
+
+      <PurchaseStatCards stats={stats} />
+
+      {pagedItems.length === 0 ? (
+        <p className="text-[16px] text-[#494453]" role="status">
+          {t('purchasePhotos.empty')}
+        </p>
+      ) : (
+        <section
+          aria-label={t('purchasePhotos.gridAria')}
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
+        >
+          {pagedItems.map((purchase) => (
+            <MemberPurchasePhotoCard key={purchase.id} purchase={purchase} />
+          ))}
+        </section>
+      )}
+
+      {items.length > 0 ? (
+        <footer className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+            <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
+              {t('purchasePhotos.showing', { from, to, total: items.length })}
+            </p>
+            <label className="inline-flex items-center gap-2 text-[13px] text-[#687186]">
+              <span>{t('purchasePhotos.perPage')}</span>
+              <select
+                value={pageSize}
+                onChange={(event) => setPageSize(Number(event.target.value))}
+                className="h-9 rounded-[8px] border border-[#e4e4e4] bg-white px-2.5 text-[13px] font-medium text-[#373737] outline-none focus:ring-2 focus:ring-[#4048cd]/20"
+              >
+                {PURCHASE_PHOTOS_PAGE_SIZE_OPTIONS.map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            ariaLabel={t('purchasePhotos.paginationAria')}
+          />
+        </footer>
+      ) : null}
+    </div>
+  );
+});
+
+PurchasePhotosContent.displayName = 'PurchasePhotosContent';
+
+export default PurchasePhotosContent;

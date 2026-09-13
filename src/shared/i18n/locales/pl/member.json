@@ -384,7 +384,8 @@
       "contactUs": "Kontakt",
       "profile": "Profil",
       "settings": "Ustawienia",
-      "logOut": "Wyloguj się"
+      "logOut": "Wyloguj się",
+      "purchasePhotos": "Kupione zdjęcia"
     },
     "stats": {
       "aria": "Szybkie statystyki",
@@ -1210,5 +1211,28 @@
         "submitted": "Wysłano dziś,\n08:45"
       }
     }
+  },
+  "purchasePhotos": {
+    "title": "Moje zakupy",
+    "subtitle": "Przeglądaj i zarządzaj wszystkimi kupionymi zdjęciami.",
+    "empty": "Nie kupiłeś jeszcze żadnych zdjęć.",
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} zakupów",
+    "perPage": "Na stronę:",
+    "paginationAria": "Paginacja zakupionych zdjęć",
+    "gridAria": "Siatka zakupionych zdjęć",
+    "download": "Pobierz",
+    "downloadStarted": "Rozpoczęto pobieranie: {{title}}.",
+    "downloadUnavailable": "To pobieranie nie jest już dostępne.",
+    "detailsAria": "Zobacz szczegóły: {{title}}",
+    "detailsSoon": "Szczegóły zakupu {{title}} będą wkrótce dostępne.",
+    "stats": {
+      "aria": "Podsumowanie zakupów",
+      "total": "Wszystkie zakupy",
+      "spent": "Łącznie wydano",
+      "spentHint": "Portfel USD",
+      "downloads": "Dostępne pobrania"
+    },
+    "invoiceAria": "Pobierz fakturę dla {{title}}",
+    "invoiceStarted": "Rozpoczęto pobieranie faktury: {{title}}."
   }
 }
