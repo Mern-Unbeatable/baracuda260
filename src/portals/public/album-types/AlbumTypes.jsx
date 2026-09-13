@@ -9,7 +9,7 @@ const AlbumTypes = memo(() => {
   useSEO({
     title: 'Album Types',
     description:
-      'Choose your album type and enter My12Photos competitions — Single Photo, 6-Photos Story, and Zodiac Story.',
+      'Choose your album type and enter My12Photos competitions — Single Photo, 6 Photos Story, and Zodiac Story.',
     keywords: ['album types', 'competitions', 'photography', 'my12photos', 'prizes'],
   });
 

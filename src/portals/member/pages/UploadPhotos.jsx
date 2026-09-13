@@ -6,7 +6,7 @@ const UploadPhotos = memo(() => {
   useSEO({
     title: 'Upload Photos',
     description:
-      'Choose a competition tier and upload your photos to My12Photos — Single Photo, 6-Photo Story, or Full Zodiac Story.',
+      'Choose a competition tier and upload your photos to My12Photos — Single Photo, 6 Photos Story, or Full Zodiac Story.',
     keywords: ['upload photos', 'competition', 'My12Photos'],
   });
 

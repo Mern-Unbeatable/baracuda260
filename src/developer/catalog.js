@@ -339,7 +339,7 @@ export const COMPONENT_DOCS = [
     id: 'plan-card',
     name: 'PlanCard',
     category: 'marketing',
-    summary: 'Competition / album-type pricing card — Single Photo, 6-Photo Story, Zodiac Album.',
+    summary: 'Competition / album-type pricing card — Single Photo, 6 Photos Story, Zodiac Album.',
     path: 'src/components/marketing/PlanCard/',
     importExample:
       "import PlanCard from '@/components/marketing/PlanCard/PlanCard'\nimport { DEMO_COMPETITION_CARDS } from '@/data/demoData'",
@@ -363,7 +363,7 @@ export const COMPONENT_DOCS = [
   features={['Monthly competition', 'Community voting']}
 />`,
     optionalExample: `<PlanCard
-  title="6-Photos Story"
+  title="6 Photos Story"
   description="Craft a visual narrative in six frames."
   prize="$2500.00"
   popular
@@ -373,7 +373,7 @@ export const COMPONENT_DOCS = [
     previewId: 'plan-card',
     variants: [
       { id: 'single', name: 'Single Photo', description: 'One-image competition tier.' },
-      { id: 'six', name: '6-Photo Story', description: 'Most popular middle tier.' },
+      { id: 'six', name: '6 Photos Story', description: 'Most popular middle tier.' },
       { id: 'zodiac', name: 'Zodiac Album', description: '12-photo grand prize tier.' },
     ],
   },
@@ -527,7 +527,7 @@ export const COMPONENT_DOCS = [
     id: 'gallery-detail-view',
     name: 'GalleryDetailView',
     category: 'data-display',
-    summary: 'Full photo detail page — single, 6-photo story, or 12-photo zodiac.',
+    summary: 'Full photo detail page — single, 6 Photos Story, or 12-photo zodiac.',
     path: 'src/components/data-display/GalleryDetailView/',
     importExample:
       "import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView'\nimport { DEMO_GALLERY_ENTRY_SINGLE, DEMO_GALLERY_ENTRY_SIX, DEMO_GALLERY_ENTRY_TWELVE } from '@/data/demoData'",
@@ -542,7 +542,7 @@ export const COMPONENT_DOCS = [
     previewId: 'gallery-detail-view',
     variants: [
       { id: 'single', name: 'Single Photo', description: 'One hero image + metadata + comments.' },
-      { id: 'six', name: '6-Photo Story', description: 'Red-theme sign strip + carousel.' },
+      { id: 'six', name: '6 Photos Story', description: 'Red-theme sign strip + carousel.' },
       { id: 'twelve', name: 'Zodiac Album', description: '12-sign strip (red + blue themes).' },
     ],
   },
@@ -589,7 +589,7 @@ export const COMPONENT_DOCS = [
     id: 'six-story-strip',
     name: 'SixStoryStrip',
     category: 'data-display',
-    summary: '6-photo story thumbnail strip + zodiac sign row.',
+    summary: '6 Photos Story thumbnail strip + zodiac sign row.',
     path: 'src/components/data-display/SixStoryStrip/',
     importExample:
       "import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip'\nimport { DEMO_SIX_STORY_SLIDES } from '@/data/demoData'",
