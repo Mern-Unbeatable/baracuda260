@@ -40,7 +40,7 @@
     "legal": "Legal",
     "singlePhoto": "Single Photo",
     "sixPhotoStory": "6 Photos Story",
-    "zodiacAlbum": "Zodiac Album",
+    "zodiacAlbum": "12 Photos Album",
     "winners": "Winners",
     "leaderboard": "Leaderboard",
     "gallery": "Gallery",
@@ -104,7 +104,7 @@
     "badges": {
       "singlePhoto": "Single Photo",
       "sixPhotosStory": "6 PHOTOS STORY",
-      "twelveZodiacFull": "Zodiac Album",
+      "twelveZodiacFull": "12 Photos Story",
       "twelvePhotoZodiac": "12 Photo Zodiac",
       "firstPlace": "1st PLACE",
       "secondPlace": "2nd PLACE",
