@@ -1,56 +1,86 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
 import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
-import PhotographerFeaturedCompetition from '@/portals/public/photographer/components/PhotographerFeaturedCompetition';
+import PhotographerCompetitionBanner from '@/portals/public/photographer/components/PhotographerCompetitionBanner';
+import PhotographerFeaturedVideo from '@/portals/public/photographer/components/PhotographerFeaturedVideo';
 import PhotographerMessagesSection from '@/portals/public/photographer/components/PhotographerMessagesSection';
-import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
+import PhotographerProfileTabs from '@/portals/public/photographer/components/PhotographerProfileTabs';
 import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
+import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
+import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
+import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
 import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
 import {
   PHOTOGRAPHER_ARTWORK,
   PHOTOGRAPHER_FEATURED,
+  PHOTOGRAPHER_FEATURED_VIDEO,
   PHOTOGRAPHER_MESSAGES,
   PHOTOGRAPHER_PREMIUM,
   PHOTOGRAPHER_PROFILE,
+  PHOTOGRAPHER_STORE_PRODUCTS,
+  PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
 
-const PhotographerProfileMain = memo(() => (
-  <SitePageLayout
-    activeHref=""
-    rootClassName="photographer-profile-root"
-    announcementTone="blue"
-    newsletterVariant="page"
-  >
-    <section className="bg-white section-py-top pb-8 sm:pb-10">
-      <Shell>
-        <PhotographerProfileHeader profile={PHOTOGRAPHER_PROFILE} />
-        <PhotographerStatsBar stats={PHOTOGRAPHER_PROFILE.stats} />
-        <PhotographerAboutSection profile={PHOTOGRAPHER_PROFILE} />
-        <PhotographerFeaturedCompetition featured={PHOTOGRAPHER_FEATURED} />
-      </Shell>
-    </section>
+const PhotographerProfileMain = memo(() => {
+  const [activeTab, setActiveTab] = useState('profile');
 
-    <section className="bg-white section-py-bottom pt-8 sm:pt-10">
-      <Shell>
-        <PhotographerArtworkGrid
-          titleKey="photographerProfile.artwork.title"
-          subtitleKey="photographerProfile.artwork.subtitle"
-          photos={PHOTOGRAPHER_ARTWORK}
-          showCompetitionTag
-        />
-        <PhotographerArtworkGrid
-          titleKey="photographerProfile.premium.title"
-          subtitleKey="photographerProfile.premium.subtitle"
-          photos={PHOTOGRAPHER_PREMIUM}
-          showPrice
-        />
-        <PhotographerMessagesSection messages={PHOTOGRAPHER_MESSAGES} />
-        <PhotographerShareBanner />
-      </Shell>
-    </section>
-  </SitePageLayout>
-));
+  return (
+    <SitePageLayout
+      activeHref=""
+      rootClassName="photographer-profile-root"
+      announcementTone="blue"
+      newsletterVariant="page"
+    >
+      <section className="bg-white section-py-top pb-10 sm:pb-12">
+        <Shell>
+          <PhotographerProfileHeader profile={PHOTOGRAPHER_PROFILE} />
+          <PhotographerProfileTabs activeTab={activeTab} onChange={setActiveTab} />
+
+          {activeTab === 'profile' ? (
+            <>
+              <PhotographerStatsBar stats={PHOTOGRAPHER_PROFILE.stats} />
+              <PhotographerAboutSection profile={PHOTOGRAPHER_PROFILE} />
+              <PhotographerFeaturedVideo video={PHOTOGRAPHER_FEATURED_VIDEO} />
+              <PhotographerTalentAppreciation appreciation={PHOTOGRAPHER_TALENT_APPRECIATION} />
+            </>
+          ) : null}
+
+          {activeTab === 'artwork' ? (
+            <>
+              <PhotographerCompetitionBanner featured={PHOTOGRAPHER_FEATURED} />
+              <PhotographerArtworkGrid
+                titleKey="photographerProfile.artwork.title"
+                subtitleKey="photographerProfile.artwork.subtitle"
+                photos={PHOTOGRAPHER_ARTWORK}
+                showCompetitionTag
+              />
+            </>
+          ) : null}
+
+          {activeTab === 'store' ? (
+            <PhotographerStoreSection products={PHOTOGRAPHER_STORE_PRODUCTS} />
+          ) : null}
+
+          {activeTab === 'premium' ? (
+            <PhotographerArtworkGrid
+              titleKey="photographerProfile.premium.title"
+              subtitleKey="photographerProfile.premium.subtitle"
+              photos={PHOTOGRAPHER_PREMIUM}
+              showPrice
+            />
+          ) : null}
+
+          {activeTab === 'posts' ? (
+            <PhotographerMessagesSection messages={PHOTOGRAPHER_MESSAGES} />
+          ) : null}
+
+          <PhotographerShareBanner />
+        </Shell>
+      </section>
+    </SitePageLayout>
+  );
+});
 
 PhotographerProfileMain.displayName = 'PhotographerProfileMain';
 

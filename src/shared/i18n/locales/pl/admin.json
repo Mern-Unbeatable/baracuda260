@@ -741,6 +741,13 @@
   },
   "adminPayouts": {
     "eyebrow": "WYPŁATY",
+    "tabs": {
+      "aria": "Kategorie wypłat",
+      "prize": "Nagrody",
+      "donation": "Darowizny",
+      "premium": "Sprzedaż zdjęć",
+      "store": "Sprzedaż sklepu"
+    },
     "sections": {
       "prize": {
         "title": "Wypłaty nagród",
@@ -752,6 +759,10 @@
       },
       "premium": {
         "title": "Wypłata zdjęć premium",
+        "subtitle": "Przeglądaj wnioski o wypłatę i uzgadniaj płatności ręczne."
+      },
+      "store": {
+        "title": "Wypłaty sklepu",
         "subtitle": "Przeglądaj wnioski o wypłatę i uzgadniaj płatności ręczne."
       }
     },
@@ -797,6 +808,9 @@
       },
       "r6": {
         "date": "12 lip 2025"
+      },
+      "r7": {
+        "date": "14 lip 2025"
       }
     }
   },

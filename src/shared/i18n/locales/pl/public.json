@@ -389,6 +389,14 @@
     "message": "Wiadomość",
     "aboutTitle": "O mnie i biografia",
     "competitionTag": "Konkurs",
+    "tabs": {
+      "aria": "Sekcje profilu fotografa",
+      "profile": "Profil",
+      "artwork": "Moje prace",
+      "store": "Mój sklep",
+      "premium": "Zdjęcia premium",
+      "posts": "Posty"
+    },
     "stats": {
       "followers": "Obserwujący",
       "following": "Obserwowani",
@@ -406,14 +414,34 @@
       "totalHearts": "Serduszka"
     },
     "featured": {
-      "badge": "Obecnie w konkursie",
+      "badge": "OBECNIE W KONKURSIE",
       "uploaded": "Dodano {{date}}",
       "votes": "{{count}} głosów",
       "rank": "Miejsce #{{rank}}",
       "votingEnds": "Głosowanie do: {{date}}",
       "inspect": "Zobacz szczegóły zgłoszenia",
+      "castVote": "Oddaj głos",
       "previous": "Poprzednie wyróżnione zgłoszenie",
       "next": "Następne wyróżnione zgłoszenie"
+    },
+    "appreciation": {
+      "title": "Docenienie talentu",
+      "subtitle": "Nagradzaj fotografa złotym, srebrnym lub brązowym aparatem raz w tygodniu. Nagrody resetują się w każdy poniedziałek.",
+      "awards": "NAGRODY",
+      "alreadyAwarded": "Już nagrodzono w tym tygodniu",
+      "resetIn": "Reset nagród za {{days}} dni",
+      "weeklyLabel": "TWOJE TYGODNIOWE DOCENIENIE",
+      "simulate": "Symuluj nowy tydzień",
+      "tiers": {
+        "gold": "ZŁOTO",
+        "silver": "SREBRO",
+        "bronze": "BRĄZ"
+      },
+      "give": {
+        "gold": "+ Daj złoto",
+        "silver": "+ Daj srebro",
+        "bronze": "+ Daj brąz"
+      }
     },
     "artwork": {
       "title": "Moje prace",
@@ -422,6 +450,35 @@
     "premium": {
       "title": "Zdjęcia premium",
       "subtitle": "Przeglądaj pojedyncze zdjęcia, zestawy 6 zdjęć i premium albumy Zodiac Story z 12 zdjęciami."
+    },
+    "store": {
+      "title": "Mój sklep",
+      "subtitle": "Odkrywaj sztukę, rękodzieło i kreatywne produkty.",
+      "viewProduct": "Zobacz produkt",
+      "buyNow": "Kup teraz",
+      "buyStarted": "Rozpoczęto zakup: {{title}}.",
+      "back": "Wróć",
+      "selectSize": "Wybierz edycję / rozmiar:",
+      "decreaseQty": "Zmniejsz ilość",
+      "increaseQty": "Zwiększ ilość",
+      "filtersAria": "Filtruj produkty sklepu",
+      "paginationAria": "Paginacja produktów sklepu",
+      "filters": {
+        "all": "Wszystkie",
+        "artPrints": "Odbitki artystyczne",
+        "handmade": "Rękodzieło",
+        "apparel": "Odzież",
+        "photobooks": "Fotoksiążki",
+        "digitalPreset": "Presety cyfrowe"
+      },
+      "badges": {
+        "artPrints": "ODBITKI",
+        "digitalArtPrint": "CYFROWA ODBITKA",
+        "handmadeCrafts": "RĘKODZIEŁO",
+        "apparel": "ODZIEŻ",
+        "photobooks": "FOTOKSIĄŻKI",
+        "digitalPreset": "PRESET CYFROWY"
+      }
     },
     "filters": {
       "allArtwork": "Wszystkie prace",
@@ -436,6 +493,13 @@
     },
     "messages": {
       "title": "Moje wiadomości",
+      "subtitle": "Ogłoszenia fotografa, kulisy pracy i informacje o wystawach.",
+      "publishedCount": "{{count}} opublikowanych aktualizacji",
+      "noteBadge": "Notatka fotografa",
+      "likes": "{{count}} polubień"
+    },
+    "posts": {
+      "title": "Posty",
       "subtitle": "Ogłoszenia fotografa, kulisy pracy i informacje o wystawach.",
       "publishedCount": "{{count}} opublikowanych aktualizacji",
       "noteBadge": "Notatka fotografa",

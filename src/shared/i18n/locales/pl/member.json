@@ -385,7 +385,10 @@
       "profile": "Profil",
       "settings": "Ustawienia",
       "logOut": "Wyloguj się",
-      "purchasePhotos": "Kupione zdjęcia"
+      "purchasePhotos": "Kupione zdjęcia",
+      "myStore": "Mój sklep",
+      "orders": "Zamówienia",
+      "myOrders": "Moje zamówienia"
     },
     "stats": {
       "aria": "Szybkie statystyki",
@@ -1234,5 +1237,255 @@
     },
     "invoiceAria": "Pobierz fakturę dla {{title}}",
     "invoiceStarted": "Rozpoczęto pobieranie faktury: {{title}}."
+  },
+  "myStore": {
+    "title": "Mój sklep",
+    "subtitle": "Odkrywaj sztukę, rękodzieło i kreatywne produkty.",
+    "uploadProduct": "Dodaj produkt",
+    "empty": "Brak produktów w tej kategorii.",
+    "gridAria": "Siatka produktów sklepu",
+    "paginationAria": "Paginacja sklepu",
+    "filters": {
+      "aria": "Filtruj produkty sklepu",
+      "all": "Wszystkie",
+      "artPrints": "Odbitki artystyczne",
+      "handmade": "Rękodzieło",
+      "apparel": "Odzież",
+      "photobooks": "Fotoksiążki",
+      "digitalPreset": "Presety cyfrowe"
+    },
+    "badges": {
+      "artPrints": "Odbitki artystyczne",
+      "digitalArtPrint": "Cyfrowa odbitka",
+      "handmadeCrafts": "Rękodzieło",
+      "apparel": "Odzież",
+      "photobooks": "Fotoksiążki",
+      "digitalPreset": "Preset cyfrowy"
+    },
+    "actions": {
+      "label": "akcja",
+      "menu": "Akcje dla {{title}}",
+      "edit": "Edytuj",
+      "delete": "Usuń"
+    },
+    "toast": {
+      "edit": "Edycja {{title}} będzie wkrótce dostępna.",
+      "deleted": "Usunięto {{title}} ze sklepu."
+    },
+    "upload": {
+      "title": "Dodaj do sklepu",
+      "back": "Powrót do sklepu",
+      "collectionTitle": "TYTUŁ KOLEKCJI",
+      "collectionPlaceholder": "np. Niebiańskie archetypy ognia",
+      "category": "KATEGORIA",
+      "price": "Cena",
+      "pricePlaceholder": "$ 2.00",
+      "edition": "Edycja/Rozmiar",
+      "editionPlaceholder": "wpisz edycję lub rozmiar",
+      "description": "Opis",
+      "descriptionPlaceholder": "Napisz opis produktu",
+      "banner": "Zdjęcie banerowe produktu",
+      "others": "Pozostałe zdjęcia",
+      "dropTitle": "Przeciągnij i upuść zdjęcia tutaj",
+      "dropHint": "Lub kliknij, aby wybrać z komputera",
+      "bannerMeta": "JPEG, PNG | Max 1 zdjęcie | zalecane 1920x1080px",
+      "othersMeta": "JPEG, PNG | Max 8 zdjęć | zalecane 1920x1080px",
+      "filesSelected": "Wybrano {{count}} plików",
+      "submit": "Wyślij zdjęcia",
+      "submitting": "Wysyłanie…",
+      "success": "Produkt dodany do sklepu.",
+      "categories": {
+        "astrophotography": "Astrofotografia",
+        "artPrints": "Odbitki artystyczne",
+        "handmade": "Rękodzieło",
+        "apparel": "Odzież",
+        "photobooks": "Fotoksiążki",
+        "digitalPreset": "Presety cyfrowe"
+      },
+      "errors": {
+        "title": "Tytuł kolekcji jest wymagany.",
+        "price": "Cena jest wymagana.",
+        "banner": "Dodaj zdjęcie banerowe produktu."
+      },
+      "editTitle": "Edytuj produkt sklepu",
+      "currentBanner": "Aktualne zdjęcie banerowe",
+      "updateSubmit": "Zaktualizuj produkt",
+      "updateSuccess": "Produkt został zaktualizowany."
+    }
+  },
+  "myOrders": {
+    "title": "Moje zamówienia",
+    "subtitle": "Przeglądaj zakupy i śledź zamówienia we wszystkich mini-sklepach twórców.",
+    "empty": "Nie złożyłeś jeszcze żadnych zamówień.",
+    "recentTitle": "OSTATNIE ZAMÓWIENIA (POKAZANO {{showing}} Z {{total}})",
+    "sortedBy": "Sortowanie: najnowsze",
+    "orderLabel": "Zamówienie #{{number}}",
+    "placedOn": "Złożono {{date}}",
+    "soldBy": "Sprzedawca: {{store}}",
+    "itemMeta": "Ilość: {{qty}} • Cena: {{price}} szt.",
+    "qtyShort": "Ilość: {{count}}",
+    "paid": "Opłacone",
+    "deliveredOn": "Dostarczono {{date}}",
+    "viewDetails": "Zobacz szczegóły",
+    "showing": "Pokazano {{showing}} z {{total}} zakupów",
+    "paginationAria": "Paginacja zamówień",
+    "copySuccess": "Numer zamówienia skopiowany.",
+    "copyFailed": "Nie udało się skopiować numeru zamówienia.",
+    "copyAria": "Kopiuj numer zamówienia {{number}}",
+    "invoiceAria": "Pobierz fakturę dla {{number}}",
+    "invoiceStarted": "Rozpoczęto pobieranie faktury: {{order}}.",
+    "status": {
+      "processing": "W realizacji",
+      "shipped": "Wysłane",
+      "delivered": "Dostarczone"
+    },
+    "stats": {
+      "aria": "Podsumowanie zamówień",
+      "total": "WSZYSTKIE ZAMÓWIENIA",
+      "totalHint": "Cały czas",
+      "processing": "W REALIZACJI",
+      "processingHint": "W przygotowaniu",
+      "shipped": "WYSŁANE",
+      "shippedHint": "W drodze",
+      "delivered": "DOSTARCZONE",
+      "deliveredHint": "Zakończone"
+    },
+    "meta": {
+      "orderTotal": "SUMA",
+      "payment": "PŁATNOŚĆ",
+      "delivery": "DOSTAWA"
+    },
+    "detail": {
+      "back": "Wróć do moich zamówień",
+      "close": "Zamknij szczegóły zamówienia",
+      "titlePrefix": "SZCZEGÓŁY ZAMÓWIENIA •",
+      "titleOrder": "Zamówienie #{{number}}",
+      "placedAt": "Złożono {{date}}",
+      "progress": "POSTĘP ZAMÓWIENIA",
+      "buyerProtection": "OCHRONA KUPUJĄCEGO LENSARENA AKTYWNA",
+      "pending": "Oczekuje",
+      "inTransit": "W drodze",
+      "purchasedProduct": "ZAKUPIONY PRODUKT",
+      "unitMeta": "Ilość: {{qty}} • Cena jednostkowa: {{price}}",
+      "soldByLabel": "SPRZEDAWCA",
+      "verifiedCreator": "Zweryfikowany twórca",
+      "visitStore": "Odwiedź sklep",
+      "message": "Wiadomość",
+      "visitStoreSoon": "Strona sklepu wkrótce będzie dostępna.",
+      "messageSoon": "Wiadomości wkrótce będą dostępne.",
+      "paymentSummary": "PODSUMOWANIE PŁATNOŚCI",
+      "paidInFull": "Opłacone w całości",
+      "subtotal": "Suma produktów",
+      "shipping": "Wysyłka",
+      "discount": "Zniżka",
+      "totalPaid": "Zapłacono łącznie",
+      "paymentMethod": "Metoda płatności: {{method}}",
+      "shippingInfo": "INFORMACJE O WYSYŁCE",
+      "shippingAddress": "Adres wysyłki",
+      "estimatedDelivery": "Szacowana dostawa",
+      "steps": {
+        "placed": "Zamówienie złożone",
+        "placedDetail": "Szczegóły zamówienia potwierdzone ze sklepem twórcy.",
+        "processing": "W realizacji",
+        "processingDetail": "Twórca przygotowuje i pakuje Twój produkt.",
+        "shipped": "Wysłane",
+        "shippedDetail": "Odbiór przez kuriera i nadanie numeru śledzenia.",
+        "delivered": "Dostarczone",
+        "deliveredDetail": "Szacowane {{date}}"
+      }
+    }
+  },
+  "storeOrders": {
+    "title": "Zamówienia",
+    "subtitle": "Przeglądaj i zarządzaj zamówieniami złożonymi na produkty w Twoim sklepie.",
+    "empty": "Brak zamówień dla tych filtrów.",
+    "showing": "Pokazano {{showing}} z {{total}} zamówień",
+    "paginationAria": "Paginacja zamówień sklepu",
+    "qty": "Ilość {{count}}",
+    "copySuccess": "Numer zamówienia skopiowany.",
+    "copyFailed": "Nie udało się skopiować numeru zamówienia.",
+    "copyAria": "Kopiuj numer zamówienia {{number}}",
+    "statusUpdated": "Status zamówienia zmieniony na {{status}}.",
+    "status": {
+      "processing": "W realizacji",
+      "shipped": "Wysłane",
+      "delivered": "Dostarczone",
+      "cancelled": "Anulowane"
+    },
+    "stats": {
+      "aria": "Podsumowanie zamówień sklepu",
+      "totalOrders": "WSZYSTKIE ZAMÓWIENIA",
+      "totalOrdersHint": "Cały czas w Twoim sklepie",
+      "totalSales": "CAŁKOWITA SPRZEDAŻ",
+      "totalSalesHint": "Przychód brutto przed opłatami",
+      "commission": "PROWIZJA PLATFORMY",
+      "commissionHint": "Zatrzymane przez LensArena",
+      "earnings": "TWOJE ZAROBKI",
+      "earningsHint": "90% trafia bezpośrednio do Ciebie"
+    },
+    "filters": {
+      "statusLabel": "Status:",
+      "all": "Wszystkie {{count}}",
+      "processing": "W realizacji {{count}}",
+      "shipped": "Wysłane {{count}}",
+      "delivered": "Dostarczone {{count}}",
+      "cancelled": "Anulowane {{count}}"
+    },
+    "date": {
+      "label": "Data:",
+      "today": "Dziś",
+      "week": "Ten tydzień",
+      "month": "Ten miesiąc",
+      "custom": "Niestandardowa"
+    },
+    "columns": {
+      "orderId": "ID zamówienia",
+      "customer": "Klient",
+      "product": "Produkt",
+      "date": "Data",
+      "total": "Suma",
+      "admin": "Admin 10%",
+      "earnings": "Zarobki sprzedawcy",
+      "status": "Status",
+      "action": "Akcja"
+    },
+    "actions": {
+      "menu": "Akcje dla {{number}}",
+      "viewDetails": "Zobacz szczegóły"
+    },
+    "detail": {
+      "title": "Zamówienie #{{number}}",
+      "close": "Zamknij szczegóły zamówienia",
+      "payment": "PŁATNOŚĆ",
+      "paid": "Opłacone",
+      "fulfillment": "REALIZACJA",
+      "customerInfo": "INFORMACJE O KLIENCIE",
+      "email": "E-MAIL",
+      "phone": "TELEFON",
+      "shippingAddress": "ADRES WYSYŁKI",
+      "productInfo": "INFORMACJE O PRODUKCIE",
+      "unitLine": "{{price}} × {{qty}}",
+      "subtotal": "SUMA CZĘŚCIOWA",
+      "paymentBreakdown": "ROZBICIE PŁATNOŚCI",
+      "orderTotal": "Suma zamówienia",
+      "commission": "Prowizja platformy (10%)",
+      "sellerEarnings": "Zarobki sprzedawcy",
+      "earningsNote": "Zarobki trafiają na saldo po potwierdzeniu dostawy.",
+      "sellerActions": "AKCJE SPRZEDAWCY",
+      "updateStatus": "Aktualizuj status",
+      "markProcessing": "Oznacz jako w realizacji",
+      "markShipped": "Oznacz jako wysłane",
+      "markDelivered": "Oznacz jako dostarczone",
+      "markCancelled": "Oznacz jako anulowane",
+      "orderTimeline": "HISTORIA ZAMÓWIENIA",
+      "timeline": {
+        "placed": "Zamówienie złożone",
+        "processing": "W realizacji",
+        "shipped": "Wysłane",
+        "delivered": "Dostarczone",
+        "pending": "Oczekuje",
+        "deliveredPending": "Dostawa oczekuje"
+      }
+    }
   }
 }

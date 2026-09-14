@@ -25,7 +25,7 @@ const PhotographerAboutSection = memo(({ profile }) => {
       <h2 className="text-[18px] font-bold text-[#111827]">
         {t('photographerProfile.aboutTitle')}
       </h2>
-      <div className="mt-3 text-[15px] leading-7 text-[#6b7280]">
+      <div className="mt-3 space-y-3 text-[15px] leading-7 text-[#6b7280]">
         {profile.bio.map((paragraph) => (
           <p key={paragraph.slice(0, 24)}>{paragraph}</p>
         ))}

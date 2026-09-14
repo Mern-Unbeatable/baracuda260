@@ -61,8 +61,14 @@ const SellPhotosUploadSingle = lazy(() => import('@/portals/member/pages/sell-ph
 const SellPhotosUploadSix = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosUploadSix'));
 const SellPhotosUploadZodiac = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosUploadZodiac'));
 const SellPhotosDetail = lazy(() => import('@/portals/member/pages/sell-photos/SellPhotosDetail'));
+const MyStore = lazy(() => import('@/portals/member/pages/MyStore'));
+const MyStoreUpload = lazy(() => import('@/portals/member/pages/MyStoreUpload'));
 const FavouritePhotographers = lazy(() => import('@/portals/member/pages/FavouritePhotographers'));
 const PurchasePhotos = lazy(() => import('@/portals/member/pages/PurchasePhotos'));
+const MyOrders = lazy(() => import('@/portals/member/pages/MyOrders'));
+const OrderDetails = lazy(() => import('@/portals/member/pages/OrderDetails'));
+const Orders = lazy(() => import('@/portals/member/pages/Orders'));
+const SellerOrderDetails = lazy(() => import('@/portals/member/pages/SellerOrderDetails'));
 const MyCompetitions = lazy(() => import('@/portals/member/pages/MyCompetitions'));
 const MyCompetitionDetails = lazy(() => import('@/portals/member/pages/MyCompetitionDetails'));
 const AdminGallery = lazy(() => import('@/portals/admin/pages/Gallery'));
@@ -209,8 +215,15 @@ const router = createBrowserRouter(
           <Route path="upload/zodiac" element={<SellPhotosUploadZodiac />} />
           <Route path=":id" element={<SellPhotosDetail />} />
         </Route>
+        <Route path={seg(ROUTES.ADMIN_MY_STORE)} element={<MyStore />} />
+        <Route path={seg(ROUTES.ADMIN_MY_STORE_UPLOAD)} element={<MyStoreUpload />} />
+        <Route path={seg(ROUTES.ADMIN_MY_STORE_EDIT)} element={<MyStoreUpload />} />
         <Route path={seg(ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS)} element={<FavouritePhotographers />} />
         <Route path={seg(ROUTES.ADMIN_PURCHASE_PHOTOS)} element={<PurchasePhotos />} />
+        <Route path={seg(ROUTES.ADMIN_MY_ORDERS)} element={<MyOrders />} />
+        <Route path={seg(ROUTES.ADMIN_MY_ORDERS_DETAIL)} element={<OrderDetails />} />
+        <Route path={seg(ROUTES.ADMIN_ORDERS)} element={<Orders />} />
+        <Route path={seg(ROUTES.ADMIN_ORDERS_DETAIL)} element={<SellerOrderDetails />} />
         <Route
           path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)}
           element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD} replace />}

@@ -389,6 +389,14 @@
     "message": "Message",
     "aboutTitle": "About & Biography",
     "competitionTag": "Competition",
+    "tabs": {
+      "aria": "Photographer profile sections",
+      "profile": "Profile",
+      "artwork": "My Artwork",
+      "store": "My Store",
+      "premium": "Premium Photos",
+      "posts": "Posts"
+    },
     "stats": {
       "followers": "Followers",
       "following": "Following",
@@ -406,14 +414,34 @@
       "totalHearts": "Hearts"
     },
     "featured": {
-      "badge": "Currently in Competition",
+      "badge": "CURRENTLY IN COMPETITION",
       "uploaded": "Uploaded {{date}}",
       "votes": "{{count}} Votes",
       "rank": "Rank #{{rank}}",
       "votingEnds": "Voting ends: {{date}}",
       "inspect": "Inspect Entry Details",
+      "castVote": "Cast Your Vote",
       "previous": "Previous featured entry",
       "next": "Next featured entry"
+    },
+    "appreciation": {
+      "title": "Talent Appreciation",
+      "subtitle": "Award this photographer with Gold, Silver, or Bronze cameras once per week. Awards reset every Monday.",
+      "awards": "AWARDS",
+      "alreadyAwarded": "Already awarded this week",
+      "resetIn": "Awards reset in {{days}} days",
+      "weeklyLabel": "YOUR WEEKLY APPRECIATION",
+      "simulate": "Simulate new week",
+      "tiers": {
+        "gold": "GOLD",
+        "silver": "SILVER",
+        "bronze": "BRONZE"
+      },
+      "give": {
+        "gold": "+ Give Gold",
+        "silver": "+ Give Silver",
+        "bronze": "+ Give Bronze"
+      }
     },
     "artwork": {
       "title": "My Artwork",
@@ -422,6 +450,35 @@
     "premium": {
       "title": "Premium Photos",
       "subtitle": "Explore single photography prints, 6-photo sets, and 12-photo Zodiac Story premium albums."
+    },
+    "store": {
+      "title": "My Store",
+      "subtitle": "Explore Art, handmade products and creative merchandise.",
+      "viewProduct": "View product",
+      "buyNow": "Buy Now",
+      "buyStarted": "Checkout started for {{title}}.",
+      "back": "Back",
+      "selectSize": "Select Edition / Size:",
+      "decreaseQty": "Decrease quantity",
+      "increaseQty": "Increase quantity",
+      "filtersAria": "Filter store products",
+      "paginationAria": "Store products pagination",
+      "filters": {
+        "all": "All items",
+        "artPrints": "Art Prints",
+        "handmade": "Handmade Crafts",
+        "apparel": "Apparel",
+        "photobooks": "Photobooks",
+        "digitalPreset": "Digital Preset"
+      },
+      "badges": {
+        "artPrints": "ART PRINTS",
+        "digitalArtPrint": "DIGITAL ART PRINT",
+        "handmadeCrafts": "HANDMADE CRAFTS",
+        "apparel": "APPAREL",
+        "photobooks": "PHOTOBOOKS",
+        "digitalPreset": "DIGITAL PRESET"
+      }
     },
     "filters": {
       "allArtwork": "All Artwork",
@@ -436,6 +493,13 @@
     },
     "messages": {
       "title": "My Messages",
+      "subtitle": "Photographer announcements, behind-the-scenes logs, and exhibition news.",
+      "publishedCount": "{{count}} Published Updates",
+      "noteBadge": "Photographer Note",
+      "likes": "{{count}} Likes"
+    },
+    "posts": {
+      "title": "Posts",
       "subtitle": "Photographer announcements, behind-the-scenes logs, and exhibition news.",
       "publishedCount": "{{count}} Published Updates",
       "noteBadge": "Photographer Note",

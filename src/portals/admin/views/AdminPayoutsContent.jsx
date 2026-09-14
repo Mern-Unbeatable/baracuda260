@@ -5,6 +5,7 @@ import {
   ADMIN_PAYOUTS_ASSETS,
   ACTION_STATUS_OPTIONS,
   MORE_ICON_SIZE,
+  PAYOUT_TABS,
   STATUS_STYLES,
   STATUS_LABEL_KEYS,
 } from '@/portals/admin/data/adminPayoutsData';
@@ -25,6 +26,40 @@ const StatusText = memo(({ status }) => {
   );
 });
 StatusText.displayName = 'StatusText';
+
+const PayoutTabs = memo(({ activeTab, onChange }) => {
+  const { t } = useTranslation();
+
+  return (
+    <nav aria-label={t('adminPayouts.tabs.aria')}>
+      <div
+        role="tablist"
+        className="inline-flex max-w-full overflow-x-auto rounded-[12px] border border-[#e5e7eb] bg-[#f3f4f6] p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {PAYOUT_TABS.map((tab) => {
+          const active = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => onChange(tab.id)}
+              className={`shrink-0 cursor-pointer rounded-[10px] px-4 py-2.5 text-[14px] font-semibold whitespace-nowrap transition sm:px-5 sm:text-[15px] ${
+                active
+                  ? 'bg-[#4048cd] text-white shadow-sm'
+                  : 'text-[#374151] hover:text-[#111827]'
+              }`}
+            >
+              {t(tab.labelKey)}
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+});
+PayoutTabs.displayName = 'PayoutTabs';
 
 const PayoutActionMenu = memo(({ row, isOpen, onToggle, onClose, onSelectStatus }) => {
   const { t } = useTranslation();
@@ -159,10 +194,12 @@ const PayoutTableRow = memo(({ row, isEven, openActionId, onToggleAction, onClos
       <td className="px-4 py-4 text-[14px] leading-5 text-[#263147] sm:px-5">{t(row.dateKey)}</td>
       <td className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">{t(row.typeKey)}</td>
       <td className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">{t(row.accountTypeKey)}</td>
-      <td className="px-4 py-4 text-[14px] leading-5 whitespace-nowrap text-[#59657a] sm:px-5">
+      <td className="whitespace-nowrap px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
         {row.accountNumber}
       </td>
-      <td className="px-4 py-4 text-[14px] leading-5 text-[#263147] sm:px-5">{row.amount}</td>
+      <td className="px-4 py-4 text-[14px] font-semibold leading-5 text-[#263147] sm:px-5">
+        {row.amount}
+      </td>
       <td className="px-4 py-4 sm:px-5">
         <StatusText status={row.status} />
       </td>
@@ -265,7 +302,7 @@ const PayoutMobileCards = memo(({ rows, openActionId, onToggleAction, onCloseAct
             </div>
             <div>
               <p className="text-[#8b95a5]">{t('adminPayouts.columns.amount')}</p>
-              <p className="text-[#59657a]">{row.amount}</p>
+              <p className="font-semibold text-[#263147]">{row.amount}</p>
             </div>
           </div>
           <StatusText status={row.status} />
@@ -281,7 +318,7 @@ const SectionFooter = memo(({ rowCount }) => {
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0f2f5] px-4 py-4 sm:px-5">
-      <p className="text-[13px] font-medium text-[#ee1c25]">
+      <p className="text-[13px] font-medium text-[#c9922a]">
         {t('adminPayouts.pagination.showing', {
           from: 1,
           to: rowCount,
@@ -291,13 +328,13 @@ const SectionFooter = memo(({ rowCount }) => {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="rounded-md border border-[#e8ebf1] px-3.5 py-1.5 text-[13px] font-medium text-[#59657a] transition hover:bg-[#f7f8fa]"
+          className="rounded-md border border-[#e0b35a] bg-white px-3.5 py-1.5 text-[13px] font-medium text-[#c9922a] transition hover:bg-[#fff8eb]"
         >
           {t('adminPayouts.pagination.previous')}
         </button>
         <button
           type="button"
-          className="rounded-md border border-[#e8ebf1] px-3.5 py-1.5 text-[13px] font-medium text-[#59657a] transition hover:bg-[#f7f8fa]"
+          className="rounded-md border border-[#e0b35a] bg-[#e0b35a] px-3.5 py-1.5 text-[13px] font-semibold text-white transition hover:bg-[#d4a64a]"
         >
           {t('adminPayouts.pagination.next')}
         </button>
@@ -307,68 +344,55 @@ const SectionFooter = memo(({ rowCount }) => {
 });
 SectionFooter.displayName = 'SectionFooter';
 
-const PayoutSection = memo(({ section, openActionId, onToggleAction, onCloseAction, onSelectStatus }) => {
-  const { t } = useTranslation();
-
-  return (
-    <section className="flex flex-col gap-3">
-      <div>
-        <p className="text-[12px] font-bold uppercase tracking-[1.2px] text-[#ee1c25]">
-          {t('adminPayouts.eyebrow')}
-        </p>
-        <h2 className="font-manrope pt-1 text-[24px] font-bold leading-8 tracking-[-0.5px] text-[#111827] sm:text-[28px]">
-          {t(section.titleKey)}
-        </h2>
-        <p className="pt-1 text-[14px] leading-5 text-[#6b7280]">
-          {t(section.subtitleKey)}
-        </p>
-      </div>
-
-      <div className="overflow-hidden rounded-2xl border border-[#e8ebf1] bg-white shadow-[0px_4px_15px_0px_rgba(27,39,69,0.02)]">
-        <div className="hidden md:block">
-          <PayoutTable
-            rows={section.rows}
-            openActionId={openActionId}
-            onToggleAction={onToggleAction}
-            onCloseAction={onCloseAction}
-            onSelectStatus={onSelectStatus}
-          />
-        </div>
-        <PayoutMobileCards
-          rows={section.rows}
-          openActionId={openActionId}
-          onToggleAction={onToggleAction}
-          onCloseAction={onCloseAction}
-          onSelectStatus={onSelectStatus}
-        />
-        <SectionFooter rowCount={section.rows.length} />
-      </div>
-    </section>
-  );
-});
-PayoutSection.displayName = 'PayoutSection';
-
 const AdminPayoutsContent = memo(() => {
+  const { t } = useTranslation();
   const {
-    sections,
+    activeTab,
+    activeSection,
     openActionId,
+    handleTabChange,
     handleToggleAction,
     handleCloseAction,
     handleRowStatusChange,
   } = useAdminPayouts();
 
+  if (!activeSection) return null;
+
   return (
-    <div className="flex w-full flex-col gap-10 py-2 sm:gap-14 sm:py-4">
-      {sections.map((section) => (
-        <PayoutSection
-          key={section.id}
-          section={section}
+    <div className="flex w-full flex-col gap-5 py-2 sm:gap-6 sm:py-4">
+      <header>
+        <p className="text-[12px] font-bold uppercase tracking-[1.2px] text-[#8b9bb8]">
+          {t('adminPayouts.eyebrow')}
+        </p>
+        <h1 className="font-manrope pt-1 text-[24px] font-bold leading-8 tracking-[-0.5px] text-[#111827] sm:text-[28px]">
+          {t(activeSection.titleKey)}
+        </h1>
+        <p className="pt-1 text-[14px] leading-5 text-[#6b7280]">
+          {t(activeSection.subtitleKey)}
+        </p>
+      </header>
+
+      <PayoutTabs activeTab={activeTab} onChange={handleTabChange} />
+
+      <div className="overflow-hidden rounded-2xl border border-[#e8ebf1] bg-white shadow-[0px_4px_15px_0px_rgba(27,39,69,0.02)]">
+        <div className="hidden md:block">
+          <PayoutTable
+            rows={activeSection.rows}
+            openActionId={openActionId}
+            onToggleAction={handleToggleAction}
+            onCloseAction={handleCloseAction}
+            onSelectStatus={handleRowStatusChange}
+          />
+        </div>
+        <PayoutMobileCards
+          rows={activeSection.rows}
           openActionId={openActionId}
           onToggleAction={handleToggleAction}
           onCloseAction={handleCloseAction}
           onSelectStatus={handleRowStatusChange}
         />
-      ))}
+        <SectionFooter rowCount={activeSection.rows.length} />
+      </div>
     </div>
   );
 });
