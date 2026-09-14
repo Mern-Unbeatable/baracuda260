@@ -1,4 +1,4 @@
-/** Admin Payouts — three-section payout tables (Prize, Donation, Premium). */
+/** Admin Payouts — tabbed payout tables (Prize, Donation, Photo Sales, Store). */
 
 const A = '/assets/admin-payouts';
 
@@ -38,6 +38,13 @@ export const ACTION_STATUS_OPTIONS = [
 ];
 
 export const PAYOUTS_PAGE_SIZE = 7;
+
+export const PAYOUT_TABS = [
+  { id: 'prize', labelKey: 'adminPayouts.tabs.prize' },
+  { id: 'donation', labelKey: 'adminPayouts.tabs.donation' },
+  { id: 'premium', labelKey: 'adminPayouts.tabs.premium' },
+  { id: 'store', labelKey: 'adminPayouts.tabs.store' },
+];
 
 const SHARED_ROWS = [
   {
@@ -94,6 +101,15 @@ const SHARED_ROWS = [
     amount: '$1,250.00',
     status: PAYOUT_STATUS.APPROVED,
   },
+  {
+    id: 'row-7',
+    dateKey: 'adminPayouts.rows.r7.date',
+    typeKey: 'adminPayouts.columns.withdrawal',
+    accountTypeKey: 'adminPayouts.columns.paypal',
+    accountNumber: '(480) 555-0108',
+    amount: '$1,250.00',
+    status: PAYOUT_STATUS.APPROVED,
+  },
 ];
 
 const prefixRows = (rows, prefix) =>
@@ -104,18 +120,28 @@ export const PAYOUT_SECTIONS = [
     id: 'prize',
     titleKey: 'adminPayouts.sections.prize.title',
     subtitleKey: 'adminPayouts.sections.prize.subtitle',
+    tabLabelKey: 'adminPayouts.tabs.prize',
     rows: prefixRows(SHARED_ROWS, 'prize'),
   },
   {
     id: 'donation',
     titleKey: 'adminPayouts.sections.donation.title',
     subtitleKey: 'adminPayouts.sections.donation.subtitle',
+    tabLabelKey: 'adminPayouts.tabs.donation',
     rows: prefixRows(SHARED_ROWS, 'donation'),
   },
   {
     id: 'premium',
     titleKey: 'adminPayouts.sections.premium.title',
     subtitleKey: 'adminPayouts.sections.premium.subtitle',
+    tabLabelKey: 'adminPayouts.tabs.premium',
     rows: prefixRows(SHARED_ROWS, 'premium'),
+  },
+  {
+    id: 'store',
+    titleKey: 'adminPayouts.sections.store.title',
+    subtitleKey: 'adminPayouts.sections.store.subtitle',
+    tabLabelKey: 'adminPayouts.tabs.store',
+    rows: prefixRows(SHARED_ROWS, 'store'),
   },
 ];

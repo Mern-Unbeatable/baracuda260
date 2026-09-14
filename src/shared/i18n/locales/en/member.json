@@ -385,7 +385,10 @@
       "profile": "Profile",
       "settings": "Settings",
       "logOut": "Log Out",
-      "purchasePhotos": "Purchase Photo"
+      "purchasePhotos": "Purchase Photo",
+      "myStore": "My Store",
+      "orders": "Orders",
+      "myOrders": "My Orders"
     },
     "stats": {
       "aria": "Quick stats",
@@ -1234,5 +1237,255 @@
     },
     "invoiceAria": "Download invoice for {{title}}",
     "invoiceStarted": "Invoice download started for {{title}}."
+  },
+  "myStore": {
+    "title": "My Store",
+    "subtitle": "Explore Art, handmade products and creative merchandise.",
+    "uploadProduct": "Upload Product",
+    "empty": "No products in this category yet.",
+    "gridAria": "Store products grid",
+    "paginationAria": "My Store pagination",
+    "filters": {
+      "aria": "Filter store products",
+      "all": "All items",
+      "artPrints": "Art Prints",
+      "handmade": "Handmade Crafts",
+      "apparel": "Apparel",
+      "photobooks": "Photobooks",
+      "digitalPreset": "Digital Preset"
+    },
+    "badges": {
+      "artPrints": "Art Prints",
+      "digitalArtPrint": "Digital Art Print",
+      "handmadeCrafts": "Handmade Crafts",
+      "apparel": "Apparel",
+      "photobooks": "Photobooks",
+      "digitalPreset": "Digital Preset"
+    },
+    "actions": {
+      "label": "action",
+      "menu": "Actions for {{title}}",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "toast": {
+      "edit": "Edit {{title}} will open soon.",
+      "deleted": "{{title}} removed from your store."
+    },
+    "upload": {
+      "title": "Upload Store",
+      "back": "Back to My Store",
+      "collectionTitle": "COLLECTION TITLE",
+      "collectionPlaceholder": "e.g., Celestial Archetypes of Fire",
+      "category": "CATEGORY",
+      "price": "Price",
+      "pricePlaceholder": "$ 2.00",
+      "edition": "Set Edition/Size",
+      "editionPlaceholder": "write edition or size",
+      "description": "Description",
+      "descriptionPlaceholder": "Write Description about this product",
+      "banner": "Product Banner Image",
+      "others": "Others Images",
+      "dropTitle": "Drag and drop photos here",
+      "dropHint": "Or click to browse from your computer",
+      "bannerMeta": "JPEG, PNG | Max 1 photos | 1920x1080px recommended",
+      "othersMeta": "JPEG, PNG | Max 8 photos | 1920x1080px recommended",
+      "filesSelected": "{{count}} files selected",
+      "submit": "Submit your photos",
+      "submitting": "Submitting…",
+      "success": "Product submitted to your store.",
+      "categories": {
+        "astrophotography": "Astrophotography",
+        "artPrints": "Art Prints",
+        "handmade": "Handmade Crafts",
+        "apparel": "Apparel",
+        "photobooks": "Photobooks",
+        "digitalPreset": "Digital Preset"
+      },
+      "errors": {
+        "title": "Collection title is required.",
+        "price": "Price is required.",
+        "banner": "Please upload a product banner image."
+      },
+      "editTitle": "Edit Store Product",
+      "currentBanner": "Current banner image",
+      "updateSubmit": "Update product",
+      "updateSuccess": "Product updated successfully."
+    }
+  },
+  "myOrders": {
+    "title": "My Orders",
+    "subtitle": "View your purchases and track your orders across all creator mini-stores.",
+    "empty": "You have not placed any orders yet.",
+    "recentTitle": "RECENT ORDERS (SHOWING {{showing}} OF {{total}})",
+    "sortedBy": "Sorted by newest placed",
+    "orderLabel": "Order #{{number}}",
+    "placedOn": "Placed on {{date}}",
+    "soldBy": "Sold by: {{store}}",
+    "itemMeta": "Quantity: {{qty}} • Item Price: {{price}} ea",
+    "qtyShort": "Qty: {{count}}",
+    "paid": "Paid",
+    "deliveredOn": "Delivered on {{date}}",
+    "viewDetails": "View Order Details",
+    "showing": "Showing {{showing}} of {{total}} purchases",
+    "paginationAria": "My Orders pagination",
+    "copySuccess": "Order number copied.",
+    "copyFailed": "Could not copy order number.",
+    "copyAria": "Copy order number {{number}}",
+    "invoiceAria": "Download invoice for {{number}}",
+    "invoiceStarted": "Invoice download started for {{order}}.",
+    "status": {
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered"
+    },
+    "stats": {
+      "aria": "Order summary",
+      "total": "TOTAL ORDERS",
+      "totalHint": "All time",
+      "processing": "PROCESSING",
+      "processingHint": "In preparation",
+      "shipped": "SHIPPED",
+      "shippedHint": "On the road",
+      "delivered": "DELIVERED",
+      "deliveredHint": "Completed"
+    },
+    "meta": {
+      "orderTotal": "ORDER TOTAL",
+      "payment": "PAYMENT",
+      "delivery": "DELIVERY"
+    },
+    "detail": {
+      "back": "Back to My Orders",
+      "close": "Close order details",
+      "titlePrefix": "ORDER DETAILS •",
+      "titleOrder": "Order #{{number}}",
+      "placedAt": "Placed on {{date}}",
+      "progress": "ORDER PROGRESS",
+      "buyerProtection": "LENSARENA BUYER PROTECTION ACTIVE",
+      "pending": "Pending",
+      "inTransit": "In transit",
+      "purchasedProduct": "PURCHASED PRODUCT",
+      "unitMeta": "Quantity: {{qty}} • Unit Price: {{price}}",
+      "soldByLabel": "SOLD BY",
+      "verifiedCreator": "Verified Creator",
+      "visitStore": "Visit Store",
+      "message": "Message",
+      "visitStoreSoon": "Store page will open soon.",
+      "messageSoon": "Messaging will open soon.",
+      "paymentSummary": "PAYMENT SUMMARY",
+      "paidInFull": "Paid in Full",
+      "subtotal": "Product Subtotal",
+      "shipping": "Shipping",
+      "discount": "Discount",
+      "totalPaid": "Total Paid",
+      "paymentMethod": "Payment Method: {{method}}",
+      "shippingInfo": "SHIPPING INFORMATION",
+      "shippingAddress": "Shipping Address",
+      "estimatedDelivery": "Estimated Delivery",
+      "steps": {
+        "placed": "Order Placed",
+        "placedDetail": "Order details confirmed with creator store.",
+        "processing": "Processing",
+        "processingDetail": "Creator is handcrafting & packaging your item.",
+        "shipped": "Shipped",
+        "shippedDetail": "Carrier pickup & tracking assignment.",
+        "delivered": "Delivered",
+        "deliveredDetail": "Estimated {{date}}"
+      }
+    }
+  },
+  "storeOrders": {
+    "title": "Orders",
+    "subtitle": "View and manage orders placed for your store products.",
+    "empty": "No orders match these filters.",
+    "showing": "Showing {{showing}} of {{total}} orders",
+    "paginationAria": "Store orders pagination",
+    "qty": "Qty {{count}}",
+    "copySuccess": "Order number copied.",
+    "copyFailed": "Could not copy order number.",
+    "copyAria": "Copy order number {{number}}",
+    "statusUpdated": "Order status updated to {{status}}.",
+    "status": {
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "stats": {
+      "aria": "Store order summary",
+      "totalOrders": "TOTAL ORDERS",
+      "totalOrdersHint": "All time across your store",
+      "totalSales": "TOTAL SALES",
+      "totalSalesHint": "Gross revenue before fees",
+      "commission": "PLATFORM COMMISSION",
+      "commissionHint": "Retained by LensArena",
+      "earnings": "YOUR EARNINGS",
+      "earningsHint": "90% goes straight to you"
+    },
+    "filters": {
+      "statusLabel": "Status:",
+      "all": "All {{count}}",
+      "processing": "Processing {{count}}",
+      "shipped": "Shipped {{count}}",
+      "delivered": "Delivered {{count}}",
+      "cancelled": "Cancelled {{count}}"
+    },
+    "date": {
+      "label": "Date:",
+      "today": "Today",
+      "week": "This Week",
+      "month": "This Month",
+      "custom": "Custom"
+    },
+    "columns": {
+      "orderId": "Order ID",
+      "customer": "Customer",
+      "product": "Product",
+      "date": "Date",
+      "total": "Total",
+      "admin": "Admin 10%",
+      "earnings": "Seller Earnings",
+      "status": "Status",
+      "action": "Action"
+    },
+    "actions": {
+      "menu": "Actions for {{number}}",
+      "viewDetails": "View Details"
+    },
+    "detail": {
+      "title": "Order #{{number}}",
+      "close": "Close order details",
+      "payment": "PAYMENT",
+      "paid": "Paid",
+      "fulfillment": "FULFILLMENT",
+      "customerInfo": "CUSTOMER INFORMATION",
+      "email": "EMAIL",
+      "phone": "PHONE",
+      "shippingAddress": "SHIPPING ADDRESS",
+      "productInfo": "PRODUCT INFORMATION",
+      "unitLine": "{{price}} × {{qty}}",
+      "subtotal": "SUBTOTAL",
+      "paymentBreakdown": "PAYMENT BREAKDOWN",
+      "orderTotal": "Order Total",
+      "commission": "Platform Commission (10%)",
+      "sellerEarnings": "Seller Earnings",
+      "earningsNote": "Earnings are added to your balance after delivery confirmation.",
+      "sellerActions": "SELLER ACTIONS",
+      "updateStatus": "Update Status",
+      "markProcessing": "Mark as Processing",
+      "markShipped": "Mark as Shipped",
+      "markDelivered": "Mark as Delivered",
+      "markCancelled": "Mark as Cancelled",
+      "orderTimeline": "ORDER TIMELINE",
+      "timeline": {
+        "placed": "Order Placed",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "pending": "Pending",
+        "deliveredPending": "Delivered Pending"
+      }
+    }
   }
 }

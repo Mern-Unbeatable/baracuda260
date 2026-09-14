@@ -12,15 +12,15 @@ const PhotographerMessagesSection = memo(({ messages }) => {
           <div className="flex items-center gap-2">
             <MessageSquare size={22} className="shrink-0 text-[#4048cd]" aria-hidden="true" />
             <h2 className="text-[20px] font-bold text-[#111827] sm:text-[22px]">
-              {t('photographerProfile.messages.title')}
+              {t('photographerProfile.posts.title')}
             </h2>
           </div>
           <p className="mt-1 max-w-2xl text-[14px] leading-6 text-[#6b7280] sm:text-[15px]">
-            {t('photographerProfile.messages.subtitle')}
+            {t('photographerProfile.posts.subtitle')}
           </p>
         </div>
         <span className="inline-flex w-fit shrink-0 rounded-full bg-[#f3f4f6] px-3 py-1.5 text-[13px] font-medium text-[#6b7280]">
-          {t('photographerProfile.messages.publishedCount', { count: messages.length })}
+          {t('photographerProfile.posts.publishedCount', { count: messages.length })}
         </span>
       </div>
 
@@ -54,7 +54,7 @@ const PhotographerMessagesSection = memo(({ messages }) => {
                 </div>
               </div>
               <span className="shrink-0 rounded-full bg-[#ecedfa] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-[#4048cd]">
-                {t('photographerProfile.messages.noteBadge')}
+                {t('photographerProfile.posts.noteBadge')}
               </span>
             </div>
 
@@ -72,9 +72,9 @@ const PhotographerMessagesSection = memo(({ messages }) => {
             </div>
 
             <div className="flex items-center justify-between border-t border-black/8 px-4 py-3 sm:px-5">
-              <span className="inline-flex items-center gap-1.5 text-[14px] font-medium text-[#4048cd]">
-                <Heart size={16} strokeWidth={2} aria-hidden="true" className="fill-[#4048cd] text-[#4048cd]" />
-                {t('photographerProfile.messages.likes', { count: message.likes })}
+              <span className="inline-flex items-center gap-1.5 text-[14px] font-medium text-[#ee1c25]">
+                <Heart size={16} strokeWidth={2} aria-hidden="true" className="fill-[#ee1c25] text-[#ee1c25]" />
+                {t('photographerProfile.posts.likes', { count: message.likes })}
               </span>
               <button
                 type="button"

@@ -737,6 +737,13 @@
   },
   "adminPayouts": {
     "eyebrow": "PAYOUTS",
+    "tabs": {
+      "aria": "Payout categories",
+      "prize": "Prize Money",
+      "donation": "Donations",
+      "premium": "Photo Sales",
+      "store": "Store Sales"
+    },
     "sections": {
       "prize": {
         "title": "Prize payouts",
@@ -748,6 +755,10 @@
       },
       "premium": {
         "title": "Premium Photos Payout",
+        "subtitle": "Review withdrawal requests and reconcile manual payments."
+      },
+      "store": {
+        "title": "Store Payouts",
         "subtitle": "Review withdrawal requests and reconcile manual payments."
       }
     },
@@ -793,6 +804,9 @@
       },
       "r6": {
         "date": "Jul 12, 2025"
+      },
+      "r7": {
+        "date": "Jul 14, 2025"
       }
     }
   },
