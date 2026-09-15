@@ -15,6 +15,7 @@ import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetail
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import {
   GALLERY_DETAIL_ASSETS as ASSETS,
   GALLERY_DETAIL_COMMENTS as COMMENTS,
@@ -256,10 +257,13 @@ const GalleryDetailView = memo(
                     height={57}
                     className="size-12 rounded-full object-cover sm:size-14.25"
                   />
-                  <div>
-                    <p className="text-[14px] leading-5 text-[#6b7280]">
-                      {t('galleryDetail.photographerLabel')}
-                    </p>
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-[14px] leading-5 text-[#6b7280]">
+                        {t('galleryDetail.photographerLabel')}
+                      </p>
+                      <PhotographerAwardCounters awards={story.awards} />
+                    </div>
                     <p className="text-[16px] font-semibold leading-6 text-(--primary-text-heading-color) sm:text-[18px]">
                       {story.photographer}
                     </p>

@@ -1108,6 +1108,8 @@
       "instagram": "Instagram URL",
       "twitter": "Twitter URL",
       "linkedin": "LinkedIn URL",
+      "youtube": "YouTube URL",
+      "tiktok": "TikTok URL",
       "saved": "Portfolio links saved successfully!"
     },
     "coverPhoto": {
