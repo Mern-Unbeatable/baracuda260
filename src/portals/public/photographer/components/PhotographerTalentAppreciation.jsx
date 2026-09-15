@@ -9,22 +9,22 @@ import {
 
 const TIER_STYLES = {
   gold: {
-    icon: 'text-[#d97706]',
-    iconBg: 'bg-[#fff7ed]',
-    btn: 'bg-[#fef3c7] text-[#b45309] hover:bg-[#fde68a]',
-    dot: 'bg-[#d97706]',
+    icon: 'text-[#ca8a04]',
+    iconBg: 'bg-[#fefce8] border border-[#fef08a]',
+    btn: 'bg-[#fef08a] text-[#854d0e] hover:bg-[#eab308] hover:text-white',
+    dot: 'bg-[#eab308]',
   },
   silver: {
     icon: 'text-[#64748b]',
     iconBg: 'bg-[#f1f5f9]',
-    btn: 'bg-[#e2e8f0] text-[#64748b]',
+    btn: 'bg-[#e2e8f0] text-[#64748b] hover:bg-[#64748b] hover:text-white',
     btnDisabled: true,
     dot: 'bg-[#94a3b8]',
   },
   bronze: {
     icon: 'text-[#b45309]',
     iconBg: 'bg-[#fff7ed]',
-    btn: 'bg-[#ffedd5] text-[#9a3412] hover:bg-[#fed7aa]',
+    btn: 'bg-[#ffedd5] text-[#9a3412] hover:bg-[#b45309] hover:text-white',
     dot: 'bg-[#b45309]',
   },
 };
@@ -56,7 +56,7 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
       <div className="rounded-[16px] border border-[#e5e7eb] bg-white p-5 sm:p-6">
         <div className="flex items-start gap-2">
           <h2 className="text-[18px] font-bold text-[#111827] sm:text-[20px]">
-            {t('photographerProfile.appreciation.title')}
+            {t('photographerProfile.appreciation.title', { defaultValue: 'Artwork Appreciation' })}
           </h2>
           <Info size={16} className="mt-1 shrink-0 text-[#9ca3af]" aria-hidden="true" />
         </div>

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import { MapPin, MessageCircle, UserPlus, UserCheck } from 'lucide-react';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 
 const PhotographerProfileHeader = memo(({ profile }) => {
   const { t } = useTranslation();
@@ -31,9 +32,12 @@ const PhotographerProfileHeader = memo(({ profile }) => {
               className="relative -mt-12 size-[84px] shrink-0 rounded-full border-[3px] border-white object-cover shadow-sm sm:-mt-14 sm:size-[104px]"
             />
             <div className="min-w-0 pb-1">
-              <h1 className="text-[24px] font-bold leading-tight tracking-[-0.3px] text-[#111827] sm:text-[30px]">
-                {profile.name}
-              </h1>
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-[24px] font-bold leading-tight tracking-[-0.3px] text-[#111827] sm:text-[30px]">
+                  {profile.name}
+                </h1>
+                <PhotographerAwardCounters awards={profile.appreciation?.tiers} size="md" />
+              </div>
               <p className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13px] text-[#6b7280] sm:text-[14px]">
                 <span>{profile.handle}</span>
                 <span aria-hidden="true">·</span>
