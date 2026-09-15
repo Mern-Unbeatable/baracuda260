@@ -309,7 +309,7 @@ export const PROFILE_ALBUM_FILTERS = [
   { id: 'six', value: '6 Photo Story', shortLabelKey: 'common.filtersShort.six' },
   {
     id: 'zodiac',
-    value: '12 photos - Full Zodiac Story',
+    value: '12 photos',
     shortLabelKey: 'common.filtersShort.zodiac',
   },
 ];
