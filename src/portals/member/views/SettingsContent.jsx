@@ -162,6 +162,8 @@ const SettingsContent = memo(() => {
     instagram: DEFAULT_MEMBER_SETTINGS.instagram,
     twitter: DEFAULT_MEMBER_SETTINGS.twitter,
     linkedin: DEFAULT_MEMBER_SETTINGS.linkedin,
+    youtube: DEFAULT_MEMBER_SETTINGS.youtube,
+    tiktok: DEFAULT_MEMBER_SETTINGS.tiktok,
   });
   const [profileErrors, setProfileErrors] = useState({});
   const [currentPassword, setCurrentPassword] = useState('');
@@ -315,6 +317,18 @@ const SettingsContent = memo(() => {
               label={t('memberSettings.portfolio.linkedin')}
               value={portfolio.linkedin}
               onChange={(value) => updatePortfolio('linkedin', value)}
+            />
+            <SettingsField
+              id="settings-youtube"
+              label={t('memberSettings.portfolio.youtube')}
+              value={portfolio.youtube}
+              onChange={(value) => updatePortfolio('youtube', value)}
+            />
+            <SettingsField
+              id="settings-tiktok"
+              label={t('memberSettings.portfolio.tiktok')}
+              value={portfolio.tiktok}
+              onChange={(value) => updatePortfolio('tiktok', value)}
             />
           </div>
 

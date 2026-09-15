@@ -8,6 +8,8 @@ export const DEFAULT_MEMBER_SETTINGS = {
   instagram: '@ismail1256',
   twitter: 'www.twitter.com',
   linkedin: '@ismail1256',
+  youtube: '@sarajenkins',
+  tiktok: '@sarajenkins',
 };
 
 export const validateMemberProfile = (values, t) => {

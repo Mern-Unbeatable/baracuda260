@@ -22,6 +22,8 @@ export const PHOTOGRAPHER_PROFILE = {
   websiteLabel: 'www.elenavancephotography.com',
   instagram: '@elenavance_photo',
   twitter: '@elenavance',
+  youtube: '@elenavance_photo',
+  tiktok: '@elenavance',
   bio: [
     "I'm a passionate photographer who loves turning real moments into timeless visual stories. With a strong eye for detail, composition, and natural emotions, I focus on creating photographs that feel authentic, beautiful, and meaningful. From portraits and weddings to lifestyle and special events, I enjoy capturing the moments that people want to remember forever.",
     'My goal is not just to take a photograph, but to tell a story through every frame — light, place, and feeling woven into a lasting memory.',
