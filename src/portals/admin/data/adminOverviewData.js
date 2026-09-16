@@ -76,19 +76,35 @@ export const CHART_MONTHS = [
   'dec',
 ];
 
-export const CHART_Y_LABELS = ['12k', '8k', '4k', '0'];
+export const REVENUE_DATA = [
+  { month: 'jan', commission: 12500, promoted: 8500 },
+  { month: 'feb', commission: 17000, promoted: 10750 },
+  { month: 'mar', commission: 15500, promoted: 9750 },
+  { month: 'apr', commission: 22500, promoted: 14250 },
+  { month: 'may', commission: 21000, promoted: 15750 },
+  { month: 'jun', commission: 30000, promoted: 22250 },
+  { month: 'jul', commission: 28000, promoted: 20250 },
+  { month: 'aug', commission: 37000, promoted: 27750 },
+  { month: 'sep', commission: 35000, promoted: 25250 },
+  { month: 'oct', commission: 43500, promoted: 32250 },
+  { month: 'nov', commission: 40500, promoted: 29750 },
+  { month: 'dec', commission: 47000, promoted: 35750 },
+];
 
-/**
- * Revenue Trend — Commission vs Promoted, plotted in a 900×240 viewBox.
- * y values are viewBox coordinates (lower = higher revenue). Marker sits on Aug (index 7).
- */
-export const REVENUE_CHART = {
-  viewBox: { width: 900, height: 240 },
-  markerIndex: 7,
-  yLabels: ['60000', '45000', '30000', '15000', '0'],
-  commission: [190, 172, 178, 150, 156, 120, 128, 92, 100, 66, 78, 52],
-  promoted: [206, 197, 201, 183, 177, 151, 159, 129, 139, 111, 121, 97],
-};
+export const VISITOR_DATA = [
+  { month: 'jan', visitors: 3000 },
+  { month: 'feb', visitors: 3500 },
+  { month: 'mar', visitors: 4200 },
+  { month: 'apr', visitors: 3800 },
+  { month: 'may', visitors: 5000 },
+  { month: 'jun', visitors: 6500 },
+  { month: 'jul', visitors: 6000 },
+  { month: 'aug', visitors: 8500 },
+  { month: 'sep', visitors: 9200 },
+  { month: 'oct', visitors: 8100 },
+  { month: 'nov', visitors: 10500 },
+  { month: 'dec', visitors: 11800 },
+];
 
 export const REVENUE_PERIODS = [
   { id: 'thisYear', labelKey: 'adminOverview.revenueTrend.periodOptions.thisYear' },

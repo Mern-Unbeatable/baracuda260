@@ -10,7 +10,6 @@ function formatNumber(value) {
 function useCountUp(target, duration = 1200, startOn = false) {
   const [value, setValue] = useState(0);
   const rafRef = useRef(null);
-  const startRef = useRef(null);
 
   useEffect(() => {
     const to = Number(String(target).replace(/[^\d]/g, '')) || 0;
@@ -55,52 +54,44 @@ const STATS = [
   { value: '120×', labelKey: 'home.stats.prizes' },
 ];
 
+const StatCounterItem = memo(({ numericTarget, suffix, labelKey, inView, t }) => {
+  const count = useCountUp(numericTarget, 1200, inView);
+  return (
+    <div className="text-center">
+      <p className="text-[22px] font-bold leading-none text-(--primary-text-heading-color) sm:text-[32px] lg:text-[40px]">
+        {formatNumber(count)}
+        {suffix}
+      </p>
+      <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-(--primary-text-color) sm:mt-3 sm:text-[11px] lg:text-[12px]">
+        {t(labelKey)}
+      </p>
+    </div>
+  );
+});
+
+StatCounterItem.displayName = 'StatCounterItem';
+
 const HomeStatsSection = memo(() => {
   const { t } = useTranslation();
-  const containerRef = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return undefined;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            obs.disconnect();
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
 
   return (
     <section className="bg-white section-py border-y border-slate-100">
       <Shell>
-        <div ref={containerRef} className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-4 lg:gap-6">
+        <div className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-4 lg:gap-6">
           {STATS.map(({ value, labelKey }) => {
             const suffix = String(value).replace(/[\d,]/g, '');
             const numericTarget = Number(String(value).replace(/[^\d]/g, '')) || 0;
             return (
               <InViewWrapper key={labelKey}>
-                {(inView) => {
-                  const count = useCountUp(numericTarget, 1200, inView);
-                  return (
-                    <div className="text-center">
-                      <p className="text-[22px] font-bold leading-none text-(--primary-text-heading-color) sm:text-[32px] lg:text-[40px]">
-                        {formatNumber(count)}
-                        {suffix}
-                      </p>
-                      <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-(--primary-text-color) sm:mt-3 sm:text-[11px] lg:text-[12px]">
-                        {t(labelKey)}
-                      </p>
-                    </div>
-                  );
-                }}
+                {(inView) => (
+                  <StatCounterItem
+                    numericTarget={numericTarget}
+                    suffix={suffix}
+                    labelKey={labelKey}
+                    inView={inView}
+                    t={t}
+                  />
+                )}
               </InViewWrapper>
             );
           })}

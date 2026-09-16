@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import {
   CalendarDays,
   Camera,

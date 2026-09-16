@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  DEMO_PROFILES,
   DEMO_PROFILES_PAGE_SIZE,
   computeDemoProfileStats,
   filterDemoProfilesByStatus,

@@ -273,18 +273,19 @@ const ChatPanel = memo(({ className = '', style, role = 'user' }) => {
   // ── Re-join all rooms after socket reconnect (admin) ────────────────────────
   useEffect(() => {
     if (!isAdmin) return;
+    const roomIds = adminRoomIdsRef.current;
     const rejoinAll = () => {
-      adminRoomIdsRef.current.forEach((id) => {
+      roomIds.forEach((id) => {
         socket.emit('conversation:join', id);
       });
     };
     socket.on('connect', rejoinAll);
     return () => {
       socket.off('connect', rejoinAll);
-      adminRoomIdsRef.current.forEach((id) => {
+      roomIds.forEach((id) => {
         socket.emit('conversation:leave', id);
       });
-      adminRoomIdsRef.current.clear();
+      roomIds.clear();
     };
   }, [isAdmin]);
 

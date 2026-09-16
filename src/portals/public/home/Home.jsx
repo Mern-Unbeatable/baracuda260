@@ -27,7 +27,7 @@ const Home = memo(() => {
       announcementTone="navy"
       newsletterVariant="home"
     >
-      <InViewWrapper><HomeHero /></InViewWrapper>
+      <HomeHero />
       <InViewWrapper><HomeStatsSection /></InViewWrapper>
       <InViewWrapper><ActiveCompetitions /></InViewWrapper>
       <InViewWrapper><HowItWorks /></InViewWrapper>

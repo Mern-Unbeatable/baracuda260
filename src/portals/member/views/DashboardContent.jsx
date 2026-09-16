@@ -10,8 +10,6 @@ import {
   Users,
   Clock,
   Calendar,
-  ChevronRight,
-  ArrowUpRight,
   Wallet,
 } from 'lucide-react';
 import { ROUTES } from '@/shared/config';

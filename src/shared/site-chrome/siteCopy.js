@@ -26,8 +26,6 @@ export const SITE_FOOTER_COLUMNS = [
     linkKeys: [
       'footer.gallery',
       'footer.about',
-      'footer.faq',
-      'footer.contact',
     ],
   },
   {
