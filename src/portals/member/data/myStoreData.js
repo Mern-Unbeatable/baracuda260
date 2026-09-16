@@ -11,6 +11,7 @@ export const MY_STORE_CATEGORIES = [
   { id: 'apparel', value: 'apparel', labelKey: 'myStore.filters.apparel' },
   { id: 'photobooks', value: 'photobooks', labelKey: 'myStore.filters.photobooks' },
   { id: 'digital-preset', value: 'digital-preset', labelKey: 'myStore.filters.digitalPreset' },
+  { id: 'other', value: 'other', labelKey: 'myStore.filters.other' },
 ];
 
 export const MY_STORE_CATEGORY_OPTIONS = [
@@ -20,6 +21,7 @@ export const MY_STORE_CATEGORY_OPTIONS = [
   { id: 'apparel', labelKey: 'myStore.upload.categories.apparel' },
   { id: 'photobooks', labelKey: 'myStore.upload.categories.photobooks' },
   { id: 'digital-preset', labelKey: 'myStore.upload.categories.digitalPreset' },
+  { id: 'other', labelKey: 'myStore.upload.categories.other' },
 ];
 
 export const MY_STORE_PRODUCTS = [
@@ -32,6 +34,7 @@ export const MY_STORE_PRODUCTS = [
     category: 'art-prints',
     badgeKey: 'myStore.badges.artPrints',
     image: `${H}/photo-golden.jpg`,
+    promoted: true,
   },
   {
     id: 'store-02',
@@ -52,6 +55,7 @@ export const MY_STORE_PRODUCTS = [
     category: 'handmade',
     badgeKey: 'myStore.badges.handmadeCrafts',
     image: `${H}/photo-forest.jpg`,
+    promoted: true,
   },
   {
     id: 'store-04',
@@ -142,6 +146,16 @@ export const MY_STORE_PRODUCTS = [
     category: 'digital-preset',
     badgeKey: 'myStore.badges.digitalPreset',
     image: `${H}/photo-golden.jpg`,
+  },
+  {
+    id: 'store-13',
+    title: 'Studio Gift Card Bundle',
+    description:
+      'Flexible gift card pack for prints, apparel, and custom studio commissions.',
+    price: '$50.00',
+    category: 'other',
+    badgeKey: 'myStore.badges.other',
+    image: `${H}/photo-morning.jpg`,
   },
 ];
 

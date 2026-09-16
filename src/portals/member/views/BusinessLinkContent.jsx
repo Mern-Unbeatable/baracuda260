@@ -16,18 +16,18 @@ import {
 const SlotIcon = memo(({ slot }) => {
   if (slot.iconBg && slot.iconOverlay) {
     return (
-      <span className="relative size-[35px] shrink-0 overflow-hidden">
+      <span className="relative size-8.75 shrink-0 overflow-hidden">
         <img
           src={slot.iconBg}
           alt=""
           width={35}
           height={35}
-          className="absolute inset-0 size-[35px] object-contain"
+          className="absolute inset-0 size-8.75 object-contain"
         />
         <img
           src={slot.iconOverlay}
           alt=""
-          className="absolute left-1/2 top-1/2 max-h-[26px] max-w-[26px] -translate-x-1/2 -translate-y-1/2 object-contain"
+          className="absolute left-1/2 top-1/2 max-h-6.5 max-w-6.5 -translate-x-1/2 -translate-y-1/2 object-contain"
         />
       </span>
     );
@@ -40,7 +40,7 @@ const SlotIcon = memo(({ slot }) => {
         alt=""
         width={35}
         height={35}
-        className="size-[35px] shrink-0 object-contain"
+        className="size-8.75 shrink-0 object-contain"
       />
     );
   }
@@ -56,7 +56,7 @@ const BusinessSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabe
 
   return (
     <article
-      className={`flex h-full min-w-0 w-full flex-col gap-[27px] rounded-[12px] border bg-white p-5 ${theme.cardBorder}`}
+      className={`flex h-full min-w-0 w-full flex-col gap-6.75 rounded-xl border bg-white p-5 ${theme.cardBorder}`}
     >
       <div className="flex w-full flex-1 flex-col items-center gap-5">
         <div className="flex w-full items-center justify-between whitespace-nowrap">
@@ -99,7 +99,7 @@ const BusinessSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabe
         <button
           type="button"
           onClick={onAddPhoto}
-          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/[0.02] ${theme.buttonBorder} ${theme.buttonText}`}
+          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${theme.buttonBorder} ${theme.buttonText}`}
         >
           <img
             src={theme.upload}
@@ -209,7 +209,7 @@ const BusinessLinkContent = memo(() => {
   };
 
   const renderSlotGrid = (slots) => (
-    <div className="grid w-full grid-cols-1 items-stretch gap-[14px] sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid w-full grid-cols-1 items-stretch gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
       {slots.map((slot) => (
         <BusinessSlotCard
           key={slot.id}
@@ -224,7 +224,7 @@ const BusinessLinkContent = memo(() => {
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <Link
         to={ROUTES.ADMIN_DASHBOARD}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
@@ -234,7 +234,7 @@ const BusinessLinkContent = memo(() => {
       </Link>
 
       <section className="flex w-full flex-col items-start gap-4 rounded-[20px] border border-black/20 bg-white p-5 sm:flex-row sm:gap-4">
-        <div className="flex h-[30px] w-[31px] shrink-0 items-center justify-center rounded border border-[#ee1c25] bg-[#fde8e9] px-[3px] py-[3px] pl-1">
+        <div className="flex h-7.5 w-7.75 shrink-0 items-center justify-center rounded border border-[#ee1c25] bg-[#fde8e9] px-0.75 py-0.75 pl-1">
           <img
             src={BUSINESS_LINK_ASSETS.bag}
             alt=""
@@ -253,7 +253,7 @@ const BusinessLinkContent = memo(() => {
         </div>
       </section>
 
-      <div className="relative h-[64px] w-full overflow-visible sm:h-[80px] lg:h-[103px]" aria-hidden="true">
+      <div className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75" aria-hidden="true">
         <img
           src={BUSINESS_LINK_ASSETS.dualWave}
           alt=""
@@ -297,7 +297,7 @@ const BusinessLinkContent = memo(() => {
               onChange={(event) => setTitle(event.target.value)}
               placeholder={t('businessLink.collectionTitlePlaceholder')}
               aria-invalid={Boolean(errors.title)}
-              className="w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              className="w-full rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
             />
             {errors.title ? (
               <p className="text-sm text-red-600" role="alert">
@@ -315,7 +315,7 @@ const BusinessLinkContent = memo(() => {
               aria-expanded={categoryOpen}
               aria-haspopup="listbox"
               onClick={() => setCategoryOpen((open) => !open)}
-              className="flex w-full cursor-pointer items-center justify-between rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-left"
+              className="flex w-full cursor-pointer items-center justify-between rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-left"
             >
               <span className="text-[16px] leading-6 text-[#707070]">
                 {t(`businessLink.categories.${category}`)}
@@ -341,7 +341,7 @@ const BusinessLinkContent = memo(() => {
                         setCategory(item);
                         setCategoryOpen(false);
                       }}
-                      className={`w-full cursor-pointer px-[17px] py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
+                      className={`w-full cursor-pointer px-4.25 py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
                         item === category ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#494453]'
                       }`}
                     >
@@ -367,7 +367,7 @@ const BusinessLinkContent = memo(() => {
               placeholder={t('businessLink.storyPlaceholder')}
               rows={5}
               aria-invalid={Boolean(errors.story)}
-              className="min-h-[147px] w-full resize-y rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              className="min-h-36.75 w-full resize-y rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
             />
             {errors.story ? (
               <p className="text-sm text-red-600" role="alert">
@@ -390,7 +390,7 @@ const BusinessLinkContent = memo(() => {
                 });
               }
             }}
-            className="mt-1 size-[18px] shrink-0 cursor-pointer rounded-[2px] border border-black bg-white accent-[#ee1c25]"
+            className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
           />
           <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
             {t('businessLink.copyrightConfirm')}

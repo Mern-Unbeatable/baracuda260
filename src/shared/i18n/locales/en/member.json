@@ -1247,6 +1247,7 @@
     "empty": "No products in this category yet.",
     "gridAria": "Store products grid",
     "paginationAria": "My Store pagination",
+    "promoted": "Promoted",
     "filters": {
       "aria": "Filter store products",
       "all": "All items",
@@ -1254,7 +1255,8 @@
       "handmade": "Handmade Crafts",
       "apparel": "Apparel",
       "photobooks": "Photobooks",
-      "digitalPreset": "Digital Preset"
+      "digitalPreset": "Digital Preset",
+      "other": "Other"
     },
     "badges": {
       "artPrints": "Art Prints",
@@ -1262,17 +1264,20 @@
       "handmadeCrafts": "Handmade Crafts",
       "apparel": "Apparel",
       "photobooks": "Photobooks",
-      "digitalPreset": "Digital Preset"
+      "digitalPreset": "Digital Preset",
+      "other": "Other"
     },
     "actions": {
       "label": "action",
       "menu": "Actions for {{title}}",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "promote": "Promote"
     },
     "toast": {
       "edit": "Edit {{title}} will open soon.",
-      "deleted": "{{title}} removed from your store."
+      "deleted": "{{title}} removed from your store.",
+      "promoted": "{{title}} is now promoted in the Marketplace."
     },
     "upload": {
       "title": "Upload Store",
@@ -1302,7 +1307,8 @@
         "handmade": "Handmade Crafts",
         "apparel": "Apparel",
         "photobooks": "Photobooks",
-        "digitalPreset": "Digital Preset"
+        "digitalPreset": "Digital Preset",
+        "other": "Other"
       },
       "errors": {
         "title": "Collection title is required.",

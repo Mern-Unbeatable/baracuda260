@@ -30,7 +30,7 @@ const UploadTierCard = memo(({ tier, routeSet }) => {
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-7">
-          <div className="flex h-[57px] w-14 items-center justify-center rounded-lg bg-[#fde8e9]">
+          <div className="flex h-14.25 w-14 items-center justify-center rounded-lg bg-[#fde8e9]">
             <Icon size={32} className="text-[#ee1c25]" aria-hidden="true" strokeWidth={1.75} />
           </div>
 
@@ -100,7 +100,7 @@ const UploadPhotosContent = memo(({ routeSet = UPLOAD_ROUTE_SETS.standalone }) =
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
       <header className="flex flex-col gap-3 sm:gap-4">
-        <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.75px] text-[#161c27] sm:text-[36px] lg:text-[40px] lg:leading-[38px]">
+        <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.75px] text-[#161c27] sm:text-[36px] lg:text-[40px] lg:leading-9.5">
           {t('uploadPhotos.title')}
         </h1>
         <p className="max-w-3xl text-[15px] leading-6 text-[#494453] sm:text-[16px]">

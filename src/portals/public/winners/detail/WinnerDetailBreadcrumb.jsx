@@ -11,7 +11,7 @@ const WinnerDetailBreadcrumb = memo(({ title }) => {
       aria-label={t('winnersDetail.breadcrumb.aria', { defaultValue: 'Breadcrumb' })}
       className="mb-5 sm:mb-6"
     >
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] font-semibold uppercase leading-[19px] tracking-[1.2px] text-[#7f8ba1] sm:text-[14px]">
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] font-semibold uppercase leading-4.75 tracking-[1.2px] text-[#7f8ba1] sm:text-[14px]">
         <li>
           <AppLink href={ROUTES.HOME} className="transition hover:text-[#ee1c25]">
             {t('galleryDetail.breadcrumb.home')}

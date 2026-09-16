@@ -19,11 +19,11 @@ const Home = lazy(() => import('@/portals/public/home/Home'));
 const PublicAlbumTypes = lazy(() => import('@/portals/public/album-types/AlbumTypes'));
 const AdvertiseWithUs = lazy(() => import('@/portals/public/advertise-with-us/AdvertiseWithUs'));
 const About = lazy(() => import('@/portals/public/about/About'));
-const Contact = lazy(() => import('@/portals/public/contact/Contact'));
 const Services = lazy(() => import('@/portals/public/services/Services'));
 const Competitions = lazy(() => import('@/portals/public/competitions/Competitions'));
 const Gallery = lazy(() => import('@/portals/public/gallery/Gallery'));
 const BuyPhotos = lazy(() => import('@/portals/public/buy-photos/BuyPhotos'));
+const Marketplace = lazy(() => import('@/portals/public/marketplace/Marketplace'));
 const BuyPhotoDetail = lazy(() => import('@/portals/public/buy-photos/detail/BuyPhotoDetail'));
 const BuyPhotosCheckout = lazy(() => import('@/portals/public/buy-photos/checkout/BuyPhotosCheckout'));
 const BuyPhotosSuccess = lazy(() => import('@/portals/public/buy-photos/success/BuyPhotosSuccess'));
@@ -117,12 +117,12 @@ const router = createBrowserRouter(
         <Route path={ROUTES.HOME} element={<Home />} />
         <Route path={ROUTES.ABOUT} element={<About />} />
         <Route path={ROUTES.SERVICES} element={<Services />} />
-        <Route path={ROUTES.CONTACT} element={<Contact />} />
         <Route path={ROUTES.COMPETITIONS} element={<Competitions />} />
         <Route path={ROUTES.GALLERY} element={<Gallery />} />
         <Route path={ROUTES.ALBUM_TYPES} element={<PublicAlbumTypes />} />
         <Route path={ROUTES.ADVERTISE_WITH_US} element={<AdvertiseWithUs />} />
         <Route path={ROUTES.BUY_PHOTOS} element={<BuyPhotos />} />
+        <Route path={ROUTES.MARKETPLACE} element={<Marketplace />} />
         <Route path={ROUTES.BUY_PHOTOS_CHECKOUT} element={<BuyPhotosCheckout />} />
         <Route path={ROUTES.BUY_PHOTOS_SUCCESS} element={<BuyPhotosSuccess />} />
         <Route path={ROUTES.BUY_PHOTOS_DETAIL} element={<BuyPhotoDetail />} />

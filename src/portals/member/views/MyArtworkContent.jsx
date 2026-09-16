@@ -57,13 +57,13 @@ const MyArtworkContent = memo(() => {
   } = usePaginatedSlice(filteredItems, MY_ARTWORK_PAGE_SIZE, [filterTab, statusFilter, sort]);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-4">
-          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
             {t('myArtwork.title')}
           </h1>
-          <p className="max-w-[960px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+          <p className="max-w-240 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
             {t('myArtwork.subtitle')}
           </p>
         </div>

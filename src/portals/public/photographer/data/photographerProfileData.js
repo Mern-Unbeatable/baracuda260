@@ -56,7 +56,6 @@ export const PHOTOGRAPHER_FEATURED = {
 };
 
 export const PHOTOGRAPHER_TALENT_APPRECIATION = {
-  resetDays: 6,
   weekly: { gold: 1, silver: 0, bronze: 1 },
   tiers: [
     { id: 'gold', count: 24, awardedThisWeek: false },
@@ -133,6 +132,7 @@ export const PHOTOGRAPHER_STORE_CATEGORIES = [
   { id: 'apparel', labelKey: 'photographerProfile.store.filters.apparel' },
   { id: 'photobooks', labelKey: 'photographerProfile.store.filters.photobooks' },
   { id: 'digital-preset', labelKey: 'photographerProfile.store.filters.digitalPreset' },
+  { id: 'other', labelKey: 'photographerProfile.store.filters.other' },
 ];
 
 export const PHOTOGRAPHER_STORE_PRODUCTS = [
@@ -297,6 +297,25 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       { id: '12x16', label: '12 x 16 in' },
       { id: '16x20', label: '16 x 20 in' },
     ],
+  },
+  {
+    id: 'store-09',
+    title: 'Studio Gift Card Bundle',
+    description: 'Flexible gift card pack for prints, apparel, and custom studio commissions.',
+    detailParagraphs: [
+      'Redeemable across studio prints, apparel drops, and selected commission slots.',
+    ],
+    price: '$50.00',
+    category: 'other',
+    badgeKey: 'photographerProfile.store.badges.other',
+    image: `${A}/photo-morning.jpg`,
+    gallery: [
+      `${A}/photo-morning.jpg`,
+      `${A}/photo-golden.jpg`,
+      `${A}/photo-harbor.jpg`,
+      `${A}/photo-forest.jpg`,
+    ],
+    sizes: [{ id: 'digital', label: 'Digital gift card' }],
   },
 ];
 

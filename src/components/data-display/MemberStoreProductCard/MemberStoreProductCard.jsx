@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { MoreVertical } from 'lucide-react';
 
 const MENU_OFFSET_PX = 6;
-const MENU_FALLBACK_HEIGHT_PX = 120;
+const MENU_FALLBACK_HEIGHT_PX = 160;
 const MENU_VIEWPORT_MARGIN_PX = 8;
 const MENU_WIDTH_PX = 148;
 
@@ -17,12 +17,14 @@ const MENU_WIDTH_PX = 148;
  *     price: string,
  *     badgeKey: string,
  *     image: string,
+ *     promoted?: boolean,
  *   },
  *   onEdit: () => void,
  *   onDelete: () => void,
+ *   onPromote?: () => void,
  * }} props
  */
-const MemberStoreProductCard = memo(({ product, onEdit, onDelete }) => {
+const MemberStoreProductCard = memo(({ product, onEdit, onDelete, onPromote }) => {
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const buttonWrapRef = useRef(null);
@@ -105,10 +107,23 @@ const MemberStoreProductCard = memo(({ product, onEdit, onDelete }) => {
               setMenuOpen(false);
               onEdit();
             }}
-            className="mb-1 w-full cursor-pointer rounded-[8px] bg-[#4048cd] px-3 py-2 text-left text-[14px] font-semibold text-white transition hover:bg-[#353cb0]"
+            className="mb-1 w-full cursor-pointer rounded-lg bg-[#4048cd] px-3 py-2 text-left text-[14px] font-semibold text-white transition hover:bg-[#353cb0]"
           >
             {t('myStore.actions.edit')}
           </button>
+          {onPromote ? (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setMenuOpen(false);
+                onPromote();
+              }}
+              className="mb-1 w-full cursor-pointer rounded-lg border border-[#e8ebf1] bg-white px-3 py-2 text-left text-[14px] font-semibold text-[#161c27] transition hover:bg-[#f6f7f9]"
+            >
+              {t('myStore.actions.promote')}
+            </button>
+          ) : null}
           <button
             type="button"
             role="menuitem"
@@ -116,7 +131,7 @@ const MemberStoreProductCard = memo(({ product, onEdit, onDelete }) => {
               setMenuOpen(false);
               onDelete();
             }}
-            className="w-full cursor-pointer rounded-[8px] border border-[#fde8e9] bg-white px-3 py-2 text-left text-[14px] font-semibold text-[#ee1c25] transition hover:bg-[#fde8e9]"
+            className="w-full cursor-pointer rounded-lg border border-[#fde8e9] bg-white px-3 py-2 text-left text-[14px] font-semibold text-[#ee1c25] transition hover:bg-[#fde8e9]"
           >
             {t('myStore.actions.delete')}
           </button>
@@ -137,9 +152,15 @@ const MemberStoreProductCard = memo(({ product, onEdit, onDelete }) => {
           decoding="async"
           className="size-full object-cover"
         />
-        <span className="absolute left-3 top-3 inline-flex max-w-[calc(100%-3.5rem)] items-center rounded-[6px] bg-[#3a3f4b]/88 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-[0.35px] text-white backdrop-blur-[2px]">
+        <span className="absolute left-3 top-3 inline-flex max-w-[calc(100%-3.5rem)] items-center rounded-md bg-[#3a3f4b]/88 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-[0.35px] text-white backdrop-blur-[2px]">
           {t(product.badgeKey)}
         </span>
+
+        {product.promoted ? (
+          <span className="absolute bottom-3 left-3 rounded-md bg-[#ee1c25] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
+            {t('myStore.promoted')}
+          </span>
+        ) : null}
 
         <div className="absolute right-3 top-3" ref={buttonWrapRef}>
           <button

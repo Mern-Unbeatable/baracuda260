@@ -33,18 +33,18 @@ const TablePagination = memo(({ showingKey, tone = 'red' }) => {
   const colors = PAGINATION_TONES[tone] ?? PAGINATION_TONES.red;
 
   return (
-    <div className="flex min-h-[67px] w-full flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0">
+    <div className="flex min-h-16.75 w-full flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0">
       <p className={`px-2.5 text-[16px] leading-normal ${colors.text}`}>{t(showingKey)}</p>
       <div className="flex shrink-0 items-center gap-2">
         <button
           type="button"
-          className={`rounded-[12px] border px-4 py-2 text-[16px] font-medium capitalize leading-normal ${colors.border} ${colors.text}`}
+          className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal ${colors.border} ${colors.text}`}
         >
           {t('prizePayments.pagination.previous')}
         </button>
         <button
           type="button"
-          className={`rounded-[12px] border px-4 py-2 text-[16px] font-medium capitalize leading-normal ${colors.border} ${colors.text}`}
+          className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal ${colors.border} ${colors.text}`}
         >
           {t('prizePayments.pagination.next')}
         </button>
@@ -60,13 +60,13 @@ const SummaryCard = memo(({ card }) => {
 
   return (
     <article
-      className={`flex h-full w-full min-w-0 flex-col gap-2 rounded-[16px] border border-[#e2e8f0] bg-white p-6 ${CARD_SHADOW}`}
+      className={`flex h-full w-full min-w-0 flex-col gap-2 rounded-2xl border border-[#e2e8f0] bg-white p-6 ${CARD_SHADOW}`}
     >
       <p className="text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]">
         {t(card.labelKey)}
       </p>
       <p
-        className={`text-[32px] font-semibold leading-[40px] tracking-[-0.75px] sm:text-[36px] sm:leading-[44px] ${card.valueClass}`}
+        className={`text-[32px] font-semibold leading-10 tracking-[-0.75px] sm:text-[36px] sm:leading-11 ${card.valueClass}`}
       >
         {t(card.valueKey)}
       </p>
@@ -111,7 +111,7 @@ const PrizingTable = memo(() => {
   return (
     <section
       aria-labelledby="prize-payments-prizing-heading"
-      className="mb-8 overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white"
+      className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
     >
       <div className="border-b border-[#ececf0] px-6 py-5">
         <h2 id="prize-payments-prizing-heading" className="text-[22px] font-bold leading-8 text-[#161c27]">
@@ -120,7 +120,7 @@ const PrizingTable = memo(() => {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <table className="min-w-[960px] w-full border-collapse">
+        <table className="min-w-240 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
               <th className={headCell}>{t('prizePayments.prizing.columns.month')}</th>
@@ -164,7 +164,7 @@ const DonationsTable = memo(() => {
   return (
     <section
       aria-labelledby="prize-payments-donations-heading"
-      className="mb-8 overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white"
+      className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
     >
       <div className="border-b border-[#ececf0] px-6 py-5">
         <h2 id="prize-payments-donations-heading" className="text-[22px] font-bold leading-8 text-[#161c27]">
@@ -174,7 +174,7 @@ const DonationsTable = memo(() => {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <table className="min-w-[960px] w-full border-collapse">
+        <table className="min-w-240 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
               <th className={headCell}>{t('prizePayments.donations.columns.date')}</th>
@@ -235,7 +235,7 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
   return (
     <section
       aria-labelledby="prize-payments-photo-sales-heading"
-      className="mb-8 overflow-hidden rounded-[12px] border border-[#e2e8f0] bg-white"
+      className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
     >
       <div className="flex flex-col gap-4 border-b border-[#ececf0] px-6 py-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
@@ -244,7 +244,7 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
           </h2>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <label className="relative min-w-[220px] flex-1">
+          <label className="relative min-w-55 flex-1">
             <span className="sr-only">{t('prizePayments.photoSales.searchPlaceholder')}</span>
             <Search
               size={16}
@@ -273,7 +273,7 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
             {t('prizePayments.photoSales.export')}
             <ChevronDown size={16} aria-hidden="true" />
           </button>
-          <label className="relative min-w-[140px]">
+          <label className="relative min-w-35">
             <span className="sr-only">{t('prizePayments.photoSales.filters.allStatuses')}</span>
             <select
               value={statusFilter}
@@ -296,7 +296,7 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <table className="min-w-[1100px] w-full border-collapse">
+        <table className="min-w-275 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
               <th className={headCell}>{t('prizePayments.photoSales.columns.date')}</th>
@@ -359,7 +359,7 @@ const PaymentHistoryTable = memo(() => {
   return (
     <section
       aria-labelledby="prize-payments-history-heading"
-      className={`overflow-hidden rounded-[16px] border border-[#e2e8f0] bg-white ${CARD_SHADOW}`}
+      className={`overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white ${CARD_SHADOW}`}
     >
       <div className="border-b border-[#ececf0] px-6 py-5">
         <h2 id="prize-payments-history-heading" className="text-[22px] font-bold leading-8 text-[#161c27]">
@@ -368,7 +368,7 @@ const PaymentHistoryTable = memo(() => {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <table className="min-w-[900px] w-full border-collapse">
+        <table className="min-w-225 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
               <th className={headCell}>{t('prizePayments.paymentHistory.columns.date')}</th>
@@ -427,10 +427,10 @@ const PrizePaymentsContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col">
+    <div className="mx-auto flex w-full max-w-395 flex-col">
       <header className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-        <div className="flex max-w-[835px] flex-col gap-3">
-          <h1 className="text-[28px] font-semibold leading-[34px] tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+        <div className="flex max-w-208.75 flex-col gap-3">
+          <h1 className="text-[28px] font-semibold leading-8.5 tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
             {t('prizePayments.title')}
           </h1>
           <p className="text-[16px] font-normal leading-6 text-[#494453]">
@@ -440,7 +440,7 @@ const PrizePaymentsContent = memo(() => {
         <button
           type="button"
           onClick={handleRequestPayout}
-          className="inline-flex shrink-0 items-center justify-center self-start rounded-[12px] bg-[#ee1c25] px-6 py-3 text-[14px] font-semibold leading-5 tracking-[0.28px] text-white sm:self-center"
+          className="inline-flex shrink-0 items-center justify-center self-start rounded-xl bg-[#ee1c25] px-6 py-3 text-[14px] font-semibold leading-5 tracking-[0.28px] text-white sm:self-center"
         >
           {t('prizePayments.requestPayout')}
         </button>
@@ -466,7 +466,7 @@ const PrizePaymentsContent = memo(() => {
       </section>
 
       {activeTab === 'donations' ? (
-        <p className="mb-8 rounded-[12px] border border-[#dbeafe] bg-[#eff6ff] px-4 py-3 text-[14px] leading-6 text-[#1e40af]">
+        <p className="mb-8 rounded-xl border border-[#dbeafe] bg-[#eff6ff] px-4 py-3 text-[14px] leading-6 text-[#1e40af]">
           {t('prizePayments.donations.commissionBanner')}
         </p>
       ) : null}

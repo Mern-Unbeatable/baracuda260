@@ -32,12 +32,12 @@ const ProfileSelectionContent = memo(() => {
   const { t } = useTranslation();
 
   return (
-    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-240 flex-col gap-8">
       <header className="flex flex-col gap-3">
         <h1 className="font-crimson text-[28px] font-semibold leading-normal text-[#050609] sm:text-[36px]">
           {t('profileConnections.selection.title')}
         </h1>
-        <p className="font-poppins text-[16px] font-normal leading-[1.5] text-[#464646]">
+        <p className="font-poppins text-[16px] font-normal leading-normal text-[#464646]">
           {t('profileConnections.selection.subtitle')}
         </p>
       </header>

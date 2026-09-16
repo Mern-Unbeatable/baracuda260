@@ -178,7 +178,7 @@ const SellerOrderDetailsContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-5">
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -261,7 +261,7 @@ const SellerOrderDetailsContent = memo(() => {
             <img
               src={order.image}
               alt={order.productTitle}
-              className="size-[64px] shrink-0 rounded-[10px] object-cover"
+              className="size-16 shrink-0 rounded-[10px] object-cover"
             />
             <div className="min-w-0">
               <p className="text-[15px] font-bold leading-5 text-[#111827]">{order.productTitle}</p>

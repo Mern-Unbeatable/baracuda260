@@ -32,7 +32,7 @@ const PhotographerProfileTabs = memo(({ activeTab, onChange }) => {
             >
               {t(tab.labelKey)}
               {active ? (
-                <span className="absolute inset-x-2 bottom-0 h-[3px] rounded-full bg-[#4048cd]" />
+                <span className="absolute inset-x-2 bottom-0 h-0.75 rounded-full bg-[#4048cd]" />
               ) : null}
             </button>
           );

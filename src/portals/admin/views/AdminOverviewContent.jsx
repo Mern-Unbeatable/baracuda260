@@ -1,35 +1,22 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
 import { selectUser } from '@/app/store/slices/authSlice';
 import {
-  ADMIN_OVERVIEW_ASSETS,
   CARD_BORDER,
   CARD_SHADOW,
-  CHART_MONTHS,
-  CHART_Y_LABELS,
   COMMUNITY_COUNTRIES,
   OVERVIEW_STATS_PRIMARY,
   OVERVIEW_STATS_SECONDARY,
   PENDING_SUBMISSIONS,
-  REVENUE_CHART,
+  REVENUE_DATA,
+  VISITOR_DATA,
   REVENUE_PERIODS,
 } from '@/portals/admin/data/adminOverviewData';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
-/** Smooth line path (horizontal-tangent cubic beziers) through equally spaced points. */
-const buildLinePath = (values, width) => {
-  const step = width / (values.length - 1);
-  return values.reduce((acc, y, i) => {
-    const x = i * step;
-    if (i === 0) return `M ${x} ${y}`;
-    const prevX = (i - 1) * step;
-    const prevY = values[i - 1];
-    const midX = (prevX + x) / 2;
-    return `${acc} C ${midX} ${prevY}, ${midX} ${y}, ${x} ${y}`;
-  }, '');
-};
 
 const StatCard = memo(({ labelKey, valueKey }) => {
   const { t } = useTranslation();
@@ -51,6 +38,22 @@ StatCard.displayName = 'StatCard';
 const VisitorChart = memo(() => {
   const { t } = useTranslation();
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="rounded-xl border border-[#eef0f4] bg-white px-3.5 py-2.5 shadow-[0px_8px_24px_rgba(23,32,51,0.12)]">
+          <p className="text-[11px] font-medium leading-4 text-[#8993a5] uppercase">
+            {t(`adminOverview.analytics.months.${label}`)}
+          </p>
+          <p className="mt-1 text-[15px] font-bold leading-5 text-[#3374E6]">
+            {payload[0].value.toLocaleString()}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <article
       className={`flex min-h-0 flex-col rounded-[18px] bg-white p-5 sm:p-7 ${CARD_BORDER} ${CARD_SHADOW}`}
@@ -68,82 +71,42 @@ const VisitorChart = memo(() => {
         {t('adminOverview.analytics.total')}
       </p>
 
-      <div className="relative mt-4 min-h-50 flex-1 pl-7 sm:mt-4 sm:min-h-55 sm:pl-9">
-        <div className="absolute inset-y-0 left-0 flex w-6 flex-col justify-between py-1 sm:w-8">
-          {CHART_Y_LABELS.map((label) => (
-            <span key={label} className="text-[11px] leading-4 text-[#a2a9b7] sm:text-[12px]">
-              {label}
-            </span>
-          ))}
-        </div>
-
-        <div className="relative h-45 w-full border-b border-[#edf0f5] sm:h-51">
-          <div className="pointer-events-none absolute inset-0 flex flex-col justify-between py-1" aria-hidden="true">
-            {[0, 1, 2, 3].map((line) => (
-              <div key={line} className="h-px w-full bg-[#edf0f5]" />
-            ))}
-          </div>
-
-          <svg
-            viewBox="0 0 838 194"
-            className="absolute inset-0 h-full w-full overflow-visible"
-            preserveAspectRatio="none"
-            role="img"
-            aria-label={t('adminOverview.analytics.title')}
-          >
+      <div className="mt-4 h-50 flex-1 sm:mt-4 sm:h-55 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={VISITOR_DATA} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="visitor-area-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3374E6" stopOpacity="0.17" />
-                <stop offset="100%" stopColor="#3374E6" stopOpacity="0" />
+                <stop offset="5%" stopColor="#3374E6" stopOpacity={0.17} />
+                <stop offset="95%" stopColor="#3374E6" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <path
-              d="M0 155.312C58.874 135.054 83.7319 146.308 130.831 118.172C177.93 90.0358 196.247 126.05 235.496 94.5376C274.745 63.0251 308.761 106.918 345.394 75.405C382.027 43.8925 400.343 109.168 450.059 81.0323C499.775 52.8961 528.557 85.534 565.19 48.3943C601.823 11.2545 638.456 75.405 682.938 36.0143C727.421 -3.37634 745.737 40.5161 837.319 0V193.577H0V155.312Z"
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#edf0f5" />
+            <XAxis 
+              dataKey="month" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fontSize: 11, fill: '#a2a9b7' }} 
+              tickFormatter={(val) => t(`adminOverview.analytics.months.${val}`)}
+              dy={10}
+            />
+            <YAxis 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fontSize: 11, fill: '#a2a9b7' }} 
+              tickFormatter={(val) => val >= 1000 ? `${val / 1000}k` : val}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area
+              type="monotone"
+              dataKey="visitors"
+              stroke="#3374E6"
+              strokeWidth={3.2}
+              fillOpacity={1}
               fill="url(#visitor-area-fill)"
+              activeDot={{ r: 6, strokeWidth: 3, stroke: '#3374E6', fill: 'white' }}
             />
-            <path
-              d="M0.592223 156.976C59.4662 136.718 84.3241 147.973 131.423 119.837C178.522 91.7004 196.839 127.715 236.088 96.2022C275.337 64.6896 309.354 108.582 345.986 77.0696C382.619 45.557 400.935 110.833 450.651 82.6968C500.367 54.5606 529.15 87.1986 565.782 50.0588C602.415 12.919 639.048 77.0696 683.53 37.6789C728.013 -1.7118 746.329 42.1807 837.911 1.66454"
-              fill="none"
-              stroke="#3374E6"
-              strokeWidth="3.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-            />
-            <line
-              x1="532"
-              y1="55"
-              x2="532"
-              y2="194"
-              stroke="#3374E6"
-              strokeWidth="1.5"
-              strokeDasharray="8 8"
-              vectorEffect="non-scaling-stroke"
-            />
-            <circle
-              cx="532"
-              cy="55"
-              r="6"
-              fill="white"
-              stroke="#3374E6"
-              strokeWidth="3"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-        </div>
-
-        <div className="mt-2 flex items-start justify-between gap-1">
-          {CHART_MONTHS.map((month, index) => (
-            <span
-              key={month}
-              className={`text-[10px] leading-4 sm:text-[11px] sm:leading-4.25 ${
-                index === 7 ? 'font-semibold text-[#3374E6]' : 'text-[#a2a9b7]'
-              }`}
-            >
-              {t(`adminOverview.analytics.months.${month}`)}
-            </span>
-          ))}
-        </div>
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </article>
   );
@@ -377,23 +340,36 @@ RevenuePeriodDropdown.displayName = 'RevenuePeriodDropdown';
 
 const RevenueTrendCard = memo(() => {
   const { t } = useTranslation();
-  const { viewBox, markerIndex, yLabels, commission, promoted } = REVENUE_CHART;
-  const { width, height } = viewBox;
-  const step = width / (commission.length - 1);
-  const markerX = markerIndex * step;
-  const commissionPath = buildLinePath(commission, width);
-  const promotedPath = buildLinePath(promoted, width);
-  const commissionValue = t('adminOverview.revenueTrend.commissionValue');
-  const promotedValue = t('adminOverview.revenueTrend.promotedValue');
-  const tooltipLeft = `${(markerX / width) * 100}%`;
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length === 2) {
+      return (
+        <div className="rounded-xl border border-[#eef0f4] bg-white px-3.5 py-2.5 shadow-[0px_8px_24px_rgba(23,32,51,0.12)]">
+          <p className="text-[11px] font-medium leading-4 text-[#8993a5] uppercase mb-1">
+            {t(`adminOverview.analytics.months.${label}`)}
+          </p>
+          <p className="text-[11px] font-medium leading-4 text-[#8993a5]">
+            {t('adminOverview.revenueTrend.commission')}
+          </p>
+          <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_COMMISSION_COLOR }}>
+            ${payload[0].value.toLocaleString()}
+          </p>
+          <p className="mt-1.5 text-[11px] font-medium leading-4 text-[#8993a5]">
+            {t('adminOverview.revenueTrend.promoted')}
+          </p>
+          <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_PROMOTED_COLOR }}>
+            ${payload[1].value.toLocaleString()}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <article
       className={`flex flex-col rounded-[18px] bg-white p-5 sm:p-7 ${CARD_BORDER} ${CARD_SHADOW}`}
     >
       <header className="flex flex-wrap items-center justify-between gap-3">
-
-        
         <h2 className="text-[18px] font-semibold leading-7 tracking-[-0.5px] text-[#172033] sm:text-[20px]">
           {t('adminOverview.revenueTrend.title')}
         </h2>
@@ -412,127 +388,37 @@ const RevenueTrendCard = memo(() => {
         </div>
       </header>
 
-      <div className="relative mt-6 pl-11 sm:mt-7 sm:pl-14">
-        <div className="absolute inset-y-0 left-0 flex w-9 flex-col justify-between py-1 sm:w-12">
-          {yLabels.map((label) => (
-            <span key={label} className="text-[10px] leading-4 text-[#a2a9b7] sm:text-[11px]">
-              {label}
-            </span>
-          ))}
-        </div>
-
-        <div className="relative h-56 w-full sm:h-64">
-          <div
-            className="pointer-events-none absolute inset-0 flex flex-col justify-between py-1"
-            aria-hidden="true"
-          >
-            {yLabels.map((label) => (
-              <div key={label} className="h-px w-full bg-[#edf0f5]" />
-            ))}
-          </div>
-
-          <svg
-            viewBox={`0 0 ${width} ${height}`}
-            className="absolute inset-0 h-full w-full overflow-visible"
-            preserveAspectRatio="none"
-            role="img"
-            aria-label={t('adminOverview.revenueTrend.title')}
-          >
-            <defs>
-              <linearGradient id="revenue-commission-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={REVENUE_COMMISSION_COLOR} stopOpacity="0.16" />
-                <stop offset="100%" stopColor={REVENUE_COMMISSION_COLOR} stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id="revenue-promoted-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={REVENUE_PROMOTED_COLOR} stopOpacity="0.14" />
-                <stop offset="100%" stopColor={REVENUE_PROMOTED_COLOR} stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            <path d={`${commissionPath} L ${width} ${height} L 0 ${height} Z`} fill="url(#revenue-commission-fill)" />
-            <path d={`${promotedPath} L ${width} ${height} L 0 ${height} Z`} fill="url(#revenue-promoted-fill)" />
-
-            <line
-              x1={markerX}
-              y1="0"
-              x2={markerX}
-              y2={height}
-              stroke="#c9ced8"
-              strokeWidth="1.5"
-              strokeDasharray="7 7"
-              vectorEffect="non-scaling-stroke"
+      <div className="mt-6 h-56 sm:mt-7 sm:h-64 w-full text-[11px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={REVENUE_DATA} margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#edf0f5" />
+            <XAxis 
+              dataKey="month" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fontSize: 11, fill: '#a2a9b7' }} 
+              tickFormatter={(val) => t(`adminOverview.analytics.months.${val}`)}
+              dy={10}
             />
-
-            <path
-              d={promotedPath}
-              fill="none"
-              stroke={REVENUE_PROMOTED_COLOR}
-              strokeWidth="3.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-            />
-            <path
-              d={commissionPath}
-              fill="none"
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#c9ced8', strokeWidth: 1.5, strokeDasharray: '7 7' }} />
+            <Line
+              type="monotone"
+              dataKey="commission"
               stroke={REVENUE_COMMISSION_COLOR}
-              strokeWidth="3.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
+              strokeWidth={3.2}
+              dot={false}
+              activeDot={{ r: 6, strokeWidth: 3, stroke: REVENUE_COMMISSION_COLOR, fill: 'white' }}
             />
-
-            <circle
-              cx={markerX}
-              cy={promoted[markerIndex]}
-              r="6"
-              fill="white"
+            <Line
+              type="monotone"
+              dataKey="promoted"
               stroke={REVENUE_PROMOTED_COLOR}
-              strokeWidth="3"
-              vectorEffect="non-scaling-stroke"
+              strokeWidth={3.2}
+              dot={false}
+              activeDot={{ r: 6, strokeWidth: 3, stroke: REVENUE_PROMOTED_COLOR, fill: 'white' }}
             />
-            <circle
-              cx={markerX}
-              cy={commission[markerIndex]}
-              r="6"
-              fill="white"
-              stroke={REVENUE_COMMISSION_COLOR}
-              strokeWidth="3"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-
-          <div
-            className="pointer-events-none absolute top-2 z-10 w-max -translate-x-1/2 rounded-xl border border-[#eef0f4] bg-white px-3.5 py-2.5 shadow-[0px_8px_24px_rgba(23,32,51,0.12)]"
-            style={{ left: tooltipLeft }}
-          >
-            <p className="text-[11px] font-medium leading-4 text-[#8993a5]">
-              {t('adminOverview.revenueTrend.commission')}
-            </p>
-            <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_COMMISSION_COLOR }}>
-              {commissionValue}
-            </p>
-            <p className="mt-1.5 text-[11px] font-medium leading-4 text-[#8993a5]">
-              {t('adminOverview.revenueTrend.promoted')}
-            </p>
-            <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_PROMOTED_COLOR }}>
-              {promotedValue}
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-2 flex items-start justify-between gap-1">
-          {CHART_MONTHS.map((month, index) => (
-            <span
-              key={month}
-              className={`text-[10px] leading-4 sm:text-[11px] ${
-                index === markerIndex ? 'font-semibold text-[#172033]' : 'text-[#a2a9b7]'
-              }`}
-            >
-              {t(`adminOverview.analytics.months.${month}`)}
-            </span>
-          ))}
-        </div>
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
       <div className="mt-4 flex items-center gap-5 sm:hidden">

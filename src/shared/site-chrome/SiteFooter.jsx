@@ -17,8 +17,6 @@ const FOOTER_LINK_HREF = {
   'footer.leaderboard': ROUTES.LEADERBOARD,
   'footer.gallery': ROUTES.GALLERY,
   'footer.about': ROUTES.ABOUT,
-  'footer.faq': `${ROUTES.ABOUT}#how-competitions-work`,
-  'footer.contact': ROUTES.CONTACT,
   'footer.privacy': ROUTES.PRIVACY,
   'footer.terms': ROUTES.TERMS,
   'footer.cookies': ROUTES.COOKIES,
@@ -43,6 +41,8 @@ const SiteFooter = memo(() => {
                 alt="My 12 Photos"
                 width={220}
                 height={68}
+                loading="lazy"
+                decoding="async"
                 className="h-full w-full object-contain object-left"
               />
             </AppLink>
@@ -57,7 +57,7 @@ const SiteFooter = memo(() => {
                   className="flex size-9 items-center justify-center rounded-2xl bg-[#2d3392]"
                   aria-label={t('footer.socialLink')}
                 >
-                  <ImgIcon src={icon} size={16} />
+                  <ImgIcon src={icon} size={16} loading="lazy" decoding="async" />
                 </a>
               ))}
             </div>

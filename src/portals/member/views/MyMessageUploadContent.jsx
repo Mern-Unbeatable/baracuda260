@@ -77,7 +77,7 @@ const MyMessageUploadContent = memo(() => {
             placeholder={t('myMessages.upload.messagePlaceholder')}
             rows={6}
             aria-invalid={Boolean(errors.message)}
-            className="min-h-[160px] w-full resize-y rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#fafaff] px-4 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+            className="min-h-40 w-full resize-y rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#fafaff] px-4 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
           />
           {errors.message ? (
             <p className="text-sm text-red-600" role="alert">

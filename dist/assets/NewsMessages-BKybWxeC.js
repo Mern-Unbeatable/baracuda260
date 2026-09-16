@@ -1,1 +1,0 @@
-import{r as s,j as e,F as o}from"./index-DM6G4TqQ.js";import{u as a}from"./useSEO-CzxWmsYo.js";const t=s.memo(()=>(a({title:"My Message",description:"Manage your photographer messages and showcase updates on My12Photos.",keywords:["messages","news","photographer notes","My12Photos"]}),e.jsx(o,{})));t.displayName="NewsMessages";export{t as default};

@@ -330,6 +330,33 @@
       }
     }
   },
+  "marketplace": {
+    "eyebrow": "Marketplace twórców",
+    "title": "Odkrywaj produkty sklepów",
+    "subtitle": "Szukaj rękodzieła, odbitek, odzieży i promowanych sklepów twórców.",
+    "searchPlaceholder": "Szukaj produktów, sklepów lub kategorii",
+    "filtersAria": "Filtruj produkty marketplace",
+    "gridAria": "Produkty marketplace",
+    "emptyTitle": "Brak pasujących produktów",
+    "emptyBody": "Zmień wyszukiwanie lub wyczyść filtr kategorii.",
+    "paginationAria": "Paginacja marketplace",
+    "promoted": "Promowane",
+    "viewProduct": "Zobacz",
+    "buyNow": "Kup teraz",
+    "buyStarted": "Rozpoczęto zakup: {{title}}.",
+    "soldBy": "sklep: {{store}}",
+    "showing": "Pokazano {{from}}–{{to}} z {{total}}",
+    "filters": {
+      "all": "Wszystkie",
+      "artPrints": "Odbitki artystyczne",
+      "handmade": "Rękodzieło",
+      "apparel": "Odzież",
+      "photobooks": "Fotoksiążki",
+      "digitalPreset": "Presety cyfrowe",
+      "other": "Inne",
+      "promotedOnly": "Tylko promowane"
+    }
+  },
   "galleryDetail": {
     "breadcrumb": {
       "aria": "Ścieżka nawigacji",
@@ -426,7 +453,7 @@
     },
     "appreciation": {
       "title": "Docenienie prac",
-      "subtitle": "Nagradzaj fotografa złotym, srebrnym lub brązowym aparatem raz w tygodniu. Nagrody resetują się w każdy poniedziałek.",
+      "subtitle": "Nagradzaj fotografa złotym, srebrnym lub brązowym aparatem raz w tygodniu. Nagrody resetują się w każdą niedzielę o północy.",
       "awards": "NAGRODY",
       "alreadyAwarded": "Już nagrodzono w tym tygodniu",
       "resetIn": "Reset nagród za {{days}} dni",
@@ -469,7 +496,8 @@
         "handmade": "Rękodzieło",
         "apparel": "Odzież",
         "photobooks": "Fotoksiążki",
-        "digitalPreset": "Presety cyfrowe"
+        "digitalPreset": "Presety cyfrowe",
+        "other": "Inne"
       },
       "badges": {
         "artPrints": "ODBITKI",
@@ -477,7 +505,8 @@
         "handmadeCrafts": "RĘKODZIEŁO",
         "apparel": "ODZIEŻ",
         "photobooks": "FOTOKSIĄŻKI",
-        "digitalPreset": "PRESET CYFROWY"
+        "digitalPreset": "PRESET CYFROWY",
+        "other": "INNE"
       }
     },
     "filters": {

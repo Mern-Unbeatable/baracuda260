@@ -74,12 +74,12 @@ const PurchasePhotosContent = memo(() => {
   const to = Math.min(currentPage * pageSize, items.length);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <header className="flex flex-col gap-3 sm:gap-4">
-        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
           {t('purchasePhotos.title')}
         </h1>
-        <p className="max-w-[960px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+        <p className="max-w-240 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
           {t('purchasePhotos.subtitle')}
         </p>
       </header>
@@ -112,7 +112,7 @@ const PurchasePhotosContent = memo(() => {
               <select
                 value={pageSize}
                 onChange={(event) => setPageSize(Number(event.target.value))}
-                className="h-9 rounded-[8px] border border-[#e4e4e4] bg-white px-2.5 text-[13px] font-medium text-[#373737] outline-none focus:ring-2 focus:ring-[#4048cd]/20"
+                className="h-9 rounded-lg border border-[#e4e4e4] bg-white px-2.5 text-[13px] font-medium text-[#373737] outline-none focus:ring-2 focus:ring-[#4048cd]/20"
               >
                 {PURCHASE_PHOTOS_PAGE_SIZE_OPTIONS.map((size) => (
                   <option key={size} value={size}>
