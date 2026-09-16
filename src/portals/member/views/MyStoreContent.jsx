@@ -7,6 +7,7 @@ import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberStoreProductCard from '@/components/data-display/MemberStoreProductCard/MemberStoreProductCard';
+import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
 import {
   MY_STORE_CATEGORIES,
   MY_STORE_PAGE_SIZE,
@@ -19,6 +20,7 @@ const MyStoreContent = memo(() => {
   const navigate = useNavigate();
   const [category, setCategory] = useState('all');
   const [products, setProducts] = useState(MY_STORE_PRODUCTS);
+  const [promoteItem, setPromoteItem] = useState(null);
 
   const filtered = useMemo(() => filterStoreProducts(products, category), [products, category]);
   const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(filtered, MY_STORE_PAGE_SIZE, [
@@ -34,17 +36,24 @@ const MyStoreContent = memo(() => {
     toast.success(t('myStore.toast.deleted', { title: product.title }));
   };
 
+  const handlePromoteConfirm = (item) => {
+    setProducts((current) =>
+      current.map((product) => (product.id === item.id ? { ...product, promoted: true } : product)),
+    );
+    toast.success(t('myStore.toast.promoted', { title: item.title }));
+  };
+
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-7">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-7">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="min-w-0">
           <div className="flex items-center gap-2.5">
             <Store size={26} className="shrink-0 text-[#161c27]" aria-hidden="true" />
-            <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+            <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
               {t('myStore.title')}
             </h1>
           </div>
-          <p className="mt-2 max-w-[720px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+          <p className="mt-2 max-w-180 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
             {t('myStore.subtitle')}
           </p>
         </div>
@@ -99,6 +108,7 @@ const MyStoreContent = memo(() => {
               product={product}
               onEdit={() => handleEdit(product)}
               onDelete={() => handleDelete(product)}
+              onPromote={() => setPromoteItem(product)}
             />
           ))}
         </section>
@@ -114,6 +124,13 @@ const MyStoreContent = memo(() => {
           />
         </footer>
       ) : null}
+
+      <MemberPromotePanel
+        item={promoteItem}
+        open={Boolean(promoteItem)}
+        onClose={() => setPromoteItem(null)}
+        onConfirm={handlePromoteConfirm}
+      />
     </div>
   );
 });

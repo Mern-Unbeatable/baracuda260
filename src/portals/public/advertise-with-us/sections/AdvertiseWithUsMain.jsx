@@ -11,9 +11,9 @@ const AdvertiseWithUsMain = memo(() => (
     newsletterVariant="page"
     showPromoBanner={false}
   >
-    <section className="bg-[radial-gradient(circle_at_top_left,_#fde8e9,_#eef0ff_58%,_#f8fbff)] py-16 sm:py-20">
+    <section className="bg-[radial-gradient(circle_at_top_left,#fde8e9,#eef0ff_58%,#f8fbff)] py-16 sm:py-20">
       <Shell>
-        <div className="mx-auto max-w-[980px] text-center">
+        <div className="mx-auto max-w-245 text-center">
           <p className="mx-auto inline-flex rounded-full border border-[#f3c1c4] bg-white/70 px-3 py-1 text-[11px] font-medium text-[#5b6270]">
             Official Lumina Advertising Network
           </p>
@@ -22,7 +22,7 @@ const AdvertiseWithUsMain = memo(() => (
             <br />
             Our Photography <span className="text-[#4048cd]">Community</span>
           </h1>
-          <p className="mx-auto mt-3 max-w-[760px] text-[18px] leading-[1.45] text-[#555b68] sm:text-[20px]">
+          <p className="mx-auto mt-3 max-w-190 text-[18px] leading-[1.45] text-[#555b68] sm:text-[20px]">
             Reach photographers, artists, and photography enthusiasts by displaying your business on
             our platform. High-intent audience, verified placements, and instant transparent
             analytics.

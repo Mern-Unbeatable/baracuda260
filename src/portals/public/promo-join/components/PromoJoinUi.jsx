@@ -60,8 +60,8 @@ export const DashedUpload = memo(
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#cfd3e6] bg-[#fafbff] px-4 text-center transition hover:border-[#4048cd] hover:bg-[#f4f5ff] ${
-        tall ? 'min-h-[160px] py-8' : 'min-h-[140px] py-6'
+      className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#cfd3e6] bg-[#fafbff] px-4 text-center transition hover:border-[#4048cd] hover:bg-[#f4f5ff] ${
+        tall ? 'min-h-40 py-8' : 'min-h-35 py-6'
       }`}
     >
       {preview ? (
@@ -83,7 +83,7 @@ export const VideoDropzone = memo(({ onClick, files = [] }) => {
     <button
       type="button"
       onClick={onClick}
-      className="flex min-h-[180px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#d5d8e8] bg-white px-4 py-8 text-center transition hover:border-[#4048cd]"
+      className="flex min-h-45 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#d5d8e8] bg-white px-4 py-8 text-center transition hover:border-[#4048cd]"
     >
       <Upload size={28} className="text-[#9aa3b5]" aria-hidden="true" />
       <p className="text-[15px] font-semibold text-[#373737]">
@@ -162,7 +162,7 @@ export const ZodiacSlotCard = memo(
           <button
             type="button"
             onClick={onAddPhoto}
-            className={`mt-auto inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-[14px] font-medium transition hover:bg-black/[0.02] ${styles.buttonBorder} ${styles.buttonText}`}
+            className={`mt-auto inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-[14px] font-medium transition hover:bg-black/2 ${styles.buttonBorder} ${styles.buttonText}`}
           >
             <img src={styles.upload} alt="" className="size-5 shrink-0" />
             {addLabel}
@@ -201,7 +201,7 @@ export const ThemePicker = memo(({ themes, themeId, onSelect }) => {
               <button
                 type="button"
                 onClick={() => onSelect(theme.id)}
-                className={`relative cursor-pointer rounded-[12px] border p-4 text-left transition ${style.card}`}
+                className={`relative cursor-pointer rounded-xl border p-4 text-left transition ${style.card}`}
               >
                 {selected ? (
                   <img
@@ -231,7 +231,7 @@ export const ThemePicker = memo(({ themes, themeId, onSelect }) => {
 });
 ThemePicker.displayName = 'ThemePicker';
 
-export const WaveDivider = memo(({ src, className = 'h-[52px]' }) => (
+export const WaveDivider = memo(({ src, className = 'h-13' }) => (
   <div className="overflow-hidden py-2">
     <img src={src} alt="" className={`w-full object-contain ${className}`} />
   </div>
@@ -242,7 +242,7 @@ export const Zodiac12Banner = memo(() => {
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-[16px] bg-[#f0f2f8] px-4 py-5 sm:px-6 sm:py-6">
+    <div className="rounded-2xl bg-[#f0f2f8] px-4 py-5 sm:px-6 sm:py-6">
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <img src={ZODIAC12_ASSETS.sun} alt="" className="size-14 shrink-0 sm:size-16" />
         <div className="min-w-0 flex-1 text-center">
@@ -298,7 +298,7 @@ export const AstroSignSelect = memo(({ open, onToggle, onClose, selected, signs,
         className={`flex h-12 w-full cursor-pointer items-center justify-between gap-3 rounded-[10px] ${FIELD_BG} px-3 text-left`}
       >
         <span className="flex min-w-0 items-center gap-3">
-          <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-[#5850ec] text-[16px] text-white">
+          <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#5850ec] text-[16px] text-white">
             {selected.symbol || '♍'}
           </span>
           <span className="truncate text-[15px] font-medium text-[#151e31]">
@@ -321,7 +321,7 @@ export const AstroSignSelect = memo(({ open, onToggle, onClose, selected, signs,
                   sign.id === selected.id ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
                 }`}
               >
-                <span className="inline-flex size-7 items-center justify-center rounded-[6px] bg-[#ecedfa] text-sm">
+                <span className="inline-flex size-7 items-center justify-center rounded-md bg-[#ecedfa] text-sm">
                   {sign.symbol}
                 </span>
                 <span className="text-[14px]">

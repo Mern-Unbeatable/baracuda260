@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
@@ -13,6 +13,7 @@ import {
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 import Pagination from '@/components/common/Pagination/Pagination';
+import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
 import {
   STORE_ORDERS,
   STORE_ORDERS_PAGE_SIZE,
@@ -108,57 +109,62 @@ const RowActions = memo(({ order, onStatusChange }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const onPointer = (event) => {
-      if (!menuRef.current?.contains(event.target)) setOpen(false);
-    };
-    document.addEventListener('mousedown', onPointer);
-    return () => document.removeEventListener('mousedown', onPointer);
-  }, [open]);
+  const buttonWrapRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const detailHref = ROUTES.ADMIN_ORDERS_DETAIL.replace(':id', order.id);
+  const menuLabel = t('storeOrders.actions.menu', { number: order.orderNumber });
 
   return (
-    <div className="relative flex justify-end" ref={menuRef}>
+    <div className="relative flex justify-end" ref={buttonWrapRef}>
       <button
+        ref={buttonRef}
         type="button"
-        aria-label={t('storeOrders.actions.menu', { number: order.orderNumber })}
+        aria-label={menuLabel}
         aria-expanded={open}
+        aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#111827]"
+        className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#111827] ${
+          open ? 'bg-[#f3f4f6] text-[#111827]' : ''
+        }`}
       >
         <MoreVertical size={16} aria-hidden="true" />
       </button>
-      {open ? (
-        <div className="absolute right-0 top-9 z-20 w-[168px] overflow-hidden rounded-[10px] border border-[#e5e7eb] bg-white py-1 shadow-[0_8px_24px_rgba(15,23,42,0.12)]">
+      <PortalDropdown
+        open={open}
+        onClose={() => setOpen(false)}
+        buttonRef={buttonRef}
+        buttonWrapRef={buttonWrapRef}
+        width={168}
+        aria-label={menuLabel}
+        className="overflow-hidden rounded-[10px] border border-[#e5e7eb] bg-white py-1 shadow-[0_8px_24px_rgba(15,23,42,0.12)]"
+      >
+        <button
+          type="button"
+          role="menuitem"
+          onClick={() => {
+            setOpen(false);
+            navigate(detailHref);
+          }}
+          className="flex w-full cursor-pointer items-center bg-[#4048cd] px-3 py-2 text-left text-[13px] font-semibold text-white"
+        >
+          {t('storeOrders.actions.viewDetails')}
+        </button>
+        {STORE_ORDER_ACTION_STATUSES.map((status) => (
           <button
+            key={status}
             type="button"
+            role="menuitem"
             onClick={() => {
               setOpen(false);
-              navigate(detailHref);
+              onStatusChange(order.id, status);
             }}
-            className="flex w-full cursor-pointer items-center px-3 py-2 text-left text-[13px] font-semibold text-white bg-[#4048cd]"
+            className="flex w-full cursor-pointer items-center px-3 py-2 text-left text-[13px] font-medium text-[#374151] transition hover:bg-[#f3f4f6]"
           >
-            {t('storeOrders.actions.viewDetails')}
+            {t(STORE_ORDER_STATUS_LABEL_KEYS[status])}
           </button>
-          {STORE_ORDER_ACTION_STATUSES.map((status) => (
-            <button
-              key={status}
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                onStatusChange(order.id, status);
-              }}
-              className="flex w-full cursor-pointer items-center px-3 py-2 text-left text-[13px] font-medium text-[#374151] transition hover:bg-[#f3f4f6]"
-            >
-              {t(STORE_ORDER_STATUS_LABEL_KEYS[status])}
-            </button>
-          ))}
-        </div>
-      ) : null}
+        ))}
+      </PortalDropdown>
     </div>
   );
 });
@@ -198,12 +204,12 @@ const OrdersContent = memo(() => {
     'whitespace-nowrap px-3 py-3 text-left text-[11px] font-bold uppercase tracking-[0.08em] text-[#9aa3b5]';
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-7">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-7">
       <header className="flex flex-col gap-2">
-        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
           {t('storeOrders.title')}
         </h1>
-        <p className="max-w-[760px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+        <p className="max-w-190 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
           {t('storeOrders.subtitle')}
         </p>
       </header>
@@ -243,7 +249,7 @@ const OrdersContent = memo(() => {
 
       <section className="overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0px_1px_2px_rgba(15,23,42,0.03)]">
         <div className="overflow-x-auto">
-          <table className="min-w-[1100px] w-full border-collapse">
+          <table className="min-w-275 w-full border-collapse">
             <thead>
               <tr className="border-b border-[#eef0f4]">
                 <th className={headCell}>
@@ -303,11 +309,11 @@ const OrdersContent = memo(() => {
                       </div>
                     </td>
                     <td className="px-3 py-4 align-middle">
-                      <div className="flex max-w-[260px] items-center gap-2.5">
+                      <div className="flex max-w-65 items-center gap-2.5">
                         <img
                           src={order.image}
                           alt=""
-                          className="size-10 shrink-0 rounded-[8px] object-cover"
+                          className="size-10 shrink-0 rounded-lg object-cover"
                           loading="lazy"
                         />
                         <div className="min-w-0">

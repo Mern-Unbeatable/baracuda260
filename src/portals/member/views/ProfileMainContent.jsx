@@ -27,7 +27,7 @@ const ProfileMainContent = memo(() => {
   const [activeTab, setActiveTab] = useState('profile');
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col pb-8 sm:pb-10">
+    <div className="mx-auto flex w-full max-w-395 flex-col pb-8 sm:pb-10">
       <MemberProfileCoverHeader profile={MEMBER_PROFILE} />
       <PhotographerProfileTabs activeTab={activeTab} onChange={setActiveTab} />
 

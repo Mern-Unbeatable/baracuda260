@@ -107,7 +107,7 @@ const OrderDetailsContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-4 sm:gap-5">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-4 sm:gap-5">
       <div className="flex items-center justify-between gap-3">
         <Link
           to={ROUTES.ADMIN_MY_ORDERS}
@@ -217,7 +217,7 @@ const OrderDetailsContent = memo(() => {
             <img
               src={order.image}
               alt={order.productTitle}
-              className="size-[64px] shrink-0 rounded-[10px] object-cover sm:size-[72px]"
+              className="size-16 shrink-0 rounded-[10px] object-cover sm:size-18"
             />
             <div className="min-w-0">
               <p className="text-[15px] font-bold leading-5 text-[#111827]">{order.productTitle}</p>

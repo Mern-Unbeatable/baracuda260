@@ -137,7 +137,7 @@ const PasswordField = memo(({ id, label, value, onChange, error, show, onToggleS
             alt=""
             width={EYE_ICON_WIDTH}
             height={EYE_ICON_HEIGHT}
-            className="h-[15px] w-[22px] object-contain"
+            className="h-3.75 w-5.5 object-contain"
           />
         </button>
       </div>
@@ -218,12 +218,12 @@ const SettingsContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <header className="flex flex-col gap-2">
-        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
           {t('memberSettings.title')}
         </h1>
-        <p className="max-w-[760px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+        <p className="max-w-190 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
           {t('memberSettings.subtitle')}
         </p>
       </header>
@@ -369,7 +369,7 @@ const SettingsContent = memo(() => {
           noValidate
           className="rounded-[20px] border border-[rgba(0,0,0,0.08)] bg-white p-6 sm:p-8"
         >
-          <div className="rounded-[16px] bg-[#eff6ff] p-5 sm:p-6">
+          <div className="rounded-2xl bg-[#eff6ff] p-5 sm:p-6">
             <div className="mb-6 inline-flex items-center gap-2 text-[16px] font-semibold text-[#4048cd]">
               <Lock size={18} strokeWidth={2} aria-hidden="true" />
               {t('memberSettings.security.formTitle')}

@@ -113,7 +113,7 @@ const PasswordInput = memo(
               alt=""
               width={EYE_ICON_WIDTH}
               height={EYE_ICON_HEIGHT}
-              className="h-[15px] w-[22px] object-contain"
+              className="h-3.75 w-5.5 object-contain"
             />
           </button>
         </div>
@@ -173,23 +173,23 @@ const ProfileContent = memo(() => {
 
   return (
     <div className="flex w-full flex-col gap-5 py-2 sm:py-4">
-      <header className="flex max-w-[714px] flex-col gap-2">
+      <header className="flex max-w-178.5 flex-col gap-2">
         <h1 className="font-crimson text-[28px] font-semibold leading-normal text-[#050609] sm:text-[36px]">
           {t('userProfile.title')}
         </h1>
-        <p className="font-poppins text-[16px] font-normal leading-[1.5] text-[#464646]">
+        <p className="font-poppins text-[16px] font-normal leading-normal text-[#464646]">
           {t('userProfile.subtitle')}
         </p>
       </header>
 
       <section
         aria-label={t('userProfile.cardAria')}
-        className="flex w-full flex-col gap-5 overflow-hidden rounded-[20px] border border-[rgba(0,0,0,0.2)] bg-white px-5 py-8 sm:px-8 sm:py-10 lg:px-[41px] lg:py-[54px]"
+        className="flex w-full flex-col gap-5 overflow-hidden rounded-[20px] border border-[rgba(0,0,0,0.2)] bg-white px-5 py-8 sm:px-8 sm:py-10 lg:px-10.25 lg:py-13.5"
       >
         <div className="flex flex-col gap-11">
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div
-              className="flex shrink-0 items-center justify-center rounded-full bg-[#e9eaeb] pb-[13px] pl-[13px] pr-3 pt-3"
+              className="flex shrink-0 items-center justify-center rounded-full bg-[#e9eaeb] pb-3.25 pl-3.25 pr-3 pt-3"
               style={{ width: AVATAR_SIZE, height: AVATAR_SIZE }}
             >
               <img
@@ -204,7 +204,7 @@ const ProfileContent = memo(() => {
               <p className="font-crimson text-[20px] font-semibold leading-normal text-[#0c0c0c] sm:text-[24px]">
                 {displayName}
               </p>
-              <p className="font-poppins text-[16px] font-normal leading-[1.5] text-[#464646]">
+              <p className="font-poppins text-[16px] font-normal leading-normal text-[#464646]">
                 {displayEmail}
               </p>
             </div>

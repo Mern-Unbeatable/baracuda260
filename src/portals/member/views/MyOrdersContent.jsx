@@ -41,7 +41,7 @@ const StatusBadge = memo(({ status, deliveredOn }) => {
   return (
     <div className="flex flex-col items-end gap-1">
       <span
-        className={`inline-flex h-[28px] items-center gap-1.5 rounded-full px-3 text-[12px] font-bold ${style.badge}`}
+        className={`inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-[12px] font-bold ${style.badge}`}
       >
         {isDelivered ? (
           <CheckCircle2 size={13} aria-hidden="true" />
@@ -128,7 +128,7 @@ const OrderCard = memo(({ order }) => {
             type="button"
             onClick={handleCopy}
             aria-label={t('myOrders.copyAria', { number: order.orderNumber })}
-            className="inline-flex size-7 cursor-pointer items-center justify-center rounded-[6px] text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd]"
+            className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd]"
           >
             <Copy size={14} aria-hidden="true" />
           </button>
@@ -136,7 +136,7 @@ const OrderCard = memo(({ order }) => {
             type="button"
             onClick={handleInvoice}
             aria-label={t('myOrders.invoiceAria', { number: order.orderNumber })}
-            className="inline-flex size-7 cursor-pointer items-center justify-center rounded-[6px] text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd]"
+            className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd]"
           >
             <FileText size={14} aria-hidden="true" />
           </button>
@@ -150,14 +150,14 @@ const OrderCard = memo(({ order }) => {
 
       <div className="flex flex-col gap-4 p-4 xl:flex-row xl:items-center xl:gap-5 xl:p-5">
         <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
-          <div className="relative size-[72px] shrink-0 overflow-hidden rounded-[10px] bg-[#f3f4f6] sm:size-[84px]">
+          <div className="relative size-18 shrink-0 overflow-hidden rounded-[10px] bg-[#f3f4f6] sm:size-21">
             <img
               src={order.image}
               alt={order.productTitle}
               className="size-full object-cover"
               loading="lazy"
             />
-            <span className="absolute bottom-1.5 right-1.5 rounded-[6px] bg-[#2f365f]/92 px-1.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="absolute bottom-1.5 right-1.5 rounded-md bg-[#2f365f]/92 px-1.5 py-0.5 text-[10px] font-bold text-white">
               {t('myOrders.qtyShort', { count: order.quantity })}
             </span>
           </div>
@@ -179,7 +179,7 @@ const OrderCard = memo(({ order }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:w-[400px] xl:shrink-0">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:w-100 xl:shrink-0">
           <div>
             <p className="text-[10px] font-bold tracking-[0.12em] text-[#9aa3b5]">
               {t('myOrders.meta.orderTotal')}
@@ -213,7 +213,7 @@ const OrderCard = memo(({ order }) => {
 
         <Link
           to={detailHref}
-          className="inline-flex h-11 w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#1a1f2e] px-4 text-[13px] font-bold text-white transition hover:bg-[#111522] xl:w-auto xl:min-w-[178px]"
+          className="inline-flex h-11 w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#1a1f2e] px-4 text-[13px] font-bold text-white transition hover:bg-[#111522] xl:w-auto xl:min-w-44.5"
         >
           {t('myOrders.viewDetails')}
           <ArrowRight size={15} aria-hidden="true" />
@@ -236,12 +236,12 @@ const MyOrdersContent = memo(() => {
   const showingCount = pagedItems.length;
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-7">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-7">
       <header className="flex flex-col gap-2">
-        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
           {t('myOrders.title')}
         </h1>
-        <p className="max-w-[760px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+        <p className="max-w-190 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
           {t('myOrders.subtitle')}
         </p>
       </header>

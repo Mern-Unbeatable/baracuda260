@@ -16,7 +16,7 @@ const StoreProductCard = memo(({ product, onView }) => {
 
   return (
     <article className="overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#f3f4f6]">
+      <div className="relative aspect-4/3 overflow-hidden bg-[#f3f4f6]">
         <img src={product.image} alt={product.title} className="size-full object-cover" loading="lazy" />
         <span className="absolute left-2.5 top-2.5 rounded-full bg-[#111827]/85 px-2 py-1 text-[10px] font-bold tracking-[0.06em] text-white">
           {t(product.badgeKey)}
@@ -33,14 +33,14 @@ const StoreProductCard = memo(({ product, onView }) => {
             <button
               type="button"
               onClick={() => onView(product.id)}
-              className="inline-flex h-8 cursor-pointer items-center rounded-[8px] bg-[#4048cd] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#343bb0]"
+              className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#4048cd] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#343bb0]"
             >
               {t('photographerProfile.store.viewProduct')}
             </button>
             <button
               type="button"
               onClick={() => toast.success(t('photographerProfile.store.buyStarted', { title: product.title }))}
-              className="inline-flex h-8 cursor-pointer items-center rounded-[8px] bg-[#ee1c25] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#d01820]"
+              className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#ee1c25] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#d01820]"
             >
               {t('photographerProfile.store.buyNow')}
             </button>
@@ -72,7 +72,7 @@ const StoreProductDetail = memo(({ product, onBack }) => {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
         <div>
           <div className="overflow-hidden rounded-[14px] bg-[#f3f4f6]">
-            <img src={activeImage} alt={product.title} className="aspect-[4/3] w-full object-cover" />
+            <img src={activeImage} alt={product.title} className="aspect-4/3 w-full object-cover" />
           </div>
           {product.gallery?.length > 1 ? (
             <div className="mt-3 grid grid-cols-4 gap-2.5">
@@ -154,7 +154,7 @@ const StoreProductDetail = memo(({ product, onBack }) => {
               onClick={() =>
                 toast.success(t('photographerProfile.store.buyStarted', { title: product.title }))
               }
-              className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-5 text-[14px] font-bold text-white transition hover:bg-[#d01820] sm:min-w-[220px]"
+              className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-5 text-[14px] font-bold text-white transition hover:bg-[#d01820] sm:min-w-55"
             >
               {t('photographerProfile.store.buyNow')}
               <ShoppingCart size={16} aria-hidden="true" />

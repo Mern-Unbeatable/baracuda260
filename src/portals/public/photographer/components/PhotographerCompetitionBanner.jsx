@@ -43,9 +43,9 @@ const PhotographerCompetitionBanner = memo(({ featured }) => {
         </>
       ) : null}
 
-      <div className="overflow-hidden rounded-[16px] bg-[#1e293b]">
+      <div className="overflow-hidden rounded-2xl bg-[#1e293b]">
         <div className="flex flex-col gap-5 p-4 sm:p-5 lg:flex-row lg:items-stretch lg:gap-6 lg:p-6">
-          <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden rounded-[12px] lg:aspect-auto lg:h-auto lg:w-[42%]">
+          <div className="relative aspect-16/10 w-full shrink-0 overflow-hidden rounded-xl lg:aspect-auto lg:h-auto lg:w-[42%]">
             <img
               src={current.image}
               alt={current.subtitle}

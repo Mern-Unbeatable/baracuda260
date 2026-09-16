@@ -330,6 +330,33 @@
       }
     }
   },
+  "marketplace": {
+    "eyebrow": "Creator Marketplace",
+    "title": "Explore Store Products",
+    "subtitle": "Search handmade goods, prints, apparel, and promoted creator stores.",
+    "searchPlaceholder": "Search products, stores, or categories",
+    "filtersAria": "Filter marketplace products",
+    "gridAria": "Marketplace products",
+    "emptyTitle": "No products match",
+    "emptyBody": "Try another search or clear the category filter.",
+    "paginationAria": "Marketplace pagination",
+    "promoted": "Promoted",
+    "viewProduct": "View",
+    "buyNow": "Buy Now",
+    "buyStarted": "Checkout started for {{title}}.",
+    "soldBy": "by {{store}}",
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "filters": {
+      "all": "All items",
+      "artPrints": "Art Prints",
+      "handmade": "Handmade Crafts",
+      "apparel": "Apparel",
+      "photobooks": "Photobooks",
+      "digitalPreset": "Digital Preset",
+      "other": "Other",
+      "promotedOnly": "Promoted only"
+    }
+  },
   "galleryDetail": {
     "breadcrumb": {
       "aria": "Breadcrumb",
@@ -426,7 +453,7 @@
     },
     "appreciation": {
       "title": "Artwork Appreciation",
-      "subtitle": "Award this photographer with Gold, Silver, or Bronze cameras once per week. Awards reset every Monday.",
+      "subtitle": "Award this photographer with Gold, Silver, or Bronze cameras once per week. Awards reset every Sunday at midnight.",
       "awards": "AWARDS",
       "alreadyAwarded": "Already awarded this week",
       "resetIn": "Awards reset in {{days}} days",
@@ -469,7 +496,8 @@
         "handmade": "Handmade Crafts",
         "apparel": "Apparel",
         "photobooks": "Photobooks",
-        "digitalPreset": "Digital Preset"
+        "digitalPreset": "Digital Preset",
+        "other": "Other"
       },
       "badges": {
         "artPrints": "ART PRINTS",
@@ -477,7 +505,8 @@
         "handmadeCrafts": "HANDMADE CRAFTS",
         "apparel": "APPAREL",
         "photobooks": "PHOTOBOOKS",
-        "digitalPreset": "DIGITAL PRESET"
+        "digitalPreset": "DIGITAL PRESET",
+        "other": "OTHER"
       }
     },
     "filters": {

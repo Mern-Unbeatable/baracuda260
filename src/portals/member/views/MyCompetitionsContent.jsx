@@ -90,7 +90,7 @@ const StatCard = memo(({ labelKey, value, hintKey, showAward }) => {
   const { t } = useTranslation();
 
   return (
-    <article className="flex min-h-[130px] flex-col gap-3 rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white p-[25px] shadow-sm">
+    <article className="flex min-h-32.5 flex-col gap-3 rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white p-6.25 shadow-sm">
       <p className="text-[14px] font-medium uppercase tracking-[0.6px] text-[#494453] sm:text-[16px] sm:leading-4">
         {t(labelKey)}
       </p>
@@ -109,7 +109,7 @@ const StatCard = memo(({ labelKey, value, hintKey, showAward }) => {
             alt=""
             width={16}
             height={25}
-            className="mb-0.5 h-[25px] w-4 shrink-0 object-contain"
+            className="mb-0.5 h-6.25 w-4 shrink-0 object-contain"
           />
         ) : null}
       </div>
@@ -126,7 +126,7 @@ const SubmissionCard = memo(({ item }) => {
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white shadow-sm">
-      <div className="relative h-[180px] w-full shrink-0 overflow-hidden sm:h-[210px]">
+      <div className="relative h-45 w-full shrink-0 overflow-hidden sm:h-52.5">
         <img
           src={item.image}
           alt=""
@@ -152,7 +152,7 @@ const SubmissionCard = memo(({ item }) => {
 
       <div className="flex flex-1 flex-col gap-2 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-3 pb-2">
-          <h2 className="min-w-0 text-[22px] font-semibold leading-[25px] text-[#161c27] sm:text-[28px]">
+          <h2 className="min-w-0 text-[22px] font-semibold leading-6.25 text-[#161c27] sm:text-[28px]">
             {t(item.titleKey)}
           </h2>
           <button
@@ -165,7 +165,7 @@ const SubmissionCard = memo(({ item }) => {
               alt=""
               width={18}
               height={20}
-              className="h-5 w-[18px] object-contain"
+              className="h-5 w-4.5 object-contain"
             />
           </button>
         </div>
@@ -176,7 +176,7 @@ const SubmissionCard = memo(({ item }) => {
 
         <div className="pb-4 pt-1">
           <div
-            className={`flex border-y border-[rgba(203,195,213,0.1)] py-[13px] ${
+            className={`flex border-y border-[rgba(203,195,213,0.1)] py-3.25 ${
               item.endsOnly ? 'justify-end' : 'items-center justify-between'
             }`}
           >
@@ -227,7 +227,7 @@ const SubmissionCard = memo(({ item }) => {
               alt=""
               width={11}
               height={11}
-              className="size-[11px] shrink-0 object-contain"
+              className="size-2.75 shrink-0 object-contain"
             />
           </Link>
         </div>
@@ -273,13 +273,13 @@ const MyCompetitionsContent = memo(() => {
   const pageButtons = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-4">
-          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
             {t('myCompetitions.title')}
           </h1>
-          <p className="max-w-[960px] text-[15px] leading-6 text-[#494453] sm:text-[16px]">
+          <p className="max-w-240 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
             {t('myCompetitions.subtitle')}
           </p>
         </div>
@@ -292,7 +292,7 @@ const MyCompetitionsContent = memo(() => {
             alt=""
             width={12}
             height={12}
-            className="size-[12px] shrink-0 object-contain"
+            className="size-3 shrink-0 object-contain"
           />
           {t('myCompetitions.newEntry')}
         </Link>
@@ -356,7 +356,7 @@ const MyCompetitionsContent = memo(() => {
 
       <section
         aria-label={t('myCompetitions.submissionsAria')}
-        className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-[42px]"
+        className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-10.5"
       >
         {pageItems.map((item) => (
           <SubmissionCard key={item.id} item={item} />
@@ -392,7 +392,7 @@ const MyCompetitionsContent = memo(() => {
               alt=""
               width={8}
               height={12}
-              className="h-3 w-[8px] object-contain"
+              className="h-3 w-2 object-contain"
             />
           </button>
           {pageButtons.map((pageNumber) => {
@@ -426,7 +426,7 @@ const MyCompetitionsContent = memo(() => {
               alt=""
               width={8}
               height={12}
-              className="h-3 w-[8px] object-contain"
+              className="h-3 w-2 object-contain"
             />
           </button>
         </nav>

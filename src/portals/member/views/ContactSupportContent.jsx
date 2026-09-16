@@ -20,7 +20,7 @@ const StatusBadge = memo(({ status }) => {
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-medium leading-4 ${
         isPending
-          ? 'border border-[#ffedd5] bg-[#fff7ed] px-[9px] py-[3px] text-[#c2410c]'
+          ? 'border border-[#ffedd5] bg-[#fff7ed] px-2.25 py-0.75 text-[#c2410c]'
           : 'bg-[#dcfce7] text-[#15803d]'
       }`}
     >
@@ -44,7 +44,7 @@ const ConversationItem = memo(({ thread, onOpen }) => {
       onClick={() => onOpen(thread)}
       className="flex w-full cursor-pointer items-start gap-4 p-6 text-left transition hover:bg-[#f9fafb]"
     >
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-[12px] bg-[#eff6ff]">
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#eff6ff]">
         <img
           src={CONTACT_SUPPORT_ASSETS.envelope}
           alt=""
@@ -127,8 +127,8 @@ const ContactSupportContent = memo(() => {
       : CONVERSATIONS.filter((thread) => thread.status === filter);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1580px] flex-col items-stretch gap-8 lg:flex-row lg:gap-[60px]">
-      <section className="flex w-full min-w-0 flex-col gap-[30px] lg:max-w-[770px] lg:flex-1">
+    <div className="mx-auto flex w-full max-w-395 flex-col items-stretch gap-8 lg:flex-row lg:gap-15">
+      <section className="flex w-full min-w-0 flex-col gap-7.5 lg:max-w-192.5 lg:flex-1">
         <header className="flex flex-col gap-4">
           <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] lg:text-[40px]">
             {t('contactSupport.formTitle')}
@@ -204,7 +204,7 @@ const ContactSupportContent = memo(() => {
                 value={subject}
                 onChange={(event) => setSubject(event.target.value)}
                 aria-invalid={Boolean(errors.subject)}
-                className={`${inputClassName} appearance-none bg-[length:16px] bg-[right_15px_center] bg-no-repeat pr-11`}
+                className={`${inputClassName} appearance-none bg-size-[16px] bg-position-[right_15px_center] bg-no-repeat pr-11`}
                 style={{
                   backgroundImage:
                     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7484' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
@@ -237,7 +237,7 @@ const ContactSupportContent = memo(() => {
                 placeholder={t('contactSupport.messagePlaceholder')}
                 rows={5}
                 aria-invalid={Boolean(errors.message)}
-                className={`${inputClassName} min-h-[148px] resize-y`}
+                className={`${inputClassName} min-h-37 resize-y`}
               />
               {errors.message ? (
                 <p className="text-sm text-red-600" role="alert">
@@ -256,14 +256,14 @@ const ContactSupportContent = memo(() => {
               alt=""
               width={24}
               height={24}
-              className="size-6 shrink-0 -rotate-[52deg]"
+              className="size-6 shrink-0 -rotate-52"
             />
             {t('contactSupport.send')}
           </button>
         </form>
       </section>
 
-      <section className="flex w-full min-w-0 flex-col gap-[30px] lg:max-w-[750px] lg:flex-1">
+      <section className="flex w-full min-w-0 flex-col gap-7.5 lg:max-w-187.5 lg:flex-1">
         <header className="flex flex-col gap-4">
           <h2 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] lg:text-[40px]">
             {t('contactSupport.conversationsTitle')}
@@ -273,7 +273,7 @@ const ContactSupportContent = memo(() => {
           </p>
         </header>
 
-        <div className="overflow-hidden rounded-[24px] border border-[#f3f4f6] bg-white shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.1),0px_8px_10px_-6px_rgba(0,0,0,0.1)]">
+        <div className="overflow-hidden rounded-3xl border border-[#f3f4f6] bg-white shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.1),0px_8px_10px_-6px_rgba(0,0,0,0.1)]">
           <div
             className="flex flex-wrap gap-2 px-6 pb-4 pt-6"
             role="tablist"

@@ -67,7 +67,7 @@ const CompetitionRow = memo(({ item }) => {
   const { t } = useTranslation();
 
   return (
-    <article className="flex flex-col gap-4 rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:gap-6 sm:p-[17px]">
+    <article className="flex flex-col gap-4 rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:gap-6 sm:p-4.25">
       <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-32">
         <img
           src={item.image}
@@ -142,13 +142,13 @@ const UserDashboardView = memo(() => {
 
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
-      <section className="relative flex min-h-[200px] items-center overflow-hidden rounded-2xl bg-[#2a303d] px-5 py-8 sm:min-h-[220px] sm:rounded-3xl sm:px-8 sm:py-10 lg:min-h-[256px] lg:px-12">
+      <section className="relative flex min-h-50 items-center overflow-hidden rounded-2xl bg-[#2a303d] px-5 py-8 sm:min-h-55 sm:rounded-3xl sm:px-8 sm:py-10 lg:min-h-64 lg:px-12">
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#2a303d] via-[#2a303d]/80 to-transparent"
+          className="pointer-events-none absolute inset-0 bg-linear-to-r from-[#2a303d] via-[#2a303d]/80 to-transparent"
           aria-hidden="true"
         />
         <div className="relative z-10 flex max-w-3xl flex-col gap-2">
-          <h1 className="text-[28px] font-bold leading-tight tracking-[-0.96px] text-white sm:text-[36px] lg:text-[48px] lg:leading-[56px]">
+          <h1 className="text-[28px] font-bold leading-tight tracking-[-0.96px] text-white sm:text-[36px] lg:text-[48px] lg:leading-14">
             {t('dashboard.welcome', { name: displayName })}
           </h1>
           <p className="max-w-xl text-[15px] leading-normal text-white/70 sm:text-[18px] lg:text-[20px]">

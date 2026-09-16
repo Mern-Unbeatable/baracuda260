@@ -15,9 +15,9 @@ const NotificationsContent = memo(() => {
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-240 flex-col gap-6">
       <header>
-        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-[38px] lg:text-[40px]">
+        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
           {t('memberNotifications.title')}
         </h1>
       </header>

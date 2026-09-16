@@ -1247,6 +1247,7 @@
     "empty": "Brak produktów w tej kategorii.",
     "gridAria": "Siatka produktów sklepu",
     "paginationAria": "Paginacja sklepu",
+    "promoted": "Promowane",
     "filters": {
       "aria": "Filtruj produkty sklepu",
       "all": "Wszystkie",
@@ -1254,7 +1255,8 @@
       "handmade": "Rękodzieło",
       "apparel": "Odzież",
       "photobooks": "Fotoksiążki",
-      "digitalPreset": "Presety cyfrowe"
+      "digitalPreset": "Presety cyfrowe",
+      "other": "Inne"
     },
     "badges": {
       "artPrints": "Odbitki artystyczne",
@@ -1262,17 +1264,20 @@
       "handmadeCrafts": "Rękodzieło",
       "apparel": "Odzież",
       "photobooks": "Fotoksiążki",
-      "digitalPreset": "Preset cyfrowy"
+      "digitalPreset": "Preset cyfrowy",
+      "other": "Inne"
     },
     "actions": {
       "label": "akcja",
       "menu": "Akcje dla {{title}}",
       "edit": "Edytuj",
-      "delete": "Usuń"
+      "delete": "Usuń",
+      "promote": "Promuj"
     },
     "toast": {
       "edit": "Edycja {{title}} będzie wkrótce dostępna.",
-      "deleted": "Usunięto {{title}} ze sklepu."
+      "deleted": "Usunięto {{title}} ze sklepu.",
+      "promoted": "{{title}} jest teraz promowany na Marketplace."
     },
     "upload": {
       "title": "Dodaj do sklepu",
@@ -1302,7 +1307,8 @@
         "handmade": "Rękodzieło",
         "apparel": "Odzież",
         "photobooks": "Fotoksiążki",
-        "digitalPreset": "Presety cyfrowe"
+        "digitalPreset": "Presety cyfrowe",
+        "other": "Inne"
       },
       "errors": {
         "title": "Tytuł kolekcji jest wymagany.",

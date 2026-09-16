@@ -31,7 +31,7 @@ const DropzoneField = memo(
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex min-h-[180px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#d5d8e8] bg-white px-4 py-8 text-center transition hover:border-[#4048cd] hover:bg-[#fafbff]"
+          className="flex min-h-45 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#d5d8e8] bg-white px-4 py-8 text-center transition hover:border-[#4048cd] hover:bg-[#fafbff]"
         >
           {preview ? (
             <img src={preview} alt="" className="max-h-28 rounded-lg object-cover" />
@@ -161,7 +161,7 @@ const MyStoreUploadContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-[920px] flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-230 flex-col gap-5">
       <div className="flex items-center gap-3">
         <Link
           to={ROUTES.ADMIN_MY_STORE}
@@ -261,7 +261,7 @@ const MyStoreUploadContent = memo(() => {
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[12px] bg-[#ee1c25] px-4 text-[15px] font-bold text-white transition hover:bg-[#d41921] disabled:cursor-default disabled:opacity-60"
+            className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#ee1c25] px-4 text-[15px] font-bold text-white transition hover:bg-[#d41921] disabled:cursor-default disabled:opacity-60"
           >
             <Images size={18} aria-hidden="true" />
             {submitting
