@@ -32,6 +32,7 @@ const GallerySixDetail = lazy(() => import('@/portals/public/gallery/detail/Gall
 const GallerySixBlueDetail = lazy(() => import('@/portals/public/gallery/detail/GallerySixBlueDetail'));
 const GalleryTwelveDetail = lazy(() => import('@/portals/public/gallery/detail/GalleryTwelveDetail'));
 const PhotographerProfile = lazy(() => import('@/portals/public/photographer/PhotographerProfile'));
+const StoreCheckout = lazy(() => import('@/portals/public/photographer/checkout/StoreCheckout'));
 const Leaderboard = lazy(() => import('@/portals/public/leaderboard/Leaderboard'));
 const Winners = lazy(() => import('@/portals/public/winners/Winners'));
 const WinnerDetail = lazy(() => import('@/portals/public/winners/WinnerDetail'));
@@ -131,6 +132,7 @@ const router = createBrowserRouter(
         <Route path={ROUTES.GALLERY_TWELVE_DETAIL} element={<GalleryTwelveDetail />} />
         <Route path={ROUTES.GALLERY_DETAIL} element={<GalleryDetail />} />
         <Route path={ROUTES.PHOTOGRAPHER_PROFILE} element={<PhotographerProfile />} />
+        <Route path={ROUTES.PHOTOGRAPHER_STORE_CHECKOUT} element={<StoreCheckout />} />
         <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
         <Route path={ROUTES.WINNERS} element={<Winners />} />
         <Route path={ROUTES.WINNERS_DETAIL} element={<WinnerDetail />} />

@@ -23,6 +23,7 @@ export const ROUTES = {
   GALLERY_SIX_BLUE_DETAIL: '/gallery/story-blue/:id',
   GALLERY_TWELVE_DETAIL: '/gallery/zodiac/:id',
   PHOTOGRAPHER_PROFILE: '/photographer',
+  PHOTOGRAPHER_STORE_CHECKOUT: '/photographer/store/checkout',
   LEADERBOARD: '/leaderboard',
   WINNERS: '/winners',
   WINNERS_DETAIL: '/winners/:id',

@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
 import { ArrowLeft, Minus, Plus, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { ROUTES } from '@/shared/config';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
 import Pagination from '@/components/common/Pagination/Pagination';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
@@ -13,6 +15,7 @@ import {
 
 const StoreProductCard = memo(({ product, onView }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <article className="overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
@@ -39,7 +42,7 @@ const StoreProductCard = memo(({ product, onView }) => {
             </button>
             <button
               type="button"
-              onClick={() => toast.success(t('photographerProfile.store.buyStarted', { title: product.title }))}
+              onClick={() => navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, { state: { product } })}
               className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#ee1c25] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#d01820]"
             >
               {t('photographerProfile.store.buyNow')}
@@ -54,6 +57,7 @@ StoreProductCard.displayName = 'StoreProductCard';
 
 const StoreProductDetail = memo(({ product, onBack }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [sizeId, setSizeId] = useState(product.sizes?.[0]?.id || '');
   const [qty, setQty] = useState(1);
   const [activeImage, setActiveImage] = useState(product.gallery?.[0] || product.image);
@@ -151,9 +155,7 @@ const StoreProductDetail = memo(({ product, onBack }) => {
             </div>
             <button
               type="button"
-              onClick={() =>
-                toast.success(t('photographerProfile.store.buyStarted', { title: product.title }))
-              }
+              onClick={() => navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, { state: { product: { ...product, qty, sizeId } } })}
               className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-5 text-[14px] font-bold text-white transition hover:bg-[#d01820] sm:min-w-55"
             >
               {t('photographerProfile.store.buyNow')}
