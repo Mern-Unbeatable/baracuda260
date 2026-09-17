@@ -14,6 +14,51 @@ export const MARKETPLACE_CATEGORIES = [
   { id: 'other', value: 'other', labelKey: 'marketplace.filters.other' },
 ];
 
+export const MARKETPLACE_STORES = [
+  {
+    id: 'st-01',
+    storeName: 'Elena Vance Studio',
+    description: 'Fine art prints, handcrafted frames, and premium studio commissions.',
+    image: `${H}/photo-golden.jpg`,
+    promoted: true,
+  },
+  {
+    id: 'st-02',
+    storeName: 'Zodiac Press',
+    description: 'Premium photobooks and celestial craft goods.',
+    image: `${H}/photo-zodiac.jpg`,
+    promoted: true,
+  },
+  {
+    id: 'st-03',
+    storeName: 'Harbor Light Atelier',
+    description: 'Quiet harbor reflections and canvas editions.',
+    image: `${H}/photo-harbor.jpg`,
+    promoted: false,
+  },
+  {
+    id: 'st-04',
+    storeName: 'Coastal Thread Co.',
+    description: 'Soft cotton tees and premium fleece with shoreline motifs.',
+    image: `${H}/photo-tidal.jpg`,
+    promoted: false,
+  },
+  {
+    id: 'st-05',
+    storeName: 'Field Grade Labs',
+    description: 'Digital grading packs and Lightroom presets for landscapes.',
+    image: `${H}/photo-morning.jpg`,
+    promoted: false,
+  },
+  {
+    id: 'st-06',
+    storeName: 'Nightline Studio',
+    description: 'High-contrast city skylines and dusk architectural prints.',
+    image: `${H}/photo-city.jpg`,
+    promoted: false,
+  },
+];
+
 export const MARKETPLACE_PRODUCTS = [
   {
     id: 'mp-01',
