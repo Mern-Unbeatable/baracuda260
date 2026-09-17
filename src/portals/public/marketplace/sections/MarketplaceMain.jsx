@@ -177,33 +177,7 @@ const MarketplaceMain = memo(() => {
             />
           </div>
 
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div
-              role="tablist"
-              aria-label={t('marketplace.filtersAria')}
-              className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible"
-            >
-              {MARKETPLACE_CATEGORIES.map((item) => {
-                const active = category === item.value;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setCategory(item.value)}
-                    className={`shrink-0 cursor-pointer rounded-full px-4 py-2.5 text-[13px] font-semibold whitespace-nowrap transition sm:text-[14px] ${
-                      active
-                        ? 'bg-[#4048cd] text-white shadow-sm'
-                        : 'border border-[#e4e4e4] bg-white text-[#5d687b] hover:border-[#d5d8e8] hover:text-[#161c27]'
-                    }`}
-                  >
-                    {t(item.labelKey)}
-                  </button>
-                );
-              })}
-            </div>
-
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
             <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-[#494453]">
               <input
                 type="checkbox"

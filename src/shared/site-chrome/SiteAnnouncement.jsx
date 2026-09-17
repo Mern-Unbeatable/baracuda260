@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import Marquee from 'react-fast-marquee';
 import { SITE_ANNOUNCEMENT_BG } from './siteCopy';
 
 const SiteAnnouncement = memo(({ tone = 'blue' }) => {
@@ -9,12 +10,12 @@ const SiteAnnouncement = memo(({ tone = 'blue' }) => {
 
   return (
     <div className={`flex h-11.5 items-center overflow-hidden ${bg}`}>
-      <div className="site-marquee-track flex w-max whitespace-nowrap text-[14px] leading-5.5 text-white">
+      <Marquee speed={40} gradient={false} className="text-[14px] leading-5.5 text-white">
         <span className="px-4">{announcement}</span>
         <span className="px-4" aria-hidden="true">
           {announcement}
         </span>
-      </div>
+      </Marquee>
     </div>
   );
 });
