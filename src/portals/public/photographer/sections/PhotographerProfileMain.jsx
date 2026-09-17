@@ -1,4 +1,5 @@
 import React, { memo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
 import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
@@ -23,7 +24,8 @@ import {
 } from '@/portals/public/photographer/data/photographerProfileData';
 
 const PhotographerProfileMain = memo(() => {
-  const [activeTab, setActiveTab] = useState('profile');
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.tab || 'profile');
 
   return (
     <SitePageLayout

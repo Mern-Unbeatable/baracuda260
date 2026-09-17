@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { MANROPE_FONT_HREF, SITE_MARQUEE_DURATION_S } from './siteCopy';
+import { MANROPE_FONT_HREF } from './siteCopy';
 
 const FONT_ATTR = 'data-manrope-font';
 const STYLE_ATTR = 'data-site-page-layout';
@@ -31,11 +31,6 @@ export default function useSitePageStyles() {
         }
         .min-h-screen:has(.site-page-root) { background: #fff !important; }
         .site-page-root { font-family: Manrope, sans-serif; color: var(--primary-text-heading-color, #212133); }
-        @keyframes site-marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .site-marquee-track { animation: site-marquee ${SITE_MARQUEE_DURATION_S}s linear infinite; }
       `;
       document.head.appendChild(style);
     }

@@ -12,6 +12,7 @@ import {
   MARKETPLACE_CATEGORIES,
   MARKETPLACE_PAGE_SIZE,
   MARKETPLACE_PRODUCTS,
+  MARKETPLACE_STORES,
   filterMarketplaceProducts,
 } from '@/portals/public/marketplace/data/marketplaceData';
 
@@ -39,7 +40,11 @@ const MarketplaceProductCard = memo(({ product }) => {
       </div>
       <div className="flex flex-1 flex-col gap-3 p-3.5 sm:p-4">
         <div>
-          <h3 className="line-clamp-2 text-[14px] font-bold leading-5 text-[#111827]">{product.title}</h3>
+          <Link to={ROUTES.PHOTOGRAPHER_PROFILE} state={{ tab: 'store' }}>
+            <h3 className="line-clamp-2 text-[14px] font-bold leading-5 text-[#111827] transition hover:text-[#4048cd] hover:underline cursor-pointer">
+              {product.title}
+            </h3>
+          </Link>
           <p className="mt-1.5 line-clamp-2 text-[12px] leading-4 text-[#6b7280]">{product.description}</p>
           <p className="mt-2 text-[12px] font-medium text-[#8b95a5]">
             {t('marketplace.soldBy', { store: product.store })}
@@ -50,6 +55,7 @@ const MarketplaceProductCard = memo(({ product }) => {
           <div className="flex items-center gap-1.5">
             <Link
               to={ROUTES.PHOTOGRAPHER_PROFILE}
+              state={{ tab: 'store' }}
               className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#4048cd] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#343bb0]"
             >
               {t('marketplace.viewProduct')}
@@ -69,21 +75,103 @@ const MarketplaceProductCard = memo(({ product }) => {
 });
 MarketplaceProductCard.displayName = 'MarketplaceProductCard';
 
+const CameraIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 7C2.89543 7 2 7.89543 2 9V19C2 20.1046 2.89543 21 4 21H20C21.1046 21 22 20.1046 22 19V9C22 7.89543 21.1046 7 20 7H16.83L15 4H9L7.17 7H4ZM12 18C9.23858 18 7 15.7614 7 13C7 10.2386 9.23858 8 12 8C14.7614 8 17 10.2386 17 13C17 15.7614 14.7614 18 12 18ZM12 16.5C13.933 16.5 15.5 14.933 15.5 13C15.5 11.067 13.933 9.5 12 9.5C10.067 9.5 8.5 11.067 8.5 13C8.5 14.933 10.067 16.5 12 16.5Z"/>
+  </svg>
+);
+
+const MarketplaceStoreCard = memo(({ store }) => {
+  const { t } = useTranslation();
+  
+  const storeProducts = useMemo(() => {
+    return MARKETPLACE_PRODUCTS.filter(p => p.store === store.storeName).slice(0, 12);
+  }, [store.storeName]);
+
+  return (
+    <article className="flex flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white p-4 sm:p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+        <Link to={ROUTES.PHOTOGRAPHER_PROFILE} state={{ tab: 'store' }} className="flex items-center gap-3.5 hover:opacity-80 transition group">
+          <img
+            src={store.authorImage || store.image}
+            alt={store.storeName}
+            className="size-14 sm:size-16 rounded-full object-cover border-2 border-white shadow-md ring-1 ring-[#e8eaef] group-hover:ring-[#4048cd] transition-all shrink-0"
+            loading="lazy"
+            decoding="async"
+          />
+          <div>
+            <h3 className="text-[17px] font-bold text-[#111827] flex items-center gap-2">
+              {store.storeName}
+              {store.promoted ? (
+                <span className="rounded-md bg-[#ee1c25] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.35px] text-white shadow-sm shrink-0">
+                  {t('marketplace.promoted')}
+                </span>
+              ) : null}
+            </h3>
+            <p className="text-[13px] text-[#6b7280] line-clamp-1 mt-0.5">{store.description}</p>
+          </div>
+        </Link>
+        
+        <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide shrink-0">
+          <div className="flex items-center gap-1.5 rounded-full bg-[#fdfaf2] border border-[#f3e5c8] px-2.5 py-1 shrink-0">
+            <CameraIcon className="w-4 h-4 text-[#d4af37]" />
+            <span className="text-[13px] font-bold text-[#927129]">{store.scores?.gold || 0}</span>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full bg-[#f5f7f9] border border-[#e2e8f0] px-2.5 py-1 shrink-0">
+            <CameraIcon className="w-4 h-4 text-[#94a3b8]" />
+            <span className="text-[13px] font-bold text-[#475569]">{store.scores?.silver || 0}</span>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full bg-[#fdf7f4] border border-[#eedfd5] px-2.5 py-1 shrink-0">
+            <CameraIcon className="w-4 h-4 text-[#cd7f32]" />
+            <span className="text-[13px] font-bold text-[#925c42]">{store.scores?.bronze || 0}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-1 px-1">
+        {storeProducts.map((product) => (
+          <Link 
+            key={product.id} 
+            to={ROUTES.PHOTOGRAPHER_PROFILE} 
+            state={{ tab: 'store' }} 
+            className="shrink-0 group block overflow-hidden rounded-[10px] border border-[#e8eaef] hover:border-[#4048cd] hover:shadow-md transition-all"
+          >
+            <div className="w-24 h-24 sm:w-28 sm:h-28 relative bg-[#f3f4f6]">
+               <img src={product.image} alt={product.title} className="size-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            </div>
+          </Link>
+        ))}
+      </div>
+    </article>
+  );
+});
+MarketplaceStoreCard.displayName = 'MarketplaceStoreCard';
+
 const MarketplaceMain = memo(() => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [promotedOnly, setPromotedOnly] = useState(false);
 
-  const filtered = useMemo(
+  const isSearchMode = query.trim().length > 0;
+
+  const filteredProducts = useMemo(
     () => filterMarketplaceProducts(MARKETPLACE_PRODUCTS, { category, query, promotedOnly }),
     [category, query, promotedOnly],
   );
 
+  const filteredStores = useMemo(() => {
+    const stores = MARKETPLACE_STORES;
+    const filtered = promotedOnly ? stores.filter(s => s.promoted) : stores;
+    return [...filtered].sort((a, b) => Number(Boolean(b.promoted)) - Number(Boolean(a.promoted)));
+  }, [promotedOnly]);
+
+  const activeItems = isSearchMode ? filteredProducts : filteredStores;
+
   const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
-    filtered,
+    activeItems,
     MARKETPLACE_PAGE_SIZE,
-    [category, query, promotedOnly],
+    [isSearchMode, category, query, promotedOnly],
   );
 
   return (
@@ -118,33 +206,7 @@ const MarketplaceMain = memo(() => {
             />
           </div>
 
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div
-              role="tablist"
-              aria-label={t('marketplace.filtersAria')}
-              className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible"
-            >
-              {MARKETPLACE_CATEGORIES.map((item) => {
-                const active = category === item.value;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setCategory(item.value)}
-                    className={`shrink-0 cursor-pointer rounded-full px-4 py-2.5 text-[13px] font-semibold whitespace-nowrap transition sm:text-[14px] ${
-                      active
-                        ? 'bg-[#4048cd] text-white shadow-sm'
-                        : 'border border-[#e4e4e4] bg-white text-[#5d687b] hover:border-[#d5d8e8] hover:text-[#161c27]'
-                    }`}
-                  >
-                    {t(item.labelKey)}
-                  </button>
-                );
-              })}
-            </div>
-
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
             <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-[#494453]">
               <input
                 type="checkbox"
@@ -164,21 +226,29 @@ const MarketplaceMain = memo(() => {
           ) : (
             <section
               aria-label={t('marketplace.gridAria')}
-              className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
+              className={`grid gap-5 ${
+                isSearchMode 
+                  ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4' 
+                  : 'grid-cols-1'
+              }`}
             >
-              {pagedItems.map((product) => (
-                <MarketplaceProductCard key={product.id} product={product} />
+              {pagedItems.map((item) => (
+                isSearchMode ? (
+                  <MarketplaceProductCard key={item.id} product={item} />
+                ) : (
+                  <MarketplaceStoreCard key={item.id} store={item} />
+                )
               ))}
             </section>
           )}
 
-          {filtered.length > 0 ? (
+          {activeItems.length > 0 ? (
             <footer className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
               <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
                 {t('marketplace.showing', {
                   from: (currentPage - 1) * MARKETPLACE_PAGE_SIZE + 1,
-                  to: Math.min(currentPage * MARKETPLACE_PAGE_SIZE, filtered.length),
-                  total: filtered.length,
+                  to: Math.min(currentPage * MARKETPLACE_PAGE_SIZE, activeItems.length),
+                  total: activeItems.length,
                 })}
               </p>
               <Pagination

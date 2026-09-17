@@ -2,8 +2,6 @@
 
 export const SITE_FOOTER_YEAR = 2026;
 
-export const SITE_MARQUEE_DURATION_S = 28;
-
 export const SITE_ANNOUNCEMENT_BG = {
   navy: 'bg-[#1b1e56]',
   blue: 'bg-[#4048cd]',

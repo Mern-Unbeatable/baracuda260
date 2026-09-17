@@ -14,6 +14,63 @@ export const MARKETPLACE_CATEGORIES = [
   { id: 'other', value: 'other', labelKey: 'marketplace.filters.other' },
 ];
 
+export const MARKETPLACE_STORES = [
+  {
+    id: 'st-01',
+    storeName: 'Elena Vance Studio',
+    authorImage: '/assets/home/avatar-anna.jpg',
+    description: 'Fine art prints, handcrafted frames, and premium studio commissions.',
+    image: `${H}/photo-golden.jpg`,
+    promoted: true,
+    scores: { gold: 24, silver: 17, bronze: 10 },
+  },
+  {
+    id: 'st-02',
+    storeName: 'Zodiac Press',
+    authorImage: '/assets/home/avatar-piotr.jpg',
+    description: 'Premium photobooks and celestial craft goods.',
+    image: `${H}/photo-zodiac.jpg`,
+    promoted: true,
+    scores: { gold: 12, silver: 5, bronze: 3 },
+  },
+  {
+    id: 'st-03',
+    storeName: 'Harbor Light Atelier',
+    authorImage: '/assets/home/avatar-marta.jpg',
+    description: 'Quiet harbor reflections and canvas editions.',
+    image: `${H}/photo-harbor.jpg`,
+    promoted: false,
+    scores: { gold: 8, silver: 2, bronze: 1 },
+  },
+  {
+    id: 'st-04',
+    storeName: 'Coastal Thread Co.',
+    authorImage: '/assets/home/avatar-photographer.jpg',
+    description: 'Soft cotton tees and premium fleece with shoreline motifs.',
+    image: `${H}/photo-tidal.jpg`,
+    promoted: false,
+    scores: { gold: 45, silver: 20, bronze: 5 },
+  },
+  {
+    id: 'st-05',
+    storeName: 'Field Grade Labs',
+    authorImage: '/assets/home/avatar-anna.jpg',
+    description: 'Digital grading packs and Lightroom presets for landscapes.',
+    image: `${H}/photo-morning.jpg`,
+    promoted: false,
+    scores: { gold: 2, silver: 1, bronze: 0 },
+  },
+  {
+    id: 'st-06',
+    storeName: 'Nightline Studio',
+    authorImage: '/assets/home/avatar-piotr.jpg',
+    description: 'High-contrast city skylines and dusk architectural prints.',
+    image: `${H}/photo-city.jpg`,
+    promoted: false,
+    scores: { gold: 15, silver: 8, bronze: 4 },
+  },
+];
+
 export const MARKETPLACE_PRODUCTS = [
   {
     id: 'mp-01',
@@ -157,18 +214,24 @@ export const MARKETPLACE_PRODUCTS = [
 export const filterMarketplaceProducts = (products, { category = 'all', query = '', promotedOnly = false } = {}) => {
   const normalizedQuery = query.trim().toLowerCase();
 
-  const filtered = products.filter((product) => {
-    const categoryOk = !category || category === 'all' || product.category === category;
-    const promotedOk = !promotedOnly || product.promoted;
-    const searchOk =
-      !normalizedQuery ||
-      [product.title, product.description, product.store, product.category, product.price].some((field) =>
-        String(field ?? '')
-          .toLowerCase()
-          .includes(normalizedQuery),
-      );
-    return categoryOk && promotedOk && searchOk;
-  });
+  const filtered = products
+    .map((product) => {
+      const store = MARKETPLACE_STORES.find((s) => s.storeName === product.store);
+      const isPromoted = product.promoted || (store?.promoted ?? false);
+      return { ...product, promoted: isPromoted, storePromoted: store?.promoted ?? false };
+    })
+    .filter((product) => {
+      const categoryOk = !category || category === 'all' || product.category === category;
+      const promotedOk = !promotedOnly || product.promoted;
+      const searchOk =
+        !normalizedQuery ||
+        [product.title, product.description, product.store, product.category, product.price].some((field) =>
+          String(field ?? '')
+            .toLowerCase()
+            .includes(normalizedQuery),
+        );
+      return categoryOk && promotedOk && searchOk;
+    });
 
   return [...filtered].sort((a, b) => Number(Boolean(b.promoted)) - Number(Boolean(a.promoted)));
 };
