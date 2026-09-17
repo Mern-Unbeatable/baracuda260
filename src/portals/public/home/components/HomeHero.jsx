@@ -1,30 +1,20 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
+import { useHomeHero } from '../hooks/useHomeHero';
 
 const SLIDES = ['/assets/hero/hero.png', '/assets/hero/hero1.png'];
 const SLIDE_MS = 6000;
 
 const HomeHero = memo(() => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveSlide((i) => (i + 1) % SLIDES.length);
-    }, SLIDE_MS);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const goToGallery = (event) => {
-    event.preventDefault();
-    const q = search.trim();
-    navigate(q ? `${ROUTES.GALLERY}?q=${encodeURIComponent(q)}` : ROUTES.GALLERY);
-  };
+  const {
+    activeSlide,
+    setActiveSlide,
+    search,
+    setSearch,
+    goToGallery,
+  } = useHomeHero(SLIDES.length, SLIDE_MS);
 
   return (
     <section className="relative min-h-140 w-full overflow-hidden md:min-h-180 xl:min-h-200">

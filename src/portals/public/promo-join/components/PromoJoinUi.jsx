@@ -7,6 +7,7 @@ import {
   SIX_PHOTO_ASSETS,
   ZODIAC12_ASSETS,
 } from '@/portals/public/promo-join/promoJoinData';
+import Input from '@/components/ui/Input';
 
 export const FieldLabel = memo(({ children, htmlFor }) => (
   <label
@@ -18,34 +19,37 @@ export const FieldLabel = memo(({ children, htmlFor }) => (
 ));
 FieldLabel.displayName = 'FieldLabel';
 
-export const TextField = memo(
-  ({ id, label, value, onChange, placeholder, type = 'text', className = '' }) => (
+export const TextField = React.forwardRef(
+  ({ id, label, placeholder, type = 'text', className = '', error, ...props }, ref) => (
     <div className={className}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <input
+      <Input
         id={id}
         type={type}
-        value={value}
-        onChange={onChange}
+        ref={ref}
+        label={label}
         placeholder={placeholder}
-        className={`h-12 w-full rounded-[10px] ${FIELD_BG} px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30`}
+        error={error}
+        labelClassName="mb-2 block text-[13px] font-bold leading-5 text-[#373737] tracking-normal normal-case"
+        inputClassName={`h-12 w-full rounded-[10px] ${FIELD_BG} px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30 ${error ? 'border border-red-500' : ''}`}
+        {...props}
       />
     </div>
   ),
 );
 TextField.displayName = 'TextField';
 
-export const TextAreaField = memo(({ id, label, value, onChange, placeholder, rows = 4 }) => (
+export const TextAreaField = React.forwardRef(({ id, label, placeholder, rows = 4, error, ...props }, ref) => (
   <div>
     <FieldLabel htmlFor={id}>{label}</FieldLabel>
     <textarea
       id={id}
-      value={value}
-      onChange={onChange}
+      ref={ref}
       placeholder={placeholder}
       rows={rows}
-      className={`w-full resize-y rounded-[10px] ${FIELD_BG} px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30`}
+      className={`w-full resize-y rounded-[10px] ${FIELD_BG} px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30 ${error ? 'border border-red-500' : ''}`}
+      {...props}
     />
+    {error && <p className="mt-1 text-[11px] text-red-500">{error.message}</p>}
   </div>
 ));
 TextAreaField.displayName = 'TextAreaField';

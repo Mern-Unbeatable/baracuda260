@@ -1,133 +1,32 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '@/app/store/slices/authSlice';
-import { envVar } from '@/shared/config/env';
+import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
-import { httpMethods } from '@/shared/lib/httpMethods';
-import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
 import AuthPageChrome from '@/portals/auth/components/auth/auth/AuthPageChrome';
-import { EMAIL_REGEX, SIGNUP_ASSETS } from '@/portals/auth/data/signupAssets';
-
-const INITIAL_FORM = {
-  fullName: '',
-  username: '',
-  email: '',
-  phone: '',
-  country: '',
-  password: '',
-};
+import { SIGNUP_ASSETS } from '@/portals/auth/data/signupAssets';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import { useSignUp } from '../hooks/useSignUp';
 
 /**
  * Sign Up page UI — Figma node 111:1024 (baracuda260 Copy).
  */
 const SignUpContent = memo(() => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const [form, setForm] = useState(INITIAL_FORM);
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-
-  const updateField = (field) => (event) => {
-    const { value } = event.target;
-    setForm((current) => ({ ...current, [field]: value }));
-  };
-
-  const validate = () => {
-    const nextErrors = {};
-
-    if (!form.fullName.trim()) {
-      nextErrors.fullName = t('signup.fullNameRequired');
-    }
-    if (!form.username.trim()) {
-      nextErrors.username = t('signup.usernameRequired');
-    }
-    if (!form.email.trim()) {
-      nextErrors.email = t('signup.emailRequired');
-    } else if (!EMAIL_REGEX.test(form.email)) {
-      nextErrors.email = t('signup.emailInvalid');
-    }
-    if (!form.phone.trim()) {
-      nextErrors.phone = t('signup.phoneRequired');
-    }
-    if (!form.country.trim()) {
-      nextErrors.country = t('signup.countryRequired');
-    }
-    if (!form.password) {
-      nextErrors.password = t('signup.passwordRequired');
-    } else if (form.password.length < 8) {
-      nextErrors.password = t('signup.passwordTooShort');
-    }
-
-    return nextErrors;
-  };
-
-  const handleSignUp = async (event) => {
-    event.preventDefault();
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      return;
-    }
-
-    setErrors({});
-    setIsLoading(true);
-
-    const payload = {
-      fullName: form.fullName.trim(),
-      username: form.username.trim().replace(/^@/, ''),
-      email: form.email.trim(),
-      phone: form.phone.trim(),
-      country: form.country.trim(),
-      password: form.password,
-    };
-
-    try {
-      if (envVar('DEV_MOCK_AUTH') === 'true') {
-        dispatch(
-          loginSuccess({
-            user: {
-              email: payload.email,
-              fullName: payload.fullName,
-              username: payload.username,
-            },
-            token: null,
-          }),
-        );
-        navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
-        return;
-      }
-
-      const { data, error } = await httpMethods.post(API_ENDPOINTS.AUTH.REGISTER, payload);
-
-      if (error) {
-        setErrors({
-          form: error?.data?.message ?? error?.message ?? t('signup.registerFailed'),
-        });
-        return;
-      }
-
-      const token = data?.token ?? data?.data?.token ?? data?.accessToken;
-      const user = data?.user ??
-        data?.data?.user ?? {
-          email: payload.email,
-          fullName: payload.fullName,
-          username: payload.username,
-        };
-      dispatch(loginSuccess({ user, token }));
-      navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    register,
+    handleSubmit,
+    errors,
+    isSubmitting,
+    globalError,
+    t,
+    EMAIL_REGEX,
+  } = useSignUp();
 
   const fieldClass = (hasError) =>
     `h-[52px] w-full rounded-lg bg-[#ecedfa] px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:ring-2 focus:ring-[#ee1c25]/25 sm:h-[60px] ${
       hasError ? 'ring-2 ring-red-400' : ''
     }`;
+    
+  const labelClass = "block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px] mb-2 sm:mb-2.5";
 
   return (
     <div className="signup-page-root relative min-h-dvh w-full overflow-x-hidden bg-white">
@@ -172,183 +71,124 @@ const SignUpContent = memo(() => {
               </h2>
             </header>
 
-            {errors.form ? (
+            {globalError ? (
               <div
                 role="alert"
                 className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
               >
-                {errors.form}
+                {globalError}
               </div>
             ) : null}
 
             <form
-              onSubmit={handleSignUp}
+              onSubmit={handleSubmit}
               noValidate
               className="flex w-full flex-col gap-6 sm:gap-7.5"
             >
               <div className="flex w-full flex-col gap-3.5 sm:gap-4">
-                <div className="flex w-full flex-col gap-2 sm:gap-2.5">
-                  <label
-                    htmlFor="signup-full-name"
-                    className="block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px]"
-                  >
-                    {t('signup.fullName')}
-                  </label>
-                  <input
-                    id="signup-full-name"
-                    type="text"
-                    autoComplete="name"
-                    value={form.fullName}
-                    onChange={updateField('fullName')}
-                    placeholder={t('signup.fullNamePlaceholder')}
-                    aria-invalid={Boolean(errors.fullName)}
-                    aria-describedby={errors.fullName ? 'signup-full-name-error' : undefined}
-                    className={fieldClass(Boolean(errors.fullName))}
-                  />
-                  {errors.fullName ? (
-                    <p id="signup-full-name-error" className="text-xs text-red-600">
-                      {errors.fullName}
-                    </p>
-                  ) : null}
-                </div>
+                <Input
+                  id="signup-full-name"
+                  type="text"
+                  autoComplete="name"
+                  label={t('signup.fullName')}
+                  placeholder={t('signup.fullNamePlaceholder')}
+                  error={errors.fullName}
+                  aria-invalid={Boolean(errors.fullName)}
+                  aria-describedby={errors.fullName ? 'signup-full-name-error' : undefined}
+                  inputClassName={fieldClass(Boolean(errors.fullName))}
+                  labelClassName={labelClass}
+                  {...register('fullName', { required: t('signup.fullNameRequired') })}
+                />
 
-                <div className="flex w-full flex-col gap-2 sm:gap-2.5">
-                  <label
-                    htmlFor="signup-username"
-                    className="block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px]"
-                  >
-                    {t('signup.username')}
-                  </label>
-                  <input
-                    id="signup-username"
-                    type="text"
-                    autoComplete="username"
-                    value={form.username}
-                    onChange={updateField('username')}
-                    placeholder={t('signup.usernamePlaceholder')}
-                    aria-invalid={Boolean(errors.username)}
-                    aria-describedby={errors.username ? 'signup-username-error' : undefined}
-                    className={fieldClass(Boolean(errors.username))}
-                  />
-                  {errors.username ? (
-                    <p id="signup-username-error" className="text-xs text-red-600">
-                      {errors.username}
-                    </p>
-                  ) : null}
-                </div>
+                <Input
+                  id="signup-username"
+                  type="text"
+                  autoComplete="username"
+                  label={t('signup.username')}
+                  placeholder={t('signup.usernamePlaceholder')}
+                  error={errors.username}
+                  aria-invalid={Boolean(errors.username)}
+                  aria-describedby={errors.username ? 'signup-username-error' : undefined}
+                  inputClassName={fieldClass(Boolean(errors.username))}
+                  labelClassName={labelClass}
+                  {...register('username', { required: t('signup.usernameRequired') })}
+                />
 
-                <div className="flex w-full flex-col gap-2 sm:gap-2.5">
-                  <label
-                    htmlFor="signup-email"
-                    className="block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px]"
-                  >
-                    {t('signup.email')}
-                  </label>
-                  <input
-                    id="signup-email"
-                    type="email"
-                    autoComplete="email"
-                    value={form.email}
-                    onChange={updateField('email')}
-                    placeholder={t('signup.emailPlaceholder')}
-                    aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? 'signup-email-error' : undefined}
-                    className={fieldClass(Boolean(errors.email))}
-                  />
-                  {errors.email ? (
-                    <p id="signup-email-error" className="text-xs text-red-600">
-                      {errors.email}
-                    </p>
-                  ) : null}
-                </div>
+                <Input
+                  id="signup-email"
+                  type="email"
+                  autoComplete="email"
+                  label={t('signup.email')}
+                  placeholder={t('signup.emailPlaceholder')}
+                  error={errors.email}
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? 'signup-email-error' : undefined}
+                  inputClassName={fieldClass(Boolean(errors.email))}
+                  labelClassName={labelClass}
+                  {...register('email', { 
+                    required: t('signup.emailRequired'),
+                    pattern: { value: EMAIL_REGEX, message: t('signup.emailInvalid') }
+                  })}
+                />
 
-                <div className="flex w-full flex-col gap-2 sm:gap-2.5">
-                  <label
-                    htmlFor="signup-phone"
-                    className="block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px]"
-                  >
-                    {t('signup.phone')}
-                  </label>
-                  <input
-                    id="signup-phone"
-                    type="tel"
-                    autoComplete="tel"
-                    value={form.phone}
-                    onChange={updateField('phone')}
-                    placeholder={t('signup.phonePlaceholder')}
-                    aria-invalid={Boolean(errors.phone)}
-                    aria-describedby={errors.phone ? 'signup-phone-error' : undefined}
-                    className={fieldClass(Boolean(errors.phone))}
-                  />
-                  {errors.phone ? (
-                    <p id="signup-phone-error" className="text-xs text-red-600">
-                      {errors.phone}
-                    </p>
-                  ) : null}
-                </div>
+                <Input
+                  id="signup-phone"
+                  type="tel"
+                  autoComplete="tel"
+                  label={t('signup.phone')}
+                  placeholder={t('signup.phonePlaceholder')}
+                  error={errors.phone}
+                  aria-invalid={Boolean(errors.phone)}
+                  aria-describedby={errors.phone ? 'signup-phone-error' : undefined}
+                  inputClassName={fieldClass(Boolean(errors.phone))}
+                  labelClassName={labelClass}
+                  {...register('phone', { required: t('signup.phoneRequired') })}
+                />
 
-                <div className="flex w-full flex-col gap-2 sm:gap-2.5">
-                  <label
-                    htmlFor="signup-country"
-                    className="block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px]"
-                  >
-                    {t('signup.country')}
-                  </label>
-                  <input
-                    id="signup-country"
-                    type="text"
-                    autoComplete="country-name"
-                    value={form.country}
-                    onChange={updateField('country')}
-                    placeholder={t('signup.countryPlaceholder')}
-                    aria-invalid={Boolean(errors.country)}
-                    aria-describedby={errors.country ? 'signup-country-error' : undefined}
-                    className={fieldClass(Boolean(errors.country))}
-                  />
-                  {errors.country ? (
-                    <p id="signup-country-error" className="text-xs text-red-600">
-                      {errors.country}
-                    </p>
-                  ) : null}
-                </div>
+                <Input
+                  id="signup-country"
+                  type="text"
+                  autoComplete="country-name"
+                  label={t('signup.country')}
+                  placeholder={t('signup.countryPlaceholder')}
+                  error={errors.country}
+                  aria-invalid={Boolean(errors.country)}
+                  aria-describedby={errors.country ? 'signup-country-error' : undefined}
+                  inputClassName={fieldClass(Boolean(errors.country))}
+                  labelClassName={labelClass}
+                  {...register('country', { required: t('signup.countryRequired') })}
+                />
 
-                <div className="flex w-full flex-col gap-2 sm:gap-2.5">
-                  <label
-                    htmlFor="signup-password"
-                    className="block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px]"
-                  >
-                    {t('signup.password')}
-                  </label>
-                  <input
-                    id="signup-password"
-                    type="password"
-                    autoComplete="new-password"
-                    value={form.password}
-                    onChange={updateField('password')}
-                    placeholder={t('signup.passwordPlaceholder')}
-                    aria-invalid={Boolean(errors.password)}
-                    aria-describedby={errors.password ? 'signup-password-error' : undefined}
-                    className={fieldClass(Boolean(errors.password))}
-                  />
-                  {errors.password ? (
-                    <p id="signup-password-error" className="text-xs text-red-600">
-                      {errors.password}
-                    </p>
-                  ) : null}
-                </div>
+                <Input
+                  id="signup-password"
+                  type="password"
+                  autoComplete="new-password"
+                  label={t('signup.password')}
+                  placeholder={t('signup.passwordPlaceholder')}
+                  error={errors.password}
+                  aria-invalid={Boolean(errors.password)}
+                  aria-describedby={errors.password ? 'signup-password-error' : undefined}
+                  inputClassName={fieldClass(Boolean(errors.password))}
+                  labelClassName={labelClass}
+                  {...register('password', { 
+                    required: t('signup.passwordRequired'),
+                    minLength: { value: 8, message: t('signup.passwordTooShort') }
+                  })}
+                />
               </div>
 
               <div className="flex w-full flex-col items-center gap-5 pb-4 sm:gap-6">
-                <button
+                <Button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isSubmitting}
+                  unstyled
                   className="inline-flex h-12 w-full items-center justify-center rounded-lg bg-[#ee1c25] px-4 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isLoading ? (
+                  {isSubmitting ? (
                     <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                   ) : null}
-                  {isLoading ? t('signup.submitting') : t('signup.submit')}
-                </button>
+                  {isSubmitting ? t('signup.submitting') : t('signup.submit')}
+                </Button>
 
                 <p className="text-center text-[15px] leading-normal text-[#a7a7a7] sm:text-[16px]">
                   <span className="text-[#0c0c0c]">{t('signup.haveAccount')} </span>

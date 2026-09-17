@@ -1,30 +1,23 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import React, { memo } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { ArrowRight, CreditCard, Lock } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
-  createBuyPurchaseRecord,
   formatBuyPhotoPrice,
-  saveLastBuyPurchase,
 } from '@/shared/data/buyPhotos';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
-import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import { useBuyPhotosCheckout } from '../hooks/useBuyPhotosCheckout';
 
 const INPUT_CLASS =
   'w-full rounded-lg border border-[#cbc3d5] bg-white px-4 py-4 text-[16px] text-[#161c27] placeholder:text-[#6b7280] outline-none transition focus:border-[#ee1c25] focus:ring-2 focus:ring-[#ee1c25]/20';
 
 const BuyPhotosCheckoutMain = memo(() => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
   const location = useLocation();
   const photo = location.state?.photo;
-
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('paypal');
 
   if (!photo) {
     return <Navigate to={ROUTES.BUY_PHOTOS} replace />;
@@ -33,18 +26,14 @@ const BuyPhotosCheckoutMain = memo(() => {
   const subtotal = photo.priceAmount ?? 0;
   const totalLabel = photo.price ?? formatBuyPhotoPrice(subtotal);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const purchase = createBuyPurchaseRecord({
-      photo,
-      buyerName: fullName.trim() || t('buyPhotos.checkout.defaultBuyerName'),
-      buyerEmail: email.trim() || t('buyPhotos.checkout.defaultBuyerEmail'),
-    });
-
-    saveLastBuyPurchase(purchase);
-    navigate(ROUTES.BUY_PHOTOS_SUCCESS, { state: { purchase } });
-  };
+  const {
+    register,
+    handleSubmit,
+    errors,
+    paymentMethodValue,
+    t,
+    EMAIL_REGEX,
+  } = useBuyPhotosCheckout(photo);
 
   return (
     <SitePageLayout
@@ -111,32 +100,35 @@ const BuyPhotosCheckoutMain = memo(() => {
 
                 <div className="mt-5 flex flex-col gap-5">
                   <div>
-                    <label htmlFor="checkout-full-name" className="mb-2 block text-[15px] text-[#494453]">
-                      {t('buyPhotos.checkout.buyer.fullName')}
-                    </label>
-                    <input
+                    <Input
                       id="checkout-full-name"
                       type="text"
                       autoComplete="name"
-                      value={fullName}
-                      onChange={(event) => setFullName(event.target.value)}
+                      label={t('buyPhotos.checkout.buyer.fullName')}
+                      labelClassName="mb-2 block text-[15px] text-[#494453] font-normal tracking-normal normal-case"
                       placeholder={t('buyPhotos.checkout.buyer.fullNamePlaceholder')}
-                      className={INPUT_CLASS}
+                      error={errors.fullName}
+                      aria-invalid={Boolean(errors.fullName)}
+                      inputClassName={`${INPUT_CLASS} ${errors.fullName ? 'border-red-400' : ''}`}
+                      {...register('fullName', { required: t('buyPhotos.checkout.buyer.fullNameRequired') })}
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="checkout-email" className="mb-2 block text-[15px] text-[#494453]">
-                      {t('buyPhotos.checkout.buyer.email')}
-                    </label>
-                    <input
+                    <Input
                       id="checkout-email"
                       type="email"
                       autoComplete="email"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
+                      label={t('buyPhotos.checkout.buyer.email')}
+                      labelClassName="mb-2 block text-[15px] text-[#494453] font-normal tracking-normal normal-case"
                       placeholder={t('buyPhotos.checkout.buyer.emailPlaceholder')}
-                      className={INPUT_CLASS}
+                      error={errors.email}
+                      aria-invalid={Boolean(errors.email)}
+                      inputClassName={`${INPUT_CLASS} ${errors.email ? 'border-red-400' : ''}`}
+                      {...register('email', { 
+                        required: t('buyPhotos.checkout.buyer.emailRequired'),
+                        pattern: { value: EMAIL_REGEX, message: t('buyPhotos.checkout.buyer.emailInvalid') }
+                      })}
                     />
                     <p className="mt-2 text-[13px] text-[#6b7280]">
                       {t('buyPhotos.checkout.buyer.emailHint')}
@@ -153,11 +145,9 @@ const BuyPhotosCheckoutMain = memo(() => {
                 <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl border border-[#4048cd]/20 bg-[#f8f9ff] p-4">
                   <input
                     type="radio"
-                    name="payment-method"
                     value="paypal"
-                    checked={paymentMethod === 'paypal'}
-                    onChange={() => setPaymentMethod('paypal')}
                     className="mt-1 size-4 accent-[#4048cd]"
+                    {...register('paymentMethod')}
                   />
                   <span className="flex-1">
                     <span className="flex items-center gap-2 text-[16px] font-bold text-[#0d0d14]">
@@ -170,10 +160,14 @@ const BuyPhotosCheckoutMain = memo(() => {
                   </span>
                 </label>
 
-                <MarketingButton type="submit" className="mt-5 w-full rounded-lg py-3.5">
+                <Button 
+                  type="submit" 
+                  unstyled 
+                  className="mt-5 w-full rounded-lg py-3.5 inline-flex items-center justify-center font-bold transition uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed bg-[#ee1c25] hover:bg-[#d01820] text-white gap-2"
+                >
                   {t('buyPhotos.checkout.payment.continuePaypal')}
                   <ArrowRight size={18} strokeWidth={2} aria-hidden="true" />
-                </MarketingButton>
+                </Button>
 
                 <p className="mt-4 text-center text-[12px] leading-5 text-[#9ca3af]">
                   {t('buyPhotos.checkout.payment.termsNotice')}

@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import {
   ABOUT_MAX_WORDS,
   DEFAULT_THEME_ID,
-  EMPTY_ACCOUNT,
   EMPTY_STORY,
   ZODIAC_SIGNS,
   countWords,
@@ -18,7 +18,24 @@ const revokePreview = (url) => {
 export default function usePromoJoin(code) {
   const promoLink = useMemo(() => findPromoLinkByCode(code), [code]);
 
-  const [account, setAccount] = useState(EMPTY_ACCOUNT);
+  const {
+    register,
+    handleSubmit: hookFormSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      fullName: '',
+      username: '',
+      email: '',
+      phone: '',
+      country: '',
+      paypal: '',
+      about: '',
+      password: '',
+    },
+  });
+
   const [socialLinks, setSocialLinks] = useState(['']);
   const [profilePreview, setProfilePreview] = useState('');
   const [coverPreview, setCoverPreview] = useState('');
@@ -51,10 +68,6 @@ export default function usePromoJoin(code) {
 
   const selectedSign = ZODIAC_SIGNS.find((sign) => sign.id === astroSignId) || ZODIAC_SIGNS[5];
   const sixSlots = getSlotsForTheme(themeId);
-
-  const patchAccount = (field, value) => {
-    setAccount((current) => ({ ...current, [field]: value }));
-  };
 
   const patchSixStory = (field, value) => {
     setSixStory((current) => ({ ...current, [field]: value }));
@@ -155,21 +168,14 @@ export default function usePromoJoin(code) {
     event.target.value = '';
   };
 
-  const validate = useCallback(
-    (t) => {
-      if (!account.fullName.trim()) return t('promoJoin.errors.fullName');
-      if (!account.username.trim()) return t('promoJoin.errors.username');
-      if (!account.email.trim()) return t('promoJoin.errors.email');
-      if (!account.password || account.password.length < 8) return t('promoJoin.errors.password');
-      if (countWords(account.about) > ABOUT_MAX_WORDS) return t('promoJoin.errors.about');
-      if (!copyrightOk) return t('promoJoin.errors.copyright');
-      return null;
-    },
-    [account, copyrightOk],
-  );
+  const validateOtherFields = (t, data) => {
+    if (countWords(data.about) > ABOUT_MAX_WORDS) return t('promoJoin.errors.about');
+    if (!copyrightOk) return t('promoJoin.errors.copyright');
+    return null;
+  };
 
-  const handleSubmit = async (t) => {
-    const error = validate(t);
+  const onSubmitForm = async (data, t) => {
+    const error = validateOtherFields(t, data);
     if (error) {
       toast.error(error);
       return;
@@ -181,10 +187,14 @@ export default function usePromoJoin(code) {
     toast.success(t('promoJoin.success'));
   };
 
+  const handleSubmit = (t) => hookFormSubmit((data) => onSubmitForm(data, t));
+
   return {
     code,
     promoLink,
-    account,
+    register,
+    handleSubmit,
+    errors,
     socialLinks,
     profilePreview,
     coverPreview,
@@ -211,7 +221,6 @@ export default function usePromoJoin(code) {
     twelveSlotInputRef,
     sixVideoInputRef,
     twelveVideoInputRef,
-    patchAccount,
     patchSixStory,
     patchTwelveStory,
     handleSocialChange,
@@ -230,6 +239,5 @@ export default function usePromoJoin(code) {
     handleTwelveVideos,
     setAiCreated,
     setCopyrightOk,
-    handleSubmit,
   };
 }
