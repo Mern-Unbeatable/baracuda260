@@ -1,7 +1,9 @@
 import React, { memo, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { Globe, MapPin, Store, Upload } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import Input from '@/components/ui/Input';
 
 const DURATION_OPTIONS = [
   { days: 7, price: 35, start: '7 Aug 2026', end: '24 Aug 2026' },
@@ -10,20 +12,36 @@ const DURATION_OPTIONS = [
 ];
 
 const inputClass =
-  'h-11 w-full rounded-[8px] border border-[#e5e7eb] bg-white px-4 text-[13px] text-[#111827] placeholder:text-[#9ca3af] outline-none transition focus:border-[#4048cd]/40';
+  'w-full rounded-[8px] border border-[#e5e7eb] bg-white px-4 py-2.5 text-[13px] text-[#111827] placeholder:text-[#9ca3af] outline-none transition focus:border-[#4048cd]/40 focus:ring-2 focus:ring-[#4048cd]/20';
 
 const AdvertiseBusinessForm = memo(({ className = '', defaultDuration = 14, onSubmit }) => {
   const [selectedDuration, setSelectedDuration] = useState(defaultDuration);
   const [businessType, setBusinessType] = useState('online');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      businessName: '',
+      page: 'Home',
+      website: '',
+      description: '',
+      location: '',
+    },
+  });
 
   const selected = useMemo(
     () => DURATION_OPTIONS.find((option) => option.days === selectedDuration) ?? DURATION_OPTIONS[1],
     [selectedDuration],
   );
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSubmit?.(selected);
+  const onFormSubmit = (data) => {
+    onSubmit?.({ ...data, duration: selected, businessType });
   };
 
   return (
@@ -32,28 +50,45 @@ const AdvertiseBusinessForm = memo(({ className = '', defaultDuration = 14, onSu
         <h2 className="text-[20px] lg:text-[38px] font-semibold leading-tight text-[#202531]">
           Tell Us About Your Business
         </h2>
-        <p className="mt-2  lg:text-[18px] text-[16px] lg:leading-[1.45] text-[#555b68]">
+        <p className="mt-2 lg:text-[18px] text-[16px] lg:leading-[1.45] text-[#555b68]">
           This information will be associated with your advertiser account, commercial invoices, and
           campaign billing.
         </p>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-6 px-6 py-6 sm:px-8 sm:py-7">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6 px-6 py-6 sm:px-8 sm:py-7">
         <div className="grid grid-cols-1 gap-4">
-          <label className="block space-y-2">
-            <span className="text-[14px] font-semibold text-[#202531]">Name</span>
-            <input className={inputClass} placeholder="Enter your full name..." />
-          </label>
+          <Input
+            id="advertise-name"
+            label="Name"
+            placeholder="Enter your full name..."
+            error={errors.name}
+            inputClassName={inputClass}
+            labelClassName="block text-[14px] font-semibold text-[#202531] mb-2 tracking-normal normal-case"
+            {...register('name', { required: 'Name is required' })}
+          />
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <label className="block space-y-2">
-              <span className="text-[14px] font-semibold text-[#202531]">Email</span>
-              <input className={inputClass} placeholder="Enter your email..." />
-            </label>
-            <label className="block space-y-2">
-              <span className="text-[14px] font-semibold text-[#202531]">Phone</span>
-              <input className={inputClass} placeholder="Enter your phone number..." />
-            </label>
+            <Input
+              id="advertise-email"
+              type="email"
+              label="Email"
+              placeholder="Enter your email..."
+              error={errors.email}
+              inputClassName={inputClass}
+              labelClassName="block text-[14px] font-semibold text-[#202531] mb-2 tracking-normal normal-case"
+              {...register('email', { required: 'Email is required' })}
+            />
+            <Input
+              id="advertise-phone"
+              type="tel"
+              label="Phone"
+              placeholder="Enter your phone number..."
+              error={errors.phone}
+              inputClassName={inputClass}
+              labelClassName="block text-[14px] font-semibold text-[#202531] mb-2 tracking-normal normal-case"
+              {...register('phone', { required: 'Phone is required' })}
+            />
           </div>
         </div>
 
@@ -85,49 +120,74 @@ const AdvertiseBusinessForm = memo(({ className = '', defaultDuration = 14, onSu
         </div>
 
         <div className="space-y-4">
-          <label className="block space-y-2">
-            <span className="text-[14px] font-semibold text-[#202531]">
-              Business Name <span className="text-[#ee1c25]">*</span>
-            </span>
-            <input className={inputClass} placeholder="Your Business Name" />
-          </label>
+          <Input
+            id="advertise-businessName"
+            label={
+              <span className="block text-[14px] font-semibold text-[#202531] mb-2 tracking-normal normal-case">
+                Business Name <span className="text-[#ee1c25]">*</span>
+              </span>
+            }
+            placeholder="Your Business Name"
+            error={errors.businessName}
+            inputClassName={inputClass}
+            {...register('businessName', { required: 'Business Name is required' })}
+          />
 
-          <label className="block space-y-2">
-            <span className="text-[14px] font-semibold text-[#202531]">
+          <div className="block space-y-2">
+            <label htmlFor="advertise-page" className="block text-[14px] font-semibold text-[#202531] tracking-normal normal-case">
               Select Page <span className="text-[#ee1c25]">*</span>
-            </span>
-            <select className={inputClass}>
-              <option>Home</option>
-              <option>Gallery</option>
-              <option>Competitions</option>
-              <option>Buy Photos</option>
+            </label>
+            <select id="advertise-page" className={`h-11 ${inputClass}`} {...register('page')}>
+              <option value="Home">Home</option>
+              <option value="Gallery">Gallery</option>
+              <option value="Competitions">Competitions</option>
+              <option value="Buy Photos">Buy Photos</option>
             </select>
-          </label>
+          </div>
 
-          <label className="block space-y-2">
-            <span className="text-[14px] font-semibold text-[#202531]">Website URL</span>
-            <input className={inputClass} placeholder="https://yourbusiness.com" />
-          </label>
+          <Input
+            id="advertise-website"
+            label="Website URL"
+            placeholder="https://yourbusiness.com"
+            error={errors.website}
+            inputClassName={inputClass}
+            labelClassName="block text-[14px] font-semibold text-[#202531] mb-2 tracking-normal normal-case"
+            {...register('website')}
+          />
 
-          <label className="block space-y-2">
-            <span className="text-[14px] font-semibold text-[#202531]">Description (0/200)</span>
+          <div className="block space-y-2">
+            <label htmlFor="advertise-description" className="block text-[14px] font-semibold text-[#202531] tracking-normal normal-case">
+              Description (0/200)
+            </label>
             <textarea
+              id="advertise-description"
               rows={4}
-              className={`h-auto resize-none py-3 ${inputClass}`}
+              className={`h-auto resize-none py-3 ${inputClass} ${errors.description ? 'border-red-500' : ''}`}
               placeholder="Tell us about your business..."
+              {...register('description', { maxLength: { value: 200, message: 'Max 200 characters' } })}
             />
-          </label>
+            {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>}
+          </div>
 
-          <label className="block space-y-2">
-            <span className="text-[14px] font-semibold text-[#202531]">Location</span>
+          <div className="block space-y-2">
+            <label htmlFor="advertise-location" className="block text-[14px] font-semibold text-[#202531] tracking-normal normal-case">
+              Location
+            </label>
             <div className="relative">
               <MapPin
                 size={14}
                 className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[#9ca3af]"
               />
-              <input className={`${inputClass} pl-8`} placeholder="123 Main St, City, State" />
+              <Input
+                id="advertise-location"
+                placeholder="123 Main St, City, State"
+                error={errors.location}
+                inputClassName={`${inputClass} pl-8`}
+                labelClassName="hidden"
+                {...register('location')}
+              />
             </div>
-          </label>
+          </div>
         </div>
 
         <div className="space-y-2">

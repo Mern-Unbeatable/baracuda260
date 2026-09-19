@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useId } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import {
   ADMIN_NEWSLETTER_ASSETS,
   CHECK_ICON_SIZE,
@@ -12,11 +14,12 @@ import {
 } from '@/portals/admin/data/adminNewsletterData';
 import useAdminNewsletter from '@/portals/admin/hooks/useAdminNewsletter';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import Input from '@/components/ui/Input';
 
 const fieldLabelClass =
-  'text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]';
+  'text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b] mb-2 block';
 const inputClass =
-  'w-full rounded-[12px] border border-[#e2e8f0] bg-white px-[17px] py-[15px] text-[16px] text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:border-[#4048cd]';
+  'w-full rounded-[12px] border border-[#e2e8f0] bg-white px-[17px] py-[15px] text-[16px] text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:border-[#4048cd] focus:ring-2 focus:ring-[#4048cd]/10';
 
 /**
  * @param {{
@@ -86,18 +89,9 @@ RecipientOption.displayName = 'RecipientOption';
 const AdminNewsletterContent = memo(() => {
   const { t } = useTranslation();
   const bannerInputId = useId();
+
   const {
     subscribers,
-    subject,
-    setSubject,
-    emailTitle,
-    setEmailTitle,
-    content,
-    setContent,
-    ctaText,
-    setCtaText,
-    ctaUrl,
-    setCtaUrl,
     bannerName,
     bannerError,
     handleBannerChange,
@@ -108,13 +102,34 @@ const AdminNewsletterContent = memo(() => {
     composerOpen,
     setComposerOpen,
     sending,
-    attempted,
-    isRecipientsValid,
-    handleSend,
+    handleSend: doSend,
   } = useAdminNewsletter();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      subject: '',
+      emailTitle: '',
+      content: '',
+      ctaText: 'View More',
+      ctaUrl: '',
+    },
+  });
 
   const isSelectMode = recipientId === 'selected';
   const selectedCount = selectedSubscriberIds.length;
+
+  const onFormSubmit = (data) => {
+    doSend();
+  };
+
+  const onFormError = () => {
+    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
+  };
 
   return (
     <div className="flex w-full flex-col gap-6 py-2 sm:gap-6 sm:py-4">
@@ -191,7 +206,7 @@ const AdminNewsletterContent = memo(() => {
         {/* Composer + recipients — never stretch to match list height */}
         <div className="flex w-full shrink-0 flex-col gap-5 self-start xl:max-w-3xl xl:flex-1">
           {composerOpen ? (
-            <section className="flex h-auto w-full shrink-0 flex-col gap-8 overflow-hidden rounded-3xl border border-[#e2e8f0] bg-white pb-8 pt-px">
+            <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className="flex h-auto w-full shrink-0 flex-col gap-8 overflow-hidden rounded-3xl border border-[#e2e8f0] bg-white pb-8 pt-px">
               <div className="flex items-center justify-between border-b border-[#f1f5f9] px-5 pb-6.25 pt-6 sm:px-8">
                 <div className="flex items-center gap-3">
                   <div className="flex rounded-lg bg-[#eef2ff] p-2">
@@ -224,29 +239,25 @@ const AdminNewsletterContent = memo(() => {
               </div>
 
               <div className="flex w-full flex-col gap-6 px-5 sm:px-8">
-                <label className="flex w-full flex-col gap-2">
-                  <span className={fieldLabelClass}>{t('adminNewsletter.composer.subject')}</span>
-                  <input
-                    type="text"
-                    value={subject}
-                    onChange={(event) => setSubject(event.target.value)}
-                    placeholder={t('adminNewsletter.composer.subjectPlaceholder')}
-                    className={inputClass}
-                  />
-                </label>
+                <Input
+                  label={t('adminNewsletter.composer.subject')}
+                  placeholder={t('adminNewsletter.composer.subjectPlaceholder')}
+                  inputClassName={inputClass}
+                  labelClassName={fieldLabelClass}
+                  error={errors.subject}
+                  {...register('subject', { required: t('adminNewsletter.send.subjectRequired') })}
+                />
 
-                <label className="flex w-full flex-col gap-2">
-                  <span className={fieldLabelClass}>{t('adminNewsletter.composer.emailTitle')}</span>
-                  <input
-                    type="text"
-                    value={emailTitle}
-                    onChange={(event) => setEmailTitle(event.target.value)}
-                    placeholder={t('adminNewsletter.composer.emailTitlePlaceholder')}
-                    className={inputClass}
-                  />
-                </label>
+                <Input
+                  label={t('adminNewsletter.composer.emailTitle')}
+                  placeholder={t('adminNewsletter.composer.emailTitlePlaceholder')}
+                  inputClassName={inputClass}
+                  labelClassName={fieldLabelClass}
+                  error={errors.emailTitle}
+                  {...register('emailTitle')}
+                />
 
-                <div className="flex w-full flex-col gap-2">
+                <div className="flex w-full flex-col">
                   <span className={fieldLabelClass} id="newsletter-content-label">
                     {t('adminNewsletter.composer.content')}
                   </span>
@@ -310,13 +321,15 @@ const AdminNewsletterContent = memo(() => {
                     </div>
                     <textarea
                       aria-labelledby="newsletter-content-label"
-                      value={content}
-                      onChange={(event) => setContent(event.target.value)}
                       placeholder={t('adminNewsletter.composer.contentPlaceholder')}
                       rows={6}
-                      className="min-h-40 w-full resize-y border-0 bg-white px-4 py-4 text-[16px] leading-6 text-[#0f172a] outline-none placeholder:text-[#94a3b8]"
+                      className="min-h-40 w-full resize-y border-0 bg-white px-4 py-4 text-[16px] leading-6 text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:ring-2 focus:ring-[#4048cd]/10"
+                      {...register('content', { required: t('adminNewsletter.send.contentRequired') })}
                     />
                   </div>
+                  {errors.content ? (
+                    <p className="mt-1.5 text-[13px] text-[#ee1c25]">{errors.content.message}</p>
+                  ) : null}
                 </div>
 
                 <div className="flex w-full flex-col gap-2">
@@ -356,43 +369,27 @@ const AdminNewsletterContent = memo(() => {
                 </div>
 
                 <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
-                  <label className="flex w-full flex-col gap-2">
-                    <span className={fieldLabelClass}>{t('adminNewsletter.composer.ctaText')}</span>
-                    <input
-                      type="text"
-                      value={ctaText}
-                      onChange={(event) => setCtaText(event.target.value)}
-                      placeholder={t('adminNewsletter.composer.ctaTextPlaceholder')}
-                      className="w-full rounded-xl border border-[#e2e8f0] bg-white px-4.25 py-3.25 text-[16px] leading-6 text-[#334155] outline-none placeholder:text-[#94a3b8] focus:border-[#4048cd]"
-                    />
-                  </label>
-                  <label className="flex w-full flex-col gap-2">
-                    <span className={fieldLabelClass}>{t('adminNewsletter.composer.ctaUrl')}</span>
-                    <input
-                      type="url"
-                      value={ctaUrl}
-                      onChange={(event) => setCtaUrl(event.target.value)}
-                      placeholder={t('adminNewsletter.composer.ctaUrlPlaceholder')}
-                      className={inputClass}
-                    />
-                  </label>
+                  <Input
+                    label={t('adminNewsletter.composer.ctaText')}
+                    placeholder={t('adminNewsletter.composer.ctaTextPlaceholder')}
+                    inputClassName={inputClass}
+                    labelClassName={fieldLabelClass}
+                    error={errors.ctaText}
+                    {...register('ctaText')}
+                  />
+                  <Input
+                    type="url"
+                    label={t('adminNewsletter.composer.ctaUrl')}
+                    placeholder={t('adminNewsletter.composer.ctaUrlPlaceholder')}
+                    inputClassName={inputClass}
+                    labelClassName={fieldLabelClass}
+                    error={errors.ctaUrl}
+                    {...register('ctaUrl')}
+                  />
                 </div>
 
-                {attempted && !subject.trim() ? (
-                  <p className="text-[13px] text-[#ee1c25]">{t('adminNewsletter.send.subjectRequired')}</p>
-                ) : null}
-                {attempted && !content.trim() ? (
-                  <p className="text-[13px] text-[#ee1c25]">{t('adminNewsletter.send.contentRequired')}</p>
-                ) : null}
-                {attempted && isSelectMode && !isRecipientsValid ? (
-                  <p className="text-[13px] text-[#ee1c25]">
-                    {t('adminNewsletter.send.recipientsRequired')}
-                  </p>
-                ) : null}
-
                 <button
-                  type="button"
-                  onClick={handleSend}
+                  type="submit"
                   disabled={sending}
                   className="w-full cursor-pointer rounded-xl bg-[#4048cd] px-6 py-4 text-[16px] font-bold leading-6 text-white shadow-[0px_4px_12px_rgba(64,72,205,0.3)] transition hover:bg-[#363db8] disabled:cursor-not-allowed disabled:opacity-60"
                 >
@@ -401,7 +398,7 @@ const AdminNewsletterContent = memo(() => {
                     : t('adminNewsletter.send.button')}
                 </button>
               </div>
-            </section>
+            </form>
           ) : (
             <button
               type="button"

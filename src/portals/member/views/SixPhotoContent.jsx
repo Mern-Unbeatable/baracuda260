@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { ArrowLeft, Sparkles as SparklesLucide, Upload } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
@@ -141,19 +142,29 @@ const SixPhotoContent = memo(({
   const isSell = purpose === 'sell';
 
   const [themeId, setThemeId] = useState(DEFAULT_THEME_ID);
-  const [category, setCategory] = useState(DEFAULT_CATEGORY);
-  const [subCategory, setSubCategory] = useState('astrophotography');
-  const [title, setTitle] = useState('');
-  const [story, setStory] = useState('');
-  const [price, setPrice] = useState(defaultPrice);
-  const [resolution, setResolution] = useState('6000*6000');
-  const [fileSize, setFileSize] = useState('125 KB');
-  const [quality, setQuality] = useState('4K');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      category: DEFAULT_CATEGORY,
+      subCategory: 'astrophotography',
+      title: '',
+      story: '',
+      price: defaultPrice,
+      resolution: '6000*6000',
+      fileSize: '125 KB',
+      quality: '4K',
+      copyrightOk: false,
+    },
+  });
+
   const [publishTarget, setPublishTarget] = useState('competition');
-  const [copyrightOk, setCopyrightOk] = useState(false);
   const [aiCreated, setAiCreated] = useState('');
   const [previews, setPreviews] = useState({});
-  const [errors, setErrors] = useState({});
+  const [photosError, setPhotosError] = useState('');
   const [successOpen, setSuccessOpen] = useState(false);
 
   const theme = getThemeById(themeId);
@@ -175,10 +186,7 @@ const SixPhotoContent = memo(({
       });
       return {};
     });
-    setErrors((current) => {
-      const { photos: _photos, ...rest } = current;
-      return rest;
-    });
+    setPhotosError('');
   };
 
   const handlePickPhoto = (slotId) => {
@@ -197,35 +205,17 @@ const SixPhotoContent = memo(({
       if (previous[slotId]) URL.revokeObjectURL(previous[slotId]);
       return { ...previous, [slotId]: nextUrl };
     });
-    setErrors((current) => {
-      const { photos: _photos, ...rest } = current;
-      return rest;
-    });
+    setPhotosError('');
   };
 
-  const validate = () => {
-    const nextErrors = {};
-    if (!title.trim()) nextErrors.title = t('sixPhoto.errors.titleRequired');
-    if (isSell) {
-      if (!price.trim()) nextErrors.price = t('sellPhotos.errors.priceRequired');
-    } else if (!story.trim()) {
-      nextErrors.story = t('sixPhoto.errors.storyRequired');
-    }
+  const onSubmit = (data) => {
     const missingPhotos = slots.some((slot) => !previews[slot.id]);
-    if (missingPhotos) nextErrors.photos = t('sixPhoto.errors.photosRequired');
-    if (!copyrightOk) nextErrors.copyright = t('sixPhoto.errors.copyrightRequired');
-    return nextErrors;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
+    if (missingPhotos) {
+      setPhotosError(t('sixPhoto.errors.photosRequired'));
       setSuccessOpen(false);
       return;
     }
-    setErrors({});
+    setPhotosError('');
     setSuccessOpen(true);
   };
 
@@ -335,9 +325,9 @@ const SixPhotoContent = memo(({
               />
             ))}
           </div>
-          {errors.photos ? (
+          {photosError ? (
             <p className="text-sm text-red-600" role="alert">
-              {errors.photos}
+              {photosError}
             </p>
           ) : null}
         </section>
@@ -361,49 +351,19 @@ const SixPhotoContent = memo(({
       <ZodiacStoryFormPanel
         t={t}
         i18nPrefix="sixPhoto"
-        onSubmit={handleSubmit}
-        title={title}
-        onTitleChange={setTitle}
-        category={category}
-        onCategoryChange={setCategory}
+        onSubmit={handleSubmit(onSubmit)}
         categoryOptions={ARTISTIC_CATEGORIES}
-        subCategory={subCategory}
-        onSubCategoryChange={setSubCategory}
-        story={story}
-        onStoryChange={setStory}
-        resolution={resolution}
-        onResolutionChange={setResolution}
-        fileSize={fileSize}
-        onFileSizeChange={setFileSize}
-        quality={quality}
-        onQualityChange={setQuality}
         publishTarget={publishTarget}
-        onPublishTargetChange={setPublishTarget}
-        copyrightOk={copyrightOk}
-        onCopyrightChange={(checked) => {
-          setCopyrightOk(checked);
-          if (checked) {
-            setErrors((current) => {
-              const { copyright: _copyright, ...rest } = current;
-              return rest;
-            });
-          }
-        }}
+        setPublishTarget={setPublishTarget}
         aiCreated={aiCreated}
-        onAiCreatedChange={setAiCreated}
+        setAiCreated={setAiCreated}
+        register={register}
         errors={errors}
         isSell={isSell}
         sellFields={
           <MemberSellPhotoFields
             idPrefix="six-photo"
-            price={price}
-            resolution={resolution}
-            fileSize={fileSize}
-            quality={quality}
-            onPriceChange={setPrice}
-            onResolutionChange={setResolution}
-            onFileSizeChange={setFileSize}
-            onQualityChange={setQuality}
+            register={register}
             errors={errors}
           />
         }

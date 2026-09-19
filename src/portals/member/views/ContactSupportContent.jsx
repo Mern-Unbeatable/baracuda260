@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
 import ConversationMessageModal from '@/portals/member/components/member-support/contactSupport/ConversationMessageModal';
 import {
   CONVERSATIONS,
@@ -8,6 +9,8 @@ import {
   FILTERS,
   SUBJECT_OPTIONS,
 } from '@/portals/member/data/contactSupportData';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 
 const inputClassName =
   'w-full rounded-[12px] border border-black/10 bg-white p-[15px] text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none transition focus:ring-2 focus:ring-[#2563eb]/25';
@@ -86,38 +89,25 @@ ConversationItem.displayName = 'ConversationItem';
 const ContactSupportContent = memo(() => {
   const { t } = useTranslation();
 
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [errors, setErrors] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    defaultValues: {
+      fullName: '',
+      email: '',
+      subject: '',
+      message: '',
+    },
+  });
+
   const [filter, setFilter] = useState('all');
   const [activeThread, setActiveThread] = useState(null);
 
-  const validate = () => {
-    const nextErrors = {};
-    if (!fullName.trim()) nextErrors.fullName = t('contactSupport.errors.nameRequired');
-    if (!email.trim()) nextErrors.email = t('contactSupport.errors.emailRequired');
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      nextErrors.email = t('contactSupport.errors.emailInvalid');
-    }
-    if (!subject.trim()) nextErrors.subject = t('contactSupport.errors.subjectRequired');
-    if (!message.trim()) nextErrors.message = t('contactSupport.errors.messageRequired');
-    return nextErrors;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      return;
-    }
-    setErrors({});
-    setFullName('');
-    setEmail('');
-    setSubject('');
-    setMessage('');
+  const onSubmit = (data) => {
+    reset();
     toast.success(t('contactSupport.success'));
   };
 
@@ -139,7 +129,7 @@ const ContactSupportContent = memo(() => {
         </header>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           noValidate
           className="flex w-full flex-col gap-6 rounded-[20px] bg-white p-5 sm:p-8 lg:p-10"
         >
@@ -152,20 +142,15 @@ const ContactSupportContent = memo(() => {
                 >
                   {t('contactSupport.fullName')}
                 </label>
-                <input
+                <Input
                   id="contact-support-name"
                   type="text"
-                  value={fullName}
-                  onChange={(event) => setFullName(event.target.value)}
                   placeholder={t('contactSupport.fullNamePlaceholder')}
-                  aria-invalid={Boolean(errors.fullName)}
-                  className={inputClassName}
+                  error={errors.fullName}
+                  inputClassName={inputClassName}
+                  labelClassName="hidden"
+                  {...register('fullName', { required: t('contactSupport.errors.nameRequired') })}
                 />
-                {errors.fullName ? (
-                  <p className="text-sm text-red-600" role="alert">
-                    {errors.fullName}
-                  </p>
-                ) : null}
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col gap-3">
@@ -175,20 +160,21 @@ const ContactSupportContent = memo(() => {
                 >
                   {t('contactSupport.email')}
                 </label>
-                <input
+                <Input
                   id="contact-support-email"
                   type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
                   placeholder={t('contactSupport.emailPlaceholder')}
-                  aria-invalid={Boolean(errors.email)}
-                  className={inputClassName}
+                  error={errors.email}
+                  inputClassName={inputClassName}
+                  labelClassName="hidden"
+                  {...register('email', { 
+                    required: t('contactSupport.errors.emailRequired'),
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: t('contactSupport.errors.emailInvalid')
+                    }
+                  })}
                 />
-                {errors.email ? (
-                  <p className="text-sm text-red-600" role="alert">
-                    {errors.email}
-                  </p>
-                ) : null}
               </div>
             </div>
 
@@ -201,15 +187,17 @@ const ContactSupportContent = memo(() => {
               </label>
               <select
                 id="contact-support-subject"
-                value={subject}
-                onChange={(event) => setSubject(event.target.value)}
                 aria-invalid={Boolean(errors.subject)}
                 className={`${inputClassName} appearance-none bg-size-[16px] bg-position-[right_15px_center] bg-no-repeat pr-11`}
                 style={{
                   backgroundImage:
                     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7484' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
                 }}
+                {...register('subject', { required: t('contactSupport.errors.subjectRequired') })}
               >
+                <option value="" disabled>
+                  Select a subject...
+                </option>
                 {SUBJECT_OPTIONS.map((option) => (
                   <option key={option.value || 'placeholder'} value={option.value} disabled={!option.value}>
                     {t(option.labelKey)}
@@ -218,7 +206,7 @@ const ContactSupportContent = memo(() => {
               </select>
               {errors.subject ? (
                 <p className="text-sm text-red-600" role="alert">
-                  {errors.subject}
+                  {errors.subject.message}
                 </p>
               ) : null}
             </div>
@@ -232,23 +220,23 @@ const ContactSupportContent = memo(() => {
               </label>
               <textarea
                 id="contact-support-message"
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
                 placeholder={t('contactSupport.messagePlaceholder')}
                 rows={5}
                 aria-invalid={Boolean(errors.message)}
                 className={`${inputClassName} min-h-37 resize-y`}
+                {...register('message', { required: t('contactSupport.errors.messageRequired') })}
               />
               {errors.message ? (
                 <p className="text-sm text-red-600" role="alert">
-                  {errors.message}
+                  {errors.message.message}
                 </p>
               ) : null}
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
+            unstyled={true}
             className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921]"
           >
             <img
@@ -259,7 +247,7 @@ const ContactSupportContent = memo(() => {
               className="size-6 shrink-0 -rotate-52"
             />
             {t('contactSupport.send')}
-          </button>
+          </Button>
         </form>
       </section>
 

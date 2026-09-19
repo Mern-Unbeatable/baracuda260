@@ -3,6 +3,8 @@ import React, { memo, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ChevronDown, Search } from 'lucide-react';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 import {
   DONATION_TRANSACTION_ROWS,
   DONATIONS_SUMMARY,
@@ -36,18 +38,20 @@ const TablePagination = memo(({ showingKey, tone = 'red' }) => {
     <div className="flex min-h-16.75 w-full flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0">
       <p className={`px-2.5 text-[16px] leading-normal ${colors.text}`}>{t(showingKey)}</p>
       <div className="flex shrink-0 items-center gap-2">
-        <button
+        <Button
           type="button"
+          unstyled={true}
           className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal ${colors.border} ${colors.text}`}
         >
           {t('prizePayments.pagination.previous')}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          unstyled={true}
           className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal ${colors.border} ${colors.text}`}
         >
           {t('prizePayments.pagination.next')}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -248,31 +252,34 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
             <span className="sr-only">{t('prizePayments.photoSales.searchPlaceholder')}</span>
             <Search
               size={16}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af]"
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] z-10"
               aria-hidden="true"
             />
-            <input
+            <Input
               type="search"
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onInput={(event) => setSearch(event.target.value)}
               placeholder={t('prizePayments.photoSales.searchPlaceholder')}
-              className="w-full rounded-[10px] border border-[#e2e8f0] py-2.5 pl-9 pr-3 text-[14px] text-[#161c27] outline-none focus:border-[#4048cd]"
+              inputClassName="w-full rounded-[10px] border border-[#e2e8f0] py-2.5 pl-9 pr-3 text-[14px] text-[#161c27] outline-none focus:border-[#4048cd]"
+              labelClassName="hidden"
             />
           </label>
-          <button
+          <Button
             type="button"
+            unstyled={true}
             onClick={onRequestPayout}
             className="inline-flex shrink-0 items-center justify-center rounded-[10px] bg-[#161c27] px-4 py-2.5 text-[14px] font-semibold text-white"
           >
             {t('prizePayments.requestPayout')}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            unstyled={true}
             className="inline-flex shrink-0 items-center gap-1 rounded-[10px] border border-[#e2e8f0] px-4 py-2.5 text-[14px] font-medium text-[#161c27]"
           >
             {t('prizePayments.photoSales.export')}
             <ChevronDown size={16} aria-hidden="true" />
-          </button>
+          </Button>
           <label className="relative min-w-35">
             <span className="sr-only">{t('prizePayments.photoSales.filters.allStatuses')}</span>
             <select
@@ -437,13 +444,14 @@ const PrizePaymentsContent = memo(() => {
             {t('prizePayments.subtitle')}
           </p>
         </div>
-        <button
+        <Button
           type="button"
+          unstyled={true}
           onClick={handleRequestPayout}
           className="inline-flex shrink-0 items-center justify-center self-start rounded-xl bg-[#ee1c25] px-6 py-3 text-[14px] font-semibold leading-5 tracking-[0.28px] text-white sm:self-center"
         >
           {t('prizePayments.requestPayout')}
-        </button>
+        </Button>
       </header>
 
       <FilterPillGroup

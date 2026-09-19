@@ -33,7 +33,7 @@ const Input = forwardRef(({ label, error, type = 'text', className = '', inputCl
         className={inputClassName !== undefined ? inputClassName : defaultInputClass}
         {...props}
       />
-      {error && <p className="mt-1 text-[11px] text-red-500">{error.message}</p>}
+      {error && <p className="mt-1.5 text-[13px] text-[#ee1c25]">{error.message}</p>}
     </div>
   );
 });

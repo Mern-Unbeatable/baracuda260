@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useId, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { memo, useId, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm, useFieldArray } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { ArrowLeft, ArrowUpFromLine, Plus, X } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
@@ -8,38 +10,14 @@ import {
   DEMO_PROFILE_STATUS,
   STATUS_LABEL_KEYS,
   STATUS_STYLES,
+  appendDemoProfile,
+  buildDemoProfileFromForm,
 } from '@/portals/admin/data/adminDemoProfilesData';
-import useAdminDemoProfilesCreate from '@/portals/admin/hooks/useAdminDemoProfilesCreate';
+import Input from '@/components/ui/Input';
 
-const fieldLabelClass =
-  'text-[14px] font-medium leading-5 text-[#455163]';
-const inputClass =
-  'box-border h-11 w-full rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd]';
-const textareaClass =
-  'box-border min-h-28 w-full resize-y rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd]';
-
-const RequiredMark = () => (
-  <span className="text-[#f31d2c]" aria-hidden="true">
-    {' '}
-    *
-  </span>
-);
-
-const FormField = memo(({ id, label, required, error, errorMessage, children }) => (
-  <div className="flex min-w-0 flex-col">
-    <label htmlFor={id} className={fieldLabelClass}>
-      {label}
-      {required ? <RequiredMark /> : null}
-    </label>
-    <div className="pt-1.5">{children}</div>
-    {error ? (
-      <p className="pt-1 text-[13px] leading-4 text-[#f31d2c]" role="alert">
-        {errorMessage}
-      </p>
-    ) : null}
-  </div>
-));
-FormField.displayName = 'FormField';
+const fieldLabelClass = 'text-[14px] font-medium leading-5 text-[#455163] normal-case tracking-normal mb-1.5';
+const inputClass = 'box-border w-full rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd] focus:ring-2 focus:ring-[#4048cd]/10';
+const textareaClass = 'box-border min-h-28 w-full resize-y rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd] focus:ring-2 focus:ring-[#4048cd]/10';
 
 const PhotoUploadField = memo(
   ({ id, label, title, hint, fileName, onChange, inputRef }) => (
@@ -120,41 +98,76 @@ StatusToggle.displayName = 'StatusToggle';
 
 const AdminDemoProfilesCreateContent = memo(() => {
   const { t } = useTranslation();
-  const fullNameId = useId();
-  const usernameId = useId();
-  const phoneId = useId();
-  const emailId = useId();
-  const bioId = useId();
+  const navigate = useNavigate();
   const profilePhotoId = useId();
   const coverPhotoId = useId();
   const profilePhotoRef = useRef(null);
   const coverPhotoRef = useRef(null);
 
-  const {
-    values,
-    attempted,
-    submitting,
-    fullNameValid,
-    usernameValid,
-    phoneValid,
-    emailValid,
-    formValid,
-    handleFieldChange,
-    handleBioChange,
-    handleSocialLinkChange,
-    handleAddSocialLink,
-    handleRemoveSocialLink,
-    handleToggleActive,
-    handleProfilePhotoChange,
-    handleCoverPhotoChange,
-    handleCancel,
-    handleSubmit,
-  } = useAdminDemoProfilesCreate();
+  const [submitting, setSubmitting] = useState(false);
+  const [isActive, setIsActive] = useState(true);
+  const [profilePhotoName, setProfilePhotoName] = useState('');
+  const [coverPhotoName, setCoverPhotoName] = useState('');
 
-  const showFullNameError = attempted && !fullNameValid;
-  const showUsernameError = attempted && !usernameValid;
-  const showPhoneError = attempted && !phoneValid;
-  const showEmailError = attempted && !emailValid;
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      fullName: '',
+      username: '',
+      phone: '',
+      email: '',
+      bio: '',
+      socialLinks: [{ value: '' }],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'socialLinks',
+  });
+
+  const bioValue = watch('bio', '');
+
+  const handleToggleActive = () => setIsActive(!isActive);
+
+  const handleProfilePhotoChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) setProfilePhotoName(file.name);
+  };
+
+  const handleCoverPhotoChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) setCoverPhotoName(file.name);
+  };
+
+  const handleCancel = () => navigate(ROUTES.ADMIN_DEMO_PROFILES);
+
+  const onSubmit = async (data) => {
+    setSubmitting(true);
+    try {
+      const socialLinksStr = data.socialLinks.map(s => s.value).filter(Boolean);
+      appendDemoProfile(buildDemoProfileFromForm({
+        ...data,
+        isActive,
+        socialLinks: socialLinksStr,
+        profilePhotoName,
+        coverPhotoName,
+      }));
+      toast.success(t('adminDemoProfiles.create.success'));
+      navigate(ROUTES.ADMIN_DEMO_PROFILES);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const onFormError = () => {
+    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
+  };
 
   return (
     <div className="flex w-full flex-col gap-5">
@@ -176,133 +189,112 @@ const AdminDemoProfilesCreateContent = memo(() => {
           </p>
         </header>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6 px-5 py-6 sm:px-6">
+        <form onSubmit={handleSubmit(onSubmit, onFormError)} className="flex flex-col gap-6 px-5 py-6 sm:px-6">
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <FormField
-              id={fullNameId}
-              label={t('adminDemoProfiles.create.fullName')}
-              required
-              error={showFullNameError}
-              errorMessage={t('adminDemoProfiles.create.fullNameRequired')}
-            >
-              <input
-                id={fullNameId}
-                name="fullName"
-                type="text"
-                value={values.fullName}
-                onChange={handleFieldChange('fullName')}
-                placeholder={t('adminDemoProfiles.create.fullNamePlaceholder')}
-                aria-invalid={showFullNameError}
-                className={inputClass}
-              />
-            </FormField>
+            <Input
+              id="admin-demo-full-name"
+              label={
+                <span>
+                  {t('adminDemoProfiles.create.fullName')} <span className="text-[#f31d2c]">*</span>
+                </span>
+              }
+              placeholder={t('adminDemoProfiles.create.fullNamePlaceholder')}
+              error={errors.fullName}
+              inputClassName={inputClass}
+              labelClassName={fieldLabelClass}
+              {...register('fullName', { required: t('adminDemoProfiles.create.fullNameRequired') })}
+            />
 
-            <FormField
-              id={usernameId}
-              label={t('adminDemoProfiles.create.username')}
-              required
-              error={showUsernameError}
-              errorMessage={t('adminDemoProfiles.create.usernameRequired')}
-            >
-              <input
-                id={usernameId}
-                name="username"
-                type="text"
-                value={values.username}
-                onChange={handleFieldChange('username')}
-                placeholder={t('adminDemoProfiles.create.usernamePlaceholder')}
-                aria-invalid={showUsernameError}
-                className={inputClass}
-              />
-            </FormField>
+            <Input
+              id="admin-demo-username"
+              label={
+                <span>
+                  {t('adminDemoProfiles.create.username')} <span className="text-[#f31d2c]">*</span>
+                </span>
+              }
+              placeholder={t('adminDemoProfiles.create.usernamePlaceholder')}
+              error={errors.username}
+              inputClassName={inputClass}
+              labelClassName={fieldLabelClass}
+              {...register('username', { required: t('adminDemoProfiles.create.usernameRequired') })}
+            />
 
-            <FormField
-              id={phoneId}
-              label={t('adminDemoProfiles.create.phone')}
-              required
-              error={showPhoneError}
-              errorMessage={t('adminDemoProfiles.create.phoneRequired')}
-            >
-              <input
-                id={phoneId}
-                name="phone"
-                type="tel"
-                value={values.phone}
-                onChange={handleFieldChange('phone')}
-                placeholder={t('adminDemoProfiles.create.phonePlaceholder')}
-                aria-invalid={showPhoneError}
-                className={inputClass}
-              />
-            </FormField>
+            <Input
+              id="admin-demo-phone"
+              type="tel"
+              label={
+                <span>
+                  {t('adminDemoProfiles.create.phone')} <span className="text-[#f31d2c]">*</span>
+                </span>
+              }
+              placeholder={t('adminDemoProfiles.create.phonePlaceholder')}
+              error={errors.phone}
+              inputClassName={inputClass}
+              labelClassName={fieldLabelClass}
+              {...register('phone', { required: t('adminDemoProfiles.create.phoneRequired') })}
+            />
 
-            <FormField
-              id={emailId}
-              label={t('adminDemoProfiles.create.email')}
-              required
-              error={showEmailError}
-              errorMessage={t('adminDemoProfiles.create.emailRequired')}
-            >
-              <input
-                id={emailId}
-                name="email"
-                type="email"
-                value={values.email}
-                onChange={handleFieldChange('email')}
-                placeholder={t('adminDemoProfiles.create.emailPlaceholder')}
-                aria-invalid={showEmailError}
-                className={inputClass}
-              />
-            </FormField>
+            <Input
+              id="admin-demo-email"
+              type="email"
+              label={
+                <span>
+                  {t('adminDemoProfiles.create.email')} <span className="text-[#f31d2c]">*</span>
+                </span>
+              }
+              placeholder={t('adminDemoProfiles.create.emailPlaceholder')}
+              error={errors.email}
+              inputClassName={inputClass}
+              labelClassName={fieldLabelClass}
+              {...register('email', { required: t('adminDemoProfiles.create.emailRequired') })}
+            />
           </div>
 
-          <FormField id={bioId} label={t('adminDemoProfiles.create.bio')}>
+          <div className="flex min-w-0 flex-col">
+            <label htmlFor="admin-demo-bio" className={fieldLabelClass}>
+              {t('adminDemoProfiles.create.bio')}
+            </label>
             <textarea
-              id={bioId}
-              name="bio"
-              value={values.bio}
-              onChange={handleBioChange}
+              id="admin-demo-bio"
               maxLength={DEMO_PROFILE_BIO_MAX_LENGTH}
               placeholder={t('adminDemoProfiles.create.bioPlaceholder')}
               className={textareaClass}
+              {...register('bio')}
             />
             <p className="pt-1.5 text-right text-[13px] leading-4 text-[#788293]">
               {t('adminDemoProfiles.create.bioCount', {
-                count: values.bio.length,
+                count: bioValue.length,
                 max: DEMO_PROFILE_BIO_MAX_LENGTH,
               })}
             </p>
-          </FormField>
+          </div>
 
           <div className="flex flex-col gap-3">
             <p className={fieldLabelClass}>{t('adminDemoProfiles.create.socialTitle')}</p>
-            {values.socialLinks.map((link, index) => {
-              const socialId = `${bioId}-social-${index}`;
-              return (
-                <div key={socialId} className="flex items-start gap-2">
-                  <input
-                    id={socialId}
-                    type="text"
-                    value={link}
-                    onChange={handleSocialLinkChange(index)}
-                    placeholder={t('adminDemoProfiles.create.socialPlaceholder')}
-                    className={inputClass}
-                  />
-                  {values.socialLinks.length > 1 ? (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveSocialLink(index)}
-                      aria-label={t('adminDemoProfiles.create.removeSocial')}
-                      className="inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#dfe4ea] text-[#788293] transition hover:bg-[#f9fafb]"
-                    >
-                      <X size={18} aria-hidden="true" />
-                    </button>
-                  ) : null}
-                </div>
-              );
-            })}
+            {fields.map((field, index) => (
+              <div key={field.id} className="flex items-start gap-2">
+                <Input
+                  placeholder={t('adminDemoProfiles.create.socialPlaceholder')}
+                  inputClassName={inputClass}
+                  labelClassName="hidden"
+                  containerClassName="flex-1 min-w-0"
+                  {...register(`socialLinks.${index}.value`)}
+                />
+                {fields.length > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    aria-label={t('adminDemoProfiles.create.removeSocial')}
+                    className="inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#dfe4ea] text-[#788293] transition hover:bg-[#f9fafb]"
+                  >
+                    <X size={18} aria-hidden="true" />
+                  </button>
+                ) : null}
+              </div>
+            ))}
             <button
               type="button"
-              onClick={handleAddSocialLink}
+              onClick={() => append({ value: '' })}
               className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-[14px] font-semibold leading-5 text-[#ee1c25] transition hover:text-[#d41921]"
             >
               <Plus size={16} aria-hidden="true" />
@@ -316,7 +308,7 @@ const AdminDemoProfilesCreateContent = memo(() => {
               label={t('adminDemoProfiles.create.profilePhoto')}
               title={t('adminDemoProfiles.create.profilePhotoTitle')}
               hint={t('adminDemoProfiles.create.profilePhotoHint')}
-              fileName={values.profilePhotoName}
+              fileName={profilePhotoName}
               onChange={handleProfilePhotoChange}
               inputRef={profilePhotoRef}
             />
@@ -325,13 +317,13 @@ const AdminDemoProfilesCreateContent = memo(() => {
               label={t('adminDemoProfiles.create.coverPhoto')}
               title={t('adminDemoProfiles.create.coverPhotoTitle')}
               hint={t('adminDemoProfiles.create.coverPhotoHint')}
-              fileName={values.coverPhotoName}
+              fileName={coverPhotoName}
               onChange={handleCoverPhotoChange}
               inputRef={coverPhotoRef}
             />
           </div>
 
-          <StatusToggle isActive={values.isActive} onToggle={handleToggleActive} />
+          <StatusToggle isActive={isActive} onToggle={handleToggleActive} />
 
           <div className="flex flex-col-reverse gap-3 border-t border-[#edf0f3] pt-5 sm:flex-row sm:justify-end">
             <button
@@ -349,12 +341,6 @@ const AdminDemoProfilesCreateContent = memo(() => {
               {t('adminDemoProfiles.create.submit')}
             </button>
           </div>
-
-          {attempted && !formValid ? (
-            <p className="text-right text-[13px] leading-4 text-[#f31d2c]" role="alert">
-              {t('adminDemoProfiles.create.formInvalid')}
-            </p>
-          ) : null}
         </form>
       </section>
     </div>

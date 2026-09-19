@@ -6,6 +6,7 @@ import { useSocket } from '@/shared/hooks/useSocket';
 import { socket } from '@/shared/lib/socket';
 import { httpMethods } from '@/shared/lib/httpMethods';
 import API_ENDPOINTS from '@/shared/lib/httpEndpoint';
+import Input from '@/components/ui/Input';
 
 const getInitials = (name = '') =>
   name
@@ -643,7 +644,7 @@ const ChatPanel = memo(({ className = '', style, role = 'user' }) => {
 
         <div className="shrink-0 px-4 sm:px-6 py-4 sm:py-5 bg-gray-50">
           <div className="flex gap-3 items-center">
-            <input
+            <Input
               ref={inputRef}
               type="text"
               value={inputValue}
@@ -652,7 +653,8 @@ const ChatPanel = memo(({ className = '', style, role = 'user' }) => {
               placeholder="Type a message…"
               aria-label="Type a message"
               disabled={!activeRoomId}
-              className="flex-1 h-13 bg-white rounded-full px-5 text-sm text-slate-800 placeholder-gray-400 tracking-[0.5px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.14)] focus:outline-none focus:ring-2 focus:ring-orange-400 transition-shadow disabled:opacity-50"
+              inputClassName="flex-1 h-13 bg-white rounded-full px-5 text-sm text-slate-800 placeholder-gray-400 tracking-[0.5px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.14)] focus:outline-none focus:ring-2 focus:ring-orange-400 transition-shadow disabled:opacity-50"
+              labelClassName="hidden"
             />
             <button
               type="button"

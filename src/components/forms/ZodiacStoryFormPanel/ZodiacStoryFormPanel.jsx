@@ -1,6 +1,8 @@
 import React, { memo } from 'react';
 import { MapPin, Sparkles } from 'lucide-react';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 
 const fieldClass =
   'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[14px] leading-6 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30';
@@ -10,30 +12,15 @@ const ZodiacStoryFormPanel = memo(
     t,
     i18nPrefix,
     onSubmit,
-    title,
-    onTitleChange,
-    category,
-    onCategoryChange,
     categoryOptions,
-    subCategory,
-    onSubCategoryChange,
-    story,
-    onStoryChange,
-    resolution,
-    onResolutionChange,
-    fileSize,
-    onFileSizeChange,
-    quality,
-    onQualityChange,
-    publishTarget,
-    onPublishTargetChange,
-    copyrightOk,
-    onCopyrightChange,
-    aiCreated = '',
-    onAiCreatedChange,
+    register,
     errors = {},
     isSell = false,
     sellFields = null,
+    publishTarget,
+    setPublishTarget,
+    aiCreated,
+    setAiCreated,
   }) => (
     <form onSubmit={onSubmit} noValidate className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5">
       <div className="flex flex-col gap-5">
@@ -41,22 +28,21 @@ const ZodiacStoryFormPanel = memo(
           <label htmlFor={`${i18nPrefix}-title`} className="text-[16px] font-medium uppercase leading-6 text-[#494453]">
             {t(`${i18nPrefix}.collectionTitle`)}
           </label>
-          <input
+          <Input
             id={`${i18nPrefix}-title`}
             type="text"
-            value={title}
-            onChange={(event) => onTitleChange(event.target.value)}
             placeholder={t(`${i18nPrefix}.collectionTitlePlaceholder`)}
-            aria-invalid={Boolean(errors.title)}
-            className={fieldClass}
+            error={errors.title}
+            inputClassName={fieldClass}
+            labelClassName="hidden"
+            {...register('title', { required: t('singlePhoto.errors.titleRequired') })}
           />
-          {errors.title ? <p className="text-sm text-red-600" role="alert">{errors.title}</p> : null}
         </div>
 
         <div className="flex flex-col gap-2.5">
           <p className="text-[16px] font-medium uppercase leading-6 text-[#494453]">{t(`${i18nPrefix}.artisticCategory`)}</p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <select value={category} onChange={(event) => onCategoryChange(event.target.value)} className={fieldClass}>
+            <select className={fieldClass} {...register('category')}>
               {categoryOptions.map((item) => (
                 <option key={item} value={item}>
                   {t(`${i18nPrefix}.categories.${item}`)}
@@ -64,7 +50,7 @@ const ZodiacStoryFormPanel = memo(
               ))}
             </select>
 
-            <select value={subCategory} onChange={(event) => onSubCategoryChange(event.target.value)} className={fieldClass}>
+            <select className={fieldClass} {...register('subCategory')}>
               <option value="">{t('uploadForm.selectSubcategory', { defaultValue: 'Select subcategory' })}</option>
               <option value="night-sky">Night Sky</option>
               <option value="constellation">Constellation</option>
@@ -83,28 +69,42 @@ const ZodiacStoryFormPanel = memo(
               </label>
               <textarea
                 id={`${i18nPrefix}-story`}
-                value={story}
-                onChange={(event) => onStoryChange(event.target.value)}
                 placeholder={t(`${i18nPrefix}.storyPlaceholder`)}
                 rows={5}
                 aria-invalid={Boolean(errors.story)}
                 className={`${fieldClass} min-h-36.75 resize-y`}
+                {...register('story', { required: t('singlePhoto.errors.storyRequired') })}
               />
-              {errors.story ? <p className="text-sm text-red-600" role="alert">{errors.story}</p> : null}
+              {errors.story ? <p className="text-sm text-red-600" role="alert">{errors.story.message}</p> : null}
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <label className="flex flex-col gap-2.5">
                 <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.resolution')}</span>
-                <input value={resolution} onChange={(event) => onResolutionChange(event.target.value)} className={fieldClass} />
+                <Input
+                  error={errors.resolution}
+                  inputClassName={fieldClass}
+                  labelClassName="hidden"
+                  {...register('resolution', { required: t('uploadForm.errors.resolutionRequired') })}
+                />
               </label>
               <label className="flex flex-col gap-2.5">
                 <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.fileSize')}</span>
-                <input value={fileSize} onChange={(event) => onFileSizeChange(event.target.value)} className={fieldClass} />
+                <Input
+                  error={errors.fileSize}
+                  inputClassName={fieldClass}
+                  labelClassName="hidden"
+                  {...register('fileSize', { required: t('uploadForm.errors.fileSizeRequired') })}
+                />
               </label>
               <label className="flex flex-col gap-2.5">
                 <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.quality')}</span>
-                <input value={quality} onChange={(event) => onQualityChange(event.target.value)} className={fieldClass} />
+                <Input
+                  error={errors.quality}
+                  inputClassName={fieldClass}
+                  labelClassName="hidden"
+                  {...register('quality', { required: t('uploadForm.errors.qualityRequired') })}
+                />
               </label>
             </div>
 
@@ -115,7 +115,7 @@ const ZodiacStoryFormPanel = memo(
                   type="radio"
                   name={`${i18nPrefix}-publish-target`}
                   checked={publishTarget === 'competition'}
-                  onChange={() => onPublishTargetChange('competition')}
+                  onChange={() => setPublishTarget('competition')}
                   className="mt-1 size-4 accent-[#4048cd]"
                 />
                 <span className="text-[13px] text-[#313744]">
@@ -133,7 +133,7 @@ const ZodiacStoryFormPanel = memo(
                   type="radio"
                   name={`${i18nPrefix}-publish-target`}
                   checked={publishTarget === 'profile'}
-                  onChange={() => onPublishTargetChange('profile')}
+                  onChange={() => setPublishTarget('profile')}
                   className="mt-1 size-4 accent-[#4048cd]"
                 />
                 <span className="text-[13px] text-[#313744]">
@@ -157,7 +157,7 @@ const ZodiacStoryFormPanel = memo(
             <input
               type="checkbox"
               checked={aiCreated === 'yes'}
-              onChange={() => onAiCreatedChange?.(aiCreated === 'yes' ? '' : 'yes')}
+              onChange={() => setAiCreated(aiCreated === 'yes' ? '' : 'yes')}
               className="size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
             />
             <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
@@ -168,7 +168,7 @@ const ZodiacStoryFormPanel = memo(
             <input
               type="checkbox"
               checked={aiCreated === 'no'}
-              onChange={() => onAiCreatedChange?.(aiCreated === 'no' ? '' : 'no')}
+              onChange={() => setAiCreated(aiCreated === 'no' ? '' : 'no')}
               className="size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
             />
             <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
@@ -184,26 +184,28 @@ const ZodiacStoryFormPanel = memo(
         ) : null}
       </div>
 
-      <label className="flex cursor-pointer items-start gap-3">
-        <input
-          type="checkbox"
-          checked={copyrightOk}
-          onChange={(event) => onCopyrightChange(event.target.checked)}
-          className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
-        />
-        <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
-          {t(`${i18nPrefix}.copyrightConfirm`)}
-        </span>
-      </label>
-      {errors.copyright ? <p className="-mt-3 text-sm text-red-600" role="alert">{errors.copyright}</p> : null}
+      <div>
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
+            {...register('copyrightOk', { required: t('singlePhoto.errors.copyrightRequired') })}
+          />
+          <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+            {t(`${i18nPrefix}.copyrightConfirm`)}
+          </span>
+        </label>
+        {errors.copyrightOk ? <p className="mt-1 text-sm text-red-600" role="alert">{errors.copyrightOk.message}</p> : null}
+      </div>
 
-      <button
+      <Button
         type="submit"
+        unstyled={true}
         className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
       >
         <Sparkles size={24} aria-hidden="true" />
         {t(`${i18nPrefix}.submit`)}
-      </button>
+      </Button>
     </form>
   ),
 );

@@ -1,17 +1,18 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useRef, useState } from 'react';
+import React, { memo, useRef, useState, forwardRef } from 'react';
 import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
 import { ArrowUpFromLine, Globe, Lock, Mail, Phone } from 'lucide-react';
 import {
   DEFAULT_MEMBER_SETTINGS,
-  validateMemberProfile,
 } from '@/portals/member/data/memberSettingsData';
 import {
   ADMIN_PROFILE_ASSETS,
   EYE_ICON_HEIGHT,
   EYE_ICON_WIDTH,
-  validatePasswordChange,
 } from '@/portals/member/data/profileData';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 
 const fieldLabelClass =
   'text-[12px] font-semibold uppercase tracking-[1.2px] text-[#4048cd]';
@@ -22,36 +23,30 @@ const cardClass =
 const saveButtonClass =
   'inline-flex cursor-pointer items-center justify-center self-start rounded-lg bg-[#ee1c25] px-8 py-3 text-[15px] font-semibold text-white transition hover:bg-[#d41921]';
 
-const SettingsField = memo(({ id, label, value, onChange, type = 'text', error, icon: Icon }) => (
+const SettingsField = memo(forwardRef(({ id, label, type = 'text', error, icon: Icon, ...props }, ref) => (
   <div className="flex flex-col gap-2">
-    <label htmlFor={id} className={fieldLabelClass}>
-      {label}
-    </label>
     <div className="relative">
       {Icon ? (
         <Icon
           size={18}
           strokeWidth={2}
           aria-hidden="true"
-          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a7484]"
+          className="pointer-events-none absolute left-4 top-[38px] -translate-y-1/2 text-[#7a7484]"
         />
       ) : null}
-      <input
+      <Input
         id={id}
+        ref={ref}
         type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        aria-invalid={Boolean(error)}
-        className={`${fieldInputClass} ${Icon ? 'pl-11' : ''}`}
+        label={label}
+        error={error}
+        inputClassName={`${fieldInputClass} ${Icon ? 'pl-11' : ''}`}
+        labelClassName={fieldLabelClass}
+        {...props}
       />
     </div>
-    {error ? (
-      <p className="text-sm text-red-600" role="alert">
-        {error}
-      </p>
-    ) : null}
   </div>
-));
+)));
 
 SettingsField.displayName = 'SettingsField';
 
@@ -107,30 +102,29 @@ const PhotoUploadSection = memo(({ titleKey, hintKey, inputId, fileName, onFileC
 
 PhotoUploadSection.displayName = 'PhotoUploadSection';
 
-const PasswordField = memo(({ id, label, value, onChange, error, show, onToggleShow }) => {
+const PasswordField = memo(forwardRef(({ id, label, error, show, onToggleShow, ...props }, ref) => {
   const { t } = useTranslation();
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className={fieldLabelClass}>
-        {label}
-      </label>
       <div className="relative">
-        <input
+        <Input
           id={id}
+          ref={ref}
           type={show ? 'text' : 'password'}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
           placeholder=".........."
-          aria-invalid={Boolean(error)}
-          className={`${fieldInputClass} pr-12`}
+          label={label}
+          error={error}
+          inputClassName={`${fieldInputClass} pr-12`}
+          labelClassName={fieldLabelClass}
+          {...props}
         />
         <button
           type="button"
           onClick={onToggleShow}
           aria-label={show ? t('login.hidePassword') : t('login.showPassword')}
           aria-pressed={show}
-          className="absolute right-4 top-1/2 flex h-5 w-6 -translate-y-1/2 cursor-pointer items-center justify-center"
+          className="absolute right-4 top-[38px] flex h-5 w-6 -translate-y-1/2 cursor-pointer items-center justify-center"
         >
           <img
             src={show ? ADMIN_PROFILE_ASSETS.eyeOff : ADMIN_PROFILE_ASSETS.eye}
@@ -141,79 +135,67 @@ const PasswordField = memo(({ id, label, value, onChange, error, show, onToggleS
           />
         </button>
       </div>
-      {error ? (
-        <p className="text-sm text-red-600" role="alert">
-          {error}
-        </p>
-      ) : null}
     </div>
   );
-});
+}));
 
 PasswordField.displayName = 'PasswordField';
 
 const SettingsContent = memo(() => {
   const { t } = useTranslation();
 
-  const [profile, setProfile] = useState(DEFAULT_MEMBER_SETTINGS);
-  const [portfolio, setPortfolio] = useState({
-    website: DEFAULT_MEMBER_SETTINGS.website,
-    facebook: DEFAULT_MEMBER_SETTINGS.facebook,
-    instagram: DEFAULT_MEMBER_SETTINGS.instagram,
-    twitter: DEFAULT_MEMBER_SETTINGS.twitter,
-    linkedin: DEFAULT_MEMBER_SETTINGS.linkedin,
-    youtube: DEFAULT_MEMBER_SETTINGS.youtube,
-    tiktok: DEFAULT_MEMBER_SETTINGS.tiktok,
+  const {
+    register: registerProfile,
+    handleSubmit: handleProfileSubmit,
+    formState: { errors: profileErrors },
+  } = useForm({
+    defaultValues: {
+      fullName: DEFAULT_MEMBER_SETTINGS.fullName,
+      username: DEFAULT_MEMBER_SETTINGS.username,
+      phone: DEFAULT_MEMBER_SETTINGS.phone,
+      email: DEFAULT_MEMBER_SETTINGS.email,
+    },
   });
-  const [profileErrors, setProfileErrors] = useState({});
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordErrors, setPasswordErrors] = useState({});
+
+  const {
+    register: registerPortfolio,
+    handleSubmit: handlePortfolioSubmit,
+  } = useForm({
+    defaultValues: {
+      website: DEFAULT_MEMBER_SETTINGS.website,
+      facebook: DEFAULT_MEMBER_SETTINGS.facebook,
+      instagram: DEFAULT_MEMBER_SETTINGS.instagram,
+      twitter: DEFAULT_MEMBER_SETTINGS.twitter,
+      linkedin: DEFAULT_MEMBER_SETTINGS.linkedin,
+      youtube: DEFAULT_MEMBER_SETTINGS.youtube,
+      tiktok: DEFAULT_MEMBER_SETTINGS.tiktok,
+    },
+  });
+
+  const {
+    register: registerPassword,
+    handleSubmit: handlePasswordSubmit,
+    formState: { errors: passwordErrors },
+    watch: watchPassword,
+    reset: resetPassword,
+  } = useForm();
+
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [coverFileName, setCoverFileName] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
 
-  const updateProfile = (key, value) => {
-    setProfile((current) => ({ ...current, [key]: value }));
-  };
-
-  const updatePortfolio = (key, value) => {
-    setPortfolio((current) => ({ ...current, [key]: value }));
-  };
-
-  const handleProfileSave = (event) => {
-    event.preventDefault();
-    const nextErrors = validateMemberProfile(profile, t);
-    if (Object.keys(nextErrors).length > 0) {
-      setProfileErrors(nextErrors);
-      return;
-    }
-    setProfileErrors({});
+  const onProfileSave = (data) => {
     toast.success(t('memberSettings.profile.saved'));
   };
 
-  const handlePortfolioSave = (event) => {
-    event.preventDefault();
+  const onPortfolioSave = (data) => {
     toast.success(t('memberSettings.portfolio.saved'));
   };
 
-  const handlePasswordSave = (event) => {
-    event.preventDefault();
-    const nextErrors = validatePasswordChange(
-      { currentPassword, newPassword, confirmPassword },
-      t,
-    );
-    if (Object.keys(nextErrors).length > 0) {
-      setPasswordErrors(nextErrors);
-      return;
-    }
-    setPasswordErrors({});
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
+  const onPasswordSave = (data) => {
+    resetPassword();
     toast.success(t('memberSettings.security.saved'));
   };
 
@@ -229,7 +211,7 @@ const SettingsContent = memo(() => {
       </header>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <form onSubmit={handleProfileSave} noValidate className={cardClass}>
+        <form onSubmit={handleProfileSubmit(onProfileSave)} noValidate className={cardClass}>
           <div>
             <h2 className="text-[20px] font-semibold text-[#161c27]">
               {t('memberSettings.profile.title')}
@@ -242,40 +224,42 @@ const SettingsContent = memo(() => {
           <SettingsField
             id="settings-full-name"
             label={t('memberSettings.profile.fullName')}
-            value={profile.fullName}
-            onChange={(value) => updateProfile('fullName', value)}
             error={profileErrors.fullName}
+            {...registerProfile('fullName', { required: t('memberSettings.errors.fullName') })}
           />
           <SettingsField
             id="settings-username"
             label={t('memberSettings.profile.username')}
-            value={profile.username}
-            onChange={(value) => updateProfile('username', value)}
             error={profileErrors.username}
+            {...registerProfile('username', { required: t('memberSettings.errors.username') })}
           />
           <SettingsField
             id="settings-phone"
             label={t('memberSettings.profile.phone')}
-            value={profile.phone}
-            onChange={(value) => updateProfile('phone', value)}
             error={profileErrors.phone}
             icon={Phone}
+            {...registerProfile('phone')}
           />
           <SettingsField
             id="settings-email"
             label={t('memberSettings.profile.email')}
-            value={profile.email}
-            onChange={(value) => updateProfile('email', value)}
             error={profileErrors.email}
             icon={Mail}
+            {...registerProfile('email', { 
+              required: t('memberSettings.errors.email'),
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: t('memberSettings.errors.emailInvalid')
+              }
+            })}
           />
 
-          <button type="submit" className={saveButtonClass}>
+          <Button type="submit" unstyled={true} className={saveButtonClass}>
             {t('memberSettings.save')}
-          </button>
+          </Button>
         </form>
 
-        <form onSubmit={handlePortfolioSave} noValidate className={cardClass}>
+        <form onSubmit={handlePortfolioSubmit(onPortfolioSave)} noValidate className={cardClass}>
           <div>
             <h2 className="text-[20px] font-semibold text-[#161c27]">
               {t('memberSettings.portfolio.title')}
@@ -288,53 +272,46 @@ const SettingsContent = memo(() => {
           <SettingsField
             id="settings-website"
             label={t('memberSettings.portfolio.website')}
-            value={portfolio.website}
-            onChange={(value) => updatePortfolio('website', value)}
             icon={Globe}
+            {...registerPortfolio('website')}
           />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <SettingsField
               id="settings-facebook"
               label={t('memberSettings.portfolio.facebook')}
-              value={portfolio.facebook}
-              onChange={(value) => updatePortfolio('facebook', value)}
+              {...registerPortfolio('facebook')}
             />
             <SettingsField
               id="settings-instagram"
               label={t('memberSettings.portfolio.instagram')}
-              value={portfolio.instagram}
-              onChange={(value) => updatePortfolio('instagram', value)}
+              {...registerPortfolio('instagram')}
             />
             <SettingsField
               id="settings-twitter"
               label={t('memberSettings.portfolio.twitter')}
-              value={portfolio.twitter}
-              onChange={(value) => updatePortfolio('twitter', value)}
+              {...registerPortfolio('twitter')}
             />
             <SettingsField
               id="settings-linkedin"
               label={t('memberSettings.portfolio.linkedin')}
-              value={portfolio.linkedin}
-              onChange={(value) => updatePortfolio('linkedin', value)}
+              {...registerPortfolio('linkedin')}
             />
             <SettingsField
               id="settings-youtube"
               label={t('memberSettings.portfolio.youtube')}
-              value={portfolio.youtube}
-              onChange={(value) => updatePortfolio('youtube', value)}
+              {...registerPortfolio('youtube')}
             />
             <SettingsField
               id="settings-tiktok"
               label={t('memberSettings.portfolio.tiktok')}
-              value={portfolio.tiktok}
-              onChange={(value) => updatePortfolio('tiktok', value)}
+              {...registerPortfolio('tiktok')}
             />
           </div>
 
-          <button type="submit" className={saveButtonClass}>
+          <Button type="submit" unstyled={true} className={saveButtonClass}>
             {t('memberSettings.save')}
-          </button>
+          </Button>
         </form>
       </div>
 
@@ -365,7 +342,7 @@ const SettingsContent = memo(() => {
         </div>
 
         <form
-          onSubmit={handlePasswordSave}
+          onSubmit={handlePasswordSubmit(onPasswordSave)}
           noValidate
           className="rounded-[20px] border border-[rgba(0,0,0,0.08)] bg-white p-6 sm:p-8"
         >
@@ -379,38 +356,41 @@ const SettingsContent = memo(() => {
               <PasswordField
                 id="settings-current-password"
                 label={t('userProfile.security.currentPassword')}
-                value={currentPassword}
-                onChange={setCurrentPassword}
                 error={passwordErrors.currentPassword}
                 show={showCurrentPassword}
                 onToggleShow={() => setShowCurrentPassword((current) => !current)}
+                {...registerPassword('currentPassword', { required: t('userProfile.errors.currentPassword') })}
               />
 
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <PasswordField
                   id="settings-new-password"
                   label={t('userProfile.security.newPassword')}
-                  value={newPassword}
-                  onChange={setNewPassword}
                   error={passwordErrors.newPassword}
                   show={showNewPassword}
                   onToggleShow={() => setShowNewPassword((current) => !current)}
+                  {...registerPassword('newPassword', { 
+                    required: t('userProfile.errors.newPassword'),
+                    minLength: { value: 8, message: t('userProfile.errors.passwordShort') }
+                  })}
                 />
                 <PasswordField
                   id="settings-confirm-password"
                   label={t('userProfile.security.confirmPassword')}
-                  value={confirmPassword}
-                  onChange={setConfirmPassword}
                   error={passwordErrors.confirmPassword}
                   show={showConfirmPassword}
                   onToggleShow={() => setShowConfirmPassword((current) => !current)}
+                  {...registerPassword('confirmPassword', { 
+                    required: t('userProfile.errors.confirmPassword'),
+                    validate: value => value === watchPassword('newPassword') || t('userProfile.errors.passwordMismatch')
+                  })}
                 />
               </div>
             </div>
 
-            <button type="submit" className={`${saveButtonClass} mt-6`}>
+            <Button type="submit" unstyled={true} className={`${saveButtonClass} mt-6`}>
               {t('userProfile.security.changePassword')}
-            </button>
+            </Button>
           </div>
         </form>
       </section>

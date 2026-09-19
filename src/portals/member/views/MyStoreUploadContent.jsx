@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
 import { ArrowLeft, CloudUpload, Images, Info } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import {
@@ -10,6 +11,8 @@ import {
   buildStoreFormFromProduct,
   getStoreProductById,
 } from '@/portals/member/data/myStoreData';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 
 const FieldLabel = memo(({ htmlFor, children }) => (
   <label
@@ -22,7 +25,7 @@ const FieldLabel = memo(({ htmlFor, children }) => (
 FieldLabel.displayName = 'FieldLabel';
 
 const DropzoneField = memo(
-  ({ id, label, hint, fileName, preview, inputRef, onChange, multiple = false }) => {
+  ({ id, label, hint, fileName, preview, inputRef, onChange, multiple = false, error }) => {
     const { t } = useTranslation();
 
     return (
@@ -31,7 +34,9 @@ const DropzoneField = memo(
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex min-h-45 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#d5d8e8] bg-white px-4 py-8 text-center transition hover:border-[#4048cd] hover:bg-[#fafbff]"
+          className={`flex min-h-45 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed bg-white px-4 py-8 text-center transition hover:border-[#4048cd] hover:bg-[#fafbff] ${
+            error ? 'border-red-500' : 'border-[#d5d8e8]'
+          }`}
         >
           {preview ? (
             <img src={preview} alt="" className="max-h-28 rounded-lg object-cover" />
@@ -53,6 +58,9 @@ const DropzoneField = memo(
             </span>
           </div>
         </button>
+        {error ? (
+          <p className="mt-1 text-[11px] text-red-500">{error}</p>
+        ) : null}
         <input
           id={id}
           ref={inputRef}
@@ -78,17 +86,24 @@ const MyStoreUploadContent = memo(() => {
   const bannerRef = useRef(null);
   const othersRef = useRef(null);
 
-  const [form, setForm] = useState(() =>
-    editingProduct ? buildStoreFormFromProduct(editingProduct) : { ...EMPTY_STORE_UPLOAD_FORM },
-  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    defaultValues: editingProduct ? buildStoreFormFromProduct(editingProduct) : { ...EMPTY_STORE_UPLOAD_FORM },
+  });
+
   const [bannerPreview, setBannerPreview] = useState(() => editingProduct?.image || '');
   const [bannerName, setBannerName] = useState('');
   const [othersName, setOthersName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [bannerError, setBannerError] = useState('');
 
   useEffect(() => {
     if (!id) {
-      setForm({ ...EMPTY_STORE_UPLOAD_FORM });
+      reset({ ...EMPTY_STORE_UPLOAD_FORM });
       setBannerPreview('');
       setBannerName('');
       setOthersName('');
@@ -98,11 +113,11 @@ const MyStoreUploadContent = memo(() => {
     const product = getStoreProductById(id);
     if (!product) return;
 
-    setForm(buildStoreFormFromProduct(product));
+    reset(buildStoreFormFromProduct(product));
     setBannerPreview(product.image || '');
     setBannerName(t('myStore.upload.currentBanner'));
     setOthersName('');
-  }, [id, t]);
+  }, [id, t, reset]);
 
   useEffect(
     () => () => {
@@ -110,10 +125,6 @@ const MyStoreUploadContent = memo(() => {
     },
     [bannerPreview],
   );
-
-  const patch = (field, value) => {
-    setForm((current) => ({ ...current, [field]: value }));
-  };
 
   const handleBannerChange = (event) => {
     const file = event.target.files?.[0];
@@ -124,6 +135,7 @@ const MyStoreUploadContent = memo(() => {
       return url;
     });
     setBannerName(file.name);
+    setBannerError('');
     event.target.value = '';
   };
 
@@ -138,17 +150,9 @@ const MyStoreUploadContent = memo(() => {
     event.target.value = '';
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!form.title.trim()) {
-      toast.error(t('myStore.upload.errors.title'));
-      return;
-    }
-    if (!form.price.trim()) {
-      toast.error(t('myStore.upload.errors.price'));
-      return;
-    }
+  const onSubmit = async (data) => {
     if (!bannerName && !bannerPreview) {
+      setBannerError(t('myStore.upload.errors.banner'));
       toast.error(t('myStore.upload.errors.banner'));
       return;
     }
@@ -175,16 +179,17 @@ const MyStoreUploadContent = memo(() => {
         </h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="rounded-[18px] bg-[#f0f2f9] p-4 sm:p-6 lg:p-8">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="rounded-[18px] bg-[#f0f2f9] p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col gap-5">
           <div>
             <FieldLabel htmlFor="store-title">{t('myStore.upload.collectionTitle')}</FieldLabel>
-            <input
+            <Input
               id="store-title"
-              value={form.title}
-              onChange={(event) => patch('title', event.target.value)}
+              error={errors.title}
               placeholder={t('myStore.upload.collectionPlaceholder')}
-              className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+              inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+              labelClassName="hidden"
+              {...register('title', { required: t('myStore.upload.errors.title') })}
             />
           </div>
 
@@ -192,9 +197,8 @@ const MyStoreUploadContent = memo(() => {
             <FieldLabel htmlFor="store-category">{t('myStore.upload.category')}</FieldLabel>
             <select
               id="store-category"
-              value={form.category}
-              onChange={(event) => patch('category', event.target.value)}
               className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[15px] text-[#151e31] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
+              {...register('category')}
             >
               {MY_STORE_CATEGORY_OPTIONS.map((option) => (
                 <option key={option.id} value={option.id}>
@@ -206,23 +210,26 @@ const MyStoreUploadContent = memo(() => {
 
           <div>
             <FieldLabel htmlFor="store-price">{t('myStore.upload.price')}</FieldLabel>
-            <input
+            <Input
               id="store-price"
-              value={form.price}
-              onChange={(event) => patch('price', event.target.value)}
+              type="number"
+              error={errors.price}
               placeholder={t('myStore.upload.pricePlaceholder')}
-              className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+              inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+              labelClassName="hidden"
+              {...register('price', { required: t('myStore.upload.errors.price') })}
             />
           </div>
 
           <div>
             <FieldLabel htmlFor="store-edition">{t('myStore.upload.edition')}</FieldLabel>
-            <input
+            <Input
               id="store-edition"
-              value={form.edition}
-              onChange={(event) => patch('edition', event.target.value)}
+              error={errors.edition}
               placeholder={t('myStore.upload.editionPlaceholder')}
-              className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+              inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+              labelClassName="hidden"
+              {...register('edition')}
             />
           </div>
 
@@ -230,11 +237,10 @@ const MyStoreUploadContent = memo(() => {
             <FieldLabel htmlFor="store-description">{t('myStore.upload.description')}</FieldLabel>
             <textarea
               id="store-description"
-              value={form.description}
-              onChange={(event) => patch('description', event.target.value)}
               placeholder={t('myStore.upload.descriptionPlaceholder')}
               rows={5}
               className="w-full resize-y rounded-[10px] border border-[#e4e8f8] bg-white px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+              {...register('description')}
             />
           </div>
 
@@ -246,6 +252,7 @@ const MyStoreUploadContent = memo(() => {
             preview={bannerPreview}
             inputRef={bannerRef}
             onChange={handleBannerChange}
+            error={bannerError}
           />
 
           <DropzoneField
@@ -258,8 +265,9 @@ const MyStoreUploadContent = memo(() => {
             multiple
           />
 
-          <button
+          <Button
             type="submit"
+            unstyled={true}
             disabled={submitting}
             className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#ee1c25] px-4 text-[15px] font-bold text-white transition hover:bg-[#d41921] disabled:cursor-default disabled:opacity-60"
           >
@@ -269,7 +277,7 @@ const MyStoreUploadContent = memo(() => {
               : isEditing
                 ? t('myStore.upload.updateSubmit')
                 : t('myStore.upload.submit')}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

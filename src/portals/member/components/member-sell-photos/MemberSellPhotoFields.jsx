@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import Input from '@/components/ui/Input';
 
 const inputClassName =
   'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30';
@@ -8,14 +9,7 @@ const labelClassName = 'text-[16px] font-medium uppercase leading-6 text-[#49445
 
 const MemberSellPhotoFields = memo(({
   idPrefix,
-  price,
-  resolution,
-  fileSize,
-  quality,
-  onPriceChange,
-  onResolutionChange,
-  onFileSizeChange,
-  onQualityChange,
+  register,
   errors = {},
 }) => {
   const { t } = useTranslation();
@@ -26,20 +20,15 @@ const MemberSellPhotoFields = memo(({
         <label htmlFor={`${idPrefix}-price`} className={labelClassName}>
           {t('sellPhotos.fields.price')}
         </label>
-        <input
+        <Input
           id={`${idPrefix}-price`}
-          type="text"
-          value={price}
-          onChange={(event) => onPriceChange(event.target.value)}
+          type="number"
           placeholder={t('sellPhotos.fields.pricePlaceholder')}
-          aria-invalid={Boolean(errors.price)}
-          className={inputClassName}
+          error={errors.price}
+          inputClassName={inputClassName}
+          labelClassName="hidden"
+          {...register('price', { required: t('uploadForm.errors.priceRequired') })}
         />
-        {errors.price ? (
-          <p className="text-sm text-red-600" role="alert">
-            {errors.price}
-          </p>
-        ) : null}
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -47,60 +36,42 @@ const MemberSellPhotoFields = memo(({
           <label htmlFor={`${idPrefix}-resolution`} className={labelClassName}>
             {t('uploadForm.resolution')}
           </label>
-          <input
+          <Input
             id={`${idPrefix}-resolution`}
-            type="text"
-            value={resolution}
-            onChange={(event) => onResolutionChange(event.target.value)}
             placeholder={t('sellPhotos.fields.resolutionPlaceholder')}
-            aria-invalid={Boolean(errors.resolution)}
-            className={inputClassName}
+            error={errors.resolution}
+            inputClassName={inputClassName}
+            labelClassName="hidden"
+            {...register('resolution', { required: t('uploadForm.errors.resolutionRequired') })}
           />
-          {errors.resolution ? (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.resolution}
-            </p>
-          ) : null}
         </div>
 
         <div className="flex flex-col gap-2.5">
           <label htmlFor={`${idPrefix}-file-size`} className={labelClassName}>
             {t('uploadForm.fileSize')}
           </label>
-          <input
+          <Input
             id={`${idPrefix}-file-size`}
-            type="text"
-            value={fileSize}
-            onChange={(event) => onFileSizeChange(event.target.value)}
             placeholder="125 KB"
-            aria-invalid={Boolean(errors.fileSize)}
-            className={inputClassName}
+            error={errors.fileSize}
+            inputClassName={inputClassName}
+            labelClassName="hidden"
+            {...register('fileSize', { required: t('uploadForm.errors.fileSizeRequired') })}
           />
-          {errors.fileSize ? (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.fileSize}
-            </p>
-          ) : null}
         </div>
 
         <div className="flex flex-col gap-2.5">
           <label htmlFor={`${idPrefix}-quality`} className={labelClassName}>
             {t('uploadForm.quality')}
           </label>
-          <input
+          <Input
             id={`${idPrefix}-quality`}
-            type="text"
-            value={quality}
-            onChange={(event) => onQualityChange(event.target.value)}
             placeholder="4K"
-            aria-invalid={Boolean(errors.quality)}
-            className={inputClassName}
+            error={errors.quality}
+            inputClassName={inputClassName}
+            labelClassName="hidden"
+            {...register('quality', { required: t('uploadForm.errors.qualityRequired') })}
           />
-          {errors.quality ? (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.quality}
-            </p>
-          ) : null}
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Store, Search } from "lucide-react";
+import { ShoppingBag, Search } from "lucide-react";
 import { useApi } from '@/shared/hooks/useApi';
 import { httpMethods } from '@/shared/lib/httpMethods';
 import API_ENDPOINTS from '@/shared/lib/httpEndpoint';
+import Input from '@/components/ui/Input';
 
 const COLUMNS = [
   "Order ID",
@@ -34,22 +35,23 @@ const MarketplaceOrders = () => {
             Marketplace Orders
           </h1>
           <p className="text-gray-500 text-sm mt-1">
-            Orders received from marketplace channels.
+            Manage orders from the marketplace.
           </p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
         <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
           <Search
             size={16}
             className="text-gray-400 shrink-0"
             aria-hidden="true"
           />
-          <input
+          <Input
             type="search"
             placeholder="Search marketplace orders..."
-            className="flex-1 text-sm text-gray-700 placeholder-gray-400 outline-none bg-transparent"
+            className="flex-1"
+            inputClassName="w-full text-sm text-gray-700 placeholder-gray-400 outline-none bg-transparent"
           />
         </div>
         <div className="overflow-x-auto">

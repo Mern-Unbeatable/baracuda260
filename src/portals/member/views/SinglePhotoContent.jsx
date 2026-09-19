@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { ArrowLeft, ArrowUpFromLine, ChevronDown, Upload } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
@@ -62,19 +63,29 @@ const SinglePhotoContent = memo(({
 
   const [signId, setSignId] = useState(DEFAULT_SIGN_ID);
   const [signOpen, setSignOpen] = useState(false);
-  const [category, setCategory] = useState(DEFAULT_CATEGORY);
-  const [subCategory, setSubCategory] = useState('astrophotography');
-  const [title, setTitle] = useState('');
-  const [story, setStory] = useState('');
-  const [price, setPrice] = useState(defaultPrice);
-  const [resolution, setResolution] = useState('6000*6000');
-  const [fileSize, setFileSize] = useState('125 KB');
-  const [quality, setQuality] = useState('4K');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      category: DEFAULT_CATEGORY,
+      subCategory: 'astrophotography',
+      title: '',
+      story: '',
+      price: defaultPrice,
+      resolution: '6000*6000',
+      fileSize: '125 KB',
+      quality: '4K',
+      copyrightOk: false,
+    },
+  });
+
   const [publishTarget, setPublishTarget] = useState('competition');
-  const [copyrightOk, setCopyrightOk] = useState(false);
   const [aiCreated, setAiCreated] = useState('');
   const [photoPreview, setPhotoPreview] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [photoError, setPhotoError] = useState('');
   const [successOpen, setSuccessOpen] = useState(false);
 
   const selectedSign = findSign(signId);
@@ -97,34 +108,16 @@ const SinglePhotoContent = memo(({
       if (previous) URL.revokeObjectURL(previous);
       return URL.createObjectURL(file);
     });
-    setErrors((current) => {
-      const { photo: _photo, ...rest } = current;
-      return rest;
-    });
+    setPhotoError('');
   };
 
-  const validate = () => {
-    const nextErrors = {};
-    if (!title.trim()) nextErrors.title = t('singlePhoto.errors.titleRequired');
-    if (isSell) {
-      if (!price.trim()) nextErrors.price = t('sellPhotos.errors.priceRequired');
-    } else if (!story.trim()) {
-      nextErrors.story = t('singlePhoto.errors.storyRequired');
-    }
-    if (!photoPreview) nextErrors.photo = t('singlePhoto.errors.photoRequired');
-    if (!copyrightOk) nextErrors.copyright = t('singlePhoto.errors.copyrightRequired');
-    return nextErrors;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
+  const onSubmit = (data) => {
+    if (!photoPreview) {
+      setPhotoError(t('singlePhoto.errors.photoRequired'));
       setSuccessOpen(false);
       return;
     }
-    setErrors({});
+    setPhotoError('');
     setSuccessOpen(true);
   };
 
@@ -269,16 +262,18 @@ const SinglePhotoContent = memo(({
               <button
                 type="button"
                 onClick={handlePickPhoto}
-                className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border border-[#4048cd] bg-white px-6 py-3 text-[16px] font-medium leading-6 text-[#4048cd] transition hover:bg-[#ecedfa]"
+                className={`inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-[#ecedfa] ${
+                  photoError ? 'border-red-500 text-red-500' : 'border-[#4048cd] text-[#4048cd]'
+                }`}
               >
                 <ArrowUpFromLine size={24} aria-hidden="true" />
                 {t('singlePhoto.addPhoto')}
               </button>
             )}
 
-            {errors.photo ? (
+            {photoError ? (
               <p className="w-full text-sm text-red-600" role="alert">
-                {errors.photo}
+                {photoError}
               </p>
             ) : null}
 
@@ -312,49 +307,19 @@ const SinglePhotoContent = memo(({
           <ZodiacStoryFormPanel
             t={t}
             i18nPrefix="singlePhoto"
-            onSubmit={handleSubmit}
-            title={title}
-            onTitleChange={setTitle}
-            category={category}
-            onCategoryChange={setCategory}
+            onSubmit={handleSubmit(onSubmit)}
             categoryOptions={ARTISTIC_CATEGORIES}
-            subCategory={subCategory}
-            onSubCategoryChange={setSubCategory}
-            story={story}
-            onStoryChange={setStory}
-            resolution={resolution}
-            onResolutionChange={setResolution}
-            fileSize={fileSize}
-            onFileSizeChange={setFileSize}
-            quality={quality}
-            onQualityChange={setQuality}
             publishTarget={publishTarget}
-            onPublishTargetChange={setPublishTarget}
-            copyrightOk={copyrightOk}
-            onCopyrightChange={(checked) => {
-              setCopyrightOk(checked);
-              if (checked) {
-                setErrors((current) => {
-                  const { copyright: _copyright, ...rest } = current;
-                  return rest;
-                });
-              }
-            }}
+            setPublishTarget={setPublishTarget}
             aiCreated={aiCreated}
-            onAiCreatedChange={setAiCreated}
+            setAiCreated={setAiCreated}
+            register={register}
             errors={errors}
             isSell={isSell}
             sellFields={
               <MemberSellPhotoFields
                 idPrefix="single-photo"
-                price={price}
-                resolution={resolution}
-                fileSize={fileSize}
-                quality={quality}
-                onPriceChange={setPrice}
-                onResolutionChange={setResolution}
-                onFileSizeChange={setFileSize}
-                onQualityChange={setQuality}
+                register={register}
                 errors={errors}
               />
             }

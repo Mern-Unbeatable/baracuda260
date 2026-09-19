@@ -108,18 +108,30 @@ const MarketplaceStoreCard = memo(({ store }) => {
           </div>
         </Link>
         
-        <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide shrink-0">
-          <div className="flex items-center gap-1.5 rounded-full bg-[#fdfaf2] border border-[#f3e5c8] px-2.5 py-1 shrink-0">
-            <CameraIcon className="w-4 h-4 text-[#d4af37]" />
-            <span className="text-[13px] font-bold text-[#927129]">{store.scores?.gold || 0}</span>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-full bg-[#f5f7f9] border border-[#e2e8f0] px-2.5 py-1 shrink-0">
-            <CameraIcon className="w-4 h-4 text-[#94a3b8]" />
-            <span className="text-[13px] font-bold text-[#475569]">{store.scores?.silver || 0}</span>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-full bg-[#fdf7f4] border border-[#eedfd5] px-2.5 py-1 shrink-0">
-            <CameraIcon className="w-4 h-4 text-[#cd7f32]" />
-            <span className="text-[13px] font-bold text-[#925c42]">{store.scores?.bronze || 0}</span>
+        <div className="flex flex-col shrink-0">
+          <span className="mb-1 text-[11px] font-medium tracking-wide text-[#9ca3af]">
+            Artwork Appreciation:
+          </span>
+          <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-1.5 rounded-full bg-[#fdfaf2] border border-[#f3e5c8] px-2.5 py-1 shrink-0">
+              <CameraIcon className="w-4 h-4 text-[#d4af37]" />
+              <span className="text-[13px] font-bold text-[#927129]">{store.scores?.gold || 0}</span>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-full bg-[#f5f7f9] border border-[#e2e8f0] px-2.5 py-1 shrink-0">
+              <CameraIcon className="w-4 h-4 text-[#94a3b8]" />
+              <span className="text-[13px] font-bold text-[#475569]">{store.scores?.silver || 0}</span>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-full bg-[#fdf7f4] border border-[#eedfd5] px-2.5 py-1 shrink-0">
+              <CameraIcon className="w-4 h-4 text-[#cd7f32]" />
+              <span className="text-[13px] font-bold text-[#925c42]">{store.scores?.bronze || 0}</span>
+            </div>
+            <Link
+              to={ROUTES.PHOTOGRAPHER_PROFILE}
+              state={{ tab: 'store' }}
+              className="ml-1 text-[13px] font-semibold text-[#4048cd] hover:underline whitespace-nowrap"
+            >
+              See All
+            </Link>
           </div>
         </div>
       </div>

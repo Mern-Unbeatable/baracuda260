@@ -349,11 +349,11 @@ export const StoryMetaPanel = memo(({ story, onPatch, showSubcategory = true }) 
       <div className="flex flex-col gap-4">
         <div>
           <CapsLabel>{t('promoJoin.meta.collectionTitle')}</CapsLabel>
-          <input
+          <Input
             value={story.title}
             onChange={(event) => onPatch('title', event.target.value)}
             placeholder={t('promoJoin.meta.collectionPlaceholder')}
-            className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
+            inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
           />
         </div>
 
@@ -410,10 +410,10 @@ export const StoryMetaPanel = memo(({ story, onPatch, showSubcategory = true }) 
               <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
                 {t(labelKey)}
               </label>
-              <input
+              <Input
                 value={story[key]}
                 onChange={(event) => onPatch(key, event.target.value)}
-                className="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
+                inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
               />
             </div>
           ))}
@@ -433,10 +433,10 @@ export const ComplianceBlock = memo(({ aiCreated, copyrightOk, onAi, onCopyright
         <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
           {t('promoJoin.meta.quality')}
         </label>
-        <input
+        <Input
           value={quality}
           onChange={(event) => onQuality(event.target.value)}
-          className="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
+          inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
         />
       </div>
       <p className="mb-3 text-[14px] font-medium text-[#373737]">{t('promoJoin.meta.aiQuestion')}</p>
