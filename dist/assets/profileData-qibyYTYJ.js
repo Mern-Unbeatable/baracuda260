@@ -1,0 +1,1 @@
+const s="/assets/admin-profile",o={user:`${s}/icon-user.svg`,eye:`${s}/icon-eye.svg`,eyeOff:`${s}/icon-eye-off.svg`},e=56,n=89,a=22,i=15,E={displayName:"Chowdhury Group Of Industries",displayEmail:"chowdhury@gmail.com",name:"John Industries",email:"admin@johnindustries.com"};export{n as A,E as D,i as E,e as U,o as a,a as b};
