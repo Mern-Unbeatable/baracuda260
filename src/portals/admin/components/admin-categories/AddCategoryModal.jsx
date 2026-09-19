@@ -1,11 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useId, useState } from 'react';
+import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import {
   ADMIN_CATEGORIES_ASSETS,
   CLOSE_ICON_SIZE,
   isCategoryNameValid,
 } from '@/portals/admin/data/adminCategoriesData';
+import Input from '@/components/ui/Input';
 
 /**
  * Add Category popup — Figma node 339:4813.
@@ -18,15 +21,20 @@ import {
 const AddCategoryModal = memo(({ open, onClose, onSave }) => {
   const { t } = useTranslation();
   const titleId = useId();
-  const nameId = useId();
-  const [name, setName] = useState('');
-  const [attempted, setAttempted] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: { name: '' },
+  });
 
   useEffect(() => {
     if (!open) return undefined;
 
-    setName('');
-    setAttempted(false);
+    reset({ name: '' });
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -40,18 +48,16 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open, onClose]);
+  }, [open, onClose, reset]);
 
   if (!open) return null;
 
-  const nameValid = isCategoryNameValid(name);
-  const showNameError = attempted && !nameValid;
+  const onFormSubmit = (data) => {
+    onSave(data.name.trim());
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setAttempted(true);
-    if (!nameValid) return;
-    onSave(name.trim());
+  const onFormError = () => {
+    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
   };
 
   return createPortal(
@@ -67,16 +73,15 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
         className="flex w-full max-w-90 flex-col gap-4 rounded-xl bg-white p-5 shadow-[0px_22px_70px_0px_rgba(14,20,35,0.25)]"
         onClick={(event) => event.stopPropagation()}
       >
-        <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
+        <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className="flex w-full flex-col gap-4">
           <div className="flex w-full flex-col gap-2.5">
             <div className="flex items-center justify-between gap-3">
-              <label
+              <h2
                 id={titleId}
-                htmlFor={nameId}
                 className="min-w-0 text-[16px] font-medium leading-6 text-[#323232]"
               >
                 {t('adminCategories.addModal.nameLabel')}
-              </label>
+              </h2>
               <button
                 type="button"
                 onClick={onClose}
@@ -93,24 +98,15 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
               </button>
             </div>
 
-            <input
-              id={nameId}
-              name="categoryName"
+            <Input
               type="text"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
               placeholder={t('adminCategories.addModal.namePlaceholder')}
-              aria-invalid={showNameError}
-              aria-describedby={showNameError ? `${nameId}-error` : undefined}
-              className={`box-border h-10 w-full rounded-lg border bg-[#f4f4f4] px-2 text-[14px] leading-5.5 text-[#454545] outline-none placeholder:text-[#9a9a9a] focus:border-[#4048cd] ${
-                showNameError ? 'border-[#ee1c25]' : 'border-transparent'
+              inputClassName={`box-border h-10 w-full rounded-lg border bg-[#f4f4f4] px-2 text-[14px] leading-5.5 text-[#454545] outline-none placeholder:text-[#9a9a9a] focus:border-[#4048cd] ${
+                errors.name ? 'border-[#ee1c25]' : 'border-transparent'
               }`}
+              error={errors.name}
+              {...register('name', { required: t('adminCategories.addModal.nameRequired') })}
             />
-            {showNameError ? (
-              <p id={`${nameId}-error`} className="text-[12px] leading-4 text-[#ee1c25]">
-                {t('adminCategories.addModal.nameRequired')}
-              </p>
-            ) : null}
           </div>
 
           <button

@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
 import { X } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 import { GALLERY_DETAIL_DONATION_AMOUNTS } from '@/shared/data/galleryDetail';
+import Input from '@/components/ui/Input';
 
 const amountButtonClass = (selected) =>
   [
@@ -16,25 +18,38 @@ const fieldClass =
 
 const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
   const { t } = useTranslation();
-  const [supportType, setSupportType] = useState('one-time');
   const [selectedAmount, setSelectedAmount] = useState(25);
-  const [customAmount, setCustomAmount] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      supportType: 'one-time',
+      customAmount: '',
+      fullName: '',
+      email: '',
+    },
+  });
+
+  const customAmount = watch('customAmount');
+
+  const onFormSubmit = (data) => {
+    // Process donation
   };
 
   const handleCustomAmountChange = (event) => {
     const digits = event.target.value.replace(/[^\d.]/g, '');
-    setCustomAmount(digits);
+    setValue('customAmount', digits);
     if (digits) setSelectedAmount(null);
   };
 
   const handlePresetSelect = (amount) => {
     setSelectedAmount(amount);
-    setCustomAmount('');
+    setValue('customAmount', '');
   };
 
   return (
@@ -67,7 +82,7 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
         </button>
       </div>
 
-      <form className="flex flex-col gap-5 px-6 py-5" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-5 px-6 py-5" onSubmit={handleSubmit(onFormSubmit)}>
         <div>
           <p className="text-[16px] font-semibold text-[#111827]">
             {t('galleryDetail.donation.supportType', { defaultValue: 'Choose How You\'d Like to Support' })}
@@ -76,22 +91,18 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
             <label className="flex cursor-pointer items-center gap-2.5">
               <input
                 type="radio"
-                name="support-type"
                 value="one-time"
-                checked={supportType === 'one-time'}
-                onChange={(e) => setSupportType(e.target.value)}
                 className="size-5 cursor-pointer"
+                {...register('supportType')}
               />
               <span className="text-[15px] text-[#6b7280]">One-Time Support</span>
             </label>
             <label className="flex cursor-pointer items-center gap-2.5">
               <input
                 type="radio"
-                name="support-type"
                 value="monthly"
-                checked={supportType === 'monthly'}
-                onChange={(e) => setSupportType(e.target.value)}
                 className="size-5 cursor-pointer"
+                {...register('supportType')}
               />
               <span className="text-[15px] text-[#6b7280]">Monthly Support</span>
             </label>
@@ -114,16 +125,16 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
               </button>
             ))}
           </div>
-          <div className="mt-3 flex items-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3 py-2.5">
+          <div className="mt-3 flex items-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3 py-1.5">
             <span className="shrink-0 text-[14px] font-medium text-[#6b7280]">$</span>
-            <input
+            <Input
               type="text"
               inputMode="decimal"
-              value={customAmount}
-              onChange={handleCustomAmountChange}
               placeholder={t('galleryDetail.donation.customAmount')}
               aria-label={t('galleryDetail.donation.customAmount')}
-              className="min-w-0 flex-1 border-0 bg-transparent text-[14px] text-[#111827] outline-none placeholder:text-[#d1d5db]"
+              inputClassName="min-w-0 flex-1 border-0 bg-transparent text-[14px] text-[#111827] outline-none placeholder:text-[#d1d5db] shadow-none focus:ring-0 px-0"
+              labelClassName="hidden"
+              {...register('customAmount', { onChange: handleCustomAmountChange })}
             />
             <span className="shrink-0 text-[12px] font-medium uppercase tracking-wide text-[#9ca3af]">
               USD
@@ -137,31 +148,29 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
           </p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="gallery-donation-name" className="text-[13px] font-medium text-[#6b7280]">
-                {t('galleryDetail.donation.fullName')}
-              </label>
-              <input
+              <Input
                 id="gallery-donation-name"
                 type="text"
-                value={fullName}
-                onChange={(event) => setFullName(event.target.value)}
+                label={t('galleryDetail.donation.fullName')}
                 placeholder={t('galleryDetail.donation.fullNamePlaceholder')}
-                className={fieldClass}
+                inputClassName={fieldClass}
+                labelClassName="text-[13px] font-medium text-[#6b7280] normal-case tracking-normal mb-1.5"
                 autoComplete="name"
+                error={errors.fullName}
+                {...register('fullName', { required: 'Name is required' })}
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="gallery-donation-email" className="text-[13px] font-medium text-[#6b7280]">
-                {t('galleryDetail.donation.email')}
-              </label>
-              <input
+              <Input
                 id="gallery-donation-email"
                 type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                label={t('galleryDetail.donation.email')}
                 placeholder={t('galleryDetail.donation.emailPlaceholder')}
-                className={fieldClass}
+                inputClassName={fieldClass}
+                labelClassName="text-[13px] font-medium text-[#6b7280] normal-case tracking-normal mb-1.5"
                 autoComplete="email"
+                error={errors.email}
+                {...register('email', { required: 'Email is required' })}
               />
             </div>
           </div>

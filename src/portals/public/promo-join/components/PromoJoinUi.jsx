@@ -7,6 +7,7 @@ import {
   SIX_PHOTO_ASSETS,
   ZODIAC12_ASSETS,
 } from '@/portals/public/promo-join/promoJoinData';
+import Input from '@/components/ui/Input';
 
 export const FieldLabel = memo(({ children, htmlFor }) => (
   <label
@@ -18,34 +19,37 @@ export const FieldLabel = memo(({ children, htmlFor }) => (
 ));
 FieldLabel.displayName = 'FieldLabel';
 
-export const TextField = memo(
-  ({ id, label, value, onChange, placeholder, type = 'text', className = '' }) => (
+export const TextField = React.forwardRef(
+  ({ id, label, placeholder, type = 'text', className = '', error, ...props }, ref) => (
     <div className={className}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <input
+      <Input
         id={id}
         type={type}
-        value={value}
-        onChange={onChange}
+        ref={ref}
+        label={label}
         placeholder={placeholder}
-        className={`h-12 w-full rounded-[10px] ${FIELD_BG} px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30`}
+        error={error}
+        labelClassName="mb-2 block text-[13px] font-bold leading-5 text-[#373737] tracking-normal normal-case"
+        inputClassName={`h-12 w-full rounded-[10px] ${FIELD_BG} px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30 ${error ? 'border border-red-500' : ''}`}
+        {...props}
       />
     </div>
   ),
 );
 TextField.displayName = 'TextField';
 
-export const TextAreaField = memo(({ id, label, value, onChange, placeholder, rows = 4 }) => (
+export const TextAreaField = React.forwardRef(({ id, label, placeholder, rows = 4, error, ...props }, ref) => (
   <div>
     <FieldLabel htmlFor={id}>{label}</FieldLabel>
     <textarea
       id={id}
-      value={value}
-      onChange={onChange}
+      ref={ref}
       placeholder={placeholder}
       rows={rows}
-      className={`w-full resize-y rounded-[10px] ${FIELD_BG} px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30`}
+      className={`w-full resize-y rounded-[10px] ${FIELD_BG} px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30 ${error ? 'border border-red-500' : ''}`}
+      {...props}
     />
+    {error && <p className="mt-1 text-[11px] text-red-500">{error.message}</p>}
   </div>
 ));
 TextAreaField.displayName = 'TextAreaField';
@@ -345,11 +349,11 @@ export const StoryMetaPanel = memo(({ story, onPatch, showSubcategory = true }) 
       <div className="flex flex-col gap-4">
         <div>
           <CapsLabel>{t('promoJoin.meta.collectionTitle')}</CapsLabel>
-          <input
+          <Input
             value={story.title}
             onChange={(event) => onPatch('title', event.target.value)}
             placeholder={t('promoJoin.meta.collectionPlaceholder')}
-            className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
+            inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
           />
         </div>
 
@@ -406,10 +410,10 @@ export const StoryMetaPanel = memo(({ story, onPatch, showSubcategory = true }) 
               <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
                 {t(labelKey)}
               </label>
-              <input
+              <Input
                 value={story[key]}
                 onChange={(event) => onPatch(key, event.target.value)}
-                className="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
+                inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
               />
             </div>
           ))}
@@ -429,10 +433,10 @@ export const ComplianceBlock = memo(({ aiCreated, copyrightOk, onAi, onCopyright
         <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
           {t('promoJoin.meta.quality')}
         </label>
-        <input
+        <Input
           value={quality}
           onChange={(event) => onQuality(event.target.value)}
-          className="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
+          inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
         />
       </div>
       <p className="mb-3 text-[14px] font-medium text-[#373737]">{t('promoJoin.meta.aiQuestion')}</p>

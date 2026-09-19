@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { ArrowLeft, ArrowUpFromLine, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { ROUTES } from '@/shared/config';
@@ -11,10 +12,19 @@ const MyMessageUploadContent = memo(() => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-  const [message, setMessage] = useState('');
-  const [copyrightOk, setCopyrightOk] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      message: '',
+      copyrightOk: false,
+    },
+  });
+
   const [fileName, setFileName] = useState('');
-  const [errors, setErrors] = useState({});
+  const [mediaError, setMediaError] = useState('');
 
   const handlePickFile = () => {
     fileInputRef.current?.click();
@@ -24,26 +34,16 @@ const MyMessageUploadContent = memo(() => {
     const file = event.target.files?.[0];
     setFileName(file?.name ?? '');
     if (file) {
-      setErrors((current) => {
-        const { media: _media, ...rest } = current;
-        return rest;
-      });
+      setMediaError('');
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const nextErrors = {};
-    if (!message.trim()) nextErrors.message = t('myMessages.upload.errors.messageRequired');
-    if (!fileName) nextErrors.media = t('myMessages.upload.errors.mediaRequired');
-    if (!copyrightOk) nextErrors.copyright = t('myMessages.upload.errors.copyrightRequired');
-
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
+  const onSubmit = (data) => {
+    if (!fileName) {
+      setMediaError(t('myMessages.upload.errors.mediaRequired'));
       return;
     }
 
-    setErrors({});
     toast.success(t('myMessages.upload.success'));
     navigate(ROUTES.ADMIN_NEWS_MESSAGES);
   };
@@ -59,7 +59,7 @@ const MyMessageUploadContent = memo(() => {
       </Link>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         noValidate
         className="flex flex-col gap-6 rounded-[20px] border border-[rgba(0,0,0,0.08)] bg-white p-5 sm:p-8"
       >
@@ -72,16 +72,15 @@ const MyMessageUploadContent = memo(() => {
           </label>
           <textarea
             id="message-body"
-            value={message}
-            onChange={(event) => setMessage(event.target.value)}
             placeholder={t('myMessages.upload.messagePlaceholder')}
             rows={6}
             aria-invalid={Boolean(errors.message)}
             className="min-h-40 w-full resize-y rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#fafaff] px-4 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+            {...register('message', { required: t('myMessages.upload.errors.messageRequired') })}
           />
           {errors.message ? (
             <p className="text-sm text-red-600" role="alert">
-              {errors.message}
+              {errors.message.message}
             </p>
           ) : null}
         </div>
@@ -120,37 +119,30 @@ const MyMessageUploadContent = memo(() => {
               <span className="text-center text-[13px] font-medium text-[#4048cd]">{fileName}</span>
             ) : null}
           </button>
-          {errors.media ? (
+          {mediaError ? (
             <p className="text-sm text-red-600" role="alert">
-              {errors.media}
+              {mediaError}
             </p>
           ) : null}
         </div>
 
-        <label className="flex cursor-pointer items-start gap-3">
-          <input
-            type="checkbox"
-            checked={copyrightOk}
-            onChange={(event) => {
-              setCopyrightOk(event.target.checked);
-              if (event.target.checked) {
-                setErrors((current) => {
-                  const { copyright: _copyright, ...rest } = current;
-                  return rest;
-                });
-              }
-            }}
-            className="mt-1 size-4 shrink-0 accent-[#ee1c25]"
-          />
-          <span className="text-[14px] leading-6 text-[#494453]">
-            {t('myMessages.upload.copyrightConfirm')}
-          </span>
-        </label>
-        {errors.copyright ? (
-          <p className="text-sm text-red-600" role="alert">
-            {errors.copyright}
-          </p>
-        ) : null}
+        <div>
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              className="mt-1 size-4 shrink-0 accent-[#ee1c25]"
+              {...register('copyrightOk', { required: t('myMessages.upload.errors.copyrightRequired') })}
+            />
+            <span className="text-[14px] leading-6 text-[#494453]">
+              {t('myMessages.upload.copyrightConfirm')}
+            </span>
+          </label>
+          {errors.copyrightOk ? (
+            <p className="mt-1 text-sm text-red-600" role="alert">
+              {errors.copyrightOk.message}
+            </p>
+          ) : null}
+        </div>
 
         <MarketingButton type="submit" className="w-full rounded-xl py-3.5">
           <Sparkles size={18} strokeWidth={2} aria-hidden="true" />

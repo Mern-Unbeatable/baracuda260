@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useForm, Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import {
   ADMIN_ALBUM_TYPES_ASSETS,
   CLOSE_ICON_SIZE,
@@ -12,6 +14,7 @@ import {
   isRequiredTextValid,
   parseFeaturedLines,
 } from '@/portals/admin/data/adminAlbumTypesData';
+import Input from '@/components/ui/Input';
 
 const EMPTY_FORM = {
   name: '',
@@ -38,19 +41,20 @@ const EMPTY_FORM = {
 const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) => {
   const { t } = useTranslation();
   const titleId = useId();
-  const nameId = useId();
-  const prizeId = useId();
-  const descriptionId = useId();
-  const featuredId = useId();
 
-  const [values, setValues] = useState(EMPTY_FORM);
-  const [attempted, setAttempted] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: EMPTY_FORM,
+  });
 
   useEffect(() => {
     if (!open) return undefined;
 
-    setValues(getAlbumTypeFormDefaults(t, mode === MODAL_MODE.EDIT ? albumType : null));
-    setAttempted(false);
+    reset(getAlbumTypeFormDefaults(t, mode === MODAL_MODE.EDIT ? albumType : null));
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -64,37 +68,28 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open, mode, albumType, onClose, t]);
+  }, [open, mode, albumType, onClose, t, reset]);
 
   if (!open) return null;
 
   const isEdit = mode === MODAL_MODE.EDIT;
-  const nameValid = isRequiredTextValid(values.name);
-  const prizeValid = isPrizeMoneyValid(values.prizeMoney);
-  const descriptionValid = isRequiredTextValid(values.description);
-  const featuredValid = isFeaturedValid(parseFeaturedLines(values.featured));
-  const formValid = isAlbumTypeFormValid(values);
 
-  const showNameError = attempted && !nameValid;
-  const showPrizeError = attempted && !prizeValid;
-  const showDescriptionError = attempted && !descriptionValid;
-  const showFeaturedError = attempted && !featuredValid;
-
-  const handleFieldChange = (field) => (event) => {
-    const nextValue = event.target.value;
-    setValues((current) => ({ ...current, [field]: nextValue }));
+  const onFormSubmit = (data) => {
+    const featuredValid = isFeaturedValid(parseFeaturedLines(data.featured));
+    if (!featuredValid) {
+      // Handled by validation rules
+    }
+    
+    onSave({
+      name: data.name.trim(),
+      prizeMoney: data.prizeMoney.trim(),
+      description: data.description.trim(),
+      featured: data.featured.trim(),
+    });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setAttempted(true);
-    if (!formValid) return;
-    onSave({
-      name: values.name.trim(),
-      prizeMoney: values.prizeMoney.trim(),
-      description: values.description.trim(),
-      featured: values.featured.trim(),
-    });
+  const onFormError = () => {
+    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
   };
 
   const fieldClass = (hasError) =>
@@ -150,124 +145,101 @@ const AlbumTypeModal = memo(({ open, mode, albumType = null, onClose, onSave }) 
           </button>
         </header>
 
-        <form onSubmit={handleSubmit} className="flex flex-col px-6 py-5">
+        <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className="flex flex-col px-6 py-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex min-w-0 flex-col">
-              <label htmlFor={nameId} className="text-[14px] font-medium leading-5 text-[#455163]">
-                {t('adminAlbumTypes.modal.nameLabel')}
-                <span className="text-[#f31d2c]" aria-hidden="true">
-                  {' '}
-                  *
-                </span>
-              </label>
-              <div className="pt-1.5">
-                <input
-                  id={nameId}
-                  name="albumTypeName"
-                  type="text"
-                  value={values.name}
-                  onChange={handleFieldChange('name')}
-                  aria-invalid={showNameError}
-                  aria-describedby={showNameError ? `${nameId}-error` : undefined}
-                  className={`box-border h-10 px-3 py-2.5 ${fieldClass(showNameError)}`}
-                />
-              </div>
-              {showNameError ? (
-                <p id={`${nameId}-error`} className="pt-1 text-[13px] leading-4 text-[#f31d2c]">
-                  {t('adminAlbumTypes.modal.nameRequired')}
-                </p>
-              ) : null}
+              <Input
+                label={
+                  <>
+                    {t('adminAlbumTypes.modal.nameLabel')}
+                    <span className="text-[#f31d2c]" aria-hidden="true">
+                      {' '}
+                      *
+                    </span>
+                  </>
+                }
+                inputClassName={`box-border h-10 px-3 py-2.5 ${fieldClass(errors.name)}`}
+                labelClassName="text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block"
+                error={errors.name}
+                {...register('name', { required: t('adminAlbumTypes.modal.nameRequired') })}
+              />
             </div>
 
             <div className="flex min-w-0 flex-col">
-              <label htmlFor={prizeId} className="text-[14px] font-medium leading-5 text-[#455163]">
+              <label className="text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block">
                 {t('adminAlbumTypes.modal.prizeLabel')}
                 <span className="text-[#f31d2c]" aria-hidden="true">
                   {' '}
                   *
                 </span>
               </label>
-              <div className="relative pt-1.5">
+              <div className="relative">
                 <span
-                  className="pointer-events-none absolute left-3 top-4.5 text-[14px] leading-5 text-[#748091]"
+                  className="pointer-events-none absolute left-3 top-2.5 text-[14px] leading-5 text-[#748091]"
                   aria-hidden="true"
                 >
                   $
                 </span>
-                <input
-                  id={prizeId}
-                  name="prizeMoney"
+                <Input
                   type="text"
                   inputMode="decimal"
-                  value={values.prizeMoney}
-                  onChange={handleFieldChange('prizeMoney')}
-                  aria-invalid={showPrizeError}
-                  aria-describedby={showPrizeError ? `${prizeId}-error` : undefined}
-                  className={`box-border h-10 py-2.5 pl-7.25 pr-3 ${fieldClass(showPrizeError)}`}
+                  inputClassName={`box-border h-10 w-full py-2.5 pl-7.25 pr-3 ${fieldClass(errors.prizeMoney)}`}
+                  {...register('prizeMoney', {
+                    required: t('adminAlbumTypes.modal.prizeRequired'),
+                    validate: (value) => isPrizeMoneyValid(value) || t('adminAlbumTypes.modal.prizeRequired'),
+                  })}
                 />
               </div>
-              {showPrizeError ? (
-                <p id={`${prizeId}-error`} className="pt-1 text-[13px] leading-4 text-[#f31d2c]">
-                  {t('adminAlbumTypes.modal.prizeRequired')}
-                </p>
-              ) : null}
+
             </div>
           </div>
 
           <div className="flex w-full flex-col pt-4">
-            <label htmlFor={descriptionId} className="text-[14px] font-medium leading-5 text-[#455163]">
+            <label className="text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block">
               {t('adminAlbumTypes.modal.descriptionLabel')}
               <span className="text-[#f31d2c]" aria-hidden="true">
                 {' '}
                 *
               </span>
             </label>
-            <div className="pt-1.5">
+            <div>
               <textarea
-                id={descriptionId}
-                name="description"
                 rows={3}
-                value={values.description}
-                onChange={handleFieldChange('description')}
-                aria-invalid={showDescriptionError}
-                aria-describedby={showDescriptionError ? `${descriptionId}-error` : undefined}
-                className={`h-20 resize-none px-3 py-2.5 ${fieldClass(showDescriptionError)}`}
+                aria-invalid={!!errors.description}
+                className={`h-20 w-full resize-none px-3 py-2.5 ${fieldClass(errors.description)}`}
+                {...register('description', { required: t('adminAlbumTypes.modal.descriptionRequired') })}
               />
             </div>
-            {showDescriptionError ? (
-              <p
-                id={`${descriptionId}-error`}
-                className="pt-1 text-[13px] leading-4 text-[#f31d2c]"
-              >
-                {t('adminAlbumTypes.modal.descriptionRequired')}
+            {errors.description ? (
+              <p className="mt-1.5 text-[13px] text-[#ee1c25]">
+                {errors.description.message}
               </p>
             ) : null}
           </div>
 
           <div className="flex w-full flex-col pt-4">
-            <label htmlFor={featuredId} className="text-[14px] font-medium leading-5 text-[#455163]">
+            <label className="text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block">
               {t('adminAlbumTypes.modal.featuredLabel')}
               <span className="text-[#f31d2c]" aria-hidden="true">
                 {' '}
                 *
               </span>
             </label>
-            <div className="pt-1.5">
+            <div>
               <textarea
-                id={featuredId}
-                name="featured"
                 rows={3}
-                value={values.featured}
-                onChange={handleFieldChange('featured')}
                 placeholder={t('adminAlbumTypes.modal.featuredPlaceholder')}
-                aria-invalid={showFeaturedError}
-                aria-describedby={showFeaturedError ? `${featuredId}-error` : undefined}
-                className={`h-20 resize-none px-3 py-2.5 ${fieldClass(showFeaturedError)}`}
+                aria-invalid={!!errors.featured}
+                className={`h-20 w-full resize-none px-3 py-2.5 ${fieldClass(errors.featured)}`}
+                {...register('featured', {
+                  required: t('adminAlbumTypes.modal.featuredRequired'),
+                  validate: (value) => isFeaturedValid(parseFeaturedLines(value)) || t('adminAlbumTypes.modal.featuredRequired'),
+                })}
               />
             </div>
-            {showFeaturedError ? (
-              <p id={`${featuredId}-error`} className="pt-1 text-[13px] leading-4 text-[#f31d2c]">
-                {t('adminAlbumTypes.modal.featuredRequired')}
+            {errors.featured ? (
+              <p className="mt-1.5 text-[13px] text-[#ee1c25]">
+                {errors.featured.message}
               </p>
             ) : null}
           </div>

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
@@ -7,14 +7,10 @@ import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import Pagination from '@/components/common/Pagination/Pagination';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import {
-  MARKETPLACE_CATEGORIES,
-  MARKETPLACE_PAGE_SIZE,
-  MARKETPLACE_PRODUCTS,
-  MARKETPLACE_STORES,
-  filterMarketplaceProducts,
-} from '@/portals/public/marketplace/data/marketplaceData';
+import { MARKETPLACE_PAGE_SIZE, MARKETPLACE_PRODUCTS } from '@/portals/public/marketplace/data/marketplaceData';
+import Button from '@/components/ui/Button';
+import Checkbox from '@/components/ui/Checkbox';
+import { useMarketplaceFilters } from '../hooks/useMarketplaceFilters';
 
 const MarketplaceProductCard = memo(({ product }) => {
   const { t } = useTranslation();
@@ -56,17 +52,17 @@ const MarketplaceProductCard = memo(({ product }) => {
             <Link
               to={ROUTES.PHOTOGRAPHER_PROFILE}
               state={{ tab: 'store' }}
-              className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#4048cd] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#343bb0]"
             >
-              {t('marketplace.viewProduct')}
+              <Button variant="outline" className="h-8 px-2.5 text-[12px]">
+                {t('marketplace.viewProduct')}
+              </Button>
             </Link>
-            <button
-              type="button"
+            <Button
               onClick={() => toast.success(t('marketplace.buyStarted', { title: product.title }))}
-              className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#ee1c25] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#d01820]"
+              className="h-8 px-2.5 text-[12px]"
             >
               {t('marketplace.buyNow')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -112,18 +108,30 @@ const MarketplaceStoreCard = memo(({ store }) => {
           </div>
         </Link>
         
-        <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide shrink-0">
-          <div className="flex items-center gap-1.5 rounded-full bg-[#fdfaf2] border border-[#f3e5c8] px-2.5 py-1 shrink-0">
-            <CameraIcon className="w-4 h-4 text-[#d4af37]" />
-            <span className="text-[13px] font-bold text-[#927129]">{store.scores?.gold || 0}</span>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-full bg-[#f5f7f9] border border-[#e2e8f0] px-2.5 py-1 shrink-0">
-            <CameraIcon className="w-4 h-4 text-[#94a3b8]" />
-            <span className="text-[13px] font-bold text-[#475569]">{store.scores?.silver || 0}</span>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-full bg-[#fdf7f4] border border-[#eedfd5] px-2.5 py-1 shrink-0">
-            <CameraIcon className="w-4 h-4 text-[#cd7f32]" />
-            <span className="text-[13px] font-bold text-[#925c42]">{store.scores?.bronze || 0}</span>
+        <div className="flex flex-col shrink-0">
+          <span className="mb-1 text-[11px] font-medium tracking-wide text-[#9ca3af]">
+            Artwork Appreciation:
+          </span>
+          <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-1.5 rounded-full bg-[#fdfaf2] border border-[#f3e5c8] px-2.5 py-1 shrink-0">
+              <CameraIcon className="w-4 h-4 text-[#d4af37]" />
+              <span className="text-[13px] font-bold text-[#927129]">{store.scores?.gold || 0}</span>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-full bg-[#f5f7f9] border border-[#e2e8f0] px-2.5 py-1 shrink-0">
+              <CameraIcon className="w-4 h-4 text-[#94a3b8]" />
+              <span className="text-[13px] font-bold text-[#475569]">{store.scores?.silver || 0}</span>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-full bg-[#fdf7f4] border border-[#eedfd5] px-2.5 py-1 shrink-0">
+              <CameraIcon className="w-4 h-4 text-[#cd7f32]" />
+              <span className="text-[13px] font-bold text-[#925c42]">{store.scores?.bronze || 0}</span>
+            </div>
+            <Link
+              to={ROUTES.PHOTOGRAPHER_PROFILE}
+              state={{ tab: 'store' }}
+              className="ml-1 text-[13px] font-semibold text-[#4048cd] hover:underline whitespace-nowrap"
+            >
+              See All
+            </Link>
           </div>
         </div>
       </div>
@@ -149,30 +157,18 @@ MarketplaceStoreCard.displayName = 'MarketplaceStoreCard';
 
 const MarketplaceMain = memo(() => {
   const { t } = useTranslation();
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('all');
-  const [promotedOnly, setPromotedOnly] = useState(false);
-
-  const isSearchMode = query.trim().length > 0;
-
-  const filteredProducts = useMemo(
-    () => filterMarketplaceProducts(MARKETPLACE_PRODUCTS, { category, query, promotedOnly }),
-    [category, query, promotedOnly],
-  );
-
-  const filteredStores = useMemo(() => {
-    const stores = MARKETPLACE_STORES;
-    const filtered = promotedOnly ? stores.filter(s => s.promoted) : stores;
-    return [...filtered].sort((a, b) => Number(Boolean(b.promoted)) - Number(Boolean(a.promoted)));
-  }, [promotedOnly]);
-
-  const activeItems = isSearchMode ? filteredProducts : filteredStores;
-
-  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
+  const {
+    query,
+    setQuery,
+    promotedOnly,
+    setPromotedOnly,
+    isSearchMode,
     activeItems,
-    MARKETPLACE_PAGE_SIZE,
-    [isSearchMode, category, query, promotedOnly],
-  );
+    currentPage,
+    setPage,
+    totalPages,
+    pagedItems,
+  } = useMarketplaceFilters();
 
   return (
     <SitePageLayout
@@ -207,15 +203,15 @@ const MarketplaceMain = memo(() => {
           </div>
 
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-            <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-[#494453]">
-              <input
-                type="checkbox"
+            <div className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#494453]">
+              <Checkbox
+                id="promotedOnly"
                 checked={promotedOnly}
                 onChange={(event) => setPromotedOnly(event.target.checked)}
-                className="size-4 accent-[#ee1c25]"
+                label={t('marketplace.filters.promotedOnly')}
+                className="mt-0 font-semibold"
               />
-              {t('marketplace.filters.promotedOnly')}
-            </label>
+            </div>
           </div>
 
           {pagedItems.length === 0 ? (

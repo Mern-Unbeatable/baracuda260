@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Search } from 'lucide-react';
+import Input from '@/components/ui/Input';
 
 const MarketingSearchBar = memo(
   ({ value, onChange, onSubmit, placeholder, ariaLabel, className = '' }) => (
@@ -15,13 +16,14 @@ const MarketingSearchBar = memo(
         className="shrink-0 text-[#9ca3af] transition-colors group-focus-within:text-[#4048cd]"
         aria-hidden="true"
       />
-      <input
+      <Input
         type="search"
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         aria-label={ariaLabel ?? placeholder}
-        className="min-w-0 flex-1 bg-transparent text-[16px] text-[#374151] outline-none placeholder:text-[#9ca3af]"
+        className="flex-1 flex min-w-0"
+        inputClassName="min-w-0 flex-1 w-full bg-transparent text-[16px] text-[#374151] outline-none placeholder:text-[#9ca3af]"
       />
     </form>
   ),

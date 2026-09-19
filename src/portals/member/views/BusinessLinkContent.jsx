@@ -1,9 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 import {
   ALL_SLOTS,
   ARTISTIC_CATEGORIES,
@@ -125,15 +128,22 @@ const BusinessLinkContent = memo(() => {
   const { t } = useTranslation();
   const fileInputRef = useRef(null);
   const activeSlotRef = useRef(null);
-  const categoryMenuRef = useRef(null);
 
-  const [category, setCategory] = useState(DEFAULT_CATEGORY);
-  const [categoryOpen, setCategoryOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [story, setStory] = useState('');
-  const [copyrightOk, setCopyrightOk] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      title: '',
+      category: DEFAULT_CATEGORY,
+      story: '',
+      copyrightOk: false,
+    },
+  });
+
   const [previews, setPreviews] = useState({});
-  const [errors, setErrors] = useState({});
+  const [photosError, setPhotosError] = useState('');
   const [successOpen, setSuccessOpen] = useState(false);
 
   useEffect(() => {
@@ -143,26 +153,6 @@ const BusinessLinkContent = memo(() => {
       });
     };
   }, [previews]);
-
-  useEffect(() => {
-    if (!categoryOpen) return undefined;
-
-    const onPointerDown = (event) => {
-      if (categoryMenuRef.current && !categoryMenuRef.current.contains(event.target)) {
-        setCategoryOpen(false);
-      }
-    };
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape') setCategoryOpen(false);
-    };
-
-    document.addEventListener('mousedown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [categoryOpen]);
 
   const handlePickPhoto = (slotId) => {
     activeSlotRef.current = slotId;
@@ -180,31 +170,17 @@ const BusinessLinkContent = memo(() => {
       if (previous[slotId]) URL.revokeObjectURL(previous[slotId]);
       return { ...previous, [slotId]: nextUrl };
     });
-    setErrors((current) => {
-      const { photos: _photos, ...rest } = current;
-      return rest;
-    });
+    setPhotosError('');
   };
 
-  const validate = () => {
-    const nextErrors = {};
-    if (!title.trim()) nextErrors.title = t('businessLink.errors.titleRequired');
-    if (!story.trim()) nextErrors.story = t('businessLink.errors.storyRequired');
+  const onSubmit = (data) => {
     const missingPhotos = ALL_SLOTS.some((slot) => !previews[slot.id]);
-    if (missingPhotos) nextErrors.photos = t('businessLink.errors.photosRequired');
-    if (!copyrightOk) nextErrors.copyright = t('businessLink.errors.copyrightRequired');
-    return nextErrors;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
+    if (missingPhotos) {
+      setPhotosError(t('businessLink.errors.photosRequired'));
       setSuccessOpen(false);
       return;
     }
-    setErrors({});
+    setPhotosError('');
     setSuccessOpen(true);
   };
 
@@ -270,15 +246,15 @@ const BusinessLinkContent = memo(() => {
           <div className="min-w-0 flex-1">{renderSlotGrid(RED_SLOTS)}</div>
           <div className="min-w-0 flex-1">{renderSlotGrid(BLUE_SLOTS)}</div>
         </div>
-        {errors.photos ? (
+        {photosError ? (
           <p className="text-sm text-red-600" role="alert">
-            {errors.photos}
+            {photosError}
           </p>
         ) : null}
       </section>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         noValidate
         className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5"
       >
@@ -290,67 +266,42 @@ const BusinessLinkContent = memo(() => {
             >
               {t('businessLink.collectionTitle')}
             </label>
-            <input
+            <Input
               id="business-link-title"
               type="text"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
               placeholder={t('businessLink.collectionTitlePlaceholder')}
-              aria-invalid={Boolean(errors.title)}
-              className="w-full rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              error={errors.title}
+              inputClassName="w-full rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              labelClassName="hidden"
+              {...register('title', { required: t('businessLink.errors.titleRequired') })}
             />
-            {errors.title ? (
-              <p className="text-sm text-red-600" role="alert">
-                {errors.title}
-              </p>
-            ) : null}
           </div>
 
-          <div className="relative flex flex-col gap-2.5" ref={categoryMenuRef}>
-            <p className="text-[16px] font-medium uppercase leading-6 text-[#494453]">
-              {t('businessLink.artisticCategory')}
-            </p>
-            <button
-              type="button"
-              aria-expanded={categoryOpen}
-              aria-haspopup="listbox"
-              onClick={() => setCategoryOpen((open) => !open)}
-              className="flex w-full cursor-pointer items-center justify-between rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-left"
+          <div className="flex flex-col gap-2.5">
+            <label
+              htmlFor="business-link-category"
+              className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
             >
-              <span className="text-[16px] leading-6 text-[#707070]">
-                {t(`businessLink.categories.${category}`)}
-              </span>
-              <ChevronDown
-                size={18}
-                className={`shrink-0 text-[#494453] transition ${categoryOpen ? 'rotate-180' : ''}`}
-                aria-hidden="true"
-              />
-            </button>
-            {categoryOpen ? (
-              <ul
-                role="listbox"
-                className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-[rgba(0,0,0,0.08)] bg-white shadow-lg"
+              {t('businessLink.artisticCategory')}
+            </label>
+            <div className="relative">
+              <select
+                id="business-link-category"
+                className="w-full appearance-none rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30 cursor-pointer"
+                {...register('category')}
               >
                 {ARTISTIC_CATEGORIES.map((item) => (
-                  <li key={item}>
-                    <button
-                      type="button"
-                      role="option"
-                      aria-selected={item === category}
-                      onClick={() => {
-                        setCategory(item);
-                        setCategoryOpen(false);
-                      }}
-                      className={`w-full cursor-pointer px-4.25 py-3 text-left text-[15px] transition hover:bg-[#ecedfa] ${
-                        item === category ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#494453]'
-                      }`}
-                    >
-                      {t(`businessLink.categories.${item}`)}
-                    </button>
-                  </li>
+                  <option key={item} value={item}>
+                    {t(`businessLink.categories.${item}`)}
+                  </option>
                 ))}
-              </ul>
-            ) : null}
+              </select>
+              <ChevronDown
+                size={18}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#494453]"
+                aria-hidden="true"
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-2.5">
@@ -362,48 +313,41 @@ const BusinessLinkContent = memo(() => {
             </label>
             <textarea
               id="business-link-story"
-              value={story}
-              onChange={(event) => setStory(event.target.value)}
               placeholder={t('businessLink.storyPlaceholder')}
               rows={5}
               aria-invalid={Boolean(errors.story)}
               className="min-h-36.75 w-full resize-y rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              {...register('story', { required: t('businessLink.errors.storyRequired') })}
             />
             {errors.story ? (
               <p className="text-sm text-red-600" role="alert">
-                {errors.story}
+                {errors.story.message}
               </p>
             ) : null}
           </div>
         </div>
 
-        <label className="flex cursor-pointer items-start gap-3">
-          <input
-            type="checkbox"
-            checked={copyrightOk}
-            onChange={(event) => {
-              setCopyrightOk(event.target.checked);
-              if (event.target.checked) {
-                setErrors((current) => {
-                  const { copyright: _copyright, ...rest } = current;
-                  return rest;
-                });
-              }
-            }}
-            className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
-          />
-          <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
-            {t('businessLink.copyrightConfirm')}
-          </span>
-        </label>
-        {errors.copyright ? (
-          <p className="-mt-3 text-sm text-red-600" role="alert">
-            {errors.copyright}
-          </p>
-        ) : null}
+        <div>
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
+              {...register('copyrightOk', { required: t('businessLink.errors.copyrightRequired') })}
+            />
+            <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+              {t('businessLink.copyrightConfirm')}
+            </span>
+          </label>
+          {errors.copyrightOk ? (
+            <p className="mt-1 text-sm text-red-600" role="alert">
+              {errors.copyrightOk.message}
+            </p>
+          ) : null}
+        </div>
 
-        <button
+        <Button
           type="submit"
+          unstyled={true}
           className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
         >
           <img
@@ -414,7 +358,7 @@ const BusinessLinkContent = memo(() => {
             className="size-6 shrink-0"
           />
           {t('businessLink.submit')}
-        </button>
+        </Button>
       </form>
 
       <input

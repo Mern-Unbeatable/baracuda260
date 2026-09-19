@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { Search, SquarePen } from 'lucide-react';
+import Input from '@/components/ui/Input';
 
 const formatUnread = (count) => {
   if (count > 999) return '999';
@@ -49,21 +50,22 @@ const ChatConversationList = memo(({
       </div>
 
       <div className="px-5 pb-4">
-        <label className="relative block">
+        <div className="relative block">
           <Search
             size={18}
             strokeWidth={2}
             aria-hidden="true"
-            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]"
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] z-10"
           />
-          <input
+          <Input
             type="search"
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder={t('memberChat.searchPlaceholder')}
-            className="h-11 w-full rounded-full border border-[#ececf0] bg-[#f8fafc] py-2 pl-11 pr-4 text-[14px] text-[#161c27] placeholder:text-[#9ca3af] outline-none transition focus:border-[#4048cd]/40 focus:ring-2 focus:ring-[#4048cd]/15"
+            inputClassName="h-11 w-full rounded-full border border-[#ececf0] bg-[#f8fafc] py-2 pl-11 pr-4 text-[14px] text-[#161c27] placeholder:text-[#9ca3af] outline-none transition focus:border-[#4048cd]/40 focus:ring-2 focus:ring-[#4048cd]/15"
+            labelClassName="hidden"
           />
-        </label>
+        </div>
       </div>
 
       <ul className="scrollbar-light flex-1 overflow-y-auto px-2" aria-label={t('memberChat.listAria')}>

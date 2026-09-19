@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { useForm, Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import {
   ANNOUNCEMENT_EMOJI_OPTIONS,
   ANNOUNCEMENT_LINK_OPTIONS,
@@ -14,10 +16,11 @@ import {
   isAnnouncementMessageValid,
   isRequiredTextValid,
 } from '@/portals/admin/data/adminAnnouncementsData';
+import Input from '@/components/ui/Input';
 
-const labelClass = 'text-[14px] font-medium leading-5 text-[#455163]';
+const labelClass = 'text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block';
 const inputClass =
-  'box-border h-11 w-full rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd]';
+  'box-border h-11 w-full rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd] disabled:cursor-not-allowed disabled:bg-[#f9fafb] disabled:text-[#9aa3b2]';
 const selectClass = inputClass;
 const textareaClass =
   'box-border min-h-28 w-full resize-y rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd]';
@@ -40,15 +43,27 @@ const RequiredMark = () => (
 const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
   const { t } = useTranslation();
   const titleId = useId();
-  const messageId = useId();
-  const [values, setValues] = useState(EMPTY_ANNOUNCEMENT_FORM);
-  const [attempted, setAttempted] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: EMPTY_ANNOUNCEMENT_FORM,
+  });
+
+  const noEndDate = watch('noEndDate');
+  const message = watch('message') || '';
+  const emoji = watch('emoji');
+  const status = watch('status');
 
   useEffect(() => {
     if (!open) return undefined;
 
-    setValues(EMPTY_ANNOUNCEMENT_FORM);
-    setAttempted(false);
+    reset(EMPTY_ANNOUNCEMENT_FORM);
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -62,30 +77,16 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open, onClose]);
+  }, [open, onClose, reset]);
 
   if (!open) return null;
 
-  const messageValid = isAnnouncementMessageValid(values.message);
-  const startDateValid = isRequiredTextValid(values.startDate);
-  const endDateValid = values.noEndDate || isRequiredTextValid(values.endDate);
-  const formValid = isAnnouncementFormValid(values);
-
-  const showMessageError = attempted && !messageValid;
-  const showStartDateError = attempted && !startDateValid;
-  const showEndDateError = attempted && !endDateValid;
-
-  const handleFieldChange = (field) => (event) => {
-    const nextValue =
-      event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    setValues((current) => ({ ...current, [field]: nextValue }));
+  const onFormSubmit = (data) => {
+    onCreate(data);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setAttempted(true);
-    if (!formValid) return;
-    onCreate(values);
+  const onFormError = () => {
+    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
   };
 
   return createPortal(
@@ -120,34 +121,32 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
           </button>
         </header>
 
-        <form onSubmit={handleSubmit} className="flex flex-1 flex-col overflow-hidden">
+        <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className="flex flex-1 flex-col overflow-hidden">
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-5">
             <div>
-              <label htmlFor={messageId} className={labelClass}>
+              <label htmlFor="announcement-message" className={labelClass}>
                 {t('adminAnnouncements.modal.messageLabel')}
                 <RequiredMark />
               </label>
               <textarea
-                id={messageId}
-                name="message"
-                value={values.message}
-                onChange={handleFieldChange('message')}
+                id="announcement-message"
                 maxLength={ANNOUNCEMENT_MESSAGE_MAX}
                 placeholder={t('adminAnnouncements.modal.messagePlaceholder')}
-                aria-invalid={showMessageError}
-                className={`mt-1.5 ${textareaClass} ${showMessageError ? 'border-[#f31d2c]' : ''}`}
+                aria-invalid={!!errors.message}
+                className={`${textareaClass} ${errors.message ? 'border-[#f31d2c]' : ''}`}
+                {...register('message', { required: t('adminAnnouncements.modal.messageRequired') })}
               />
               <div className="flex items-center justify-between pt-1.5">
-                {showMessageError ? (
+                {errors.message ? (
                   <p className="text-[13px] leading-4 text-[#f31d2c]" role="alert">
-                    {t('adminAnnouncements.modal.messageRequired')}
+                    {errors.message.message}
                   </p>
                 ) : (
                   <span />
                 )}
                 <p className="text-[13px] leading-4 text-[#788293]">
                   {t('adminAnnouncements.modal.messageCount', {
-                    count: values.message.length,
+                    count: message.length,
                     max: ANNOUNCEMENT_MESSAGE_MAX,
                   })}
                 </p>
@@ -161,22 +160,22 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                 role="listbox"
                 aria-label={t('adminAnnouncements.modal.emojiLabel')}
               >
-                {ANNOUNCEMENT_EMOJI_OPTIONS.map((emoji) => {
-                  const selected = values.emoji === emoji;
+                {ANNOUNCEMENT_EMOJI_OPTIONS.map((e) => {
+                  const selected = emoji === e;
                   return (
                     <button
-                      key={emoji}
+                      key={e}
                       type="button"
                       role="option"
                       aria-selected={selected}
-                      onClick={() => setValues((current) => ({ ...current, emoji }))}
+                      onClick={() => setValue('emoji', e)}
                       className={`inline-flex size-10 cursor-pointer items-center justify-center rounded-lg border text-[18px] transition ${
                         selected
                           ? 'border-[#111827] bg-[#111827] shadow-sm'
                           : 'border-[#e5e7eb] bg-white hover:border-[#cbd5e1] hover:bg-[#f9fafb]'
                       }`}
                     >
-                      {emoji}
+                      {e}
                     </button>
                   );
                 })}
@@ -190,9 +189,8 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                 </label>
                 <select
                   id="announcement-type"
-                  value={values.type}
-                  onChange={handleFieldChange('type')}
-                  className={`mt-1.5 ${selectClass}`}
+                  className={selectClass}
+                  {...register('type')}
                 >
                   {ANNOUNCEMENT_TYPE_OPTIONS.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -208,9 +206,8 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                 </label>
                 <select
                   id="announcement-link"
-                  value={values.link}
-                  onChange={handleFieldChange('link')}
-                  className={`mt-1.5 ${selectClass}`}
+                  className={selectClass}
+                  {...register('link')}
                 >
                   {ANNOUNCEMENT_LINK_OPTIONS.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -226,69 +223,54 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                 {t('adminAnnouncements.modal.scheduleTitle')}
               </p>
               <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="announcement-start-date" className={labelClass}>
-                    {t('adminAnnouncements.modal.startDate')}
-                    <RequiredMark />
-                  </label>
-                  <input
-                    id="announcement-start-date"
-                    type="date"
-                    value={values.startDate}
-                    onChange={handleFieldChange('startDate')}
-                    aria-invalid={showStartDateError}
-                    className={`mt-1.5 ${inputClass} ${showStartDateError ? 'border-[#f31d2c]' : ''}`}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="announcement-start-time" className={labelClass}>
-                    {t('adminAnnouncements.modal.startTime')}
-                  </label>
-                  <input
-                    id="announcement-start-time"
-                    type="time"
-                    value={values.startTime}
-                    onChange={handleFieldChange('startTime')}
-                    className={`mt-1.5 ${inputClass}`}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="announcement-end-date" className={labelClass}>
-                    {t('adminAnnouncements.modal.endDate')}
-                    {!values.noEndDate ? <RequiredMark /> : null}
-                  </label>
-                  <input
-                    id="announcement-end-date"
-                    type="date"
-                    value={values.endDate}
-                    onChange={handleFieldChange('endDate')}
-                    disabled={values.noEndDate}
-                    aria-invalid={showEndDateError}
-                    className={`mt-1.5 ${inputClass} disabled:cursor-not-allowed disabled:bg-[#f9fafb] disabled:text-[#9aa3b2] ${
-                      showEndDateError ? 'border-[#f31d2c]' : ''
-                    }`}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="announcement-end-time" className={labelClass}>
-                    {t('adminAnnouncements.modal.endTime')}
-                  </label>
-                  <input
-                    id="announcement-end-time"
-                    type="time"
-                    value={values.endTime}
-                    onChange={handleFieldChange('endTime')}
-                    disabled={values.noEndDate}
-                    className={`mt-1.5 ${inputClass} disabled:cursor-not-allowed disabled:bg-[#f9fafb] disabled:text-[#9aa3b2]`}
-                  />
-                </div>
+                <Input
+                  type="date"
+                  label={
+                    <>
+                      {t('adminAnnouncements.modal.startDate')}
+                      <RequiredMark />
+                    </>
+                  }
+                  inputClassName={inputClass}
+                  labelClassName={labelClass}
+                  error={errors.startDate}
+                  {...register('startDate', { required: t('adminAnnouncements.modal.startDateRequired', 'Start date is required') })}
+                />
+                <Input
+                  type="time"
+                  label={t('adminAnnouncements.modal.startTime')}
+                  inputClassName={inputClass}
+                  labelClassName={labelClass}
+                  {...register('startTime')}
+                />
+                <Input
+                  type="date"
+                  label={
+                    <>
+                      {t('adminAnnouncements.modal.endDate')}
+                      {!noEndDate ? <RequiredMark /> : null}
+                    </>
+                  }
+                  inputClassName={inputClass}
+                  labelClassName={labelClass}
+                  error={errors.endDate}
+                  disabled={noEndDate}
+                  {...register('endDate', { required: !noEndDate ? t('adminAnnouncements.modal.endDateRequired', 'End date is required') : false })}
+                />
+                <Input
+                  type="time"
+                  label={t('adminAnnouncements.modal.endTime')}
+                  inputClassName={inputClass}
+                  labelClassName={labelClass}
+                  disabled={noEndDate}
+                  {...register('endTime')}
+                />
               </div>
               <label className="mt-3 inline-flex cursor-pointer items-center gap-2.5">
                 <input
                   type="checkbox"
-                  checked={values.noEndDate}
-                  onChange={handleFieldChange('noEndDate')}
                   className="size-4 cursor-pointer rounded border-[#cbd5e1] accent-[#4048cd]"
+                  {...register('noEndDate')}
                 />
                 <span className="text-[14px] leading-5 text-[#455163]">
                   {t('adminAnnouncements.modal.noEndDate')}
@@ -299,18 +281,16 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
             <div>
               <p className={labelClass}>{t('adminAnnouncements.modal.statusLabel')}</p>
               <div className="mt-2 flex flex-wrap items-center gap-5">
-                {[ANNOUNCEMENT_STATUS.ACTIVE, ANNOUNCEMENT_STATUS.INACTIVE].map((status) => (
-                  <label key={status} className="inline-flex cursor-pointer items-center gap-2">
+                {[ANNOUNCEMENT_STATUS.ACTIVE, ANNOUNCEMENT_STATUS.INACTIVE].map((s) => (
+                  <label key={s} className="inline-flex cursor-pointer items-center gap-2">
                     <input
                       type="radio"
-                      name="announcement-status"
-                      value={status}
-                      checked={values.status === status}
-                      onChange={handleFieldChange('status')}
+                      value={s}
                       className="size-4 cursor-pointer accent-[#4048cd]"
+                      {...register('status')}
                     />
                     <span className="text-[14px] leading-5 text-[#253043]">
-                      {t(`adminAnnouncements.status.${status}`)}
+                      {t(`adminAnnouncements.status.${s}`)}
                     </span>
                   </label>
                 ))}
@@ -324,9 +304,8 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
               </label>
               <select
                 id="announcement-priority"
-                value={values.priority}
-                onChange={handleFieldChange('priority')}
-                className={`mt-1.5 ${selectClass}`}
+                className={selectClass}
+                {...register('priority')}
               >
                 {ANNOUNCEMENT_PRIORITY_OPTIONS.map((option) => (
                   <option key={option.id} value={option.id}>

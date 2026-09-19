@@ -1,14 +1,17 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
+import React, { memo, useState, forwardRef } from 'react';
 import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
 import {
   ADMIN_PROFILE_ASSETS,
   AVATAR_SIZE,
   EYE_ICON_HEIGHT,
   EYE_ICON_WIDTH,
   USER_ICON_SIZE,
+  DEFAULT_ADMIN_PROFILE,
 } from '@/portals/member/data/profileData';
-import useAdminProfile from '@/portals/member/hooks/useAdminProfile';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 
 const labelClass = 'text-[14px] font-normal leading-[1.5] text-[#464646]';
 const inputClass =
@@ -19,70 +22,40 @@ const sectionTitleClass =
 const primaryButtonClass =
   'inline-flex cursor-pointer items-center justify-center rounded-[4px] bg-[#4048cd] px-6 py-3 font-crimson text-[16px] font-normal leading-normal text-white transition hover:bg-[#353cb0]';
 
-/**
- * @param {{
- *   id: string,
- *   label: string,
- *   value: string,
- *   onChange: (value: string) => void,
- *   type?: string,
- *   autoComplete?: string,
- *   placeholder?: string,
- *   error?: string,
- * }} props
- */
 const ProfileInput = memo(
-  ({ id, label, value, onChange, type = 'text', autoComplete, placeholder, error }) => (
+  forwardRef(({ id, label, type = 'text', autoComplete, placeholder, error, ...props }, ref) => (
     <div className="flex w-full min-w-0 flex-col gap-3">
       <label htmlFor={id} className={labelClass}>
         {label}
       </label>
-      <input
+      <Input
         id={id}
+        ref={ref}
         type={type}
         autoComplete={autoComplete}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        aria-invalid={Boolean(error)}
-        className={inputClass}
+        error={error}
+        inputClassName={inputClass}
+        labelClassName="hidden"
+        {...props}
       />
-      {error ? (
-        <p className="text-sm text-red-600" role="alert">
-          {error}
-        </p>
-      ) : null}
     </div>
-  ),
+  ))
 );
 
 ProfileInput.displayName = 'ProfileInput';
 
-/**
- * @param {{
- *   id: string,
- *   label: string,
- *   value: string,
- *   onChange: (value: string) => void,
- *   autoComplete?: string,
- *   placeholder?: string,
- *   error?: string,
- *   show: boolean,
- *   onToggleShow: () => void,
- * }} props
- */
 const PasswordInput = memo(
-  ({
+  forwardRef(({
     id,
     label,
-    value,
-    onChange,
     autoComplete,
     placeholder,
     error,
     show,
     onToggleShow,
-  }) => {
+    ...props
+  }, ref) => {
     const { t } = useTranslation();
 
     return (
@@ -91,15 +64,16 @@ const PasswordInput = memo(
           {label}
         </label>
         <div className="relative w-full">
-          <input
+          <Input
             id={id}
+            ref={ref}
             type={show ? 'text' : 'password'}
             autoComplete={autoComplete}
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
             placeholder={placeholder}
-            aria-invalid={Boolean(error)}
-            className={passwordInputClass}
+            error={error}
+            inputClassName={passwordInputClass}
+            labelClassName="hidden"
+            {...props}
           />
           <button
             type="button"
@@ -117,14 +91,9 @@ const PasswordInput = memo(
             />
           </button>
         </div>
-        {error ? (
-          <p className="text-sm text-red-600" role="alert">
-            {error}
-          </p>
-        ) : null}
       </div>
     );
-  },
+  })
 );
 
 PasswordInput.displayName = 'PasswordInput';
@@ -134,40 +103,41 @@ PasswordInput.displayName = 'PasswordInput';
  */
 const ProfileContent = memo(() => {
   const { t } = useTranslation();
-  const {
-    displayName,
-    displayEmail,
-    name,
-    email,
-    currentPassword,
-    newPassword,
-    confirmPassword,
-    profileErrors,
-    passwordErrors,
-    showCurrentPassword,
-    showNewPassword,
-    showConfirmPassword,
-    handleNameChange,
-    handleEmailChange,
-    handleCurrentPasswordChange,
-    handleNewPasswordChange,
-    handleConfirmPasswordChange,
-    handleToggleShowCurrentPassword,
-    handleToggleShowNewPassword,
-    handleToggleShowConfirmPassword,
-    submitProfile,
-    submitPassword,
-  } = useAdminProfile();
+  
+  const [displayName, setDisplayName] = useState(DEFAULT_ADMIN_PROFILE.displayName);
+  const [displayEmail, setDisplayEmail] = useState(DEFAULT_ADMIN_PROFILE.displayEmail);
 
-  const handleProfileSubmit = (event) => {
-    event.preventDefault();
-    if (!submitProfile(t)) return;
+  const {
+    register: registerProfile,
+    handleSubmit: handleProfileSubmit,
+    formState: { errors: profileErrors },
+  } = useForm({
+    defaultValues: {
+      name: DEFAULT_ADMIN_PROFILE.name,
+      email: DEFAULT_ADMIN_PROFILE.email,
+    },
+  });
+
+  const {
+    register: registerPassword,
+    handleSubmit: handlePasswordSubmit,
+    formState: { errors: passwordErrors },
+    watch: watchPassword,
+    reset: resetPassword,
+  } = useForm();
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const onSubmitProfile = (data) => {
+    setDisplayName(data.name.trim());
+    setDisplayEmail(data.email.trim());
     toast.success(t('userProfile.account.updateSuccess'));
   };
 
-  const handlePasswordSubmit = (event) => {
-    event.preventDefault();
-    if (!submitPassword(t)) return;
+  const onSubmitPassword = (data) => {
+    resetPassword();
     toast.success(t('userProfile.security.success'));
   };
 
@@ -211,7 +181,7 @@ const ProfileContent = memo(() => {
           </div>
 
           <form
-            onSubmit={handleProfileSubmit}
+            onSubmit={handleProfileSubmit(onSubmitProfile)}
             noValidate
             className="flex w-full flex-col gap-6"
           >
@@ -220,31 +190,35 @@ const ProfileContent = memo(() => {
               <ProfileInput
                 id="admin-profile-name"
                 label={t('userProfile.account.name')}
-                value={name}
-                onChange={handleNameChange}
                 autoComplete="organization"
                 error={profileErrors.name}
+                {...registerProfile('name', { required: t('userProfile.errors.nameRequired') })}
               />
               <ProfileInput
                 id="admin-profile-email"
                 label={t('userProfile.account.email')}
-                value={email}
-                onChange={handleEmailChange}
                 type="email"
                 autoComplete="email"
                 error={profileErrors.email}
+                {...registerProfile('email', { 
+                  required: t('userProfile.errors.emailRequired'),
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: t('userProfile.errors.emailInvalid')
+                  }
+                })}
               />
             </div>
             <div className="flex justify-end">
-              <button type="submit" className={primaryButtonClass}>
+              <Button type="submit" unstyled={true} className={primaryButtonClass}>
                 {t('userProfile.account.update')}
-              </button>
+              </Button>
             </div>
           </form>
         </div>
 
         <form
-          onSubmit={handlePasswordSubmit}
+          onSubmit={handlePasswordSubmit(onSubmitPassword)}
           noValidate
           className="flex w-full flex-col gap-6"
         >
@@ -253,41 +227,44 @@ const ProfileContent = memo(() => {
             <PasswordInput
               id="admin-profile-current-password"
               label={t('userProfile.security.currentPassword')}
-              value={currentPassword}
-              onChange={handleCurrentPasswordChange}
               autoComplete="current-password"
               placeholder=".........."
               error={passwordErrors.currentPassword}
               show={showCurrentPassword}
-              onToggleShow={handleToggleShowCurrentPassword}
+              onToggleShow={() => setShowCurrentPassword(s => !s)}
+              {...registerPassword('currentPassword', { required: t('userProfile.errors.currentPassword') })}
             />
             <PasswordInput
               id="admin-profile-new-password"
               label={t('userProfile.security.newPassword')}
-              value={newPassword}
-              onChange={handleNewPasswordChange}
               autoComplete="new-password"
               placeholder=".........."
               error={passwordErrors.newPassword}
               show={showNewPassword}
-              onToggleShow={handleToggleShowNewPassword}
+              onToggleShow={() => setShowNewPassword(s => !s)}
+              {...registerPassword('newPassword', { 
+                required: t('userProfile.errors.newPassword'),
+                minLength: { value: 8, message: t('userProfile.errors.passwordShort') }
+              })}
             />
             <PasswordInput
               id="admin-profile-confirm-password"
               label={t('userProfile.security.confirmPassword')}
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
               autoComplete="new-password"
               placeholder="........."
               error={passwordErrors.confirmPassword}
               show={showConfirmPassword}
-              onToggleShow={handleToggleShowConfirmPassword}
+              onToggleShow={() => setShowConfirmPassword(s => !s)}
+              {...registerPassword('confirmPassword', { 
+                required: t('userProfile.errors.confirmPassword'),
+                validate: value => value === watchPassword('newPassword') || t('userProfile.errors.passwordMismatch')
+              })}
             />
           </div>
           <div className="flex justify-end">
-            <button type="submit" className={primaryButtonClass}>
+            <Button type="submit" unstyled={true} className={primaryButtonClass}>
               {t('userProfile.security.changePassword')}
-            </button>
+            </Button>
           </div>
         </form>
       </section>

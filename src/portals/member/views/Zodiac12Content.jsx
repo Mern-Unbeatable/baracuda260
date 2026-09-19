@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
 import { ArrowLeft } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
@@ -138,19 +139,28 @@ const Zodiac12Content = memo(({
   const activeSlotRef = useRef(null);
   const isSell = purpose === 'sell';
 
-  const [category, setCategory] = useState(DEFAULT_CATEGORY);
-  const [title, setTitle] = useState('');
-  const [story, setStory] = useState('');
-  const [subCategory, setSubCategory] = useState('');
-  const [price, setPrice] = useState(defaultPrice);
-  const [resolution, setResolution] = useState(BUY_PHOTO_DEFAULT_SPECS.resolution);
-  const [fileSize, setFileSize] = useState('125 KB');
-  const [quality, setQuality] = useState('4K');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      category: DEFAULT_CATEGORY,
+      subCategory: 'astrophotography',
+      title: '',
+      story: '',
+      price: defaultPrice,
+      resolution: BUY_PHOTO_DEFAULT_SPECS.resolution,
+      fileSize: '125 KB',
+      quality: '4K',
+      copyrightOk: false,
+    },
+  });
+
   const [publishTarget, setPublishTarget] = useState('competition');
-  const [copyrightOk, setCopyrightOk] = useState(false);
   const [aiCreated, setAiCreated] = useState('');
   const [previews, setPreviews] = useState({});
-  const [errors, setErrors] = useState({});
+  const [photosError, setPhotosError] = useState('');
   const [successOpen, setSuccessOpen] = useState(false);
 
   useEffect(() => {
@@ -177,35 +187,17 @@ const Zodiac12Content = memo(({
       if (previous[slotId]) URL.revokeObjectURL(previous[slotId]);
       return { ...previous, [slotId]: nextUrl };
     });
-    setErrors((current) => {
-      const { photos: _photos, ...rest } = current;
-      return rest;
-    });
+    setPhotosError('');
   };
 
-  const validate = () => {
-    const nextErrors = {};
-    if (!title.trim()) nextErrors.title = t('zodiac12.errors.titleRequired');
-    if (isSell) {
-      if (!price.trim()) nextErrors.price = t('sellPhotos.errors.priceRequired');
-    } else if (!story.trim()) {
-      nextErrors.story = t('zodiac12.errors.storyRequired');
-    }
+  const onSubmit = (data) => {
     const missingPhotos = ALL_SLOTS.some((slot) => !previews[slot.id]);
-    if (missingPhotos) nextErrors.photos = t('zodiac12.errors.photosRequired');
-    if (!copyrightOk) nextErrors.copyright = t('zodiac12.errors.copyrightRequired');
-    return nextErrors;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
+    if (missingPhotos) {
+      setPhotosError(t('zodiac12.errors.photosRequired'));
       setSuccessOpen(false);
       return;
     }
-    setErrors({});
+    setPhotosError('');
     setSuccessOpen(true);
   };
 
@@ -283,9 +275,9 @@ const Zodiac12Content = memo(({
           <div className="min-w-0 flex-1">{renderSlotGrid(RED_SLOTS)}</div>
           <div className="min-w-0 flex-1">{renderSlotGrid(BLUE_SLOTS)}</div>
         </div>
-        {errors.photos ? (
+        {photosError ? (
           <p className="text-sm text-red-600" role="alert">
-            {errors.photos}
+            {photosError}
           </p>
         ) : null}
       </section>
@@ -293,49 +285,19 @@ const Zodiac12Content = memo(({
       <ZodiacStoryFormPanel
         t={t}
         i18nPrefix="zodiac12"
-        onSubmit={handleSubmit}
-        title={title}
-        onTitleChange={setTitle}
-        category={category}
-        onCategoryChange={setCategory}
+        onSubmit={handleSubmit(onSubmit)}
         categoryOptions={ARTISTIC_CATEGORIES}
-        subCategory={subCategory}
-        onSubCategoryChange={setSubCategory}
-        story={story}
-        onStoryChange={setStory}
-        resolution={resolution}
-        onResolutionChange={setResolution}
-        fileSize={fileSize}
-        onFileSizeChange={setFileSize}
-        quality={quality}
-        onQualityChange={setQuality}
         publishTarget={publishTarget}
-        onPublishTargetChange={setPublishTarget}
-        copyrightOk={copyrightOk}
-        onCopyrightChange={(checked) => {
-          setCopyrightOk(checked);
-          if (checked) {
-            setErrors((current) => {
-              const { copyright: _copyright, ...rest } = current;
-              return rest;
-            });
-          }
-        }}
+        setPublishTarget={setPublishTarget}
         aiCreated={aiCreated}
-        onAiCreatedChange={setAiCreated}
+        setAiCreated={setAiCreated}
+        register={register}
         errors={errors}
         isSell={isSell}
         sellFields={
           <MemberSellPhotoFields
             idPrefix="zodiac12"
-            price={price}
-            resolution={resolution}
-            fileSize={fileSize}
-            quality={quality}
-            onPriceChange={setPrice}
-            onResolutionChange={setResolution}
-            onFileSizeChange={setFileSize}
-            onQualityChange={setQuality}
+            register={register}
             errors={errors}
           />
         }

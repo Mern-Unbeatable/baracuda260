@@ -78,10 +78,7 @@ const PromoJoinContent = memo(({ code }) => {
 
         <form
           className="flex flex-col gap-5 sm:gap-6"
-          onSubmit={(event) => {
-            event.preventDefault();
-            join.handleSubmit(t);
-          }}
+          onSubmit={join.handleSubmit(t)}
         >
           {/* Account */}
           <SectionCard>
@@ -89,45 +86,45 @@ const PromoJoinContent = memo(({ code }) => {
               <TextField
                 id="fullName"
                 label={t('promoJoin.account.fullName')}
-                value={join.account.fullName}
-                onChange={(event) => join.patchAccount('fullName', event.target.value)}
                 placeholder={t('promoJoin.account.fullNamePh')}
+                error={join.errors.fullName}
+                {...join.register('fullName', { required: t('promoJoin.errors.fullName') })}
               />
               <TextField
                 id="username"
                 label={t('promoJoin.account.username')}
-                value={join.account.username}
-                onChange={(event) => join.patchAccount('username', event.target.value)}
                 placeholder={t('promoJoin.account.usernamePh')}
+                error={join.errors.username}
+                {...join.register('username', { required: t('promoJoin.errors.username') })}
               />
               <TextField
                 id="email"
                 label={t('promoJoin.account.email')}
                 type="email"
-                value={join.account.email}
-                onChange={(event) => join.patchAccount('email', event.target.value)}
                 placeholder={t('promoJoin.account.emailPh')}
+                error={join.errors.email}
+                {...join.register('email', { required: t('promoJoin.errors.email') })}
               />
               <TextField
                 id="phone"
                 label={t('promoJoin.account.phone')}
-                value={join.account.phone}
-                onChange={(event) => join.patchAccount('phone', event.target.value)}
                 placeholder={t('promoJoin.account.phonePh')}
+                error={join.errors.phone}
+                {...join.register('phone')}
               />
               <TextField
                 id="country"
                 label={t('promoJoin.account.country')}
-                value={join.account.country}
-                onChange={(event) => join.patchAccount('country', event.target.value)}
                 placeholder={t('promoJoin.account.countryPh')}
+                error={join.errors.country}
+                {...join.register('country')}
               />
               <TextField
                 id="paypal"
                 label={t('promoJoin.account.paypal')}
-                value={join.account.paypal}
-                onChange={(event) => join.patchAccount('paypal', event.target.value)}
                 placeholder={t('promoJoin.account.paypalPh')}
+                error={join.errors.paypal}
+                {...join.register('paypal')}
               />
             </div>
 
@@ -135,10 +132,10 @@ const PromoJoinContent = memo(({ code }) => {
               <TextAreaField
                 id="about"
                 label={t('promoJoin.account.about')}
-                value={join.account.about}
-                onChange={(event) => join.patchAccount('about', event.target.value)}
                 placeholder={t('promoJoin.account.aboutPh')}
                 rows={4}
+                error={join.errors.about}
+                {...join.register('about')}
               />
 
               <div>
@@ -196,9 +193,12 @@ const PromoJoinContent = memo(({ code }) => {
                 id="password"
                 label={t('promoJoin.account.password')}
                 type="password"
-                value={join.account.password}
-                onChange={(event) => join.patchAccount('password', event.target.value)}
                 placeholder={t('promoJoin.account.passwordPh')}
+                error={join.errors.password}
+                {...join.register('password', { 
+                  required: t('promoJoin.errors.password'),
+                  minLength: { value: 8, message: t('promoJoin.errors.password') }
+                })}
               />
             </div>
           </SectionCard>

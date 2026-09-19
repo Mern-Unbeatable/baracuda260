@@ -3,6 +3,7 @@ import { ShoppingCart, Search } from "lucide-react";
 import { useApi } from '@/shared/hooks/useApi';
 import { httpMethods } from '@/shared/lib/httpMethods';
 import API_ENDPOINTS from '@/shared/lib/httpEndpoint';
+import Input from '@/components/ui/Input';
 
 const COLUMNS = ["Order ID", "Customer", "Date", "Items", "Total", "Status"];
 
@@ -37,10 +38,11 @@ const Orders = () => {
             className="text-gray-400 shrink-0"
             aria-hidden="true"
           />
-          <input
+          <Input
             type="search"
             placeholder="Search orders..."
-            className="flex-1 text-sm text-gray-700 placeholder-gray-400 outline-none bg-transparent"
+            className="flex-1"
+            inputClassName="w-full text-sm text-gray-700 placeholder-gray-400 outline-none bg-transparent"
           />
         </div>
         <div className="overflow-x-auto">

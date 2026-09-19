@@ -1,16 +1,16 @@
-import React, { memo, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import React, { memo } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { Copy, Facebook, Twitter } from 'lucide-react';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
-import toast from 'react-hot-toast';
-
-const INPUT_CLASS =
-  'w-full rounded-[4px] border border-[#e2e8f0] bg-white px-3.5 py-3 text-[14px] text-[#111827] placeholder:text-[#9ca3af] outline-none transition focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]';
-const LABEL_CLASS = 'mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-[#111827]';
-const REQUIRED_CLASS = 'text-[10px] font-bold uppercase tracking-wider text-[#9ca3af]';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Checkbox from '@/components/ui/Checkbox';
+import Card from '@/components/ui/Card';
+import Badge from '@/components/ui/Badge';
+import { useCheckout } from '../hooks/useCheckout';
 
 const WhatsAppIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -20,53 +20,21 @@ const WhatsAppIcon = () => (
 
 const StoreCheckoutMain = memo(() => {
   const { t } = useTranslation();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const product = location.state?.product;
-
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    mobile: '',
-    city: '',
-    state: '',
-    zip: '',
-    address: '',
-    agreeTerms: false,
-  });
+  const {
+    product,
+    cartItems,
+    subtotal,
+    delivery,
+    total,
+    register,
+    handleSubmit,
+    errors,
+    formatPrice,
+  } = useCheckout();
 
   if (!product) {
     return <Navigate to={ROUTES.PHOTOGRAPHER_PROFILE} state={{ tab: 'store' }} replace />;
   }
-
-  const cartItems = [
-    { ...product, qty: 1 },
-  ];
-
-  const subtotal = cartItems.reduce((sum, item) => sum + parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.qty, 0);
-  const delivery = 20.00;
-  const total = subtotal + delivery;
-
-  const formatPrice = (val) => `$${val.toFixed(2)}`;
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-  };
-
-  const handlePlaceOrder = (e) => {
-    e.preventDefault();
-    if (!formData.agreeTerms) {
-      toast.error('Please agree to the terms to place your order.');
-      return;
-    }
-    if (!formData.firstName || !formData.address) {
-      toast.error('Please fill in your details and delivery address.');
-      return;
-    }
-    toast.success('Order placed successfully!');
-    navigate(ROUTES.PHOTOGRAPHER_PROFILE, { state: { tab: 'store' } });
-  };
 
   return (
     <SitePageLayout
@@ -82,119 +50,78 @@ const StoreCheckoutMain = memo(() => {
             <p className="text-[15px] text-[#6b7280] mt-1.5">Everything you need, in one simple checkout.</p>
           </div>
 
-          <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_400px] gap-8">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_400px] gap-8">
             <div className={PAGE_STACK}>
               {/* 1. Your Details */}
-              <div className="bg-[#f5f5f5] p-6 sm:p-8">
+              <Card>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">1. Your details</h2>
-                  <span className={REQUIRED_CLASS}>REQUIRED</span>
+                  <Badge>REQUIRED</Badge>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                  <div>
-                    <label htmlFor="firstName" className={LABEL_CLASS}>First Name</label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      placeholder="First name"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      className={INPUT_CLASS}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className={LABEL_CLASS}>Last Name / Alias</label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      placeholder="Name or alias"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      className={INPUT_CLASS}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="mobile" className={LABEL_CLASS}>Mobile Number</label>
-                  <input
-                    type="tel"
-                    id="mobile"
-                    name="mobile"
-                    placeholder="04XX XXX XXX"
-                    value={formData.mobile}
-                    onChange={handleChange}
-                    className={INPUT_CLASS}
+                  <Input
+                    label="First Name"
+                    placeholder="First name"
+                    error={errors.firstName}
+                    {...register('firstName', { required: 'First name is required' })}
+                  />
+                  <Input
+                    label="Last Name / Alias"
+                    placeholder="Name or alias"
+                    error={errors.lastName}
+                    {...register('lastName')}
                   />
                 </div>
-              </div>
+                <Input
+                  label="Mobile Number"
+                  type="tel"
+                  placeholder="04XX XXX XXX"
+                  error={errors.mobile}
+                  {...register('mobile', { required: 'Mobile number is required' })}
+                />
+              </Card>
 
               {/* 2. Delivery Details */}
-              <div className="bg-[#f5f5f5] p-6 sm:p-8">
+              <Card>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">2. Where should we deliver?</h2>
-                  <span className={REQUIRED_CLASS}>REQUIRED</span>
+                  <Badge>REQUIRED</Badge>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
-                  <div>
-                    <label htmlFor="city" className={LABEL_CLASS}>City</label>
-                    <input
-                      type="text"
-                      id="city"
-                      name="city"
-                      placeholder="enter city name"
-                      value={formData.city}
-                      onChange={handleChange}
-                      className={INPUT_CLASS}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="state" className={LABEL_CLASS}>State</label>
-                    <input
-                      type="text"
-                      id="state"
-                      name="state"
-                      placeholder="state name"
-                      value={formData.state}
-                      onChange={handleChange}
-                      className={INPUT_CLASS}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="zip" className={LABEL_CLASS}>Zip Code</label>
-                    <input
-                      type="text"
-                      id="zip"
-                      name="zip"
-                      placeholder="zip code"
-                      value={formData.zip}
-                      onChange={handleChange}
-                      className={INPUT_CLASS}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="address" className={LABEL_CLASS}>Delivery Address</label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    placeholder="write delivery address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    className={INPUT_CLASS}
+                  <Input
+                    label="City"
+                    placeholder="enter city name"
+                    error={errors.city}
+                    {...register('city', { required: 'City is required' })}
+                  />
+                  <Input
+                    label="State"
+                    placeholder="state name"
+                    error={errors.state}
+                    {...register('state', { required: 'State is required' })}
+                  />
+                  <Input
+                    label="Zip Code"
+                    placeholder="zip code"
+                    error={errors.zip}
+                    {...register('zip', { required: 'Zip is required' })}
                   />
                 </div>
-              </div>
+                <Input
+                  label="Delivery Address"
+                  placeholder="write delivery address"
+                  error={errors.address}
+                  {...register('address', { required: 'Address is required' })}
+                />
+              </Card>
             </div>
 
             {/* Right Column: Order Summary */}
             <div className="lg:sticky lg:top-[100px] self-start">
-              <div className="bg-[#f5f5f5] p-6 sm:p-8">
+              <Card>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">Your order</h2>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#9ca3af]">{cartItems.length} ITEMS</span>
+                  <Badge>{cartItems.length} ITEMS</Badge>
                 </div>
 
                 <div className="flex flex-col gap-6 mb-8">
@@ -226,35 +153,25 @@ const StoreCheckoutMain = memo(() => {
                   <span className="text-[22px] font-bold text-[#111827]">{formatPrice(total)}</span>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-[#ee1c25] hover:bg-[#d01820] text-white font-bold text-[13px] py-3.5 rounded-[4px] uppercase tracking-wider transition"
-                >
+                <Button type="submit" className="w-full py-3.5 text-[13px]">
                   Place Order
-                </button>
+                </Button>
 
-                <div className="mt-5 flex items-start gap-3">
-                  <input
-                    type="checkbox"
+                <div className="mt-5">
+                  <Checkbox
                     id="agreeTerms"
-                    name="agreeTerms"
-                    checked={formData.agreeTerms}
-                    onChange={handleChange}
-                    className="mt-1 size-4 rounded border-[#d1d5db] text-[#ee1c25] focus:ring-[#ee1c25]"
+                    label="By placing your order, you confirm your details are correct and agree to my12Photo's terms."
+                    error={errors.agreeTerms}
+                    {...register('agreeTerms')}
                   />
-                  <label htmlFor="agreeTerms" className="text-[10px] leading-[15px] text-[#9ca3af] mt-0.5">
-                    By placing your order, you confirm your details are correct and agree to my12Photo's terms.
-                  </label>
                 </div>
-              </div>
+              </Card>
             </div>
           </form>
 
           {/* Social Banner */}
           <div className="mt-12 rounded-[12px] bg-[#111b2b] p-8 sm:p-10 text-white relative overflow-hidden">
-            {/* Subtle highlight gradient to match screenshot */}
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/[0.03] to-transparent pointer-events-none"></div>
-            
             <div className="relative z-10">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1 text-[10px] font-medium mb-5">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
