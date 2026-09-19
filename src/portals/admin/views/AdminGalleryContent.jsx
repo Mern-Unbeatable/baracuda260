@@ -1,3 +1,4 @@
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
@@ -186,9 +187,7 @@ const AdminGalleryContent = memo(() => {
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <h1 className="font-manrope text-[28px] font-semibold leading-8 tracking-[-0.5px] text-[#111827] sm:text-[32px] sm:leading-9">
-          {t('adminGallery.title')}
-        </h1>
+        <AdminPageHeader title={t('adminGallery.title')} />
         <GalleryTypeFilters activeFilter={activeFilter} onFilterClick={handleFilterClick} />
       </header>
 

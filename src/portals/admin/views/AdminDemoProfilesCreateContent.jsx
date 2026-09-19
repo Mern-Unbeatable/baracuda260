@@ -1,3 +1,4 @@
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import { useTranslation } from 'react-i18next';
 import React, { memo, useId, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -181,12 +182,10 @@ const AdminDemoProfilesCreateContent = memo(() => {
 
       <section className="overflow-hidden rounded-[12px] border border-[#e8ebf1] bg-white shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)]">
         <header className="border-b border-[#edf0f3] px-5 py-5 sm:px-6 sm:py-6">
-          <h1 className="font-manrope text-[28px] font-bold leading-8 tracking-[-0.5px] text-[#202838] sm:text-[32px]">
-            {t('adminDemoProfiles.create.title')}
-          </h1>
-          <p className="pt-2 text-[16px] leading-6 text-[#788293]">
-            {t('adminDemoProfiles.create.subtitle')}
-          </p>
+          <AdminPageHeader 
+            title={t('adminDemoProfiles.create.title')} 
+            description={t('adminDemoProfiles.create.subtitle')} 
+          />
         </header>
 
         <form onSubmit={handleSubmit(onSubmit, onFormError)} className="flex flex-col gap-6 px-5 py-6 sm:px-6">
