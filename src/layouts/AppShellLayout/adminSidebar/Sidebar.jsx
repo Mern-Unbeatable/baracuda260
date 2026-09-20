@@ -41,6 +41,7 @@ import {
   ShieldCheck,
   Ticket,
   UserCircle2,
+  TrendingUp,
 } from 'lucide-react';
 
 const USER_NAV_ITEMS = [
@@ -72,6 +73,11 @@ const ADMIN_NAV_GROUPS = [
         labelKey: 'adminOverview.nav.overview',
         path: ROUTES.ADMIN_DASHBOARD,
         icon: LayoutDashboard,
+      },
+      {
+        labelKey: 'Marketing Stats',
+        path: ROUTES.ADMIN_MARKETING_STATISTICS,
+        icon: TrendingUp,
       },
       {
         labelKey: 'adminOverview.nav.competitions',
