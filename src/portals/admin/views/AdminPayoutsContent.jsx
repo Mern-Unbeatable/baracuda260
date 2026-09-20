@@ -1,3 +1,4 @@
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -360,17 +361,11 @@ const AdminPayoutsContent = memo(() => {
 
   return (
     <div className="flex w-full flex-col gap-5 py-2 sm:gap-6 sm:py-4">
-      <header>
-        <p className="text-[12px] font-bold uppercase tracking-[1.2px] text-[#8b9bb8]">
-          {t('adminPayouts.eyebrow')}
-        </p>
-        <h1 className="font-manrope pt-1 text-[24px] font-bold leading-8 tracking-[-0.5px] text-[#111827] sm:text-[28px]">
-          {t(activeSection.titleKey)}
-        </h1>
-        <p className="pt-1 text-[14px] leading-5 text-[#6b7280]">
-          {t(activeSection.subtitleKey)}
-        </p>
-      </header>
+      <AdminPageHeader 
+        eyebrow={t('adminPayouts.eyebrow')}
+        title={t(activeSection.titleKey)}
+        description={t(activeSection.subtitleKey)}
+      />
 
       <PayoutTabs activeTab={activeTab} onChange={handleTabChange} />
 

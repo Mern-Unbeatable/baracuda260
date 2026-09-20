@@ -104,6 +104,7 @@ const ProfileFollowers = lazy(() => import('@/portals/member/pages/profile/Profi
 const ProfileSettings = lazy(() => import('@/portals/member/pages/profile/ProfileSettings'));
 const ProfileMainContent = lazy(() => import('@/portals/member/views/ProfileMainContent'));
 const SettingsRoute = lazy(() => import('@/portals/admin/pages/SettingsRoute'));
+const MarketingStatistics = lazy(() => import('@/portals/admin/pages/MarketingStatistics'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -278,6 +279,7 @@ const router = createBrowserRouter(
         <Route path={seg(ROUTES.ADMIN_PROMO_LINKS)} element={<PromoLinks />} />
         <Route path={seg(ROUTES.ADMIN_REPORTS)} element={<Reports />} />
         <Route path={seg(ROUTES.ADMIN_REPORTS_DETAIL)} element={<ReportDetail />} />
+        <Route path={seg(ROUTES.ADMIN_MARKETING_STATISTICS)} element={<MarketingStatistics />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

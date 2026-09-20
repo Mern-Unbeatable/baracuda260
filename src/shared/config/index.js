@@ -96,6 +96,7 @@ export const ROUTES = {
   ADMIN_PROMO_LINKS: '/admin/promo-links',
   ADMIN_REPORTS: '/admin/reports',
   ADMIN_REPORTS_DETAIL: '/admin/reports/:id',
+  ADMIN_MARKETING_STATISTICS: '/admin/marketing-statistics',
 };
 
 /** Site header nav — add new pages here AND register them in router.jsx */
