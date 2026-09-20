@@ -76,7 +76,7 @@ export function useSignUp() {
         };
       dispatch(loginSuccess({ user, token }));
       navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
-    } catch (err) {
+    } catch (_err) {
         setGlobalError(t('signup.registerFailed'));
     }
   };

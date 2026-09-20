@@ -6,8 +6,7 @@ import toast from 'react-hot-toast';
 import {
   ADMIN_CATEGORIES_ASSETS,
   CLOSE_ICON_SIZE,
-  isCategoryNameValid,
-} from '@/portals/admin/data/adminCategoriesData';
+  } from '@/portals/admin/data/adminCategoriesData';
 import Input from '@/components/ui/Input';
 
 /**

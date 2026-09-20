@@ -1,18 +1,16 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useId, useState } from 'react';
+import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import {
   ADMIN_ALBUM_TYPES_ASSETS,
   CLOSE_ICON_SIZE,
   MODAL_MODE,
   getAlbumTypeFormDefaults,
-  isAlbumTypeFormValid,
-  isFeaturedValid,
+    isFeaturedValid,
   isPrizeMoneyValid,
-  isRequiredTextValid,
-  parseFeaturedLines,
+    parseFeaturedLines,
 } from '@/portals/admin/data/adminAlbumTypesData';
 import Input from '@/components/ui/Input';
 

@@ -38,7 +38,7 @@ const MyMessageUploadContent = memo(() => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (_data) => {
     if (!fileName) {
       setMediaError(t('myMessages.upload.errors.mediaRequired'));
       return;

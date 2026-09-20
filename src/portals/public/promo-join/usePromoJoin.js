@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import {
@@ -21,8 +21,7 @@ export default function usePromoJoin(code) {
   const {
     register,
     handleSubmit: hookFormSubmit,
-    watch,
-    formState: { errors },
+        formState: { errors },
   } = useForm({
     defaultValues: {
       fullName: '',

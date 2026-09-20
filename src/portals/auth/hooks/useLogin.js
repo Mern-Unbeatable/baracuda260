@@ -101,7 +101,7 @@ export function useLogin() {
       const user = responseData?.user ?? responseData?.data?.user ?? null;
       dispatch(loginSuccess({ user, token }));
       goToDashboard();
-    } catch (err) {
+    } catch (_err) {
       setGlobalError(t('login.invalidCredentials'));
     }
   };

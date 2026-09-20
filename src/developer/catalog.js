@@ -199,7 +199,7 @@ export const COMPONENT_DOCS = [
   open={open}
   onClose={() => setOpen(false)}
   photoTitle="Golden Hour Silence"
-  onSubmit={({ reason, details }) => console.log(reason, details)}
+  onSubmit={({ reason, details }) => {}}
 />`,
     previewId: 'report-photo-modal',
   },
@@ -755,7 +755,7 @@ export const COMPONENT_DOCS = [
       { name: 'onSubmit', type: '(selectedDuration) => void', required: false, description: 'Called on Pay Now submit with chosen duration object.' },
     ],
     requiredExample: `<AdvertiseBusinessForm />`,
-    optionalExample: `<AdvertiseBusinessForm defaultDuration={30} onSubmit={(duration) => console.log(duration)} />`,
+    optionalExample: `<AdvertiseBusinessForm defaultDuration={30} onSubmit={(duration) => {}} />`,
     previewId: 'advertise-business-form',
   },
   {

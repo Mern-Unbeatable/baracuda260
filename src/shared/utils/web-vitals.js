@@ -68,8 +68,6 @@ const logToConsole = (metric) => {
 };
 
 const handleMetric = (metric) => {
-  logToConsole(metric);
-
   if (IS_PROD) {
     sendToAnalytics(metric);
   }

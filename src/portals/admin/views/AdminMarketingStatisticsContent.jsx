@@ -7,8 +7,7 @@ import {
   TrendingUp, 
   Camera, 
   Trophy, 
-  Activity, 
-  Globe, 
+    Globe, 
   PenTool,
   ArrowUpRight 
 } from 'lucide-react';

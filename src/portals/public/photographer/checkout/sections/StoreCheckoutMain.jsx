@@ -19,7 +19,6 @@ const WhatsAppIcon = () => (
 );
 
 const StoreCheckoutMain = memo(() => {
-  const { t } = useTranslation();
   const {
     product,
     cartItems,

@@ -37,7 +37,7 @@ const GalleryDetailDonation = memo(({ photographer, avatar, bio, onClose }) => {
 
   const customAmount = watch('customAmount');
 
-  const onFormSubmit = (data) => {
+  const onFormSubmit = (_data) => {
     // Process donation
   };
 
