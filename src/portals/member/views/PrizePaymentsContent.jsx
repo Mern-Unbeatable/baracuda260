@@ -466,7 +466,7 @@ const PrizePaymentsContent = memo(() => {
 
       <section
         aria-label={t('prizePayments.summary.aria')}
-        className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6"
+        className={`mb-8 grid grid-cols-1 gap-5 md:grid-cols-2 ${summaryCards.length >= 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3'} xl:gap-6`}
       >
         {summaryCards.map((card) => (
           <SummaryCard key={card.id} card={card} />
