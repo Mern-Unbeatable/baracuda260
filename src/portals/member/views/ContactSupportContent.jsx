@@ -195,9 +195,7 @@ const ContactSupportContent = memo(() => {
                 }}
                 {...register('subject', { required: t('contactSupport.errors.subjectRequired') })}
               >
-                <option value="" disabled>
-                  Select a subject...
-                </option>
+
                 {SUBJECT_OPTIONS.map((option) => (
                   <option key={option.value || 'placeholder'} value={option.value} disabled={!option.value}>
                     {t(option.labelKey)}
