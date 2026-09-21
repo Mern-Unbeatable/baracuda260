@@ -187,7 +187,6 @@ const DonationsTable = memo(() => {
               <th className={headCell}>{t('prizePayments.donations.columns.donation')}</th>
               <th className={headCell}>{t('prizePayments.donations.columns.platformFee')}</th>
               <th className={headCell}>{t('prizePayments.donations.columns.yourEarnings')}</th>
-              <th className={headCell}>{t('prizePayments.donations.columns.status')}</th>
             </tr>
           </thead>
           <tbody>
@@ -199,9 +198,6 @@ const DonationsTable = memo(() => {
                 <td className={bodyCell}>{row.donation}</td>
                 <td className={bodyCell}>{row.platformFee}</td>
                 <td className={bodyCell}>{row.yourEarnings}</td>
-                <td className={bodyCell}>
-                  <StatusText status={row.status} />
-                </td>
               </tr>
             ))}
           </tbody>
@@ -312,7 +308,6 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
               <th className={headCell}>{t('prizePayments.photoSales.columns.photo')}</th>
               <th className={headCell}>{t('prizePayments.photoSales.columns.salePrice')}</th>
               <th className={headCell}>{t('prizePayments.photoSales.columns.yourEarnings')}</th>
-              <th className={headCell}>{t('prizePayments.photoSales.columns.status')}</th>
               <th className={headCell}>{t('prizePayments.photoSales.columns.action')}</th>
             </tr>
           </thead>
@@ -336,9 +331,6 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
                 </td>
                 <td className={bodyCell}>{row.salePrice}</td>
                 <td className={bodyCell}>{row.yourEarnings}</td>
-                <td className={bodyCell}>
-                  <StatusText status={row.status} />
-                </td>
                 <td className={bodyCell}>
                   <button type="button" className="text-[14px] font-medium text-[#4048cd] hover:underline">
                     {t('prizePayments.photoSales.details')}
@@ -466,7 +458,7 @@ const PrizePaymentsContent = memo(() => {
 
       <section
         aria-label={t('prizePayments.summary.aria')}
-        className={`mb-8 grid grid-cols-1 gap-5 md:grid-cols-2 ${summaryCards.length >= 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3'} xl:gap-6`}
+        className={`mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 ${summaryCards.length >= 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3'} ${summaryCards.length >= 5 ? '2xl:grid-cols-5' : ''}`}
       >
         {summaryCards.map((card) => (
           <SummaryCard key={card.id} card={card} />
