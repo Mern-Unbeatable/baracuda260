@@ -22,6 +22,13 @@ export const PRIZE_MONEY_SUMMARY = [
     valueClass: 'text-[#15803d]',
   },
   {
+    id: 'pending',
+    labelKey: 'prizePayments.prizeMoney.summary.pending',
+    valueKey: 'prizePayments.prizeMoney.summary.pendingValue',
+    hintKey: 'prizePayments.prizeMoney.summary.pendingHint',
+    valueClass: 'text-[#ea580c]',
+  },
+  {
     id: 'paidOut',
     labelKey: 'prizePayments.prizeMoney.summary.paidOut',
     valueKey: 'prizePayments.prizeMoney.summary.paidOutValue',
@@ -50,7 +57,28 @@ export const DONATIONS_SUMMARY = [
     labelKey: 'prizePayments.donations.summary.yourEarnings',
     valueKey: 'prizePayments.donations.summary.yourEarningsValue',
     hintKey: 'prizePayments.donations.summary.yourEarningsHint',
+    valueClass: 'text-[#161c27]',
+  },
+  {
+    id: 'available',
+    labelKey: 'prizePayments.donations.summary.available',
+    valueKey: 'prizePayments.donations.summary.availableValue',
+    hintKey: 'prizePayments.donations.summary.availableHint',
     valueClass: 'text-[#15803d]',
+  },
+  {
+    id: 'pending',
+    labelKey: 'prizePayments.donations.summary.pending',
+    valueKey: 'prizePayments.donations.summary.pendingValue',
+    hintKey: 'prizePayments.donations.summary.pendingHint',
+    valueClass: 'text-[#ea580c]',
+  },
+  {
+    id: 'paidOut',
+    labelKey: 'prizePayments.donations.summary.paidOut',
+    valueKey: 'prizePayments.donations.summary.paidOutValue',
+    hintKey: 'prizePayments.donations.summary.paidOutHint',
+    valueClass: 'text-[#161c27]',
   },
 ];
 
@@ -74,6 +102,20 @@ export const PHOTO_SALES_SUMMARY = [
     labelKey: 'prizePayments.photoSales.summary.availableEarnings',
     valueKey: 'prizePayments.photoSales.summary.availableEarningsValue',
     hintKey: 'prizePayments.photoSales.summary.availableEarningsHint',
+    valueClass: 'text-[#15803d]',
+  },
+  {
+    id: 'pending',
+    labelKey: 'prizePayments.photoSales.summary.pending',
+    valueKey: 'prizePayments.photoSales.summary.pendingValue',
+    hintKey: 'prizePayments.photoSales.summary.pendingHint',
+    valueClass: 'text-[#ea580c]',
+  },
+  {
+    id: 'paidOut',
+    labelKey: 'prizePayments.photoSales.summary.paidOut',
+    valueKey: 'prizePayments.photoSales.summary.paidOutValue',
+    hintKey: 'prizePayments.photoSales.summary.paidOutHint',
     valueClass: 'text-[#161c27]',
   },
 ];
