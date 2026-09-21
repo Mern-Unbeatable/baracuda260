@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 export function useMarketingStatistics() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
 
   useEffect(() => {
     // Simulate API fetch delay

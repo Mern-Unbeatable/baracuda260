@@ -111,7 +111,7 @@ const SinglePhotoContent = memo(({
     setPhotoError('');
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (_data) => {
     if (!photoPreview) {
       setPhotoError(t('singlePhoto.errors.photoRequired'));
       setSuccessOpen(false);

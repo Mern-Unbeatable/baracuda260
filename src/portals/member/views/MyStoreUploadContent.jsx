@@ -150,7 +150,7 @@ const MyStoreUploadContent = memo(() => {
     event.target.value = '';
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (_data) => {
     if (!bannerName && !bannerPreview) {
       setBannerError(t('myStore.upload.errors.banner'));
       toast.error(t('myStore.upload.errors.banner'));

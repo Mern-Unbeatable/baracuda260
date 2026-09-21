@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
 import { ArrowLeft, Minus, Plus, ShoppingBag, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { ROUTES } from '@/shared/config';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
 import Pagination from '@/components/common/Pagination/Pagination';

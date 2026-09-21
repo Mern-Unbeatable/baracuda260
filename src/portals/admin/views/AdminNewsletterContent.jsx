@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo, useId } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import {
   ADMIN_NEWSLETTER_ASSETS,
@@ -108,8 +108,7 @@ const AdminNewsletterContent = memo(() => {
   const {
     register,
     handleSubmit,
-    control,
-    formState: { errors },
+        formState: { errors },
   } = useForm({
     defaultValues: {
       subject: '',
@@ -123,7 +122,7 @@ const AdminNewsletterContent = memo(() => {
   const isSelectMode = recipientId === 'selected';
   const selectedCount = selectedSubscriberIds.length;
 
-  const onFormSubmit = (data) => {
+  const onFormSubmit = (_data) => {
     doSend();
   };
 

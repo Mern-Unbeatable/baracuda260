@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
 
-export const PROFILE_TABS = [
+const PROFILE_TABS = [
   { id: 'profile', labelKey: 'photographerProfile.tabs.profile' },
   { id: 'artwork', labelKey: 'photographerProfile.tabs.artwork' },
   { id: 'store', labelKey: 'photographerProfile.tabs.store' },

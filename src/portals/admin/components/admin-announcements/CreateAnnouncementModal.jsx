@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useId, useState } from 'react';
+import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import {
   ANNOUNCEMENT_EMOJI_OPTIONS,
@@ -12,10 +12,7 @@ import {
   ANNOUNCEMENT_STATUS,
   ANNOUNCEMENT_TYPE_OPTIONS,
   EMPTY_ANNOUNCEMENT_FORM,
-  isAnnouncementFormValid,
-  isAnnouncementMessageValid,
-  isRequiredTextValid,
-} from '@/portals/admin/data/adminAnnouncementsData';
+      } from '@/portals/admin/data/adminAnnouncementsData';
 import Input from '@/components/ui/Input';
 
 const labelClass = 'text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block';
@@ -58,7 +55,6 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
   const noEndDate = watch('noEndDate');
   const message = watch('message') || '';
   const emoji = watch('emoji');
-  const status = watch('status');
 
   useEffect(() => {
     if (!open) return undefined;

@@ -208,7 +208,7 @@ const SixPhotoContent = memo(({
     setPhotosError('');
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (_data) => {
     const missingPhotos = slots.some((slot) => !previews[slot.id]);
     if (missingPhotos) {
       setPhotosError(t('sixPhoto.errors.photosRequired'));

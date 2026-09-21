@@ -106,7 +106,7 @@ const ContactSupportContent = memo(() => {
   const [filter, setFilter] = useState('all');
   const [activeThread, setActiveThread] = useState(null);
 
-  const onSubmit = (data) => {
+  const onSubmit = (_data) => {
     reset();
     toast.success(t('contactSupport.success'));
   };

@@ -190,7 +190,7 @@ const Zodiac12Content = memo(({
     setPhotosError('');
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (_data) => {
     const missingPhotos = ALL_SLOTS.some((slot) => !previews[slot.id]);
     if (missingPhotos) {
       setPhotosError(t('zodiac12.errors.photosRequired'));

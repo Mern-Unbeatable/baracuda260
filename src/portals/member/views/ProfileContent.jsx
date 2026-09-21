@@ -136,7 +136,7 @@ const ProfileContent = memo(() => {
     toast.success(t('userProfile.account.updateSuccess'));
   };
 
-  const onSubmitPassword = (data) => {
+  const onSubmitPassword = (_data) => {
     resetPassword();
     toast.success(t('userProfile.security.success'));
   };

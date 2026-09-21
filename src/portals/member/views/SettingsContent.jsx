@@ -186,15 +186,15 @@ const SettingsContent = memo(() => {
   const [coverFileName, setCoverFileName] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
 
-  const onProfileSave = (data) => {
+  const onProfileSave = (_data) => {
     toast.success(t('memberSettings.profile.saved'));
   };
 
-  const onPortfolioSave = (data) => {
+  const onPortfolioSave = (_data) => {
     toast.success(t('memberSettings.portfolio.saved'));
   };
 
-  const onPasswordSave = (data) => {
+  const onPasswordSave = (_data) => {
     resetPassword();
     toast.success(t('memberSettings.security.saved'));
   };

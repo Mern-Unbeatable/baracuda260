@@ -7,8 +7,7 @@ import {
   TrendingUp, 
   Camera, 
   Trophy, 
-  Activity, 
-  Globe, 
+    Globe, 
   PenTool,
   ArrowUpRight 
 } from 'lucide-react';
@@ -55,7 +54,7 @@ const AdminMarketingStatisticsContent = memo(() => {
   if (!data) return null;
 
   const total = data.totalRegisteredProfiles;
-  const calcPct = (val) => ((val / total) * 100).toFixed(1);
+  const calcPct = (val) => ((val / total) * 100).toFixed(2);
 
   return (
     <div className="flex w-full flex-col gap-8 pb-12">

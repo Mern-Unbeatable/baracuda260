@@ -19,21 +19,20 @@ const BuyPhotosCheckoutMain = memo(() => {
   const location = useLocation();
   const photo = location.state?.photo;
 
+  const {
+    register,
+    handleSubmit,
+    errors,
+    t,
+    EMAIL_REGEX,
+  } = useBuyPhotosCheckout(photo);
+
   if (!photo) {
     return <Navigate to={ROUTES.BUY_PHOTOS} replace />;
   }
 
   const subtotal = photo.priceAmount ?? 0;
   const totalLabel = photo.price ?? formatBuyPhotoPrice(subtotal);
-
-  const {
-    register,
-    handleSubmit,
-    errors,
-    paymentMethodValue,
-    t,
-    EMAIL_REGEX,
-  } = useBuyPhotosCheckout(photo);
 
   return (
     <SitePageLayout
