@@ -1,11 +1,7 @@
-import { useTranslation } from 'react-i18next';
+import { CalendarDays, Camera, Check, Info } from 'lucide-react';
 import React, { memo, useState } from 'react';
-import {
-  CalendarDays,
-  Camera,
-  Check,
-  Info,
-} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 import { getDaysUntilNextSundayMidnight } from '@/shared/utils/weekReset';
 
 const TIER_STYLES = {
@@ -34,13 +30,17 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
   const { t } = useTranslation();
   const [awards, setAwards] = useState(appreciation.tiers);
   const [weekly, setWeekly] = useState(appreciation.weekly);
-  const [resetDays, setResetDays] = useState(() => getDaysUntilNextSundayMidnight());
+  const [resetDays, setResetDays] = useState(() =>
+    getDaysUntilNextSundayMidnight(),
+  );
 
   const giveAward = (tierId) => {
     if (weekly[tierId] === 0) return;
     setAwards((prev) =>
       prev.map((tier) =>
-        tier.id === tierId ? { ...tier, count: tier.count + 1, awardedThisWeek: true } : tier,
+        tier.id === tierId
+          ? { ...tier, count: tier.count + 1, awardedThisWeek: true }
+          : tier,
       ),
     );
     setWeekly((prev) => ({ ...prev, [tierId]: 0 }));
@@ -48,7 +48,9 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
 
   const simulateWeek = () => {
     setWeekly({ gold: 1, silver: 1, bronze: 1 });
-    setAwards((prev) => prev.map((tier) => ({ ...tier, awardedThisWeek: false })));
+    setAwards((prev) =>
+      prev.map((tier) => ({ ...tier, awardedThisWeek: false })),
+    );
     setResetDays(getDaysUntilNextSundayMidnight());
   };
 
@@ -57,9 +59,15 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
       <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 sm:p-6">
         <div className="flex items-start gap-2">
           <h2 className="text-[18px] font-bold text-[#111827] sm:text-[20px]">
-            {t('photographerProfile.appreciation.title', { defaultValue: 'Artwork Appreciation' })}
+            {t('photographerProfile.appreciation.title', {
+              defaultValue: 'Artwork Appreciation',
+            })}
           </h2>
-          <Info size={16} className="mt-1 shrink-0 text-[#9ca3af]" aria-hidden="true" />
+          <Info
+            size={16}
+            className="mt-1 shrink-0 text-[#9ca3af]"
+            aria-hidden="true"
+          />
         </div>
         <p className="mt-1.5 max-w-3xl text-[13px] leading-5 text-[#6b7280] sm:text-[14px]">
           {t('photographerProfile.appreciation.subtitle')}
@@ -93,7 +101,8 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
                 <p className="mt-1 text-[11px] font-semibold tracking-[0.08em] text-[#9ca3af]">
                   {t('photographerProfile.appreciation.awards')}
                 </p>
-                <button
+                <Button
+                  unstyled
                   type="button"
                   disabled={disabled}
                   onClick={() => giveAward(tier.id)}
@@ -106,7 +115,7 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
                   {disabled
                     ? t('photographerProfile.appreciation.alreadyAwarded')
                     : t(`photographerProfile.appreciation.give.${tier.id}`)}
-                </button>
+                </Button>
               </article>
             );
           })}
@@ -116,7 +125,9 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <p className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#6b7280]">
               <CalendarDays size={14} aria-hidden="true" />
-              {t('photographerProfile.appreciation.resetIn', { days: resetDays })}
+              {t('photographerProfile.appreciation.resetIn', {
+                days: resetDays,
+              })}
             </p>
             <p className="text-[11px] font-bold tracking-widest text-[#9ca3af]">
               {t('photographerProfile.appreciation.weeklyLabel')}
@@ -126,19 +137,23 @@ const PhotographerTalentAppreciation = memo(({ appreciation }) => {
                 key={id}
                 className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#374151]"
               >
-                <span className={`size-2 rounded-full ${TIER_STYLES[id].dot}`} aria-hidden="true" />
+                <span
+                  className={`size-2 rounded-full ${TIER_STYLES[id].dot}`}
+                  aria-hidden="true"
+                />
                 {t(`photographerProfile.appreciation.tiers.${id}`)}{' '}
                 <span className="text-[#9ca3af]">{weekly[id]}/1</span>
               </span>
             ))}
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={simulateWeek}
             className="cursor-pointer text-[12px] font-semibold text-[#4048cd] transition hover:underline"
           >
             {t('photographerProfile.appreciation.simulate')}
-          </button>
+          </Button>
         </div>
       </div>
     </section>

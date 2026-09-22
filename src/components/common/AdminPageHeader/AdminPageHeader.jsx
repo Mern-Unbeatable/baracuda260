@@ -20,24 +20,28 @@ const DESCRIPTION_SPACING = 'pt-1.5 sm:pt-3';
  *   titleId?: string,
  * }} props
  */
-const AdminPageHeader = memo(({ eyebrow, title, description, as: Tag = 'header', titleId }) => {
-  const hasEyebrow = eyebrow != null && eyebrow !== '';
+const AdminPageHeader = memo(
+  ({ eyebrow, title, description, as: Tag = 'header', titleId }) => {
+    const hasEyebrow = eyebrow != null && eyebrow !== '';
 
-  return (
-    <Tag className="flex flex-col">
-      {hasEyebrow ? <p className={EYEBROW_CLASS}>{eyebrow}</p> : null}
-      <h1
-        id={titleId}
-        className={`${TITLE_CLASS} ${hasEyebrow ? TITLE_AFTER_EYEBROW_SPACING : ''}`.trim()}
-      >
-        {title}
-      </h1>
-      {description != null && description !== '' ? (
-        <p className={`${DESCRIPTION_CLASS} ${DESCRIPTION_SPACING}`.trim()}>{description}</p>
-      ) : null}
-    </Tag>
-  );
-});
+    return (
+      <Tag className="flex flex-col">
+        {hasEyebrow ? <p className={EYEBROW_CLASS}>{eyebrow}</p> : null}
+        <h1
+          id={titleId}
+          className={`${TITLE_CLASS} ${hasEyebrow ? TITLE_AFTER_EYEBROW_SPACING : ''}`.trim()}
+        >
+          {title}
+        </h1>
+        {description != null && description !== '' ? (
+          <p className={`${DESCRIPTION_CLASS} ${DESCRIPTION_SPACING}`.trim()}>
+            {description}
+          </p>
+        ) : null}
+      </Tag>
+    );
+  },
+);
 
 AdminPageHeader.displayName = 'AdminPageHeader';
 

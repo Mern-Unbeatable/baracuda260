@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
-import { useSEO } from '@/shared/hooks/useSEO';
-import { ROUTES } from '@/shared/config';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import ProfileContent from '@/portals/member/views/ProfileContent';
+import { ROUTES } from '@/shared/config';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const ProfileSettings = memo(() => {
   const { t } = useTranslation();

@@ -1,17 +1,8 @@
-import { Trans, useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
+import Button from '@/components/ui/Button';
 import AuthPageChrome from '@/portals/auth/components/auth/auth/AuthPageChrome';
-import usePromoJoin from '@/portals/public/promo-join/usePromoJoin';
-import {
-  ALL_SLOTS,
-  BLUE_SLOTS,
-  RED_SLOTS,
-  THEMES,
-  ZODIAC_SIGNS,
-  getThemeById,
-} from '@/portals/public/promo-join/promoJoinData';
 import {
   AstroSignSelect,
   ComplianceBlock,
@@ -22,17 +13,35 @@ import {
   ThemePicker,
   VideoDropzone,
   WaveDivider,
+  ZODIAC12_ASSETS,
   Zodiac12Banner,
   ZodiacSlotCard,
-  ZODIAC12_ASSETS,
 } from '@/portals/public/promo-join/components/PromoJoinUi';
+import {
+  ALL_SLOTS,
+  BLUE_SLOTS,
+  getThemeById,
+  RED_SLOTS,
+  THEMES,
+  ZODIAC_SIGNS,
+} from '@/portals/public/promo-join/promoJoinData';
+import usePromoJoin from '@/portals/public/promo-join/usePromoJoin';
+import { ROUTES } from '@/shared/config';
 
 const SectionCard = memo(({ title, subtitle, children, className = '' }) => (
-  <section className={`rounded-2xl border border-[#e8eaf3] bg-white p-4 sm:p-6 ${className}`}>
+  <section
+    className={`rounded-2xl border border-[#e8eaf3] bg-white p-4 sm:p-6 ${className}`}
+  >
     {title ? (
       <div className="mb-4">
-        <h2 className="text-[18px] font-bold text-[#151e31] sm:text-[20px]">{title}</h2>
-        {subtitle ? <p className="mt-1 text-[13px] text-[#687186] sm:text-[14px]">{subtitle}</p> : null}
+        <h2 className="text-[18px] font-bold text-[#151e31] sm:text-[20px]">
+          {title}
+        </h2>
+        {subtitle ? (
+          <p className="mt-1 text-[13px] text-[#687186] sm:text-[14px]">
+            {subtitle}
+          </p>
+        ) : null}
       </div>
     ) : null}
     {children}
@@ -88,14 +97,18 @@ const PromoJoinContent = memo(({ code }) => {
                 label={t('promoJoin.account.fullName')}
                 placeholder={t('promoJoin.account.fullNamePh')}
                 error={join.errors.fullName}
-                {...join.register('fullName', { required: t('promoJoin.errors.fullName') })}
+                {...join.register('fullName', {
+                  required: t('promoJoin.errors.fullName'),
+                })}
               />
               <TextField
                 id="username"
                 label={t('promoJoin.account.username')}
                 placeholder={t('promoJoin.account.usernamePh')}
                 error={join.errors.username}
-                {...join.register('username', { required: t('promoJoin.errors.username') })}
+                {...join.register('username', {
+                  required: t('promoJoin.errors.username'),
+                })}
               />
               <TextField
                 id="email"
@@ -103,7 +116,9 @@ const PromoJoinContent = memo(({ code }) => {
                 type="email"
                 placeholder={t('promoJoin.account.emailPh')}
                 error={join.errors.email}
-                {...join.register('email', { required: t('promoJoin.errors.email') })}
+                {...join.register('email', {
+                  required: t('promoJoin.errors.email'),
+                })}
               />
               <TextField
                 id="phone"
@@ -143,27 +158,34 @@ const PromoJoinContent = memo(({ code }) => {
                   id="social-0"
                   label={t('promoJoin.account.social')}
                   value={join.socialLinks[0] || ''}
-                  onChange={(event) => join.handleSocialChange(0, event.target.value)}
+                  onChange={(event) =>
+                    join.handleSocialChange(0, event.target.value)
+                  }
                   placeholder={t('promoJoin.account.socialPh')}
                 />
                 {join.socialLinks.slice(1).map((link, index) => (
                   <div key={`social-${index + 1}`} className="mt-3">
                     <TextField
                       id={`social-${index + 1}`}
-                      label={t('promoJoin.account.socialExtra', { n: index + 2 })}
+                      label={t('promoJoin.account.socialExtra', {
+                        n: index + 2,
+                      })}
                       value={link}
-                      onChange={(event) => join.handleSocialChange(index + 1, event.target.value)}
+                      onChange={(event) =>
+                        join.handleSocialChange(index + 1, event.target.value)
+                      }
                       placeholder={t('promoJoin.account.socialPh')}
                     />
                   </div>
                 ))}
-                <button
+                <Button
+                  unstyled
                   type="button"
                   onClick={join.handleAddSocial}
                   className="mt-2 cursor-pointer text-[14px] font-semibold text-[#ee1c25] hover:underline"
                 >
                   {t('promoJoin.account.addAnother')}
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -195,9 +217,12 @@ const PromoJoinContent = memo(({ code }) => {
                 type="password"
                 placeholder={t('promoJoin.account.passwordPh')}
                 error={join.errors.password}
-                {...join.register('password', { 
+                {...join.register('password', {
                   required: t('promoJoin.errors.password'),
-                  minLength: { value: 8, message: t('promoJoin.errors.password') }
+                  minLength: {
+                    value: 8,
+                    message: t('promoJoin.errors.password'),
+                  },
                 })}
               />
             </div>
@@ -230,13 +255,19 @@ const PromoJoinContent = memo(({ code }) => {
 
           {/* 6 Photos */}
           <SectionCard title={t('promoJoin.six.title')}>
-            <ThemePicker themes={THEMES} themeId={join.themeId} onSelect={join.setThemeId} />
+            <ThemePicker
+              themes={THEMES}
+              themeId={join.themeId}
+              onSelect={join.setThemeId}
+            />
             <WaveDivider src={theme.wave} className={theme.waveClassName} />
             <div className="mt-2">
               <h3 className="text-[18px] font-bold text-[#151e31]">
                 {t('promoJoin.six.gridTitle')}
               </h3>
-              <p className="mt-1 text-[13px] text-[#687186]">{t('promoJoin.six.gridSubtitle')}</p>
+              <p className="mt-1 text-[13px] text-[#687186]">
+                {t('promoJoin.six.gridSubtitle')}
+              </p>
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
                 {join.sixSlots.map((slot) => (
                   <ZodiacSlotCard
@@ -270,7 +301,10 @@ const PromoJoinContent = memo(({ code }) => {
             <h2 className="text-[18px] font-bold text-[#151e31] sm:text-[20px]">
               {t('promoJoin.twelve.title')}
             </h2>
-            <WaveDivider src={ZODIAC12_ASSETS.dualWave} className="mt-3 h-11.5" />
+            <WaveDivider
+              src={ZODIAC12_ASSETS.dualWave}
+              className="mt-3 h-11.5"
+            />
             <div className="mt-4">
               <Zodiac12Banner />
             </div>
@@ -315,10 +349,14 @@ const PromoJoinContent = memo(({ code }) => {
             />
           </SectionCard>
 
-          <StoryMetaPanel story={join.twelveStory} onPatch={join.patchTwelveStory} />
+          <StoryMetaPanel
+            story={join.twelveStory}
+            onPatch={join.patchTwelveStory}
+          />
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <button
+            <Button
+              unstyled
               type="submit"
               disabled={join.submitting || join.submitted}
               className="inline-flex w-full cursor-pointer items-center justify-center rounded-[10px] bg-[#ee1c25] px-6 py-3.5 text-[16px] font-bold text-white transition hover:bg-[#d41921] disabled:cursor-default disabled:opacity-60 sm:w-auto"
@@ -328,7 +366,7 @@ const PromoJoinContent = memo(({ code }) => {
                 : join.submitting
                   ? t('promoJoin.submitting')
                   : t('promoJoin.submit')}
-            </button>
+            </Button>
             <p className="text-[13px] text-[#687186]">
               <Trans
                 i18nKey="promoJoin.slotsHint"

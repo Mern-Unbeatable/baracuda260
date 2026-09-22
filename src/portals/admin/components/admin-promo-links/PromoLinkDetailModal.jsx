@@ -1,17 +1,18 @@
-import { useTranslation } from 'react-i18next';
+import { Copy, X } from 'lucide-react';
 import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
-import { Copy, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 import {
-  CLOSE_ICON_SIZE,
-  REWARD_LABEL_KEYS,
-  STATUS_LABEL_KEYS,
-  STATUS_STYLES,
   buildPromoJoinAbsoluteUrl,
+  CLOSE_ICON_SIZE,
   formatIssuedAt,
   getRequirementStage,
   getValidityMeta,
+  REWARD_LABEL_KEYS,
+  STATUS_LABEL_KEYS,
+  STATUS_STYLES,
 } from '@/portals/admin/data/adminPromoLinksData';
 
 /**
@@ -81,10 +82,16 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
 
   const rows = [
     { label: t('adminPromoLinks.columns.linkId'), value: link.linkId },
-    { label: t('adminPromoLinks.columns.dateIssued'), value: formatIssuedAt(link.issuedAt) },
+    {
+      label: t('adminPromoLinks.columns.dateIssued'),
+      value: formatIssuedAt(link.issuedAt),
+    },
     { label: t('adminPromoLinks.columns.validity'), value: validityLabel },
     { label: t('adminPromoLinks.columns.checklist'), value: checklistLabel },
-    { label: t('adminPromoLinks.columns.reward'), value: t(REWARD_LABEL_KEYS[link.reward]) },
+    {
+      label: t('adminPromoLinks.columns.reward'),
+      value: t(REWARD_LABEL_KEYS[link.reward]),
+    },
   ];
 
   return createPortal(
@@ -110,14 +117,15 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
             </h2>
             <p className="mt-1 text-[14px] text-[#687186]">{link.linkId}</p>
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             aria-label={t('adminPromoLinks.detail.close')}
             className="inline-flex cursor-pointer items-center justify-center rounded-full p-1 transition hover:bg-black/5"
           >
             <X size={CLOSE_ICON_SIZE - 4} aria-hidden="true" />
-          </button>
+          </Button>
         </header>
 
         <div className="overflow-y-auto px-5 py-5 sm:px-6">
@@ -130,15 +138,18 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
           </div>
 
           <div className="mb-5 flex items-start gap-3 rounded-[12px] border border-[#edf0f3] bg-[#fafbff] px-4 py-3">
-            <p className="min-w-0 flex-1 break-all text-[14px] leading-5 text-[#151e31]">{absoluteUrl}</p>
-            <button
+            <p className="min-w-0 flex-1 break-all text-[14px] leading-5 text-[#151e31]">
+              {absoluteUrl}
+            </p>
+            <Button
+              unstyled
               type="button"
               onClick={handleCopy}
               aria-label={t('adminPromoLinks.copyAria')}
               className="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-[8px] text-[#ee1c25] transition hover:bg-[#fde8e9]"
             >
               <Copy size={16} aria-hidden="true" />
-            </button>
+            </Button>
           </div>
 
           <dl className="grid grid-cols-1 gap-3">
@@ -148,20 +159,23 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
                 className="flex items-start justify-between gap-4 border-b border-[#f1f3f6] pb-3 last:border-b-0 last:pb-0"
               >
                 <dt className="text-[13px] text-[#7f8ba1]">{row.label}</dt>
-                <dd className="text-right text-[14px] font-medium text-[#0c0c0c]">{row.value}</dd>
+                <dd className="text-right text-[14px] font-medium text-[#0c0c0c]">
+                  {row.value}
+                </dd>
               </div>
             ))}
           </dl>
         </div>
 
         <footer className="border-t border-[#edf0f3] px-5 py-4 sm:px-6">
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             className="inline-flex w-full cursor-pointer items-center justify-center rounded-[10px] bg-[#f6f7f9] px-4 py-2.5 text-[14px] font-semibold text-[#373737] transition hover:bg-[#eef0f3]"
           >
             {t('adminPromoLinks.detail.closeButton')}
-          </button>
+          </Button>
         </footer>
       </div>
     </div>,

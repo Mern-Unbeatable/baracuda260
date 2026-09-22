@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { useSEO } from '@/shared/hooks/useSEO';
 import { selectUser } from '@/app/store/slices/authSlice';
 import AdminBusinessLinkContent from '@/portals/admin/views/AdminBusinessLinkContent';
 import BusinessLinkContent from '@/portals/member/views/BusinessLinkContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const BusinessPhotos = memo(() => {
   const user = useSelector(selectUser);

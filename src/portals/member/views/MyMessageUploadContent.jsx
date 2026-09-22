@@ -1,11 +1,12 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { ArrowLeft, ArrowUpFromLine, Sparkles } from 'lucide-react';
+import React, { memo, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { ROUTES } from '@/shared/config';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import Button from '@/components/ui/Button';
+import { ROUTES } from '@/shared/config';
 
 const MyMessageUploadContent = memo(() => {
   const { t } = useTranslation();
@@ -76,7 +77,9 @@ const MyMessageUploadContent = memo(() => {
             rows={6}
             aria-invalid={Boolean(errors.message)}
             className="min-h-40 w-full resize-y rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#fafaff] px-4 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
-            {...register('message', { required: t('myMessages.upload.errors.messageRequired') })}
+            {...register('message', {
+              required: t('myMessages.upload.errors.messageRequired'),
+            })}
           />
           {errors.message ? (
             <p className="text-sm text-red-600" role="alert">
@@ -101,7 +104,8 @@ const MyMessageUploadContent = memo(() => {
             className="sr-only"
             onChange={handleFileChange}
           />
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={handlePickFile}
             className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-[#cbc3d5] bg-[#fafaff] px-6 py-10 transition hover:border-[#4048cd]/40 hover:bg-[#ecedfa]/40"
@@ -116,9 +120,11 @@ const MyMessageUploadContent = memo(() => {
               {t('myMessages.upload.dropHint')}
             </span>
             {fileName ? (
-              <span className="text-center text-[13px] font-medium text-[#4048cd]">{fileName}</span>
+              <span className="text-center text-[13px] font-medium text-[#4048cd]">
+                {fileName}
+              </span>
             ) : null}
-          </button>
+          </Button>
           {mediaError ? (
             <p className="text-sm text-red-600" role="alert">
               {mediaError}
@@ -131,7 +137,9 @@ const MyMessageUploadContent = memo(() => {
             <input
               type="checkbox"
               className="mt-1 size-4 shrink-0 accent-[#ee1c25]"
-              {...register('copyrightOk', { required: t('myMessages.upload.errors.copyrightRequired') })}
+              {...register('copyrightOk', {
+                required: t('myMessages.upload.errors.copyrightRequired'),
+              })}
             />
             <span className="text-[14px] leading-6 text-[#494453]">
               {t('myMessages.upload.copyrightConfirm')}

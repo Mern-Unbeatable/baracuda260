@@ -1,20 +1,28 @@
-import { useTranslation } from 'react-i18next';
+import {
+  Camera,
+  Heart,
+  Image as ImageIcon,
+  Maximize2,
+  Share2,
+  ShoppingCart,
+} from 'lucide-react';
 import React, { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Heart, Image, Maximize2, Share2, ShoppingCart } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import { PAGE_STACK } from '@/shared/ui/actionStyles';
+import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
-import { AppLink, Shell, SitePageLayout } from '@/shared/site-chrome';
-import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
-import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
+import Image from '@/components/ui/Image';
+import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
   GALLERY_DETAIL_DEMO_VIDEO,
   resolveGalleryDetailMedia,
   resolveGalleryImageDetails,
 } from '@/shared/data/galleryDetail';
+import { AppLink, Shell, SitePageLayout } from '@/shared/site-chrome';
+import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import BuyPhotoDetailBreadcrumb from './BuyPhotoDetailBreadcrumb';
 
 const SHOWCASE_BADGE_KEYS = {
@@ -31,7 +39,10 @@ const parseCount = (value) => {
 const formatCount = (value) => parseCount(value).toLocaleString('en-US');
 
 const DetailInfoCard = memo(({ title, children, className = '' }) => (
-  <MarketingCard variant="filled" className={`flex h-full flex-col p-5 sm:p-6 ${className}`.trim()}>
+  <MarketingCard
+    variant="filled"
+    className={`flex h-full flex-col p-5 sm:p-6 ${className}`.trim()}
+  >
     <h2 className="text-[14px] font-semibold uppercase tracking-[1.2px] text-[#6b7280]">
       {title}
     </h2>
@@ -51,7 +62,9 @@ const BuyPhotoDetailView = memo(({ photo }) => {
   const badgeLabel = t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
     defaultValue: photo.badge,
   });
-  const categoryLabel = t(`common.categories.${photo.category}`, { defaultValue: photo.category });
+  const categoryLabel = t(`common.categories.${photo.category}`, {
+    defaultValue: photo.category,
+  });
 
   const { videoPoster, videoSrc } = resolveGalleryDetailMedia(
     { ...photo, videoSrc: photo.videoSrc ?? GALLERY_DETAIL_DEMO_VIDEO },
@@ -109,7 +122,7 @@ const BuyPhotoDetailView = memo(({ photo }) => {
           <BuyPhotoDetailBreadcrumb title={photo.title} />
 
           <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]">
-            <img
+            <Image
               src={photo.image}
               alt={photo.title}
               width={1536}
@@ -123,7 +136,11 @@ const BuyPhotoDetailView = memo(({ photo }) => {
       <section className="bg-white section-py-bottom pt-0">
         <Shell>
           <div className={PAGE_STACK}>
-            <GalleryDetailVideo poster={videoPoster} src={videoSrc} title={photo.title} />
+            <GalleryDetailVideo
+              poster={videoPoster}
+              src={videoSrc}
+              title={photo.title}
+            />
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
               {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
@@ -160,7 +177,7 @@ const BuyPhotoDetailView = memo(({ photo }) => {
               <DetailInfoCard title={t('buyPhotos.detail.creator.title')}>
                 <div className="flex flex-1 flex-col">
                   <div className="flex items-center gap-3">
-                    <img
+                    <Image
                       src={GALLERY_DETAIL_ASSETS.photographer}
                       alt={photo.photographer}
                       width={57}
@@ -198,7 +215,9 @@ const BuyPhotoDetailView = memo(({ photo }) => {
                         <p className="text-[12px] font-semibold uppercase tracking-[1px] text-[#9ca3af]">
                           {label}
                         </p>
-                        <p className="mt-0.5 text-[15px] font-medium text-[#0d0d14]">{value}</p>
+                        <p className="mt-0.5 text-[15px] font-medium text-[#0d0d14]">
+                          {value}
+                        </p>
                       </div>
                     </li>
                   ))}
@@ -247,7 +266,11 @@ const BuyPhotoDetailView = memo(({ photo }) => {
                 />
                 {t('buyPhotos.detail.like')}
               </MarketingButton>
-              <MarketingButton type="button" variant="secondary" onClick={handleShare}>
+              <MarketingButton
+                type="button"
+                variant="secondary"
+                onClick={handleShare}
+              >
                 <Share2 size={18} strokeWidth={2} aria-hidden="true" />
                 {t('buyPhotos.detail.share')}
               </MarketingButton>

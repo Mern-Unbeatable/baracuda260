@@ -8,19 +8,22 @@ const PLACEMENT_CLASS = {
   'preview-start': 'absolute bottom-2.5 left-2.5 z-10',
 };
 
-const PhotoAiBadgeOverlay = memo(({ show = false, placement = 'hero-end', size = 'sm', className = '' }) => {
-  if (!show) return null;
+const PhotoAiBadgeOverlay = memo(
+  ({ show = false, placement = 'hero-end', size = 'sm', className = '' }) => {
+    if (!show) return null;
 
-  const positionClass = PLACEMENT_CLASS[placement] ?? PLACEMENT_CLASS['hero-end'];
+    const positionClass =
+      PLACEMENT_CLASS[placement] ?? PLACEMENT_CLASS['hero-end'];
 
-  return (
-    <AiGeneratedPhotoBadge
-      variant="overlay"
-      size={size}
-      className={`pointer-events-none ${positionClass} ${className}`.trim()}
-    />
-  );
-});
+    return (
+      <AiGeneratedPhotoBadge
+        variant="overlay"
+        size={size}
+        className={`pointer-events-none ${positionClass} ${className}`.trim()}
+      />
+    );
+  },
+);
 
 PhotoAiBadgeOverlay.displayName = 'PhotoAiBadgeOverlay';
 

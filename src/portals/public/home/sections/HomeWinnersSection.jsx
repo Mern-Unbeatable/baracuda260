@@ -1,5 +1,6 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import Image from '@/components/ui/Image';
 import { Shell } from '@/shared/site-chrome';
 import { HOME_WINNERS } from '../data/homePageData';
 
@@ -30,14 +31,16 @@ const HomeWinnersSection = memo(() => {
                   <span className="text-[28px] leading-8 sm:text-[36px] sm:leading-10">
                     {w.medal}
                   </span>
-                  <img
+                  <Image
                     src={w.image}
                     alt={w.name}
                     width={64}
                     height={64}
                     className="mt-3 size-16 rounded-full border-2 border-white/20 object-cover"
                   />
-                  <h3 className="mt-3 text-[18px] font-semibold text-white/90">{w.name}</h3>
+                  <h3 className="mt-3 text-[18px] font-semibold text-white/90">
+                    {w.name}
+                  </h3>
                   <p className="text-[14px]">{w.work}</p>
                   <p className="mt-1 text-[12px]">
                     {t('home.winners.votesLabel', { count: w.votesCount })}

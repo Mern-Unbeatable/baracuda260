@@ -1,7 +1,7 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { ImgIcon, Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import { ImgIcon, Shell } from '@/shared/site-chrome';
 import { HOME_FEATURES } from '../data/homePageData';
 
 const HomeFeaturesSection = memo(() => {
@@ -19,7 +19,10 @@ const HomeFeaturesSection = memo(() => {
         />
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {HOME_FEATURES.map((f) => (
-            <article key={f.titleKey} className="rounded-2xl border border-black/17 p-6.25">
+            <article
+              key={f.titleKey}
+              className="rounded-2xl border border-black/17 p-6.25"
+            >
               <div className="mb-2.5 flex size-10 items-center justify-center rounded-[14px] bg-[#eef2ff]">
                 <ImgIcon src={f.icon} size={18} />
               </div>

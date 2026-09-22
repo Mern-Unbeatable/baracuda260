@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
 
 export function useCheckout() {
@@ -28,7 +28,8 @@ export function useCheckout() {
   const cartItems = product ? [{ ...product, qty: product.qty || 1 }] : [];
 
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.qty,
+    (sum, item) =>
+      sum + parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.qty,
     0,
   );
   const delivery = 20.0;

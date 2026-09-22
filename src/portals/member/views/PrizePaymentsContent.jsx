@@ -1,10 +1,11 @@
-import { useTranslation } from 'react-i18next';
+import { ChevronDown, Search } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { ChevronDown, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
-import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import {
   DONATION_TRANSACTION_ROWS,
   DONATIONS_SUMMARY,
@@ -36,7 +37,9 @@ const TablePagination = memo(({ showingKey, tone = 'red' }) => {
 
   return (
     <div className="flex min-h-16.75 w-full flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0">
-      <p className={`px-2.5 text-[16px] leading-normal ${colors.text}`}>{t(showingKey)}</p>
+      <p className={`px-2.5 text-[16px] leading-normal ${colors.text}`}>
+        {t(showingKey)}
+      </p>
       <div className="flex shrink-0 items-center gap-2">
         <Button
           type="button"
@@ -89,7 +92,10 @@ const StatusText = memo(({ status }) => {
   if (isAvailable) {
     return (
       <span className="inline-flex items-center gap-2 text-[14px] font-medium text-[#15803d]">
-        <span className="size-2 shrink-0 rounded-full bg-[#15803d]" aria-hidden="true" />
+        <span
+          className="size-2 shrink-0 rounded-full bg-[#15803d]"
+          aria-hidden="true"
+        />
         {t('prizePayments.status.available')}
       </span>
     );
@@ -110,7 +116,8 @@ const PrizingTable = memo(() => {
   const { t } = useTranslation();
   const headCell =
     'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell = 'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
+  const bodyCell =
+    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -118,7 +125,10 @@ const PrizingTable = memo(() => {
       className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
     >
       <div className="border-b border-[#ececf0] px-6 py-5">
-        <h2 id="prize-payments-prizing-heading" className="text-[22px] font-bold leading-8 text-[#161c27]">
+        <h2
+          id="prize-payments-prizing-heading"
+          className="text-[22px] font-bold leading-8 text-[#161c27]"
+        >
           {t('prizePayments.prizing.title')}
         </h2>
       </div>
@@ -127,13 +137,27 @@ const PrizingTable = memo(() => {
         <table className="min-w-240 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
-              <th className={headCell}>{t('prizePayments.prizing.columns.month')}</th>
-              <th className={headCell}>{t('prizePayments.prizing.columns.name')}</th>
-              <th className={headCell}>{t('prizePayments.prizing.columns.category')}</th>
-              <th className={headCell}>{t('prizePayments.prizing.columns.albumType')}</th>
-              <th className={headCell}>{t('prizePayments.prizing.columns.position')}</th>
-              <th className={headCell}>{t('prizePayments.prizing.columns.votes')}</th>
-              <th className={headCell}>{t('prizePayments.prizing.columns.prize')}</th>
+              <th className={headCell}>
+                {t('prizePayments.prizing.columns.month')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.prizing.columns.name')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.prizing.columns.category')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.prizing.columns.albumType')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.prizing.columns.position')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.prizing.columns.votes')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.prizing.columns.prize')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -163,7 +187,8 @@ const DonationsTable = memo(() => {
   const { t } = useTranslation();
   const headCell =
     'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell = 'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
+  const bodyCell =
+    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -171,22 +196,39 @@ const DonationsTable = memo(() => {
       className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
     >
       <div className="border-b border-[#ececf0] px-6 py-5">
-        <h2 id="prize-payments-donations-heading" className="text-[22px] font-bold leading-8 text-[#161c27]">
+        <h2
+          id="prize-payments-donations-heading"
+          className="text-[22px] font-bold leading-8 text-[#161c27]"
+        >
           {t('prizePayments.donations.title')}
         </h2>
-        <p className="mt-1 text-[14px] leading-5 text-[#7a7484]">{t('prizePayments.donations.subtitle')}</p>
+        <p className="mt-1 text-[14px] leading-5 text-[#7a7484]">
+          {t('prizePayments.donations.subtitle')}
+        </p>
       </div>
 
       <div className="w-full overflow-x-auto">
         <table className="min-w-240 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
-              <th className={headCell}>{t('prizePayments.donations.columns.date')}</th>
-              <th className={headCell}>{t('prizePayments.donations.columns.donor')}</th>
-              <th className={headCell}>{t('prizePayments.donations.columns.email')}</th>
-              <th className={headCell}>{t('prizePayments.donations.columns.donation')}</th>
-              <th className={headCell}>{t('prizePayments.donations.columns.platformFee')}</th>
-              <th className={headCell}>{t('prizePayments.donations.columns.yourEarnings')}</th>
+              <th className={headCell}>
+                {t('prizePayments.donations.columns.date')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.donations.columns.donor')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.donations.columns.email')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.donations.columns.donation')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.donations.columns.platformFee')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.donations.columns.yourEarnings')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -204,7 +246,10 @@ const DonationsTable = memo(() => {
         </table>
       </div>
 
-      <TablePagination showingKey="prizePayments.donations.showing" tone="red" />
+      <TablePagination
+        showingKey="prizePayments.donations.showing"
+        tone="red"
+      />
     </section>
   );
 });
@@ -219,18 +264,24 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
   const filteredRows = useMemo(() => {
     const query = search.trim().toLowerCase();
     return PHOTO_SALES_ROWS.filter((row) => {
-      const matchesStatus = statusFilter === 'all' || row.status === statusFilter;
+      const matchesStatus =
+        statusFilter === 'all' || row.status === statusFilter;
       if (!matchesStatus) return false;
       if (!query) return true;
       const buyer = t(row.buyerKey).toLowerCase();
       const photo = t(row.photoKey).toLowerCase();
-      return buyer.includes(query) || row.email.toLowerCase().includes(query) || photo.includes(query);
+      return (
+        buyer.includes(query) ||
+        row.email.toLowerCase().includes(query) ||
+        photo.includes(query)
+      );
     });
   }, [search, statusFilter, t]);
 
   const headCell =
     'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell = 'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
+  const bodyCell =
+    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -239,13 +290,18 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
     >
       <div className="flex flex-col gap-4 border-b border-[#ececf0] px-6 py-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <h2 id="prize-payments-photo-sales-heading" className="text-[22px] font-bold leading-8 text-[#161c27]">
+          <h2
+            id="prize-payments-photo-sales-heading"
+            className="text-[22px] font-bold leading-8 text-[#161c27]"
+          >
             {t('prizePayments.photoSales.title')}
           </h2>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <label className="relative min-w-55 flex-1">
-            <span className="sr-only">{t('prizePayments.photoSales.searchPlaceholder')}</span>
+            <span className="sr-only">
+              {t('prizePayments.photoSales.searchPlaceholder')}
+            </span>
             <Search
               size={16}
               className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] z-10"
@@ -277,7 +333,9 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
             <ChevronDown size={16} aria-hidden="true" />
           </Button>
           <label className="relative min-w-35">
-            <span className="sr-only">{t('prizePayments.photoSales.filters.allStatuses')}</span>
+            <span className="sr-only">
+              {t('prizePayments.photoSales.filters.allStatuses')}
+            </span>
             <select
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value)}
@@ -302,13 +360,27 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
         <table className="min-w-275 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
-              <th className={headCell}>{t('prizePayments.photoSales.columns.date')}</th>
-              <th className={headCell}>{t('prizePayments.photoSales.columns.buyer')}</th>
-              <th className={headCell}>{t('prizePayments.photoSales.columns.email')}</th>
-              <th className={headCell}>{t('prizePayments.photoSales.columns.photo')}</th>
-              <th className={headCell}>{t('prizePayments.photoSales.columns.salePrice')}</th>
-              <th className={headCell}>{t('prizePayments.photoSales.columns.yourEarnings')}</th>
-              <th className={headCell}>{t('prizePayments.photoSales.columns.action')}</th>
+              <th className={headCell}>
+                {t('prizePayments.photoSales.columns.date')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.photoSales.columns.buyer')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.photoSales.columns.email')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.photoSales.columns.photo')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.photoSales.columns.salePrice')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.photoSales.columns.yourEarnings')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.photoSales.columns.action')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -319,7 +391,7 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
                 <td className={bodyCell}>{row.email}</td>
                 <td className={bodyCell}>
                   <span className="inline-flex items-center gap-3">
-                    <img
+                    <Image
                       src={row.image}
                       alt=""
                       width={40}
@@ -332,9 +404,13 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
                 <td className={bodyCell}>{row.salePrice}</td>
                 <td className={bodyCell}>{row.yourEarnings}</td>
                 <td className={bodyCell}>
-                  <button type="button" className="text-[14px] font-medium text-[#4048cd] hover:underline">
+                  <Button
+                    unstyled
+                    type="button"
+                    className="text-[14px] font-medium text-[#4048cd] hover:underline"
+                  >
                     {t('prizePayments.photoSales.details')}
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -342,7 +418,10 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
         </table>
       </div>
 
-      <TablePagination showingKey="prizePayments.photoSales.showing" tone="red" />
+      <TablePagination
+        showingKey="prizePayments.photoSales.showing"
+        tone="red"
+      />
     </section>
   );
 });
@@ -353,7 +432,8 @@ const PaymentHistoryTable = memo(() => {
   const { t } = useTranslation();
   const headCell =
     'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell = 'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
+  const bodyCell =
+    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -361,7 +441,10 @@ const PaymentHistoryTable = memo(() => {
       className={`overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white ${CARD_SHADOW}`}
     >
       <div className="border-b border-[#ececf0] px-6 py-5">
-        <h2 id="prize-payments-history-heading" className="text-[22px] font-bold leading-8 text-[#161c27]">
+        <h2
+          id="prize-payments-history-heading"
+          className="text-[22px] font-bold leading-8 text-[#161c27]"
+        >
           {t('prizePayments.paymentHistory.title')}
         </h2>
       </div>
@@ -370,12 +453,24 @@ const PaymentHistoryTable = memo(() => {
         <table className="min-w-225 w-full border-collapse">
           <thead>
             <tr className="bg-[#f6fbff]">
-              <th className={headCell}>{t('prizePayments.paymentHistory.columns.date')}</th>
-              <th className={headCell}>{t('prizePayments.paymentHistory.columns.type')}</th>
-              <th className={headCell}>{t('prizePayments.paymentHistory.columns.accountType')}</th>
-              <th className={headCell}>{t('prizePayments.paymentHistory.columns.accountNumber')}</th>
-              <th className={headCell}>{t('prizePayments.paymentHistory.columns.amount')}</th>
-              <th className={headCell}>{t('prizePayments.paymentHistory.columns.status')}</th>
+              <th className={headCell}>
+                {t('prizePayments.paymentHistory.columns.date')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.paymentHistory.columns.type')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.paymentHistory.columns.accountType')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.paymentHistory.columns.accountNumber')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.paymentHistory.columns.amount')}
+              </th>
+              <th className={headCell}>
+                {t('prizePayments.paymentHistory.columns.status')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -398,7 +493,10 @@ const PaymentHistoryTable = memo(() => {
         </table>
       </div>
 
-      <TablePagination showingKey="prizePayments.paymentHistory.showing" tone="orange" />
+      <TablePagination
+        showingKey="prizePayments.paymentHistory.showing"
+        tone="orange"
+      />
     </section>
   );
 });
@@ -473,7 +571,9 @@ const PrizePaymentsContent = memo(() => {
 
       {activeTab === 'prizeMoney' ? <PrizingTable /> : null}
       {activeTab === 'donations' ? <DonationsTable /> : null}
-      {activeTab === 'photoSales' ? <PhotoSalesTable onRequestPayout={handleRequestPayout} /> : null}
+      {activeTab === 'photoSales' ? (
+        <PhotoSalesTable onRequestPayout={handleRequestPayout} />
+      ) : null}
 
       <PaymentHistoryTable />
     </div>

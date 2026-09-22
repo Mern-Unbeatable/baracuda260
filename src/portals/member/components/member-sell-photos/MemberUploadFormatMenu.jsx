@@ -1,7 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { ChevronDown, Plus } from 'lucide-react';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import Button from '@/components/ui/Button';
 import { ROUTES } from '@/shared/config';
 
 const UPLOAD_OPTIONS = [
@@ -45,7 +46,8 @@ const MemberUploadFormatMenu = memo(() => {
 
   return (
     <div ref={containerRef} className="relative shrink-0">
-      <button
+      <Button
+        unstyled
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
@@ -60,7 +62,7 @@ const MemberUploadFormatMenu = memo(() => {
           aria-hidden="true"
           className={`transition ${open ? 'rotate-180' : ''}`}
         />
-      </button>
+      </Button>
 
       {open ? (
         <div

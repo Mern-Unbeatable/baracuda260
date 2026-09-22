@@ -1,7 +1,7 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useRef, useState } from 'react';
-import { Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import InViewWrapper from '@/components/common/InViewWrapper';
+import { Shell } from '@/shared/site-chrome';
 
 function formatNumber(value) {
   return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -20,7 +20,7 @@ function useCountUp(target, duration = 1200, startOn = false) {
       const elapsed = now - start;
       const t = Math.min(1, elapsed / duration);
       const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-      const current = Math.round((to) * eased);
+      const current = Math.round(to * eased);
       setValue(current);
       if (t < 1) {
         rafRef.current = requestAnimationFrame(step);
@@ -54,20 +54,22 @@ const STATS = [
   { value: '120×', labelKey: 'home.stats.prizes' },
 ];
 
-const StatCounterItem = memo(({ numericTarget, suffix, labelKey, inView, t }) => {
-  const count = useCountUp(numericTarget, 1200, inView);
-  return (
-    <div className="text-center">
-      <p className="text-[22px] font-bold leading-none text-(--primary-text-heading-color) sm:text-[32px] lg:text-[40px]">
-        {formatNumber(count)}
-        {suffix}
-      </p>
-      <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-(--primary-text-color) sm:mt-3 sm:text-[11px] lg:text-[12px]">
-        {t(labelKey)}
-      </p>
-    </div>
-  );
-});
+const StatCounterItem = memo(
+  ({ numericTarget, suffix, labelKey, inView, t }) => {
+    const count = useCountUp(numericTarget, 1200, inView);
+    return (
+      <div className="text-center">
+        <p className="text-[22px] font-bold leading-none text-(--primary-text-heading-color) sm:text-[32px] lg:text-[40px]">
+          {formatNumber(count)}
+          {suffix}
+        </p>
+        <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-(--primary-text-color) sm:mt-3 sm:text-[11px] lg:text-[12px]">
+          {t(labelKey)}
+        </p>
+      </div>
+    );
+  },
+);
 
 StatCounterItem.displayName = 'StatCounterItem';
 
@@ -80,7 +82,8 @@ const HomeStatsSection = memo(() => {
         <div className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-4 lg:gap-6">
           {STATS.map(({ value, labelKey }) => {
             const suffix = String(value).replace(/[\d,]/g, '');
-            const numericTarget = Number(String(value).replace(/[^\d]/g, '')) || 0;
+            const numericTarget =
+              Number(String(value).replace(/[^\d]/g, '')) || 0;
             return (
               <InViewWrapper key={labelKey}>
                 {(inView) => (

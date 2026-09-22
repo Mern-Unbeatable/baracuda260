@@ -1,4 +1,10 @@
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 const MENU_OFFSET_PX = 6;
@@ -44,7 +50,8 @@ const PortalDropdown = memo(
 
       const updatePosition = () => {
         const rect = buttonRef.current.getBoundingClientRect();
-        const menuHeight = menuRef.current?.offsetHeight || MENU_FALLBACK_HEIGHT_PX;
+        const menuHeight =
+          menuRef.current?.offsetHeight || MENU_FALLBACK_HEIGHT_PX;
         const spaceBelow = window.innerHeight - rect.bottom;
         const openUpward = spaceBelow < menuHeight + MENU_OFFSET_PX;
 
@@ -69,7 +76,9 @@ const PortalDropdown = memo(
       if (!open) return undefined;
 
       const handlePointerDown = (event) => {
-        const inButton = buttonWrapRef?.current?.contains(event.target) || buttonRef?.current?.contains(event.target);
+        const inButton =
+          buttonWrapRef?.current?.contains(event.target) ||
+          buttonRef?.current?.contains(event.target);
         const inMenu = menuRef.current?.contains(event.target);
         if (!inButton && !inMenu) onClose();
       };

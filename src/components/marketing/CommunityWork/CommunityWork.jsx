@@ -1,18 +1,18 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
-import { ROUTES } from '@/shared/config';
-import {
-  ALBUM_TYPES,
-  ALBUM_TYPE_LABEL_KEYS,
-  ALBUM_TYPE_SHORT_LABEL_KEYS,
-  matchesAlbumType,
-} from '@/shared/data/albumTypes';
-import { GALLERY_PHOTOS, galleryDetailPath } from '@/shared/data/galleryPhotos';
-import { AppLink, Shell, homeAsset } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
+import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
-import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
+import { ROUTES } from '@/shared/config';
+import {
+  ALBUM_TYPE_LABEL_KEYS,
+  ALBUM_TYPE_SHORT_LABEL_KEYS,
+  ALBUM_TYPES,
+  matchesAlbumType,
+} from '@/shared/data/albumTypes';
+import { GALLERY_PHOTOS, galleryDetailPath } from '@/shared/data/galleryPhotos';
+import { AppLink, homeAsset, Shell } from '@/shared/site-chrome';
 
 const SHOWCASE_BADGE_KEYS = {
   'Single Photo': 'common.badges.singlePhoto',
@@ -33,7 +33,9 @@ const SHOWCASE_IDS = [
   'zodiac-journey',
 ];
 
-const GALLERY_BY_ID = Object.fromEntries(GALLERY_PHOTOS.map((photo) => [photo.id, photo]));
+const GALLERY_BY_ID = Object.fromEntries(
+  GALLERY_PHOTOS.map((photo) => [photo.id, photo]),
+);
 
 const SHOWCASE = SHOWCASE_IDS.map((id) => GALLERY_BY_ID[id]).filter(Boolean);
 

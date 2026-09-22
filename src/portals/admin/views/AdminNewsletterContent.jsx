@@ -1,7 +1,11 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useId } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import {
   ADMIN_NEWSLETTER_ASSETS,
   CHECK_ICON_SIZE,
@@ -13,8 +17,6 @@ import {
   UPLOAD_ICON_SIZE,
 } from '@/portals/admin/data/adminNewsletterData';
 import useAdminNewsletter from '@/portals/admin/hooks/useAdminNewsletter';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import Input from '@/components/ui/Input';
 
 const fieldLabelClass =
   'text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b] mb-2 block';
@@ -33,7 +35,8 @@ const RecipientOption = memo(({ option, selected, onSelect }) => {
   const iconSrc = ADMIN_NEWSLETTER_ASSETS[option.icon];
 
   return (
-    <button
+    <Button
+      unstyled
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
@@ -49,7 +52,7 @@ const RecipientOption = memo(({ option, selected, onSelect }) => {
             selected ? 'bg-[#4048cd]' : 'bg-[#f8fafc]'
           }`}
         >
-          <img
+          <Image
             src={iconSrc}
             alt=""
             width={RECIPIENT_ICON_SIZE}
@@ -61,12 +64,14 @@ const RecipientOption = memo(({ option, selected, onSelect }) => {
           <span className="text-[16px] font-semibold leading-6 text-[#0f172a]">
             {t(option.titleKey)}
           </span>
-          <span className="text-[14px] leading-5.25 text-[#64748b]">{t(option.subtitleKey)}</span>
+          <span className="text-[14px] leading-5.25 text-[#64748b]">
+            {t(option.subtitleKey)}
+          </span>
         </span>
       </span>
       {selected ? (
         <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#4048cd]">
-          <img
+          <Image
             src={ADMIN_NEWSLETTER_ASSETS.check}
             alt=""
             width={CHECK_ICON_SIZE}
@@ -75,9 +80,12 @@ const RecipientOption = memo(({ option, selected, onSelect }) => {
           />
         </span>
       ) : (
-        <span className="size-6 shrink-0 rounded-full border-2 border-[#e2e8f0]" aria-hidden="true" />
+        <span
+          className="size-6 shrink-0 rounded-full border-2 border-[#e2e8f0]"
+          aria-hidden="true"
+        />
       )}
-    </button>
+    </Button>
   );
 });
 
@@ -108,7 +116,7 @@ const AdminNewsletterContent = memo(() => {
   const {
     register,
     handleSubmit,
-        formState: { errors },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       subject: '',
@@ -127,7 +135,11 @@ const AdminNewsletterContent = memo(() => {
   };
 
   const onFormError = () => {
-    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
+    toast.error(
+      t('form.errors.checkFields', {
+        defaultValue: 'Please check the form for errors.',
+      }),
+    );
   };
 
   return (
@@ -152,7 +164,9 @@ const AdminNewsletterContent = memo(() => {
                   {t('adminNewsletter.recipients.selectHint')}
                 </p>
                 <p className="text-[13px] leading-5 text-[#64748b]">
-                  {t('adminNewsletter.recipients.selectedCount', { count: selectedCount })}
+                  {t('adminNewsletter.recipients.selectedCount', {
+                    count: selectedCount,
+                  })}
                 </p>
               </div>
             ) : (
@@ -172,7 +186,9 @@ const AdminNewsletterContent = memo(() => {
                 <li
                   key={row.id}
                   className={`flex items-center justify-between border-b border-[#e4e4e4] px-4 last:border-b-0 ${
-                    isSelectMode && isSelected ? 'bg-[rgba(239,246,255,0.45)]' : ''
+                    isSelectMode && isSelected
+                      ? 'bg-[rgba(239,246,255,0.45)]'
+                      : ''
                   }`}
                 >
                   {isSelectMode ? (
@@ -182,7 +198,10 @@ const AdminNewsletterContent = memo(() => {
                         checked={isSelected}
                         onChange={() => handleToggleSubscriber(row.id)}
                         className="size-4 shrink-0 cursor-pointer accent-[#4048cd]"
-                        aria-label={t('adminNewsletter.recipients.selectSubscriber', { email: row.email })}
+                        aria-label={t(
+                          'adminNewsletter.recipients.selectSubscriber',
+                          { email: row.email },
+                        )}
                       />
                       <span className="break-all text-[14px] leading-6 text-[#0c0c0c] sm:text-[16px]">
                         {row.email}
@@ -205,11 +224,14 @@ const AdminNewsletterContent = memo(() => {
         {/* Composer + recipients — never stretch to match list height */}
         <div className="flex w-full shrink-0 flex-col gap-5 self-start xl:max-w-3xl xl:flex-1">
           {composerOpen ? (
-            <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className="flex h-auto w-full shrink-0 flex-col gap-8 overflow-hidden rounded-3xl border border-[#e2e8f0] bg-white pb-8 pt-px">
+            <form
+              onSubmit={handleSubmit(onFormSubmit, onFormError)}
+              className="flex h-auto w-full shrink-0 flex-col gap-8 overflow-hidden rounded-3xl border border-[#e2e8f0] bg-white pb-8 pt-px"
+            >
               <div className="flex items-center justify-between border-b border-[#f1f5f9] px-5 pb-6.25 pt-6 sm:px-8">
                 <div className="flex items-center gap-3">
                   <div className="flex rounded-lg bg-[#eef2ff] p-2">
-                    <img
+                    <Image
                       src={ADMIN_NEWSLETTER_ASSETS.composer}
                       alt=""
                       width={COMPOSER_ICON_SIZE}
@@ -221,20 +243,21 @@ const AdminNewsletterContent = memo(() => {
                     {t('adminNewsletter.composer.title')}
                   </h2>
                 </div>
-                <button
+                <Button
+                  unstyled
                   type="button"
                   onClick={() => setComposerOpen(false)}
                   aria-label={t('adminNewsletter.composer.close')}
                   className="cursor-pointer rounded-md p-1 transition hover:bg-[#f1f5f9]"
                 >
-                  <img
+                  <Image
                     src={ADMIN_NEWSLETTER_ASSETS.close}
                     alt=""
                     width={CLOSE_ICON_SIZE}
                     height={CLOSE_ICON_SIZE}
                     className="size-6"
                   />
-                </button>
+                </Button>
               </div>
 
               <div className="flex w-full flex-col gap-6 px-5 sm:px-8">
@@ -244,12 +267,16 @@ const AdminNewsletterContent = memo(() => {
                   inputClassName={inputClass}
                   labelClassName={fieldLabelClass}
                   error={errors.subject}
-                  {...register('subject', { required: t('adminNewsletter.send.subjectRequired') })}
+                  {...register('subject', {
+                    required: t('adminNewsletter.send.subjectRequired'),
+                  })}
                 />
 
                 <Input
                   label={t('adminNewsletter.composer.emailTitle')}
-                  placeholder={t('adminNewsletter.composer.emailTitlePlaceholder')}
+                  placeholder={t(
+                    'adminNewsletter.composer.emailTitlePlaceholder',
+                  )}
                   inputClassName={inputClass}
                   labelClassName={fieldLabelClass}
                   error={errors.emailTitle}
@@ -257,7 +284,10 @@ const AdminNewsletterContent = memo(() => {
                 />
 
                 <div className="flex w-full flex-col">
-                  <span className={fieldLabelClass} id="newsletter-content-label">
+                  <span
+                    className={fieldLabelClass}
+                    id="newsletter-content-label"
+                  >
                     {t('adminNewsletter.composer.content')}
                   </span>
                   <div className="overflow-hidden rounded-xl border border-[#e2e8f0]">
@@ -267,33 +297,45 @@ const AdminNewsletterContent = memo(() => {
                       aria-label={t('adminNewsletter.composer.toolbarAria')}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-[16px] leading-6 text-[#475569]" aria-hidden="true">
+                        <span
+                          className="text-[16px] leading-6 text-[#475569]"
+                          aria-hidden="true"
+                        >
                           B
                         </span>
-                        <span className="text-[16px] italic leading-6 text-[#475569]" aria-hidden="true">
+                        <span
+                          className="text-[16px] italic leading-6 text-[#475569]"
+                          aria-hidden="true"
+                        >
                           I
                         </span>
-                        <span className="text-[16px] underline leading-6 text-[#475569]" aria-hidden="true">
+                        <span
+                          className="text-[16px] underline leading-6 text-[#475569]"
+                          aria-hidden="true"
+                        >
                           U
                         </span>
                       </div>
-                      <span className="h-4 w-px bg-[#e2e8f0]" aria-hidden="true" />
+                      <span
+                        className="h-4 w-px bg-[#e2e8f0]"
+                        aria-hidden="true"
+                      />
                       <div className="flex items-center gap-3">
-                        <img
+                        <Image
                           src={ADMIN_NEWSLETTER_ASSETS.alignLeft}
                           alt=""
                           width={TOOLBAR_ICON_SIZE}
                           height={TOOLBAR_ICON_SIZE}
                           className="size-4"
                         />
-                        <img
+                        <Image
                           src={ADMIN_NEWSLETTER_ASSETS.alignCenter}
                           alt=""
                           width={TOOLBAR_ICON_SIZE}
                           height={TOOLBAR_ICON_SIZE}
                           className="size-4"
                         />
-                        <img
+                        <Image
                           src={ADMIN_NEWSLETTER_ASSETS.alignRight}
                           alt=""
                           width={TOOLBAR_ICON_SIZE}
@@ -301,16 +343,22 @@ const AdminNewsletterContent = memo(() => {
                           className="size-4"
                         />
                       </div>
-                      <span className="h-4 w-px bg-[#e2e8f0]" aria-hidden="true" />
-                      <img
+                      <span
+                        className="h-4 w-px bg-[#e2e8f0]"
+                        aria-hidden="true"
+                      />
+                      <Image
                         src={ADMIN_NEWSLETTER_ASSETS.code}
                         alt=""
                         width={TOOLBAR_ICON_SIZE}
                         height={TOOLBAR_ICON_SIZE}
                         className="size-4"
                       />
-                      <span className="h-4 w-px bg-[#e2e8f0]" aria-hidden="true" />
-                      <img
+                      <span
+                        className="h-4 w-px bg-[#e2e8f0]"
+                        aria-hidden="true"
+                      />
+                      <Image
                         src={ADMIN_NEWSLETTER_ASSETS.link}
                         alt=""
                         width={TOOLBAR_ICON_SIZE}
@@ -320,25 +368,33 @@ const AdminNewsletterContent = memo(() => {
                     </div>
                     <textarea
                       aria-labelledby="newsletter-content-label"
-                      placeholder={t('adminNewsletter.composer.contentPlaceholder')}
+                      placeholder={t(
+                        'adminNewsletter.composer.contentPlaceholder',
+                      )}
                       rows={6}
                       className="min-h-40 w-full resize-y border-0 bg-white px-4 py-4 text-[16px] leading-6 text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:ring-2 focus:ring-[#4048cd]/10"
-                      {...register('content', { required: t('adminNewsletter.send.contentRequired') })}
+                      {...register('content', {
+                        required: t('adminNewsletter.send.contentRequired'),
+                      })}
                     />
                   </div>
                   {errors.content ? (
-                    <p className="mt-1.5 text-[13px] text-[#ee1c25]">{errors.content.message}</p>
+                    <p className="mt-1.5 text-[13px] text-[#ee1c25]">
+                      {errors.content.message}
+                    </p>
                   ) : null}
                 </div>
 
                 <div className="flex w-full flex-col gap-2">
-                  <span className={fieldLabelClass}>{t('adminNewsletter.composer.banner')}</span>
+                  <span className={fieldLabelClass}>
+                    {t('adminNewsletter.composer.banner')}
+                  </span>
                   <label
                     htmlFor={bannerInputId}
                     className="flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-[#e2e8f0] bg-[rgba(248,250,252,0.3)] px-4.5 py-6.5 transition hover:border-[#4048cd]"
                   >
                     <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-[#e2e8f0] bg-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
-                      <img
+                      <Image
                         src={ADMIN_NEWSLETTER_ASSETS.upload}
                         alt=""
                         width={UPLOAD_ICON_SIZE}
@@ -357,20 +413,24 @@ const AdminNewsletterContent = memo(() => {
                     <input
                       id={bannerInputId}
                       type="file"
-                      accept="image/png,image/jpeg,.png,.jpg,.jpeg"
+                      accept="image/png,image/jpeg,.png,.jpg,.webp"
                       className="sr-only"
                       onChange={handleBannerChange}
                     />
                   </label>
                   {bannerError ? (
-                    <p className="text-[13px] text-[#ee1c25]">{t(bannerError)}</p>
+                    <p className="text-[13px] text-[#ee1c25]">
+                      {t(bannerError)}
+                    </p>
                   ) : null}
                 </div>
 
                 <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
                   <Input
                     label={t('adminNewsletter.composer.ctaText')}
-                    placeholder={t('adminNewsletter.composer.ctaTextPlaceholder')}
+                    placeholder={t(
+                      'adminNewsletter.composer.ctaTextPlaceholder',
+                    )}
                     inputClassName={inputClass}
                     labelClassName={fieldLabelClass}
                     error={errors.ctaText}
@@ -379,7 +439,9 @@ const AdminNewsletterContent = memo(() => {
                   <Input
                     type="url"
                     label={t('adminNewsletter.composer.ctaUrl')}
-                    placeholder={t('adminNewsletter.composer.ctaUrlPlaceholder')}
+                    placeholder={t(
+                      'adminNewsletter.composer.ctaUrlPlaceholder',
+                    )}
                     inputClassName={inputClass}
                     labelClassName={fieldLabelClass}
                     error={errors.ctaUrl}
@@ -387,7 +449,8 @@ const AdminNewsletterContent = memo(() => {
                   />
                 </div>
 
-                <button
+                <Button
+                  unstyled
                   type="submit"
                   disabled={sending}
                   className="w-full cursor-pointer rounded-xl bg-[#4048cd] px-6 py-4 text-[16px] font-bold leading-6 text-white shadow-[0px_4px_12px_rgba(64,72,205,0.3)] transition hover:bg-[#363db8] disabled:cursor-not-allowed disabled:opacity-60"
@@ -395,17 +458,18 @@ const AdminNewsletterContent = memo(() => {
                   {sending
                     ? t('adminNewsletter.send.sending')
                     : t('adminNewsletter.send.button')}
-                </button>
+                </Button>
               </div>
             </form>
           ) : (
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => setComposerOpen(true)}
               className="w-full cursor-pointer rounded-3xl border border-dashed border-[#e2e8f0] bg-white px-6 py-8 text-left text-[16px] font-semibold text-[#4048cd] transition hover:border-[#4048cd]"
             >
               {t('adminNewsletter.composer.reopen')}
-            </button>
+            </Button>
           )}
 
           <section className="flex h-auto w-full shrink-0 flex-col gap-8 rounded-3xl border border-[#f1f5f9] bg-white p-5 shadow-[0px_4px_10px_rgba(0,0,0,0.05)] sm:p-8.25">
@@ -417,7 +481,11 @@ const AdminNewsletterContent = memo(() => {
                 {t('adminNewsletter.recipients.subtitle')}
               </p>
             </div>
-            <div className="flex flex-col gap-4" role="group" aria-label={t('adminNewsletter.recipients.title')}>
+            <div
+              className="flex flex-col gap-4"
+              role="group"
+              aria-label={t('adminNewsletter.recipients.title')}
+            >
               {RECIPIENT_OPTIONS.map((option) => (
                 <RecipientOption
                   key={option.id}

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
+import PhotoShowcasePageContent from '@/components/marketing/PhotoShowcasePageContent/PhotoShowcasePageContent';
 import { ROUTES } from '@/shared/config';
 import { GALLERY_PHOTOS, galleryDetailPath } from '@/shared/data/galleryPhotos';
-import PhotoShowcasePageContent from '@/components/marketing/PhotoShowcasePageContent/PhotoShowcasePageContent';
 
 const GalleryMain = memo(({ activeHref = ROUTES.GALLERY }) => (
   <PhotoShowcasePageContent

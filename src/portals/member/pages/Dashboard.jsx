@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { useSEO } from '@/shared/hooks/useSEO';
 import { selectUser } from '@/app/store/slices/authSlice';
 import DashboardContent from '@/portals/member/views/DashboardContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const Dashboard = memo(() => {
   const user = useSelector(selectUser);
@@ -18,7 +18,8 @@ const Dashboard = memo(() => {
         }
       : {
           title: 'Dashboard',
-          description: 'Your My12Photos dashboard — rank, photos, votes, prizes, and competitions.',
+          description:
+            'Your My12Photos dashboard — rank, photos, votes, prizes, and competitions.',
           keywords: ['dashboard', 'My12Photos', 'competitions'],
         },
   );

@@ -21,10 +21,7 @@ export const SITE_FOOTER_COLUMNS = [
   },
   {
     titleKey: 'footer.platform',
-    linkKeys: [
-      'footer.gallery',
-      'footer.about',
-    ],
+    linkKeys: ['footer.gallery', 'footer.about'],
   },
   {
     titleKey: 'footer.legal',

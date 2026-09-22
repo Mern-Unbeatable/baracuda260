@@ -3,12 +3,12 @@
 import { RED_SLOTS } from '@/portals/member/data/zodiac12Assets';
 
 const THUMBS = [
-  '/assets/admin-competition-detail/thumb-1.jpg',
-  '/assets/admin-competition-detail/thumb-2.jpg',
-  '/assets/admin-competition-detail/thumb-3.jpg',
-  '/assets/admin-competition-detail/thumb-4.jpg',
-  '/assets/admin-competition-detail/thumb-5.jpg',
-  '/assets/admin-competition-detail/thumb-6.jpg',
+  '/assets/admin-competition-detail/thumb-1.webp',
+  '/assets/admin-competition-detail/thumb-2.webp',
+  '/assets/admin-competition-detail/thumb-3.webp',
+  '/assets/admin-competition-detail/thumb-4.webp',
+  '/assets/admin-competition-detail/thumb-5.webp',
+  '/assets/admin-competition-detail/thumb-6.webp',
 ];
 
 export const REPORTS_PAGE_SIZE = 12;
@@ -35,7 +35,10 @@ export const REPORT_REASON = {
 export const STATUS_FILTERS = [
   { id: 'all', labelKey: 'adminReports.filters.all' },
   { id: REPORT_STATUS.PENDING, labelKey: 'adminReports.filters.pending' },
-  { id: REPORT_STATUS.UNDER_REVIEW, labelKey: 'adminReports.filters.underReview' },
+  {
+    id: REPORT_STATUS.UNDER_REVIEW,
+    labelKey: 'adminReports.filters.underReview',
+  },
   { id: REPORT_STATUS.RESOLVED, labelKey: 'adminReports.filters.resolved' },
 ];
 
@@ -77,8 +80,16 @@ export const REASON_LABEL_KEYS = {
 
 export const ACTION_MENU_OPTIONS = [
   { id: 'view', labelKey: 'adminReports.actions.viewReport', kind: 'navigate' },
-  { id: REPORT_STATUS.RESOLVED, labelKey: 'adminReports.actions.markResolved', kind: 'status' },
-  { id: REPORT_STATUS.UNDER_REVIEW, labelKey: 'adminReports.actions.markUnderReview', kind: 'status' },
+  {
+    id: REPORT_STATUS.RESOLVED,
+    labelKey: 'adminReports.actions.markResolved',
+    kind: 'status',
+  },
+  {
+    id: REPORT_STATUS.UNDER_REVIEW,
+    labelKey: 'adminReports.actions.markUnderReview',
+    kind: 'status',
+  },
 ];
 
 export const REPORT_STAT_CARDS = [
@@ -132,8 +143,8 @@ const buildSixSlides = () =>
 export const SIX_STORY_SLIDES = buildSixSlides();
 
 export const SHARED_MEDIA = {
-  hero: '/assets/competition-details/hero.jpg',
-  preview: '/assets/admin-competitions/morning.jpg',
+  hero: '/assets/competition-details/hero.webp',
+  preview: '/assets/admin-competitions/morning.webp',
   titleKey: 'adminReports.detail.mediaTitle',
   descriptionKey: 'adminReports.detail.mediaDescription',
   credit: 'Wong Kar-Wai',
@@ -153,7 +164,7 @@ export const MODERATION_HISTORY = {
   locationKey: 'adminReports.people.victor.location',
   email: 'vvance@biotechsurplus.com',
   memberSince: 'Jan 14, 2025',
-  avatar: '/assets/competition-details/avatar-3.jpg',
+  avatar: '/assets/competition-details/avatar-3.webp',
   recentReportsLabelKey: 'adminReports.history.recentReports',
   stats: {
     totalReports: 7,
@@ -210,17 +221,21 @@ export const ADMIN_REPORTS_ROWS = [
       nameKey: 'adminReports.people.claire.name',
       roleKey: 'adminReports.people.claire.role',
       locationKey: 'adminReports.people.claire.location',
-      avatar: '/assets/competition-details/avatar-1.jpg',
+      avatar: '/assets/competition-details/avatar-1.webp',
     },
     reportedUser: {
       nameKey: 'adminReports.people.victor.name',
       roleKey: 'adminReports.people.victor.role',
       locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.jpg',
+      avatar: '/assets/competition-details/avatar-3.webp',
       reportCount: 1,
       warnings: 0,
     },
-    media: { ...SHARED_MEDIA, slides: SIX_STORY_SLIDES, albumLabelKey: 'adminReports.detail.sixPhotos' },
+    media: {
+      ...SHARED_MEDIA,
+      slides: SIX_STORY_SLIDES,
+      albumLabelKey: 'adminReports.detail.sixPhotos',
+    },
   },
   {
     id: 'rep-2',
@@ -238,17 +253,21 @@ export const ADMIN_REPORTS_ROWS = [
       nameKey: 'adminReports.people.marvin',
       roleKey: 'adminReports.people.marvinRole',
       locationKey: 'adminReports.people.marvinLocation',
-      avatar: '/assets/competition-details/avatar-2.jpg',
+      avatar: '/assets/competition-details/avatar-2.webp',
     },
     reportedUser: {
       nameKey: 'adminReports.people.victor.name',
       roleKey: 'adminReports.people.victor.role',
       locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.jpg',
+      avatar: '/assets/competition-details/avatar-3.webp',
       reportCount: 1,
       warnings: 0,
     },
-    media: { ...SHARED_MEDIA, slides: SIX_STORY_SLIDES, albumLabelKey: 'adminReports.detail.sixPhotos' },
+    media: {
+      ...SHARED_MEDIA,
+      slides: SIX_STORY_SLIDES,
+      albumLabelKey: 'adminReports.detail.sixPhotos',
+    },
   },
   {
     id: 'rep-3',
@@ -266,13 +285,13 @@ export const ADMIN_REPORTS_ROWS = [
       nameKey: 'adminReports.people.ronald',
       roleKey: 'adminReports.people.ronaldRole',
       locationKey: 'adminReports.people.ronaldLocation',
-      avatar: '/assets/competition-details/avatar-4.jpg',
+      avatar: '/assets/competition-details/avatar-4.webp',
     },
     reportedUser: {
       nameKey: 'adminReports.people.victor.name',
       roleKey: 'adminReports.people.victor.role',
       locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.jpg',
+      avatar: '/assets/competition-details/avatar-3.webp',
       reportCount: 1,
       warnings: 0,
     },
@@ -298,17 +317,21 @@ export const ADMIN_REPORTS_ROWS = [
       nameKey: 'adminReports.people.albert',
       roleKey: 'adminReports.people.albertRole',
       locationKey: 'adminReports.people.albertLocation',
-      avatar: '/assets/competition-details/avatar-5.jpg',
+      avatar: '/assets/competition-details/avatar-5.webp',
     },
     reportedUser: {
       nameKey: 'adminReports.people.victor.name',
       roleKey: 'adminReports.people.victor.role',
       locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.jpg',
+      avatar: '/assets/competition-details/avatar-3.webp',
       reportCount: 1,
       warnings: 0,
     },
-    media: { ...SHARED_MEDIA, slides: SIX_STORY_SLIDES, albumLabelKey: 'adminReports.detail.singlePhoto' },
+    media: {
+      ...SHARED_MEDIA,
+      slides: SIX_STORY_SLIDES,
+      albumLabelKey: 'adminReports.detail.singlePhoto',
+    },
   },
   {
     id: 'rep-5',
@@ -326,17 +349,21 @@ export const ADMIN_REPORTS_ROWS = [
       nameKey: 'adminReports.people.marvin',
       roleKey: 'adminReports.people.marvinRole',
       locationKey: 'adminReports.people.marvinLocation',
-      avatar: '/assets/competition-details/avatar-2.jpg',
+      avatar: '/assets/competition-details/avatar-2.webp',
     },
     reportedUser: {
       nameKey: 'adminReports.people.victor.name',
       roleKey: 'adminReports.people.victor.role',
       locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.jpg',
+      avatar: '/assets/competition-details/avatar-3.webp',
       reportCount: 1,
       warnings: 0,
     },
-    media: { ...SHARED_MEDIA, slides: SIX_STORY_SLIDES, albumLabelKey: 'adminReports.detail.sixPhotos' },
+    media: {
+      ...SHARED_MEDIA,
+      slides: SIX_STORY_SLIDES,
+      albumLabelKey: 'adminReports.detail.sixPhotos',
+    },
   },
   {
     id: 'rep-6',
@@ -354,17 +381,21 @@ export const ADMIN_REPORTS_ROWS = [
       nameKey: 'adminReports.people.ronald',
       roleKey: 'adminReports.people.ronaldRole',
       locationKey: 'adminReports.people.ronaldLocation',
-      avatar: '/assets/competition-details/avatar-4.jpg',
+      avatar: '/assets/competition-details/avatar-4.webp',
     },
     reportedUser: {
       nameKey: 'adminReports.people.victor.name',
       roleKey: 'adminReports.people.victor.role',
       locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.jpg',
+      avatar: '/assets/competition-details/avatar-3.webp',
       reportCount: 1,
       warnings: 0,
     },
-    media: { ...SHARED_MEDIA, slides: SIX_STORY_SLIDES, albumLabelKey: 'adminReports.detail.singlePhoto' },
+    media: {
+      ...SHARED_MEDIA,
+      slides: SIX_STORY_SLIDES,
+      albumLabelKey: 'adminReports.detail.singlePhoto',
+    },
   },
   {
     id: 'rep-7',
@@ -382,13 +413,13 @@ export const ADMIN_REPORTS_ROWS = [
       nameKey: 'adminReports.people.albert',
       roleKey: 'adminReports.people.albertRole',
       locationKey: 'adminReports.people.albertLocation',
-      avatar: '/assets/competition-details/avatar-5.jpg',
+      avatar: '/assets/competition-details/avatar-5.webp',
     },
     reportedUser: {
       nameKey: 'adminReports.people.victor.name',
       roleKey: 'adminReports.people.victor.role',
       locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.jpg',
+      avatar: '/assets/competition-details/avatar-3.webp',
       reportCount: 1,
       warnings: 0,
     },
@@ -403,7 +434,8 @@ export const ADMIN_REPORTS_ROWS = [
 export const computeReportStats = (rows) => ({
   total: rows.length,
   pending: rows.filter((row) => row.status === REPORT_STATUS.PENDING).length,
-  underReview: rows.filter((row) => row.status === REPORT_STATUS.UNDER_REVIEW).length,
+  underReview: rows.filter((row) => row.status === REPORT_STATUS.UNDER_REVIEW)
+    .length,
   resolved: rows.filter((row) => row.status === REPORT_STATUS.RESOLVED).length,
 });
 
@@ -420,4 +452,5 @@ export const paginateReports = (rows, page, pageSize) => {
 export const updateReportStatus = (rows, rowId, nextStatus) =>
   rows.map((row) => (row.id === rowId ? { ...row, status: nextStatus } : row));
 
-export const getReportById = (rows, reportId) => rows.find((row) => row.id === reportId) || null;
+export const getReportById = (rows, reportId) =>
+  rows.find((row) => row.id === reportId) || null;

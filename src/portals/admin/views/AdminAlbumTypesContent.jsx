@@ -1,17 +1,19 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import AlbumTypeModal from '@/portals/admin/components/admin-album-types/AlbumTypeModal';
 import {
   ADMIN_ALBUM_TYPES_ASSETS,
   CHECK_ICON_SIZE,
   EDIT_ICON_SIZE,
-  ICON_BOX_SIZE,
-  TYPE_ICON_SIZE,
   formatPrizeMoney,
+  ICON_BOX_SIZE,
   resolveAlbumTypeCopy,
+  TYPE_ICON_SIZE,
 } from '@/portals/admin/data/adminAlbumTypesData';
 import useAdminAlbumTypes from '@/portals/admin/hooks/useAdminAlbumTypes';
-import AlbumTypeModal from '@/portals/admin/components/admin-album-types/AlbumTypeModal';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /**
  * @param {{ albumType: object, onEdit: (id: string) => void }} props
@@ -19,7 +21,9 @@ import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader
 const AlbumTypeCard = memo(({ albumType, onEdit }) => {
   const { t } = useTranslation();
   const { name, description, features } = resolveAlbumTypeCopy(t, albumType);
-  const iconSrc = ADMIN_ALBUM_TYPES_ASSETS[albumType.iconKey] || ADMIN_ALBUM_TYPES_ASSETS.camera;
+  const iconSrc =
+    ADMIN_ALBUM_TYPES_ASSETS[albumType.iconKey] ||
+    ADMIN_ALBUM_TYPES_ASSETS.camera;
 
   return (
     <article className="flex w-full flex-col gap-7.5 rounded-[20px] border border-[rgba(0,0,0,0.16)] bg-white p-5 sm:p-8">
@@ -29,7 +33,7 @@ const AlbumTypeCard = memo(({ albumType, onEdit }) => {
             className="inline-flex items-center justify-center rounded-lg bg-[#fde8e9] px-3 pb-3.25 pt-3"
             style={{ width: ICON_BOX_SIZE.width, height: ICON_BOX_SIZE.height }}
           >
-            <img
+            <Image
               src={iconSrc}
               alt=""
               width={TYPE_ICON_SIZE}
@@ -51,7 +55,7 @@ const AlbumTypeCard = memo(({ albumType, onEdit }) => {
             <ul className="flex w-full flex-col gap-2.5">
               {features.map((feature) => (
                 <li key={feature} className="flex items-center gap-2">
-                  <img
+                  <Image
                     src={ADMIN_ALBUM_TYPES_ASSETS.check}
                     alt=""
                     width={CHECK_ICON_SIZE}
@@ -77,12 +81,13 @@ const AlbumTypeCard = memo(({ albumType, onEdit }) => {
         </p>
       </div>
 
-      <button
+      <Button
+        unstyled
         type="button"
         onClick={() => onEdit(albumType.id)}
         className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-bold leading-normal text-white transition hover:bg-[#d41921]"
       >
-        <img
+        <Image
           src={ADMIN_ALBUM_TYPES_ASSETS.edit}
           alt=""
           width={EDIT_ICON_SIZE}
@@ -90,7 +95,7 @@ const AlbumTypeCard = memo(({ albumType, onEdit }) => {
           className="size-5"
         />
         {t('adminAlbumTypes.editAlbum')}
-      </button>
+      </Button>
     </article>
   );
 });
@@ -123,13 +128,14 @@ const AdminAlbumTypesContent = memo(() => {
           description={t('adminAlbumTypes.subtitle')}
         />
 
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={handleOpenCreateModal}
           className="inline-flex w-fit shrink-0 cursor-pointer items-center justify-center rounded-[10px] bg-[#ee1c25] px-4.5 py-3.25 text-[17px] font-bold leading-6.25 text-white shadow-[0px_5px_5px_rgba(38,99,213,0.11)] transition hover:bg-[#d41921]"
         >
           {t('adminAlbumTypes.create')}
-        </button>
+        </Button>
       </header>
 
       <section

@@ -1,9 +1,22 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
 import { MoreVertical } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import {
+  ADMIN_DEMO_PROFILES_ASSETS,
+  CHEVRON_ICON_SIZE,
+} from '@/portals/admin/data/adminDemoProfilesData';
 import {
   ACTION_MENU_OPTIONS,
   MORE_ICON_SIZE,
@@ -15,13 +28,8 @@ import {
   STATUS_STYLES,
   TYPE_LABEL_KEYS,
 } from '@/portals/admin/data/adminReportsData';
-import {
-  ADMIN_DEMO_PROFILES_ASSETS,
-  CHEVRON_ICON_SIZE,
-} from '@/portals/admin/data/adminDemoProfilesData';
 import useAdminReports from '@/portals/admin/hooks/useAdminReports';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import { ROUTES } from '@/shared/config';
 
 const ACTION_MENU_OFFSET_PX = 6;
 const ACTION_MENU_FALLBACK_HEIGHT_PX = 148;
@@ -31,7 +39,9 @@ const MD_MEDIA_QUERY = '(min-width: 768px)';
 
 const useIsMdUp = () => {
   const [isMdUp, setIsMdUp] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia(MD_MEDIA_QUERY).matches : false,
+    typeof window !== 'undefined'
+      ? window.matchMedia(MD_MEDIA_QUERY).matches
+      : false,
   );
 
   useEffect(() => {
@@ -66,7 +76,9 @@ const ReportStatCards = memo(({ stats }) => {
               {card.icon}
             </span>
           </div>
-          <p className={`pt-3.5 text-[32px] font-extrabold leading-8 ${card.valueClass}`}>
+          <p
+            className={`pt-3.5 text-[32px] font-extrabold leading-8 ${card.valueClass}`}
+          >
             {stats[card.id]}
           </p>
           <p className="pt-2 text-[11px] font-semibold leading-[16.5px] text-[#9ca3af]">
@@ -88,8 +100,13 @@ const StatusBadge = memo(({ status }) => {
     <span
       className={`inline-flex h-[30px] items-center gap-[5px] rounded-[8px] px-[9px] py-[5px] ${style.bg}`}
     >
-      <span className={`size-[6px] shrink-0 rounded-[3px] ${style.dot}`} aria-hidden="true" />
-      <span className={`text-[13px] font-bold leading-[19px] whitespace-nowrap ${style.text}`}>
+      <span
+        className={`size-[6px] shrink-0 rounded-[3px] ${style.dot}`}
+        aria-hidden="true"
+      />
+      <span
+        className={`text-[13px] font-bold leading-[19px] whitespace-nowrap ${style.text}`}
+      >
         {t(STATUS_LABEL_KEYS[status])}
       </span>
     </span>
@@ -98,81 +115,90 @@ const StatusBadge = memo(({ status }) => {
 
 StatusBadge.displayName = 'StatusBadge';
 
-const StatusSortSelect = memo(({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
-  const { t } = useTranslation();
-  const rootRef = useRef(null);
-  const activeFilter = STATUS_FILTERS.find((filter) => filter.id === statusFilter) || STATUS_FILTERS[0];
+const StatusSortSelect = memo(
+  ({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
+    const { t } = useTranslation();
+    const rootRef = useRef(null);
+    const activeFilter =
+      STATUS_FILTERS.find((filter) => filter.id === statusFilter) ||
+      STATUS_FILTERS[0];
 
-  useEffect(() => {
-    if (!sortOpen) return undefined;
+    useEffect(() => {
+      if (!sortOpen) return undefined;
 
-    const handlePointerDown = (event) => {
-      if (rootRef.current && !rootRef.current.contains(event.target)) onClose();
-    };
+      const handlePointerDown = (event) => {
+        if (rootRef.current && !rootRef.current.contains(event.target))
+          onClose();
+      };
 
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
+      const handleKeyDown = (event) => {
+        if (event.key === 'Escape') onClose();
+      };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [sortOpen, onClose]);
+      document.addEventListener('mousedown', handlePointerDown);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('mousedown', handlePointerDown);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [sortOpen, onClose]);
 
-  return (
-    <div className="relative" ref={rootRef}>
-      <button
-        type="button"
-        aria-expanded={sortOpen}
-        aria-haspopup="listbox"
-        aria-label={t('adminReports.filters.aria')}
-        onClick={onToggle}
-        className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-[8px] border border-[#e4e4e4] bg-white p-3 text-left"
-      >
-        <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
-          {t(activeFilter.labelKey)}
-        </span>
-        <img
-          src={ADMIN_DEMO_PROFILES_ASSETS.chevronDown}
-          alt=""
-          width={CHEVRON_ICON_SIZE}
-          height={CHEVRON_ICON_SIZE}
-          className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
-        />
-      </button>
-
-      {sortOpen ? (
-        <ul
-          role="listbox"
+    return (
+      <div className="relative" ref={rootRef}>
+        <Button
+          unstyled
+          type="button"
+          aria-expanded={sortOpen}
+          aria-haspopup="listbox"
           aria-label={t('adminReports.filters.aria')}
-          className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
+          onClick={onToggle}
+          className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-[8px] border border-[#e4e4e4] bg-white p-3 text-left"
         >
-          {STATUS_FILTERS.map((filter) => {
-            const selected = filter.id === statusFilter;
-            return (
-              <li key={filter.id}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={selected}
-                  onClick={() => onSelect(filter.id)}
-                  className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
-                    selected ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
-                  }`}
-                >
-                  {t(filter.labelKey)}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
-    </div>
-  );
-});
+          <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
+            {t(activeFilter.labelKey)}
+          </span>
+          <Image
+            src={ADMIN_DEMO_PROFILES_ASSETS.chevronDown}
+            alt=""
+            width={CHEVRON_ICON_SIZE}
+            height={CHEVRON_ICON_SIZE}
+            className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
+          />
+        </Button>
+
+        {sortOpen ? (
+          <ul
+            role="listbox"
+            aria-label={t('adminReports.filters.aria')}
+            className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
+          >
+            {STATUS_FILTERS.map((filter) => {
+              const selected = filter.id === statusFilter;
+              return (
+                <li key={filter.id}>
+                  <Button
+                    unstyled
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    onClick={() => onSelect(filter.id)}
+                    className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
+                      selected
+                        ? 'bg-[#f6fbff] text-[#4048cd]'
+                        : 'text-[#373737]'
+                    }`}
+                  >
+                    {t(filter.labelKey)}
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+      </div>
+    );
+  },
+);
 
 StatusSortSelect.displayName = 'StatusSortSelect';
 
@@ -192,12 +218,16 @@ const ReportActionMenu = memo(
 
       const updatePosition = () => {
         const rect = buttonRef.current.getBoundingClientRect();
-        const menuHeight = menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
+        const menuHeight =
+          menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
         const spaceBelow = window.innerHeight - rect.bottom;
         const openUpward = spaceBelow < menuHeight + ACTION_MENU_OFFSET_PX;
 
         setPlacement({
-          right: Math.max(ACTION_MENU_VIEWPORT_MARGIN_PX, window.innerWidth - rect.right),
+          right: Math.max(
+            ACTION_MENU_VIEWPORT_MARGIN_PX,
+            window.innerWidth - rect.right,
+          ),
           ...(openUpward
             ? { bottom: window.innerHeight - rect.top + ACTION_MENU_OFFSET_PX }
             : { top: rect.bottom + ACTION_MENU_OFFSET_PX }),
@@ -239,7 +269,9 @@ const ReportActionMenu = memo(
           <div
             ref={menuRef}
             role="menu"
-            aria-label={t('adminReports.actions.menu', { name: t(row.reportedByKey) })}
+            aria-label={t('adminReports.actions.menu', {
+              name: t(row.reportedByKey),
+            })}
             style={{
               position: 'fixed',
               zIndex: 50,
@@ -249,9 +281,13 @@ const ReportActionMenu = memo(
             }}
             className="overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
           >
-            <span className="block h-[3px] w-full bg-[#4048cd]" aria-hidden="true" />
+            <span
+              className="block h-[3px] w-full bg-[#4048cd]"
+              aria-hidden="true"
+            />
             {ACTION_MENU_OPTIONS.map((option) => (
-              <button
+              <Button
+                unstyled
                 key={option.id}
                 type="button"
                 role="menuitem"
@@ -262,7 +298,7 @@ const ReportActionMenu = memo(
                 className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff]"
               >
                 {t(option.labelKey)}
-              </button>
+              </Button>
             ))}
           </div>,
           document.body,
@@ -271,19 +307,22 @@ const ReportActionMenu = memo(
 
     return (
       <div className="relative inline-flex" ref={buttonWrapRef}>
-        <button
+        <Button
+          unstyled
           ref={buttonRef}
           type="button"
           aria-expanded={isOpen}
           aria-haspopup="menu"
-          aria-label={t('adminReports.actions.menu', { name: t(row.reportedByKey) })}
+          aria-label={t('adminReports.actions.menu', {
+            name: t(row.reportedByKey),
+          })}
           onClick={() => onToggle(row.id)}
           className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-[6px] text-[#373737] transition ${
             isOpen ? 'bg-[#f6fbff]' : 'hover:bg-[#f6fbff]'
           }`}
         >
           <MoreVertical size={MORE_ICON_SIZE} aria-hidden="true" />
-        </button>
+        </Button>
         {menu}
       </div>
     );
@@ -304,7 +343,14 @@ const TABLE_COLUMNS = [
 ];
 
 const ReportTableRow = memo(
-  ({ row, openActionId, onToggleAction, onCloseAction, onViewReport, onSelectStatus }) => {
+  ({
+    row,
+    openActionId,
+    onToggleAction,
+    onCloseAction,
+    onViewReport,
+    onSelectStatus,
+  }) => {
     const { t } = useTranslation();
 
     return (
@@ -323,9 +369,13 @@ const ReportTableRow = memo(
         </td>
         <td className="min-w-[180px] px-[26px] py-6">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[16px] leading-6 text-[#0c0c0c]">{t(row.reportedUserKey)}</span>
+            <span className="text-[16px] leading-6 text-[#0c0c0c]">
+              {t(row.reportedUserKey)}
+            </span>
             <span className="rounded-full bg-[#fee2e2] px-2 py-0.5 text-[11px] font-bold text-[#991b1b]">
-              {t('adminReports.reportCount', { count: row.reportedUserReportCount })}
+              {t('adminReports.reportCount', {
+                count: row.reportedUserReportCount,
+              })}
             </span>
           </div>
         </td>
@@ -353,7 +403,14 @@ const ReportTableRow = memo(
 ReportTableRow.displayName = 'ReportTableRow';
 
 const ReportMobileCard = memo(
-  ({ row, openActionId, onToggleAction, onCloseAction, onViewReport, onSelectStatus }) => {
+  ({
+    row,
+    openActionId,
+    onToggleAction,
+    onCloseAction,
+    onViewReport,
+    onSelectStatus,
+  }) => {
     const { t } = useTranslation();
 
     return (
@@ -363,7 +420,9 @@ const ReportMobileCard = memo(
             <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
               {t(row.reportedByKey)}
             </p>
-            <p className="mt-1 text-[14px] leading-5 text-[#687186]">{t(row.reportedItemKey)}</p>
+            <p className="mt-1 text-[14px] leading-5 text-[#687186]">
+              {t(row.reportedItemKey)}
+            </p>
           </div>
           <ReportActionMenu
             row={row}
@@ -376,13 +435,17 @@ const ReportMobileCard = memo(
         </div>
         <div className="grid grid-cols-1 gap-2">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">{t('adminReports.columns.type')}</span>
+            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+              {t('adminReports.columns.type')}
+            </span>
             <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
               {t(TYPE_LABEL_KEYS[row.type])}
             </span>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">{t('adminReports.columns.reason')}</span>
+            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+              {t('adminReports.columns.reason')}
+            </span>
             <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
               {t(REASON_LABEL_KEYS[row.reason])}
             </span>
@@ -399,10 +462,14 @@ const ReportMobileCard = memo(
             <span className="text-[13px] leading-5 text-[#7f8ba1]">
               {t('adminReports.columns.reportedDate')}
             </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">{row.reportedDate}</span>
+            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+              {row.reportedDate}
+            </span>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">{t('adminReports.columns.status')}</span>
+            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+              {t('adminReports.columns.status')}
+            </span>
             <StatusBadge status={row.status} />
           </div>
         </div>
@@ -446,7 +513,10 @@ const AdminReportsContent = memo(() => {
   return (
     <div className="flex w-full flex-col gap-5">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <AdminPageHeader title={t('adminReports.title')} description={t('adminReports.subtitle')} />
+        <AdminPageHeader
+          title={t('adminReports.title')}
+          description={t('adminReports.subtitle')}
+        />
         <StatusSortSelect
           statusFilter={statusFilter}
           sortOpen={sortOpen}
@@ -458,7 +528,10 @@ const AdminReportsContent = memo(() => {
 
       <ReportStatCards stats={stats} />
 
-      <section aria-label={t('adminReports.tableAria')} className="overflow-hidden rounded-[12px] bg-white">
+      <section
+        aria-label={t('adminReports.tableAria')}
+        className="overflow-hidden rounded-[12px] bg-white"
+      >
         {visibleRows.length > 0 ? (
           isMdUp ? (
             <div className="w-full overflow-x-auto">
@@ -508,7 +581,9 @@ const AdminReportsContent = memo(() => {
             </div>
           )
         ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">{t('adminReports.empty')}</p>
+          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+            {t('adminReports.empty')}
+          </p>
         )}
 
         <AdminPagination
@@ -520,7 +595,11 @@ const AdminReportsContent = memo(() => {
           isLastPage={isLastPage}
           onPrevious={handlePreviousPage}
           onNext={handleNextPage}
-          showingText={t('adminReports.pagination.showing', { from, to, total: resultsTotal })}
+          showingText={t('adminReports.pagination.showing', {
+            from,
+            to,
+            total: resultsTotal,
+          })}
           previousLabel={t('adminReports.pagination.previous')}
           nextLabel={t('adminReports.pagination.next')}
         />

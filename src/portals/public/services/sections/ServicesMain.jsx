@@ -1,7 +1,7 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect } from 'react';
 import { useApi } from '@/shared/hooks/useApi';
-import { httpMethods } from '@/shared/lib/httpMethods';
 import API_ENDPOINTS from '@/shared/lib/httpEndpoint';
+import { httpMethods } from '@/shared/lib/httpMethods';
 
 const ServiceCard = memo(({ title, description }) => (
   <div className="bg-white p-6 rounded-lg shadow-md">
@@ -10,7 +10,7 @@ const ServiceCard = memo(({ title, description }) => (
   </div>
 ));
 
-ServiceCard.displayName = "ServiceCard";
+ServiceCard.displayName = 'ServiceCard';
 
 const ServicesContent = memo(() => {
   const { data, loading, error, execute } = useApi(httpMethods.get);
@@ -53,6 +53,6 @@ const ServicesContent = memo(() => {
   );
 });
 
-ServicesContent.displayName = "ServicesContent";
+ServicesContent.displayName = 'ServicesContent';
 
 export default ServicesContent;

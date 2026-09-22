@@ -1,10 +1,11 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import AuthPageChrome from '@/portals/auth/components/auth/auth/AuthPageChrome';
 import { SIGNUP_ASSETS } from '@/portals/auth/data/signupAssets';
-import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
+import { ROUTES } from '@/shared/config';
 import { useSignUp } from '../hooks/useSignUp';
 
 /**
@@ -25,8 +26,9 @@ const SignUpContent = memo(() => {
     `h-[52px] w-full rounded-lg bg-[#ecedfa] px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:ring-2 focus:ring-[#ee1c25]/25 sm:h-[60px] ${
       hasError ? 'ring-2 ring-red-400' : ''
     }`;
-    
-  const labelClass = "block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px] mb-2 sm:mb-2.5";
+
+  const labelClass =
+    'block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px] mb-2 sm:mb-2.5';
 
   return (
     <div className="signup-page-root relative min-h-dvh w-full overflow-x-hidden bg-white">
@@ -34,7 +36,7 @@ const SignUpContent = memo(() => {
 
       <div className="grid min-h-dvh w-full grid-cols-1 lg:grid-cols-[minmax(0,724fr)_minmax(0,720fr)]">
         <aside className="relative h-55 overflow-hidden sm:h-75 md:h-90 lg:h-auto lg:min-h-dvh">
-          <img
+          <Image
             src={SIGNUP_ASSETS.hero}
             alt=""
             width={724}
@@ -94,10 +96,14 @@ const SignUpContent = memo(() => {
                   placeholder={t('signup.fullNamePlaceholder')}
                   error={errors.fullName}
                   aria-invalid={Boolean(errors.fullName)}
-                  aria-describedby={errors.fullName ? 'signup-full-name-error' : undefined}
+                  aria-describedby={
+                    errors.fullName ? 'signup-full-name-error' : undefined
+                  }
                   inputClassName={fieldClass(Boolean(errors.fullName))}
                   labelClassName={labelClass}
-                  {...register('fullName', { required: t('signup.fullNameRequired') })}
+                  {...register('fullName', {
+                    required: t('signup.fullNameRequired'),
+                  })}
                 />
 
                 <Input
@@ -108,10 +114,14 @@ const SignUpContent = memo(() => {
                   placeholder={t('signup.usernamePlaceholder')}
                   error={errors.username}
                   aria-invalid={Boolean(errors.username)}
-                  aria-describedby={errors.username ? 'signup-username-error' : undefined}
+                  aria-describedby={
+                    errors.username ? 'signup-username-error' : undefined
+                  }
                   inputClassName={fieldClass(Boolean(errors.username))}
                   labelClassName={labelClass}
-                  {...register('username', { required: t('signup.usernameRequired') })}
+                  {...register('username', {
+                    required: t('signup.usernameRequired'),
+                  })}
                 />
 
                 <Input
@@ -122,12 +132,17 @@ const SignUpContent = memo(() => {
                   placeholder={t('signup.emailPlaceholder')}
                   error={errors.email}
                   aria-invalid={Boolean(errors.email)}
-                  aria-describedby={errors.email ? 'signup-email-error' : undefined}
+                  aria-describedby={
+                    errors.email ? 'signup-email-error' : undefined
+                  }
                   inputClassName={fieldClass(Boolean(errors.email))}
                   labelClassName={labelClass}
-                  {...register('email', { 
+                  {...register('email', {
                     required: t('signup.emailRequired'),
-                    pattern: { value: EMAIL_REGEX, message: t('signup.emailInvalid') }
+                    pattern: {
+                      value: EMAIL_REGEX,
+                      message: t('signup.emailInvalid'),
+                    },
                   })}
                 />
 
@@ -139,10 +154,14 @@ const SignUpContent = memo(() => {
                   placeholder={t('signup.phonePlaceholder')}
                   error={errors.phone}
                   aria-invalid={Boolean(errors.phone)}
-                  aria-describedby={errors.phone ? 'signup-phone-error' : undefined}
+                  aria-describedby={
+                    errors.phone ? 'signup-phone-error' : undefined
+                  }
                   inputClassName={fieldClass(Boolean(errors.phone))}
                   labelClassName={labelClass}
-                  {...register('phone', { required: t('signup.phoneRequired') })}
+                  {...register('phone', {
+                    required: t('signup.phoneRequired'),
+                  })}
                 />
 
                 <Input
@@ -153,10 +172,14 @@ const SignUpContent = memo(() => {
                   placeholder={t('signup.countryPlaceholder')}
                   error={errors.country}
                   aria-invalid={Boolean(errors.country)}
-                  aria-describedby={errors.country ? 'signup-country-error' : undefined}
+                  aria-describedby={
+                    errors.country ? 'signup-country-error' : undefined
+                  }
                   inputClassName={fieldClass(Boolean(errors.country))}
                   labelClassName={labelClass}
-                  {...register('country', { required: t('signup.countryRequired') })}
+                  {...register('country', {
+                    required: t('signup.countryRequired'),
+                  })}
                 />
 
                 <Input
@@ -167,12 +190,17 @@ const SignUpContent = memo(() => {
                   placeholder={t('signup.passwordPlaceholder')}
                   error={errors.password}
                   aria-invalid={Boolean(errors.password)}
-                  aria-describedby={errors.password ? 'signup-password-error' : undefined}
+                  aria-describedby={
+                    errors.password ? 'signup-password-error' : undefined
+                  }
                   inputClassName={fieldClass(Boolean(errors.password))}
                   labelClassName={labelClass}
-                  {...register('password', { 
+                  {...register('password', {
                     required: t('signup.passwordRequired'),
-                    minLength: { value: 8, message: t('signup.passwordTooShort') }
+                    minLength: {
+                      value: 8,
+                      message: t('signup.passwordTooShort'),
+                    },
                   })}
                 />
               </div>
@@ -191,8 +219,13 @@ const SignUpContent = memo(() => {
                 </Button>
 
                 <p className="text-center text-[15px] leading-normal text-[#a7a7a7] sm:text-[16px]">
-                  <span className="text-[#0c0c0c]">{t('signup.haveAccount')} </span>
-                  <Link to={ROUTES.LOGIN} className="font-semibold text-[#ee1c25]">
+                  <span className="text-[#0c0c0c]">
+                    {t('signup.haveAccount')}{' '}
+                  </span>
+                  <Link
+                    to={ROUTES.LOGIN}
+                    className="font-semibold text-[#ee1c25]"
+                  >
                     {t('signup.logIn')}
                   </Link>
                 </p>

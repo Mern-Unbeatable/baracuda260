@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
-  DEMO_PROFILES_PAGE_SIZE,
   computeDemoProfileStats,
+  DEMO_PROFILES_PAGE_SIZE,
   filterDemoProfilesByStatus,
   getDemoProfileById,
   getDemoProfilesStore,
@@ -24,7 +24,11 @@ export default function useAdminDemoProfiles(
   const filteredProfiles = filterDemoProfilesByStatus(profiles, statusFilter);
   const totalPages = Math.max(1, Math.ceil(filteredProfiles.length / pageSize));
   const safePage = Math.min(page, totalPages);
-  const visibleProfiles = paginateDemoProfiles(filteredProfiles, safePage, pageSize);
+  const visibleProfiles = paginateDemoProfiles(
+    filteredProfiles,
+    safePage,
+    pageSize,
+  );
   const detailProfile = getDemoProfileById(profiles, detailProfileId);
 
   const handleStatusFilterChange = (nextFilter) => {
@@ -67,7 +71,11 @@ export default function useAdminDemoProfiles(
   const handleDeactivateProfile = () => {
     if (!detailProfileId) return;
     setProfiles((current) => {
-      const next = updateDemoProfileStatus(current, detailProfileId, 'inactive');
+      const next = updateDemoProfileStatus(
+        current,
+        detailProfileId,
+        'inactive',
+      );
       setDemoProfilesStore(next);
       return next;
     });
@@ -84,7 +92,8 @@ export default function useAdminDemoProfiles(
     setOpenActionId(null);
   };
 
-  const resultsFrom = filteredProfiles.length === 0 ? 0 : (safePage - 1) * pageSize + 1;
+  const resultsFrom =
+    filteredProfiles.length === 0 ? 0 : (safePage - 1) * pageSize + 1;
   const resultsTo = Math.min(safePage * pageSize, filteredProfiles.length);
   const stats = computeDemoProfileStats(profiles);
 

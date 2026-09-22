@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher/LanguageSwitcher';
+import { ROUTES } from '@/shared/config';
 
 /**
  * Shared auth chrome: back-home + language switcher (login / signup).
@@ -17,7 +17,13 @@ const AuthPageChrome = memo(({ backLabelKey }) => {
         aria-label={t(backLabelKey)}
         className="pointer-events-auto inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white/95 text-[#0c0c0c] shadow-[0_2px_10px_rgba(0,0,0,0.18)] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ee1c25]"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
           <path
             d="M15 18l-6-6 6-6"
             stroke="currentColor"

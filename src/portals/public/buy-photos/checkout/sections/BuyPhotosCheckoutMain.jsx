@@ -1,15 +1,14 @@
+import { ArrowRight, CreditCard, Lock } from 'lucide-react';
 import React, { memo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { ArrowRight, CreditCard, Lock } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import {
-  formatBuyPhotoPrice,
-} from '@/shared/data/buyPhotos';
-import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
-import { Shell, SitePageLayout } from '@/shared/site-chrome';
-import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
+import { ROUTES } from '@/shared/config';
+import { formatBuyPhotoPrice } from '@/shared/data/buyPhotos';
+import { Shell, SitePageLayout } from '@/shared/site-chrome';
+import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import { useBuyPhotosCheckout } from '../hooks/useBuyPhotosCheckout';
 
 const INPUT_CLASS =
@@ -19,13 +18,8 @@ const BuyPhotosCheckoutMain = memo(() => {
   const location = useLocation();
   const photo = location.state?.photo;
 
-  const {
-    register,
-    handleSubmit,
-    errors,
-    t,
-    EMAIL_REGEX,
-  } = useBuyPhotosCheckout(photo);
+  const { register, handleSubmit, errors, t, EMAIL_REGEX } =
+    useBuyPhotosCheckout(photo);
 
   if (!photo) {
     return <Navigate to={ROUTES.BUY_PHOTOS} replace />;
@@ -55,7 +49,7 @@ const BuyPhotosCheckoutMain = memo(() => {
                 </h2>
 
                 <div className="mt-5 flex items-center gap-4 border-b border-black/10 pb-5">
-                  <img
+                  <Image
                     src={photo.image}
                     alt={photo.title}
                     width={72}
@@ -63,30 +57,45 @@ const BuyPhotosCheckoutMain = memo(() => {
                     className="size-18 shrink-0 rounded-lg object-cover"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[16px] font-bold text-[#0d0d14]">{photo.title}</p>
+                    <p className="truncate text-[16px] font-bold text-[#0d0d14]">
+                      {photo.title}
+                    </p>
                     <p className="mt-1 text-[14px] text-[#6b7280]">
-                      {t('buyPhotos.checkout.summary.by', { name: photo.photographer })}
+                      {t('buyPhotos.checkout.summary.by', {
+                        name: photo.photographer,
+                      })}
                     </p>
                   </div>
-                  <p className="shrink-0 text-[18px] font-bold text-[#4048cd]">{totalLabel}</p>
+                  <p className="shrink-0 text-[18px] font-bold text-[#4048cd]">
+                    {totalLabel}
+                  </p>
                 </div>
 
                 <dl className="mt-5 space-y-3 text-[15px]">
                   <div className="flex items-center justify-between gap-4">
-                    <dt className="text-[#6b7280]">{t('buyPhotos.checkout.summary.subtotal')}</dt>
+                    <dt className="text-[#6b7280]">
+                      {t('buyPhotos.checkout.summary.subtotal')}
+                    </dt>
                     <dd className="font-medium text-[#0d0d14]">{totalLabel}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-4 border-t border-black/10 pt-3">
                     <dt className="text-[16px] font-bold text-[#0d0d14]">
                       {t('buyPhotos.checkout.summary.total')}
                     </dt>
-                    <dd className="text-[20px] font-bold text-[#0d0d14]">{totalLabel}</dd>
+                    <dd className="text-[20px] font-bold text-[#0d0d14]">
+                      {totalLabel}
+                    </dd>
                   </div>
                 </dl>
               </MarketingCard>
 
               <div className="flex items-start gap-3 rounded-xl bg-[#f5f5f5] px-4 py-4 text-[14px] leading-6 text-[#6b7280]">
-                <Lock size={18} strokeWidth={2} aria-hidden="true" className="mt-0.5 shrink-0" />
+                <Lock
+                  size={18}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                  className="mt-0.5 shrink-0"
+                />
                 <p>{t('buyPhotos.checkout.securityNotice')}</p>
               </div>
             </div>
@@ -105,11 +114,17 @@ const BuyPhotosCheckoutMain = memo(() => {
                       autoComplete="name"
                       label={t('buyPhotos.checkout.buyer.fullName')}
                       labelClassName="mb-2 block text-[15px] text-[#494453] font-normal tracking-normal normal-case"
-                      placeholder={t('buyPhotos.checkout.buyer.fullNamePlaceholder')}
+                      placeholder={t(
+                        'buyPhotos.checkout.buyer.fullNamePlaceholder',
+                      )}
                       error={errors.fullName}
                       aria-invalid={Boolean(errors.fullName)}
                       inputClassName={`${INPUT_CLASS} ${errors.fullName ? 'border-red-400' : ''}`}
-                      {...register('fullName', { required: t('buyPhotos.checkout.buyer.fullNameRequired') })}
+                      {...register('fullName', {
+                        required: t(
+                          'buyPhotos.checkout.buyer.fullNameRequired',
+                        ),
+                      })}
                     />
                   </div>
 
@@ -120,13 +135,18 @@ const BuyPhotosCheckoutMain = memo(() => {
                       autoComplete="email"
                       label={t('buyPhotos.checkout.buyer.email')}
                       labelClassName="mb-2 block text-[15px] text-[#494453] font-normal tracking-normal normal-case"
-                      placeholder={t('buyPhotos.checkout.buyer.emailPlaceholder')}
+                      placeholder={t(
+                        'buyPhotos.checkout.buyer.emailPlaceholder',
+                      )}
                       error={errors.email}
                       aria-invalid={Boolean(errors.email)}
                       inputClassName={`${INPUT_CLASS} ${errors.email ? 'border-red-400' : ''}`}
-                      {...register('email', { 
+                      {...register('email', {
                         required: t('buyPhotos.checkout.buyer.emailRequired'),
-                        pattern: { value: EMAIL_REGEX, message: t('buyPhotos.checkout.buyer.emailInvalid') }
+                        pattern: {
+                          value: EMAIL_REGEX,
+                          message: t('buyPhotos.checkout.buyer.emailInvalid'),
+                        },
                       })}
                     />
                     <p className="mt-2 text-[13px] text-[#6b7280]">
@@ -151,7 +171,12 @@ const BuyPhotosCheckoutMain = memo(() => {
                   <span className="flex-1">
                     <span className="flex items-center gap-2 text-[16px] font-bold text-[#0d0d14]">
                       PayPal
-                      <CreditCard size={18} strokeWidth={2} aria-hidden="true" className="text-[#6b7280]" />
+                      <CreditCard
+                        size={18}
+                        strokeWidth={2}
+                        aria-hidden="true"
+                        className="text-[#6b7280]"
+                      />
                     </span>
                     <span className="mt-1 block text-[14px] leading-6 text-[#6b7280]">
                       {t('buyPhotos.checkout.payment.paypalDescription')}
@@ -159,9 +184,9 @@ const BuyPhotosCheckoutMain = memo(() => {
                   </span>
                 </label>
 
-                <Button 
-                  type="submit" 
-                  unstyled 
+                <Button
+                  type="submit"
+                  unstyled
                   className="mt-5 w-full rounded-lg py-3.5 inline-flex items-center justify-center font-bold transition uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed bg-[#ee1c25] hover:bg-[#d01820] text-white gap-2"
                 >
                   {t('buyPhotos.checkout.payment.continuePaypal')}

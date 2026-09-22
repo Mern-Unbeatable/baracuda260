@@ -1,13 +1,15 @@
 /** Public promo-join onboarding — opened via /join/promo/:code */
 
+import { getPromoLinksStore } from '@/portals/admin/data/adminPromoLinksData';
+import { ZODIAC_SIGNS } from '@/portals/member/data/singlePhotoAssets';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_CATEGORY,
   DEFAULT_THEME_ID,
-  SIX_PHOTO_ASSETS,
-  THEMES,
   getSlotsForTheme,
   getThemeById,
+  SIX_PHOTO_ASSETS,
+  THEMES,
 } from '@/portals/member/data/sixPhotoAssets';
 import {
   ALL_SLOTS,
@@ -15,22 +17,20 @@ import {
   RED_SLOTS,
   ZODIAC12_ASSETS,
 } from '@/portals/member/data/zodiac12Assets';
-import { ZODIAC_SIGNS } from '@/portals/member/data/singlePhotoAssets';
-import { getPromoLinksStore } from '@/portals/admin/data/adminPromoLinksData';
 
 export {
+  ALL_SLOTS,
   ARTISTIC_CATEGORIES,
+  BLUE_SLOTS,
   DEFAULT_CATEGORY,
   DEFAULT_THEME_ID,
-  SIX_PHOTO_ASSETS,
-  THEMES,
   getSlotsForTheme,
   getThemeById,
-  ALL_SLOTS,
-  BLUE_SLOTS,
   RED_SLOTS,
-  ZODIAC12_ASSETS,
+  SIX_PHOTO_ASSETS,
+  THEMES,
   ZODIAC_SIGNS,
+  ZODIAC12_ASSETS,
 };
 
 export const FIELD_BG = 'bg-[#ecedfa]';
@@ -61,7 +61,9 @@ export const findPromoLinkByCode = (code) => {
   if (!code) return null;
   const normalized = String(code).trim().toUpperCase();
   return (
-    getPromoLinksStore().find((link) => String(link.code).toUpperCase() === normalized) || null
+    getPromoLinksStore().find(
+      (link) => String(link.code).toUpperCase() === normalized,
+    ) || null
   );
 };
 

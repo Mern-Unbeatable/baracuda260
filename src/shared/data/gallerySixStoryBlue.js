@@ -7,8 +7,8 @@ export const SIX_BLUE_STORY_SLIDES = [
     sign: 'Libra',
     number: 7,
     icon: `${A}/icon-libra.svg`,
-    thumb: `${A}/blue-thumb-1.jpg`,
-    hero: `${A}/blue-hero-libra.jpg`,
+    thumb: `${A}/blue-thumb-1.webp`,
+    hero: `${A}/blue-hero-libra.webp`,
     iconBoxed: true,
   },
   {
@@ -16,8 +16,8 @@ export const SIX_BLUE_STORY_SLIDES = [
     sign: 'Scorpio',
     number: 8,
     icon: `${A}/icon-scorpio.svg`,
-    thumb: `${A}/blue-thumb-2.jpg`,
-    hero: `${A}/blue-thumb-2.jpg`,
+    thumb: `${A}/blue-thumb-2.webp`,
+    hero: `${A}/blue-thumb-2.webp`,
     iconBoxed: true,
   },
   {
@@ -25,24 +25,24 @@ export const SIX_BLUE_STORY_SLIDES = [
     sign: 'Sagittarius',
     number: 9,
     icon: `${A}/icon-sagittarius.svg`,
-    thumb: `${A}/blue-thumb-3.jpg`,
-    hero: `${A}/blue-thumb-3.jpg`,
+    thumb: `${A}/blue-thumb-3.webp`,
+    hero: `${A}/blue-thumb-3.webp`,
   },
   {
     id: 'capricorn',
     sign: 'Capricorn',
     number: 10,
     icon: `${A}/icon-capricorn.svg`,
-    thumb: `${A}/blue-thumb-4.jpg`,
-    hero: `${A}/blue-thumb-4.jpg`,
+    thumb: `${A}/blue-thumb-4.webp`,
+    hero: `${A}/blue-thumb-4.webp`,
   },
   {
     id: 'aquarius',
     sign: 'Aquarius',
     number: 11,
     icon: `${A}/icon-aquarius.svg`,
-    thumb: `${A}/blue-thumb-5.jpg`,
-    hero: `${A}/blue-thumb-5.jpg`,
+    thumb: `${A}/blue-thumb-5.webp`,
+    hero: `${A}/blue-thumb-5.webp`,
     iconBoxed: true,
   },
   {
@@ -50,8 +50,8 @@ export const SIX_BLUE_STORY_SLIDES = [
     sign: 'Pisces',
     number: 12,
     icon: `${A}/icon-pisces.svg`,
-    thumb: `${A}/blue-thumb-5.jpg`,
-    hero: `${A}/blue-thumb-5.jpg`,
+    thumb: `${A}/blue-thumb-5.webp`,
+    hero: `${A}/blue-thumb-5.webp`,
   },
 ];
 
@@ -71,7 +71,8 @@ export const GALLERY_SIX_BLUE_STORIES = [
 ];
 
 export const getGallerySixBlueStoryById = (id) =>
-  GALLERY_SIX_BLUE_STORIES.find((story) => story.id === id) || GALLERY_SIX_BLUE_STORIES[0];
+  GALLERY_SIX_BLUE_STORIES.find((story) => story.id === id) ||
+  GALLERY_SIX_BLUE_STORIES[0];
 
 export const gallerySixBlueStoryPath = (id) =>
   `/gallery/story-blue/${id || GALLERY_SIX_BLUE_STORIES[0].id}`;

@@ -1,22 +1,24 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import React, { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import SignBadge from '@/components/data-display/SignBadge/SignBadge';
+import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
+import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import { getSellPhotoDetailById } from '@/portals/member/data/sellPhotosDetailData';
+import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
   GALLERY_DETAIL_SLIDE_MS,
   GALLERY_DETAIL_VARIANTS,
+  isBlueSlide,
   resolveGalleryDetailMedia,
   resolveGalleryImageDetails,
-  isBlueSlide,
 } from '@/shared/data/galleryDetail';
-import SignBadge from '@/components/data-display/SignBadge/SignBadge';
-import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
-import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
-import { getSellPhotoDetailById } from '@/portals/member/data/sellPhotosDetailData';
 
 const SHOWCASE_BADGE_KEYS = {
   'Single Photo': 'common.badges.singlePhoto',
@@ -69,7 +71,9 @@ const MemberSellPhotoDetailContent = memo(() => {
   const activeSlide = slides[activeIndex] || slides[0];
   const blueBadge = isBlueSlide(activeSlide, config.stripAccent);
   const heroSrc = activeSlide?.hero || detail.image;
-  const heroAlt = activeSlide?.sign ? `${detail.title} — ${activeSlide.sign}` : detail.title;
+  const heroAlt = activeSlide?.sign
+    ? `${detail.title} — ${activeSlide.sign}`
+    : detail.title;
   const { videoPoster, videoSrc } = resolveGalleryDetailMedia(detail, heroSrc);
   const imageDetails = resolveGalleryImageDetails({
     ...detail,
@@ -88,8 +92,10 @@ const MemberSellPhotoDetailContent = memo(() => {
     defaultValue: detail.category?.toUpperCase?.() || detail.category,
   });
 
-  const goPrev = () => setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
-  const goNext = () => setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
+  const goPrev = () =>
+    setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
+  const goNext = () =>
+    setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
 
   const specRows = [
     { label: t('buyPhotos.detail.specs.resolution'), value: detail.resolution },
@@ -114,52 +120,58 @@ const MemberSellPhotoDetailContent = memo(() => {
       </Link>
 
       <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]">
-        <img
+        <Image
           src={heroSrc}
           alt={heroAlt}
           width={1536}
           height={653}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        {activeSlide ? <SignBadge slide={activeSlide} blue={blueBadge} /> : null}
+        {activeSlide ? (
+          <SignBadge slide={activeSlide} blue={blueBadge} />
+        ) : null}
 
         {showStoryChrome || slideCount > 1 ? (
           <>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={goPrev}
               aria-label={t('galleryDetail.previousPhoto')}
               className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-12.75 sm:size-12.75"
             >
-              <img
+              <Image
                 src={GALLERY_DETAIL_ASSETS.arrow}
                 alt=""
                 width={16}
                 height={32}
                 className="h-7 w-3.5 rotate-180 object-contain sm:h-8 sm:w-4"
               />
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="button"
               onClick={goNext}
               aria-label={t('galleryDetail.nextPhoto')}
               className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-12.75 sm:size-12.75"
             >
-              <img
+              <Image
                 src={GALLERY_DETAIL_ASSETS.arrow}
                 alt=""
                 width={16}
                 height={32}
                 className="h-7 w-3.5 object-contain sm:h-8 sm:w-4"
               />
-            </button>
+            </Button>
           </>
         ) : null}
       </div>
 
       {config.curveSrc ? (
-        <div className={`relative w-full overflow-hidden ${config.curveHeightClass}`}>
-          <img
+        <div
+          className={`relative w-full overflow-hidden ${config.curveHeightClass}`}
+        >
+          <Image
             src={config.curveSrc}
             alt=""
             className={`h-full w-full object-top ${config.curveObjectClass}`}
@@ -177,10 +189,18 @@ const MemberSellPhotoDetailContent = memo(() => {
       ) : null}
 
       {config.stripLayout === 'twelve' ? (
-        <TwelveStoryStrip slides={slides} activeIndex={activeIndex} onSelect={setActiveIndex} />
+        <TwelveStoryStrip
+          slides={slides}
+          activeIndex={activeIndex}
+          onSelect={setActiveIndex}
+        />
       ) : null}
 
-      <GalleryDetailVideo poster={videoPoster} src={videoSrc} title={detail.title} />
+      <GalleryDetailVideo
+        poster={videoPoster}
+        src={videoSrc}
+        title={detail.title}
+      />
 
       <div className="flex flex-wrap gap-2 sm:gap-3">
         {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
@@ -215,8 +235,12 @@ const MemberSellPhotoDetailContent = memo(() => {
                 key={row.label}
                 className="flex items-center justify-between gap-4 border-b border-black/8 pb-3 last:border-b-0 last:pb-0"
               >
-                <dt className="text-[14px] font-medium text-[#6b7280]">{row.label}</dt>
-                <dd className="text-[15px] font-semibold text-[#0d0d14]">{row.value}</dd>
+                <dt className="text-[14px] font-medium text-[#6b7280]">
+                  {row.label}
+                </dt>
+                <dd className="text-[15px] font-semibold text-[#0d0d14]">
+                  {row.value}
+                </dd>
               </div>
             ))}
           </dl>

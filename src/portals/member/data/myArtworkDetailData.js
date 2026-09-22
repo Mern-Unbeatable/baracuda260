@@ -1,13 +1,13 @@
+import { MY_ARTWORK_ITEMS } from '@/portals/member/data/myArtworkData';
+import { COMPETITION_DETAILS } from '@/portals/public/competition-details/data/competitionDetailsAssets';
 import { ROUTES } from '@/shared/config';
-import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
-import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
-import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 import {
   GALLERY_DETAIL_ASSETS,
   toGalleryDetailEntry,
 } from '@/shared/data/galleryDetail';
-import { COMPETITION_DETAILS } from '@/portals/public/competition-details/data/competitionDetailsAssets';
-import { MY_ARTWORK_ITEMS } from '@/portals/member/data/myArtworkData';
+import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
+import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
+import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 
 const DETAIL_DESCRIPTION_KEY = 'myArtwork.detail.description';
 

@@ -65,7 +65,10 @@ export default function useAdminAnnouncements(
   const handleCloseCreateModal = () => setIsCreateModalOpen(false);
 
   const handleCreateAnnouncement = (values) => {
-    setRows((current) => [buildAnnouncementFromForm(values, current), ...current]);
+    setRows((current) => [
+      buildAnnouncementFromForm(values, current),
+      ...current,
+    ]);
     setPage(1);
     setIsCreateModalOpen(false);
   };

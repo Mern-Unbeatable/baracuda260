@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
 import LoginContent from '@/portals/auth/views/LoginContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const Login = memo(() => {
   useSEO({
     title: 'Log in',
-    description: 'Log in to My12Photos to join competitions and showcase your photography.',
+    description:
+      'Log in to My12Photos to join competitions and showcase your photography.',
     keywords: ['login', 'sign in', 'My12Photos'],
   });
 

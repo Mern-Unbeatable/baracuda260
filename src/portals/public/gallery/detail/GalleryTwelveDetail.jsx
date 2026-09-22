@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSEO } from '@/shared/hooks/useSEO';
 import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
 import { mergeGalleryPhotoMeta } from '@/shared/data/galleryDetail';
 import { getGalleryTwelveStoryById } from '@/shared/data/galleryTwelveStory';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const GalleryTwelveDetail = memo(() => {
   const { id } = useParams();

@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const InViewWrapper = ({ children, className = '', rootMargin = '0px 0px -10% 0px', threshold = 0.12 }) => {
+const InViewWrapper = ({
+  children,
+  className = '',
+  rootMargin = '0px 0px -10% 0px',
+  threshold = 0.12,
+}) => {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
 
@@ -42,4 +47,3 @@ const InViewWrapper = ({ children, className = '', rootMargin = '0px 0px -10% 0p
 };
 
 export default InViewWrapper;
-

@@ -1,9 +1,11 @@
-import { useTranslation } from 'react-i18next';
+import { X } from 'lucide-react';
 import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import {
   ANNOUNCEMENT_EMOJI_OPTIONS,
   ANNOUNCEMENT_LINK_OPTIONS,
@@ -12,10 +14,10 @@ import {
   ANNOUNCEMENT_STATUS,
   ANNOUNCEMENT_TYPE_OPTIONS,
   EMPTY_ANNOUNCEMENT_FORM,
-      } from '@/portals/admin/data/adminAnnouncementsData';
-import Input from '@/components/ui/Input';
+} from '@/portals/admin/data/adminAnnouncementsData';
 
-const labelClass = 'text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block';
+const labelClass =
+  'text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block';
 const inputClass =
   'box-border h-11 w-full rounded-lg border border-[#dfe4ea] bg-white px-3 py-2.5 text-[14px] leading-5 text-[#253043] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd] disabled:cursor-not-allowed disabled:bg-[#f9fafb] disabled:text-[#9aa3b2]';
 const selectClass = inputClass;
@@ -82,7 +84,11 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
   };
 
   const onFormError = () => {
-    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
+    toast.error(
+      t('form.errors.checkFields', {
+        defaultValue: 'Please check the form for errors.',
+      }),
+    );
   };
 
   return createPortal(
@@ -100,24 +106,31 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
       >
         <header className="flex items-start justify-between border-b border-[#edf0f3] px-6 pb-5 pt-5">
           <div className="min-w-0 flex-1 pr-3">
-            <h2 id={titleId} className="font-manrope text-[22px] font-bold leading-8 text-[#202838]">
+            <h2
+              id={titleId}
+              className="font-manrope text-[22px] font-bold leading-8 text-[#202838]"
+            >
               {t('adminAnnouncements.modal.title')}
             </h2>
             <p className="pt-1 text-[14px] leading-5 text-[#788293]">
               {t('adminAnnouncements.modal.subtitle')}
             </p>
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             aria-label={t('adminAnnouncements.modal.close')}
             className="inline-flex cursor-pointer items-center justify-center rounded-full p-1 text-[#788293] transition hover:bg-black/5"
           >
             <X size={20} aria-hidden="true" />
-          </button>
+          </Button>
         </header>
 
-        <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className="flex flex-1 flex-col overflow-hidden">
+        <form
+          onSubmit={handleSubmit(onFormSubmit, onFormError)}
+          className="flex flex-1 flex-col overflow-hidden"
+        >
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-5">
             <div>
               <label htmlFor="announcement-message" className={labelClass}>
@@ -130,11 +143,16 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                 placeholder={t('adminAnnouncements.modal.messagePlaceholder')}
                 aria-invalid={!!errors.message}
                 className={`${textareaClass} ${errors.message ? 'border-[#f31d2c]' : ''}`}
-                {...register('message', { required: t('adminAnnouncements.modal.messageRequired') })}
+                {...register('message', {
+                  required: t('adminAnnouncements.modal.messageRequired'),
+                })}
               />
               <div className="flex items-center justify-between pt-1.5">
                 {errors.message ? (
-                  <p className="text-[13px] leading-4 text-[#f31d2c]" role="alert">
+                  <p
+                    className="text-[13px] leading-4 text-[#f31d2c]"
+                    role="alert"
+                  >
                     {errors.message.message}
                   </p>
                 ) : (
@@ -150,7 +168,9 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
             </div>
 
             <div>
-              <p className={labelClass}>{t('adminAnnouncements.modal.emojiLabel')}</p>
+              <p className={labelClass}>
+                {t('adminAnnouncements.modal.emojiLabel')}
+              </p>
               <div
                 className="mt-2 flex flex-wrap gap-2"
                 role="listbox"
@@ -159,7 +179,8 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                 {ANNOUNCEMENT_EMOJI_OPTIONS.map((e) => {
                   const selected = emoji === e;
                   return (
-                    <button
+                    <Button
+                      unstyled
                       key={e}
                       type="button"
                       role="option"
@@ -172,7 +193,7 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                       }`}
                     >
                       {e}
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -230,7 +251,12 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                   inputClassName={inputClass}
                   labelClassName={labelClass}
                   error={errors.startDate}
-                  {...register('startDate', { required: t('adminAnnouncements.modal.startDateRequired', 'Start date is required') })}
+                  {...register('startDate', {
+                    required: t(
+                      'adminAnnouncements.modal.startDateRequired',
+                      'Start date is required',
+                    ),
+                  })}
                 />
                 <Input
                   type="time"
@@ -251,7 +277,14 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                   labelClassName={labelClass}
                   error={errors.endDate}
                   disabled={noEndDate}
-                  {...register('endDate', { required: !noEndDate ? t('adminAnnouncements.modal.endDateRequired', 'End date is required') : false })}
+                  {...register('endDate', {
+                    required: !noEndDate
+                      ? t(
+                          'adminAnnouncements.modal.endDateRequired',
+                          'End date is required',
+                        )
+                      : false,
+                  })}
                 />
                 <Input
                   type="time"
@@ -275,23 +308,32 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
             </div>
 
             <div>
-              <p className={labelClass}>{t('adminAnnouncements.modal.statusLabel')}</p>
+              <p className={labelClass}>
+                {t('adminAnnouncements.modal.statusLabel')}
+              </p>
               <div className="mt-2 flex flex-wrap items-center gap-5">
-                {[ANNOUNCEMENT_STATUS.ACTIVE, ANNOUNCEMENT_STATUS.INACTIVE].map((s) => (
-                  <label key={s} className="inline-flex cursor-pointer items-center gap-2">
-                    <input
-                      type="radio"
-                      value={s}
-                      className="size-4 cursor-pointer accent-[#4048cd]"
-                      {...register('status')}
-                    />
-                    <span className="text-[14px] leading-5 text-[#253043]">
-                      {t(`adminAnnouncements.status.${s}`)}
-                    </span>
-                  </label>
-                ))}
+                {[ANNOUNCEMENT_STATUS.ACTIVE, ANNOUNCEMENT_STATUS.INACTIVE].map(
+                  (s) => (
+                    <label
+                      key={s}
+                      className="inline-flex cursor-pointer items-center gap-2"
+                    >
+                      <input
+                        type="radio"
+                        value={s}
+                        className="size-4 cursor-pointer accent-[#4048cd]"
+                        {...register('status')}
+                      />
+                      <span className="text-[14px] leading-5 text-[#253043]">
+                        {t(`adminAnnouncements.status.${s}`)}
+                      </span>
+                    </label>
+                  ),
+                )}
               </div>
-              <p className={hintClass}>{t('adminAnnouncements.modal.statusHint')}</p>
+              <p className={hintClass}>
+                {t('adminAnnouncements.modal.statusHint')}
+              </p>
             </div>
 
             <div>
@@ -309,24 +351,28 @@ const CreateAnnouncementModal = memo(({ open, onClose, onCreate }) => {
                   </option>
                 ))}
               </select>
-              <p className={hintClass}>{t('adminAnnouncements.modal.priorityHint')}</p>
+              <p className={hintClass}>
+                {t('adminAnnouncements.modal.priorityHint')}
+              </p>
             </div>
           </div>
 
           <footer className="flex flex-col-reverse gap-3 border-t border-[#edf0f3] px-6 py-5 sm:flex-row sm:justify-end">
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={onClose}
               className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#dfe4ea] px-5 py-2.5 text-[14px] font-medium leading-5 text-[#536070] transition hover:bg-[#f9fafb]"
             >
               {t('adminAnnouncements.modal.cancel')}
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="submit"
               className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-[#ee1c25] px-5 py-2.5 text-[14px] font-semibold leading-5 text-white transition hover:bg-[#d41921]"
             >
               {t('adminAnnouncements.modal.submit')}
-            </button>
+            </Button>
           </footer>
         </form>
       </div>

@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
 import AdminReportDetailContent from '@/portals/admin/views/AdminReportDetailContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const ReportDetail = memo(() => {
   useSEO({
     title: 'Report Details',
-    description: 'Review a reported submission and take moderation action on My12Photos.',
+    description:
+      'Review a reported submission and take moderation action on My12Photos.',
     keywords: ['report', 'moderation', 'admin', 'My12Photos'],
   });
 

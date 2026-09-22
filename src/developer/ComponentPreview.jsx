@@ -1,53 +1,50 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
-import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
-import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
-import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher/LanguageSwitcher';
 import Pagination from '@/components/common/Pagination/Pagination';
-import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
-import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
-import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
-import PlanCard from '@/components/marketing/PlanCard/PlanCard';
-import PromoBanner from '@/components/marketing/PromoBanner/PromoBanner';
-import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
-import FilterCheckboxGroup from '@/components/marketing/FilterCheckboxGroup/FilterCheckboxGroup';
-import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
-import TopPhotographers from '@/components/marketing/TopPhotographers/TopPhotographers';
-import ActiveCompetitions from '@/components/marketing/ActiveCompetitions/ActiveCompetitions';
-import HowItWorks from '@/components/marketing/HowItWorks/HowItWorks';
-import HomeStatsSection from '@/components/marketing/HomeStatsSection/HomeStatsSection';
-import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
-import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation';
-import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
-import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
-import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
 import BuyPhotoDetailView from '@/components/data-display/BuyPhotoDetailView/BuyPhotoDetailView';
 import FavoriteHeartButton from '@/components/data-display/FavoriteHeartButton/FavoriteHeartButton';
-import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard';
+import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation';
+import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
+import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu';
+import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
 import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCardFooter/MemberArtworkCardFooter';
-import MemberSellPhotoCard from '@/components/data-display/MemberSellPhotoCard/MemberSellPhotoCard';
+import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
+import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard';
 import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard';
-import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
-import AdvertiseBusinessForm from '@/components/forms/AdvertiseBusinessForm/AdvertiseBusinessForm';
-import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
-import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
 import MemberMessageCard from '@/components/data-display/MemberMessageCard/MemberMessageCard';
 import MemberNotificationItem from '@/components/data-display/MemberNotificationItem/MemberNotificationItem';
 import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader';
 import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import MemberSellPhotoCard from '@/components/data-display/MemberSellPhotoCard/MemberSellPhotoCard';
+import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
+import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
+import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
+import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
 import SignBadge from '@/components/data-display/SignBadge/SignBadge';
+import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
+import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
+import AdvertiseBusinessForm from '@/components/forms/AdvertiseBusinessForm/AdvertiseBusinessForm';
+import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
+import ActiveCompetitions from '@/components/marketing/ActiveCompetitions/ActiveCompetitions';
+import CommunityWork from '@/components/marketing/CommunityWork/CommunityWork';
+import FilterCheckboxGroup from '@/components/marketing/FilterCheckboxGroup/FilterCheckboxGroup';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import HomeStatsSection from '@/components/marketing/HomeStatsSection/HomeStatsSection';
+import HowItWorks from '@/components/marketing/HowItWorks/HowItWorks';
+import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
+import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
 import OverlayBadge from '@/components/marketing/OverlayBadge/OverlayBadge';
 import PhotoShowcasePageContent from '@/components/marketing/PhotoShowcasePageContent/PhotoShowcasePageContent';
-import CommunityWork from '@/components/marketing/CommunityWork/CommunityWork';
-import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu';
-import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
-import LanguageSwitcher from '@/components/common/LanguageSwitcher/LanguageSwitcher';
-import { homeAsset } from '@/shared/site-chrome';
-import { ALBUM_TYPE_VALUES, ALBUM_TYPE_LABEL_KEYS } from '@/shared/data/albumTypes';
-import { GALLERY_PHOTOS } from '@/shared/data/galleryPhotos';
+import PlanCard from '@/components/marketing/PlanCard/PlanCard';
+import PromoBanner from '@/components/marketing/PromoBanner/PromoBanner';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import TopPhotographers from '@/components/marketing/TopPhotographers/TopPhotographers';
 import {
   DEMO_ARTWORK_ITEM,
   DEMO_ARTWORK_ITEM_ENDED,
@@ -73,6 +70,12 @@ import {
   DEMO_TWELVE_STORY_SLIDES,
   DEMO_VIDEO,
 } from '@/data/demoData';
+import {
+  ALBUM_TYPE_LABEL_KEYS,
+  ALBUM_TYPE_VALUES,
+} from '@/shared/data/albumTypes';
+import { GALLERY_PHOTOS } from '@/shared/data/galleryPhotos';
+import { homeAsset } from '@/shared/site-chrome';
 
 const ENTER_ARROW = homeAsset('icon-arrow.svg');
 const FILTER_PILL_ITEMS = [
@@ -161,7 +164,9 @@ function MemberArtworkCardFooterPreview({ variantId }) {
     ended: DEMO_ARTWORK_ITEM_ENDED,
     profile: DEMO_ARTWORK_ITEM_PROFILE,
   };
-  return <MemberArtworkCardFooter item={items[variantId] ?? DEMO_ARTWORK_ITEM} />;
+  return (
+    <MemberArtworkCardFooter item={items[variantId] ?? DEMO_ARTWORK_ITEM} />
+  );
 }
 
 function MarketingSearchBarPreview() {
@@ -181,12 +186,26 @@ function PaginationPreview({ variantId }) {
     variantId === 'start' ? 2 : variantId === 'few' ? 2 : 5,
   );
   const totalPages = variantId === 'few' ? 4 : 28;
-  return <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />;
+  return (
+    <Pagination
+      currentPage={page}
+      totalPages={totalPages}
+      onPageChange={setPage}
+    />
+  );
 }
 
 function MarketingButtonPreview({ variantId }) {
-  const variant = variantId === 'muted' ? 'muted' : variantId === 'ghost' ? 'ghost' : 'primary';
-  const className = variantId === 'muted' ? '!bg-[#4048CD] !text-white hover:!bg-[#333BB0]' : '';
+  const variant =
+    variantId === 'muted'
+      ? 'muted'
+      : variantId === 'ghost'
+        ? 'ghost'
+        : 'primary';
+  const className =
+    variantId === 'muted'
+      ? '!bg-[#4048CD] !text-white hover:!bg-[#333BB0]'
+      : '';
   return (
     <MarketingButton variant={variant} className={className}>
       {variantId === 'ghost' ? 'Learn more' : 'View Gallery'}
@@ -243,7 +262,9 @@ function FilterCheckboxGroupPreview() {
   const [selected, setSelected] = useState([ALBUM_TYPE_VALUES[0]]);
   const toggle = (option) => {
     setSelected((current) =>
-      current.includes(option) ? current.filter((v) => v !== option) : [...current, option],
+      current.includes(option)
+        ? current.filter((v) => v !== option)
+        : [...current, option],
     );
   };
   return (
@@ -259,11 +280,18 @@ function FilterCheckboxGroupPreview() {
 }
 
 function MarketingCardPreview({ variantId }) {
-  const variant = variantId === 'filled' ? 'filled' : variantId === 'showcase' ? 'showcase' : 'default';
+  const variant =
+    variantId === 'filled'
+      ? 'filled'
+      : variantId === 'showcase'
+        ? 'showcase'
+        : 'default';
   return (
     <MarketingCard variant={variant} className="max-w-sm p-6">
       <p className="text-[15px] text-[#374151]">
-        {variant === 'showcase' ? 'Showcase card wrapper for photo grids.' : 'Marketing card content.'}
+        {variant === 'showcase'
+          ? 'Showcase card wrapper for photo grids.'
+          : 'Marketing card content.'}
       </p>
     </MarketingCard>
   );
@@ -345,7 +373,11 @@ function ReportPhotoModalPreview() {
   const [open, setOpen] = useState(true);
   return (
     <>
-      <MarketingButton variant="outline" type="button" onClick={() => setOpen(true)}>
+      <MarketingButton
+        variant="outline"
+        type="button"
+        onClick={() => setOpen(true)}
+      >
         Open report modal
       </MarketingButton>
       <ReportPhotoModal
@@ -387,9 +419,9 @@ function AdvertiseBusinessFormPreview() {
             Our Photography <span className="text-[#4048cd]">Community</span>
           </h2>
           <p className="mx-auto mt-3 max-w-190 text-[18px] leading-[1.45] text-[#555b68] sm:text-[20px]">
-            Reach photographers, artists, and photography enthusiasts by displaying your business on
-            our platform. High-intent audience, verified placements, and instant transparent
-            analytics.
+            Reach photographers, artists, and photography enthusiasts by
+            displaying your business on our platform. High-intent audience,
+            verified placements, and instant transparent analytics.
           </p>
         </section>
 
@@ -401,7 +433,9 @@ function AdvertiseBusinessFormPreview() {
 
 const PREVIEWS = {
   'photo-showcase-card': PhotoShowcaseCardPreview,
-  'gallery-detail-image-details': () => <GalleryDetailImageDetails details={DEMO_IMAGE_DETAILS} />,
+  'gallery-detail-image-details': () => (
+    <GalleryDetailImageDetails details={DEMO_IMAGE_DETAILS} />
+  ),
   'member-artwork-card': MemberArtworkCardPreview,
   'report-photo-modal': ReportPhotoModalPreview,
   pagination: PaginationPreview,
@@ -435,7 +469,7 @@ const PREVIEWS = {
         subtitle="Turn your website traffic into revenue by enabling targeted advertising."
         ctaLabel="Learn more"
         href="#"
-        image="/assets/home/hero.jpg"
+        image="/assets/home/hero.webp"
       />
     </div>
   ),
@@ -449,7 +483,11 @@ const PREVIEWS = {
     />
   ),
   'gallery-detail-video': () => (
-    <GalleryDetailVideo poster={DEMO_VIDEO.poster} src={DEMO_VIDEO.src} title={DEMO_VIDEO.title} />
+    <GalleryDetailVideo
+      poster={DEMO_VIDEO.poster}
+      src={DEMO_VIDEO.src}
+      title={DEMO_VIDEO.title}
+    />
   ),
   'six-story-strip': SixStoryStripPreview,
   'twelve-story-strip': TwelveStoryStripPreview,
@@ -459,18 +497,28 @@ const PREVIEWS = {
     </ScrollPreview>
   ),
   'favorite-heart-button': () => (
-    <FavoriteHeartButton initialVotes="1,488" title={DEMO_SHOWCASE_PHOTO.title} />
+    <FavoriteHeartButton
+      initialVotes="1,488"
+      title={DEMO_SHOWCASE_PHOTO.title}
+    />
   ),
-  'member-artwork-stat-card': () => <MemberArtworkStatCard {...DEMO_ARTWORK_STAT} />,
+  'member-artwork-stat-card': () => (
+    <MemberArtworkStatCard {...DEMO_ARTWORK_STAT} />
+  ),
   'member-artwork-card-footer': MemberArtworkCardFooterPreview,
   'member-sell-photo-card': () => (
     <div className="max-w-sm">
-      <MemberSellPhotoCard item={DEMO_SELL_PHOTO_ITEM} badgeLabel="Single Photo" />
+      <MemberSellPhotoCard
+        item={DEMO_SELL_PHOTO_ITEM}
+        badgeLabel="Single Photo"
+      />
     </div>
   ),
   'member-favourite-photographer-card': () => (
     <div className="max-w-md">
-      <MemberFavouritePhotographerCard photographer={DEMO_FAVOURITE_PHOTOGRAPHER} />
+      <MemberFavouritePhotographerCard
+        photographer={DEMO_FAVOURITE_PHOTOGRAPHER}
+      />
     </div>
   ),
   'member-promote-panel': MemberPromotePanelPreview,
@@ -486,7 +534,9 @@ const PREVIEWS = {
       <MemberMessageCard message={DEMO_MESSAGE} />
     </div>
   ),
-  'member-notification-item': () => <MemberNotificationItem item={DEMO_NOTIFICATION} />,
+  'member-notification-item': () => (
+    <MemberNotificationItem item={DEMO_NOTIFICATION} />
+  ),
   'member-profile-cover-header': () => (
     <MemberProfileCoverHeader profile={DEMO_MEMBER_PROFILE} />
   ),

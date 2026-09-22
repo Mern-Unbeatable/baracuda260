@@ -1,6 +1,7 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef } from 'react';
 import { ChevronDown, Filter } from 'lucide-react';
+import React, { memo, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 
 const MemberFilterSelect = memo(
   ({
@@ -22,7 +23,8 @@ const MemberFilterSelect = memo(
       if (!open) return undefined;
 
       const onPointerDown = (event) => {
-        if (rootRef.current && !rootRef.current.contains(event.target)) onClose();
+        if (rootRef.current && !rootRef.current.contains(event.target))
+          onClose();
       };
       const onKeyDown = (event) => {
         if (event.key === 'Escape') onClose();
@@ -38,7 +40,8 @@ const MemberFilterSelect = memo(
 
     return (
       <div className="relative" ref={rootRef}>
-        <button
+        <Button
+          unstyled
           type="button"
           aria-expanded={open}
           aria-haspopup="listbox"
@@ -46,7 +49,12 @@ const MemberFilterSelect = memo(
           className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#606060] px-4 py-2.5 text-[14px] font-medium text-[#1c1c1c]"
         >
           {showFilterIcon ? (
-            <Filter size={16} strokeWidth={2} aria-hidden="true" className="text-[#6b7280]" />
+            <Filter
+              size={16}
+              strokeWidth={2}
+              aria-hidden="true"
+              className="text-[#6b7280]"
+            />
           ) : null}
           {prefixLabelKey ? (
             <span className="text-[#6b7280]">{t(prefixLabelKey)}</span>
@@ -58,7 +66,7 @@ const MemberFilterSelect = memo(
             aria-hidden="true"
             className={`transition ${open ? 'rotate-180' : ''}`}
           />
-        </button>
+        </Button>
         {open ? (
           <ul
             role="listbox"
@@ -67,15 +75,18 @@ const MemberFilterSelect = memo(
           >
             {options.map((option) => (
               <li key={option} role="option" aria-selected={option === value}>
-                <button
+                <Button
+                  unstyled
                   type="button"
                   onClick={() => onSelect(option)}
                   className={`w-full cursor-pointer whitespace-nowrap px-4 py-2.5 text-left text-[14px] font-medium transition hover:bg-[#ecedfa] ${
-                    option === value ? 'bg-[#fde8e9] text-[#ee1c25]' : 'text-[#1c1c1c]'
+                    option === value
+                      ? 'bg-[#fde8e9] text-[#ee1c25]'
+                      : 'text-[#1c1c1c]'
                   }`}
                 >
                   {t(`${optionKeyPrefix}.${option}`)}
-                </button>
+                </Button>
               </li>
             ))}
           </ul>

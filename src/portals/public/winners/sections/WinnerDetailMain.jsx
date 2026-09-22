@@ -1,9 +1,9 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { ROUTES } from '@/shared/config';
+import { useTranslation } from 'react-i18next';
 import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
-import WinnerDetailBreadcrumb from '@/portals/public/winners/detail/WinnerDetailBreadcrumb';
 import { toWinnerDetailEntry } from '@/portals/public/winners/data/winnersArchive';
+import WinnerDetailBreadcrumb from '@/portals/public/winners/detail/WinnerDetailBreadcrumb';
+import { ROUTES } from '@/shared/config';
 
 const WinnerDetailMain = memo(({ winner }) => {
   const { t } = useTranslation();

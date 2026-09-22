@@ -106,7 +106,7 @@ export const MY_ORDERS = [
     deliveryEstimate: 'September 18–20, 2026',
     deliveryEstimateShort: 'Sep 18–20, 2026',
     deliveredOn: null,
-    image: `${H}/photo-harbor.jpg`,
+    image: `${H}/photo-harbor.webp`,
     progress: {
       placed: 'done',
       processing: 'current',
@@ -143,7 +143,7 @@ export const MY_ORDERS = [
     deliveryEstimate: 'September 16–17, 2026',
     deliveryEstimateShort: 'Sep 16–17, 2026',
     deliveredOn: null,
-    image: `${H}/photo-golden.jpg`,
+    image: `${H}/photo-golden.webp`,
     tracking: 'TRK-88421',
     progress: {
       placed: 'done',
@@ -180,7 +180,7 @@ export const MY_ORDERS = [
     deliveryLabel: 'Front Door',
     deliveryEstimate: 'Delivered Sep 9, 2026',
     deliveredOn: 'September 9, 2026',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -216,7 +216,7 @@ export const MY_ORDERS = [
     deliveryLabel: 'Mailbox',
     deliveryEstimate: 'Delivered Sep 2, 2026',
     deliveredOn: 'September 2, 2026',
-    image: `${H}/photo-forest.jpg`,
+    image: `${H}/photo-forest.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -253,7 +253,7 @@ export const MY_ORDERS = [
     deliveryEstimate: 'August 25–27, 2026',
     deliveryEstimateShort: 'Aug 25–27, 2026',
     deliveredOn: null,
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -289,7 +289,7 @@ export const MY_ORDERS = [
     deliveryLabel: 'Instant',
     deliveryEstimate: 'Delivered Aug 12, 2026',
     deliveredOn: 'August 12, 2026',
-    image: `${H}/photo-morning.jpg`,
+    image: `${H}/photo-morning.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -327,7 +327,7 @@ export const MY_ORDERS = [
     deliveryEstimate: 'August 10–12, 2026',
     deliveryEstimateShort: 'Aug 10–12, 2026',
     deliveredOn: null,
-    image: `${H}/photo-tidal.jpg`,
+    image: `${H}/photo-tidal.webp`,
     progress: {
       placed: 'done',
       processing: 'current',
@@ -364,7 +364,7 @@ export const MY_ORDERS = [
     deliveryEstimate: 'August 1–3, 2026',
     deliveryEstimateShort: 'Aug 1–3, 2026',
     deliveredOn: null,
-    image: `${H}/photo-autumn.jpg`,
+    image: `${H}/photo-autumn.webp`,
     tracking: 'TRK-77102',
     progress: {
       placed: 'done',
@@ -401,7 +401,7 @@ export const MY_ORDERS = [
     deliveryLabel: 'Front Door',
     deliveryEstimate: 'Delivered Jul 22, 2026',
     deliveredOn: 'July 22, 2026',
-    image: `${H}/photo-silent.jpg`,
+    image: `${H}/photo-silent.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -437,7 +437,7 @@ export const MY_ORDERS = [
     deliveryLabel: 'Reception',
     deliveryEstimate: 'Delivered Jul 12, 2026',
     deliveredOn: 'July 12, 2026',
-    image: `${H}/photo-wings.jpg`,
+    image: `${H}/photo-wings.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -473,7 +473,7 @@ export const MY_ORDERS = [
     deliveryLabel: 'Mailbox',
     deliveryEstimate: 'Delivered Jul 2, 2026',
     deliveredOn: 'July 2, 2026',
-    image: `${H}/photo-golden.jpg`,
+    image: `${H}/photo-golden.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -509,7 +509,7 @@ export const MY_ORDERS = [
     deliveryLabel: 'Front Door',
     deliveryEstimate: 'Delivered Jun 19, 2026',
     deliveredOn: 'June 19, 2026',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     progress: {
       placed: 'done',
       processing: 'done',
@@ -521,18 +521,26 @@ export const MY_ORDERS = [
 ];
 
 export const getOrderById = (orderId) =>
-  MY_ORDERS.find((order) => order.id === orderId || order.orderNumber === orderId) || null;
+  MY_ORDERS.find(
+    (order) => order.id === orderId || order.orderNumber === orderId,
+  ) || null;
 
 export const computeOrderStats = (orders) => ({
   total: { value: String(orders.length) },
   processing: {
-    value: String(orders.filter((order) => order.status === ORDER_STATUS.PROCESSING).length),
+    value: String(
+      orders.filter((order) => order.status === ORDER_STATUS.PROCESSING).length,
+    ),
   },
   shipped: {
-    value: String(orders.filter((order) => order.status === ORDER_STATUS.SHIPPED).length),
+    value: String(
+      orders.filter((order) => order.status === ORDER_STATUS.SHIPPED).length,
+    ),
   },
   delivered: {
-    value: String(orders.filter((order) => order.status === ORDER_STATUS.DELIVERED).length),
+    value: String(
+      orders.filter((order) => order.status === ORDER_STATUS.DELIVERED).length,
+    ),
   },
 });
 

@@ -1,14 +1,16 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
-import { ImgIcon, Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import Button from '@/components/ui/Button';
 import { ABOUT_ASSETS } from '@/portals/public/about/data/aboutAssets';
 import { ABOUT_STEPS } from '@/portals/public/about/data/aboutData';
+import { ImgIcon, Shell } from '@/shared/site-chrome';
 
 const AboutHowItWorks = memo(() => {
   const { t } = useTranslation();
   const [activeId, setActiveId] = useState(ABOUT_STEPS[0].id);
-  const active = ABOUT_STEPS.find((step) => step.id === activeId) || ABOUT_STEPS[0];
+  const active =
+    ABOUT_STEPS.find((step) => step.id === activeId) || ABOUT_STEPS[0];
 
   const goNext = () => {
     setActiveId((current) => {
@@ -19,7 +21,10 @@ const AboutHowItWorks = memo(() => {
   };
 
   return (
-    <section id="how-competitions-work" className="scroll-mt-35 bg-[#ecedfa] section-py">
+    <section
+      id="how-competitions-work"
+      className="scroll-mt-35 bg-[#ecedfa] section-py"
+    >
       <Shell>
         <SectionHeader
           className="mb-10 mx-auto max-w-173.5 xl:mb-14"
@@ -34,7 +39,8 @@ const AboutHowItWorks = memo(() => {
             {ABOUT_STEPS.map((step) => {
               const selected = step.id === activeId;
               return (
-                <button
+                <Button
+                  unstyled
                   key={step.id}
                   type="button"
                   onClick={() => setActiveId(step.id)}
@@ -55,7 +61,7 @@ const AboutHowItWorks = memo(() => {
                       {t(step.summaryKey)}
                     </span>
                   </span>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -92,8 +98,11 @@ const AboutHowItWorks = memo(() => {
               <div>
                 <div className="h-px w-full bg-black/10" />
                 <div className="mt-4 flex items-center justify-between gap-4">
-                  <p className="text-[14px] text-[#606266]">{t('about.howItWorks.activeMode')}</p>
-                  <button
+                  <p className="text-[14px] text-[#606266]">
+                    {t('about.howItWorks.activeMode')}
+                  </p>
+                  <Button
+                    unstyled
                     type="button"
                     onClick={goNext}
                     className="inline-flex items-center gap-1.5 text-[14px] text-[#4048cd]"
@@ -102,7 +111,7 @@ const AboutHowItWorks = memo(() => {
                     <span className="inline-flex size-6 rotate-90 items-center justify-center">
                       <ImgIcon src={ABOUT_ASSETS.arrowNext} size={24} />
                     </span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

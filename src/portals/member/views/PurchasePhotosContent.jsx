@@ -1,16 +1,16 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useState } from 'react';
 import { CloudDownload, Image, Wallet } from 'lucide-react';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberPurchasePhotoCard from '@/components/data-display/MemberPurchasePhotoCard/MemberPurchasePhotoCard';
 import {
+  computePurchaseStats,
   PURCHASE_PHOTOS,
   PURCHASE_PHOTOS_PAGE_SIZE,
   PURCHASE_PHOTOS_PAGE_SIZE_OPTIONS,
   PURCHASE_STAT_CARDS,
-  computePurchaseStats,
 } from '@/portals/member/data/purchasePhotosData';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const STAT_ICONS = {
   Image,
@@ -39,7 +39,9 @@ const PurchaseStatCards = memo(({ stats }) => {
                   {t(card.labelKey)}
                 </p>
                 {card.hintKey ? (
-                  <p className="mt-1 text-[11px] font-medium text-[#9aa3b5]">{t(card.hintKey)}</p>
+                  <p className="mt-1 text-[11px] font-medium text-[#9aa3b5]">
+                    {t(card.hintKey)}
+                  </p>
                 ) : null}
               </div>
               <span
@@ -66,9 +68,11 @@ const PurchasePhotosContent = memo(() => {
 
   const items = useMemo(() => PURCHASE_PHOTOS, []);
   const stats = useMemo(() => computePurchaseStats(items), [items]);
-  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(items, pageSize, [
+  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
+    items,
     pageSize,
-  ]);
+    [pageSize],
+  );
 
   const from = items.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const to = Math.min(currentPage * pageSize, items.length);

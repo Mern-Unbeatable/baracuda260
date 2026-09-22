@@ -11,7 +11,10 @@ import {
 /**
  * Row actions, drawer, and pagination for Admin Ads Management.
  */
-export default function useAdminAds(initialRows = ADMIN_ADS_ROWS, pageSize = ADS_PAGE_SIZE) {
+export default function useAdminAds(
+  initialRows = ADMIN_ADS_ROWS,
+  pageSize = ADS_PAGE_SIZE,
+) {
   const [rows, setRows] = useState(initialRows);
   const [page, setPage] = useState(1);
   const [openActionId, setOpenActionId] = useState(null);
@@ -22,7 +25,9 @@ export default function useAdminAds(initialRows = ADMIN_ADS_ROWS, pageSize = ADS
   const totalPages = Math.max(1, Math.ceil(resultsTotal / pageSize));
   const safePage = Math.min(page, totalPages);
   const visibleRows = paginateAds(activeRows, safePage, pageSize);
-  const detailsRow = detailsId ? rows.find((row) => row.id === detailsId) || null : null;
+  const detailsRow = detailsId
+    ? rows.find((row) => row.id === detailsId) || null
+    : null;
 
   const handleToggleAction = (rowId) => {
     setOpenActionId((current) => (current === rowId ? null : rowId));
@@ -60,7 +65,8 @@ export default function useAdminAds(initialRows = ADMIN_ADS_ROWS, pageSize = ADS
   };
 
   const from = resultsTotal === 0 ? 0 : (safePage - 1) * pageSize + 1;
-  const to = resultsTotal === 0 ? 0 : Math.min(safePage * pageSize, resultsTotal);
+  const to =
+    resultsTotal === 0 ? 0 : Math.min(safePage * pageSize, resultsTotal);
 
   return {
     openActionId,

@@ -1,6 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo } from 'react';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import { useTranslation } from 'react-i18next';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard';
 import {
@@ -8,11 +7,15 @@ import {
   FAVOURITE_PHOTOGRAPHERS_PAGE_SIZE,
   sortFavouritePhotographers,
 } from '@/portals/member/data/favouritePhotographersData';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const FavouritePhotographersContent = memo(() => {
   const { t } = useTranslation();
 
-  const sortedItems = useMemo(() => sortFavouritePhotographers(FAVOURITE_PHOTOGRAPHERS), []);
+  const sortedItems = useMemo(
+    () => sortFavouritePhotographers(FAVOURITE_PHOTOGRAPHERS),
+    [],
+  );
 
   const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
     sortedItems,
@@ -40,7 +43,10 @@ const FavouritePhotographersContent = memo(() => {
           className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4"
         >
           {pagedItems.map((photographer) => (
-            <MemberFavouritePhotographerCard key={photographer.id} photographer={photographer} />
+            <MemberFavouritePhotographerCard
+              key={photographer.id}
+              photographer={photographer}
+            />
           ))}
         </section>
       )}
@@ -50,7 +56,10 @@ const FavouritePhotographersContent = memo(() => {
           <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
             {t('favouritePhotographers.showing', {
               from: (currentPage - 1) * FAVOURITE_PHOTOGRAPHERS_PAGE_SIZE + 1,
-              to: Math.min(currentPage * FAVOURITE_PHOTOGRAPHERS_PAGE_SIZE, sortedItems.length),
+              to: Math.min(
+                currentPage * FAVOURITE_PHOTOGRAPHERS_PAGE_SIZE,
+                sortedItems.length,
+              ),
               total: sortedItems.length,
             })}
           </p>

@@ -1,13 +1,15 @@
-import { useTranslation } from 'react-i18next';
-import { useState, useEffect, memo } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { Menu } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Outlet, useLocation } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
-import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
-import AdminComingSoonContent from '@/portals/admin/views/AdminComingSoonContent';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import Sidebar from '@/layouts/AppShellLayout/adminSidebar/Sidebar';
+import AdminComingSoonContent from '@/portals/admin/views/AdminComingSoonContent';
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
+import { ROUTES } from '@/shared/config';
 
 const normalizePath = (pathname) => pathname.replace(/\/+$/, '') || '/';
 
@@ -29,7 +31,9 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_PREMIUM_PHOTOS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PREMIUM_PHOTOS)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS) ||
-    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS)}/`) ||
+    currentPath.startsWith(
+      `${normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS)}/`,
+    ) ||
     // currentPath === normalizePath(ROUTES.ADMIN_SUBMISSIONS) ||
     currentPath === normalizePath(ROUTES.ADMIN_USERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_CATEGORIES) ||
@@ -108,7 +112,8 @@ const Layout = memo(() => {
 
       <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <header className="flex h-14 shrink-0 items-center gap-3 border-b border-[#e2e2e2] bg-white px-4 lg:hidden">
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={() => setSidebarOpen(true)}
             aria-expanded={sidebarOpen}
@@ -117,8 +122,8 @@ const Layout = memo(() => {
             className="-ml-1 rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
           >
             <Menu size={20} aria-hidden="true" />
-          </button>
-          <img
+          </Button>
+          <Image
             src={DASHBOARD_ASSETS.logo}
             alt="My12Photos"
             width={120}
@@ -135,7 +140,11 @@ const Layout = memo(() => {
             className="scrollbar-white min-h-0 w-full flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8"
             data-lenis-prevent
           >
-            {isAdmin && !isAdminReadyPage ? <AdminComingSoonContent /> : <Outlet />}
+            {isAdmin && !isAdminReadyPage ? (
+              <AdminComingSoonContent />
+            ) : (
+              <Outlet />
+            )}
           </div>
         </div>
       </main>

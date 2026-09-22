@@ -11,7 +11,7 @@ const A = '/assets/home';
 
 export const MEMBER_PROFILE_ASSETS = {
   ...PHOTOGRAPHER_ASSETS,
-  cover: `${A}/photo-morning.jpg`,
+  cover: `${A}/photo-morning.webp`,
 };
 
 export const MEMBER_PROFILE = {

@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import { COMPETITION_STEPS } from '@/shared/data/competitionsMarketing';
 import { Shell } from '@/shared/site-chrome';
-import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 
 /**
  * Shared How It Works section (Home + Competitions pages).

@@ -3,15 +3,15 @@
 const A = '/assets/admin-winners';
 
 export const ADMIN_WINNERS_ASSETS = {
-  anna: `${A}/avatar-anna.jpg`,
-  piotr: `${A}/avatar-piotr.jpg`,
-  marta: `${A}/avatar-marta.jpg`,
+  anna: `${A}/avatar-anna.webp`,
+  piotr: `${A}/avatar-piotr.webp`,
+  marta: `${A}/avatar-marta.webp`,
   eye: `${A}/icon-eye.svg`,
   calendar: `${A}/icon-calendar.svg`,
   chevronDown: `${A}/icon-chevron-down.svg`,
-  medalGold: `${A}/medal-gold.png`,
-  medalSilver: `${A}/medal-silver.png`,
-  medalBronze: `${A}/medal-bronze.png`,
+  medalGold: `${A}/medal-gold.webp`,
+  medalSilver: `${A}/medal-silver.webp`,
+  medalBronze: `${A}/medal-bronze.webp`,
 };
 
 export const EYE_ICON_SIZE = 24;
@@ -29,9 +29,9 @@ export const PODIUM_SIZES = {
 };
 
 export const RANK_MEDAL_ASSETS = {
-  1: `${A}/medal-gold.png`,
-  2: `${A}/medal-silver.png`,
-  3: `${A}/medal-bronze.png`,
+  1: `${A}/medal-gold.webp`,
+  2: `${A}/medal-silver.webp`,
+  3: `${A}/medal-bronze.webp`,
 };
 
 export const ALBUM_FORMATS = [
@@ -164,7 +164,8 @@ export const getWinnersForFormat = (formatId) =>
  * @param {typeof JULY_SIX_WINNERS} winners
  */
 export const getPodiumWinners = (winners) => {
-  const byRank = (rank) => winners.find((winner) => winner.rank === rank) || null;
+  const byRank = (rank) =>
+    winners.find((winner) => winner.rank === rank) || null;
   return {
     second: byRank(2),
     first: byRank(1),
@@ -176,7 +177,8 @@ export const getPodiumWinners = (winners) => {
  * @param {string} monthId
  */
 export const getMonthOption = (monthId) =>
-  MONTH_OPTIONS.find((month) => month.id === monthId) || MONTH_OPTIONS.find((month) => month.id === DEFAULT_MONTH_ID);
+  MONTH_OPTIONS.find((month) => month.id === monthId) ||
+  MONTH_OPTIONS.find((month) => month.id === DEFAULT_MONTH_ID);
 
 /**
  * @param {number} rank

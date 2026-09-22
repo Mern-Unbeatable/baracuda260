@@ -1,15 +1,16 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import Image from '@/components/ui/Image';
 import {
   ADMIN_BUSINESS_LINK_ASSETS,
   EYE_ICON_SIZE,
   getBusinessLinkDetailPath,
 } from '@/portals/admin/data/adminBusinessLinkData';
 import useAdminBusinessLink from '@/portals/admin/hooks/useAdminBusinessLink';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import { ROUTES } from '@/shared/config';
 
 /**
  * @param {{
@@ -18,28 +19,37 @@ import AdminPagination from '@/components/common/AdminPagination/AdminPagination
  */
 const BusinessLinkTableRow = memo(({ row }) => {
   const { t } = useTranslation();
-  const detailPath = getBusinessLinkDetailPath(row.id, ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL);
+  const detailPath = getBusinessLinkDetailPath(
+    row.id,
+    ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL,
+  );
 
   return (
     <tr className="border-b border-[#e4e4e4]">
-      <td className="px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">{t(row.userKey)}</td>
+      <td className="px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">
+        {t(row.userKey)}
+      </td>
       <td className="max-w-45 wrap-break-word px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">
         {row.email}
       </td>
       <td className="px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
         {row.phone}
       </td>
-      <td className="px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">{t(row.countryKey)}</td>
+      <td className="px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">
+        {t(row.countryKey)}
+      </td>
       <td className="px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
         {row.uploadDate}
       </td>
       <td className="px-6.5 py-6">
         <Link
           to={detailPath}
-          aria-label={t('adminBusinessLink.actions.view', { user: t(row.userKey) })}
+          aria-label={t('adminBusinessLink.actions.view', {
+            user: t(row.userKey),
+          })}
           className="inline-flex size-6 items-center justify-center rounded-md transition hover:bg-[#f6fbff]"
         >
-          <img
+          <Image
             src={ADMIN_BUSINESS_LINK_ASSETS.eye}
             alt=""
             width={EYE_ICON_SIZE}
@@ -108,22 +118,37 @@ const BusinessLinkMobileCards = memo(({ rows }) => {
   const { t } = useTranslation();
 
   return (
-    <ul className="flex flex-col md:hidden" data-testid="business-link-mobile-cards">
+    <ul
+      className="flex flex-col md:hidden"
+      data-testid="business-link-mobile-cards"
+    >
       {rows.map((row) => {
-        const detailPath = getBusinessLinkDetailPath(row.id, ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL);
+        const detailPath = getBusinessLinkDetailPath(
+          row.id,
+          ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL,
+        );
         return (
-          <li key={row.id} className="border-b border-[#e4e4e4] px-4 py-5 last:border-b-0">
+          <li
+            key={row.id}
+            className="border-b border-[#e4e4e4] px-4 py-5 last:border-b-0"
+          >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[16px] font-medium leading-6 text-[#0c0c0c]">{t(row.userKey)}</p>
-                <p className="mt-1 wrap-break-word text-[14px] leading-5 text-[#687186]">{row.email}</p>
+                <p className="text-[16px] font-medium leading-6 text-[#0c0c0c]">
+                  {t(row.userKey)}
+                </p>
+                <p className="mt-1 wrap-break-word text-[14px] leading-5 text-[#687186]">
+                  {row.email}
+                </p>
               </div>
               <Link
                 to={detailPath}
-                aria-label={t('adminBusinessLink.actions.view', { user: t(row.userKey) })}
+                aria-label={t('adminBusinessLink.actions.view', {
+                  user: t(row.userKey),
+                })}
                 className="inline-flex size-6 shrink-0 items-center justify-center rounded-md transition hover:bg-[#f6fbff]"
               >
-                <img
+                <Image
                   src={ADMIN_BUSINESS_LINK_ASSETS.eye}
                   alt=""
                   width={EYE_ICON_SIZE}
@@ -134,15 +159,21 @@ const BusinessLinkMobileCards = memo(({ rows }) => {
             </div>
             <dl className="mt-4 grid grid-cols-1 gap-2 text-[14px] leading-5 sm:grid-cols-2">
               <div>
-                <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.phone')}</dt>
+                <dt className="text-[#8b95a5]">
+                  {t('adminBusinessLink.columns.phone')}
+                </dt>
                 <dd className="text-[#0c0c0c]">{row.phone}</dd>
               </div>
               <div>
-                <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.country')}</dt>
+                <dt className="text-[#8b95a5]">
+                  {t('adminBusinessLink.columns.country')}
+                </dt>
                 <dd className="text-[#0c0c0c]">{t(row.countryKey)}</dd>
               </div>
               <div>
-                <dt className="text-[#8b95a5]">{t('adminBusinessLink.columns.uploadDate')}</dt>
+                <dt className="text-[#8b95a5]">
+                  {t('adminBusinessLink.columns.uploadDate')}
+                </dt>
                 <dd className="text-[#0c0c0c]">{row.uploadDate}</dd>
               </div>
             </dl>

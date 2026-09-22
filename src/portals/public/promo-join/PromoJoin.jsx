@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSEO } from '@/shared/hooks/useSEO';
 import PromoJoinContent from '@/portals/public/promo-join/PromoJoinContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const PromoJoin = memo(() => {
   const { code = '' } = useParams();

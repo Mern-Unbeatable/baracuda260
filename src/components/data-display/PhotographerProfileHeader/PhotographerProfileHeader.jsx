@@ -1,7 +1,9 @@
-import { useTranslation } from 'react-i18next';
+import { MapPin, MessageCircle, UserCheck, UserPlus } from 'lucide-react';
 import React, { memo, useState } from 'react';
-import { MapPin, MessageCircle, UserPlus, UserCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 
 const PhotographerProfileHeader = memo(({ profile }) => {
   const { t } = useTranslation();
@@ -11,7 +13,7 @@ const PhotographerProfileHeader = memo(({ profile }) => {
     <div>
       <div className="-mx-4 overflow-hidden rounded-2xl sm:-mx-6">
         <div className="relative aspect-[3.2/1] min-h-[160px]">
-          <img
+          <Image
             src={profile.coverImage || profile.image}
             alt=""
             width={1536}
@@ -24,7 +26,7 @@ const PhotographerProfileHeader = memo(({ profile }) => {
       <div className="-mx-4 sm:-mx-6">
         <div className="relative flex flex-col gap-4 px-4 pb-2 pt-3 sm:flex-row sm:items-end sm:justify-between sm:px-6 sm:pb-3 sm:pt-0">
           <div className="flex min-w-0 items-end gap-3 sm:gap-4">
-            <img
+            <Image
               src={profile.avatar}
               alt={profile.name}
               width={112}
@@ -36,7 +38,10 @@ const PhotographerProfileHeader = memo(({ profile }) => {
                 <h1 className="text-[24px] font-bold leading-tight tracking-[-0.3px] text-[#111827] sm:text-[30px]">
                   {profile.name}
                 </h1>
-                <PhotographerAwardCounters awards={profile.appreciation?.tiers} size="md" />
+                <PhotographerAwardCounters
+                  awards={profile.appreciation?.tiers}
+                  size="md"
+                />
               </div>
               <p className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13px] text-[#6b7280] sm:text-[14px]">
                 <span>{profile.handle}</span>
@@ -52,7 +57,8 @@ const PhotographerProfileHeader = memo(({ profile }) => {
           </div>
 
           <div className="flex shrink-0 flex-wrap items-center gap-2.5 sm:pb-1">
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => setFollowing((current) => !current)}
               className={`inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] px-4 text-[14px] font-semibold text-white transition ${
@@ -66,15 +72,18 @@ const PhotographerProfileHeader = memo(({ profile }) => {
               ) : (
                 <UserPlus size={16} strokeWidth={2} aria-hidden="true" />
               )}
-              {following ? t('photographerProfile.following') : t('photographerProfile.follow')}
-            </button>
-            <button
+              {following
+                ? t('photographerProfile.following')
+                : t('photographerProfile.follow')}
+            </Button>
+            <Button
+              unstyled
               type="button"
               className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] bg-[#1e293b] px-4 text-[14px] font-semibold text-white transition hover:bg-[#0f172a]"
             >
               <MessageCircle size={16} strokeWidth={2} aria-hidden="true" />
               {t('photographerProfile.message')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

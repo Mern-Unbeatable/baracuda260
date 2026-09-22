@@ -1,15 +1,15 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
+import InViewWrapper from '@/components/common/InViewWrapper';
 import { ROUTES } from '@/shared/config';
+import { useSEO } from '@/shared/hooks/useSEO';
 import { SitePageLayout } from '@/shared/site-chrome';
-import AboutHero from './sections/AboutHero';
-import AboutStats from './sections/AboutStats';
-import AboutStory from './sections/AboutStory';
-import AboutMissionVision from './sections/AboutMissionVision';
-import AboutHowItWorks from './sections/AboutHowItWorks';
 import AboutCommunity from './sections/AboutCommunity';
 import AboutCta from './sections/AboutCta';
-import InViewWrapper from '@/components/common/InViewWrapper';
+import AboutHero from './sections/AboutHero';
+import AboutHowItWorks from './sections/AboutHowItWorks';
+import AboutMissionVision from './sections/AboutMissionVision';
+import AboutStats from './sections/AboutStats';
+import AboutStory from './sections/AboutStory';
 
 const About = memo(() => {
   useSEO({
@@ -26,13 +26,27 @@ const About = memo(() => {
       announcementTone="blue"
       newsletterVariant="page"
     >
-      <InViewWrapper><AboutHero /></InViewWrapper>
-      <InViewWrapper><AboutStats /></InViewWrapper>
-      <InViewWrapper><AboutStory /></InViewWrapper>
-      <InViewWrapper><AboutMissionVision /></InViewWrapper>
-      <InViewWrapper><AboutHowItWorks /></InViewWrapper>
-      <InViewWrapper><AboutCommunity /></InViewWrapper>
-      <InViewWrapper><AboutCta /></InViewWrapper>
+      <InViewWrapper>
+        <AboutHero />
+      </InViewWrapper>
+      <InViewWrapper>
+        <AboutStats />
+      </InViewWrapper>
+      <InViewWrapper>
+        <AboutStory />
+      </InViewWrapper>
+      <InViewWrapper>
+        <AboutMissionVision />
+      </InViewWrapper>
+      <InViewWrapper>
+        <AboutHowItWorks />
+      </InViewWrapper>
+      <InViewWrapper>
+        <AboutCommunity />
+      </InViewWrapper>
+      <InViewWrapper>
+        <AboutCta />
+      </InViewWrapper>
     </SitePageLayout>
   );
 });

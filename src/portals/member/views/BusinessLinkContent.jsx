@@ -1,12 +1,12 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
-import Input from '@/components/ui/Input';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
+import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import {
   ALL_SLOTS,
   ARTISTIC_CATEGORIES,
@@ -15,19 +15,20 @@ import {
   DEFAULT_CATEGORY,
   RED_SLOTS,
 } from '@/portals/member/data/businessLinkAssets';
+import { ROUTES } from '@/shared/config';
 
 const SlotIcon = memo(({ slot }) => {
   if (slot.iconBg && slot.iconOverlay) {
     return (
       <span className="relative size-8.75 shrink-0 overflow-hidden">
-        <img
+        <Image
           src={slot.iconBg}
           alt=""
           width={35}
           height={35}
           className="absolute inset-0 size-8.75 object-contain"
         />
-        <img
+        <Image
           src={slot.iconOverlay}
           alt=""
           className="absolute left-1/2 top-1/2 max-h-6.5 max-w-6.5 -translate-x-1/2 -translate-y-1/2 object-contain"
@@ -38,7 +39,7 @@ const SlotIcon = memo(({ slot }) => {
 
   if (slot.icon) {
     return (
-      <img
+      <Image
         src={slot.icon}
         alt=""
         width={35}
@@ -53,70 +54,78 @@ const SlotIcon = memo(({ slot }) => {
 
 SlotIcon.displayName = 'SlotIcon';
 
-const BusinessSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel }) => {
-  const { t } = useTranslation();
-  const theme = slot.theme;
+const BusinessSlotCard = memo(
+  ({ slot, preview, onAddPhoto, changeLabel, addLabel }) => {
+    const { t } = useTranslation();
+    const theme = slot.theme;
 
-  return (
-    <article
-      className={`flex h-full min-w-0 w-full flex-col gap-6.75 rounded-xl border bg-white p-5 ${theme.cardBorder}`}
-    >
-      <div className="flex w-full flex-1 flex-col items-center gap-5">
-        <div className="flex w-full items-center justify-between whitespace-nowrap">
-          <p className={`shrink-0 text-[20px] font-semibold leading-6 ${theme.number}`}>
-            #{slot.number}
-          </p>
-          <p className="shrink-0 text-[16px] font-medium leading-6 text-[#3a3a3a]">
-            {t(slot.elementKey)}
-          </p>
-        </div>
-
-        <div className="flex w-full flex-1 flex-col items-center gap-3">
-          <SlotIcon slot={slot} />
-          <div className="flex w-full flex-1 flex-col items-center gap-1 text-center">
-            <p className={`min-h-6 w-full text-[20px] font-medium leading-6 ${theme.name}`}>
-              {t(slot.nameKey)}
-            </p>
-            {/* Reserve 2 lines so Add Photo stays aligned when ranges wrap. */}
+    return (
+      <article
+        className={`flex h-full min-w-0 w-full flex-col gap-6.75 rounded-xl border bg-white p-5 ${theme.cardBorder}`}
+      >
+        <div className="flex w-full flex-1 flex-col items-center gap-5">
+          <div className="flex w-full items-center justify-between whitespace-nowrap">
             <p
-              className={`flex min-h-12 w-full items-start justify-center text-[16px] font-medium leading-6 ${theme.range}`}
+              className={`shrink-0 text-[20px] font-semibold leading-6 ${theme.number}`}
             >
-              {t(slot.rangeKey)}
+              #{slot.number}
+            </p>
+            <p className="shrink-0 text-[16px] font-medium leading-6 text-[#3a3a3a]">
+              {t(slot.elementKey)}
             </p>
           </div>
-        </div>
-      </div>
 
-      {preview ? (
-        <div className="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10">
-          <img src={preview} alt="" className="h-24 w-full object-cover" />
-          <button
+          <div className="flex w-full flex-1 flex-col items-center gap-3">
+            <SlotIcon slot={slot} />
+            <div className="flex w-full flex-1 flex-col items-center gap-1 text-center">
+              <p
+                className={`min-h-6 w-full text-[20px] font-medium leading-6 ${theme.name}`}
+              >
+                {t(slot.nameKey)}
+              </p>
+              {/* Reserve 2 lines so Add Photo stays aligned when ranges wrap. */}
+              <p
+                className={`flex min-h-12 w-full items-start justify-center text-[16px] font-medium leading-6 ${theme.range}`}
+              >
+                {t(slot.rangeKey)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {preview ? (
+          <div className="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10">
+            <Image src={preview} alt="" className="h-24 w-full object-cover" />
+            <Button
+              unstyled
+              type="button"
+              onClick={onAddPhoto}
+              className="absolute bottom-2 right-2 cursor-pointer rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#ee1c25] shadow"
+            >
+              {changeLabel}
+            </Button>
+          </div>
+        ) : (
+          <Button
+            unstyled
             type="button"
             onClick={onAddPhoto}
-            className="absolute bottom-2 right-2 cursor-pointer rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#ee1c25] shadow"
+            className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${theme.buttonBorder} ${theme.buttonText}`}
           >
-            {changeLabel}
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={onAddPhoto}
-          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${theme.buttonBorder} ${theme.buttonText}`}
-        >
-          <img
-            src={theme.upload}
-            alt=""
-            width={24}
-            height={24}
-            className="size-6 shrink-0"
-          />
-          {addLabel}
-        </button>
-      )}
-    </article>
-  );
-});
+            <Image
+              src={theme.upload}
+              alt=""
+              width={24}
+              height={24}
+              className="size-6 shrink-0"
+            />
+            {addLabel}
+          </Button>
+        )}
+      </article>
+    );
+  },
+);
 
 BusinessSlotCard.displayName = 'BusinessSlotCard';
 
@@ -211,7 +220,7 @@ const BusinessLinkContent = memo(() => {
 
       <section className="flex w-full flex-col items-start gap-4 rounded-[20px] border border-black/20 bg-white p-5 sm:flex-row sm:gap-4">
         <div className="flex h-7.5 w-7.75 shrink-0 items-center justify-center rounded border border-[#ee1c25] bg-[#fde8e9] px-0.75 py-0.75 pl-1">
-          <img
+          <Image
             src={BUSINESS_LINK_ASSETS.bag}
             alt=""
             width={24}
@@ -229,8 +238,11 @@ const BusinessLinkContent = memo(() => {
         </div>
       </section>
 
-      <div className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75" aria-hidden="true">
-        <img
+      <div
+        className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75"
+        aria-hidden="true"
+      >
+        <Image
           src={BUSINESS_LINK_ASSETS.dualWave}
           alt=""
           className="absolute inset-x-0 top-0 h-full w-full object-fill"
@@ -273,7 +285,9 @@ const BusinessLinkContent = memo(() => {
               error={errors.title}
               inputClassName="w-full rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
               labelClassName="hidden"
-              {...register('title', { required: t('businessLink.errors.titleRequired') })}
+              {...register('title', {
+                required: t('businessLink.errors.titleRequired'),
+              })}
             />
           </div>
 
@@ -317,7 +331,9 @@ const BusinessLinkContent = memo(() => {
               rows={5}
               aria-invalid={Boolean(errors.story)}
               className="min-h-36.75 w-full resize-y rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
-              {...register('story', { required: t('businessLink.errors.storyRequired') })}
+              {...register('story', {
+                required: t('businessLink.errors.storyRequired'),
+              })}
             />
             {errors.story ? (
               <p className="text-sm text-red-600" role="alert">
@@ -332,7 +348,9 @@ const BusinessLinkContent = memo(() => {
             <input
               type="checkbox"
               className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
-              {...register('copyrightOk', { required: t('businessLink.errors.copyrightRequired') })}
+              {...register('copyrightOk', {
+                required: t('businessLink.errors.copyrightRequired'),
+              })}
             />
             <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
               {t('businessLink.copyrightConfirm')}
@@ -350,7 +368,7 @@ const BusinessLinkContent = memo(() => {
           unstyled={true}
           className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
         >
-          <img
+          <Image
             src={BUSINESS_LINK_ASSETS.submit}
             alt=""
             width={24}
@@ -369,7 +387,10 @@ const BusinessLinkContent = memo(() => {
         onChange={handleFileChange}
       />
 
-      <PhotoSubmitSuccessModal open={successOpen} onClose={() => setSuccessOpen(false)} />
+      <PhotoSubmitSuccessModal
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+      />
     </div>
   );
 });

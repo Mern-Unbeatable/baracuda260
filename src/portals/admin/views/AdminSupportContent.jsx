@@ -1,7 +1,9 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import AnswerPublishModal from '@/portals/admin/components/admin-support/AnswerPublishModal';
+import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import AnswerPublishModal from '@/portals/admin/components/admin-support/AnswerPublishModal';
 import {
   ADMIN_SUPPORT_ASSETS,
   AVATAR_SIZE,
@@ -29,7 +31,7 @@ const SupportTicketRow = memo(({ ticket, onAnswer, onView, variant }) => {
         className="flex shrink-0 items-center justify-center rounded-full bg-[#ecedfa]"
         style={{ width: AVATAR_SIZE, height: AVATAR_SIZE }}
       >
-        <img
+        <Image
           src={ADMIN_SUPPORT_ASSETS.question}
           alt=""
           width={QUESTION_ICON_SIZE}
@@ -51,12 +53,13 @@ const SupportTicketRow = memo(({ ticket, onAnswer, onView, variant }) => {
 
         <div className="flex flex-wrap items-center gap-3 pt-5">
           {isPending ? (
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => onAnswer?.(ticket.id)}
               className="inline-flex cursor-pointer items-center gap-1 rounded-[8px] bg-[#ee1c25] px-4 py-2 text-[16px] leading-6 text-white transition hover:bg-[#d41820]"
             >
-              <img
+              <Image
                 src={ADMIN_SUPPORT_ASSETS.message}
                 alt=""
                 width={MESSAGE_ICON_SIZE}
@@ -64,11 +67,11 @@ const SupportTicketRow = memo(({ ticket, onAnswer, onView, variant }) => {
                 className="size-[12px]"
               />
               {t('adminSupport.actions.answer')}
-            </button>
+            </Button>
           ) : (
             <>
               <span className="inline-flex items-center gap-1 rounded-[8px] bg-[#9f9f9f] px-4 py-2 text-[16px] leading-6 text-white">
-                <img
+                <Image
                   src={ADMIN_SUPPORT_ASSETS.message}
                   alt=""
                   width={MESSAGE_ICON_SIZE}
@@ -77,12 +80,13 @@ const SupportTicketRow = memo(({ ticket, onAnswer, onView, variant }) => {
                 />
                 {t('adminSupport.actions.answered')}
               </span>
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={() => onView?.(ticket.id)}
                 className="inline-flex cursor-pointer items-center gap-1 rounded-[8px] border border-[#ee1c25] bg-white px-4 py-2 text-[16px] leading-6 text-[#222] transition hover:bg-[#fde8e9]"
               >
-                <img
+                <Image
                   src={ADMIN_SUPPORT_ASSETS.eye}
                   alt=""
                   width={EYE_ICON_SIZE}
@@ -90,7 +94,7 @@ const SupportTicketRow = memo(({ ticket, onAnswer, onView, variant }) => {
                   className="size-5"
                 />
                 {t('adminSupport.actions.viewMessage')}
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -111,32 +115,39 @@ SupportTicketRow.displayName = 'SupportTicketRow';
  *   onView?: (ticketId: string) => void,
  * }} props
  */
-const SupportQueueCard = memo(({ title, tickets, emptyLabel, variant, onAnswer, onView }) => (
-  <section className="overflow-hidden rounded-[12px] border border-[#eeeef0] bg-white shadow-[0px_4px_10px_rgba(123,94,167,0.08)]">
-    <div className="border-b border-[#eeeef0] px-4 pb-[25px] pt-6 sm:px-6">
-      <h2 className="font-manrope text-[20px] font-semibold leading-8 text-[#1a1c1d] sm:text-[24px]">
-        {title}
-      </h2>
-    </div>
+const SupportQueueCard = memo(
+  ({ title, tickets, emptyLabel, variant, onAnswer, onView }) => (
+    <section className="overflow-hidden rounded-[12px] border border-[#eeeef0] bg-white shadow-[0px_4px_10px_rgba(123,94,167,0.08)]">
+      <div className="border-b border-[#eeeef0] px-4 pb-[25px] pt-6 sm:px-6">
+        <h2 className="font-manrope text-[20px] font-semibold leading-8 text-[#1a1c1d] sm:text-[24px]">
+          {title}
+        </h2>
+      </div>
 
-    {tickets.length > 0 ? (
-      <ul className="flex flex-col">
-        {tickets.map((ticket) => (
-          <li key={ticket.id} className="border-b border-[#eeeef0] last:border-b-0">
-            <SupportTicketRow
-              ticket={ticket}
-              variant={variant}
-              onAnswer={onAnswer}
-              onView={onView}
-            />
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <p className="px-6 py-10 text-center text-[16px] text-[#687186]">{emptyLabel}</p>
-    )}
-  </section>
-));
+      {tickets.length > 0 ? (
+        <ul className="flex flex-col">
+          {tickets.map((ticket) => (
+            <li
+              key={ticket.id}
+              className="border-b border-[#eeeef0] last:border-b-0"
+            >
+              <SupportTicketRow
+                ticket={ticket}
+                variant={variant}
+                onAnswer={onAnswer}
+                onView={onView}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+          {emptyLabel}
+        </p>
+      )}
+    </section>
+  ),
+);
 
 SupportQueueCard.displayName = 'SupportQueueCard';
 

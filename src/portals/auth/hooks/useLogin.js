@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '@/app/store/slices/authSlice';
-import { envVar } from '@/shared/config/env';
-import { ROUTES } from '@/shared/config';
-import { httpMethods } from '@/shared/lib/httpMethods';
-import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
-import { DEMO_ACCOUNTS, DEMO_PASSWORD, getDemoAccount } from '@/portals/auth/data/demoAccounts';
+import {
+  DEMO_ACCOUNTS,
+  DEMO_PASSWORD,
+  getDemoAccount,
+} from '@/portals/auth/data/demoAccounts';
 import { EMAIL_REGEX } from '@/portals/auth/data/loginAssets';
+import { ROUTES } from '@/shared/config';
+import { envVar } from '@/shared/config/env';
+import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
+import { httpMethods } from '@/shared/lib/httpMethods';
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -36,7 +40,8 @@ export function useLogin() {
   const rememberMeValue = watch('rememberMe');
 
   const goToDashboard = () => {
-    const destination = location.state?.from?.pathname ?? ROUTES.ADMIN_DASHBOARD;
+    const destination =
+      location.state?.from?.pathname ?? ROUTES.ADMIN_DASHBOARD;
     navigate(destination, { replace: true });
   };
 
@@ -78,7 +83,12 @@ export function useLogin() {
       if (envVar('DEV_MOCK_AUTH') === 'true') {
         dispatch(
           loginSuccess({
-            user: { email: data.email, rememberMe: data.rememberMe, role: 'user', fullName: data.email },
+            user: {
+              email: data.email,
+              rememberMe: data.rememberMe,
+              role: 'user',
+              fullName: data.email,
+            },
             token: null,
           }),
         );
@@ -86,18 +96,28 @@ export function useLogin() {
         return;
       }
 
-      const { data: responseData, error } = await httpMethods.post(API_ENDPOINTS.AUTH.LOGIN, {
-        email: data.email,
-        password: data.password,
-        rememberMe: data.rememberMe,
-      });
+      const { data: responseData, error } = await httpMethods.post(
+        API_ENDPOINTS.AUTH.LOGIN,
+        {
+          email: data.email,
+          password: data.password,
+          rememberMe: data.rememberMe,
+        },
+      );
 
       if (error) {
-        setGlobalError(error?.data?.message ?? error?.message ?? t('login.invalidCredentials'));
+        setGlobalError(
+          error?.data?.message ??
+            error?.message ??
+            t('login.invalidCredentials'),
+        );
         return;
       }
 
-      const token = responseData?.token ?? responseData?.data?.token ?? responseData?.accessToken;
+      const token =
+        responseData?.token ??
+        responseData?.data?.token ??
+        responseData?.accessToken;
       const user = responseData?.user ?? responseData?.data?.user ?? null;
       dispatch(loginSuccess({ user, token }));
       goToDashboard();

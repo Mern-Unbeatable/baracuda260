@@ -1,13 +1,15 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ROUTES } from '@/shared/config';
+import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   ADMIN_BUSINESS_LINK_ASSETS,
   ARROW_ICON_SIZE,
 } from '@/portals/admin/data/adminBusinessLinkData';
 import useAdminBusinessLinkDetail from '@/portals/admin/hooks/useAdminBusinessLinkDetail';
+import { ROUTES } from '@/shared/config';
 
 /**
  * @param {{
@@ -27,7 +29,8 @@ const ZodiacThumb = memo(({ slide, active, onSelect }) => {
     : 'border-transparent';
 
   return (
-    <button
+    <Button
+      unstyled
       type="button"
       onClick={onSelect}
       aria-label={t('adminBusinessLink.detail.selectPhoto', {
@@ -53,7 +56,7 @@ const ZodiacThumb = memo(({ slide, active, onSelect }) => {
             : 'rounded-[4px] bg-[#ee1c25] px-2.5 py-1'
         }`}
       >
-        <img
+        <Image
           src={slide.icon}
           alt=""
           width={35}
@@ -71,9 +74,9 @@ const ZodiacThumb = memo(({ slide, active, onSelect }) => {
       <span
         className={`mt-1 block size-[64px] overflow-hidden rounded-[8px] border-[3px] sm:size-[80px] lg:h-[100px] lg:w-full lg:max-w-[112px] ${borderClass}`}
       >
-        <img src={slide.thumb} alt="" className="size-full object-cover" />
+        <Image src={slide.thumb} alt="" className="size-full object-cover" />
       </span>
-    </button>
+    </Button>
   );
 });
 
@@ -85,13 +88,22 @@ ZodiacThumb.displayName = 'ZodiacThumb';
 const AdminBusinessLinkDetailContent = memo(() => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const { detail, slides, activeIndex, activeSlide, goPrev, goNext, selectSlide } =
-    useAdminBusinessLinkDetail(id);
+  const {
+    detail,
+    slides,
+    activeIndex,
+    activeSlide,
+    goPrev,
+    goNext,
+    selectSlide,
+  } = useAdminBusinessLinkDetail(id);
 
   if (!detail || !activeSlide) {
     return (
       <div className="flex w-full flex-col gap-4 py-6">
-        <p className="text-[16px] text-[#687186]">{t('adminBusinessLink.detail.notFound')}</p>
+        <p className="text-[16px] text-[#687186]">
+          {t('adminBusinessLink.detail.notFound')}
+        </p>
         <Link
           to={ROUTES.ADMIN_BUSINESS_PHOTOS}
           className="text-[16px] font-medium text-[#4048cd] hover:underline"
@@ -117,7 +129,10 @@ const AdminBusinessLinkDetailContent = memo(() => {
   return (
     <div className="flex w-full flex-col gap-6 py-2 sm:gap-8 sm:py-4">
       <div className="flex items-center gap-2 text-[14px] text-[#687186]">
-        <Link to={ROUTES.ADMIN_BUSINESS_PHOTOS} className="hover:text-[#4048cd] hover:underline">
+        <Link
+          to={ROUTES.ADMIN_BUSINESS_PHOTOS}
+          className="hover:text-[#4048cd] hover:underline"
+        >
           {t('adminBusinessLink.title')}
         </Link>
         <span aria-hidden="true">/</span>
@@ -135,7 +150,9 @@ const AdminBusinessLinkDetailContent = memo(() => {
               <h1 className="font-manrope text-[18px] font-bold tracking-[-0.5px] text-[#111827] sm:text-[20px] sm:leading-7">
                 {t(detail.nameKey)}
               </h1>
-              <p className="text-[15px] leading-7 text-[#6b7280] sm:text-[18px]">{detail.email}</p>
+              <p className="text-[15px] leading-7 text-[#6b7280] sm:text-[18px]">
+                {detail.email}
+              </p>
             </div>
           </div>
           <span className="inline-flex w-fit rounded-full bg-[#eff4ff] px-4 py-1.5 text-[14px] font-semibold leading-5 text-[#2563eb]">
@@ -150,7 +167,9 @@ const AdminBusinessLinkDetailContent = memo(() => {
             <dt className="text-[14px] font-medium leading-5 text-[#9ca3af]">
               {t('adminBusinessLink.detail.phone')}
             </dt>
-            <dd className="text-[16px] font-medium leading-6 text-[#374151]">{detail.phone}</dd>
+            <dd className="text-[16px] font-medium leading-6 text-[#374151]">
+              {detail.phone}
+            </dd>
           </div>
           <div>
             <dt className="text-[14px] font-medium leading-5 text-[#9ca3af]">
@@ -172,15 +191,20 @@ const AdminBusinessLinkDetailContent = memo(() => {
             <dt className="text-[14px] font-medium leading-5 text-[#9ca3af]">
               {t('adminBusinessLink.detail.albumIdLabel')}
             </dt>
-            <dd className="text-[16px] font-bold leading-6 text-[#111827]">{detail.albumId}</dd>
+            <dd className="text-[16px] font-bold leading-6 text-[#111827]">
+              {detail.albumId}
+            </dd>
           </div>
         </dl>
       </section>
 
       {/* Hero viewer */}
-      <section aria-label={t('adminBusinessLink.detail.galleryAria')} className="flex flex-col gap-4">
+      <section
+        aria-label={t('adminBusinessLink.detail.galleryAria')}
+        className="flex flex-col gap-4"
+      >
         <div className="relative aspect-[1536/653] w-full overflow-hidden rounded-[16px] sm:rounded-[20px]">
-          <img
+          <Image
             src={activeSlide.hero}
             alt={`${t(detail.titleKey)} — ${activeSlide.sign}`}
             className="absolute inset-0 size-full object-cover"
@@ -188,48 +212,52 @@ const AdminBusinessLinkDetailContent = memo(() => {
           <div
             className={`absolute left-4 top-4 inline-flex items-end gap-2 rounded-[20px] px-4 py-1.5 sm:left-6 sm:top-6 ${badgeBg}`}
           >
-            <img
+            <Image
               src={ADMIN_BUSINESS_LINK_ASSETS.ariesWhite}
               alt=""
               width={24}
               height={21}
               className="h-[21px] w-6 object-contain"
             />
-            <span className="text-[16px] text-white sm:text-[20px]">{activeSlide.sign}</span>
+            <span className="text-[16px] text-white sm:text-[20px]">
+              {activeSlide.sign}
+            </span>
           </div>
 
-          <button
+          <Button
+            unstyled
             type="button"
             aria-label={t('adminBusinessLink.detail.previousPhoto')}
             onClick={goPrev}
             className="absolute left-3 top-1/2 flex size-[44px] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/70 transition hover:bg-white sm:left-4 sm:size-[51px]"
           >
-            <img
+            <Image
               src={ADMIN_BUSINESS_LINK_ASSETS.arrow}
               alt=""
               width={ARROW_ICON_SIZE}
               height={32}
               className="h-8 w-4 rotate-180"
             />
-          </button>
-          <button
+          </Button>
+          <Button
+            unstyled
             type="button"
             aria-label={t('adminBusinessLink.detail.nextPhoto')}
             onClick={goNext}
             className="absolute right-3 top-1/2 flex size-[44px] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/70 transition hover:bg-white sm:right-4 sm:size-[51px]"
           >
-            <img
+            <Image
               src={ADMIN_BUSINESS_LINK_ASSETS.arrow}
               alt=""
               width={ARROW_ICON_SIZE}
               height={32}
               className="h-8 w-4"
             />
-          </button>
+          </Button>
         </div>
 
         <div className="w-full px-1 sm:px-4" aria-hidden="true">
-          <img
+          <Image
             src={ADMIN_BUSINESS_LINK_ASSETS.curve}
             alt=""
             className="h-auto w-full object-contain"
@@ -301,12 +329,13 @@ const AdminBusinessLinkDetailContent = memo(() => {
             </div>
 
             <div className="flex w-full items-center pt-2">
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={handleCopyLink}
                 className="inline-flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#4048cd] px-5 py-2.5 shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition hover:bg-[#343aa8]"
               >
-                <img
+                <Image
                   src={ADMIN_BUSINESS_LINK_ASSETS.copy}
                   alt=""
                   width={18}
@@ -316,12 +345,12 @@ const AdminBusinessLinkDetailContent = memo(() => {
                 <span className="text-[16px] font-semibold leading-6 text-white">
                   {t('adminBusinessLink.detail.copyLink')}
                 </span>
-              </button>
+              </Button>
             </div>
           </section>
 
           <div className="h-0 w-full" aria-hidden="true">
-            <img
+            <Image
               src={ADMIN_BUSINESS_LINK_ASSETS.divider}
               alt=""
               className="block h-px w-full max-w-none"
@@ -331,7 +360,7 @@ const AdminBusinessLinkDetailContent = memo(() => {
 
         {/* Photographer — same meta text sizes as zodiac competition detail */}
         <section className="flex items-start gap-3">
-          <img
+          <Image
             src={detail.photographerAvatar}
             alt=""
             width={57}

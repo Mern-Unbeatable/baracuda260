@@ -13,7 +13,12 @@ export const PROFILE_FOLLOWING = sortedPhotographers.map((photographer) => ({
   defaultFollowing: true,
 }));
 
-const NOT_FOLLOWING_BACK_IDS = new Set(['fav-sofia-reyes', 'fav-jan-muller', 'fav-emma-clark', 'fav-tomasz-nowak']);
+const NOT_FOLLOWING_BACK_IDS = new Set([
+  'fav-sofia-reyes',
+  'fav-jan-muller',
+  'fav-emma-clark',
+  'fav-tomasz-nowak',
+]);
 
 export const PROFILE_FOLLOWERS = sortedPhotographers.map((photographer) => ({
   ...photographer,

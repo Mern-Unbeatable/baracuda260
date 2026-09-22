@@ -1,11 +1,12 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import Image from '@/components/ui/Image';
 import { ROUTES } from '@/shared/config';
-import { SITE_ASSETS } from './siteAssets';
-import { SITE_FOOTER_COLUMNS, SITE_FOOTER_YEAR } from './siteCopy';
 import AppLink from './AppLink';
 import ImgIcon from './ImgIcon';
 import Shell from './Shell';
+import { SITE_ASSETS } from './siteAssets';
+import { SITE_FOOTER_COLUMNS, SITE_FOOTER_YEAR } from './siteCopy';
 
 const SOCIAL_ICONS = [SITE_ASSETS.ig, SITE_ASSETS.fb, SITE_ASSETS.x];
 
@@ -36,7 +37,7 @@ const SiteFooter = memo(() => {
               className="relative flex h-16.75 w-55 items-center"
               aria-label={t('nav.home')}
             >
-              <img
+              <Image
                 src={SITE_ASSETS.logoFooter}
                 alt="My 12 Photos"
                 width={220}
@@ -57,7 +58,12 @@ const SiteFooter = memo(() => {
                   className="flex size-9 items-center justify-center rounded-2xl bg-[#2d3392]"
                   aria-label={t('footer.socialLink')}
                 >
-                  <ImgIcon src={icon} size={16} loading="lazy" decoding="async" />
+                  <ImgIcon
+                    src={icon}
+                    size={16}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </a>
               ))}
             </div>

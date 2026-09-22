@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
 
@@ -21,13 +21,19 @@ const MemberProfileStatsBar = memo(({ stats }) => {
       {STAT_ITEMS.map(({ key, href }) => {
         const value = Number(stats[key] ?? 0).toLocaleString('en-US');
         const label = t(`memberProfile.stats.${key}`, {
-          defaultValue: t(`photographerProfile.stats.${key}`, { defaultValue: key }),
+          defaultValue: t(`photographerProfile.stats.${key}`, {
+            defaultValue: key,
+          }),
         });
 
         const content = (
           <>
-            <p className="text-[24px] font-bold leading-none text-[#111827] sm:text-[28px]">{value}</p>
-            <p className="text-[13px] leading-snug text-[#6b7280] sm:text-[14px]">{label}</p>
+            <p className="text-[24px] font-bold leading-none text-[#111827] sm:text-[28px]">
+              {value}
+            </p>
+            <p className="text-[13px] leading-snug text-[#6b7280] sm:text-[14px]">
+              {label}
+            </p>
           </>
         );
 

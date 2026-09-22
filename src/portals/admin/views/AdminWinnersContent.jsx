@@ -1,25 +1,27 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   ADMIN_WINNERS_ASSETS,
   ALBUM_FORMATS,
   CALENDAR_ICON_SIZE,
   CHEVRON_ICON_SIZE,
   EYE_ICON_SIZE,
+  formatCount,
+  getRankDisplay,
+  getRankMedalSrc,
+  isMedalRank,
   MONTH_OPTIONS,
   PODIUM_MEDAL_SIZE,
   PODIUM_SIZES,
   TABLE_AVATAR_SIZE,
   TABLE_MEDAL_SIZE,
-  formatCount,
-  getRankDisplay,
-  getRankMedalSrc,
-  isMedalRank,
 } from '@/portals/admin/data/adminWinnersData';
 import useAdminWinners from '@/portals/admin/hooks/useAdminWinners';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import { ROUTES } from '@/shared/config';
 
 /**
  * @param {{
@@ -33,11 +35,13 @@ import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader
  */
 const PhotographerAvatar = memo(({ winner, size }) => {
   const { t } = useTranslation();
-  const avatarSrc = winner.avatarKey ? ADMIN_WINNERS_ASSETS[winner.avatarKey] : null;
+  const avatarSrc = winner.avatarKey
+    ? ADMIN_WINNERS_ASSETS[winner.avatarKey]
+    : null;
 
   if (avatarSrc) {
     return (
-      <img
+      <Image
         src={avatarSrc}
         alt={t(winner.nameKey)}
         width={size}
@@ -63,22 +67,22 @@ const RankMedal = memo(({ rank, size = 'podium' }) => {
   const medalSrc = getRankMedalSrc(rank);
   if (!medalSrc) {
     return (
-      <span className="text-[14px] font-extrabold leading-5 text-[#6b7280]">{getRankDisplay(rank)}</span>
+      <span className="text-[14px] font-extrabold leading-5 text-[#6b7280]">
+        {getRankDisplay(rank)}
+      </span>
     );
   }
 
   const dims = size === 'table' ? TABLE_MEDAL_SIZE : PODIUM_MEDAL_SIZE;
 
   return (
-    <img
+    <Image
       src={medalSrc}
       alt=""
       width={dims.width}
       height={dims.height}
       className={
-        size === 'table'
-          ? 'size-5 object-contain'
-          : 'size-7 object-contain'
+        size === 'table' ? 'size-5 object-contain' : 'size-7 object-contain'
       }
     />
   );
@@ -105,9 +109,14 @@ const PodiumAvatar = memo(({ winner, place }) => {
       : 'border-2 border-[#fee685]';
 
   return (
-    <div className="relative flex w-full justify-center" style={{ height: size }}>
+    <div
+      className="relative flex w-full justify-center"
+      style={{ height: size }}
+    >
       <div className="relative" style={{ width: size, height: size }}>
-        <div className={`size-full overflow-hidden rounded-full bg-[#f3f4f6] ${borderClass}`}>
+        <div
+          className={`size-full overflow-hidden rounded-full bg-[#f3f4f6] ${borderClass}`}
+        >
           <PhotographerAvatar winner={winner} size={size} />
         </div>
         <div
@@ -141,14 +150,20 @@ const PodiumMeta = memo(({ winner, place, locale }) => {
     <div className="flex w-full flex-col items-center pt-2 text-center">
       <p
         className={`text-[#0d0d14] ${
-          isFirst ? 'text-[16px] font-extrabold leading-6' : 'text-[14px] font-bold leading-5'
+          isFirst
+            ? 'text-[16px] font-extrabold leading-6'
+            : 'text-[14px] font-bold leading-5'
         }`}
       >
         {t(winner.firstNameKey)}
       </p>
-      <p className="text-[12px] leading-4 text-[#6b7280]">{t(winner.cityKey)}</p>
+      <p className="text-[12px] leading-4 text-[#6b7280]">
+        {t(winner.cityKey)}
+      </p>
       <p className="pt-1 text-[14px] font-bold leading-5 text-[#e31837]">
-        {t('adminWinners.votesLabel', { count: formatCount(winner.votes, locale) })}
+        {t('adminWinners.votesLabel', {
+          count: formatCount(winner.votes, locale),
+        })}
       </p>
     </div>
   );
@@ -179,7 +194,12 @@ const WinnersPodium = memo(({ podium, locale }) => {
       </div>
       <div className="grid grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8">
         {places.map(({ place, winner }) => (
-          <PodiumMeta key={`meta-${place}`} winner={winner} place={place} locale={locale} />
+          <PodiumMeta
+            key={`meta-${place}`}
+            winner={winner}
+            place={place}
+            locale={locale}
+          />
         ))}
       </div>
     </div>
@@ -206,7 +226,8 @@ const FormatTabs = memo(({ albumFormat, onSelect }) => {
       {ALBUM_FORMATS.map((format) => {
         const selected = format.id === albumFormat;
         return (
-          <button
+          <Button
+            unstyled
             key={format.id}
             type="button"
             role="tab"
@@ -219,7 +240,7 @@ const FormatTabs = memo(({ albumFormat, onSelect }) => {
             }`}
           >
             {t(format.labelKey)}
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -237,89 +258,95 @@ FormatTabs.displayName = 'FormatTabs';
  *   onSelect: (monthId: string) => void,
  * }} props
  */
-const MonthSelect = memo(({ selectedMonth, monthOpen, onToggle, onClose, onSelect }) => {
-  const { t } = useTranslation();
-  const rootRef = useRef(null);
+const MonthSelect = memo(
+  ({ selectedMonth, monthOpen, onToggle, onClose, onSelect }) => {
+    const { t } = useTranslation();
+    const rootRef = useRef(null);
 
-  useEffect(() => {
-    if (!monthOpen) return undefined;
+    useEffect(() => {
+      if (!monthOpen) return undefined;
 
-    const handlePointerDown = (event) => {
-      if (rootRef.current && !rootRef.current.contains(event.target)) {
-        onClose();
-      }
-    };
+      const handlePointerDown = (event) => {
+        if (rootRef.current && !rootRef.current.contains(event.target)) {
+          onClose();
+        }
+      };
 
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
+      const handleKeyDown = (event) => {
+        if (event.key === 'Escape') onClose();
+      };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [monthOpen, onClose]);
+      document.addEventListener('mousedown', handlePointerDown);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('mousedown', handlePointerDown);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [monthOpen, onClose]);
 
-  return (
-    <div className="relative" ref={rootRef}>
-      <button
-        type="button"
-        aria-expanded={monthOpen}
-        aria-haspopup="listbox"
-        aria-label={t('adminWinners.monthAria')}
-        onClick={onToggle}
-        className="inline-flex cursor-pointer items-center gap-[10px] rounded-[4px] bg-[#f0f0f0] px-3 py-2"
-      >
-        <img
-          src={ADMIN_WINNERS_ASSETS.calendar}
-          alt=""
-          width={CALENDAR_ICON_SIZE}
-          height={CALENDAR_ICON_SIZE}
-          className="h-[13px] w-3"
-        />
-        <span className="font-manrope text-[16px] font-medium leading-normal text-[#222]">
-          {t(selectedMonth.monthKey)}
-        </span>
-        <img
-          src={ADMIN_WINNERS_ASSETS.chevronDown}
-          alt=""
-          width={CHEVRON_ICON_SIZE}
-          height={CHEVRON_ICON_SIZE}
-          className={`size-6 transition ${monthOpen ? 'rotate-180' : ''}`}
-        />
-      </button>
-
-      {monthOpen ? (
-        <ul
-          role="listbox"
+    return (
+      <div className="relative" ref={rootRef}>
+        <Button
+          unstyled
+          type="button"
+          aria-expanded={monthOpen}
+          aria-haspopup="listbox"
           aria-label={t('adminWinners.monthAria')}
-          className="absolute right-0 top-full z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
+          onClick={onToggle}
+          className="inline-flex cursor-pointer items-center gap-[10px] rounded-[4px] bg-[#f0f0f0] px-3 py-2"
         >
-          {MONTH_OPTIONS.map((month) => {
-            const selected = month.id === selectedMonth.id;
-            return (
-              <li key={month.id}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={selected}
-                  onClick={() => onSelect(month.id)}
-                  className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
-                    selected ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
-                  }`}
-                >
-                  {t(month.monthKey)}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
-    </div>
-  );
-});
+          <Image
+            src={ADMIN_WINNERS_ASSETS.calendar}
+            alt=""
+            width={CALENDAR_ICON_SIZE}
+            height={CALENDAR_ICON_SIZE}
+            className="h-[13px] w-3"
+          />
+          <span className="font-manrope text-[16px] font-medium leading-normal text-[#222]">
+            {t(selectedMonth.monthKey)}
+          </span>
+          <Image
+            src={ADMIN_WINNERS_ASSETS.chevronDown}
+            alt=""
+            width={CHEVRON_ICON_SIZE}
+            height={CHEVRON_ICON_SIZE}
+            className={`size-6 transition ${monthOpen ? 'rotate-180' : ''}`}
+          />
+        </Button>
+
+        {monthOpen ? (
+          <ul
+            role="listbox"
+            aria-label={t('adminWinners.monthAria')}
+            className="absolute right-0 top-full z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
+          >
+            {MONTH_OPTIONS.map((month) => {
+              const selected = month.id === selectedMonth.id;
+              return (
+                <li key={month.id}>
+                  <Button
+                    unstyled
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    onClick={() => onSelect(month.id)}
+                    className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
+                      selected
+                        ? 'bg-[#f6fbff] text-[#4048cd]'
+                        : 'text-[#373737]'
+                    }`}
+                  >
+                    {t(month.monthKey)}
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+      </div>
+    );
+  },
+);
 
 MonthSelect.displayName = 'MonthSelect';
 
@@ -349,7 +376,9 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
           >
             <PhotographerAvatar winner={winner} size={TABLE_AVATAR_SIZE} />
           </div>
-          <span className="text-[14px] font-bold leading-5 text-[#0d0d14]">{t(winner.nameKey)}</span>
+          <span className="text-[14px] font-bold leading-5 text-[#0d0d14]">
+            {t(winner.nameKey)}
+          </span>
         </div>
       </td>
       <td className="hidden px-3 py-[22px] text-[14px] leading-5 text-[#6b7280] sm:table-cell md:px-4">
@@ -362,20 +391,21 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
         {formatCount(winner.points, locale)}
       </td>
       <td className="px-4 py-[22px] text-right sm:px-6">
-        <button
+        <Button
+          unstyled
           type="button"
           aria-label={t('adminWinners.view', { name: t(winner.nameKey) })}
           onClick={() => onView(winner.id)}
           className="inline-flex size-6 cursor-pointer items-center justify-center"
         >
-          <img
+          <Image
             src={ADMIN_WINNERS_ASSETS.eye}
             alt=""
             width={EYE_ICON_SIZE}
             height={EYE_ICON_SIZE}
             className="size-6"
           />
-        </button>
+        </Button>
       </td>
     </tr>
   );
@@ -411,23 +441,26 @@ const WinnerMobileCard = memo(({ winner, locale, onView }) => {
             <p className="truncate text-[14px] font-bold leading-5 text-[#0d0d14]">
               {t(winner.nameKey)}
             </p>
-            <p className="text-[12px] leading-4 text-[#6b7280]">{t(winner.cityKey)}</p>
+            <p className="text-[12px] leading-4 text-[#6b7280]">
+              {t(winner.cityKey)}
+            </p>
           </div>
         </div>
-        <button
+        <Button
+          unstyled
           type="button"
           aria-label={t('adminWinners.view', { name: t(winner.nameKey) })}
           onClick={() => onView(winner.id)}
           className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center"
         >
-          <img
+          <Image
             src={ADMIN_WINNERS_ASSETS.eye}
             alt=""
             width={EYE_ICON_SIZE}
             height={EYE_ICON_SIZE}
             className="size-6"
           />
-        </button>
+        </Button>
       </div>
       <div className="flex items-center justify-between text-[14px]">
         <span className="font-extrabold text-[#0d0d14]">
@@ -466,7 +499,9 @@ const AdminWinnersContent = memo(() => {
     (winnerId) => {
       const winner = winners.find((w) => w.id === winnerId);
       if (winner?.photoId) {
-        navigate(ROUTES.ADMIN_MY_COMPETITION_DETAIL.replace(':id', winner.photoId));
+        navigate(
+          ROUTES.ADMIN_MY_COMPETITION_DETAIL.replace(':id', winner.photoId),
+        );
       }
     },
     [winners, navigate],
@@ -496,7 +531,10 @@ const AdminWinnersContent = memo(() => {
         </div>
       </header>
 
-      <section aria-label={t('adminWinners.podiumAria')} className="flex justify-center pt-5">
+      <section
+        aria-label={t('adminWinners.podiumAria')}
+        className="flex justify-center pt-5"
+      >
         <WinnersPodium podium={podium} locale={locale} />
       </section>
 

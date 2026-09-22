@@ -1,1 +1,0 @@
-const o="/assets/login",s={hero:`${o}/hero.jpg`,mail:`${o}/icon-mail.svg`,lock:`${o}/icon-lock.svg`,eye:`${o}/icon-eye.svg`,arrow:`${o}/icon-arrow.svg`},c=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;export{c as E,s as L};

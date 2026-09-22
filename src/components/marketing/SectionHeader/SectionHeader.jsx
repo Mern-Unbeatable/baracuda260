@@ -21,7 +21,14 @@ const titleClass =
 const descriptionClass =
   'text-[16px] font-normal leading-6 text-(--primary-text-color) sm:text-[18px] sm:leading-6.75 lg:leading-7.25';
 
-function CopyStack({ badge, badgeTone, title, description, align = 'left', className = '' }) {
+function CopyStack({
+  badge,
+  badgeTone,
+  title,
+  description,
+  align = 'left',
+  className = '',
+}) {
   const left = align === 'left';
   const stackClass = left
     ? `flex w-full flex-col ${COPY_STACK_GAP} items-start text-left ${className}`.trim()
@@ -62,28 +69,40 @@ export default function SectionHeader({
             align={align}
             className="min-w-0 max-w-none flex-1"
           />
-          <div className={`w-full shrink-0 ${left ? 'sm:w-auto' : 'sm:mx-auto'}`}>{end}</div>
+          <div
+            className={`w-full shrink-0 ${left ? 'sm:w-auto' : 'sm:mx-auto'}`}
+          >
+            {end}
+          </div>
         </div>
       </header>
     );
   }
 
   if (end) {
-    const stackAlign = left ? 'items-start text-left' : 'items-center text-center';
+    const stackAlign = left
+      ? 'items-start text-left'
+      : 'items-center text-center';
 
     return (
       <header className={rootClass}>
-        <div className={`flex w-full flex-col ${COPY_STACK_GAP} ${stackAlign}`.trim()}>
+        <div
+          className={`flex w-full flex-col ${COPY_STACK_GAP} ${stackAlign}`.trim()}
+        >
           {badge ? <p className={badgeClass(badgeTone)}>{badge}</p> : null}
           {title ? (
             <div
               className={`flex w-full flex-col ${TITLE_ROW_GAP} sm:flex-row sm:items-start`.trim()}
             >
               <h2 className={`min-w-0 shrink-0 ${titleClass}`}>{title}</h2>
-              <div className="w-full sm:ml-auto sm:max-w-lg sm:flex-1">{end}</div>
+              <div className="w-full sm:ml-auto sm:max-w-lg sm:flex-1">
+                {end}
+              </div>
             </div>
           ) : (
-            <div className={`w-full ${left ? 'sm:ml-auto' : 'mx-auto'}`}>{end}</div>
+            <div className={`w-full ${left ? 'sm:ml-auto' : 'mx-auto'}`}>
+              {end}
+            </div>
           )}
         </div>
       </header>

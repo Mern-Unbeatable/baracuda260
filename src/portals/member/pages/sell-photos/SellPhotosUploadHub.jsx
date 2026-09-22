@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
-import UploadPhotosContent from '@/portals/member/views/UploadPhotosContent';
 import { UPLOAD_ROUTE_SETS } from '@/portals/member/data/uploadPhotosAssets';
+import UploadPhotosContent from '@/portals/member/views/UploadPhotosContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const SellPhotosUploadHub = memo(() => {
   useSEO({

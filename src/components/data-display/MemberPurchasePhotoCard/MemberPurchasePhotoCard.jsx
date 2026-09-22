@@ -1,7 +1,9 @@
-import { useTranslation } from 'react-i18next';
+import { Download, FileText } from 'lucide-react';
 import React, { memo } from 'react';
 import toast from 'react-hot-toast';
-import { Download, FileText } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import { PURCHASE_BADGE_KEYS } from '@/portals/member/data/purchasePhotosData';
 
 /**
@@ -30,17 +32,21 @@ const MemberPurchasePhotoCard = memo(({ purchase }) => {
       toast.error(t('purchasePhotos.downloadUnavailable'));
       return;
     }
-    toast.success(t('purchasePhotos.downloadStarted', { title: purchase.title }));
+    toast.success(
+      t('purchasePhotos.downloadStarted', { title: purchase.title }),
+    );
   };
 
   const handleInvoiceDownload = () => {
-    toast.success(t('purchasePhotos.invoiceStarted', { title: purchase.title }));
+    toast.success(
+      t('purchasePhotos.invoiceStarted', { title: purchase.title }),
+    );
   };
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.12)] bg-white shadow-sm">
       <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
-        <img
+        <Image
           src={purchase.image}
           alt={purchase.title}
           width={368}
@@ -59,7 +65,9 @@ const MemberPurchasePhotoCard = memo(({ purchase }) => {
           <h3 className="min-w-0 flex-1 text-[16px] font-bold leading-5 text-[#0d0d14] line-clamp-2">
             {purchase.title}
           </h3>
-          <p className="shrink-0 text-[16px] font-bold leading-5 text-[#0d0d14]">{purchase.price}</p>
+          <p className="shrink-0 text-[16px] font-bold leading-5 text-[#0d0d14]">
+            {purchase.price}
+          </p>
         </div>
 
         <div className="flex items-center justify-between gap-3">
@@ -71,26 +79,32 @@ const MemberPurchasePhotoCard = memo(({ purchase }) => {
               {purchase.photographer}
             </span>
           </div>
-          <span className="shrink-0 text-[12px] text-[#9aa3b5]">{purchase.purchasedLabel}</span>
+          <span className="shrink-0 text-[12px] text-[#9aa3b5]">
+            {purchase.purchasedLabel}
+          </span>
         </div>
 
         <div className="mt-auto flex items-center gap-2">
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={handleDownload}
             className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-4 text-[14px] font-bold text-white transition hover:bg-[#d41921]"
           >
             <Download size={16} aria-hidden="true" />
             {t('purchasePhotos.download')}
-          </button>
-          <button
+          </Button>
+          <Button
+            unstyled
             type="button"
             onClick={handleInvoiceDownload}
-            aria-label={t('purchasePhotos.invoiceAria', { title: purchase.title })}
+            aria-label={t('purchasePhotos.invoiceAria', {
+              title: purchase.title,
+            })}
             className="inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] border border-[#dfe3f4] bg-white text-[#4048cd] transition hover:bg-[#f4f5ff]"
           >
             <FileText size={18} aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       </div>
     </article>

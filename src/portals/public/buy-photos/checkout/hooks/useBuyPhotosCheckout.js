@@ -1,12 +1,12 @@
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { EMAIL_REGEX } from '@/portals/auth/data/loginAssets';
 import { ROUTES } from '@/shared/config';
 import {
   createBuyPurchaseRecord,
   saveLastBuyPurchase,
 } from '@/shared/data/buyPhotos';
-import { EMAIL_REGEX } from '@/portals/auth/data/loginAssets';
 
 export function useBuyPhotosCheckout(photo) {
   const { t } = useTranslation();
@@ -30,8 +30,10 @@ export function useBuyPhotosCheckout(photo) {
   const onSubmit = (data) => {
     const purchase = createBuyPurchaseRecord({
       photo,
-      buyerName: data.fullName.trim() || t('buyPhotos.checkout.defaultBuyerName'),
-      buyerEmail: data.email.trim() || t('buyPhotos.checkout.defaultBuyerEmail'),
+      buyerName:
+        data.fullName.trim() || t('buyPhotos.checkout.defaultBuyerName'),
+      buyerEmail:
+        data.email.trim() || t('buyPhotos.checkout.defaultBuyerEmail'),
     });
 
     saveLastBuyPurchase(purchase);

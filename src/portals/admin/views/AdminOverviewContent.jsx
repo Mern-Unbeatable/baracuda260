@@ -1,9 +1,22 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { selectUser } from '@/app/store/slices/authSlice';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   CARD_BORDER,
   CARD_SHADOW,
@@ -12,11 +25,9 @@ import {
   OVERVIEW_STATS_SECONDARY,
   PENDING_SUBMISSIONS,
   REVENUE_DATA,
-  VISITOR_DATA,
   REVENUE_PERIODS,
+  VISITOR_DATA,
 } from '@/portals/admin/data/adminOverviewData';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-
 
 const StatCard = memo(({ labelKey, valueKey }) => {
   const { t } = useTranslation();
@@ -25,7 +36,9 @@ const StatCard = memo(({ labelKey, valueKey }) => {
     <article
       className={`flex min-w-0 flex-1 flex-col rounded-2xl bg-white p-5 sm:p-6 ${CARD_BORDER} ${CARD_SHADOW}`}
     >
-      <p className="text-[15px] leading-6 text-[#7a8497] sm:text-[16px]">{t(labelKey)}</p>
+      <p className="text-[15px] leading-6 text-[#7a8497] sm:text-[16px]">
+        {t(labelKey)}
+      </p>
       <p className="mt-3 text-[26px] font-bold leading-tight tracking-[-1.2px] text-[#172033] sm:mt-4 sm:text-[30px]">
         {t(valueKey)}
       </p>
@@ -73,27 +86,42 @@ const VisitorChart = memo(() => {
 
       <div className="mt-4 h-50 flex-1 sm:mt-4 sm:h-55 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={VISITOR_DATA} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+          <AreaChart
+            data={VISITOR_DATA}
+            margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
+          >
             <defs>
-              <linearGradient id="visitor-area-fill" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id="visitor-area-fill"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
                 <stop offset="5%" stopColor="#3374E6" stopOpacity={0.17} />
                 <stop offset="95%" stopColor="#3374E6" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#edf0f5" />
-            <XAxis 
-              dataKey="month" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 11, fill: '#a2a9b7' }} 
-              tickFormatter={(val) => t(`adminOverview.analytics.months.${val}`)}
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#edf0f5"
+            />
+            <XAxis
+              dataKey="month"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 11, fill: '#a2a9b7' }}
+              tickFormatter={(val) =>
+                t(`adminOverview.analytics.months.${val}`)
+              }
               dy={10}
             />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 11, fill: '#a2a9b7' }} 
-              tickFormatter={(val) => val >= 1000 ? `${val / 1000}k` : val}
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 11, fill: '#a2a9b7' }}
+              tickFormatter={(val) => (val >= 1000 ? `${val / 1000}k` : val)}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area
@@ -103,7 +131,12 @@ const VisitorChart = memo(() => {
               strokeWidth={3.2}
               fillOpacity={1}
               fill="url(#visitor-area-fill)"
-              activeDot={{ r: 6, strokeWidth: 3, stroke: '#3374E6', fill: 'white' }}
+              activeDot={{
+                r: 6,
+                strokeWidth: 3,
+                stroke: '#3374E6',
+                fill: 'white',
+              }}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -145,13 +178,14 @@ const PendingReviewCard = memo(() => {
             {t('adminOverview.pending.subtitle')}
           </p>
         </div>
-        <button
+        <Button
+          unstyled
           type="button"
           className="inline-flex shrink-0 items-center gap-0.5 text-[13px] font-bold text-[#3068d3] transition hover:text-[#2454b0] sm:text-[14px]"
         >
           {t('adminOverview.pending.reviewAll')}
           <ArrowUpRight size={14} aria-hidden="true" />
-        </button>
+        </Button>
       </header>
 
       <ul className="mt-5 flex flex-1 flex-col" role="list">
@@ -161,7 +195,7 @@ const PendingReviewCard = memo(() => {
             className="flex items-center gap-3 border-b border-[#f0f1f4] py-2.5 last:border-b-0 sm:gap-3"
           >
             <div className="relative size-11 shrink-0 overflow-hidden rounded-[9px] bg-[#dce4ed]">
-              <img
+              <Image
                 src={item.image}
                 alt=""
                 width={44}
@@ -182,12 +216,13 @@ const PendingReviewCard = memo(() => {
         ))}
       </ul>
 
-      <button
+      <Button
+        unstyled
         type="button"
         className="mt-4 w-full rounded-[9px] bg-[#ee1c25] px-4 py-3 text-[14px] font-bold text-white transition hover:bg-[#d41921]"
       >
         {t('adminOverview.pending.openQueue')}
-      </button>
+      </Button>
     </article>
   );
 });
@@ -250,9 +285,17 @@ const REVENUE_PROMOTED_COLOR = '#34C759';
 
 const RevenueLegendItem = memo(({ color, label, value }) => (
   <span className="inline-flex items-center gap-2">
-    <span className="size-2.5 rounded-full" style={{ backgroundColor: color }} aria-hidden="true" />
-    <span className="text-[13px] font-semibold text-[#172033] sm:text-[14px]">{label}</span>
-    {value ? <span className="text-[13px] text-[#8993a5] sm:text-[14px]">{value}</span> : null}
+    <span
+      className="size-2.5 rounded-full"
+      style={{ backgroundColor: color }}
+      aria-hidden="true"
+    />
+    <span className="text-[13px] font-semibold text-[#172033] sm:text-[14px]">
+      {label}
+    </span>
+    {value ? (
+      <span className="text-[13px] text-[#8993a5] sm:text-[14px]">{value}</span>
+    ) : null}
   </span>
 ));
 
@@ -268,7 +311,10 @@ const RevenuePeriodDropdown = memo(() => {
     if (!open) return undefined;
 
     const handlePointerDown = (event) => {
-      if (containerRef.current && !containerRef.current.contains(event.target)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
         setOpen(false);
       }
     };
@@ -284,11 +330,14 @@ const RevenuePeriodDropdown = memo(() => {
     };
   }, [open]);
 
-  const selectedOption = REVENUE_PERIODS.find((option) => option.id === selected);
+  const selectedOption = REVENUE_PERIODS.find(
+    (option) => option.id === selected,
+  );
 
   return (
     <div ref={containerRef} className="relative">
-      <button
+      <Button
+        unstyled
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-haspopup="listbox"
@@ -301,7 +350,7 @@ const RevenuePeriodDropdown = memo(() => {
           aria-hidden="true"
           className={`transition-transform ${open ? 'rotate-180' : ''}`}
         />
-      </button>
+      </Button>
 
       {open ? (
         <ul
@@ -312,7 +361,8 @@ const RevenuePeriodDropdown = memo(() => {
             const isSelected = option.id === selected;
             return (
               <li key={option.id}>
-                <button
+                <Button
+                  unstyled
                   type="button"
                   role="option"
                   aria-selected={isSelected}
@@ -321,12 +371,20 @@ const RevenuePeriodDropdown = memo(() => {
                     setOpen(false);
                   }}
                   className={`flex w-full items-center justify-between gap-2 px-3.5 py-2 text-left text-[13px] transition hover:bg-[#f6f8fb] sm:text-[14px] ${
-                    isSelected ? 'font-semibold text-[#172033]' : 'text-[#4a5568]'
+                    isSelected
+                      ? 'font-semibold text-[#172033]'
+                      : 'text-[#4a5568]'
                   }`}
                 >
                   {t(option.labelKey)}
-                  {isSelected ? <Check size={15} className="text-[#3374E6]" aria-hidden="true" /> : null}
-                </button>
+                  {isSelected ? (
+                    <Check
+                      size={15}
+                      className="text-[#3374E6]"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                </Button>
               </li>
             );
           })}
@@ -350,13 +408,19 @@ const RevenueTrendCard = memo(() => {
           <p className="text-[11px] font-medium leading-4 text-[#8993a5]">
             {t('adminOverview.revenueTrend.commission')}
           </p>
-          <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_COMMISSION_COLOR }}>
+          <p
+            className="text-[15px] font-bold leading-5"
+            style={{ color: REVENUE_COMMISSION_COLOR }}
+          >
             ${payload[0].value.toLocaleString()}
           </p>
           <p className="mt-1.5 text-[11px] font-medium leading-4 text-[#8993a5]">
             {t('adminOverview.revenueTrend.promoted')}
           </p>
-          <p className="text-[15px] font-bold leading-5" style={{ color: REVENUE_PROMOTED_COLOR }}>
+          <p
+            className="text-[15px] font-bold leading-5"
+            style={{ color: REVENUE_PROMOTED_COLOR }}
+          >
             ${payload[1].value.toLocaleString()}
           </p>
         </div>
@@ -390,24 +454,45 @@ const RevenueTrendCard = memo(() => {
 
       <div className="mt-6 h-56 sm:mt-7 sm:h-64 w-full text-[11px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={REVENUE_DATA} margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#edf0f5" />
-            <XAxis 
-              dataKey="month" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 11, fill: '#a2a9b7' }} 
-              tickFormatter={(val) => t(`adminOverview.analytics.months.${val}`)}
+          <LineChart
+            data={REVENUE_DATA}
+            margin={{ top: 20, right: 10, left: 10, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#edf0f5"
+            />
+            <XAxis
+              dataKey="month"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 11, fill: '#a2a9b7' }}
+              tickFormatter={(val) =>
+                t(`adminOverview.analytics.months.${val}`)
+              }
               dy={10}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#c9ced8', strokeWidth: 1.5, strokeDasharray: '7 7' }} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{
+                stroke: '#c9ced8',
+                strokeWidth: 1.5,
+                strokeDasharray: '7 7',
+              }}
+            />
             <Line
               type="monotone"
               dataKey="commission"
               stroke={REVENUE_COMMISSION_COLOR}
               strokeWidth={3.2}
               dot={false}
-              activeDot={{ r: 6, strokeWidth: 3, stroke: REVENUE_COMMISSION_COLOR, fill: 'white' }}
+              activeDot={{
+                r: 6,
+                strokeWidth: 3,
+                stroke: REVENUE_COMMISSION_COLOR,
+                fill: 'white',
+              }}
             />
             <Line
               type="monotone"
@@ -415,7 +500,12 @@ const RevenueTrendCard = memo(() => {
               stroke={REVENUE_PROMOTED_COLOR}
               strokeWidth={3.2}
               dot={false}
-              activeDot={{ r: 6, strokeWidth: 3, stroke: REVENUE_PROMOTED_COLOR, fill: 'white' }}
+              activeDot={{
+                r: 6,
+                strokeWidth: 3,
+                stroke: REVENUE_PROMOTED_COLOR,
+                fill: 'white',
+              }}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -458,15 +548,26 @@ const AdminOverviewContent = memo(() => {
         description={t('adminOverview.subtitle')}
       />
 
-      <section aria-label={t('adminOverview.stats.aria')} className="flex flex-col gap-4 xl:gap-5">
+      <section
+        aria-label={t('adminOverview.stats.aria')}
+        className="flex flex-col gap-4 xl:gap-5"
+      >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
           {OVERVIEW_STATS_PRIMARY.map((stat) => (
-            <StatCard key={stat.id} labelKey={stat.labelKey} valueKey={stat.valueKey} />
+            <StatCard
+              key={stat.id}
+              labelKey={stat.labelKey}
+              valueKey={stat.valueKey}
+            />
           ))}
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:gap-5">
           {OVERVIEW_STATS_SECONDARY.map((stat) => (
-            <StatCard key={stat.id} labelKey={stat.labelKey} valueKey={stat.valueKey} />
+            <StatCard
+              key={stat.id}
+              labelKey={stat.labelKey}
+              valueKey={stat.valueKey}
+            />
           ))}
         </div>
       </section>

@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import { ROUTES } from '@/shared/config';
 import { AppLink } from '@/shared/site-chrome';
-import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 
 const DetailRow = memo(({ label, children }) => (
   <div className="flex items-start gap-4 text-[14px] lg:text-[15px] leading-5 sm:gap-8">

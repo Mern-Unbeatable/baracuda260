@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
-import ProfileConnectionsContent from '@/portals/member/views/ProfileConnectionsContent';
 import { PROFILE_FOLLOWERS } from '@/portals/member/data/profileConnectionsData';
+import ProfileConnectionsContent from '@/portals/member/views/ProfileConnectionsContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const ProfileFollowers = memo(() => {
   useSEO({

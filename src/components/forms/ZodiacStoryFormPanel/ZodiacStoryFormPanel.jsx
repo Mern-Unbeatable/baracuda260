@@ -1,8 +1,8 @@
-import React, { memo } from 'react';
 import { MapPin, Sparkles } from 'lucide-react';
+import React, { memo } from 'react';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
-import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 
 const fieldClass =
   'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[14px] leading-6 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30';
@@ -22,10 +22,17 @@ const ZodiacStoryFormPanel = memo(
     aiCreated,
     setAiCreated,
   }) => (
-    <form onSubmit={onSubmit} noValidate className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5">
+    <form
+      onSubmit={onSubmit}
+      noValidate
+      className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5"
+    >
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-2.5">
-          <label htmlFor={`${i18nPrefix}-title`} className="text-[16px] font-medium uppercase leading-6 text-[#494453]">
+          <label
+            htmlFor={`${i18nPrefix}-title`}
+            className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
+          >
             {t(`${i18nPrefix}.collectionTitle`)}
           </label>
           <Input
@@ -35,12 +42,16 @@ const ZodiacStoryFormPanel = memo(
             error={errors.title}
             inputClassName={fieldClass}
             labelClassName="hidden"
-            {...register('title', { required: t('singlePhoto.errors.titleRequired') })}
+            {...register('title', {
+              required: t('singlePhoto.errors.titleRequired'),
+            })}
           />
         </div>
 
         <div className="flex flex-col gap-2.5">
-          <p className="text-[16px] font-medium uppercase leading-6 text-[#494453]">{t(`${i18nPrefix}.artisticCategory`)}</p>
+          <p className="text-[16px] font-medium uppercase leading-6 text-[#494453]">
+            {t(`${i18nPrefix}.artisticCategory`)}
+          </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <select className={fieldClass} {...register('category')}>
               {categoryOptions.map((item) => (
@@ -51,7 +62,11 @@ const ZodiacStoryFormPanel = memo(
             </select>
 
             <select className={fieldClass} {...register('subCategory')}>
-              <option value="">{t('uploadForm.selectSubcategory', { defaultValue: 'Select subcategory' })}</option>
+              <option value="">
+                {t('uploadForm.selectSubcategory', {
+                  defaultValue: 'Select subcategory',
+                })}
+              </option>
               <option value="night-sky">Night Sky</option>
               <option value="constellation">Constellation</option>
               <option value="deep-space">Deep Space</option>
@@ -64,7 +79,10 @@ const ZodiacStoryFormPanel = memo(
         ) : (
           <>
             <div className="flex flex-col gap-2.5">
-              <label htmlFor={`${i18nPrefix}-story`} className="text-[16px] font-medium uppercase leading-6 text-[#494453]">
+              <label
+                htmlFor={`${i18nPrefix}-story`}
+                className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
+              >
                 Story / Concept / Creative Log
               </label>
               <textarea
@@ -73,43 +91,63 @@ const ZodiacStoryFormPanel = memo(
                 rows={5}
                 aria-invalid={Boolean(errors.story)}
                 className={`${fieldClass} min-h-36.75 resize-y`}
-                {...register('story', { required: t('singlePhoto.errors.storyRequired') })}
+                {...register('story', {
+                  required: t('singlePhoto.errors.storyRequired'),
+                })}
               />
-              {errors.story ? <p className="text-sm text-red-600" role="alert">{errors.story.message}</p> : null}
+              {errors.story ? (
+                <p className="text-sm text-red-600" role="alert">
+                  {errors.story.message}
+                </p>
+              ) : null}
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.resolution')}</span>
+                <span className="text-[14px] font-medium uppercase text-[#494453]">
+                  {t('uploadForm.resolution')}
+                </span>
                 <Input
                   error={errors.resolution}
                   inputClassName={fieldClass}
                   labelClassName="hidden"
-                  {...register('resolution', { required: t('uploadForm.errors.resolutionRequired') })}
+                  {...register('resolution', {
+                    required: t('uploadForm.errors.resolutionRequired'),
+                  })}
                 />
               </label>
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.fileSize')}</span>
+                <span className="text-[14px] font-medium uppercase text-[#494453]">
+                  {t('uploadForm.fileSize')}
+                </span>
                 <Input
                   error={errors.fileSize}
                   inputClassName={fieldClass}
                   labelClassName="hidden"
-                  {...register('fileSize', { required: t('uploadForm.errors.fileSizeRequired') })}
+                  {...register('fileSize', {
+                    required: t('uploadForm.errors.fileSizeRequired'),
+                  })}
                 />
               </label>
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium uppercase text-[#494453]">{t('uploadForm.quality')}</span>
+                <span className="text-[14px] font-medium uppercase text-[#494453]">
+                  {t('uploadForm.quality')}
+                </span>
                 <Input
                   error={errors.quality}
                   inputClassName={fieldClass}
                   labelClassName="hidden"
-                  {...register('quality', { required: t('uploadForm.errors.qualityRequired') })}
+                  {...register('quality', {
+                    required: t('uploadForm.errors.qualityRequired'),
+                  })}
                 />
               </label>
             </div>
 
             <div className="space-y-3 rounded-lg border border-[#daddeb] bg-white p-4">
-              <p className="text-[13px] text-[#494453]">Choose where this artwork should be published:</p>
+              <p className="text-[13px] text-[#494453]">
+                Choose where this artwork should be published:
+              </p>
               <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-[#e4e6f2] p-3">
                 <input
                   type="radio"
@@ -123,9 +161,15 @@ const ZodiacStoryFormPanel = memo(
                     <MapPin size={12} className="text-[#f59e0b]" />
                     Add this artwork to this month&apos;s competition
                   </span>
-                  <span className="mt-1 block text-[11px] text-[#7a8291]">August Photography Competition</span>
-                  <span className="block text-[11px] text-[#7a8291]">Voting Period: Aug 1 — Aug 31, 2026</span>
-                  <span className="block text-[11px] text-[#7a8291]">Prize Pool: $10,000</span>
+                  <span className="mt-1 block text-[11px] text-[#7a8291]">
+                    August Photography Competition
+                  </span>
+                  <span className="block text-[11px] text-[#7a8291]">
+                    Voting Period: Aug 1 — Aug 31, 2026
+                  </span>
+                  <span className="block text-[11px] text-[#7a8291]">
+                    Prize Pool: $10,000
+                  </span>
                 </span>
               </label>
               <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-[#e4e6f2] p-3">
@@ -139,7 +183,8 @@ const ZodiacStoryFormPanel = memo(
                 <span className="text-[13px] text-[#313744]">
                   <strong>Add this artwork only to my profile</strong>
                   <span className="mt-1 block text-[11px] text-[#7a8291]">
-                    Keep on your personal showcase portfolio. You can always enter it into future monthly competitions later.
+                    Keep on your personal showcase portfolio. You can always
+                    enter it into future monthly competitions later.
                   </span>
                 </span>
               </label>
@@ -189,13 +234,19 @@ const ZodiacStoryFormPanel = memo(
           <input
             type="checkbox"
             className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
-            {...register('copyrightOk', { required: t('singlePhoto.errors.copyrightRequired') })}
+            {...register('copyrightOk', {
+              required: t('singlePhoto.errors.copyrightRequired'),
+            })}
           />
           <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
             {t(`${i18nPrefix}.copyrightConfirm`)}
           </span>
         </label>
-        {errors.copyrightOk ? <p className="mt-1 text-sm text-red-600" role="alert">{errors.copyrightOk.message}</p> : null}
+        {errors.copyrightOk ? (
+          <p className="mt-1 text-sm text-red-600" role="alert">
+            {errors.copyrightOk.message}
+          </p>
+        ) : null}
       </div>
 
       <Button

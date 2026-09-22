@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { Camera } from 'lucide-react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PHOTOGRAPHER_TALENT_APPRECIATION } from '@/portals/public/photographer/data/photographerProfileData';
 
@@ -38,11 +38,7 @@ const SIZE_STYLES = {
 };
 
 const PhotographerAwardCounters = memo(
-  ({
-    awards,
-    size = 'sm',
-    className = '',
-  }) => {
+  ({ awards, size = 'sm', className = '' }) => {
     const { t } = useTranslation();
     const sizeConfig = SIZE_STYLES[size] ?? SIZE_STYLES.sm;
     const tierList = Array.isArray(awards)
@@ -58,7 +54,9 @@ const PhotographerAwardCounters = memo(
       >
         {tierList.map((tier) => {
           const style = COUNTER_STYLES[tier.id] ?? COUNTER_STYLES.gold;
-          const tierTitle = t(style.labelKey, { defaultValue: style.defaultLabel });
+          const tierTitle = t(style.labelKey, {
+            defaultValue: style.defaultLabel,
+          });
           const tooltip = `${tierTitle}: ${tier.count}`;
 
           return (

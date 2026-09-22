@@ -1,14 +1,20 @@
 import React from 'react';
 import { Shell } from '@/shared/site-chrome';
 
-const PromoBanner = ({ title, subtitle, ctaLabel = 'Learn more', href = '#', image }) => {
+const PromoBanner = ({
+  title,
+  subtitle,
+  ctaLabel = 'Learn more',
+  href = '#',
+  image,
+}) => {
   return (
     <section className="bg-white py-6 sm:py-8">
       <Shell>
         <div
           className="relative w-full overflow-hidden rounded-[12px] border border-dashed border-[#4b4b4b] bg-cover bg-center"
           style={{
-            backgroundImage: `url(${image || '/assets/home/hero.jpg'})`,
+            backgroundImage: `url(${image || '/assets/home/hero.webp'})`,
           }}
         >
           <div className="absolute inset-0 bg-black/45" />
@@ -20,7 +26,9 @@ const PromoBanner = ({ title, subtitle, ctaLabel = 'Learn more', href = '#', ima
                 </h2>
               ) : null}
               {subtitle ? (
-                <p className="text-[20px] leading-[1.55] sm:text-[34px]">{subtitle}</p>
+                <p className="text-[20px] leading-[1.55] sm:text-[34px]">
+                  {subtitle}
+                </p>
               ) : null}
               <a
                 href={href}
@@ -39,4 +47,3 @@ const PromoBanner = ({ title, subtitle, ctaLabel = 'Learn more', href = '#', ima
 PromoBanner.displayName = 'PromoBanner';
 
 export default PromoBanner;
-

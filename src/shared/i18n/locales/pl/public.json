@@ -655,9 +655,7 @@
           "PayPal",
           "Dostawcy usług e-mail"
         ],
-        "footnotes": [
-          "Każda usługa ma własną politykę prywatności."
-        ]
+        "footnotes": ["Każda usługa ma własną politykę prywatności."]
       },
       {
         "id": "rights",
@@ -670,9 +668,7 @@
           "Zrezygnować z subskrypcji newslettera",
           "Skontaktować się z nami w sprawach prywatności"
         ],
-        "footnotes": [
-          "Każda usługa ma własną politykę prywatności."
-        ]
+        "footnotes": ["Każda usługa ma własną politykę prywatności."]
       },
       {
         "id": "contact",
@@ -705,9 +701,7 @@
       {
         "id": "accounts",
         "title": "3. Konta użytkowników",
-        "leads": [
-          "Użytkownicy są odpowiedzialni za:"
-        ],
+        "leads": ["Użytkownicy są odpowiedzialni za:"],
         "bullets": [
           "Utrzymanie bezpieczeństwa konta",
           "Podawanie prawdziwych informacji",
@@ -754,9 +748,7 @@
       {
         "id": "prohibited",
         "title": "8. Zabronione działania",
-        "leads": [
-          "Użytkownicy nie mogą:"
-        ],
+        "leads": ["Użytkownicy nie mogą:"],
         "bullets": [
           "Przesyłać nielegalnych treści",
           "Podszywać się pod innych",
@@ -805,9 +797,7 @@
       {
         "id": "types",
         "title": "Rodzaje plików cookie, których używamy",
-        "leads": [
-          "Wymagane do:"
-        ],
+        "leads": ["Wymagane do:"],
         "bullets": [
           "Logowania",
           "Bezpieczeństwa konta",
@@ -828,9 +818,7 @@
       {
         "id": "analytics",
         "title": "Pliki cookie analityczne",
-        "leads": [
-          "Używamy Google Analytics, aby zrozumieć:"
-        ],
+        "leads": ["Używamy Google Analytics, aby zrozumieć:"],
         "bullets": [
           "Ruch odwiedzających",
           "Popularne strony",
@@ -848,9 +836,7 @@
       {
         "id": "functional",
         "title": "Pliki cookie funkcjonalne",
-        "leads": [
-          "Zapamiętują:"
-        ],
+        "leads": ["Zapamiętują:"],
         "bullets": [
           "Wybrany język",
           "Preferencje użytkownika",
@@ -861,9 +847,7 @@
       {
         "id": "managing",
         "title": "Zarządzanie plikami cookie",
-        "leads": [
-          "Większość przeglądarek pozwala na:"
-        ],
+        "leads": ["Większość przeglądarek pozwala na:"],
         "bullets": [
           "Akceptację wszystkich plików cookie",
           "Odrzucenie plików cookie",
@@ -877,11 +861,7 @@
         "leads": [
           "Niektóre pliki cookie pochodzą z zaufanych usług zewnętrznych, w tym:"
         ],
-        "bullets": [
-          "Google Analytics",
-          "Google Ads",
-          "PayPal"
-        ]
+        "bullets": ["Google Analytics", "Google Ads", "PayPal"]
       },
       {
         "id": "updates",

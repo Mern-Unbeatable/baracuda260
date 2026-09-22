@@ -1,10 +1,11 @@
 import React, { memo } from 'react';
-import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useSEO } from '@/shared/hooks/useSEO';
-import { ROUTES } from '@/shared/config';
+import { Navigate } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
 import AdminCompetitionsContent from '@/portals/admin/views/AdminCompetitionsContent';
+import { ROUTES } from '@/shared/config';
+import { useSEO } from '@/shared/hooks/useSEO';
+
 // import MyCompetitionsContent from '@/portals/member/views/MyCompetitionsContent';
 
 const MyCompetitions = memo(() => {

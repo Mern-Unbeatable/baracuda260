@@ -27,10 +27,18 @@ export const BANNER_MAX_BYTES = 4 * 1024 * 1024;
 
 /** Mock subscribers matching Figma 346:1740 list. */
 export const ADMIN_NEWSLETTER_SUBSCRIBERS = [
-  { id: 'sub-1', email: 'john.anderson@company.com', subscribedDate: '6/9/2026' },
+  {
+    id: 'sub-1',
+    email: 'john.anderson@company.com',
+    subscribedDate: '6/9/2026',
+  },
   { id: 'sub-2', email: 'sarah.m@email.com', subscribedDate: '6/9/2026' },
   { id: 'sub-3', email: 'admin@buildpro.com', subscribedDate: '6/9/2026' },
-  { id: 'sub-4', email: 'contact@construction.com', subscribedDate: '6/9/2026' },
+  {
+    id: 'sub-4',
+    email: 'contact@construction.com',
+    subscribedDate: '6/9/2026',
+  },
   { id: 'sub-5', email: 'emily.d@email.com', subscribedDate: '6/9/2026' },
   { id: 'sub-6', email: 'emily.d@email.com', subscribedDate: '6/9/2026' },
   { id: 'sub-7', email: 'emily.d@email.com', subscribedDate: '6/9/2026' },
@@ -76,6 +84,8 @@ export const DEFAULT_CTA_TEXT = 'Read more';
  */
 export const isBannerFileAllowed = (file, maxBytes = BANNER_MAX_BYTES) => {
   if (!file) return false;
-  const typeOk = /image\/(png|jpeg|jpg)/i.test(file.type) || /\.(png|jpe?g)$/i.test(file.name);
+  const typeOk =
+    /image\/(png|jpeg|jpg)/i.test(file.type) ||
+    /\.(png|jpe?g)$/i.test(file.name);
   return typeOk && file.size <= maxBytes;
 };

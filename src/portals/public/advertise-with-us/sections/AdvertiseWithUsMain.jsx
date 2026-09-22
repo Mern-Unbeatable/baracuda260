@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
+import AdvertiseBusinessForm from '@/components/forms/AdvertiseBusinessForm/AdvertiseBusinessForm';
 import { ROUTES } from '@/shared/config';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
-import AdvertiseBusinessForm from '@/components/forms/AdvertiseBusinessForm/AdvertiseBusinessForm';
 
 const AdvertiseWithUsMain = memo(() => (
   <SitePageLayout
@@ -23,9 +23,9 @@ const AdvertiseWithUsMain = memo(() => (
             Our Photography <span className="text-[#4048cd]">Community</span>
           </h1>
           <p className="mx-auto mt-3 max-w-190 text-[18px] leading-[1.45] text-[#555b68] sm:text-[20px]">
-            Reach photographers, artists, and photography enthusiasts by displaying your business on
-            our platform. High-intent audience, verified placements, and instant transparent
-            analytics.
+            Reach photographers, artists, and photography enthusiasts by
+            displaying your business on our platform. High-intent audience,
+            verified placements, and instant transparent analytics.
           </p>
         </div>
       </Shell>
@@ -44,4 +44,3 @@ const AdvertiseWithUsMain = memo(() => (
 AdvertiseWithUsMain.displayName = 'AdvertiseWithUsMain';
 
 export default AdvertiseWithUsMain;
-

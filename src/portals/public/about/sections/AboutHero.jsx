@@ -1,6 +1,11 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useState } from 'react';
-import { ABOUT_HERO_SLIDE_MS, ABOUT_HERO_SLIDES } from '@/portals/public/about/data/aboutAssets';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import {
+  ABOUT_HERO_SLIDE_MS,
+  ABOUT_HERO_SLIDES,
+} from '@/portals/public/about/data/aboutAssets';
 
 const AboutHero = memo(() => {
   const { t } = useTranslation();
@@ -18,10 +23,11 @@ const AboutHero = memo(() => {
   return (
     <section className="relative min-h-130 w-full overflow-hidden md:min-h-170 xl:min-h-222.5">
       {ABOUT_HERO_SLIDES.map((src, index) => (
-        <img
+        <Image
           key={src}
           src={src}
           alt=""
+          priority={true}
           width={1920}
           height={890}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
@@ -35,7 +41,9 @@ const AboutHero = memo(() => {
           <div className="flex flex-col gap-3">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4.25 py-1.75">
               <span className="size-2 rounded-full bg-[#05df72]" />
-              <span className="text-sm font-semibold text-white">{t('about.hero.badge')}</span>
+              <span className="text-sm font-semibold text-white">
+                {t('about.hero.badge')}
+              </span>
             </div>
             <h1 className="text-[36px] font-semibold leading-[1.15] tracking-[-1.44px] text-white sm:text-[48px] xl:text-[64px] xl:leading-[77.76px]">
               {t('about.hero.title')}
@@ -69,7 +77,8 @@ const AboutHero = memo(() => {
         {ABOUT_HERO_SLIDES.map((_, index) => {
           const active = index === activeIndex;
           return (
-            <button
+            <Button
+              unstyled
               key={ABOUT_HERO_SLIDES[index]}
               type="button"
               role="tab"

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import {
   ADMIN_ALBUM_TYPE_ITEMS,
-  MODAL_MODE,
   appendAlbumType,
   createAlbumTypeFromForm,
   isAlbumTypeFormValid,
+  MODAL_MODE,
   parseFeaturedLines,
   parsePrizeMoney,
   updateAlbumTypeById,
@@ -13,7 +13,9 @@ import {
 /**
  * Album type cards + create/edit modal state.
  */
-export default function useAdminAlbumTypes(initialAlbumTypes = ADMIN_ALBUM_TYPE_ITEMS) {
+export default function useAdminAlbumTypes(
+  initialAlbumTypes = ADMIN_ALBUM_TYPE_ITEMS,
+) {
   const [albumTypes, setAlbumTypes] = useState(initialAlbumTypes);
   const [nextCustomIndex, setNextCustomIndex] = useState(1);
   const [modalMode, setModalMode] = useState(null);

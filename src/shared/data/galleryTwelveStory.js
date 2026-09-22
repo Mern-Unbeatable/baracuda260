@@ -25,7 +25,7 @@ export const GALLERY_TWELVE_STORIES = [
     views: '12400',
     badge: '12 photos - full Zodiac Story',
     category: 'Nature',
-    cover: `${A}/photo-zodiac.jpg`,
+    cover: `${A}/photo-zodiac.webp`,
     description:
       'A young man walking confidently along a quiet city street during golden hour, wearing a casual white t-shirt, black jeans, and clean white sneakers. His hands are relaxed by his sides, with a natural walking posture and a calm expression. Soft sunlight creates warm highlights and long shadows on the pavement. Modern buildings, green trees, and a slightly blurred urban background add depth to the scene. Captured in a cinematic, photorealistic style with shallow depth of field, ultra-realistic, high detail, 8K quality.',
     slides: TWELVE_STORY_SLIDES,
@@ -38,7 +38,7 @@ export const GALLERY_TWELVE_STORIES = [
     views: '15220',
     badge: '12 photos - full Zodiac Story',
     category: 'Fine Art',
-    cover: `${A}/photo-zodiac.jpg`,
+    cover: `${A}/photo-zodiac.webp`,
     description:
       'A full zodiac story told through twelve connected frames. Symbolic motifs, rich color, and careful pacing guide the viewer through the journey.',
     slides: TWELVE_STORY_SLIDES,
@@ -46,7 +46,8 @@ export const GALLERY_TWELVE_STORIES = [
 ];
 
 export const getGalleryTwelveStoryById = (id) =>
-  GALLERY_TWELVE_STORIES.find((story) => story.id === id) || GALLERY_TWELVE_STORIES[0];
+  GALLERY_TWELVE_STORIES.find((story) => story.id === id) ||
+  GALLERY_TWELVE_STORIES[0];
 
 export const galleryTwelveStoryPath = (id) =>
   `/gallery/zodiac/${id || GALLERY_TWELVE_STORIES[0].id}`;

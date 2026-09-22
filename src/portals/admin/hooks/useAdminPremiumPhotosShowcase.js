@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
+  filterPremiumPhotosCards,
   PREMIUM_PHOTOS_CARDS,
   PREMIUM_PHOTOS_TOTAL_PAGES,
-  filterPremiumPhotosCards,
 } from '@/portals/admin/data/adminPremiumPhotosData';
 
 /**

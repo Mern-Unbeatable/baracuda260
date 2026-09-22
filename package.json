@@ -8,9 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write src"
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write ."
   },
   "keywords": [
     "react",
@@ -32,22 +32,12 @@
     "react-i18next": "^17.0.11",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.0",
-    "recharts": "^3.10.1",
-    "socket.io-client": "^4.8.3",
-    "web-vitals": "^5.1.0"
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.5",
+    "@biomejs/biome": "^2.5.14",
     "@tailwindcss/vite": "^4.1.18",
     "@vitejs/plugin-react": "^5.0.0",
-    "eslint": "^9.39.0",
-    "eslint-plugin-jsx-a11y": "^6.10.0",
-    "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-react-refresh": "^0.5.4",
-    "eslint-plugin-tailwindcss": "^3.18.3",
-    "globals": "^15.0.0",
-    "prettier": "^3.3.0",
     "tailwindcss": "^4.1.18",
     "vite": "^5.1.0"
   }

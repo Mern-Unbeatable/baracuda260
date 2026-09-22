@@ -1,17 +1,14 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Input from '@/components/ui/Input';
 
 const inputClassName =
   'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30';
 
-const labelClassName = 'text-[16px] font-medium uppercase leading-6 text-[#494453]';
+const labelClassName =
+  'text-[16px] font-medium uppercase leading-6 text-[#494453]';
 
-const MemberSellPhotoFields = memo(({
-  idPrefix,
-  register,
-  errors = {},
-}) => {
+const MemberSellPhotoFields = memo(({ idPrefix, register, errors = {} }) => {
   const { t } = useTranslation();
 
   return (
@@ -27,7 +24,9 @@ const MemberSellPhotoFields = memo(({
           error={errors.price}
           inputClassName={inputClassName}
           labelClassName="hidden"
-          {...register('price', { required: t('uploadForm.errors.priceRequired') })}
+          {...register('price', {
+            required: t('uploadForm.errors.priceRequired'),
+          })}
         />
       </div>
 
@@ -42,7 +41,9 @@ const MemberSellPhotoFields = memo(({
             error={errors.resolution}
             inputClassName={inputClassName}
             labelClassName="hidden"
-            {...register('resolution', { required: t('uploadForm.errors.resolutionRequired') })}
+            {...register('resolution', {
+              required: t('uploadForm.errors.resolutionRequired'),
+            })}
           />
         </div>
 
@@ -56,7 +57,9 @@ const MemberSellPhotoFields = memo(({
             error={errors.fileSize}
             inputClassName={inputClassName}
             labelClassName="hidden"
-            {...register('fileSize', { required: t('uploadForm.errors.fileSizeRequired') })}
+            {...register('fileSize', {
+              required: t('uploadForm.errors.fileSizeRequired'),
+            })}
           />
         </div>
 
@@ -70,7 +73,9 @@ const MemberSellPhotoFields = memo(({
             error={errors.quality}
             inputClassName={inputClassName}
             labelClassName="hidden"
-            {...register('quality', { required: t('uploadForm.errors.qualityRequired') })}
+            {...register('quality', {
+              required: t('uploadForm.errors.qualityRequired'),
+            })}
           />
         </div>
       </div>

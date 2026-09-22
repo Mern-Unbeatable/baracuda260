@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import {
-  PROMO_LINK_DATE_RANGE,
-  PROMO_LINKS_PAGE_SIZE,
   computePromoLinkStats,
   createPromoLink,
   filterPromoLinks,
   getPromoLinkById,
   getPromoLinksStore,
+  PROMO_LINK_DATE_RANGE,
+  PROMO_LINKS_PAGE_SIZE,
   paginatePromoLinks,
   prependPromoLink,
   setPromoLinksStore,
@@ -33,7 +33,10 @@ export default function useAdminPromoLinks(
   const [generateOpen, setGenerateOpen] = useState(false);
   const [createdLink, setCreatedLink] = useState(null);
 
-  const filteredLinks = useMemo(() => filterPromoLinks(links, filters), [links, filters]);
+  const filteredLinks = useMemo(
+    () => filterPromoLinks(links, filters),
+    [links, filters],
+  );
   const totalPages = Math.max(1, Math.ceil(filteredLinks.length / pageSize));
   const safePage = Math.min(page, totalPages);
   const visibleLinks = paginatePromoLinks(filteredLinks, safePage, pageSize);
@@ -109,7 +112,8 @@ export default function useAdminPromoLinks(
     setOpenActionId(null);
   };
 
-  const resultsFrom = filteredLinks.length === 0 ? 0 : (safePage - 1) * pageSize + 1;
+  const resultsFrom =
+    filteredLinks.length === 0 ? 0 : (safePage - 1) * pageSize + 1;
   const resultsTo = Math.min(safePage * pageSize, filteredLinks.length);
 
   return {

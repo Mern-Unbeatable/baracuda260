@@ -1,7 +1,3 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import {
   ArrowRight,
   BadgeCheck,
@@ -13,18 +9,24 @@ import {
   Package,
   Truck,
 } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import React, { memo, useMemo } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
+  computeOrderStats,
   MY_ORDERS,
   MY_ORDERS_PAGE_SIZE,
   MY_ORDERS_STAT_CARDS,
   ORDER_STATUS,
   ORDER_STATUS_LABEL_KEYS,
   ORDER_STATUS_STYLES,
-  computeOrderStats,
 } from '@/portals/member/data/myOrdersData';
+import { ROUTES } from '@/shared/config';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const STAT_ICONS = {
   Package,
@@ -46,7 +48,10 @@ const StatusBadge = memo(({ status, deliveredOn }) => {
         {isDelivered ? (
           <CheckCircle2 size={13} aria-hidden="true" />
         ) : (
-          <span className={`size-1.5 rounded-full ${style.dot}`} aria-hidden="true" />
+          <span
+            className={`size-1.5 rounded-full ${style.dot}`}
+            aria-hidden="true"
+          />
         )}
         {t(ORDER_STATUS_LABEL_KEYS[status])}
       </span>
@@ -83,7 +88,9 @@ const OrderStatCards = memo(({ stats }) => {
                 <p className="mt-2 text-[28px] font-extrabold leading-none text-[#111827]">
                   {stats[card.id].value}
                 </p>
-                <p className="mt-1.5 text-[12px] font-medium text-[#687186]">{t(card.hintKey)}</p>
+                <p className="mt-1.5 text-[12px] font-medium text-[#687186]">
+                  {t(card.hintKey)}
+                </p>
               </div>
               <span
                 className={`inline-flex size-9 shrink-0 items-center justify-center rounded-[10px] ${card.iconBg}`}
@@ -124,22 +131,26 @@ const OrderCard = memo(({ order }) => {
           <p className="text-[14px] font-bold text-[#151e31]">
             {t('myOrders.orderLabel', { number: order.orderNumber })}
           </p>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={handleCopy}
             aria-label={t('myOrders.copyAria', { number: order.orderNumber })}
             className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd]"
           >
             <Copy size={14} aria-hidden="true" />
-          </button>
-          <button
+          </Button>
+          <Button
+            unstyled
             type="button"
             onClick={handleInvoice}
-            aria-label={t('myOrders.invoiceAria', { number: order.orderNumber })}
+            aria-label={t('myOrders.invoiceAria', {
+              number: order.orderNumber,
+            })}
             className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd]"
           >
             <FileText size={14} aria-hidden="true" />
-          </button>
+          </Button>
           <p className="inline-flex items-center gap-1.5 text-[13px] text-[#687186]">
             <Calendar size={13} className="text-[#9aa3b5]" aria-hidden="true" />
             {t('myOrders.placedOn', { date: order.placedOn })}
@@ -151,7 +162,7 @@ const OrderCard = memo(({ order }) => {
       <div className="flex flex-col gap-4 p-4 xl:flex-row xl:items-center xl:gap-5 xl:p-5">
         <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
           <div className="relative size-18 shrink-0 overflow-hidden rounded-[10px] bg-[#f3f4f6] sm:size-21">
-            <img
+            <Image
               src={order.image}
               alt={order.productTitle}
               className="size-full object-cover"
@@ -168,7 +179,11 @@ const OrderCard = memo(({ order }) => {
             </h3>
             <p className="mt-1 inline-flex flex-wrap items-center gap-1 text-[13px] text-[#687186]">
               <span>{t('myOrders.soldBy', { store: order.storeName })}</span>
-              <BadgeCheck size={14} className="text-[#4048cd]" aria-hidden="true" />
+              <BadgeCheck
+                size={14}
+                className="text-[#4048cd]"
+                aria-hidden="true"
+              />
             </p>
             <p className="mt-1 text-[12px] text-[#9aa3b5]">
               {t('myOrders.itemMeta', {
@@ -184,10 +199,14 @@ const OrderCard = memo(({ order }) => {
             <p className="text-[10px] font-bold tracking-[0.12em] text-[#9aa3b5]">
               {t('myOrders.meta.orderTotal')}
             </p>
-            <p className="mt-1 text-[16px] font-bold text-[#0d0d14]">{order.orderTotal}</p>
+            <p className="mt-1 text-[16px] font-bold text-[#0d0d14]">
+              {order.orderTotal}
+            </p>
             <p
               className={`mt-0.5 text-[11px] font-medium ${
-                order.shippingNoteTone === 'success' ? 'text-[#268262]' : 'text-[#9aa3b5]'
+                order.shippingNoteTone === 'success'
+                  ? 'text-[#268262]'
+                  : 'text-[#9aa3b5]'
               }`}
             >
               {order.shippingNote}
@@ -201,13 +220,17 @@ const OrderCard = memo(({ order }) => {
               <CheckCircle2 size={14} aria-hidden="true" />
               {t('myOrders.paid')}
             </p>
-            <p className="mt-0.5 text-[11px] text-[#9aa3b5]">{order.paymentMethodShort}</p>
+            <p className="mt-0.5 text-[11px] text-[#9aa3b5]">
+              {order.paymentMethodShort}
+            </p>
           </div>
           <div>
             <p className="text-[10px] font-bold tracking-[0.12em] text-[#9aa3b5]">
               {t('myOrders.meta.delivery')}
             </p>
-            <p className="mt-1 text-[13px] font-semibold text-[#0d0d14]">{order.deliveryLabel}</p>
+            <p className="mt-1 text-[13px] font-semibold text-[#0d0d14]">
+              {order.deliveryLabel}
+            </p>
           </div>
         </div>
 
@@ -251,7 +274,10 @@ const MyOrdersContent = memo(() => {
       <section className="flex flex-col gap-4">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="text-[12px] font-bold tracking-[0.14em] text-[#8b93a7]">
-            {t('myOrders.recentTitle', { showing: showingCount, total: orders.length })}
+            {t('myOrders.recentTitle', {
+              showing: showingCount,
+              total: orders.length,
+            })}
           </h2>
           <p className="text-[12px] text-[#9aa3b5]">{t('myOrders.sortedBy')}</p>
         </div>
@@ -272,7 +298,10 @@ const MyOrdersContent = memo(() => {
       {orders.length > 0 ? (
         <footer className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] font-medium tracking-[0.4px] text-[#494453]">
-            {t('myOrders.showing', { showing: showingCount, total: orders.length })}
+            {t('myOrders.showing', {
+              showing: showingCount,
+              total: orders.length,
+            })}
           </p>
           <Pagination
             currentPage={currentPage}

@@ -59,11 +59,23 @@ export const ABOUT_COMMUNITY_FEATURES = [
 
 export const ABOUT_COMMUNITY_IMAGES = {
   left: [
-    { src: ABOUT_ASSETS.community1, className: 'h-[200px] sm:h-[240px] xl:h-[262px]' },
-    { src: ABOUT_ASSETS.community2, className: 'h-[280px] sm:h-[320px] xl:h-[371px]' },
+    {
+      src: ABOUT_ASSETS.community1,
+      className: 'h-[200px] sm:h-[240px] xl:h-[262px]',
+    },
+    {
+      src: ABOUT_ASSETS.community2,
+      className: 'h-[280px] sm:h-[320px] xl:h-[371px]',
+    },
   ],
   right: [
-    { src: ABOUT_ASSETS.community4, className: 'h-[240px] sm:h-[280px] xl:h-[336px]' },
-    { src: ABOUT_ASSETS.community3, className: 'h-[240px] sm:h-[280px] xl:h-[313px]' },
+    {
+      src: ABOUT_ASSETS.community4,
+      className: 'h-[240px] sm:h-[280px] xl:h-[336px]',
+    },
+    {
+      src: ABOUT_ASSETS.community3,
+      className: 'h-[240px] sm:h-[280px] xl:h-[313px]',
+    },
   ],
 };

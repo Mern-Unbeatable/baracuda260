@@ -1,14 +1,14 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Trans, useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
 import { ArrowLeft } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
-import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
-import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
-import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
+import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
+import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import {
   ALL_SLOTS,
   ARTISTIC_CATEGORIES,
@@ -17,19 +17,21 @@ import {
   RED_SLOTS,
   ZODIAC12_ASSETS,
 } from '@/portals/member/data/zodiac12Assets';
+import { ROUTES } from '@/shared/config';
+import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 
 const SlotIcon = memo(({ slot }) => {
   if (slot.iconBg && slot.iconOverlay) {
     return (
       <span className="relative size-8.75 shrink-0 overflow-hidden">
-        <img
+        <Image
           src={slot.iconBg}
           alt=""
           width={35}
           height={35}
           className="absolute inset-0 size-8.75 object-contain"
         />
-        <img
+        <Image
           src={slot.iconOverlay}
           alt=""
           className="absolute left-1/2 top-1/2 max-h-6.5 max-w-6.5 -translate-x-1/2 -translate-y-1/2 object-contain"
@@ -40,7 +42,7 @@ const SlotIcon = memo(({ slot }) => {
 
   if (slot.icon) {
     return (
-      <img
+      <Image
         src={slot.icon}
         alt=""
         width={35}
@@ -55,72 +57,87 @@ const SlotIcon = memo(({ slot }) => {
 
 SlotIcon.displayName = 'SlotIcon';
 
-const ZodiacSlotCard = memo(({ slot, preview, onAddPhoto, changeLabel, addLabel, showAiBadge = false }) => {
-  const { t } = useTranslation();
-  const theme = slot.theme;
+const ZodiacSlotCard = memo(
+  ({
+    slot,
+    preview,
+    onAddPhoto,
+    changeLabel,
+    addLabel,
+    showAiBadge = false,
+  }) => {
+    const { t } = useTranslation();
+    const theme = slot.theme;
 
-  return (
-    <article
-      className={`flex h-full min-w-0 w-full flex-col gap-6.75 rounded-xl border bg-white p-5 ${theme.cardBorder}`}
-    >
-      <div className="flex w-full flex-1 flex-col items-center gap-5">
-        <div className="flex w-full items-center justify-between whitespace-nowrap">
-          <p className={`shrink-0 text-[20px] font-semibold leading-6 ${theme.number}`}>
-            #{slot.number}
-          </p>
-          <p className="shrink-0 text-[16px] font-medium leading-6 text-[#3a3a3a]">
-            {t(slot.elementKey)}
-          </p>
-        </div>
-
-        <div className="flex w-full flex-col items-center gap-3">
-          <SlotIcon slot={slot} />
-          <div className="flex w-full flex-col items-center gap-1 text-center">
-            <p className={`w-full text-[20px] font-medium leading-6 ${theme.name}`}>
-              {t(slot.nameKey)}
-            </p>
+    return (
+      <article
+        className={`flex h-full min-w-0 w-full flex-col gap-6.75 rounded-xl border bg-white p-5 ${theme.cardBorder}`}
+      >
+        <div className="flex w-full flex-1 flex-col items-center gap-5">
+          <div className="flex w-full items-center justify-between whitespace-nowrap">
             <p
-              className={`flex min-h-12 w-full items-start justify-center text-[16px] font-medium leading-6 ${theme.range}`}
+              className={`shrink-0 text-[20px] font-semibold leading-6 ${theme.number}`}
             >
-              {t(slot.rangeKey)}
+              #{slot.number}
+            </p>
+            <p className="shrink-0 text-[16px] font-medium leading-6 text-[#3a3a3a]">
+              {t(slot.elementKey)}
             </p>
           </div>
-        </div>
-      </div>
 
-      {preview ? (
-        <UploadedPhotoPreview
-          src={preview}
-          frameClassName="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10"
-          showAiBadge={showAiBadge}
-        >
-          <button
+          <div className="flex w-full flex-col items-center gap-3">
+            <SlotIcon slot={slot} />
+            <div className="flex w-full flex-col items-center gap-1 text-center">
+              <p
+                className={`w-full text-[20px] font-medium leading-6 ${theme.name}`}
+              >
+                {t(slot.nameKey)}
+              </p>
+              <p
+                className={`flex min-h-12 w-full items-start justify-center text-[16px] font-medium leading-6 ${theme.range}`}
+              >
+                {t(slot.rangeKey)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {preview ? (
+          <UploadedPhotoPreview
+            src={preview}
+            frameClassName="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10"
+            showAiBadge={showAiBadge}
+          >
+            <Button
+              unstyled
+              type="button"
+              onClick={onAddPhoto}
+              className="absolute bottom-2 right-2 cursor-pointer rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#ee1c25] shadow"
+            >
+              {changeLabel}
+            </Button>
+          </UploadedPhotoPreview>
+        ) : (
+          <Button
+            unstyled
             type="button"
             onClick={onAddPhoto}
-            className="absolute bottom-2 right-2 cursor-pointer rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#ee1c25] shadow"
+            className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${theme.buttonBorder} ${theme.buttonText}`}
           >
-            {changeLabel}
-          </button>
-        </UploadedPhotoPreview>
-      ) : (
-        <button
-          type="button"
-          onClick={onAddPhoto}
-          className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${theme.buttonBorder} ${theme.buttonText}`}
-        >
-          <img
-            src={theme.upload}
-            alt=""
-            width={24}
-            height={24}
-            className="size-6 shrink-0"
-          />
-          {addLabel}
-        </button>
-      )}
-    </article>
-  );
-});
+            <Image
+              src={theme.upload}
+              alt=""
+              width={24}
+              height={24}
+              className="size-6 shrink-0"
+            />
+            {addLabel}
+          </Button>
+        )}
+      </article>
+    );
+  },
+);
 
 ZodiacSlotCard.displayName = 'ZodiacSlotCard';
 
@@ -128,197 +145,202 @@ ZodiacSlotCard.displayName = 'ZodiacSlotCard';
  * 12 Photo Zodiac Album — Figma node 190:1054.
  * Dual red/blue wave → hero banner → red (1–6) + blue (7–12) grids → form.
  */
-const Zodiac12Content = memo(({
-  backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
-  uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
-  purpose = 'artwork',
-  defaultPrice = '$5.00',
-}) => {
-  const { t } = useTranslation();
-  const fileInputRef = useRef(null);
-  const activeSlotRef = useRef(null);
-  const isSell = purpose === 'sell';
+const Zodiac12Content = memo(
+  ({
+    backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+    uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+    purpose = 'artwork',
+    defaultPrice = '$5.00',
+  }) => {
+    const { t } = useTranslation();
+    const fileInputRef = useRef(null);
+    const activeSlotRef = useRef(null);
+    const isSell = purpose === 'sell';
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      category: DEFAULT_CATEGORY,
-      subCategory: 'astrophotography',
-      title: '',
-      story: '',
-      price: defaultPrice,
-      resolution: BUY_PHOTO_DEFAULT_SPECS.resolution,
-      fileSize: '125 KB',
-      quality: '4K',
-      copyrightOk: false,
-    },
-  });
-
-  const [publishTarget, setPublishTarget] = useState('competition');
-  const [aiCreated, setAiCreated] = useState('');
-  const [previews, setPreviews] = useState({});
-  const [photosError, setPhotosError] = useState('');
-  const [successOpen, setSuccessOpen] = useState(false);
-
-  useEffect(() => {
-    return () => {
-      Object.values(previews).forEach((url) => {
-        if (url) URL.revokeObjectURL(url);
-      });
-    };
-  }, [previews]);
-
-  const handlePickPhoto = (slotId) => {
-    activeSlotRef.current = slotId;
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
-    const slotId = activeSlotRef.current;
-    event.target.value = '';
-    if (!file || !slotId) return;
-
-    setPreviews((previous) => {
-      const nextUrl = URL.createObjectURL(file);
-      if (previous[slotId]) URL.revokeObjectURL(previous[slotId]);
-      return { ...previous, [slotId]: nextUrl };
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      defaultValues: {
+        category: DEFAULT_CATEGORY,
+        subCategory: 'astrophotography',
+        title: '',
+        story: '',
+        price: defaultPrice,
+        resolution: BUY_PHOTO_DEFAULT_SPECS.resolution,
+        fileSize: '125 KB',
+        quality: '4K',
+        copyrightOk: false,
+      },
     });
-    setPhotosError('');
-  };
 
-  const onSubmit = (_data) => {
-    const missingPhotos = ALL_SLOTS.some((slot) => !previews[slot.id]);
-    if (missingPhotos) {
-      setPhotosError(t('zodiac12.errors.photosRequired'));
-      setSuccessOpen(false);
-      return;
-    }
-    setPhotosError('');
-    setSuccessOpen(true);
-  };
+    const [publishTarget, setPublishTarget] = useState('competition');
+    const [aiCreated, setAiCreated] = useState('');
+    const [previews, setPreviews] = useState({});
+    const [photosError, setPhotosError] = useState('');
+    const [successOpen, setSuccessOpen] = useState(false);
 
-  const renderSlotGrid = (slots) => (
-    <div className="grid w-full grid-cols-1 items-stretch gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-      {slots.map((slot) => (
-        <ZodiacSlotCard
-          key={slot.id}
-          slot={slot}
-          preview={previews[slot.id]}
-          onAddPhoto={() => handlePickPhoto(slot.id)}
-          addLabel={t('zodiac12.addPhoto')}
-          changeLabel={t('zodiac12.changePhoto')}
-          showAiBadge={aiCreated === 'yes'}
+    useEffect(() => {
+      return () => {
+        Object.values(previews).forEach((url) => {
+          if (url) URL.revokeObjectURL(url);
+        });
+      };
+    }, [previews]);
+
+    const handlePickPhoto = (slotId) => {
+      activeSlotRef.current = slotId;
+      fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event) => {
+      const file = event.target.files?.[0];
+      const slotId = activeSlotRef.current;
+      event.target.value = '';
+      if (!file || !slotId) return;
+
+      setPreviews((previous) => {
+        const nextUrl = URL.createObjectURL(file);
+        if (previous[slotId]) URL.revokeObjectURL(previous[slotId]);
+        return { ...previous, [slotId]: nextUrl };
+      });
+      setPhotosError('');
+    };
+
+    const onSubmit = (_data) => {
+      const missingPhotos = ALL_SLOTS.some((slot) => !previews[slot.id]);
+      if (missingPhotos) {
+        setPhotosError(t('zodiac12.errors.photosRequired'));
+        setSuccessOpen(false);
+        return;
+      }
+      setPhotosError('');
+      setSuccessOpen(true);
+    };
+
+    const renderSlotGrid = (slots) => (
+      <div className="grid w-full grid-cols-1 items-stretch gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+        {slots.map((slot) => (
+          <ZodiacSlotCard
+            key={slot.id}
+            slot={slot}
+            preview={previews[slot.id]}
+            onAddPhoto={() => handlePickPhoto(slot.id)}
+            addLabel={t('zodiac12.addPhoto')}
+            changeLabel={t('zodiac12.changePhoto')}
+            showAiBadge={aiCreated === 'yes'}
+          />
+        ))}
+      </div>
+    );
+
+    return (
+      <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
+        <Link
+          to={backHref}
+          className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
+        >
+          <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
+          {t('zodiac12.backToSelection')}
+        </Link>
+
+        <div
+          className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75"
+          aria-hidden="true"
+        >
+          <Image
+            src={ZODIAC12_ASSETS.dualWave}
+            alt=""
+            className="absolute inset-x-0 top-0 h-full w-full object-fill"
+          />
+        </div>
+
+        <section className="flex w-full flex-col items-center gap-6 rounded-[20px] bg-[#ecedfa] px-5 py-6 sm:px-10 lg:flex-row lg:justify-center lg:gap-21 lg:px-16 xl:px-52">
+          <Image
+            src={ZODIAC12_ASSETS.sun}
+            alt=""
+            width={132}
+            height={132}
+            className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
+          />
+          <div className="flex max-w-184 flex-col items-center gap-2 text-center">
+            <h1 className="text-[24px] font-semibold leading-[1.35] text-black sm:text-[30px] lg:text-[36px] lg:leading-12.5">
+              <Trans
+                i18nKey="zodiac12.bannerTitle"
+                components={{
+                  red: <span className="text-[#ee1c25]" />,
+                  blue: <span className="text-[#4048cd]" />,
+                }}
+              />
+            </h1>
+            <p className="text-[16px] font-normal leading-6 text-[#4e4e4e] sm:text-[18px] lg:text-[20px]">
+              {t('zodiac12.bannerSubtitle')}
+            </p>
+          </div>
+          <Image
+            src={ZODIAC12_ASSETS.moon}
+            alt=""
+            width={132}
+            height={132}
+            className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
+          />
+        </section>
+
+        <section className="flex w-full flex-col gap-5">
+          <h2 className="text-[20px] font-semibold leading-8 text-[#494453]">
+            {t('zodiac12.gridTitle')}
+          </h2>
+
+          <div className="flex w-full flex-col items-stretch gap-5 xl:flex-row">
+            <div className="min-w-0 flex-1">{renderSlotGrid(RED_SLOTS)}</div>
+            <div className="min-w-0 flex-1">{renderSlotGrid(BLUE_SLOTS)}</div>
+          </div>
+          {photosError ? (
+            <p className="text-sm text-red-600" role="alert">
+              {photosError}
+            </p>
+          ) : null}
+        </section>
+
+        <ZodiacStoryFormPanel
+          t={t}
+          i18nPrefix="zodiac12"
+          onSubmit={handleSubmit(onSubmit)}
+          categoryOptions={ARTISTIC_CATEGORIES}
+          publishTarget={publishTarget}
+          setPublishTarget={setPublishTarget}
+          aiCreated={aiCreated}
+          setAiCreated={setAiCreated}
+          register={register}
+          errors={errors}
+          isSell={isSell}
+          sellFields={
+            <MemberSellPhotoFields
+              idPrefix="zodiac12"
+              register={register}
+              errors={errors}
+            />
+          }
         />
-      ))}
-    </div>
-  );
 
-  return (
-    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
-      <Link
-        to={backHref}
-        className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
-      >
-        <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
-        {t('zodiac12.backToSelection')}
-      </Link>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="sr-only"
+          onChange={handleFileChange}
+        />
 
-      <div className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75" aria-hidden="true">
-        <img
-          src={ZODIAC12_ASSETS.dualWave}
-          alt=""
-          className="absolute inset-x-0 top-0 h-full w-full object-fill"
+        <PhotoSubmitSuccessModal
+          open={successOpen}
+          onClose={() => setSuccessOpen(false)}
+          uploadAnotherHref={uploadAnotherHref}
         />
       </div>
-
-      <section className="flex w-full flex-col items-center gap-6 rounded-[20px] bg-[#ecedfa] px-5 py-6 sm:px-10 lg:flex-row lg:justify-center lg:gap-21 lg:px-16 xl:px-52">
-        <img
-          src={ZODIAC12_ASSETS.sun}
-          alt=""
-          width={132}
-          height={132}
-          className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
-        />
-        <div className="flex max-w-184 flex-col items-center gap-2 text-center">
-          <h1 className="text-[24px] font-semibold leading-[1.35] text-black sm:text-[30px] lg:text-[36px] lg:leading-12.5">
-            <Trans
-              i18nKey="zodiac12.bannerTitle"
-              components={{
-                red: <span className="text-[#ee1c25]" />,
-                blue: <span className="text-[#4048cd]" />,
-              }}
-            />
-          </h1>
-          <p className="text-[16px] font-normal leading-6 text-[#4e4e4e] sm:text-[18px] lg:text-[20px]">
-            {t('zodiac12.bannerSubtitle')}
-          </p>
-        </div>
-        <img
-          src={ZODIAC12_ASSETS.moon}
-          alt=""
-          width={132}
-          height={132}
-          className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
-        />
-      </section>
-
-      <section className="flex w-full flex-col gap-5">
-        <h2 className="text-[20px] font-semibold leading-8 text-[#494453]">
-          {t('zodiac12.gridTitle')}
-        </h2>
-
-        <div className="flex w-full flex-col items-stretch gap-5 xl:flex-row">
-          <div className="min-w-0 flex-1">{renderSlotGrid(RED_SLOTS)}</div>
-          <div className="min-w-0 flex-1">{renderSlotGrid(BLUE_SLOTS)}</div>
-        </div>
-        {photosError ? (
-          <p className="text-sm text-red-600" role="alert">
-            {photosError}
-          </p>
-        ) : null}
-      </section>
-
-      <ZodiacStoryFormPanel
-        t={t}
-        i18nPrefix="zodiac12"
-        onSubmit={handleSubmit(onSubmit)}
-        categoryOptions={ARTISTIC_CATEGORIES}
-        publishTarget={publishTarget}
-        setPublishTarget={setPublishTarget}
-        aiCreated={aiCreated}
-        setAiCreated={setAiCreated}
-        register={register}
-        errors={errors}
-        isSell={isSell}
-        sellFields={
-          <MemberSellPhotoFields
-            idPrefix="zodiac12"
-            register={register}
-            errors={errors}
-          />
-        }
-      />
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="sr-only"
-        onChange={handleFileChange}
-      />
-
-      <PhotoSubmitSuccessModal
-        open={successOpen}
-        onClose={() => setSuccessOpen(false)}
-        uploadAnotherHref={uploadAnotherHref}
-      />
-    </div>
-  );
-});
+    );
+  },
+);
 
 Zodiac12Content.displayName = 'Zodiac12Content';
 

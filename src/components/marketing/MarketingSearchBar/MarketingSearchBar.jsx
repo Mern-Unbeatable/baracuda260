@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { Search } from 'lucide-react';
+import React, { memo } from 'react';
 import Input from '@/components/ui/Input';
 
 const MarketingSearchBar = memo(

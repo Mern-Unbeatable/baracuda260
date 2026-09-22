@@ -1,7 +1,8 @@
-import { useTranslation } from 'react-i18next';
+import { Clock3, Info, Link2, ShieldCheck, X, Zap } from 'lucide-react';
 import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { Clock3, Info, Link2, ShieldCheck, X, Zap } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 import { PROMO_LINK_VALIDITY_DAYS } from '@/portals/admin/data/adminPromoLinksData';
 
 /**
@@ -64,14 +65,15 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
               </p>
             </div>
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             aria-label={t('adminPromoLinks.generate.close')}
             className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#687186] transition hover:bg-black/5"
           >
             <X size={20} aria-hidden="true" />
-          </button>
+          </Button>
         </header>
 
         <div className="flex flex-col gap-4 px-5 py-5 sm:px-6">
@@ -88,10 +90,14 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
                 {t('adminPromoLinks.generate.validityLabel')}
               </p>
               <p className="mt-1 text-[18px] font-bold leading-6 text-[#151e31]">
-                {t('adminPromoLinks.generate.validityValue', { days: PROMO_LINK_VALIDITY_DAYS })}
+                {t('adminPromoLinks.generate.validityValue', {
+                  days: PROMO_LINK_VALIDITY_DAYS,
+                })}
               </p>
               <p className="mt-1 text-[13px] leading-5 text-[#687186]">
-                {t('adminPromoLinks.generate.validityHint', { days: PROMO_LINK_VALIDITY_DAYS })}
+                {t('adminPromoLinks.generate.validityHint', {
+                  days: PROMO_LINK_VALIDITY_DAYS,
+                })}
               </p>
             </article>
 
@@ -112,7 +118,11 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
           </div>
 
           <div className="flex items-start gap-3 rounded-[12px] border border-[#e4e8f8] bg-[#f4f5ff] px-4 py-3">
-            <Info size={18} className="mt-0.5 shrink-0 text-[#4048cd]" aria-hidden="true" />
+            <Info
+              size={18}
+              className="mt-0.5 shrink-0 text-[#4048cd]"
+              aria-hidden="true"
+            />
             <p className="text-[13px] leading-5 text-[#4b556f]">
               {t('adminPromoLinks.generate.info')}
             </p>
@@ -121,25 +131,30 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
 
         <footer className="flex flex-col gap-3 border-t border-[#edf0f3] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p className="inline-flex items-center gap-2 text-[13px] font-medium text-[#268262]">
-            <span className="size-2 rounded-full bg-[#268262]" aria-hidden="true" />
+            <span
+              className="size-2 rounded-full bg-[#268262]"
+              aria-hidden="true"
+            />
             {t('adminPromoLinks.generate.ready')}
           </p>
           <div className="flex items-center justify-end gap-2">
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={onClose}
               className="cursor-pointer rounded-[10px] px-4 py-2.5 text-[14px] font-semibold text-[#687186] transition hover:bg-[#f6f7f9]"
             >
               {t('adminPromoLinks.generate.cancel')}
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="button"
               onClick={onConfirm}
               className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#4048cd] px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-[#353cb0]"
             >
               <Zap size={16} aria-hidden="true" />
               {t('adminPromoLinks.generate.confirm')}
-            </button>
+            </Button>
           </div>
         </footer>
       </div>

@@ -1,6 +1,6 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
 import { Globe, Instagram, Youtube } from 'lucide-react';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const TwitterIcon = ({ size = 16 }) => (
   <svg
@@ -44,7 +44,12 @@ const PhotographerAboutSection = memo(({ profile }) => {
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
         {profile.website ? (
-          <a href={profile.website} target="_blank" rel="noreferrer" className={linkClass}>
+          <a
+            href={profile.website}
+            target="_blank"
+            rel="noreferrer"
+            className={linkClass}
+          >
             <Globe size={16} strokeWidth={2} aria-hidden="true" />
             {profile.websiteLabel || profile.website}
           </a>

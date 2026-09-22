@@ -7,7 +7,13 @@ const PhotographerProfile = memo(() => {
     title: 'Elena Vance — Photographer Profile',
     description:
       'View Elena Vance’s nature and landscape photography, premium albums, competition entries, and announcements on My12Photos.',
-    keywords: ['photographer', 'profile', 'my12photos', 'gallery', 'Elena Vance'],
+    keywords: [
+      'photographer',
+      'profile',
+      'my12photos',
+      'gallery',
+      'Elena Vance',
+    ],
   });
 
   return <PhotographerProfileMain />;

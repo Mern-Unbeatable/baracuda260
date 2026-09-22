@@ -7,7 +7,13 @@ const Marketplace = memo(() => {
     title: 'Marketplace',
     description:
       'Search creator store products on My12Photos — prints, handmade goods, apparel, and paid store promotions.',
-    keywords: ['marketplace', 'store', 'merchandise', 'my12photos', 'creator products'],
+    keywords: [
+      'marketplace',
+      'store',
+      'merchandise',
+      'my12photos',
+      'creator products',
+    ],
   });
 
   return <MarketplaceMain />;

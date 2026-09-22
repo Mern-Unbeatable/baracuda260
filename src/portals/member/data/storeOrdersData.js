@@ -86,10 +86,19 @@ export const STORE_ORDERS_SUMMARY = {
 
 export const STORE_ORDER_STATUS_FILTERS = [
   { id: 'all', labelKey: 'storeOrders.filters.all' },
-  { id: STORE_ORDER_STATUS.PROCESSING, labelKey: 'storeOrders.filters.processing' },
+  {
+    id: STORE_ORDER_STATUS.PROCESSING,
+    labelKey: 'storeOrders.filters.processing',
+  },
   { id: STORE_ORDER_STATUS.SHIPPED, labelKey: 'storeOrders.filters.shipped' },
-  { id: STORE_ORDER_STATUS.DELIVERED, labelKey: 'storeOrders.filters.delivered' },
-  { id: STORE_ORDER_STATUS.CANCELLED, labelKey: 'storeOrders.filters.cancelled' },
+  {
+    id: STORE_ORDER_STATUS.DELIVERED,
+    labelKey: 'storeOrders.filters.delivered',
+  },
+  {
+    id: STORE_ORDER_STATUS.CANCELLED,
+    labelKey: 'storeOrders.filters.cancelled',
+  },
 ];
 
 export const STORE_ORDER_DATE_FILTERS = [
@@ -136,11 +145,16 @@ export const STORE_ORDERS = [
     commission: '-$4.50',
     earnings: '$40.50',
     paymentStatus: 'paid',
-    image: `${H}/photo-harbor.jpg`,
+    image: `${H}/photo-harbor.webp`,
     transitNote: 'In transit — NYC hub',
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 14, 2026', time: '10:32 AM' },
-      { id: 'processing', state: 'done', date: 'Sep 14, 2026', time: '11:10 AM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Sep 14, 2026',
+        time: '11:10 AM',
+      },
       { id: 'shipped', state: 'done', date: 'Sep 14, 2026', time: '4:20 PM' },
       { id: 'delivered', state: 'pending', date: null, time: null },
     ],
@@ -165,11 +179,16 @@ export const STORE_ORDERS = [
     commission: '-$6.00',
     earnings: '$54.00',
     paymentStatus: 'paid',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     transitNote: 'In transit — Denver facility',
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 9, 2026', time: '2:14 PM' },
-      { id: 'processing', state: 'done', date: 'Sep 10, 2026', time: '9:00 AM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Sep 10, 2026',
+        time: '9:00 AM',
+      },
       { id: 'shipped', state: 'done', date: 'Sep 10, 2026', time: '4:44 PM' },
       { id: 'delivered', state: 'pending', date: null, time: null },
     ],
@@ -194,11 +213,16 @@ export const STORE_ORDERS = [
     commission: '-$3.50',
     earnings: '$31.50',
     paymentStatus: 'paid',
-    image: `${H}/photo-golden.jpg`,
+    image: `${H}/photo-golden.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 12, 2026', time: '3:18 PM' },
-      { id: 'processing', state: 'done', date: 'Sep 12, 2026', time: '4:02 PM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Sep 12, 2026',
+        time: '4:02 PM',
+      },
       { id: 'shipped', state: 'done', date: 'Sep 13, 2026', time: '10:00 AM' },
       { id: 'delivered', state: 'done', date: 'Sep 15, 2026', time: '1:20 PM' },
     ],
@@ -223,11 +247,16 @@ export const STORE_ORDERS = [
     commission: '-$4.20',
     earnings: '$37.80',
     paymentStatus: 'paid',
-    image: `${H}/photo-wings.jpg`,
+    image: `${H}/photo-wings.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 10, 2026', time: '9:05 AM' },
-      { id: 'processing', state: 'current', date: 'Sep 10, 2026', time: '10:20 AM' },
+      {
+        id: 'processing',
+        state: 'current',
+        date: 'Sep 10, 2026',
+        time: '10:20 AM',
+      },
       { id: 'shipped', state: 'pending', date: null, time: null },
       { id: 'delivered', state: 'pending', date: null, time: null },
     ],
@@ -252,7 +281,7 @@ export const STORE_ORDERS = [
     commission: '-$5.80',
     earnings: '$52.20',
     paymentStatus: 'paid',
-    image: `${H}/photo-forest.jpg`,
+    image: `${H}/photo-forest.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 8, 2026', time: '6:44 PM' },
@@ -281,13 +310,18 @@ export const STORE_ORDERS = [
     commission: '-$7.00',
     earnings: '$63.00',
     paymentStatus: 'paid',
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 6, 2026', time: '1:12 PM' },
       { id: 'processing', state: 'done', date: 'Sep 6, 2026', time: '2:00 PM' },
       { id: 'shipped', state: 'done', date: 'Sep 7, 2026', time: '9:30 AM' },
-      { id: 'delivered', state: 'done', date: 'Sep 10, 2026', time: '12:40 PM' },
+      {
+        id: 'delivered',
+        state: 'done',
+        date: 'Sep 10, 2026',
+        time: '12:40 PM',
+      },
     ],
   },
   {
@@ -310,11 +344,16 @@ export const STORE_ORDERS = [
     commission: '-$1.80',
     earnings: '$0.00',
     paymentStatus: 'refunded',
-    image: `${H}/photo-morning.jpg`,
+    image: `${H}/photo-morning.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 4, 2026', time: '11:25 AM' },
-      { id: 'processing', state: 'done', date: 'Sep 4, 2026', time: '12:00 PM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Sep 4, 2026',
+        time: '12:00 PM',
+      },
       { id: 'shipped', state: 'pending', date: null, time: null },
       { id: 'delivered', state: 'pending', date: null, time: null },
     ],
@@ -339,7 +378,7 @@ export const STORE_ORDERS = [
     commission: '-$7.10',
     earnings: '$63.90',
     paymentStatus: 'paid',
-    image: `${H}/photo-tidal.jpg`,
+    image: `${H}/photo-tidal.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Sep 2, 2026', time: '4:50 PM' },
@@ -368,11 +407,16 @@ export const STORE_ORDERS = [
     commission: '-$4.90',
     earnings: '$44.10',
     paymentStatus: 'paid',
-    image: `${H}/photo-autumn.jpg`,
+    image: `${H}/photo-autumn.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Aug 28, 2026', time: '2:15 PM' },
-      { id: 'processing', state: 'done', date: 'Aug 28, 2026', time: '3:00 PM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Aug 28, 2026',
+        time: '3:00 PM',
+      },
       { id: 'shipped', state: 'done', date: 'Aug 29, 2026', time: '8:40 AM' },
       { id: 'delivered', state: 'done', date: 'Sep 1, 2026', time: '11:10 AM' },
     ],
@@ -397,11 +441,16 @@ export const STORE_ORDERS = [
     commission: '-$5.60',
     earnings: '$50.40',
     paymentStatus: 'paid',
-    image: `${H}/photo-silent.jpg`,
+    image: `${H}/photo-silent.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Aug 22, 2026', time: '10:08 AM' },
-      { id: 'processing', state: 'done', date: 'Aug 22, 2026', time: '11:00 AM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Aug 22, 2026',
+        time: '11:00 AM',
+      },
       { id: 'shipped', state: 'done', date: 'Aug 23, 2026', time: '1:30 PM' },
       { id: 'delivered', state: 'done', date: 'Aug 26, 2026', time: '4:15 PM' },
     ],
@@ -426,11 +475,16 @@ export const STORE_ORDERS = [
     commission: '-$4.30',
     earnings: '$38.70',
     paymentStatus: 'paid',
-    image: `${H}/photo-wings.jpg`,
+    image: `${H}/photo-wings.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Aug 18, 2026', time: '5:40 PM' },
-      { id: 'processing', state: 'done', date: 'Aug 18, 2026', time: '6:20 PM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Aug 18, 2026',
+        time: '6:20 PM',
+      },
       { id: 'shipped', state: 'done', date: 'Aug 19, 2026', time: '9:00 AM' },
       { id: 'delivered', state: 'done', date: 'Aug 22, 2026', time: '2:45 PM' },
     ],
@@ -455,19 +509,31 @@ export const STORE_ORDERS = [
     commission: '-$7.20',
     earnings: '$64.80',
     paymentStatus: 'paid',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     transitNote: null,
     timeline: [
       { id: 'placed', state: 'done', date: 'Aug 12, 2026', time: '9:22 AM' },
-      { id: 'processing', state: 'done', date: 'Aug 12, 2026', time: '10:05 AM' },
+      {
+        id: 'processing',
+        state: 'done',
+        date: 'Aug 12, 2026',
+        time: '10:05 AM',
+      },
       { id: 'shipped', state: 'done', date: 'Aug 13, 2026', time: '3:20 PM' },
-      { id: 'delivered', state: 'done', date: 'Aug 16, 2026', time: '11:50 AM' },
+      {
+        id: 'delivered',
+        state: 'done',
+        date: 'Aug 16, 2026',
+        time: '11:50 AM',
+      },
     ],
   },
 ];
 
 export const getStoreOrderById = (orderId) =>
-  STORE_ORDERS.find((order) => order.id === orderId || order.orderNumber === orderId) || null;
+  STORE_ORDERS.find(
+    (order) => order.id === orderId || order.orderNumber === orderId,
+  ) || null;
 
 export const countStoreOrdersByStatus = (orders) => {
   const counts = {

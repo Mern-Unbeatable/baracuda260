@@ -1,13 +1,13 @@
+import { SELL_PHOTOS_ITEMS } from '@/portals/member/data/sellPhotosData';
 import { ROUTES } from '@/shared/config';
 import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
-import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
-import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
-import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 import {
   GALLERY_DETAIL_ASSETS,
   toGalleryDetailEntry,
 } from '@/shared/data/galleryDetail';
-import { SELL_PHOTOS_ITEMS } from '@/portals/member/data/sellPhotosData';
+import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
+import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
+import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 
 export const sellPhotoDetailPath = (id) =>
   `${ROUTES.ADMIN_SELL_PHOTOS}/${encodeURIComponent(id)}`;

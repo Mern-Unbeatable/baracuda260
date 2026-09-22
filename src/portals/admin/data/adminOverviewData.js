@@ -2,10 +2,10 @@
 const A = '/assets/admin-overview';
 
 export const ADMIN_OVERVIEW_ASSETS = {
-  thumbRiver: `${A}/thumb-river.jpg`,
-  thumbGarden: `${A}/thumb-garden.jpg`,
-  thumbCeiling: `${A}/thumb-ceiling.jpg`,
-  avatar: `${A}/avatar.jpg`,
+  thumbRiver: `${A}/thumb-river.webp`,
+  thumbGarden: `${A}/thumb-garden.webp`,
+  thumbCeiling: `${A}/thumb-ceiling.webp`,
+  avatar: `${A}/avatar.webp`,
 };
 
 /** First stats row — 5 cards (Figma). */
@@ -107,10 +107,22 @@ export const VISITOR_DATA = [
 ];
 
 export const REVENUE_PERIODS = [
-  { id: 'thisYear', labelKey: 'adminOverview.revenueTrend.periodOptions.thisYear' },
-  { id: 'sixMonths', labelKey: 'adminOverview.revenueTrend.periodOptions.sixMonths' },
-  { id: 'thisMonth', labelKey: 'adminOverview.revenueTrend.periodOptions.thisMonth' },
-  { id: 'lastYear', labelKey: 'adminOverview.revenueTrend.periodOptions.lastYear' },
+  {
+    id: 'thisYear',
+    labelKey: 'adminOverview.revenueTrend.periodOptions.thisYear',
+  },
+  {
+    id: 'sixMonths',
+    labelKey: 'adminOverview.revenueTrend.periodOptions.sixMonths',
+  },
+  {
+    id: 'thisMonth',
+    labelKey: 'adminOverview.revenueTrend.periodOptions.thisMonth',
+  },
+  {
+    id: 'lastYear',
+    labelKey: 'adminOverview.revenueTrend.periodOptions.lastYear',
+  },
 ];
 
 export const PENDING_SUBMISSIONS = [

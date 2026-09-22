@@ -1,21 +1,20 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Share2 } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import { PAGE_STACK } from '@/shared/ui/actionStyles';
-import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
-import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
-import GalleryDetailBreadcrumb from './GalleryDetailBreadcrumb';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
+import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation';
 import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
-import SignBadge from '@/components/data-display/SignBadge/SignBadge';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
-import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
-import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
+import SignBadge from '@/components/data-display/SignBadge/SignBadge';
 import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
-import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
+import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS as ASSETS,
   GALLERY_DETAIL_COMMENTS as COMMENTS,
@@ -26,6 +25,9 @@ import {
   resolveGalleryImageDetails,
   toGalleryDetailEntry,
 } from '@/shared/data/galleryDetail';
+import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
+import { PAGE_STACK } from '@/shared/ui/actionStyles';
+import GalleryDetailBreadcrumb from './GalleryDetailBreadcrumb';
 
 const GalleryDetailView = memo(
   ({
@@ -36,7 +38,8 @@ const GalleryDetailView = memo(
     rootClassName: rootClassNameProp,
   }) => {
     const { t } = useTranslation();
-    const config = GALLERY_DETAIL_VARIANTS[variant] || GALLERY_DETAIL_VARIANTS.single;
+    const config =
+      GALLERY_DETAIL_VARIANTS[variant] || GALLERY_DETAIL_VARIANTS.single;
     const rootClassName = rootClassNameProp ?? config.rootClassName;
     const story = toGalleryDetailEntry(entry);
     const slides = story.slides || [];
@@ -51,11 +54,11 @@ const GalleryDetailView = memo(
     const blueBadge = isBlueSlide(activeSlide, config.stripAccent);
 
     const heroSrc = activeSlide?.hero || story.image;
-    const heroAlt = activeSlide?.sign ? `${story.title} — ${activeSlide.sign}` : story.title;
-    const { videoPoster, videoSrc, donationAvatar, donationBio } = resolveGalleryDetailMedia(
-      story,
-      heroSrc,
-    );
+    const heroAlt = activeSlide?.sign
+      ? `${story.title} — ${activeSlide.sign}`
+      : story.title;
+    const { videoPoster, videoSrc, donationAvatar, donationBio } =
+      resolveGalleryDetailMedia(story, heroSrc);
     const imageDetails = resolveGalleryImageDetails(story);
 
     useEffect(() => {
@@ -70,8 +73,10 @@ const GalleryDetailView = memo(
       return () => window.clearInterval(timerId);
     }, [showStoryChrome, slideCount, story.id]);
 
-    const goPrev = () => setActiveIndex((i) => (i === 0 ? slideCount - 1 : i - 1));
-    const goNext = () => setActiveIndex((i) => (i === slideCount - 1 ? 0 : i + 1));
+    const goPrev = () =>
+      setActiveIndex((i) => (i === 0 ? slideCount - 1 : i - 1));
+    const goNext = () =>
+      setActiveIndex((i) => (i === slideCount - 1 ? 0 : i + 1));
 
     const handleShare = useCallback(async () => {
       const url = window.location.href;
@@ -98,46 +103,54 @@ const GalleryDetailView = memo(
             <Breadcrumb title={story.title} />
 
             <div className="relative mt-4 aspect-1536/653 w-full overflow-hidden rounded-2xl sm:mt-5 sm:rounded-[20px]">
-              <img
+              <Image
                 src={heroSrc}
                 alt={heroAlt}
                 width={1536}
                 height={653}
                 className="absolute inset-0 h-full w-full object-cover"
               />
-              {activeSlide ? <SignBadge slide={activeSlide} blue={blueBadge} /> : null}
-              <PhotoAiBadgeOverlay show={story.isAiGenerated} placement="hero-end" size="lg" />
+              {activeSlide ? (
+                <SignBadge slide={activeSlide} blue={blueBadge} />
+              ) : null}
+              <PhotoAiBadgeOverlay
+                show={story.isAiGenerated}
+                placement="hero-end"
+                size="lg"
+              />
 
               {showStoryChrome ? (
                 <>
-                  <button
+                  <Button
+                    unstyled
                     type="button"
                     onClick={goPrev}
                     aria-label={t('galleryDetail.previousPhoto')}
                     className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-12.75 sm:size-12.75"
                   >
-                    <img
+                    <Image
                       src={ASSETS.arrow}
                       alt=""
                       width={16}
                       height={32}
                       className="h-7 w-3.5 rotate-180 object-contain sm:h-8 sm:w-4"
                     />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    unstyled
                     type="button"
                     onClick={goNext}
                     aria-label={t('galleryDetail.nextPhoto')}
                     className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-12.75 sm:size-12.75"
                   >
-                    <img
+                    <Image
                       src={ASSETS.arrow}
                       alt=""
                       width={16}
                       height={32}
                       className="h-7 w-3.5 object-contain sm:h-8 sm:w-4"
                     />
-                  </button>
+                  </Button>
                 </>
               ) : null}
             </div>
@@ -146,7 +159,7 @@ const GalleryDetailView = memo(
               <div
                 className={`relative mt-2 w-full overflow-hidden sm:mt-3 ${config.curveHeightClass}`}
               >
-                <img
+                <Image
                   src={config.curveSrc}
                   alt=""
                   className={`h-full w-full object-top ${config.curveObjectClass}`}
@@ -176,7 +189,11 @@ const GalleryDetailView = memo(
         <section className="bg-white section-py-bottom pt-0">
           <Shell>
             <div className={PAGE_STACK}>
-              <GalleryDetailVideo poster={videoPoster} src={videoSrc} title={story.title} />
+              <GalleryDetailVideo
+                poster={videoPoster}
+                src={videoSrc}
+                title={story.title}
+              />
 
               <div>
                 <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -242,15 +259,24 @@ const GalleryDetailView = memo(
                 >
                   {t('galleryDetail.downloadPhoto')}
                 </MarketingButton>
-                <MarketingButton type="button" variant="outline" onClick={handleShare}>
-                  <Share2 size={18} strokeWidth={2} aria-hidden="true" className="text-[#e53935]" />
+                <MarketingButton
+                  type="button"
+                  variant="outline"
+                  onClick={handleShare}
+                >
+                  <Share2
+                    size={18}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="text-[#e53935]"
+                  />
                   {t('galleryDetail.share')}
                 </MarketingButton>
               </div>
 
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
-                  <img
+                  <Image
                     src={ASSETS.photographer}
                     alt={story.photographer}
                     width={57}
@@ -286,8 +312,14 @@ const GalleryDetailView = memo(
                   onClose={() => setDonationOpen(false)}
                 />
               ) : (
-                <MarketingButton type="button" variant="muted" onClick={() => setDonationOpen(true)}>
-                  {t('galleryDetail.donation.reopen', { name: story.photographer })}
+                <MarketingButton
+                  type="button"
+                  variant="muted"
+                  onClick={() => setDonationOpen(true)}
+                >
+                  {t('galleryDetail.donation.reopen', {
+                    name: story.photographer,
+                  })}
                 </MarketingButton>
               )}
 
@@ -304,7 +336,7 @@ const GalleryDetailView = memo(
                     >
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <img
+                          <Image
                             src={ASSETS.commentAvatar}
                             alt=""
                             width={48}
@@ -320,7 +352,9 @@ const GalleryDetailView = memo(
                           {t('galleryDetail.verified')}
                         </span>
                       </div>
-                      <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">{item.text}</p>
+                      <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
+                        {item.text}
+                      </p>
                     </li>
                   ))}
                 </ul>

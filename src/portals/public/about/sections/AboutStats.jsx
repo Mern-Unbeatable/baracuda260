@@ -1,7 +1,7 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import { ABOUT_STATS } from '@/portals/public/about/data/aboutData';
+import { Shell } from '@/shared/site-chrome';
 
 const AboutStats = memo(() => {
   const { t } = useTranslation();

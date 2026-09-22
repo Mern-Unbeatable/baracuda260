@@ -68,7 +68,10 @@ export const UPLOAD_ROUTE_SETS = {
   },
 };
 
-export const getUploadTierHref = (tierId, routeSet = UPLOAD_ROUTE_SETS.artwork) => {
+export const getUploadTierHref = (
+  tierId,
+  routeSet = UPLOAD_ROUTE_SETS.artwork,
+) => {
   if (tierId === 'single') return routeSet.single;
   if (tierId === 'story6') return routeSet.story6;
   if (tierId === 'zodiac12') return routeSet.zodiac12;

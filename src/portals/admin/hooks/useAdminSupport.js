@@ -2,22 +2,30 @@ import { useState } from 'react';
 import {
   ADMIN_SUPPORT_TICKETS,
   ANSWER_MODAL_MODE,
-  SUPPORT_STATUS,
   filterSupportTicketsByStatus,
   findSupportTicketById,
   publishSupportAnswer,
+  SUPPORT_STATUS,
 } from '@/portals/admin/data/adminSupportData';
 
 /**
  * Queues + Answer & Publish modal state for Admin Support.
  */
-export default function useAdminSupport(initialTickets = ADMIN_SUPPORT_TICKETS) {
+export default function useAdminSupport(
+  initialTickets = ADMIN_SUPPORT_TICKETS,
+) {
   const [tickets, setTickets] = useState(initialTickets);
   const [activeTicketId, setActiveTicketId] = useState(null);
   const [modalMode, setModalMode] = useState(null);
 
-  const pendingTickets = filterSupportTicketsByStatus(tickets, SUPPORT_STATUS.PENDING);
-  const answeredTickets = filterSupportTicketsByStatus(tickets, SUPPORT_STATUS.ANSWERED);
+  const pendingTickets = filterSupportTicketsByStatus(
+    tickets,
+    SUPPORT_STATUS.PENDING,
+  );
+  const answeredTickets = filterSupportTicketsByStatus(
+    tickets,
+    SUPPORT_STATUS.ANSWERED,
+  );
   const activeTicket = findSupportTicketById(tickets, activeTicketId);
 
   const handleOpenCompose = (ticketId) => {
@@ -37,7 +45,9 @@ export default function useAdminSupport(initialTickets = ADMIN_SUPPORT_TICKETS) 
 
   const handlePublish = (answer) => {
     if (!activeTicketId) return;
-    setTickets((current) => publishSupportAnswer(current, activeTicketId, answer));
+    setTickets((current) =>
+      publishSupportAnswer(current, activeTicketId, answer),
+    );
     setModalMode(ANSWER_MODAL_MODE.PUBLISHED);
   };
 

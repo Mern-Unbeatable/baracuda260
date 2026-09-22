@@ -1,19 +1,21 @@
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   ADMIN_PREMIUM_PHOTOS_ASSETS,
   CARD_IMAGE_HEIGHT,
   CARD_IMAGE_WIDTH,
-  PREMIUM_PHOTOS_FILTERS,
-  PREMIUM_PHOTOS_TYPE_KEYS,
   getPremiumPhotoDetailPath,
   METRIC_ICON_SIZE,
+  PREMIUM_PHOTOS_FILTERS,
+  PREMIUM_PHOTOS_TYPE_KEYS,
 } from '@/portals/admin/data/adminPremiumPhotosData';
 import useAdminPremiumPhotosShowcase from '@/portals/admin/hooks/useAdminPremiumPhotosShowcase';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import { ROUTES } from '@/shared/config';
 
 /** @param {{ icon: string, value: string, tone?: 'default' | 'accent' }} props */
 const MetricStat = memo(({ icon, value, tone = 'default' }) => (
@@ -22,7 +24,7 @@ const MetricStat = memo(({ icon, value, tone = 'default' }) => (
       tone === 'accent' ? 'text-[#ee1c25]' : 'text-[#6b7280]'
     }`}
   >
-    <img
+    <Image
       src={icon}
       alt=""
       width={METRIC_ICON_SIZE}
@@ -52,12 +54,18 @@ MetricStat.displayName = 'MetricStat';
  */
 const ShowcaseCard = memo(({ card }) => {
   const { t } = useTranslation();
-  const detailPath = getPremiumPhotoDetailPath(card.id, ROUTES.ADMIN_PREMIUM_PHOTOS_DETAIL);
+  const detailPath = getPremiumPhotoDetailPath(
+    card.id,
+    ROUTES.ADMIN_PREMIUM_PHOTOS_DETAIL,
+  );
 
   return (
     <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)]">
-      <Link to={detailPath} className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60">
-        <img
+      <Link
+        to={detailPath}
+        className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
+      >
+        <Image
           src={card.image}
           alt=""
           width={CARD_IMAGE_WIDTH}
@@ -87,17 +95,28 @@ const ShowcaseCard = memo(({ card }) => {
         </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#f0f1f4] pt-3">
-          <MetricStat icon={ADMIN_PREMIUM_PHOTOS_ASSETS.heart} value={card.likes} tone="accent" />
-          <MetricStat icon={ADMIN_PREMIUM_PHOTOS_ASSETS.eye} value={card.views} />
-          <MetricStat icon={ADMIN_PREMIUM_PHOTOS_ASSETS.calendar} value={t(card.dateKey)} />
+          <MetricStat
+            icon={ADMIN_PREMIUM_PHOTOS_ASSETS.heart}
+            value={card.likes}
+            tone="accent"
+          />
+          <MetricStat
+            icon={ADMIN_PREMIUM_PHOTOS_ASSETS.eye}
+            value={card.views}
+          />
+          <MetricStat
+            icon={ADMIN_PREMIUM_PHOTOS_ASSETS.calendar}
+            value={t(card.dateKey)}
+          />
         </div>
 
-        <button
+        <Button
+          unstyled
           type="button"
           className="w-full rounded-xl bg-[#ee1c25] px-4 py-3 text-[14px] font-bold leading-5 text-white transition hover:bg-[#d41921] sm:text-[15px]"
         >
           {t('adminPremiumPhotos.delete')}
-        </button>
+        </Button>
       </div>
     </article>
   );
@@ -125,7 +144,8 @@ const PremiumPhotosTypeFilters = memo(({ activeFilter, onFilterClick }) => {
         const isAll = filter.id === 'all';
 
         return (
-          <button
+          <Button
+            unstyled
             key={filter.id}
             type="button"
             aria-pressed={selected}
@@ -139,7 +159,7 @@ const PremiumPhotosTypeFilters = memo(({ activeFilter, onFilterClick }) => {
             }`}
           >
             {t(filter.labelKey)}
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -188,13 +208,18 @@ const AdminPremiumPhotosContent = memo(() => {
     <div className="flex w-full flex-col gap-6 sm:gap-8">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <AdminPageHeader title={t('adminPremiumPhotos.title')} />
-        <PremiumPhotosTypeFilters activeFilter={activeFilter} onFilterClick={handleFilterClick} />
+        <PremiumPhotosTypeFilters
+          activeFilter={activeFilter}
+          onFilterClick={handleFilterClick}
+        />
       </header>
 
       <ShowcaseGrid cards={visibleCards} />
 
       {visibleCards.length === 0 ? (
-        <p className="text-center text-[16px] text-[#6b7280]">{t('adminPremiumPhotos.empty')}</p>
+        <p className="text-center text-[16px] text-[#6b7280]">
+          {t('adminPremiumPhotos.empty')}
+        </p>
       ) : null}
 
       <div className="flex justify-center pt-2 sm:pt-4">
@@ -208,7 +233,9 @@ const AdminPremiumPhotosContent = memo(() => {
           prevLabel={t('adminPremiumPhotos.pagination.prev')}
           nextLabel={t('adminPremiumPhotos.pagination.next')}
           lastLabel={t('adminPremiumPhotos.pagination.last')}
-          pageLabel={(pageNumber) => t('adminPremiumPhotos.pagination.page', { page: pageNumber })}
+          pageLabel={(pageNumber) =>
+            t('adminPremiumPhotos.pagination.page', { page: pageNumber })
+          }
         />
       </div>
     </div>

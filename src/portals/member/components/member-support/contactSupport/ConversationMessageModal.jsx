@@ -1,7 +1,12 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { CONTACT_SUPPORT_ASSETS, THREAD_DETAILS } from '@/portals/member/data/contactSupportData';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import {
+  CONTACT_SUPPORT_ASSETS,
+  THREAD_DETAILS,
+} from '@/portals/member/data/contactSupportData';
 
 const StatusBadge = memo(({ status }) => {
   const { t } = useTranslation();
@@ -43,7 +48,7 @@ const UserMessage = memo(({ body, time, read }) => {
               <>
                 <span aria-hidden="true">•</span>
                 <span className="inline-flex items-center gap-0.5">
-                  <img
+                  <Image
                     src={CONTACT_SUPPORT_ASSETS.readCheck}
                     alt=""
                     width={12}
@@ -82,7 +87,9 @@ const SupportMessage = memo(({ body, time, attachment }) => {
             className="pointer-events-none absolute inset-0 rounded-full shadow-[0_0_0_2px_white]"
             aria-hidden="true"
           />
-          <span className="relative">{t('contactSupport.modal.supportInitial')}</span>
+          <span className="relative">
+            {t('contactSupport.modal.supportInitial')}
+          </span>
         </span>
         <div className="flex min-w-0 max-w-[448px] flex-col items-start">
           <div className="flex w-full flex-col gap-4 rounded-bl-[16px] rounded-br-[16px] rounded-tl-none rounded-tr-[16px] border border-[#f3f4f6] bg-white px-[21px] py-4 text-[14px] font-normal leading-[22.75px] text-[#334155] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
@@ -90,7 +97,7 @@ const SupportMessage = memo(({ body, time, attachment }) => {
             {attachment ? (
               <div className="flex w-full items-center gap-3 rounded-[12px] border border-[#e5e7eb] bg-[#f1f5f9] p-[13px]">
                 <span className="flex shrink-0 rounded-lg bg-[rgba(203,213,225,0.5)] p-2">
-                  <img
+                  <Image
                     src={CONTACT_SUPPORT_ASSETS.paperclip}
                     alt=""
                     width={16}
@@ -109,7 +116,9 @@ const SupportMessage = memo(({ body, time, attachment }) => {
               </div>
             ) : null}
           </div>
-          <p className="pt-1 text-[11px] font-normal leading-[16.5px] text-[#94a3b8]">{time}</p>
+          <p className="pt-1 text-[11px] font-normal leading-[16.5px] text-[#94a3b8]">
+            {time}
+          </p>
         </div>
       </div>
     </div>
@@ -169,33 +178,42 @@ const ConversationMessageModal = memo(({ open, thread, onClose }) => {
               </h2>
               <StatusBadge status={thread.status} />
             </div>
-            <p className="text-[14px] leading-5 text-[#64748b]">{t(detail.lastUpdatedKey)}</p>
+            <p className="text-[14px] leading-5 text-[#64748b]">
+              {t(detail.lastUpdatedKey)}
+            </p>
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             aria-label={t('contactSupport.modal.close')}
             className="inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded transition hover:bg-black/5"
           >
-            <img
+            <Image
               src={CONTACT_SUPPORT_ASSETS.modalClose}
               alt=""
               width={20}
               height={20}
               className="size-5"
             />
-          </button>
+          </Button>
         </header>
 
         <div className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto bg-[#f9fafb] p-6">
           <div className="flex w-full items-center py-2">
-            <div className="h-px min-w-0 flex-1 border-t border-[#e5e7eb]" aria-hidden="true" />
+            <div
+              className="h-px min-w-0 flex-1 border-t border-[#e5e7eb]"
+              aria-hidden="true"
+            />
             <div className="px-4">
               <span className="block rounded-full bg-[#f3f4f6] px-3 py-1 text-[12px] font-normal leading-4 text-[#9ca3af]">
                 {t(detail.dayKey)}
               </span>
             </div>
-            <div className="h-px min-w-0 flex-1 border-t border-[#e5e7eb]" aria-hidden="true" />
+            <div
+              className="h-px min-w-0 flex-1 border-t border-[#e5e7eb]"
+              aria-hidden="true"
+            />
           </div>
 
           {detail.messages.map((message) =>
@@ -219,7 +237,7 @@ const ConversationMessageModal = memo(({ open, thread, onClose }) => {
 
         <footer className="shrink-0 border-t border-[#f3f4f6] bg-white px-5 pb-6 pt-[25px] sm:px-6">
           <div className="flex gap-4 rounded-[16px] border-2 border-dashed border-[#e5e7eb] bg-[#f9fafb] p-[22px]">
-            <img
+            <Image
               src={CONTACT_SUPPORT_ASSETS.lock}
               alt=""
               width={18}

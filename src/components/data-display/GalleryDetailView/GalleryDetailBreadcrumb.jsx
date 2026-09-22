@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/shared/config';
 import { AppLink } from '@/shared/site-chrome';
 
@@ -11,12 +11,17 @@ const GalleryDetailBreadcrumb = memo(({ title }) => {
 
   return (
     <nav
-      aria-label={t('galleryDetail.breadcrumb.aria', { defaultValue: 'Breadcrumb' })}
+      aria-label={t('galleryDetail.breadcrumb.aria', {
+        defaultValue: 'Breadcrumb',
+      })}
       className="mb-5 sm:mb-6"
     >
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] font-semibold uppercase leading-4.75 tracking-[1.2px] text-[#7f8ba1] sm:text-[14px]">
         <li>
-          <AppLink href={ROUTES.HOME} className="transition hover:text-[#ee1c25]">
+          <AppLink
+            href={ROUTES.HOME}
+            className="transition hover:text-[#ee1c25]"
+          >
             {t('galleryDetail.breadcrumb.home')}
           </AppLink>
         </li>
@@ -24,7 +29,10 @@ const GalleryDetailBreadcrumb = memo(({ title }) => {
           ›
         </li>
         <li>
-          <AppLink href={ROUTES.GALLERY} className="transition hover:text-[#ee1c25]">
+          <AppLink
+            href={ROUTES.GALLERY}
+            className="transition hover:text-[#ee1c25]"
+          >
             {t('galleryDetail.breadcrumb.gallery')}
           </AppLink>
         </li>

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import {
   ADMIN_USERS,
-  USER_STATUS,
-  USERS_PAGE_SIZE,
   filterUsersByStatus,
   getUsersPageRange,
   paginateUsers,
+  USER_STATUS,
+  USERS_PAGE_SIZE,
 } from '@/portals/admin/data/adminUsersData';
 
 /**
@@ -27,7 +27,8 @@ export default function useAdminUsers(
   const safePage = Math.min(page, totalPages);
   const visibleUsers = paginateUsers(filteredUsers, safePage, pageSize);
   const range = getUsersPageRange(safePage, pageSize, filteredUsers.length);
-  const suspendTarget = users.find((user) => user.id === suspendTargetId) || null;
+  const suspendTarget =
+    users.find((user) => user.id === suspendTargetId) || null;
 
   const handleStatusFilterChange = (nextFilter) => {
     setStatusFilter(nextFilter || 'all');
@@ -68,7 +69,9 @@ export default function useAdminUsers(
 
     setUsers((current) =>
       current.map((user) =>
-        user.id === userId ? { ...user, status: USER_STATUS.ACTIVE, suspendReason: undefined } : user,
+        user.id === userId
+          ? { ...user, status: USER_STATUS.ACTIVE, suspendReason: undefined }
+          : user,
       ),
     );
     setOpenActionMenuId(null);

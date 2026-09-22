@@ -1,11 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import { useTranslation } from 'react-i18next';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberSellPhotoCard from '@/components/data-display/MemberSellPhotoCard/MemberSellPhotoCard';
-import MemberUploadFormatMenu from '@/portals/member/components/member-sell-photos/MemberUploadFormatMenu';
 import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import MemberUploadFormatMenu from '@/portals/member/components/member-sell-photos/MemberUploadFormatMenu';
 import {
   matchesSellPhotosFilter,
   SELL_PHOTOS_FILTER_TABS,
@@ -13,6 +12,7 @@ import {
   SELL_PHOTOS_PAGE_SIZE,
   sortSellPhotosItems,
 } from '@/portals/member/data/sellPhotosData';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const SHOWCASE_BADGE_KEYS = {
   'Single Photo': 'common.badges.singlePhoto',
@@ -31,7 +31,9 @@ const SellPhotosContent = memo(() => {
   }));
 
   const filteredItems = useMemo(() => {
-    const filtered = SELL_PHOTOS_ITEMS.filter((item) => matchesSellPhotosFilter(item, filterTab));
+    const filtered = SELL_PHOTOS_ITEMS.filter((item) =>
+      matchesSellPhotosFilter(item, filterTab),
+    );
     return sortSellPhotosItems(filtered);
   }, [filterTab]);
 
@@ -80,9 +82,12 @@ const SellPhotosContent = memo(() => {
             <MemberSellPhotoCard
               key={item.id}
               item={item}
-              badgeLabel={t(SHOWCASE_BADGE_KEYS[item.albumBadge] || item.albumBadge, {
-                defaultValue: item.albumBadge,
-              })}
+              badgeLabel={t(
+                SHOWCASE_BADGE_KEYS[item.albumBadge] || item.albumBadge,
+                {
+                  defaultValue: item.albumBadge,
+                },
+              )}
               onEdit={() => {}}
               onDelete={() => {}}
               onPromote={setPromoteItem}
@@ -96,7 +101,10 @@ const SellPhotosContent = memo(() => {
           <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
             {t('sellPhotos.showing', {
               from: (currentPage - 1) * SELL_PHOTOS_PAGE_SIZE + 1,
-              to: Math.min(currentPage * SELL_PHOTOS_PAGE_SIZE, filteredItems.length),
+              to: Math.min(
+                currentPage * SELL_PHOTOS_PAGE_SIZE,
+                filteredItems.length,
+              ),
               total: filteredItems.length,
             })}
           </p>

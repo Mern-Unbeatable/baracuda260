@@ -5,8 +5,8 @@ const HOME = '/assets/home';
 
 export const ADMIN_DETAIL_ASSETS = {
   divider: `${DETAIL}/divider.svg`,
-  photographer: `${HOME}/avatar-photographer.jpg`,
-  commentAvatar: `${HOME}/avatar-comment.jpg`,
+  photographer: `${HOME}/avatar-photographer.webp`,
+  commentAvatar: `${HOME}/avatar-comment.webp`,
   verified: `${HOME}/icon-verified.svg`,
   arrow: `${HOME}/icon-arrow-nav.svg`,
   curves: {
@@ -39,7 +39,7 @@ export const ADMIN_COMPETITION_RANKINGS = [
     nameKey: 'competitionDetails.rankings.alessandro',
     wins: '14',
     votes: '12,450',
-    avatar: `${HOME}/winner-klaus.jpg`,
+    avatar: `${HOME}/winner-klaus.webp`,
     highlighted: false,
   },
   {
@@ -48,7 +48,7 @@ export const ADMIN_COMPETITION_RANKINGS = [
     nameKey: 'competitionDetails.rankings.elena',
     wins: '11',
     votes: '11,820',
-    avatar: `${HOME}/winner-emma.jpg`,
+    avatar: `${HOME}/winner-emma.webp`,
     highlighted: false,
   },
   {
@@ -57,7 +57,7 @@ export const ADMIN_COMPETITION_RANKINGS = [
     nameKey: 'competitionDetails.rankings.sarah',
     wins: '09',
     votes: '8,940',
-    avatar: `${HOME}/winner-dawn.jpg`,
+    avatar: `${HOME}/winner-dawn.webp`,
     highlighted: true,
   },
   {
@@ -66,7 +66,7 @@ export const ADMIN_COMPETITION_RANKINGS = [
     nameKey: 'competitionDetails.rankings.julian',
     wins: '07',
     votes: '10,910',
-    avatar: `${HOME}/winner-david.jpg`,
+    avatar: `${HOME}/winner-david.webp`,
     highlighted: false,
   },
   {
@@ -75,7 +75,7 @@ export const ADMIN_COMPETITION_RANKINGS = [
     nameKey: 'competitionDetails.rankings.marcus',
     wins: '05',
     votes: '9,420',
-    avatar: `${HOME}/winner-marie.jpg`,
+    avatar: `${HOME}/winner-marie.webp`,
     highlighted: false,
   },
 ];
@@ -87,19 +87,19 @@ export const ADMIN_COMPETITION_RANKINGS_META = {
 
 /** Showcase card cover used as the hero for that entry. */
 const CARD_COVER = {
-  autumn: `${HOME}/photo-autumn.jpg`,
-  wings: `${HOME}/photo-wings.jpg`,
-  city: `${HOME}/photo-city.jpg`,
-  forest: `${HOME}/photo-forest.jpg`,
-  morning: `${HOME}/photo-morning.jpg`,
-  harbor: `${HOME}/photo-harbor.jpg`,
-  silent: `${HOME}/photo-silent.jpg`,
-  zodiac: `${HOME}/photo-zodiac.jpg`,
+  autumn: `${HOME}/photo-autumn.webp`,
+  wings: `${HOME}/photo-wings.webp`,
+  city: `${HOME}/photo-city.webp`,
+  forest: `${HOME}/photo-forest.webp`,
+  morning: `${HOME}/photo-morning.webp`,
+  harbor: `${HOME}/photo-harbor.webp`,
+  silent: `${HOME}/photo-silent.webp`,
+  zodiac: `${HOME}/photo-zodiac.webp`,
 };
 
-const RED_HERO = `${HOME}/six-hero-aries.jpg`;
-const BLUE_HERO = `${HOME}/blue-hero-libra.jpg`;
-const SINGLE_HERO = `${HOME}/detail-hero.jpg`;
+const RED_HERO = `${HOME}/six-hero-aries.webp`;
+const BLUE_HERO = `${HOME}/blue-hero-libra.webp`;
+const SINGLE_HERO = `${HOME}/detail-hero.webp`;
 
 const buildRedSlides = (coverHero) => [
   {
@@ -107,7 +107,7 @@ const buildRedSlides = (coverHero) => [
     number: 1,
     nameKey: 'adminCompetitionDetail.signs.aries',
     icon: `${HOME}/icon-aries.svg`,
-    thumb: `${HOME}/six-thumb-1.jpg`,
+    thumb: `${HOME}/six-thumb-1.webp`,
     hero: coverHero,
     theme: 'red',
   },
@@ -116,8 +116,8 @@ const buildRedSlides = (coverHero) => [
     number: 2,
     nameKey: 'adminCompetitionDetail.signs.taurus',
     icon: `${HOME}/icon-taurus.svg`,
-    thumb: `${HOME}/six-thumb-2.jpg`,
-    hero: `${HOME}/six-thumb-2.jpg`,
+    thumb: `${HOME}/six-thumb-2.webp`,
+    hero: `${HOME}/six-thumb-2.webp`,
     theme: 'red',
   },
   {
@@ -125,8 +125,8 @@ const buildRedSlides = (coverHero) => [
     number: 3,
     nameKey: 'adminCompetitionDetail.signs.gemini',
     icon: `${HOME}/icon-gemini.svg`,
-    thumb: `${HOME}/six-thumb-3.jpg`,
-    hero: `${HOME}/six-thumb-3.jpg`,
+    thumb: `${HOME}/six-thumb-3.webp`,
+    hero: `${HOME}/six-thumb-3.webp`,
     theme: 'red',
   },
   {
@@ -134,8 +134,8 @@ const buildRedSlides = (coverHero) => [
     number: 4,
     nameKey: 'adminCompetitionDetail.signs.cancer',
     icon: `${HOME}/icon-cancer.svg`,
-    thumb: `${HOME}/six-thumb-4.jpg`,
-    hero: `${HOME}/six-thumb-4.jpg`,
+    thumb: `${HOME}/six-thumb-4.webp`,
+    hero: `${HOME}/six-thumb-4.webp`,
     theme: 'red',
   },
   {
@@ -143,8 +143,8 @@ const buildRedSlides = (coverHero) => [
     number: 5,
     nameKey: 'adminCompetitionDetail.signs.leo',
     icon: `${HOME}/icon-leo.svg`,
-    thumb: `${HOME}/six-thumb-5.jpg`,
-    hero: `${HOME}/six-thumb-5.jpg`,
+    thumb: `${HOME}/six-thumb-5.webp`,
+    hero: `${HOME}/six-thumb-5.webp`,
     theme: 'red',
   },
   {
@@ -152,8 +152,8 @@ const buildRedSlides = (coverHero) => [
     number: 6,
     nameKey: 'adminCompetitionDetail.signs.virgo',
     icon: `${HOME}/icon-virgo.svg`,
-    thumb: `${HOME}/photo-morning.jpg`,
-    hero: `${HOME}/photo-morning.jpg`,
+    thumb: `${HOME}/photo-morning.webp`,
+    hero: `${HOME}/photo-morning.webp`,
     theme: 'red',
   },
 ];
@@ -164,7 +164,7 @@ const buildBlueSlides = (coverHero) => [
     number: 7,
     nameKey: 'adminCompetitionDetail.signs.libra',
     icon: `${HOME}/icon-libra.svg`,
-    thumb: `${HOME}/blue-thumb-1.jpg`,
+    thumb: `${HOME}/blue-thumb-1.webp`,
     hero: coverHero,
     theme: 'blue',
     iconBoxed: true,
@@ -174,8 +174,8 @@ const buildBlueSlides = (coverHero) => [
     number: 8,
     nameKey: 'adminCompetitionDetail.signs.scorpio',
     icon: `${HOME}/icon-scorpio.svg`,
-    thumb: `${HOME}/blue-thumb-2.jpg`,
-    hero: `${HOME}/blue-thumb-2.jpg`,
+    thumb: `${HOME}/blue-thumb-2.webp`,
+    hero: `${HOME}/blue-thumb-2.webp`,
     theme: 'blue',
     iconBoxed: true,
   },
@@ -184,8 +184,8 @@ const buildBlueSlides = (coverHero) => [
     number: 9,
     nameKey: 'adminCompetitionDetail.signs.sagittarius',
     icon: `${HOME}/icon-sagittarius.svg`,
-    thumb: `${HOME}/blue-thumb-3.jpg`,
-    hero: `${HOME}/blue-thumb-3.jpg`,
+    thumb: `${HOME}/blue-thumb-3.webp`,
+    hero: `${HOME}/blue-thumb-3.webp`,
     theme: 'blue',
   },
   {
@@ -193,8 +193,8 @@ const buildBlueSlides = (coverHero) => [
     number: 10,
     nameKey: 'adminCompetitionDetail.signs.capricorn',
     icon: `${HOME}/icon-capricorn.svg`,
-    thumb: `${HOME}/blue-thumb-4.jpg`,
-    hero: `${HOME}/blue-thumb-4.jpg`,
+    thumb: `${HOME}/blue-thumb-4.webp`,
+    hero: `${HOME}/blue-thumb-4.webp`,
     theme: 'blue',
   },
   {
@@ -202,8 +202,8 @@ const buildBlueSlides = (coverHero) => [
     number: 11,
     nameKey: 'adminCompetitionDetail.signs.aquarius',
     icon: `${HOME}/icon-aquarius.svg`,
-    thumb: `${HOME}/blue-thumb-5.jpg`,
-    hero: `${HOME}/blue-thumb-5.jpg`,
+    thumb: `${HOME}/blue-thumb-5.webp`,
+    hero: `${HOME}/blue-thumb-5.webp`,
     theme: 'blue',
     iconBoxed: true,
   },
@@ -212,8 +212,8 @@ const buildBlueSlides = (coverHero) => [
     number: 12,
     nameKey: 'adminCompetitionDetail.signs.pisces',
     icon: `${HOME}/icon-pisces.svg`,
-    thumb: `${HOME}/photo-tidal.jpg`,
-    hero: `${HOME}/photo-tidal.jpg`,
+    thumb: `${HOME}/photo-tidal.webp`,
+    hero: `${HOME}/photo-tidal.webp`,
     theme: 'blue',
   },
 ];
@@ -254,7 +254,10 @@ const singleEntry = (id, titleKey) => ({
 export const ADMIN_COMPETITION_DETAILS = {
   wings: singleEntry('wings', 'adminCompetitionDetail.entries.wings.title'),
   forest: singleEntry('forest', 'adminCompetitionDetail.entries.forest.title'),
-  morning: singleEntry('morning', 'adminCompetitionDetail.entries.morning.title'),
+  morning: singleEntry(
+    'morning',
+    'adminCompetitionDetail.entries.morning.title',
+  ),
   harbor: singleEntry('harbor', 'adminCompetitionDetail.entries.harbor.title'),
   silent: singleEntry('silent', 'adminCompetitionDetail.entries.silent.title'),
   autumn: {
@@ -301,10 +304,7 @@ export const ADMIN_COMPETITION_DETAILS = {
     videoPoster: CARD_COVER.zodiac,
     videoSrc: ADMIN_COMPETITION_VIDEO,
     sign: null,
-    slides: [
-      ...buildRedSlides(RED_HERO),
-      ...buildBlueSlides(BLUE_HERO),
-    ],
+    slides: [...buildRedSlides(RED_HERO), ...buildBlueSlides(BLUE_HERO)],
     curve: ADMIN_DETAIL_ASSETS.curves.twelve,
     rankings: ADMIN_COMPETITION_RANKINGS,
     ...ADMIN_COMPETITION_RANKINGS_META,

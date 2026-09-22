@@ -1,12 +1,9 @@
-import { useTranslation } from 'react-i18next';
+import { ChevronLeft, ChevronRight, Heart, Trophy } from 'lucide-react';
 import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  Trophy,
-} from 'lucide-react';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 
 const PhotographerCompetitionBanner = memo(({ featured }) => {
   const { t } = useTranslation();
@@ -24,29 +21,31 @@ const PhotographerCompetitionBanner = memo(({ featured }) => {
     <section className="relative mt-6 sm:mt-8">
       {items.length > 1 ? (
         <>
-          <button
+          <Button
+            unstyled
             type="button"
             aria-label={t('photographerProfile.featured.previous')}
             onClick={() => go(-1)}
             className="absolute -left-2 top-1/2 z-10 hidden size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-[#111827] shadow-md sm:inline-flex lg:-left-5"
           >
             <ChevronLeft size={20} aria-hidden="true" />
-          </button>
-          <button
+          </Button>
+          <Button
+            unstyled
             type="button"
             aria-label={t('photographerProfile.featured.next')}
             onClick={() => go(1)}
             className="absolute -right-2 top-1/2 z-10 hidden size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-[#111827] shadow-md sm:inline-flex lg:-right-5"
           >
             <ChevronRight size={20} aria-hidden="true" />
-          </button>
+          </Button>
         </>
       ) : null}
 
       <div className="overflow-hidden rounded-2xl bg-[#1e293b]">
         <div className="flex flex-col gap-5 p-4 sm:p-5 lg:flex-row lg:items-stretch lg:gap-6 lg:p-6">
           <div className="relative aspect-16/10 w-full shrink-0 overflow-hidden rounded-xl lg:aspect-auto lg:h-auto lg:w-[42%]">
-            <img
+            <Image
               src={current.image}
               alt={current.subtitle}
               className="h-full w-full object-cover"
@@ -60,35 +59,54 @@ const PhotographerCompetitionBanner = memo(({ featured }) => {
                   {t('photographerProfile.featured.badge')}
                 </span>
                 <span className="text-[12px] font-medium text-white/70">
-                  {t('photographerProfile.featured.uploaded', { date: current.uploaded })}
+                  {t('photographerProfile.featured.uploaded', {
+                    date: current.uploaded,
+                  })}
                 </span>
               </div>
-              <button
+              <Button
+                unstyled
                 type="button"
                 className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] bg-[#ee1c25] px-4 text-[13px] font-bold text-white transition hover:bg-[#d01820]"
               >
                 <Heart size={15} className="fill-white" aria-hidden="true" />
                 {t('photographerProfile.featured.castVote')}
-              </button>
+              </Button>
             </div>
 
             <h2 className="mt-4 text-[20px] font-bold leading-snug text-white sm:text-[24px]">
               {current.title}
             </h2>
-            <p className="mt-2 text-[15px] italic text-white/75">“{current.subtitle}”</p>
+            <p className="mt-2 text-[15px] italic text-white/75">
+              “{current.subtitle}”
+            </p>
 
             <div className="mt-auto flex flex-col gap-3 pt-5 sm:flex-row sm:items-end sm:justify-between">
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-white/85">
                 <span className="inline-flex items-center gap-1.5">
-                  <Heart size={14} className="text-[#ee1c25]" aria-hidden="true" />
-                  {t('photographerProfile.featured.votes', { count: current.votes })}
+                  <Heart
+                    size={14}
+                    className="text-[#ee1c25]"
+                    aria-hidden="true"
+                  />
+                  {t('photographerProfile.featured.votes', {
+                    count: current.votes,
+                  })}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Trophy size={14} className="text-[#fbbf24]" aria-hidden="true" />
-                  {t('photographerProfile.featured.rank', { rank: current.rank })}
+                  <Trophy
+                    size={14}
+                    className="text-[#fbbf24]"
+                    aria-hidden="true"
+                  />
+                  {t('photographerProfile.featured.rank', {
+                    rank: current.rank,
+                  })}
                 </span>
                 <span>
-                  {t('photographerProfile.featured.votingEnds', { date: current.votingEnds })}
+                  {t('photographerProfile.featured.votingEnds', {
+                    date: current.votingEnds,
+                  })}
                 </span>
               </div>
               {current.detailHref ? (
