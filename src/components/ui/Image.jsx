@@ -15,6 +15,8 @@ const Image = forwardRef(
           alt={alt}
           className={className}
           fetchpriority="high"
+          loading="eager"
+          decoding="sync"
           {...props}
         />
       );
