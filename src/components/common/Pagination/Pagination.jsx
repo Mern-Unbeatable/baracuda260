@@ -1,9 +1,15 @@
-import { useTranslation } from 'react-i18next';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
 import React, { useMemo } from 'react';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 import { FOCUS_RING } from '@/shared/ui/sectionStyles';
-import { paginationLabels, PAGINATION_WINDOW } from './paginationLabels';
+import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
+import { PAGINATION_WINDOW, paginationLabels } from './paginationLabels';
 
 const ICON = 16;
 
@@ -32,10 +38,13 @@ export default function Pagination({
 
   const windowPages = useMemo(() => {
     const start = Math.min(page, Math.max(1, totalPages - windowSize + 1));
-    return Array.from({ length: windowSize }, (_, i) => start + i).filter((n) => n <= totalPages);
+    return Array.from({ length: windowSize }, (_, i) => start + i).filter(
+      (n) => n <= totalPages,
+    );
   }, [page, totalPages, windowSize]);
 
-  const showEllipsis = windowPages.length > 0 && windowPages[windowPages.length - 1] < totalPages;
+  const showEllipsis =
+    windowPages.length > 0 && windowPages[windowPages.length - 1] < totalPages;
 
   const go = (next) => {
     const target = Math.min(Math.max(1, next), totalPages);
@@ -49,7 +58,8 @@ export default function Pagination({
       aria-label={ariaLabel}
       className={`flex flex-wrap items-center justify-center gap-1.25 ${className}`.trim()}
     >
-      <button
+      <Button
+        unstyled
         type="button"
         aria-label={i18n.firstPage}
         disabled={page <= 1}
@@ -57,8 +67,9 @@ export default function Pagination({
         className={navBtn}
       >
         <ChevronsLeft size={ICON} strokeWidth={2} aria-hidden="true" />
-      </button>
-      <button
+      </Button>
+      <Button
+        unstyled
         type="button"
         aria-label={i18n.previousPage}
         disabled={page <= 1}
@@ -66,9 +77,10 @@ export default function Pagination({
         className={navBtn}
       >
         <ChevronLeft size={ICON} strokeWidth={2} aria-hidden="true" />
-      </button>
+      </Button>
       {windowPages.map((n) => (
-        <button
+        <Button
+          unstyled
           key={n}
           type="button"
           aria-label={i18n.page?.(n) ?? `Page ${n}`}
@@ -77,7 +89,7 @@ export default function Pagination({
           className={pageBtn(page === n)}
         >
           {n}
-        </button>
+        </Button>
       ))}
       {showEllipsis ? (
         <>
@@ -87,7 +99,8 @@ export default function Pagination({
           >
             …
           </span>
-          <button
+          <Button
+            unstyled
             type="button"
             aria-label={i18n.page?.(totalPages) ?? `Page ${totalPages}`}
             aria-current={page === totalPages ? 'page' : undefined}
@@ -95,10 +108,11 @@ export default function Pagination({
             className={pageBtn(page === totalPages)}
           >
             {totalPages}
-          </button>
+          </Button>
         </>
       ) : null}
-      <button
+      <Button
+        unstyled
         type="button"
         aria-label={i18n.nextPage}
         disabled={page >= totalPages}
@@ -106,8 +120,9 @@ export default function Pagination({
         className={navBtn}
       >
         <ChevronRight size={ICON} strokeWidth={2} aria-hidden="true" />
-      </button>
-      <button
+      </Button>
+      <Button
+        unstyled
         type="button"
         aria-label={i18n.lastPage}
         disabled={page >= totalPages}
@@ -115,7 +130,7 @@ export default function Pagination({
         className={navBtn}
       >
         <ChevronsRight size={ICON} strokeWidth={2} aria-hidden="true" />
-      </button>
+      </Button>
     </nav>
   );
 }

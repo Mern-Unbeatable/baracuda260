@@ -5,7 +5,8 @@ import { useSEO } from '@/shared/hooks/useSEO';
 const NewsMessages = memo(() => {
   useSEO({
     title: 'My Message',
-    description: 'Manage your photographer messages and showcase updates on My12Photos.',
+    description:
+      'Manage your photographer messages and showcase updates on My12Photos.',
     keywords: ['messages', 'news', 'photographer notes', 'My12Photos'],
   });
 

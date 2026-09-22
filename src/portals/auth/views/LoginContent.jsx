@@ -1,10 +1,11 @@
 import React, { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '@/shared/config';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import AuthPageChrome from '@/portals/auth/components/auth/auth/AuthPageChrome';
 import { LOGIN_ASSETS } from '@/portals/auth/data/loginAssets';
-import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
+import { ROUTES } from '@/shared/config';
 import { useLogin } from '../hooks/useLogin';
 
 /**
@@ -39,7 +40,7 @@ const LoginContent = memo(() => {
       <div className="grid min-h-dvh w-full grid-cols-1 lg:grid-cols-2">
         {/* Visual panel — stacked banner on mobile/tablet, full-height column on laptop+ */}
         <aside className="relative h-55 overflow-hidden sm:h-75 md:h-90 lg:h-auto lg:min-h-dvh">
-          <img
+          <Image
             src={LOGIN_ASSETS.hero}
             alt=""
             width={724}
@@ -116,7 +117,11 @@ const LoginContent = memo(() => {
               </div>
             ) : null}
 
-            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5 sm:gap-6">
+            <form
+              onSubmit={handleSubmit}
+              noValidate
+              className="flex flex-col gap-5 sm:gap-6"
+            >
               <div>
                 <label
                   htmlFor="login-email"
@@ -126,7 +131,7 @@ const LoginContent = memo(() => {
                 </label>
                 <div className="relative">
                   <span className="pointer-events-none absolute left-4 top-1/2 flex h-4 w-5 -translate-y-1/2 items-center justify-center overflow-hidden z-10">
-                    <img
+                    <Image
                       src={LOGIN_ASSETS.mail}
                       alt=""
                       width={20}
@@ -141,11 +146,16 @@ const LoginContent = memo(() => {
                     placeholder={t('login.emailPlaceholder')}
                     error={errors.email}
                     aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? 'login-email-error' : undefined}
+                    aria-describedby={
+                      errors.email ? 'login-email-error' : undefined
+                    }
                     inputClassName={emailFieldClass}
-                    {...register('email', { 
+                    {...register('email', {
                       required: t('login.emailRequired'),
-                      pattern: { value: EMAIL_REGEX, message: t('login.emailInvalid') }
+                      pattern: {
+                        value: EMAIL_REGEX,
+                        message: t('login.emailInvalid'),
+                      },
                     })}
                   />
                 </div>
@@ -153,19 +163,23 @@ const LoginContent = memo(() => {
 
               <div>
                 <div className="mb-2 flex items-center justify-between gap-3 px-1">
-                  <label htmlFor="login-password" className="text-[16px] leading-6 text-[#494453]">
+                  <label
+                    htmlFor="login-password"
+                    className="text-[16px] leading-6 text-[#494453]"
+                  >
                     {t('login.password')}
                   </label>
-                  <button
+                  <Button
+                    unstyled
                     type="button"
                     className="shrink-0 text-[15px] leading-6 text-[#ee1c25] sm:text-[16px]"
                   >
                     {t('login.forgotPassword')}
-                  </button>
+                  </Button>
                 </div>
                 <div className="relative">
                   <span className="pointer-events-none absolute left-4 top-1/2 flex h-5.25 w-4 -translate-y-1/2 items-center justify-center overflow-hidden z-10">
-                    <img
+                    <Image
                       src={LOGIN_ASSETS.lock}
                       alt=""
                       width={16}
@@ -180,24 +194,33 @@ const LoginContent = memo(() => {
                     placeholder="••••••••"
                     error={errors.password}
                     aria-invalid={Boolean(errors.password)}
-                    aria-describedby={errors.password ? 'login-password-error' : undefined}
+                    aria-describedby={
+                      errors.password ? 'login-password-error' : undefined
+                    }
                     inputClassName={passwordFieldClass}
-                    {...register('password', { required: t('login.passwordRequired') })}
+                    {...register('password', {
+                      required: t('login.passwordRequired'),
+                    })}
                   />
-                  <button
+                  <Button
+                    unstyled
                     type="button"
                     onClick={() => setShowPassword((current) => !current)}
-                    aria-label={showPassword ? t('login.hidePassword') : t('login.showPassword')}
+                    aria-label={
+                      showPassword
+                        ? t('login.hidePassword')
+                        : t('login.showPassword')
+                    }
                     className="absolute right-4 top-1/2 flex h-3.75 w-5.5 -translate-y-1/2 items-center justify-center overflow-hidden z-10"
                   >
-                    <img
+                    <Image
                       src={LOGIN_ASSETS.eye}
                       alt=""
                       width={22}
                       height={15}
                       className={`h-full w-full object-contain ${showPassword ? 'opacity-100' : 'opacity-70'}`}
                     />
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -221,10 +244,12 @@ const LoginContent = memo(() => {
                 {isSubmitting ? (
                   <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                 ) : null}
-                <span>{isSubmitting ? t('login.submitting') : t('login.submit')}</span>
+                <span>
+                  {isSubmitting ? t('login.submitting') : t('login.submit')}
+                </span>
                 {!isSubmitting ? (
                   <span className="inline-flex size-3.25 items-center justify-center overflow-hidden">
-                    <img
+                    <Image
                       src={LOGIN_ASSETS.arrow}
                       alt=""
                       width={14}

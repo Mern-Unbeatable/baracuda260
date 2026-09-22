@@ -1,7 +1,3 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import {
   ArrowUpDown,
   Banknote,
@@ -10,23 +6,29 @@ import {
   ShoppingBag,
   Wallet,
 } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import React, { memo, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
 import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
-  STORE_ORDERS,
-  STORE_ORDERS_PAGE_SIZE,
-  STORE_ORDERS_STAT_CARDS,
-  STORE_ORDERS_SUMMARY,
+  countStoreOrdersByStatus,
+  filterStoreOrders,
   STORE_ORDER_ACTION_STATUSES,
   STORE_ORDER_DATE_FILTERS,
   STORE_ORDER_STATUS_FILTERS,
   STORE_ORDER_STATUS_LABEL_KEYS,
   STORE_ORDER_STATUS_STYLES,
-  countStoreOrdersByStatus,
-  filterStoreOrders,
+  STORE_ORDERS,
+  STORE_ORDERS_PAGE_SIZE,
+  STORE_ORDERS_STAT_CARDS,
+  STORE_ORDERS_SUMMARY,
 } from '@/portals/member/data/storeOrdersData';
+import { ROUTES } from '@/shared/config';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const STAT_ICONS = {
   ShoppingBag,
@@ -43,7 +45,10 @@ const StatusBadge = memo(({ status }) => {
     <span
       className={`inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-semibold ${style.badge}`}
     >
-      <span className={`size-1.5 rounded-full ${style.dot}`} aria-hidden="true" />
+      <span
+        className={`size-1.5 rounded-full ${style.dot}`}
+        aria-hidden="true"
+      />
       {t(STORE_ORDER_STATUS_LABEL_KEYS[status])}
     </span>
   );
@@ -70,10 +75,14 @@ const StatCards = memo(() => {
                 <p className="text-[11px] font-bold tracking-[0.14em] text-[#8b93a7]">
                   {t(card.labelKey)}
                 </p>
-                <p className={`mt-2 text-[26px] font-extrabold leading-none ${card.valueClass}`}>
+                <p
+                  className={`mt-2 text-[26px] font-extrabold leading-none ${card.valueClass}`}
+                >
                   {STORE_ORDERS_SUMMARY[card.id]}
                 </p>
-                <p className="mt-1.5 text-[12px] font-medium text-[#687186]">{t(card.hintKey)}</p>
+                <p className="mt-1.5 text-[12px] font-medium text-[#687186]">
+                  {t(card.hintKey)}
+                </p>
               </div>
               <span
                 className={`inline-flex size-10 shrink-0 items-center justify-center rounded-[10px] ${card.iconBg}`}
@@ -91,7 +100,8 @@ const StatCards = memo(() => {
 StatCards.displayName = 'StatCards';
 
 const FilterChip = memo(({ active, children, onClick }) => (
-  <button
+  <Button
+    unstyled
     type="button"
     onClick={onClick}
     className={`inline-flex h-8 cursor-pointer items-center rounded-full px-3 text-[12px] font-semibold transition ${
@@ -101,7 +111,7 @@ const FilterChip = memo(({ active, children, onClick }) => (
     }`}
   >
     {children}
-  </button>
+  </Button>
 ));
 FilterChip.displayName = 'FilterChip';
 
@@ -113,11 +123,14 @@ const RowActions = memo(({ order, onStatusChange }) => {
   const buttonRef = useRef(null);
 
   const detailHref = ROUTES.ADMIN_ORDERS_DETAIL.replace(':id', order.id);
-  const menuLabel = t('storeOrders.actions.menu', { number: order.orderNumber });
+  const menuLabel = t('storeOrders.actions.menu', {
+    number: order.orderNumber,
+  });
 
   return (
     <div className="relative flex justify-end" ref={buttonWrapRef}>
-      <button
+      <Button
+        unstyled
         ref={buttonRef}
         type="button"
         aria-label={menuLabel}
@@ -129,7 +142,7 @@ const RowActions = memo(({ order, onStatusChange }) => {
         }`}
       >
         <MoreVertical size={16} aria-hidden="true" />
-      </button>
+      </Button>
       <PortalDropdown
         open={open}
         onClose={() => setOpen(false)}
@@ -139,7 +152,8 @@ const RowActions = memo(({ order, onStatusChange }) => {
         aria-label={menuLabel}
         className="overflow-hidden rounded-[10px] border border-[#e5e7eb] bg-white py-1 shadow-[0_8px_24px_rgba(15,23,42,0.12)]"
       >
-        <button
+        <Button
+          unstyled
           type="button"
           role="menuitem"
           onClick={() => {
@@ -149,9 +163,10 @@ const RowActions = memo(({ order, onStatusChange }) => {
           className="flex w-full cursor-pointer items-center bg-[#4048cd] px-3 py-2 text-left text-[13px] font-semibold text-white"
         >
           {t('storeOrders.actions.viewDetails')}
-        </button>
+        </Button>
         {STORE_ORDER_ACTION_STATUSES.map((status) => (
-          <button
+          <Button
+            unstyled
             key={status}
             type="button"
             role="menuitem"
@@ -162,7 +177,7 @@ const RowActions = memo(({ order, onStatusChange }) => {
             className="flex w-full cursor-pointer items-center px-3 py-2 text-left text-[13px] font-medium text-[#374151] transition hover:bg-[#f3f4f6]"
           >
             {t(STORE_ORDER_STATUS_LABEL_KEYS[status])}
-          </button>
+          </Button>
         ))}
       </PortalDropdown>
     </div>
@@ -176,7 +191,10 @@ const OrdersContent = memo(() => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('month');
 
-  const statusCounts = useMemo(() => countStoreOrdersByStatus(orders), [orders]);
+  const statusCounts = useMemo(
+    () => countStoreOrdersByStatus(orders),
+    [orders],
+  );
   const filtered = useMemo(
     () => filterStoreOrders(orders, statusFilter),
     [orders, statusFilter],
@@ -191,7 +209,9 @@ const OrdersContent = memo(() => {
 
   const handleStatusChange = (orderId, nextStatus) => {
     setOrders((prev) =>
-      prev.map((order) => (order.id === orderId ? { ...order, status: nextStatus } : order)),
+      prev.map((order) =>
+        order.id === orderId ? { ...order, status: nextStatus } : order,
+      ),
     );
     toast.success(
       t('storeOrders.statusUpdated', {
@@ -258,7 +278,9 @@ const OrdersContent = memo(() => {
                     <ArrowUpDown size={12} aria-hidden="true" />
                   </span>
                 </th>
-                <th className={headCell}>{t('storeOrders.columns.customer')}</th>
+                <th className={headCell}>
+                  {t('storeOrders.columns.customer')}
+                </th>
                 <th className={headCell}>{t('storeOrders.columns.product')}</th>
                 <th className={headCell}>
                   <span className="inline-flex items-center gap-1">
@@ -273,21 +295,31 @@ const OrdersContent = memo(() => {
                   </span>
                 </th>
                 <th className={headCell}>{t('storeOrders.columns.admin')}</th>
-                <th className={headCell}>{t('storeOrders.columns.earnings')}</th>
+                <th className={headCell}>
+                  {t('storeOrders.columns.earnings')}
+                </th>
                 <th className={headCell}>{t('storeOrders.columns.status')}</th>
-                <th className={`${headCell} text-right`}>{t('storeOrders.columns.action')}</th>
+                <th className={`${headCell} text-right`}>
+                  {t('storeOrders.columns.action')}
+                </th>
               </tr>
             </thead>
             <tbody>
               {pagedItems.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-12 text-center text-[14px] text-[#6b7280]">
+                  <td
+                    colSpan={9}
+                    className="px-4 py-12 text-center text-[14px] text-[#6b7280]"
+                  >
                     {t('storeOrders.empty')}
                   </td>
                 </tr>
               ) : (
                 pagedItems.map((order) => (
-                  <tr key={order.id} className="border-b border-[#f1f3f7] last:border-b-0">
+                  <tr
+                    key={order.id}
+                    className="border-b border-[#f1f3f7] last:border-b-0"
+                  >
                     <td className="px-3 py-4 align-middle">
                       <Link
                         to={ROUTES.ADMIN_ORDERS_DETAIL.replace(':id', order.id)}
@@ -310,7 +342,7 @@ const OrdersContent = memo(() => {
                     </td>
                     <td className="px-3 py-4 align-middle">
                       <div className="flex max-w-65 items-center gap-2.5">
-                        <img
+                        <Image
                           src={order.image}
                           alt=""
                           className="size-10 shrink-0 rounded-lg object-cover"
@@ -342,7 +374,10 @@ const OrdersContent = memo(() => {
                       <StatusBadge status={order.status} />
                     </td>
                     <td className="px-3 py-4 align-middle">
-                      <RowActions order={order} onStatusChange={handleStatusChange} />
+                      <RowActions
+                        order={order}
+                        onStatusChange={handleStatusChange}
+                      />
                     </td>
                   </tr>
                 ))
@@ -355,7 +390,10 @@ const OrdersContent = memo(() => {
       {filtered.length > 0 ? (
         <footer className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] font-medium tracking-[0.4px] text-[#494453]">
-            {t('storeOrders.showing', { showing: showingCount, total: filtered.length })}
+            {t('storeOrders.showing', {
+              showing: showingCount,
+              total: filtered.length,
+            })}
           </p>
           <Pagination
             currentPage={currentPage}

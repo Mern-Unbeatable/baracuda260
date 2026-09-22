@@ -27,11 +27,15 @@ export default function useAdminComment(
   const resultsTotal = filteredRows.length;
   const computedPages = Math.max(1, Math.ceil(resultsTotal / pageSize));
   const totalPages =
-    statusFilter === 'all' ? Math.max(COMMENTS_PAGE_CHROME, computedPages) : computedPages;
+    statusFilter === 'all'
+      ? Math.max(COMMENTS_PAGE_CHROME, computedPages)
+      : computedPages;
   const safePage = Math.min(page, totalPages);
   const visibleRows = paginateComments(filteredRows, safePage, pageSize);
   const pageNumbers = getCommentPageNumbers(safePage, totalPages);
-  const detailsRow = detailsId ? rows.find((row) => row.id === detailsId) || null : null;
+  const detailsRow = detailsId
+    ? rows.find((row) => row.id === detailsId) || null
+    : null;
 
   const handleStatusFilterChange = (nextFilter) => {
     setStatusFilter(nextFilter || 'all');
@@ -115,7 +119,8 @@ export default function useAdminComment(
     isFirstPage: safePage <= 1,
     isLastPage: safePage >= totalPages,
     allVisibleSelected:
-      visibleRows.length > 0 && visibleRows.every((row) => selectedIds.has(row.id)),
+      visibleRows.length > 0 &&
+      visibleRows.every((row) => selectedIds.has(row.id)),
     handleStatusFilterChange,
     handleToggleAction,
     handleCloseAction,

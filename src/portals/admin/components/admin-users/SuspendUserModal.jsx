@@ -1,6 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   ADMIN_USERS_ASSETS,
   CLOSE_ICON_SIZE,
@@ -74,25 +76,29 @@ const SuspendUserModal = memo(({ open, onClose, onConfirm }) => {
           >
             {t('adminUsers.suspendModal.title')}
           </h2>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             aria-label={t('adminUsers.suspendModal.close')}
             className="inline-flex cursor-pointer items-center justify-center rounded-full p-1 transition hover:bg-black/5"
           >
-            <img
+            <Image
               src={ADMIN_USERS_ASSETS.close}
               alt=""
               width={CLOSE_ICON_SIZE}
               height={CLOSE_ICON_SIZE}
               className="size-4.5"
             />
-          </button>
+          </Button>
         </header>
 
         <form onSubmit={handleSubmit} className="flex flex-col px-6 py-5">
           <div className="flex w-full flex-col">
-            <label htmlFor={reasonId} className="text-[12px] leading-4 text-[#455163]">
+            <label
+              htmlFor={reasonId}
+              className="text-[12px] leading-4 text-[#455163]"
+            >
               {t('adminUsers.suspendModal.reason')}
               <span className="text-[#f31d2c]" aria-hidden="true">
                 {' '}
@@ -108,33 +114,40 @@ const SuspendUserModal = memo(({ open, onClose, onConfirm }) => {
                 onChange={(event) => setReason(event.target.value)}
                 placeholder={t('adminUsers.suspendModal.reasonPlaceholder')}
                 aria-invalid={showReasonError}
-                aria-describedby={showReasonError ? `${reasonId}-error` : undefined}
+                aria-describedby={
+                  showReasonError ? `${reasonId}-error` : undefined
+                }
                 className={`h-23 w-full resize-none rounded-md border bg-white px-1.75 py-[7px] text-[12px] leading-4 text-[#455163] outline-none placeholder:text-[#9aa3b2] focus:border-[#4048cd] ${
                   showReasonError ? 'border-[#f31d2c]' : 'border-[#dfe4ea]'
                 }`}
               />
             </div>
             {showReasonError ? (
-              <p id={`${reasonId}-error`} className="pt-1 text-[12px] leading-4 text-[#f31d2c]">
+              <p
+                id={`${reasonId}-error`}
+                className="pt-1 text-[12px] leading-4 text-[#f31d2c]"
+              >
                 {t('adminUsers.suspendModal.reasonRequired')}
               </p>
             ) : null}
           </div>
 
           <div className="flex items-start justify-end gap-2 pt-6">
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={onClose}
               className="cursor-pointer rounded-[6px] border border-[#dfe4ea] px-[17px] py-[9px] text-[12px] leading-4 text-[#536070] transition hover:bg-[#f9fafb]"
             >
               {t('adminUsers.suspendModal.cancel')}
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="submit"
               className="cursor-pointer rounded-[6px] bg-[#f31d2c] px-4 py-2 text-[12px] leading-4 text-white shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
             >
               {t('adminUsers.suspendModal.confirm')}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

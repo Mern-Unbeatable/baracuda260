@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
 
@@ -17,7 +17,9 @@ export function useHomeHero(slidesLength, slideIntervalMs) {
   const goToGallery = (event) => {
     event.preventDefault();
     const q = search.trim();
-    navigate(q ? `${ROUTES.GALLERY}?q=${encodeURIComponent(q)}` : ROUTES.GALLERY);
+    navigate(
+      q ? `${ROUTES.GALLERY}?q=${encodeURIComponent(q)}` : ROUTES.GALLERY,
+    );
   };
 
   return {

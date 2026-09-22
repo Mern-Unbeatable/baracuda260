@@ -1,16 +1,17 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useState } from 'react';
-import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import ConversationMessageModal from '@/portals/member/components/member-support/contactSupport/ConversationMessageModal';
 import {
-  CONVERSATIONS,
   CONTACT_SUPPORT_ASSETS,
+  CONVERSATIONS,
   FILTERS,
   SUBJECT_OPTIONS,
 } from '@/portals/member/data/contactSupportData';
-import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
 
 const inputClassName =
   'w-full rounded-[12px] border border-black/10 bg-white p-[15px] text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none transition focus:ring-2 focus:ring-[#2563eb]/25';
@@ -42,13 +43,14 @@ const ConversationItem = memo(({ thread, onOpen }) => {
   const { t } = useTranslation();
 
   return (
-    <button
+    <Button
+      unstyled
       type="button"
       onClick={() => onOpen(thread)}
       className="flex w-full cursor-pointer items-start gap-4 p-6 text-left transition hover:bg-[#f9fafb]"
     >
       <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#eff6ff]">
-        <img
+        <Image
           src={CONTACT_SUPPORT_ASSETS.envelope}
           alt=""
           width={24}
@@ -65,11 +67,13 @@ const ConversationItem = memo(({ thread, onOpen }) => {
         </span>
         <span className="flex flex-wrap items-center gap-2 pt-2">
           <StatusBadge status={thread.status} />
-          <span className="text-[14px] leading-5 text-[#9ca3af]">{t(thread.timeKey)}</span>
+          <span className="text-[14px] leading-5 text-[#9ca3af]">
+            {t(thread.timeKey)}
+          </span>
         </span>
       </span>
       <span className="flex self-stretch items-center">
-        <img
+        <Image
           src={CONTACT_SUPPORT_ASSETS.chevron}
           alt=""
           width={20}
@@ -77,7 +81,7 @@ const ConversationItem = memo(({ thread, onOpen }) => {
           className="size-5 shrink-0"
         />
       </span>
-    </button>
+    </Button>
   );
 });
 
@@ -149,7 +153,9 @@ const ContactSupportContent = memo(() => {
                   error={errors.fullName}
                   inputClassName={inputClassName}
                   labelClassName="hidden"
-                  {...register('fullName', { required: t('contactSupport.errors.nameRequired') })}
+                  {...register('fullName', {
+                    required: t('contactSupport.errors.nameRequired'),
+                  })}
                 />
               </div>
 
@@ -167,12 +173,12 @@ const ContactSupportContent = memo(() => {
                   error={errors.email}
                   inputClassName={inputClassName}
                   labelClassName="hidden"
-                  {...register('email', { 
+                  {...register('email', {
                     required: t('contactSupport.errors.emailRequired'),
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: t('contactSupport.errors.emailInvalid')
-                    }
+                      message: t('contactSupport.errors.emailInvalid'),
+                    },
                   })}
                 />
               </div>
@@ -193,11 +199,16 @@ const ContactSupportContent = memo(() => {
                   backgroundImage:
                     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7484' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
                 }}
-                {...register('subject', { required: t('contactSupport.errors.subjectRequired') })}
+                {...register('subject', {
+                  required: t('contactSupport.errors.subjectRequired'),
+                })}
               >
-
                 {SUBJECT_OPTIONS.map((option) => (
-                  <option key={option.value || 'placeholder'} value={option.value} disabled={!option.value}>
+                  <option
+                    key={option.value || 'placeholder'}
+                    value={option.value}
+                    disabled={!option.value}
+                  >
                     {t(option.labelKey)}
                   </option>
                 ))}
@@ -222,7 +233,9 @@ const ContactSupportContent = memo(() => {
                 rows={5}
                 aria-invalid={Boolean(errors.message)}
                 className={`${inputClassName} min-h-37 resize-y`}
-                {...register('message', { required: t('contactSupport.errors.messageRequired') })}
+                {...register('message', {
+                  required: t('contactSupport.errors.messageRequired'),
+                })}
               />
               {errors.message ? (
                 <p className="text-sm text-red-600" role="alert">
@@ -237,7 +250,7 @@ const ContactSupportContent = memo(() => {
             unstyled={true}
             className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921]"
           >
-            <img
+            <Image
               src={CONTACT_SUPPORT_ASSETS.send}
               alt=""
               width={24}
@@ -268,7 +281,8 @@ const ContactSupportContent = memo(() => {
             {FILTERS.map((item) => {
               const active = filter === item;
               return (
-                <button
+                <Button
+                  unstyled
                   key={item}
                   type="button"
                   role="tab"
@@ -281,7 +295,7 @@ const ContactSupportContent = memo(() => {
                   }`}
                 >
                   {t(`contactSupport.filters.${item}`)}
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -298,7 +312,9 @@ const ContactSupportContent = memo(() => {
                 />
               ))
             ) : (
-              <p className="p-6 text-[14px] text-[#6b7280]">{t('contactSupport.empty')}</p>
+              <p className="p-6 text-[14px] text-[#6b7280]">
+                {t('contactSupport.empty')}
+              </p>
             )}
           </div>
         </div>

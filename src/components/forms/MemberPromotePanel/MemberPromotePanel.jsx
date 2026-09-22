@@ -1,12 +1,15 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useState } from 'react';
 import { X } from 'lucide-react';
+import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import Button from '@/components/ui/Button';
 import { MY_ARTWORK_PROMOTE_TIERS } from '@/portals/member/data/myArtworkData';
 
 const MemberPromotePanel = memo(({ item, open, onClose, onConfirm }) => {
   const { t } = useTranslation();
-  const [selectedTier, setSelectedTier] = useState(MY_ARTWORK_PROMOTE_TIERS[0].id);
+  const [selectedTier, setSelectedTier] = useState(
+    MY_ARTWORK_PROMOTE_TIERS[0].id,
+  );
 
   if (!open || !item) return null;
 
@@ -17,7 +20,8 @@ const MemberPromotePanel = memo(({ item, open, onClose, onConfirm }) => {
 
   return (
     <div className="fixed inset-0 z-120 flex items-center justify-center p-4">
-      <button
+      <Button
+        unstyled
         type="button"
         aria-label={t('myArtwork.promote.close')}
         onClick={onClose}
@@ -31,19 +35,23 @@ const MemberPromotePanel = memo(({ item, open, onClose, onConfirm }) => {
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 id="promote-artwork-title" className="text-[20px] font-bold text-[#161c27]">
+            <h2
+              id="promote-artwork-title"
+              className="text-[20px] font-bold text-[#161c27]"
+            >
               {t('myArtwork.promote.title')}
             </h2>
             <p className="mt-1 text-[14px] text-[#6b7280]">{item.title}</p>
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             aria-label={t('myArtwork.promote.close')}
             className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-black/10 text-[#494453] transition hover:bg-[#f9fafb]"
           >
             <X size={18} strokeWidth={2} aria-hidden="true" />
-          </button>
+          </Button>
         </div>
 
         <fieldset className="mt-6">
@@ -71,7 +79,9 @@ const MemberPromotePanel = memo(({ item, open, onClose, onConfirm }) => {
                       onChange={() => setSelectedTier(tier.id)}
                       className="size-4 accent-[#ee1c25]"
                     />
-                    <span className="text-[15px] font-semibold text-[#161c27]">{tier.price}</span>
+                    <span className="text-[15px] font-semibold text-[#161c27]">
+                      {tier.price}
+                    </span>
                   </span>
                   <span className="text-[13px] text-[#6b7280]">
                     {t('myArtwork.promote.days', { count: tier.days })}
@@ -83,14 +93,19 @@ const MemberPromotePanel = memo(({ item, open, onClose, onConfirm }) => {
         </fieldset>
 
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-black/10 px-5 py-2.5 text-[14px] font-semibold text-[#494453] transition hover:bg-[#f9fafb]"
           >
             {t('myArtwork.promote.cancel')}
-          </button>
-          <MarketingButton type="button" className="rounded-lg px-5 py-2.5" onClick={handleConfirm}>
+          </Button>
+          <MarketingButton
+            type="button"
+            className="rounded-lg px-5 py-2.5"
+            onClick={handleConfirm}
+          >
             {t('myArtwork.promote.confirm')}
           </MarketingButton>
         </div>

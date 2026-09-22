@@ -1,8 +1,8 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ROUTES } from '@/shared/config';
+import { Navigate, useLocation } from 'react-router-dom';
 import { selectIsAuthenticated } from '@/app/store/slices/authSlice';
+import { ROUTES } from '@/shared/config';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);

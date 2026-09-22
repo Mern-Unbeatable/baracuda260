@@ -3,7 +3,7 @@
 const A = '/assets/competition-details';
 
 export const COMPETITION_DETAILS_ASSETS = {
-  hero: `${A}/hero.jpg`,
+  hero: `${A}/hero.webp`,
   wave: `${A}/wave.svg`,
   votes: `${A}/icon-votes.svg`,
   position: `${A}/icon-position.svg`,
@@ -18,19 +18,19 @@ export const COMPETITION_DETAILS_ASSETS = {
     virgo: `${A}/virgo.svg`,
   },
   thumbs: {
-    1: `${A}/thumb-1.jpg`,
-    2: `${A}/thumb-2.jpg`,
-    3: `${A}/thumb-3.jpg`,
-    4: `${A}/thumb-4.jpg`,
-    5: `${A}/thumb-5.jpg`,
-    6: `${A}/thumb-6.jpg`,
+    1: `${A}/thumb-1.webp`,
+    2: `${A}/thumb-2.webp`,
+    3: `${A}/thumb-3.webp`,
+    4: `${A}/thumb-4.webp`,
+    5: `${A}/thumb-5.webp`,
+    6: `${A}/thumb-6.webp`,
   },
   avatars: {
-    1: `${A}/avatar-1.jpg`,
-    2: `${A}/avatar-2.jpg`,
-    3: `${A}/avatar-3.jpg`,
-    4: `${A}/avatar-4.jpg`,
-    5: `${A}/avatar-5.jpg`,
+    1: `${A}/avatar-1.webp`,
+    2: `${A}/avatar-2.webp`,
+    3: `${A}/avatar-3.webp`,
+    4: `${A}/avatar-4.webp`,
+    5: `${A}/avatar-5.webp`,
   },
 };
 
@@ -158,5 +158,8 @@ export const COMPETITION_DETAILS = {
 export const DEFAULT_COMPETITION_DETAIL_ID = 'monochrome';
 
 export function getCompetitionDetailById(id) {
-  return COMPETITION_DETAILS[id] || COMPETITION_DETAILS[DEFAULT_COMPETITION_DETAIL_ID];
+  return (
+    COMPETITION_DETAILS[id] ||
+    COMPETITION_DETAILS[DEFAULT_COMPETITION_DETAIL_ID]
+  );
 }

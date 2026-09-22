@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
 import AdminUsersContent from '@/portals/admin/views/AdminUsersContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const Users = memo(() => {
   useSEO({
     title: 'Users Management',
-    description: 'Admin community tools — manage registered My12Photos users and account status.',
+    description:
+      'Admin community tools — manage registered My12Photos users and account status.',
     keywords: ['users', 'community', 'admin', 'My12Photos'],
   });
 

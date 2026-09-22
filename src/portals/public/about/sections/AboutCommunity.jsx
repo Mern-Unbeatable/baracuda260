@@ -1,8 +1,12 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { ImgIcon, Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
-import { ABOUT_COMMUNITY_FEATURES, ABOUT_COMMUNITY_IMAGES } from '@/portals/public/about/data/aboutData';
+import Image from '@/components/ui/Image';
+import {
+  ABOUT_COMMUNITY_FEATURES,
+  ABOUT_COMMUNITY_IMAGES,
+} from '@/portals/public/about/data/aboutData';
+import { ImgIcon, Shell } from '@/shared/site-chrome';
 
 const AboutCommunity = memo(() => {
   const { t } = useTranslation();
@@ -51,7 +55,11 @@ const AboutCommunity = memo(() => {
                   key={image.src}
                   className={`relative overflow-hidden rounded-[20px] bg-[#f3f3f3] ${image.className}`}
                 >
-                  <img src={image.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                  <Image
+                    src={image.src}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                 </div>
               ))}
             </div>
@@ -61,7 +69,11 @@ const AboutCommunity = memo(() => {
                   key={image.src}
                   className={`relative overflow-hidden rounded-[20px] bg-[#f3f3f3] ${image.className}`}
                 >
-                  <img src={image.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                  <Image
+                    src={image.src}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                 </div>
               ))}
             </div>

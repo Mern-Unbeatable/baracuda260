@@ -31,30 +31,69 @@ export const PROMO_LINK_CHECKLIST_TOTAL = 9;
 
 export const STATUS_FILTERS = [
   { id: 'all', labelKey: 'adminPromoLinks.filters.status.all' },
-  { id: PROMO_LINK_STATUS.ACTIVE, labelKey: 'adminPromoLinks.filters.status.active' },
-  { id: PROMO_LINK_STATUS.USED, labelKey: 'adminPromoLinks.filters.status.used' },
-  { id: PROMO_LINK_STATUS.EXPIRED, labelKey: 'adminPromoLinks.filters.status.expired' },
+  {
+    id: PROMO_LINK_STATUS.ACTIVE,
+    labelKey: 'adminPromoLinks.filters.status.active',
+  },
+  {
+    id: PROMO_LINK_STATUS.USED,
+    labelKey: 'adminPromoLinks.filters.status.used',
+  },
+  {
+    id: PROMO_LINK_STATUS.EXPIRED,
+    labelKey: 'adminPromoLinks.filters.status.expired',
+  },
 ];
 
 export const DATE_FILTERS = [
-  { id: PROMO_LINK_DATE_RANGE.LAST_30, labelKey: 'adminPromoLinks.filters.date.last30' },
-  { id: PROMO_LINK_DATE_RANGE.LAST_7, labelKey: 'adminPromoLinks.filters.date.last7' },
-  { id: PROMO_LINK_DATE_RANGE.LAST_90, labelKey: 'adminPromoLinks.filters.date.last90' },
-  { id: PROMO_LINK_DATE_RANGE.ALL, labelKey: 'adminPromoLinks.filters.date.all' },
+  {
+    id: PROMO_LINK_DATE_RANGE.LAST_30,
+    labelKey: 'adminPromoLinks.filters.date.last30',
+  },
+  {
+    id: PROMO_LINK_DATE_RANGE.LAST_7,
+    labelKey: 'adminPromoLinks.filters.date.last7',
+  },
+  {
+    id: PROMO_LINK_DATE_RANGE.LAST_90,
+    labelKey: 'adminPromoLinks.filters.date.last90',
+  },
+  {
+    id: PROMO_LINK_DATE_RANGE.ALL,
+    labelKey: 'adminPromoLinks.filters.date.all',
+  },
 ];
 
 export const REQUIREMENT_FILTERS = [
   { id: 'all', labelKey: 'adminPromoLinks.filters.requirements.all' },
-  { id: PROMO_LINK_REQUIREMENT.INCOMPLETE, labelKey: 'adminPromoLinks.filters.requirements.incomplete' },
-  { id: PROMO_LINK_REQUIREMENT.COMPLETED, labelKey: 'adminPromoLinks.filters.requirements.completed' },
-  { id: PROMO_LINK_REQUIREMENT.NONE, labelKey: 'adminPromoLinks.filters.requirements.none' },
+  {
+    id: PROMO_LINK_REQUIREMENT.INCOMPLETE,
+    labelKey: 'adminPromoLinks.filters.requirements.incomplete',
+  },
+  {
+    id: PROMO_LINK_REQUIREMENT.COMPLETED,
+    labelKey: 'adminPromoLinks.filters.requirements.completed',
+  },
+  {
+    id: PROMO_LINK_REQUIREMENT.NONE,
+    labelKey: 'adminPromoLinks.filters.requirements.none',
+  },
 ];
 
 export const REWARD_FILTERS = [
   { id: 'all', labelKey: 'adminPromoLinks.filters.reward.all' },
-  { id: PROMO_LINK_REWARD.PAID, labelKey: 'adminPromoLinks.filters.reward.paid' },
-  { id: PROMO_LINK_REWARD.UNDER_REVIEW, labelKey: 'adminPromoLinks.filters.reward.underReview' },
-  { id: PROMO_LINK_REWARD.NOT_ELIGIBLE, labelKey: 'adminPromoLinks.filters.reward.notEligible' },
+  {
+    id: PROMO_LINK_REWARD.PAID,
+    labelKey: 'adminPromoLinks.filters.reward.paid',
+  },
+  {
+    id: PROMO_LINK_REWARD.UNDER_REVIEW,
+    labelKey: 'adminPromoLinks.filters.reward.underReview',
+  },
+  {
+    id: PROMO_LINK_REWARD.NOT_ELIGIBLE,
+    labelKey: 'adminPromoLinks.filters.reward.notEligible',
+  },
 ];
 
 export const STATUS_LABEL_KEYS = {
@@ -317,17 +356,21 @@ export const setPromoLinksStore = (links) => {
 
 export const getRequirementStage = (link) => {
   if (link.checklistDone == null) return PROMO_LINK_REQUIREMENT.NONE;
-  if (link.checklistDone >= link.checklistTotal) return PROMO_LINK_REQUIREMENT.COMPLETED;
+  if (link.checklistDone >= link.checklistTotal)
+    return PROMO_LINK_REQUIREMENT.COMPLETED;
   return PROMO_LINK_REQUIREMENT.INCOMPLETE;
 };
 
 export const computePromoLinkStats = (links) => ({
   total: links.length,
-  active: links.filter((link) => link.status === PROMO_LINK_STATUS.ACTIVE).length,
-  used: links.filter((link) => link.status === PROMO_LINK_STATUS.USED).length,
-  expired: links.filter((link) => link.status === PROMO_LINK_STATUS.EXPIRED).length,
-  incomplete: links.filter((link) => getRequirementStage(link) === PROMO_LINK_REQUIREMENT.INCOMPLETE)
+  active: links.filter((link) => link.status === PROMO_LINK_STATUS.ACTIVE)
     .length,
+  used: links.filter((link) => link.status === PROMO_LINK_STATUS.USED).length,
+  expired: links.filter((link) => link.status === PROMO_LINK_STATUS.EXPIRED)
+    .length,
+  incomplete: links.filter(
+    (link) => getRequirementStage(link) === PROMO_LINK_REQUIREMENT.INCOMPLETE,
+  ).length,
 });
 
 const daysBetween = (fromIso, toDate = new Date()) => {
@@ -382,13 +425,18 @@ const matchesDateRange = (issuedAt, rangeId) => {
 };
 
 export const filterPromoLinks = (links, filters) => {
-  const { status = 'all', dateRange = PROMO_LINK_DATE_RANGE.LAST_30, requirements = 'all', reward = 'all' } =
-    filters || {};
+  const {
+    status = 'all',
+    dateRange = PROMO_LINK_DATE_RANGE.LAST_30,
+    requirements = 'all',
+    reward = 'all',
+  } = filters || {};
 
   return links.filter((link) => {
     if (status !== 'all' && link.status !== status) return false;
     if (!matchesDateRange(link.issuedAt, dateRange)) return false;
-    if (requirements !== 'all' && getRequirementStage(link) !== requirements) return false;
+    if (requirements !== 'all' && getRequirementStage(link) !== requirements)
+      return false;
     if (reward !== 'all' && link.reward !== reward) return false;
     return true;
   });
@@ -404,7 +452,9 @@ export const getPromoLinkById = (links, linkId) =>
   links.find((link) => link.id === linkId) || null;
 
 export const updatePromoLinkReward = (links, linkId, nextReward) =>
-  links.map((link) => (link.id === linkId ? { ...link, reward: nextReward } : link));
+  links.map((link) =>
+    link.id === linkId ? { ...link, reward: nextReward } : link,
+  );
 
 const randomCode = () => {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';

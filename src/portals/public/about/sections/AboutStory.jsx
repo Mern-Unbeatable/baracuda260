@@ -1,8 +1,9 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import Image from '@/components/ui/Image';
 import { ABOUT_ASSETS } from '@/portals/public/about/data/aboutAssets';
+import { Shell } from '@/shared/site-chrome';
 
 const AboutStory = memo(() => {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ const AboutStory = memo(() => {
       <Shell>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20">
           <div className="relative h-90 overflow-hidden rounded-[20px] sm:h-120 lg:h-151">
-            <img
+            <Image
               src={ABOUT_ASSETS.story}
               alt=""
               width={668}

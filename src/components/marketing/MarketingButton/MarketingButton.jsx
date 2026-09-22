@@ -39,7 +39,9 @@ const MarketingButton = memo(
     ...rest
   }) => (
     <Component
-      className={[VARIANT[variant] ?? VARIANT.primary, className].filter(Boolean).join(' ')}
+      className={[VARIANT[variant] ?? VARIANT.primary, className]
+        .filter(Boolean)
+        .join(' ')}
       {...rest}
     >
       {children}

@@ -1,28 +1,30 @@
 /** Shared demo payloads for /developer previews and local UI work. */
 
-import { GALLERY_SIX_STORIES } from '@/shared/data/gallerySixStory';
-import { GALLERY_TWELVE_STORIES } from '@/shared/data/galleryTwelveStory';
+import { DASHBOARD_STATS } from '@/portals/member/data/dashboardAssets';
+import { FAVOURITE_PHOTOGRAPHERS } from '@/portals/member/data/favouritePhotographersData';
+import { MEMBER_NOTIFICATIONS } from '@/portals/member/data/memberNotificationsData';
+import { MEMBER_PROFILE } from '@/portals/member/data/memberProfileData';
+import { MY_ARTWORK_STATS } from '@/portals/member/data/myArtworkData';
+import { MY_MESSAGES } from '@/portals/member/data/myMessagesData';
+import { SELL_PHOTOS_ITEMS } from '@/portals/member/data/sellPhotosData';
+import { COMPETITION_DETAILS } from '@/portals/public/competition-details/data/competitionDetailsAssets';
+import { PHOTOGRAPHER_PROFILE } from '@/portals/public/photographer/data/photographerProfileData';
 import { BUY_PHOTOS } from '@/shared/data/buyPhotos';
 import { COMPETITION_CARDS } from '@/shared/data/competitionsMarketing';
-import { FAVOURITE_PHOTOGRAPHERS } from '@/portals/member/data/favouritePhotographersData';
-import { MY_MESSAGES } from '@/portals/member/data/myMessagesData';
-import { MEMBER_NOTIFICATIONS } from '@/portals/member/data/memberNotificationsData';
-import { MY_ARTWORK_STATS } from '@/portals/member/data/myArtworkData';
-import { DASHBOARD_STATS } from '@/portals/member/data/dashboardAssets';
-import { SELL_PHOTOS_ITEMS } from '@/portals/member/data/sellPhotosData';
-import { MEMBER_PROFILE } from '@/portals/member/data/memberProfileData';
-import {
-  PHOTOGRAPHER_PROFILE,
-} from '@/portals/public/photographer/data/photographerProfileData';
 import {
   DEFAULT_GALLERY_IMAGE_DETAILS,
   GALLERY_DETAIL_ASSETS,
   GALLERY_DETAIL_DEMO_VIDEO,
 } from '@/shared/data/galleryDetail';
-import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
-import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 import { GALLERY_PHOTOS } from '@/shared/data/galleryPhotos';
-import { COMPETITION_DETAILS } from '@/portals/public/competition-details/data/competitionDetailsAssets';
+import {
+  GALLERY_SIX_STORIES,
+  SIX_STORY_SLIDES,
+} from '@/shared/data/gallerySixStory';
+import {
+  GALLERY_TWELVE_STORIES,
+  TWELVE_STORY_SLIDES,
+} from '@/shared/data/galleryTwelveStory';
 
 export const DEMO_SHOWCASE_PHOTO = GALLERY_PHOTOS[1];
 export const DEMO_IMAGE_DETAILS = DEFAULT_GALLERY_IMAGE_DETAILS;
@@ -54,7 +56,8 @@ export const DEMO_VIDEO = {
 export const DEMO_ARTWORK_ITEM = {
   id: 'demo-artwork',
   title: 'Golden Hour Silence',
-  description: 'Warm golden-hour light settles over a quiet scene with cinematic glow.',
+  description:
+    'Warm golden-hour light settles over a quiet scene with cinematic glow.',
   image: DEMO_SHOWCASE_PHOTO.image,
   albumBadge: 'Single Photo',
   category: 'Landscape',

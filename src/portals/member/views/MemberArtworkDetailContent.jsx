@@ -1,28 +1,30 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import React, { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, Navigate, useParams } from 'react-router-dom';
+import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
+import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
+import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import SignBadge from '@/components/data-display/SignBadge/SignBadge';
+import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
+import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import { getMyArtworkDetailById } from '@/portals/member/data/myArtworkDetailData';
+import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
   GALLERY_DETAIL_COMMENTS,
   GALLERY_DETAIL_SLIDE_MS,
   GALLERY_DETAIL_VARIANTS,
+  isBlueSlide,
   resolveGalleryDetailMedia,
   resolveGalleryImageDetails,
-  isBlueSlide,
 } from '@/shared/data/galleryDetail';
-import SignBadge from '@/components/data-display/SignBadge/SignBadge';
-import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
-import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
-import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
-import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
-import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
 import { ImgIcon } from '@/shared/site-chrome';
-import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
-import { getMyArtworkDetailById } from '@/portals/member/data/myArtworkDetailData';
 
 const DETAIL_COMMENTS = [
   ...GALLERY_DETAIL_COMMENTS,
@@ -67,7 +69,9 @@ const MemberArtworkDetailContent = memo(() => {
   const activeSlide = slides[activeIndex] || slides[0];
   const blueBadge = isBlueSlide(activeSlide, config.stripAccent);
   const heroSrc = activeSlide?.hero || detail.image;
-  const heroAlt = activeSlide?.sign ? `${detail.title} — ${activeSlide.sign}` : detail.title;
+  const heroAlt = activeSlide?.sign
+    ? `${detail.title} — ${activeSlide.sign}`
+    : detail.title;
   const { videoPoster, videoSrc } = resolveGalleryDetailMedia(detail, heroSrc);
   const imageDetails = resolveGalleryImageDetails({
     ...detail,
@@ -85,17 +89,25 @@ const MemberArtworkDetailContent = memo(() => {
         });
   const categoryLabel = detail.category?.toUpperCase?.() || detail.category;
 
-  const goPrev = () => setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
-  const goNext = () => setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
+  const goPrev = () =>
+    setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
+  const goNext = () =>
+    setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
 
   const statItems =
     detail.footerState === 'active'
       ? [
-          { label: t('galleryDetail.votesReceived'), value: detail.votesMetric },
+          {
+            label: t('galleryDetail.votesReceived'),
+            value: detail.votesMetric,
+          },
           { label: t('galleryDetail.viewsCounted'), value: detail.viewsMetric },
         ]
       : [
-          { label: t('myArtwork.detail.totalReact'), value: detail.reactMetric },
+          {
+            label: t('myArtwork.detail.totalReact'),
+            value: detail.reactMetric,
+          },
           { label: t('galleryDetail.viewsCounted'), value: detail.viewsMetric },
         ];
 
@@ -110,53 +122,63 @@ const MemberArtworkDetailContent = memo(() => {
       </Link>
 
       <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]">
-        <img
+        <Image
           src={heroSrc}
           alt={heroAlt}
           width={1536}
           height={653}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        {activeSlide ? <SignBadge slide={activeSlide} blue={blueBadge} /> : null}
-        <PhotoAiBadgeOverlay show={detail.isAiGenerated} placement="hero-end" size="lg" />
+        {activeSlide ? (
+          <SignBadge slide={activeSlide} blue={blueBadge} />
+        ) : null}
+        <PhotoAiBadgeOverlay
+          show={detail.isAiGenerated}
+          placement="hero-end"
+          size="lg"
+        />
 
         {showStoryChrome || slideCount > 1 ? (
           <>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={goPrev}
               aria-label={t('galleryDetail.previousPhoto')}
               className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-12.75 sm:size-12.75"
             >
-              <img
+              <Image
                 src={GALLERY_DETAIL_ASSETS.arrow}
                 alt=""
                 width={16}
                 height={32}
                 className="h-7 w-3.5 rotate-180 object-contain sm:h-8 sm:w-4"
               />
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="button"
               onClick={goNext}
               aria-label={t('galleryDetail.nextPhoto')}
               className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-12.75 sm:size-12.75"
             >
-              <img
+              <Image
                 src={GALLERY_DETAIL_ASSETS.arrow}
                 alt=""
                 width={16}
                 height={32}
                 className="h-7 w-3.5 object-contain sm:h-8 sm:w-4"
               />
-            </button>
+            </Button>
           </>
         ) : null}
       </div>
 
       {config.curveSrc ? (
-        <div className={`relative w-full overflow-hidden ${config.curveHeightClass}`}>
-          <img
+        <div
+          className={`relative w-full overflow-hidden ${config.curveHeightClass}`}
+        >
+          <Image
             src={config.curveSrc}
             alt=""
             className={`h-full w-full object-top ${config.curveObjectClass}`}
@@ -174,10 +196,18 @@ const MemberArtworkDetailContent = memo(() => {
       ) : null}
 
       {config.stripLayout === 'twelve' ? (
-        <TwelveStoryStrip slides={slides} activeIndex={activeIndex} onSelect={setActiveIndex} />
+        <TwelveStoryStrip
+          slides={slides}
+          activeIndex={activeIndex}
+          onSelect={setActiveIndex}
+        />
       ) : null}
 
-      <GalleryDetailVideo poster={videoPoster} src={videoSrc} title={detail.title} />
+      <GalleryDetailVideo
+        poster={videoPoster}
+        src={videoSrc}
+        title={detail.title}
+      />
 
       <div className="flex flex-wrap gap-2 sm:gap-3">
         {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
@@ -188,14 +218,18 @@ const MemberArtworkDetailContent = memo(() => {
             {tag}
           </span>
         ))}
-        {detail.isAiGenerated ? <AiGeneratedPhotoBadge variant="inline" size="md" /> : null}
+        {detail.isAiGenerated ? (
+          <AiGeneratedPhotoBadge variant="inline" size="md" />
+        ) : null}
       </div>
 
       <div>
         <h1 className="text-[28px] font-semibold leading-tight text-[#161c27] sm:text-[32px]">
           {detail.title}
         </h1>
-        {detail.isAiGenerated ? <AiGeneratedDetailNotice className="mt-4" /> : null}
+        {detail.isAiGenerated ? (
+          <AiGeneratedDetailNotice className="mt-4" />
+        ) : null}
         <p className="mt-3 max-w-4xl text-[16px] leading-6 text-[#494453] sm:mt-4 sm:text-[17px] sm:leading-7">
           {t(detail.descriptionKey)}
         </p>
@@ -240,21 +274,25 @@ const MemberArtworkDetailContent = memo(() => {
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <img
+                  <Image
                     src={GALLERY_DETAIL_ASSETS.commentAvatar}
                     alt=""
                     width={48}
                     height={48}
                     className="size-12 rounded-full object-cover"
                   />
-                  <p className="text-[14px] font-medium leading-5 text-[#191c1f]">{item.name}</p>
+                  <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
+                    {item.name}
+                  </p>
                 </div>
                 <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
                   <ImgIcon src={GALLERY_DETAIL_ASSETS.verified} size={16} />
                   {t('galleryDetail.verified')}
                 </span>
               </div>
-              <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">{item.text}</p>
+              <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
+                {item.text}
+              </p>
             </li>
           ))}
         </ul>

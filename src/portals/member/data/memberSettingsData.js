@@ -14,10 +14,14 @@ export const DEFAULT_MEMBER_SETTINGS = {
 
 export const validateMemberProfile = (values, t) => {
   const next = {};
-  if (!values.fullName?.trim()) next.fullName = t('memberSettings.errors.fullNameRequired');
-  if (!values.username?.trim()) next.username = t('memberSettings.errors.usernameRequired');
-  if (!values.phone?.trim()) next.phone = t('memberSettings.errors.phoneRequired');
-  if (!values.email?.trim()) next.email = t('memberSettings.errors.emailRequired');
+  if (!values.fullName?.trim())
+    next.fullName = t('memberSettings.errors.fullNameRequired');
+  if (!values.username?.trim())
+    next.username = t('memberSettings.errors.usernameRequired');
+  if (!values.phone?.trim())
+    next.phone = t('memberSettings.errors.phoneRequired');
+  if (!values.email?.trim())
+    next.email = t('memberSettings.errors.emailRequired');
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
     next.email = t('memberSettings.errors.emailInvalid');
   }

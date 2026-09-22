@@ -1,13 +1,14 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { ArrowLeft, ArrowUpFromLine, ChevronDown, Upload } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
-import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
-import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
+import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
+import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_CATEGORY,
@@ -15,15 +16,17 @@ import {
   SINGLE_PHOTO_ASSETS,
   ZODIAC_SIGNS,
 } from '@/portals/member/data/singlePhotoAssets';
+import { ROUTES } from '@/shared/config';
 
-const findSign = (id) => ZODIAC_SIGNS.find((sign) => sign.id === id) ?? ZODIAC_SIGNS[5];
+const findSign = (id) =>
+  ZODIAC_SIGNS.find((sign) => sign.id === id) ?? ZODIAC_SIGNS[5];
 
 const ZodiacIcon = memo(({ sign, size = 35, variant = 'default' }) => {
   const src = variant === 'slot' && sign.slotIcon ? sign.slotIcon : sign.icon;
 
   if (src) {
     return (
-      <img
+      <Image
         src={src}
         alt=""
         width={size}
@@ -51,290 +54,315 @@ ZodiacIcon.displayName = 'ZodiacIcon';
  * Single Photo upload workspace — Figma node 190:142 (file kE9g2eZmAoSco81PgZNlj2).
  * Layout: left 930 + gap 71 + right 579; copyright confirm + submit on right panel.
  */
-const SinglePhotoContent = memo(({
-  backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
-  uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
-  purpose = 'artwork',
-  defaultPrice = '$2.00',
-}) => {
-  const { t } = useTranslation();
-  const fileInputRef = useRef(null);
-  const isSell = purpose === 'sell';
+const SinglePhotoContent = memo(
+  ({
+    backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+    uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+    purpose = 'artwork',
+    defaultPrice = '$2.00',
+  }) => {
+    const { t } = useTranslation();
+    const fileInputRef = useRef(null);
+    const isSell = purpose === 'sell';
 
-  const [signId, setSignId] = useState(DEFAULT_SIGN_ID);
-  const [signOpen, setSignOpen] = useState(false);
+    const [signId, setSignId] = useState(DEFAULT_SIGN_ID);
+    const [signOpen, setSignOpen] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      category: DEFAULT_CATEGORY,
-      subCategory: 'astrophotography',
-      title: '',
-      story: '',
-      price: defaultPrice,
-      resolution: '6000*6000',
-      fileSize: '125 KB',
-      quality: '4K',
-      copyrightOk: false,
-    },
-  });
-
-  const [publishTarget, setPublishTarget] = useState('competition');
-  const [aiCreated, setAiCreated] = useState('');
-  const [photoPreview, setPhotoPreview] = useState(null);
-  const [photoError, setPhotoError] = useState('');
-  const [successOpen, setSuccessOpen] = useState(false);
-
-  const selectedSign = findSign(signId);
-
-  useEffect(() => {
-    return () => {
-      if (photoPreview) URL.revokeObjectURL(photoPreview);
-    };
-  }, [photoPreview]);
-
-  const handlePickPhoto = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setPhotoPreview((previous) => {
-      if (previous) URL.revokeObjectURL(previous);
-      return URL.createObjectURL(file);
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      defaultValues: {
+        category: DEFAULT_CATEGORY,
+        subCategory: 'astrophotography',
+        title: '',
+        story: '',
+        price: defaultPrice,
+        resolution: '6000*6000',
+        fileSize: '125 KB',
+        quality: '4K',
+        copyrightOk: false,
+      },
     });
-    setPhotoError('');
-  };
 
-  const onSubmit = (_data) => {
-    if (!photoPreview) {
-      setPhotoError(t('singlePhoto.errors.photoRequired'));
+    const [publishTarget, setPublishTarget] = useState('competition');
+    const [aiCreated, setAiCreated] = useState('');
+    const [photoPreview, setPhotoPreview] = useState(null);
+    const [photoError, setPhotoError] = useState('');
+    const [successOpen, setSuccessOpen] = useState(false);
+
+    const selectedSign = findSign(signId);
+
+    useEffect(() => {
+      return () => {
+        if (photoPreview) URL.revokeObjectURL(photoPreview);
+      };
+    }, [photoPreview]);
+
+    const handlePickPhoto = () => {
+      fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      setPhotoPreview((previous) => {
+        if (previous) URL.revokeObjectURL(previous);
+        return URL.createObjectURL(file);
+      });
+      setPhotoError('');
+    };
+
+    const onSubmit = (_data) => {
+      if (!photoPreview) {
+        setPhotoError(t('singlePhoto.errors.photoRequired'));
+        setSuccessOpen(false);
+        return;
+      }
+      setPhotoError('');
+      setSuccessOpen(true);
+    };
+
+    const handleCloseSuccess = () => {
       setSuccessOpen(false);
-      return;
-    }
-    setPhotoError('');
-    setSuccessOpen(true);
-  };
+    };
 
-  const handleCloseSuccess = () => {
-    setSuccessOpen(false);
-  };
+    return (
+      <div className="mx-auto w-full max-w-395">
+        {/* Figma: left 930 | gap ~71 | right 579 */}
+        <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-10 xl:gap-17.75">
+          {/* LEFT */}
+          <div className="flex min-w-0 flex-col gap-4">
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-8.5">
+                <Link
+                  to={backHref}
+                  className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
+                >
+                  <ArrowLeft
+                    size={24}
+                    aria-hidden="true"
+                    className="shrink-0"
+                  />
+                  {t('singlePhoto.backToSelection')}
+                </Link>
 
-  return (
-    <div className="mx-auto w-full max-w-395">
-      {/* Figma: left 930 | gap ~71 | right 579 */}
-      <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-10 xl:gap-17.75">
-        {/* LEFT */}
-        <div className="flex min-w-0 flex-col gap-4">
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-8.5">
-              <Link
-                to={backHref}
-                className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
-              >
-                <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
-                {t('singlePhoto.backToSelection')}
-              </Link>
-
-              <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-6.5">
-                <p className="mb-5 whitespace-pre-wrap text-[16px] font-medium uppercase tracking-[0.28em] text-[#28252f]">
-                  {t('singlePhoto.selectSign')}
-                </p>
-                <div className="relative">
-                  <button
-                    type="button"
-                    aria-expanded={signOpen}
-                    aria-haspopup="listbox"
-                    onClick={() => {
-                      setSignOpen((open) => !open);
-                    }}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-3.5 text-left"
-                  >
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <ZodiacIcon sign={selectedSign} />
-                      <span className="truncate text-[16px] leading-6 text-[#1b1b1b]">
-                        {t(selectedSign.nameKey)} ({t(selectedSign.rangeKey)})
-                      </span>
-                    </span>
-                    <ChevronDown
-                      size={18}
-                      className={`shrink-0 text-[#494453] transition ${signOpen ? 'rotate-180' : ''}`}
-                      aria-hidden="true"
-                    />
-                  </button>
-
-                  {signOpen ? (
-                    <ul
-                      role="listbox"
-                      className="absolute z-30 mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-[rgba(0,0,0,0.12)] bg-white py-1 shadow-lg"
+                <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-6.5">
+                  <p className="mb-5 whitespace-pre-wrap text-[16px] font-medium uppercase tracking-[0.28em] text-[#28252f]">
+                    {t('singlePhoto.selectSign')}
+                  </p>
+                  <div className="relative">
+                    <Button
+                      unstyled
+                      type="button"
+                      aria-expanded={signOpen}
+                      aria-haspopup="listbox"
+                      onClick={() => {
+                        setSignOpen((open) => !open);
+                      }}
+                      className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-3.5 text-left"
                     >
-                      {ZODIAC_SIGNS.map((sign) => (
-                        <li key={sign.id}>
-                          <button
-                            type="button"
-                            role="option"
-                            aria-selected={sign.id === signId}
-                            onClick={() => {
-                              setSignId(sign.id);
-                              setSignOpen(false);
-                            }}
-                            className={`flex w-full cursor-pointer items-center gap-2 px-3.5 py-2.5 text-left text-[15px] transition hover:bg-[#ecedfa] ${
-                              sign.id === signId ? 'bg-[#ecedfa] text-[#4048cd]' : 'text-[#1b1b1b]'
-                            }`}
-                          >
-                            <ZodiacIcon sign={sign} size={28} />
-                            <span>
-                              {t(sign.nameKey)} ({t(sign.rangeKey)})
-                            </span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </div>
-              </section>
-            </div>
+                      <span className="flex min-w-0 items-center gap-1.5">
+                        <ZodiacIcon sign={selectedSign} />
+                        <span className="truncate text-[16px] leading-6 text-[#1b1b1b]">
+                          {t(selectedSign.nameKey)} ({t(selectedSign.rangeKey)})
+                        </span>
+                      </span>
+                      <ChevronDown
+                        size={18}
+                        className={`shrink-0 text-[#494453] transition ${signOpen ? 'rotate-180' : ''}`}
+                        aria-hidden="true"
+                      />
+                    </Button>
 
-            <div className="relative h-11.5 w-full overflow-visible" aria-hidden="true">
-              <img
-                src={SINGLE_PHOTO_ASSETS.wave}
-                alt=""
-                className="absolute inset-x-0 top-0 h-14.5 w-full object-fill"
-              />
-            </div>
-
-            <div className="flex w-full max-w-121.25 flex-col gap-4">
-              <h1 className="text-[24px] font-semibold leading-6 text-[#2a282d]">
-                {t('singlePhoto.slotsTitle')}
-              </h1>
-              <p className="text-[16px] font-medium leading-6 text-[#555555]">
-                {t('singlePhoto.slotsSubtitle')}
-              </p>
-            </div>
-          </div>
-
-          <article className="flex w-full flex-col items-center gap-6.75 rounded-xl border border-[#c4c6f0] bg-white p-5">
-            <div className="flex w-full flex-col items-center gap-5">
-              <div className="flex w-full items-center justify-between">
-                <p className="text-[20px] font-semibold leading-6 text-[#4048cd]">
-                  #{selectedSign.number}
-                </p>
-                <p className="text-[16px] font-medium uppercase leading-6 text-[#5e5d61]">
-                  {t(selectedSign.elementKey)}
-                </p>
+                    {signOpen ? (
+                      <ul
+                        role="listbox"
+                        className="absolute z-30 mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-[rgba(0,0,0,0.12)] bg-white py-1 shadow-lg"
+                      >
+                        {ZODIAC_SIGNS.map((sign) => (
+                          <li key={sign.id}>
+                            <Button
+                              unstyled
+                              type="button"
+                              role="option"
+                              aria-selected={sign.id === signId}
+                              onClick={() => {
+                                setSignId(sign.id);
+                                setSignOpen(false);
+                              }}
+                              className={`flex w-full cursor-pointer items-center gap-2 px-3.5 py-2.5 text-left text-[15px] transition hover:bg-[#ecedfa] ${
+                                sign.id === signId
+                                  ? 'bg-[#ecedfa] text-[#4048cd]'
+                                  : 'text-[#1b1b1b]'
+                              }`}
+                            >
+                              <ZodiacIcon sign={sign} size={28} />
+                              <span>
+                                {t(sign.nameKey)} ({t(sign.rangeKey)})
+                              </span>
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                </section>
               </div>
 
-              <div className="flex w-37.25 flex-col items-center gap-3">
-                <ZodiacIcon sign={selectedSign} variant="slot" />
-                <div className="flex w-full flex-col items-center gap-1 text-center">
-                  <p className="w-full text-[20px] font-medium leading-6 text-[#1b1e56]">
-                    {t(selectedSign.nameKey)}
-                  </p>
-                  <p className="w-full whitespace-pre-wrap text-[16px] font-medium leading-6 text-[#666dd7]">
-                    {t(selectedSign.rangeKey)}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {photoPreview ? (
-              <UploadedPhotoPreview
-                src={photoPreview}
-                imageClassName="max-h-72 w-full object-cover"
-                frameClassName="relative w-full overflow-hidden rounded-lg border border-[#c4c6f0]"
-                showAiBadge={aiCreated === 'yes'}
-                badgeSize="md"
+              <div
+                className="relative h-11.5 w-full overflow-visible"
+                aria-hidden="true"
               >
-                <button
+                <Image
+                  src={SINGLE_PHOTO_ASSETS.wave}
+                  alt=""
+                  className="absolute inset-x-0 top-0 h-14.5 w-full object-fill"
+                />
+              </div>
+
+              <div className="flex w-full max-w-121.25 flex-col gap-4">
+                <h1 className="text-[24px] font-semibold leading-6 text-[#2a282d]">
+                  {t('singlePhoto.slotsTitle')}
+                </h1>
+                <p className="text-[16px] font-medium leading-6 text-[#555555]">
+                  {t('singlePhoto.slotsSubtitle')}
+                </p>
+              </div>
+            </div>
+
+            <article className="flex w-full flex-col items-center gap-6.75 rounded-xl border border-[#c4c6f0] bg-white p-5">
+              <div className="flex w-full flex-col items-center gap-5">
+                <div className="flex w-full items-center justify-between">
+                  <p className="text-[20px] font-semibold leading-6 text-[#4048cd]">
+                    #{selectedSign.number}
+                  </p>
+                  <p className="text-[16px] font-medium uppercase leading-6 text-[#5e5d61]">
+                    {t(selectedSign.elementKey)}
+                  </p>
+                </div>
+
+                <div className="flex w-37.25 flex-col items-center gap-3">
+                  <ZodiacIcon sign={selectedSign} variant="slot" />
+                  <div className="flex w-full flex-col items-center gap-1 text-center">
+                    <p className="w-full text-[20px] font-medium leading-6 text-[#1b1e56]">
+                      {t(selectedSign.nameKey)}
+                    </p>
+                    <p className="w-full whitespace-pre-wrap text-[16px] font-medium leading-6 text-[#666dd7]">
+                      {t(selectedSign.rangeKey)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {photoPreview ? (
+                <UploadedPhotoPreview
+                  src={photoPreview}
+                  imageClassName="max-h-72 w-full object-cover"
+                  frameClassName="relative w-full overflow-hidden rounded-lg border border-[#c4c6f0]"
+                  showAiBadge={aiCreated === 'yes'}
+                  badgeSize="md"
+                >
+                  <Button
+                    unstyled
+                    type="button"
+                    onClick={handlePickPhoto}
+                    className="absolute bottom-3 right-3 cursor-pointer rounded-lg bg-white/95 px-3 py-1.5 text-sm font-medium text-[#4048cd] shadow"
+                  >
+                    {t('singlePhoto.changePhoto')}
+                  </Button>
+                </UploadedPhotoPreview>
+              ) : (
+                <Button
+                  unstyled
                   type="button"
                   onClick={handlePickPhoto}
-                  className="absolute bottom-3 right-3 cursor-pointer rounded-lg bg-white/95 px-3 py-1.5 text-sm font-medium text-[#4048cd] shadow"
+                  className={`inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-[#ecedfa] ${
+                    photoError
+                      ? 'border-red-500 text-red-500'
+                      : 'border-[#4048cd] text-[#4048cd]'
+                  }`}
                 >
-                  {t('singlePhoto.changePhoto')}
-                </button>
-              </UploadedPhotoPreview>
-            ) : (
-              <button
-                type="button"
-                onClick={handlePickPhoto}
-                className={`inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-[#ecedfa] ${
-                  photoError ? 'border-red-500 text-red-500' : 'border-[#4048cd] text-[#4048cd]'
-                }`}
-              >
-                <ArrowUpFromLine size={24} aria-hidden="true" />
-                {t('singlePhoto.addPhoto')}
-              </button>
-            )}
+                  <ArrowUpFromLine size={24} aria-hidden="true" />
+                  {t('singlePhoto.addPhoto')}
+                </Button>
+              )}
 
-            {photoError ? (
-              <p className="w-full text-sm text-red-600" role="alert">
-                {photoError}
+              {photoError ? (
+                <p className="w-full text-sm text-red-600" role="alert">
+                  {photoError}
+                </p>
+              ) : null}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={handleFileChange}
+              />
+            </article>
+
+            <article className="rounded-xl border border-[#e6e8ef] bg-white p-5">
+              <h3 className="text-[24px] font-semibold leading-8 text-[#2a282d]">
+                Upload Videos
+              </h3>
+              <p className="mt-1 text-[13px] leading-5 text-[#717784]">
+                Help your pro prepare by showing them the work area. Optional
+                but highly recommended.
               </p>
-            ) : null}
+              <Button
+                unstyled
+                type="button"
+                className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
+              >
+                <Upload size={24} className="mb-2 text-[#b1b6c5]" />
+                <span className="text-[16px] leading-6">
+                  Click to upload Videos or drag &amp; drop
+                </span>
+                <span className="text-[12px] text-[#9ca3af]">
+                  MP4 — max 10MB each
+                </span>
+              </Button>
+            </article>
+          </div>
 
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="sr-only"
-              onChange={handleFileChange}
+          {/* RIGHT — Figma y=170 aligns with select card (after back link) */}
+          <aside className="w-full min-w-0 lg:mt-14.5 lg:sticky lg:top-0">
+            <ZodiacStoryFormPanel
+              t={t}
+              i18nPrefix="singlePhoto"
+              onSubmit={handleSubmit(onSubmit)}
+              categoryOptions={ARTISTIC_CATEGORIES}
+              publishTarget={publishTarget}
+              setPublishTarget={setPublishTarget}
+              aiCreated={aiCreated}
+              setAiCreated={setAiCreated}
+              register={register}
+              errors={errors}
+              isSell={isSell}
+              sellFields={
+                <MemberSellPhotoFields
+                  idPrefix="single-photo"
+                  register={register}
+                  errors={errors}
+                />
+              }
             />
-          </article>
-
-          <article className="rounded-xl border border-[#e6e8ef] bg-white p-5">
-            <h3 className="text-[24px] font-semibold leading-8 text-[#2a282d]">Upload Videos</h3>
-            <p className="mt-1 text-[13px] leading-5 text-[#717784]">
-              Help your pro prepare by showing them the work area. Optional but highly recommended.
-            </p>
-            <button
-              type="button"
-              className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
-            >
-              <Upload size={24} className="mb-2 text-[#b1b6c5]" />
-              <span className="text-[16px] leading-6">Click to upload Videos or drag &amp; drop</span>
-              <span className="text-[12px] text-[#9ca3af]">MP4 — max 10MB each</span>
-            </button>
-          </article>
+          </aside>
         </div>
 
-        {/* RIGHT — Figma y=170 aligns with select card (after back link) */}
-        <aside className="w-full min-w-0 lg:mt-14.5 lg:sticky lg:top-0">
-          <ZodiacStoryFormPanel
-            t={t}
-            i18nPrefix="singlePhoto"
-            onSubmit={handleSubmit(onSubmit)}
-            categoryOptions={ARTISTIC_CATEGORIES}
-            publishTarget={publishTarget}
-            setPublishTarget={setPublishTarget}
-            aiCreated={aiCreated}
-            setAiCreated={setAiCreated}
-            register={register}
-            errors={errors}
-            isSell={isSell}
-            sellFields={
-              <MemberSellPhotoFields
-                idPrefix="single-photo"
-                register={register}
-                errors={errors}
-              />
-            }
-          />
-        </aside>
+        <PhotoSubmitSuccessModal
+          open={successOpen}
+          onClose={handleCloseSuccess}
+          uploadAnotherHref={uploadAnotherHref}
+        />
       </div>
-
-      <PhotoSubmitSuccessModal
-        open={successOpen}
-        onClose={handleCloseSuccess}
-        uploadAnotherHref={uploadAnotherHref}
-      />
-    </div>
-  );
-});
+    );
+  },
+);
 
 SinglePhotoContent.displayName = 'SinglePhotoContent';
 

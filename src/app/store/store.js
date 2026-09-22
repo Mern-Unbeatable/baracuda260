@@ -1,7 +1,15 @@
 import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
-import authReducer, { loginSuccess, logout, updateUser } from './slices/authSlice';
-import themeReducer, { toggleTheme, setTheme, setPrimaryColor } from './slices/themeSlice';
+import authReducer, {
+  loginSuccess,
+  logout,
+  updateUser,
+} from './slices/authSlice';
 import cartReducer from './slices/cartSlice';
+import themeReducer, {
+  setPrimaryColor,
+  setTheme,
+  toggleTheme,
+} from './slices/themeSlice';
 
 const applyPrimaryColor = (color) => {
   document.documentElement.style.setProperty('--color-primary', color);
@@ -67,7 +75,8 @@ const store = configureStore({
     theme: themeReducer,
     cart: cartReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(listener.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(listener.middleware),
   devTools: import.meta.env.DEV,
 });
 

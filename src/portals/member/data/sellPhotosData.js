@@ -23,7 +23,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-autumn-1',
     title: 'Autumn Sequence',
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
     albumBadge: 'Single Photo',
     uploadedDate: 'August 9, 2026',
     views: '1,400',
@@ -36,7 +36,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-autumn-6',
     title: 'Chasing the Neon Stream',
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
     albumBadge: '6 Photos Story',
     category: 'Nature',
     uploadedDate: 'August 9, 2026',
@@ -54,7 +54,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-autumn-12',
     title: 'Autumn Sequence',
-    image: `${A}/photo-zodiac.jpg`,
+    image: `${A}/photo-zodiac.webp`,
     albumBadge: '12 photos - full Zodiac Story',
     uploadedDate: 'August 9, 2026',
     views: '1,400',
@@ -67,7 +67,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-neon-single',
     title: 'Chasing the Neon Stream',
-    image: `${A}/photo-city.jpg`,
+    image: `${A}/photo-city.webp`,
     albumBadge: 'Single Photo',
     uploadedDate: 'August 8, 2026',
     views: '2,150',
@@ -81,7 +81,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-nordic-six',
     title: 'Chasing the Neon Stream',
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
     albumBadge: '6 Photos Story',
     category: 'Nature',
     uploadedDate: 'August 7, 2026',
@@ -98,7 +98,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-golden-single',
     title: 'Golden Hour Silence',
-    image: `${A}/photo-golden.jpg`,
+    image: `${A}/photo-golden.webp`,
     albumBadge: 'Single Photo',
     uploadedDate: 'August 6, 2026',
     views: '1,580',
@@ -111,7 +111,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-tidal-twelve',
     title: 'Chasing the Neon Stream',
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
     albumBadge: '12 photos - full Zodiac Story',
     category: 'Nature',
     uploadedDate: 'August 5, 2026',
@@ -128,7 +128,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-morning-single',
     title: 'Morning Fields',
-    image: `${A}/photo-morning.jpg`,
+    image: `${A}/photo-morning.webp`,
     albumBadge: 'Single Photo',
     uploadedDate: 'August 4, 2026',
     views: '720',
@@ -141,7 +141,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-wings-six',
     title: 'Wings Over the Marsh',
-    image: `${A}/photo-wings.jpg`,
+    image: `${A}/photo-wings.webp`,
     albumBadge: '6 Photos Story',
     uploadedDate: 'August 3, 2026',
     views: '890',
@@ -155,7 +155,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-city-twelve',
     title: 'City After Midnight',
-    image: `${A}/photo-city.jpg`,
+    image: `${A}/photo-city.webp`,
     albumBadge: '12 photos - full Zodiac Story',
     uploadedDate: 'August 2, 2026',
     views: '1,320',
@@ -168,7 +168,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-autumn-2',
     title: 'Autumn Sequence',
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
     albumBadge: 'Single Photo',
     uploadedDate: 'August 1, 2026',
     views: '1,400',
@@ -181,7 +181,7 @@ export const SELL_PHOTOS_ITEMS = [
   {
     id: 'sell-autumn-3',
     title: 'Autumn Sequence',
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
     albumBadge: '6 Photos Story',
     uploadedDate: 'July 31, 2026',
     views: '1,400',

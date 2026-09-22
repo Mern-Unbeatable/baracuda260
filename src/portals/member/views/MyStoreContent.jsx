@@ -1,19 +1,20 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { Plus, Store } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import React, { memo, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberStoreProductCard from '@/components/data-display/MemberStoreProductCard/MemberStoreProductCard';
 import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
+import Button from '@/components/ui/Button';
 import {
+  filterStoreProducts,
   MY_STORE_CATEGORIES,
   MY_STORE_PAGE_SIZE,
   MY_STORE_PRODUCTS,
-  filterStoreProducts,
 } from '@/portals/member/data/myStoreData';
+import { ROUTES } from '@/shared/config';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const MyStoreContent = memo(() => {
   const { t } = useTranslation();
@@ -22,10 +23,15 @@ const MyStoreContent = memo(() => {
   const [products, setProducts] = useState(MY_STORE_PRODUCTS);
   const [promoteItem, setPromoteItem] = useState(null);
 
-  const filtered = useMemo(() => filterStoreProducts(products, category), [products, category]);
-  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(filtered, MY_STORE_PAGE_SIZE, [
-    category,
-  ]);
+  const filtered = useMemo(
+    () => filterStoreProducts(products, category),
+    [products, category],
+  );
+  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
+    filtered,
+    MY_STORE_PAGE_SIZE,
+    [category],
+  );
 
   const handleEdit = (product) => {
     navigate(ROUTES.ADMIN_MY_STORE_EDIT.replace(':id', product.id));
@@ -38,7 +44,9 @@ const MyStoreContent = memo(() => {
 
   const handlePromoteConfirm = (item) => {
     setProducts((current) =>
-      current.map((product) => (product.id === item.id ? { ...product, promoted: true } : product)),
+      current.map((product) =>
+        product.id === item.id ? { ...product, promoted: true } : product,
+      ),
     );
     toast.success(t('myStore.toast.promoted', { title: item.title }));
   };
@@ -48,7 +56,11 @@ const MyStoreContent = memo(() => {
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="min-w-0">
           <div className="flex items-center gap-2.5">
-            <Store size={26} className="shrink-0 text-[#161c27]" aria-hidden="true" />
+            <Store
+              size={26}
+              className="shrink-0 text-[#161c27]"
+              aria-hidden="true"
+            />
             <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
               {t('myStore.title')}
             </h1>
@@ -75,7 +87,8 @@ const MyStoreContent = memo(() => {
         {MY_STORE_CATEGORIES.map((item) => {
           const active = category === item.value;
           return (
-            <button
+            <Button
+              unstyled
               key={item.id}
               type="button"
               role="tab"
@@ -88,7 +101,7 @@ const MyStoreContent = memo(() => {
               }`}
             >
               {t(item.labelKey)}
-            </button>
+            </Button>
           );
         })}
       </div>

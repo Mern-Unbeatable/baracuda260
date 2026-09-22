@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { readLegalPage } from '@/portals/public/legal/data/legalI18n';
 import { ROUTES } from '@/shared/config';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
-import { readLegalPage } from '@/portals/public/legal/data/legalI18n';
 
 const leadClassName =
   'text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px] xl:text-[24px]';
@@ -30,7 +30,9 @@ const PrivacySection = memo(({ section }) => (
       </p>
     ))}
 
-    {section.listIntro ? <p className={bodyClassName}>{section.listIntro}</p> : null}
+    {section.listIntro ? (
+      <p className={bodyClassName}>{section.listIntro}</p>
+    ) : null}
 
     {section.bullets.length ? (
       <ul className="list-disc space-y-0 pl-7.5 text-[16px] font-normal leading-8 text-[#2d2d2d] sm:text-[18px] md:text-[20px]">

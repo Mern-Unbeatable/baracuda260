@@ -6,8 +6,8 @@ const A = '/assets/home';
 
 export const GALLERY_DETAIL_ASSETS = {
   aries: `${A}/icon-aries.svg`,
-  photographer: `${A}/avatar-photographer.jpg`,
-  commentAvatar: `${A}/avatar-comment.jpg`,
+  photographer: `${A}/avatar-photographer.webp`,
+  commentAvatar: `${A}/avatar-comment.webp`,
   verified: `${A}/icon-verified.svg`,
   voteHeart: `${A}/icon-vote-heart.svg`,
   arrow: `${A}/icon-arrow-nav.svg`,
@@ -55,16 +55,31 @@ export const resolveGalleryImageDetails = (story) => {
   const categories = [story.category, story.badge].filter(Boolean).join(' ');
 
   return {
-    credit: fromStory.credit ?? story.photographer ?? DEFAULT_GALLERY_IMAGE_DETAILS.credit,
+    credit:
+      fromStory.credit ??
+      story.photographer ??
+      DEFAULT_GALLERY_IMAGE_DETAILS.credit,
     creativeNumber:
-      fromStory.creativeNumber ?? story.creativeNumber ?? DEFAULT_GALLERY_IMAGE_DETAILS.creativeNumber,
-    resolution: fromStory.resolution ?? story.resolution ?? DEFAULT_GALLERY_IMAGE_DETAILS.resolution,
+      fromStory.creativeNumber ??
+      story.creativeNumber ??
+      DEFAULT_GALLERY_IMAGE_DETAILS.creativeNumber,
+    resolution:
+      fromStory.resolution ??
+      story.resolution ??
+      DEFAULT_GALLERY_IMAGE_DETAILS.resolution,
     quality: fromStory.quality ?? DEFAULT_GALLERY_IMAGE_DETAILS.quality,
-    fileType: fromStory.fileType ?? story.format ?? DEFAULT_GALLERY_IMAGE_DETAILS.fileType,
+    fileType:
+      fromStory.fileType ??
+      story.format ??
+      DEFAULT_GALLERY_IMAGE_DETAILS.fileType,
     fileSize: fromStory.fileSize ?? DEFAULT_GALLERY_IMAGE_DETAILS.fileSize,
-    uploadDate: fromStory.uploadDate ?? story.date ?? DEFAULT_GALLERY_IMAGE_DETAILS.uploadDate,
+    uploadDate:
+      fromStory.uploadDate ??
+      story.date ??
+      DEFAULT_GALLERY_IMAGE_DETAILS.uploadDate,
     categories:
-      fromStory.categories ?? (categories || DEFAULT_GALLERY_IMAGE_DETAILS.categories),
+      fromStory.categories ??
+      (categories || DEFAULT_GALLERY_IMAGE_DETAILS.categories),
     isAiGenerated: Boolean(fromStory.isAiGenerated ?? story.isAiGenerated),
   };
 };

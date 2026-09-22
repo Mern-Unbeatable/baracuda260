@@ -1,28 +1,26 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import { useHomeHero } from '../hooks/useHomeHero';
 
-const SLIDES = ['/assets/hero/hero.png', '/assets/hero/hero1.png'];
+const SLIDES = ['/assets/hero/hero.webp', '/assets/hero/hero1.webp'];
 const SLIDE_MS = 6000;
 
 const HomeHero = memo(() => {
   const { t } = useTranslation();
-  const {
-    activeSlide,
-    setActiveSlide,
-    search,
-    setSearch,
-    goToGallery,
-  } = useHomeHero(SLIDES.length, SLIDE_MS);
+  const { activeSlide, setActiveSlide, search, setSearch, goToGallery } =
+    useHomeHero(SLIDES.length, SLIDE_MS);
 
   return (
     <section className="relative min-h-140 w-full overflow-hidden md:min-h-180 xl:min-h-200">
       {SLIDES.map((src, index) => (
-        <img
+        <Image
           key={src}
           src={src}
           alt=""
+          priority={true}
           width={1920}
           height={890}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
@@ -39,7 +37,9 @@ const HomeHero = memo(() => {
           <div className="flex flex-col gap-3">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1">
               <span className="size-2 rounded-full bg-[#05df72]" />
-              <span className="text-sm font-semibold text-white">{t('home.hero.badge')}</span>
+              <span className="text-sm font-semibold text-white">
+                {t('home.hero.badge')}
+              </span>
             </div>
             <h1 className="text-[36px] leading-[1.15] uppercase [word-spacing:4px] font-bold tracking-tight text-white sm:text-[48px] xl:text-[54px] xl:leading-[64.8px] xl:mb-6">
               {t('home.hero.title')}
@@ -65,7 +65,8 @@ const HomeHero = memo(() => {
         aria-label={t('common.heroSlides')}
       >
         {SLIDES.map((src, index) => (
-          <button
+          <Button
+            unstyled
             key={src}
             type="button"
             role="tab"
@@ -73,7 +74,9 @@ const HomeHero = memo(() => {
             aria-label={t('common.showSlide', { n: index + 1 })}
             onClick={() => setActiveSlide(index)}
             className={`size-3.5 rounded-full transition ${
-              index === activeSlide ? 'bg-white' : 'bg-white/50 hover:bg-white/80'
+              index === activeSlide
+                ? 'bg-white'
+                : 'bg-white/50 hover:bg-white/80'
             }`}
           />
         ))}

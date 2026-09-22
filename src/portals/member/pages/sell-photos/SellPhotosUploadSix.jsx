@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
-import { ROUTES } from '@/shared/config';
 import SixPhotoContent from '@/portals/member/views/SixPhotoContent';
+import { ROUTES } from '@/shared/config';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const uploadHub = ROUTES.ADMIN_SELL_PHOTOS_UPLOAD;
 

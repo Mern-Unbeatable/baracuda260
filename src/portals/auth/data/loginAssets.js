@@ -2,7 +2,7 @@
 const A = '/assets/login';
 
 export const LOGIN_ASSETS = {
-  hero: `${A}/hero.jpg`,
+  hero: `${A}/hero.webp`,
   mail: `${A}/icon-mail.svg`,
   lock: `${A}/icon-lock.svg`,
   eye: `${A}/icon-eye.svg`,

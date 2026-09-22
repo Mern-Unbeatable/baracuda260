@@ -5,7 +5,8 @@ import { useSEO } from '@/shared/hooks/useSEO';
 const Profile = memo(() => {
   useSEO({
     title: 'Profile',
-    description: 'View and manage your My12Photos public profile, artwork, messages, and portfolio.',
+    description:
+      'View and manage your My12Photos public profile, artwork, messages, and portfolio.',
     keywords: ['profile', 'following', 'followers', 'account', 'My12Photos'],
   });
 

@@ -1,26 +1,26 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
 import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard';
-import MemberFilterSelect from '@/portals/member/components/member-artwork/MemberFilterSelect';
 import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import MemberFilterSelect from '@/portals/member/components/member-artwork/MemberFilterSelect';
 import {
-  matchesMyArtworkFilter,
-  matchesMyArtworkStatus,
   MY_ARTWORK_FILTER_TABS,
   MY_ARTWORK_ITEMS,
   MY_ARTWORK_PAGE_SIZE,
   MY_ARTWORK_SORT_OPTIONS,
   MY_ARTWORK_STATS,
   MY_ARTWORK_STATUS_FILTERS,
+  matchesMyArtworkFilter,
+  matchesMyArtworkStatus,
   sortMyArtworkItems,
 } from '@/portals/member/data/myArtworkData';
+import { ROUTES } from '@/shared/config';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const SHOWCASE_BADGE_KEYS = {
   'Single Photo': 'common.badges.singlePhoto',
@@ -44,17 +44,18 @@ const MyArtworkContent = memo(() => {
 
   const filteredItems = useMemo(() => {
     const filtered = MY_ARTWORK_ITEMS.filter(
-      (item) => matchesMyArtworkFilter(item, filterTab) && matchesMyArtworkStatus(item, statusFilter),
+      (item) =>
+        matchesMyArtworkFilter(item, filterTab) &&
+        matchesMyArtworkStatus(item, statusFilter),
     );
     return sortMyArtworkItems(filtered, sort);
   }, [filterTab, sort, statusFilter]);
 
-  const {
-    currentPage,
-    setPage,
-    totalPages,
-    pagedItems,
-  } = usePaginatedSlice(filteredItems, MY_ARTWORK_PAGE_SIZE, [filterTab, statusFilter, sort]);
+  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
+    filteredItems,
+    MY_ARTWORK_PAGE_SIZE,
+    [filterTab, statusFilter, sort],
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
@@ -152,9 +153,12 @@ const MyArtworkContent = memo(() => {
             <MemberArtworkCard
               key={item.id}
               item={item}
-              badgeLabel={t(SHOWCASE_BADGE_KEYS[item.albumBadge] || item.albumBadge, {
-                defaultValue: item.albumBadge,
-              })}
+              badgeLabel={t(
+                SHOWCASE_BADGE_KEYS[item.albumBadge] || item.albumBadge,
+                {
+                  defaultValue: item.albumBadge,
+                },
+              )}
               onEdit={() => {}}
               onDelete={() => {}}
               onPromote={setPromoteItem}
@@ -168,7 +172,10 @@ const MyArtworkContent = memo(() => {
           <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
             {t('myArtwork.showing', {
               from: (currentPage - 1) * MY_ARTWORK_PAGE_SIZE + 1,
-              to: Math.min(currentPage * MY_ARTWORK_PAGE_SIZE, filteredItems.length),
+              to: Math.min(
+                currentPage * MY_ARTWORK_PAGE_SIZE,
+                filteredItems.length,
+              ),
               total: filteredItems.length,
             })}
           </p>

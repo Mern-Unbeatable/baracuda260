@@ -1,7 +1,7 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { ImgIcon, Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import { ABOUT_ASSETS } from '@/portals/public/about/data/aboutAssets';
+import { ImgIcon, Shell } from '@/shared/site-chrome';
 
 const MissionVisionCard = memo(({ title, children, highlight }) => (
   <article className="flex h-full flex-col gap-5 rounded-2xl bg-[#fde8e9] p-6 sm:p-8">
@@ -14,7 +14,9 @@ const MissionVisionCard = memo(({ title, children, highlight }) => (
       </div>
       <div className="flex items-center gap-2 border-t border-black/10 pt-5">
         <ImgIcon src={ABOUT_ASSETS.fire} size={24} />
-        <p className="text-[15px] font-normal text-[#fd9400] sm:text-[16px]">{highlight}</p>
+        <p className="text-[15px] font-normal text-[#fd9400] sm:text-[16px]">
+          {highlight}
+        </p>
       </div>
     </div>
   </article>

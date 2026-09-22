@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
 import AdminGalleryContent from '@/portals/admin/views/AdminGalleryContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const Gallery = memo(() => {
   useSEO({

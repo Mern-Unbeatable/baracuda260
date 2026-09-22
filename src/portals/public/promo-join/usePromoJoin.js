@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import {
   ABOUT_MAX_WORDS,
+  countWords,
   DEFAULT_THEME_ID,
   EMPTY_STORY,
-  ZODIAC_SIGNS,
-  countWords,
   findPromoLinkByCode,
   getSlotsForTheme,
+  ZODIAC_SIGNS,
 } from '@/portals/public/promo-join/promoJoinData';
 
 const revokePreview = (url) => {
@@ -21,7 +21,7 @@ export default function usePromoJoin(code) {
   const {
     register,
     handleSubmit: hookFormSubmit,
-        formState: { errors },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       fullName: '',
@@ -65,7 +65,8 @@ export default function usePromoJoin(code) {
   const activeSixSlotRef = useRef(null);
   const activeTwelveSlotRef = useRef(null);
 
-  const selectedSign = ZODIAC_SIGNS.find((sign) => sign.id === astroSignId) || ZODIAC_SIGNS[5];
+  const selectedSign =
+    ZODIAC_SIGNS.find((sign) => sign.id === astroSignId) || ZODIAC_SIGNS[5];
   const sixSlots = getSlotsForTheme(themeId);
 
   const patchSixStory = (field, value) => {
@@ -77,7 +78,9 @@ export default function usePromoJoin(code) {
   };
 
   const handleSocialChange = (index, value) => {
-    setSocialLinks((current) => current.map((item, i) => (i === index ? value : item)));
+    setSocialLinks((current) =>
+      current.map((item, i) => (i === index ? value : item)),
+    );
   };
 
   const handleAddSocial = () => {
@@ -163,12 +166,16 @@ export default function usePromoJoin(code) {
   const handleTwelveVideos = (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
-    setTwelveVideos((current) => [...current, ...files.map((file) => file.name)]);
+    setTwelveVideos((current) => [
+      ...current,
+      ...files.map((file) => file.name),
+    ]);
     event.target.value = '';
   };
 
   const validateOtherFields = (t, data) => {
-    if (countWords(data.about) > ABOUT_MAX_WORDS) return t('promoJoin.errors.about');
+    if (countWords(data.about) > ABOUT_MAX_WORDS)
+      return t('promoJoin.errors.about');
     if (!copyrightOk) return t('promoJoin.errors.copyright');
     return null;
   };

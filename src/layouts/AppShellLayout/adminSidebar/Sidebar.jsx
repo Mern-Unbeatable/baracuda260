@@ -1,67 +1,133 @@
-import { useTranslation } from 'react-i18next';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import toast from 'react-hot-toast';
-import { ROUTES } from '@/shared/config';
-import { logout, selectUser } from '@/app/store/slices/authSlice';
-import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
-import { ADMIN_OVERVIEW_ASSETS } from '@/portals/admin/data/adminOverviewData';
 import {
-  LayoutDashboard,
-  Trophy,
-  Link2,
-  MessageSquare,
-  Wallet,
-  UserRound,
-  LogOut,
-  X,
-  ChevronRight,
-  ChevronsRight,
-  ChevronsLeft,
-  Images,
-  Image,
-  Users,
-  ChartColumnStacked,
-  BookImage,
-  Crown,
-  CreditCard,
-  MessageCircleQuestion,
-  Newspaper,
-  MessageSquareText,
-  Megaphone,
-  Store,
-  Package,
-  Star,
-  ShoppingBag,
-  ClipboardList,
-  ShoppingCart,
   Bell,
+  BookImage,
+  ChartColumnStacked,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  ClipboardList,
+  CreditCard,
+  Crown,
+  Image as ImageIcon,
+  Images,
+  LayoutDashboard,
+  Link2,
+  LogOut,
+  Megaphone,
+  MessageCircleQuestion,
+  MessageSquare,
+  MessageSquareText,
+  Newspaper,
+  Package,
   Settings,
-  Sparkles,
   ShieldCheck,
+  ShoppingBag,
+  ShoppingCart,
+  Sparkles,
+  Star,
+  Store,
   Ticket,
-  UserCircle2,
   TrendingUp,
+  Trophy,
+  UserCircle2,
+  UserRound,
+  Users,
+  Wallet,
+  X,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { logout, selectUser } from '@/app/store/slices/authSlice';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import { ADMIN_OVERVIEW_ASSETS } from '@/portals/admin/data/adminOverviewData';
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
+import { ROUTES } from '@/shared/config';
 
 const USER_NAV_ITEMS = [
-  { labelKey: 'dashboard.nav.dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: LayoutDashboard },
-  { labelKey: 'dashboard.nav.artworkManagement', path: ROUTES.ADMIN_MY_ARTWORK, icon: Images },
-  { labelKey: 'dashboard.nav.newsMessages', path: ROUTES.ADMIN_NEWS_MESSAGES, icon: Newspaper },
-  { labelKey: 'dashboard.nav.sellPhotos', path: ROUTES.ADMIN_SELL_PHOTOS, icon: Store },
-  { labelKey: 'dashboard.nav.myStore', path: ROUTES.ADMIN_MY_STORE, icon: Package },
-  { labelKey: 'dashboard.nav.orders', path: ROUTES.ADMIN_ORDERS, icon: ShoppingCart },
-  { labelKey: 'dashboard.nav.myOrders', path: ROUTES.ADMIN_MY_ORDERS, icon: ClipboardList },
-  { labelKey: 'dashboard.nav.favouritePhotographers', path: ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS, icon: Star },
+  {
+    labelKey: 'dashboard.nav.dashboard',
+    path: ROUTES.ADMIN_DASHBOARD,
+    icon: LayoutDashboard,
+  },
+  {
+    labelKey: 'dashboard.nav.artworkManagement',
+    path: ROUTES.ADMIN_MY_ARTWORK,
+    icon: Images,
+  },
+  {
+    labelKey: 'dashboard.nav.newsMessages',
+    path: ROUTES.ADMIN_NEWS_MESSAGES,
+    icon: Newspaper,
+  },
+  {
+    labelKey: 'dashboard.nav.sellPhotos',
+    path: ROUTES.ADMIN_SELL_PHOTOS,
+    icon: Store,
+  },
+  {
+    labelKey: 'dashboard.nav.myStore',
+    path: ROUTES.ADMIN_MY_STORE,
+    icon: Package,
+  },
+  {
+    labelKey: 'dashboard.nav.orders',
+    path: ROUTES.ADMIN_ORDERS,
+    icon: ShoppingCart,
+  },
+  {
+    labelKey: 'dashboard.nav.myOrders',
+    path: ROUTES.ADMIN_MY_ORDERS,
+    icon: ClipboardList,
+  },
+  {
+    labelKey: 'dashboard.nav.favouritePhotographers',
+    path: ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS,
+    icon: Star,
+  },
   // { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
-  { labelKey: 'dashboard.nav.businessPhotos', path: ROUTES.ADMIN_BUSINESS_PHOTOS, icon: Link2 },
-  { labelKey: 'dashboard.nav.chat', path: ROUTES.ADMIN_CHAT, icon: MessageSquare },
-  { labelKey: 'dashboard.nav.notifications', path: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
-  { labelKey: 'dashboard.nav.prizePayments', path: ROUTES.ADMIN_PRIZE_PAYMENTS, icon: Wallet },
-  { labelKey: 'dashboard.nav.contactUs', path: ROUTES.ADMIN_CONTACT_US, icon: MessageCircleQuestion },
-  { labelKey: 'dashboard.nav.purchasePhotos', path: ROUTES.ADMIN_PURCHASE_PHOTOS, icon: ShoppingBag },
-  { labelKey: 'dashboard.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
-  { labelKey: 'dashboard.nav.settings', path: ROUTES.ADMIN_SETTINGS, icon: Settings },
+  {
+    labelKey: 'dashboard.nav.businessPhotos',
+    path: ROUTES.ADMIN_BUSINESS_PHOTOS,
+    icon: Link2,
+  },
+  {
+    labelKey: 'dashboard.nav.chat',
+    path: ROUTES.ADMIN_CHAT,
+    icon: MessageSquare,
+  },
+  {
+    labelKey: 'dashboard.nav.notifications',
+    path: ROUTES.ADMIN_NOTIFICATIONS,
+    icon: Bell,
+  },
+  {
+    labelKey: 'dashboard.nav.prizePayments',
+    path: ROUTES.ADMIN_PRIZE_PAYMENTS,
+    icon: Wallet,
+  },
+  {
+    labelKey: 'dashboard.nav.contactUs',
+    path: ROUTES.ADMIN_CONTACT_US,
+    icon: MessageCircleQuestion,
+  },
+  {
+    labelKey: 'dashboard.nav.purchasePhotos',
+    path: ROUTES.ADMIN_PURCHASE_PHOTOS,
+    icon: ShoppingBag,
+  },
+  {
+    labelKey: 'dashboard.nav.profile',
+    path: ROUTES.ADMIN_PROFILE,
+    icon: UserRound,
+  },
+  {
+    labelKey: 'dashboard.nav.settings',
+    path: ROUTES.ADMIN_SETTINGS,
+    icon: Settings,
+  },
 ];
 
 const ADMIN_NAV_GROUPS = [
@@ -87,7 +153,7 @@ const ADMIN_NAV_GROUPS = [
       {
         labelKey: 'adminOverview.nav.gallery',
         path: ROUTES.ADMIN_GALLERY,
-        icon: Image,
+        icon: ImageIcon,
       },
       {
         labelKey: 'adminOverview.nav.premiumPhotos',
@@ -100,7 +166,11 @@ const ADMIN_NAV_GROUPS = [
         icon: Megaphone,
       },
       // { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
-      { labelKey: 'adminOverview.nav.users', path: ROUTES.ADMIN_USERS, icon: Users },
+      {
+        labelKey: 'adminOverview.nav.users',
+        path: ROUTES.ADMIN_USERS,
+        icon: Users,
+      },
     ],
   },
   {
@@ -112,9 +182,21 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_CATEGORIES,
         icon: ChartColumnStacked,
       },
-      { labelKey: 'adminOverview.nav.albumTypes', path: ROUTES.ADMIN_ALBUM_TYPES, icon: BookImage },
-      { labelKey: 'adminOverview.nav.winners', path: ROUTES.ADMIN_WINNERS, icon: Crown },
-      { labelKey: 'adminOverview.nav.payouts', path: ROUTES.ADMIN_PAYOUTS, icon: CreditCard },
+      {
+        labelKey: 'adminOverview.nav.albumTypes',
+        path: ROUTES.ADMIN_ALBUM_TYPES,
+        icon: BookImage,
+      },
+      {
+        labelKey: 'adminOverview.nav.winners',
+        path: ROUTES.ADMIN_WINNERS,
+        icon: Crown,
+      },
+      {
+        labelKey: 'adminOverview.nav.payouts',
+        path: ROUTES.ADMIN_PAYOUTS,
+        icon: CreditCard,
+      },
       {
         labelKey: 'adminOverview.nav.support',
         path: ROUTES.ADMIN_SUPPORT,
@@ -125,7 +207,11 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_BUSINESS_PHOTOS,
         icon: Link2,
       },
-      { labelKey: 'adminOverview.nav.newsletter', path: ROUTES.ADMIN_NEWSLETTER, icon: Newspaper },
+      {
+        labelKey: 'adminOverview.nav.newsletter',
+        path: ROUTES.ADMIN_NEWSLETTER,
+        icon: Newspaper,
+      },
       {
         labelKey: 'adminOverview.nav.comment',
         path: ROUTES.ADMIN_COMMENT,
@@ -157,8 +243,16 @@ const ADMIN_NAV_GROUPS = [
     id: 'system',
     labelKey: 'adminOverview.nav.groups.system',
     items: [
-      { labelKey: 'adminOverview.nav.settings', path: ROUTES.ADMIN_SETTINGS, icon: Settings },
-      { labelKey: 'adminOverview.nav.profile', path: ROUTES.ADMIN_PROFILE, icon: UserRound },
+      {
+        labelKey: 'adminOverview.nav.settings',
+        path: ROUTES.ADMIN_SETTINGS,
+        icon: Settings,
+      },
+      {
+        labelKey: 'adminOverview.nav.profile',
+        path: ROUTES.ADMIN_PROFILE,
+        icon: UserRound,
+      },
     ],
   },
 ];
@@ -171,18 +265,31 @@ const NAV_ACTIVE =
 const NAV_INACTIVE =
   'text-[#5d687b] border-transparent hover:bg-[#fde8e9]/50 hover:text-[#161c27] hover:border-[#fde8e9]';
 
-const getNavClass = ({ isActive }) => `${NAV_BASE} ${isActive ? NAV_ACTIVE : NAV_INACTIVE}`;
+const getNavClass = ({ isActive }) =>
+  `${NAV_BASE} ${isActive ? NAV_ACTIVE : NAV_INACTIVE}`;
 
-const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpand }) => {
+const Sidebar = ({
+  onClose,
+  onDesktopClose,
+  onAutoCollapse,
+  isCollapsed,
+  onExpand,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const isAdmin = user?.role === 'admin';
   const { t } = useTranslation();
 
-  const displayName = user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
+  const displayName =
+    user?.fullName ||
+    user?.name ||
+    user?.username ||
+    t('dashboard.defaultName');
   const avatarInitial = displayName.trim().charAt(0).toUpperCase() || 'U';
-  const avatarSrc = isAdmin ? ADMIN_OVERVIEW_ASSETS.avatar : DASHBOARD_ASSETS.avatar;
+  const avatarSrc = isAdmin
+    ? ADMIN_OVERVIEW_ASSETS.avatar
+    : DASHBOARD_ASSETS.avatar;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -198,7 +305,8 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
   if (isCollapsed) {
     return (
       <div className="flex h-full w-full flex-col items-center gap-1 border-r border-gray-100 bg-white py-3">
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={onExpand}
           title={t('dashboard.sidebar.expand')}
@@ -206,36 +314,39 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
           className="mb-2 flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg text-gray-500 transition-colors duration-200 hover:bg-[#fde8e9]/60 hover:text-gray-800"
         >
           <ChevronsRight size={20} aria-hidden="true" />
-        </button>
+        </Button>
 
         <nav
           className="scrollbar-white flex w-full flex-1 flex-col items-center gap-1 overflow-y-auto px-2"
           aria-label={t('dashboard.sidebar.navAria')}
         >
-          {collapsedItems.map(({ labelKey, path, icon: Icon, autoCollapse }) => (
-            <NavLink
-              key={`${path}-${labelKey}`}
-              to={path}
-              end={path === ROUTES.ADMIN_DASHBOARD}
-              title={t(labelKey)}
-              onClick={() => {
-                onClose();
-                if (autoCollapse && onAutoCollapse) onAutoCollapse();
-              }}
-              className={({ isActive }) =>
-                `flex size-10 items-center justify-center rounded-lg transition-colors duration-200 ${
-                  isActive
-                    ? 'bg-[#fde8e9] text-[#ee1c25]'
-                    : 'text-gray-400 hover:bg-[#fde8e9]/60 hover:text-gray-900'
-                }`
-              }
-            >
-              <Icon size={20} aria-hidden="true" />
-            </NavLink>
-          ))}
+          {collapsedItems.map(
+            ({ labelKey, path, icon: Icon, autoCollapse }) => (
+              <NavLink
+                key={`${path}-${labelKey}`}
+                to={path}
+                end={path === ROUTES.ADMIN_DASHBOARD}
+                title={t(labelKey)}
+                onClick={() => {
+                  onClose();
+                  if (autoCollapse && onAutoCollapse) onAutoCollapse();
+                }}
+                className={({ isActive }) =>
+                  `flex size-10 items-center justify-center rounded-lg transition-colors duration-200 ${
+                    isActive
+                      ? 'bg-[#fde8e9] text-[#ee1c25]'
+                      : 'text-gray-400 hover:bg-[#fde8e9]/60 hover:text-gray-900'
+                  }`
+                }
+              >
+                <Icon size={20} aria-hidden="true" />
+              </NavLink>
+            ),
+          )}
         </nav>
 
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={handleLogout}
           title={t('dashboard.nav.logOut')}
@@ -243,7 +354,7 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
           className="mt-1 flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition-colors duration-200 hover:bg-red-50 hover:text-[#d00000]"
         >
           <LogOut size={20} aria-hidden="true" />
-        </button>
+        </Button>
       </div>
     );
   }
@@ -257,7 +368,7 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
           className="min-w-0 flex-1 cursor-pointer pr-2"
           aria-label={t('nav.home')}
         >
-          <img
+          <Image
             src={DASHBOARD_ASSETS.logo}
             alt="My12Photos"
             width={200}
@@ -268,22 +379,24 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
             }}
           />
         </Link>
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={onClose}
           className="-mr-1 mt-0.5 cursor-pointer rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 lg:hidden"
           aria-label={t('dashboard.sidebar.close')}
         >
           <X size={20} aria-hidden="true" />
-        </button>
-        <button
+        </Button>
+        <Button
+          unstyled
           type="button"
           onClick={onDesktopClose}
           className="-mr-1 mt-0.5 hidden cursor-pointer items-center justify-center rounded-md p-1.5 text-gray-500 transition-colors hover:bg-[#fde8e9]/60 hover:text-gray-900 lg:flex"
           aria-label={t('dashboard.sidebar.collapse')}
         >
           <ChevronsLeft size={20} aria-hidden="true" />
-        </button>
+        </Button>
       </div>
 
       <nav
@@ -317,7 +430,9 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
                                   : 'text-gray-400 group-hover:text-gray-500'
                               }`}
                             />
-                            <span className="flex-1 truncate">{t(labelKey)}</span>
+                            <span className="flex-1 truncate">
+                              {t(labelKey)}
+                            </span>
                             <ChevronRight
                               size={18}
                               aria-hidden="true"
@@ -340,39 +455,43 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
               {t('dashboard.sidebar.mainMenu')}
             </p>
             <ul className="space-y-1.5" role="list">
-              {USER_NAV_ITEMS.map(({ labelKey, path, icon: Icon, autoCollapse }) => (
-                <li key={path}>
-                  <NavLink
-                    to={path}
-                    end={path === ROUTES.ADMIN_DASHBOARD}
-                    onClick={() => {
-                      onClose();
-                      if (autoCollapse && onAutoCollapse) onAutoCollapse();
-                    }}
-                    className={getNavClass}
-                  >
-                    {({ isActive }) => (
-                      <>
-                        <Icon
-                          size={20}
-                          aria-hidden="true"
-                          className={`shrink-0 transition-colors ${
-                            isActive ? 'text-[#ee1c25]' : 'text-gray-400 group-hover:text-gray-500'
-                          }`}
-                        />
-                        <span className="flex-1 truncate">{t(labelKey)}</span>
-                        <ChevronRight
-                          size={18}
-                          aria-hidden="true"
-                          className={`mr-0.5 shrink-0 text-[#ee1c25] drop-shadow-[0_0_6px_#ee1c25] ${
-                            isActive ? 'animate-nav-arrow' : 'opacity-0'
-                          }`}
-                        />
-                      </>
-                    )}
-                  </NavLink>
-                </li>
-              ))}
+              {USER_NAV_ITEMS.map(
+                ({ labelKey, path, icon: Icon, autoCollapse }) => (
+                  <li key={path}>
+                    <NavLink
+                      to={path}
+                      end={path === ROUTES.ADMIN_DASHBOARD}
+                      onClick={() => {
+                        onClose();
+                        if (autoCollapse && onAutoCollapse) onAutoCollapse();
+                      }}
+                      className={getNavClass}
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <Icon
+                            size={20}
+                            aria-hidden="true"
+                            className={`shrink-0 transition-colors ${
+                              isActive
+                                ? 'text-[#ee1c25]'
+                                : 'text-gray-400 group-hover:text-gray-500'
+                            }`}
+                          />
+                          <span className="flex-1 truncate">{t(labelKey)}</span>
+                          <ChevronRight
+                            size={18}
+                            aria-hidden="true"
+                            className={`mr-0.5 shrink-0 text-[#ee1c25] drop-shadow-[0_0_6px_#ee1c25] ${
+                              isActive ? 'animate-nav-arrow' : 'opacity-0'
+                            }`}
+                          />
+                        </>
+                      )}
+                    </NavLink>
+                  </li>
+                ),
+              )}
             </ul>
           </>
         )}
@@ -384,7 +503,7 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
             <span className="absolute inset-0 flex items-center justify-center text-base font-bold text-white">
               {avatarInitial}
             </span>
-            <img
+            <Image
               src={avatarSrc}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
@@ -398,19 +517,26 @@ const Sidebar = ({ onClose, onDesktopClose, onAutoCollapse, isCollapsed, onExpan
               {displayName}
             </p>
             {user?.email ? (
-              <p className="truncate text-xs leading-5 text-gray-400">{user.email}</p>
+              <p className="truncate text-xs leading-5 text-gray-400">
+                {user.email}
+              </p>
             ) : null}
           </div>
         </div>
 
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={handleLogout}
           className={`${NAV_BASE} w-full cursor-pointer border-transparent text-[#d00000] hover:bg-red-50 hover:shadow-[inset_3px_0_0_0_#d00000]`}
         >
-          <LogOut size={20} aria-hidden="true" className="shrink-0 text-[#d00000]" />
+          <LogOut
+            size={20}
+            aria-hidden="true"
+            className="shrink-0 text-[#d00000]"
+          />
           <span>{t('dashboard.nav.logOut')}</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

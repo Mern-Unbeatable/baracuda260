@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SUPPORTED_LOCALES, changeLanguage } from '@/shared/i18n';
-import { SITE_ASSETS } from '@/shared/site-chrome/siteAssets';
+import Button from '@/components/ui/Button';
+import { changeLanguage, SUPPORTED_LOCALES } from '@/shared/i18n';
 import ImgIcon from '@/shared/site-chrome/ImgIcon';
+import { SITE_ASSETS } from '@/shared/site-chrome/siteAssets';
 
 const LanguageSwitcher = memo(({ className = '' }) => {
   const { t, i18n } = useTranslation();
@@ -10,7 +11,8 @@ const LanguageSwitcher = memo(({ className = '' }) => {
   const rootRef = useRef(null);
   const currentLng = i18n.resolvedLanguage || i18n.language;
   const active =
-    SUPPORTED_LOCALES.find((locale) => locale.code === currentLng) || SUPPORTED_LOCALES[0];
+    SUPPORTED_LOCALES.find((locale) => locale.code === currentLng) ||
+    SUPPORTED_LOCALES[0];
 
   useEffect(() => {
     if (!open) return undefined;
@@ -34,7 +36,8 @@ const LanguageSwitcher = memo(({ className = '' }) => {
 
   return (
     <div className={`relative ${className}`} ref={rootRef}>
-      <button
+      <Button
+        unstyled
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -43,10 +46,13 @@ const LanguageSwitcher = memo(({ className = '' }) => {
         className="flex items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-1.5 text-[16px] font-medium text-[#222]"
       >
         {t(active.labelKey)}
-        <span className={`inline-flex transition ${open ? 'rotate-180' : ''}`} aria-hidden="true">
+        <span
+          className={`inline-flex transition ${open ? 'rotate-180' : ''}`}
+          aria-hidden="true"
+        >
           <ImgIcon src={SITE_ASSETS.chevron} size={24} />
         </span>
-      </button>
+      </Button>
 
       {open && (
         <ul
@@ -58,7 +64,8 @@ const LanguageSwitcher = memo(({ className = '' }) => {
             const selected = locale.code === currentLng;
             return (
               <li key={locale.code} role="option" aria-selected={selected}>
-                <button
+                <Button
+                  unstyled
                   type="button"
                   className={`flex w-full px-3 py-2.5 text-left text-[14px] font-medium transition ${
                     selected
@@ -71,7 +78,7 @@ const LanguageSwitcher = memo(({ className = '' }) => {
                   }}
                 >
                   {t(locale.labelKey)}
-                </button>
+                </Button>
               </li>
             );
           })}

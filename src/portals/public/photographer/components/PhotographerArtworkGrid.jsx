@@ -1,13 +1,17 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useState } from 'react';
 import { ChevronDown, Images } from 'lucide-react';
+import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Pagination from '@/components/common/Pagination/Pagination';
+import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import Button from '@/components/ui/Button';
+import {
+  PROFILE_ALBUM_FILTERS,
+  PROFILE_SORT_OPTIONS,
+} from '@/portals/public/photographer/data/photographerProfileData';
 import { matchesAlbumType } from '@/shared/data/albumTypes';
 import { galleryDetailPath } from '@/shared/data/galleryPhotos';
-import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
-import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
-import Pagination from '@/components/common/Pagination/Pagination';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
-import { PROFILE_ALBUM_FILTERS, PROFILE_SORT_OPTIONS } from '@/portals/public/photographer/data/photographerProfileData';
 
 const PAGE_SIZE = 8;
 const ALL_FILTER = 'All';
@@ -19,7 +23,13 @@ const SHOWCASE_BADGE_KEYS = {
 };
 
 const PhotographerArtworkGrid = memo(
-  ({ titleKey, subtitleKey, photos, showCompetitionTag = false, showPrice = false }) => {
+  ({
+    titleKey,
+    subtitleKey,
+    photos,
+    showCompetitionTag = false,
+    showPrice = false,
+  }) => {
     const { t } = useTranslation();
     const [filter, setFilter] = useState(ALL_FILTER);
     const [sort, setSort] = useState(PROFILE_SORT_OPTIONS[0]);
@@ -34,7 +44,9 @@ const PhotographerArtworkGrid = memo(
           label:
             item.value === ALL_FILTER
               ? t('photographerProfile.filters.allArtwork')
-              : t(SHOWCASE_BADGE_KEYS[item.value] || item.value, { defaultValue: item.value }),
+              : t(SHOWCASE_BADGE_KEYS[item.value] || item.value, {
+                  defaultValue: item.value,
+                }),
         })),
       [t],
     );
@@ -50,13 +62,15 @@ const PhotographerArtworkGrid = memo(
       if (sort === 'mostLiked') {
         list.sort(
           (a, b) =>
-            Number(String(b.votes).replace(/,/g, '')) - Number(String(a.votes).replace(/,/g, '')),
+            Number(String(b.votes).replace(/,/g, '')) -
+            Number(String(a.votes).replace(/,/g, '')),
         );
       }
       if (sort === 'mostViewed') {
         list.sort(
           (a, b) =>
-            Number(String(b.views).replace(/,/g, '')) - Number(String(a.views).replace(/,/g, '')),
+            Number(String(b.views).replace(/,/g, '')) -
+            Number(String(a.views).replace(/,/g, '')),
         );
       }
       return list;
@@ -74,7 +88,11 @@ const PhotographerArtworkGrid = memo(
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <Images size={22} className="shrink-0 text-[#4048cd]" aria-hidden="true" />
+              <Images
+                size={22}
+                className="shrink-0 text-[#4048cd]"
+                aria-hidden="true"
+              />
               <h2 className="text-[20px] font-bold text-[#111827] sm:text-[22px]">
                 {t(titleKey)}
               </h2>
@@ -85,7 +103,8 @@ const PhotographerArtworkGrid = memo(
           </div>
 
           <div className="relative w-full shrink-0 sm:w-auto">
-            <button
+            <Button
+              unstyled
               type="button"
               aria-haspopup="listbox"
               aria-expanded={sortOpen}
@@ -94,7 +113,7 @@ const PhotographerArtworkGrid = memo(
             >
               {t(`photographerProfile.sort.${sort}`)}
               <ChevronDown size={16} aria-hidden="true" />
-            </button>
+            </Button>
             {sortOpen ? (
               <ul
                 role="listbox"
@@ -102,8 +121,13 @@ const PhotographerArtworkGrid = memo(
                 className="absolute right-0 z-20 mt-2 min-w-36 overflow-hidden rounded-lg border border-black/10 bg-white py-1 shadow-lg"
               >
                 {PROFILE_SORT_OPTIONS.map((option) => (
-                  <li key={option} role="option" aria-selected={sort === option}>
-                    <button
+                  <li
+                    key={option}
+                    role="option"
+                    aria-selected={sort === option}
+                  >
+                    <Button
+                      unstyled
                       type="button"
                       onClick={() => {
                         setSort(option);
@@ -116,7 +140,7 @@ const PhotographerArtworkGrid = memo(
                       }`}
                     >
                       {t(`photographerProfile.sort.${option}`)}
-                    </button>
+                    </Button>
                   </li>
                 ))}
               </ul>
@@ -179,7 +203,9 @@ const PhotographerArtworkGrid = memo(
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setPage}
-          ariaLabel={t('gallery.paginationAria', { defaultValue: 'Gallery pagination' })}
+          ariaLabel={t('gallery.paginationAria', {
+            defaultValue: 'Gallery pagination',
+          })}
         />
       </section>
     );

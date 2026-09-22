@@ -1,4 +1,6 @@
 import React, { memo } from 'react';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 
 const TwelveStoryStrip = memo(({ slides, activeIndex, onSelect }) => (
   <div className="mt-2 w-full overflow-x-auto pb-2">
@@ -24,7 +26,7 @@ const TwelveStoryStrip = memo(({ slides, activeIndex, onSelect }) => (
                     : 'rounded bg-[#ee1c25] px-1.5 py-1'
                 }`}
               >
-                <img
+                <Image
                   src={slide.icon}
                   alt=""
                   width={35}
@@ -42,23 +44,26 @@ const TwelveStoryStrip = memo(({ slides, activeIndex, onSelect }) => (
                 {slide.sign}
               </span>
             </div>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => onSelect(index)}
               aria-label={`Show ${slide.sign}`}
               aria-pressed={index === activeIndex}
               className={`relative h-18 w-full overflow-hidden rounded-lg sm:h-25 xl:h-30 ${
-                index === activeIndex ? 'border-[3px] border-[#ee1c25]' : 'border border-black/10'
+                index === activeIndex
+                  ? 'border-[3px] border-[#ee1c25]'
+                  : 'border border-black/10'
               }`}
             >
-              <img
+              <Image
                 src={slide.thumb}
                 alt={slide.sign}
                 width={112}
                 height={120}
                 className="h-full w-full object-cover"
               />
-            </button>
+            </Button>
           </div>
         );
       })}

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
+import TopPhotographers from '@/components/marketing/TopPhotographers/TopPhotographers';
 import { ROUTES } from '@/shared/config';
 import { SitePageLayout } from '@/shared/site-chrome';
-import TopPhotographers from '@/components/marketing/TopPhotographers/TopPhotographers';
 
 /**
  * Navbar Leaderboard page — same standings UI as Home, with album/month tabs.

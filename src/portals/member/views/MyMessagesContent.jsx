@@ -1,12 +1,15 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberMessageCard from '@/components/data-display/MemberMessageCard/MemberMessageCard';
-import { MY_MESSAGES, MY_MESSAGES_PAGE_SIZE } from '@/portals/member/data/myMessagesData';
+import {
+  MY_MESSAGES,
+  MY_MESSAGES_PAGE_SIZE,
+} from '@/portals/member/data/myMessagesData';
+import { ROUTES } from '@/shared/config';
+import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const MyMessagesContent = memo(() => {
   const { t } = useTranslation();

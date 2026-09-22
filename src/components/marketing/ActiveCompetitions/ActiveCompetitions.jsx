@@ -1,9 +1,9 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { COMPETITION_CARDS } from '@/shared/data/competitionsMarketing';
-import { Shell, homeAsset } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import PlanCard from '@/components/marketing/PlanCard/PlanCard';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import { COMPETITION_CARDS } from '@/shared/data/competitionsMarketing';
+import { homeAsset, Shell } from '@/shared/site-chrome';
 
 const ENTER_ARROW = homeAsset('icon-arrow.svg');
 

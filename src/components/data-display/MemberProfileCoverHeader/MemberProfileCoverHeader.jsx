@@ -1,7 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
 import { MapPin, Pencil } from 'lucide-react';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import Image from '@/components/ui/Image';
 import { ROUTES } from '@/shared/config';
 
 const MemberProfileCoverHeader = memo(({ profile }) => {
@@ -10,7 +11,11 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
   return (
     <div className="flex flex-col">
       <div className="relative h-45 w-full overflow-hidden rounded-2xl sm:h-55 lg:h-65">
-        <img src={profile.cover} alt="" className="h-full w-full object-cover" />
+        <Image
+          src={profile.cover}
+          alt=""
+          className="h-full w-full object-cover"
+        />
         <div
           className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#111827]/40 to-transparent"
           aria-hidden="true"
@@ -18,7 +23,7 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
       </div>
 
       <div className="flex items-center gap-4 px-1 pt-3 sm:gap-5 sm:px-2">
-        <img
+        <Image
           src={profile.avatar}
           alt={profile.name}
           width={112}

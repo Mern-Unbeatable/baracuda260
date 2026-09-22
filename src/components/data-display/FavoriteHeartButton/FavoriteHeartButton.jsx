@@ -1,6 +1,7 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useState } from 'react';
 import { Heart } from 'lucide-react';
+import React, { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 
 const parseVotes = (value) => {
   const n = Number(String(value ?? '0').replace(/,/g, ''));
@@ -26,13 +27,17 @@ const FavoriteHeartButton = memo(({ initialVotes = '0', title = '' }) => {
   };
 
   return (
-    <button
+    <Button
+      unstyled
       type="button"
       onClick={handleClick}
       aria-pressed={favorited}
       aria-label={
         favorited
-          ? t('gallery.unfavorite', { title, defaultValue: `Unfavorite ${title}` })
+          ? t('gallery.unfavorite', {
+              title,
+              defaultValue: `Unfavorite ${title}`,
+            })
           : t('gallery.favorite', { title, defaultValue: `Favorite ${title}` })
       }
       className="inline-flex cursor-pointer items-center gap-1.5 rounded-md text-[14px] text-[#6b7280] transition hover:text-[#e53935]"
@@ -48,7 +53,7 @@ const FavoriteHeartButton = memo(({ initialVotes = '0', title = '' }) => {
         }
       />
       <span>{formatVotes(displayVotes)}</span>
-    </button>
+    </Button>
   );
 });
 

@@ -1,5 +1,6 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 
 const PROFILE_TABS = [
   { id: 'profile', labelKey: 'photographerProfile.tabs.profile' },
@@ -21,20 +22,23 @@ const PhotographerProfileTabs = memo(({ activeTab, onChange }) => {
         {PROFILE_TABS.map((tab) => {
           const active = activeTab === tab.id;
           return (
-            <button
+            <Button
+              unstyled
               key={tab.id}
               type="button"
               onClick={() => onChange(tab.id)}
               aria-current={active ? 'page' : undefined}
               className={`relative shrink-0 cursor-pointer px-3 py-3 text-[14px] font-semibold transition sm:px-4 sm:text-[15px] ${
-                active ? 'text-[#4048cd]' : 'text-[#6b7280] hover:text-[#111827]'
+                active
+                  ? 'text-[#4048cd]'
+                  : 'text-[#6b7280] hover:text-[#111827]'
               }`}
             >
               {t(tab.labelKey)}
               {active ? (
                 <span className="absolute inset-x-2 bottom-0 h-0.75 rounded-full bg-[#4048cd]" />
               ) : null}
-            </button>
+            </Button>
           );
         })}
       </div>

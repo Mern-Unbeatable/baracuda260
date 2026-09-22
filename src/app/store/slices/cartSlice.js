@@ -1,4 +1,4 @@
-import { createSlice, createSelector } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   items: [],
@@ -20,16 +20,28 @@ const cartSlice = createSlice({
         state.items.push({ ...product, quantity: 1 });
       }
 
-      state.totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
-      state.totalPrice = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      state.totalItems = state.items.reduce(
+        (sum, item) => sum + item.quantity,
+        0,
+      );
+      state.totalPrice = state.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
     },
 
     removeFromCart: (state, action) => {
       const productId = action.payload;
       state.items = state.items.filter((item) => item.id !== productId);
 
-      state.totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
-      state.totalPrice = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      state.totalItems = state.items.reduce(
+        (sum, item) => sum + item.quantity,
+        0,
+      );
+      state.totalPrice = state.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
     },
 
     increaseQuantity: (state, action) => {
@@ -60,8 +72,13 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  increaseQuantity,
+  decreaseQuantity,
+  clearCart,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
 
@@ -79,7 +96,11 @@ export const selectCartTotal = createSelector(selectCartItems, (items) =>
 );
 
 export const selectIsInCart = (productId) =>
-  createSelector(selectCartItems, (items) => items.some((item) => item.id === productId));
+  createSelector(selectCartItems, (items) =>
+    items.some((item) => item.id === productId),
+  );
 
 export const selectCartItemById = (productId) =>
-  createSelector(selectCartItems, (items) => items.find((item) => item.id === productId));
+  createSelector(selectCartItems, (items) =>
+    items.find((item) => item.id === productId),
+  );

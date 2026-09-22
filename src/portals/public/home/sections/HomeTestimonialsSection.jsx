@@ -1,7 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { ImgIcon, Shell } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import Image from '@/components/ui/Image';
+import { ImgIcon, Shell } from '@/shared/site-chrome';
 import { HOME_TESTIMONIALS, homeAssets } from '../data/homePageData';
 
 const HomeTestimonialsSection = memo(() => {
@@ -25,7 +26,11 @@ const HomeTestimonialsSection = memo(() => {
                 {Array.from({ length: 5 }).map((_, i) => (
                   <ImgIcon
                     key={i}
-                    src={i < Math.floor(item.stars) ? homeAssets.starFull : homeAssets.starHalf}
+                    src={
+                      i < Math.floor(item.stars)
+                        ? homeAssets.starFull
+                        : homeAssets.starHalf
+                    }
                     size={16}
                   />
                 ))}
@@ -34,7 +39,7 @@ const HomeTestimonialsSection = memo(() => {
                 &ldquo;{t(item.quoteKey)}&rdquo;
               </p>
               <div className="mt-6 flex items-center gap-3">
-                <img
+                <Image
                   src={item.avatar}
                   alt=""
                   width={40}
@@ -42,8 +47,12 @@ const HomeTestimonialsSection = memo(() => {
                   className="size-10 rounded-full object-cover"
                 />
                 <div>
-                  <p className="text-[14px] font-bold text-[#0d0d14]">{item.name}</p>
-                  <p className="text-[12px] text-[#6b7280]">{t(item.roleKey)}</p>
+                  <p className="text-[14px] font-bold text-[#0d0d14]">
+                    {item.name}
+                  </p>
+                  <p className="text-[12px] text-[#6b7280]">
+                    {t(item.roleKey)}
+                  </p>
                 </div>
               </div>
             </article>

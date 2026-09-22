@@ -21,6 +21,7 @@ export const getDemoAccount = (email, password) => {
   if (password !== DEMO_PASSWORD) return null;
 
   if (normalized === DEMO_ACCOUNTS.user.email) return { ...DEMO_ACCOUNTS.user };
-  if (normalized === DEMO_ACCOUNTS.admin.email) return { ...DEMO_ACCOUNTS.admin };
+  if (normalized === DEMO_ACCOUNTS.admin.email)
+    return { ...DEMO_ACCOUNTS.admin };
   return null;
 };

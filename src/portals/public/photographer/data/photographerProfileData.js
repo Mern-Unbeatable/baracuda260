@@ -3,12 +3,12 @@ import { GALLERY_PHOTOS } from '@/shared/data/galleryPhotos';
 const A = '/assets/home';
 
 export const PHOTOGRAPHER_ASSETS = {
-  avatar: `${A}/avatar-marta.jpg`,
-  featuredHero: `${A}/photo-morning.jpg`,
-  featuredVideo: `${A}/photo-morning.jpg`,
-  messageHero: `${A}/photo-golden.jpg`,
-  messageMushroom: `${A}/photo-forest.jpg`,
-  profileCover: `${A}/photo-silent.jpg`,
+  avatar: `${A}/avatar-marta.webp`,
+  featuredHero: `${A}/photo-morning.webp`,
+  featuredVideo: `${A}/photo-morning.webp`,
+  messageHero: `${A}/photo-golden.webp`,
+  messageMushroom: `${A}/photo-forest.webp`,
+  profileCover: `${A}/photo-silent.webp`,
 };
 
 export const PHOTOGRAPHER_PROFILE = {
@@ -66,16 +66,36 @@ export const PHOTOGRAPHER_TALENT_APPRECIATION = {
 
 const ARTWORK_META = {
   'golden-hour-silence': { inCompetition: false, premium: false },
-  'autumn-sequence': { inCompetition: true, premium: false, extraPhotoCount: 5 },
+  'autumn-sequence': {
+    inCompetition: true,
+    premium: false,
+    extraPhotoCount: 5,
+  },
   'wings-over-the-marsh': { inCompetition: false, premium: false },
-  'city-after-midnight': { inCompetition: true, premium: false, extraPhotoCount: 5 },
-  'tidal-memory': { inCompetition: false, premium: true, price: '$5.00', extraPhotoCount: 11 },
+  'city-after-midnight': {
+    inCompetition: true,
+    premium: false,
+    extraPhotoCount: 5,
+  },
+  'tidal-memory': {
+    inCompetition: false,
+    premium: true,
+    price: '$5.00',
+    extraPhotoCount: 11,
+  },
   'forest-cathedral': { inCompetition: false, premium: true, price: '$2.00' },
   'morning-fields': { inCompetition: false, premium: true, price: '$2.00' },
-  'zodiac-journey': { inCompetition: false, premium: true, price: '$5.00', extraPhotoCount: 11 },
+  'zodiac-journey': {
+    inCompetition: false,
+    premium: true,
+    price: '$5.00',
+    extraPhotoCount: 11,
+  },
 };
 
-const galleryById = Object.fromEntries(GALLERY_PHOTOS.map((photo) => [photo.id, photo]));
+const galleryById = Object.fromEntries(
+  GALLERY_PHOTOS.map((photo) => [photo.id, photo]),
+);
 
 export const PHOTOGRAPHER_ARTWORK = Object.entries(ARTWORK_META)
   .map(([id, meta]) => {
@@ -85,7 +105,9 @@ export const PHOTOGRAPHER_ARTWORK = Object.entries(ARTWORK_META)
   })
   .filter(Boolean);
 
-export const PHOTOGRAPHER_PREMIUM = PHOTOGRAPHER_ARTWORK.filter((photo) => photo.premium);
+export const PHOTOGRAPHER_PREMIUM = PHOTOGRAPHER_ARTWORK.filter(
+  (photo) => photo.premium,
+);
 
 export const PHOTOGRAPHER_MESSAGES = [
   {
@@ -130,8 +152,14 @@ export const PHOTOGRAPHER_STORE_CATEGORIES = [
   { id: 'art-prints', labelKey: 'photographerProfile.store.filters.artPrints' },
   { id: 'handmade', labelKey: 'photographerProfile.store.filters.handmade' },
   { id: 'apparel', labelKey: 'photographerProfile.store.filters.apparel' },
-  { id: 'photobooks', labelKey: 'photographerProfile.store.filters.photobooks' },
-  { id: 'digital-preset', labelKey: 'photographerProfile.store.filters.digitalPreset' },
+  {
+    id: 'photobooks',
+    labelKey: 'photographerProfile.store.filters.photobooks',
+  },
+  {
+    id: 'digital-preset',
+    labelKey: 'photographerProfile.store.filters.digitalPreset',
+  },
   { id: 'other', labelKey: 'photographerProfile.store.filters.other' },
 ];
 
@@ -148,12 +176,12 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
     price: '$68.00',
     category: 'art-prints',
     badgeKey: 'photographerProfile.store.badges.artPrints',
-    image: `${A}/photo-golden.jpg`,
+    image: `${A}/photo-golden.webp`,
     gallery: [
-      `${A}/photo-golden.jpg`,
-      `${A}/photo-morning.jpg`,
-      `${A}/photo-silent.jpg`,
-      `${A}/photo-harbor.jpg`,
+      `${A}/photo-golden.webp`,
+      `${A}/photo-morning.webp`,
+      `${A}/photo-silent.webp`,
+      `${A}/photo-harbor.webp`,
     ],
     sizes: [
       { id: '12x36', label: '12 x 36 in ( Gallery Exhibition )' },
@@ -164,19 +192,20 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
   {
     id: 'store-02',
     title: 'Silent Harbor Canvas Edition',
-    description: 'Limited canvas edition capturing quiet harbor reflections in cool evening tones.',
+    description:
+      'Limited canvas edition capturing quiet harbor reflections in cool evening tones.',
     detailParagraphs: [
       'A calm harbor scene printed on gallery-wrapped canvas with muted blues and soft night glow.',
     ],
     price: '$54.00',
     category: 'art-prints',
     badgeKey: 'photographerProfile.store.badges.digitalArtPrint',
-    image: `${A}/photo-harbor.jpg`,
+    image: `${A}/photo-harbor.webp`,
     gallery: [
-      `${A}/photo-harbor.jpg`,
-      `${A}/photo-tidal.jpg`,
-      `${A}/photo-city.jpg`,
-      `${A}/photo-silent.jpg`,
+      `${A}/photo-harbor.webp`,
+      `${A}/photo-tidal.webp`,
+      `${A}/photo-city.webp`,
+      `${A}/photo-silent.webp`,
     ],
     sizes: [
       { id: '16x24', label: '16 x 24 in ( A2 )' },
@@ -186,53 +215,58 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
   {
     id: 'store-03',
     title: 'Forest Cathedral Handmade Frame',
-    description: 'Handcrafted wood frame paired with a misty forest print for gallery-wall presence.',
-    detailParagraphs: ['Handmade walnut frame with museum glass and archival backing.'],
+    description:
+      'Handcrafted wood frame paired with a misty forest print for gallery-wall presence.',
+    detailParagraphs: [
+      'Handmade walnut frame with museum glass and archival backing.',
+    ],
     price: '$92.00',
     category: 'handmade',
     badgeKey: 'photographerProfile.store.badges.handmadeCrafts',
-    image: `${A}/photo-forest.jpg`,
+    image: `${A}/photo-forest.webp`,
     gallery: [
-      `${A}/photo-forest.jpg`,
-      `${A}/photo-autumn.jpg`,
-      `${A}/photo-morning.jpg`,
-      `${A}/photo-wings.jpg`,
+      `${A}/photo-forest.webp`,
+      `${A}/photo-autumn.webp`,
+      `${A}/photo-morning.webp`,
+      `${A}/photo-wings.webp`,
     ],
     sizes: [{ id: 'standard', label: 'Standard framed print' }],
   },
   {
     id: 'store-04',
     title: 'Zodiac Journey Photobook',
-    description: 'A 12-sign visual journey bound as a premium photobook with matte archival pages.',
+    description:
+      'A 12-sign visual journey bound as a premium photobook with matte archival pages.',
     detailParagraphs: [
       'Hardcover photobook spanning a full zodiac narrative across twelve chapters.',
     ],
     price: '$78.00',
     category: 'photobooks',
     badgeKey: 'photographerProfile.store.badges.photobooks',
-    image: `${A}/photo-zodiac.jpg`,
+    image: `${A}/photo-zodiac.webp`,
     gallery: [
-      `${A}/photo-zodiac.jpg`,
-      `${A}/photo-golden.jpg`,
-      `${A}/photo-forest.jpg`,
-      `${A}/photo-city.jpg`,
+      `${A}/photo-zodiac.webp`,
+      `${A}/photo-golden.webp`,
+      `${A}/photo-forest.webp`,
+      `${A}/photo-city.webp`,
     ],
     sizes: [{ id: 'hardcover', label: 'Hardcover · 120 pages' }],
   },
   {
     id: 'store-05',
     title: 'Tidal Memory Apparel Tee',
-    description: 'Soft cotton tee featuring a shoreline motif from the Tidal Memory collection.',
+    description:
+      'Soft cotton tee featuring a shoreline motif from the Tidal Memory collection.',
     detailParagraphs: ['Soft unisex cotton tee with a tonal shoreline print.'],
     price: '$36.00',
     category: 'apparel',
     badgeKey: 'photographerProfile.store.badges.apparel',
-    image: `${A}/photo-tidal.jpg`,
+    image: `${A}/photo-tidal.webp`,
     gallery: [
-      `${A}/photo-tidal.jpg`,
-      `${A}/photo-harbor.jpg`,
-      `${A}/photo-wings.jpg`,
-      `${A}/photo-silent.jpg`,
+      `${A}/photo-tidal.webp`,
+      `${A}/photo-harbor.webp`,
+      `${A}/photo-wings.webp`,
+      `${A}/photo-silent.webp`,
     ],
     sizes: [
       { id: 's', label: 'S' },
@@ -244,34 +278,40 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
   {
     id: 'store-06',
     title: 'Morning Fields Lightroom Preset',
-    description: 'Warm countryside grading pack tuned for soft sunrise landscapes and golden haze.',
-    detailParagraphs: ['Digital Lightroom preset pack for warm countryside sunrise grading.'],
+    description:
+      'Warm countryside grading pack tuned for soft sunrise landscapes and golden haze.',
+    detailParagraphs: [
+      'Digital Lightroom preset pack for warm countryside sunrise grading.',
+    ],
     price: '$18.00',
     category: 'digital-preset',
     badgeKey: 'photographerProfile.store.badges.digitalPreset',
-    image: `${A}/photo-morning.jpg`,
+    image: `${A}/photo-morning.webp`,
     gallery: [
-      `${A}/photo-morning.jpg`,
-      `${A}/photo-golden.jpg`,
-      `${A}/photo-autumn.jpg`,
-      `${A}/photo-forest.jpg`,
+      `${A}/photo-morning.webp`,
+      `${A}/photo-golden.webp`,
+      `${A}/photo-autumn.webp`,
+      `${A}/photo-forest.webp`,
     ],
     sizes: [{ id: 'digital', label: 'Digital download' }],
   },
   {
     id: 'store-07',
     title: 'City Lights Metal Print',
-    description: 'High-gloss aluminum print of midnight city glow with crisp specular highlights.',
-    detailParagraphs: ['Metal print with high-gloss finish for urban night scenes.'],
+    description:
+      'High-gloss aluminum print of midnight city glow with crisp specular highlights.',
+    detailParagraphs: [
+      'Metal print with high-gloss finish for urban night scenes.',
+    ],
     price: '$72.00',
     category: 'art-prints',
     badgeKey: 'photographerProfile.store.badges.artPrints',
-    image: `${A}/photo-city.jpg`,
+    image: `${A}/photo-city.webp`,
     gallery: [
-      `${A}/photo-city.jpg`,
-      `${A}/photo-harbor.jpg`,
-      `${A}/photo-silent.jpg`,
-      `${A}/photo-tidal.jpg`,
+      `${A}/photo-city.webp`,
+      `${A}/photo-harbor.webp`,
+      `${A}/photo-silent.webp`,
+      `${A}/photo-tidal.webp`,
     ],
     sizes: [
       { id: '16x24', label: '16 x 24 in ( A2 )' },
@@ -281,17 +321,20 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
   {
     id: 'store-08',
     title: 'Wings Over Water Art Print',
-    description: 'Archival ink print of birds in flight across open water at dusk.',
-    detailParagraphs: ['Archival paper print celebrating movement across open water.'],
+    description:
+      'Archival ink print of birds in flight across open water at dusk.',
+    detailParagraphs: [
+      'Archival paper print celebrating movement across open water.',
+    ],
     price: '$39.00',
     category: 'art-prints',
     badgeKey: 'photographerProfile.store.badges.artPrints',
-    image: `${A}/photo-wings.jpg`,
+    image: `${A}/photo-wings.webp`,
     gallery: [
-      `${A}/photo-wings.jpg`,
-      `${A}/photo-tidal.jpg`,
-      `${A}/photo-harbor.jpg`,
-      `${A}/photo-morning.jpg`,
+      `${A}/photo-wings.webp`,
+      `${A}/photo-tidal.webp`,
+      `${A}/photo-harbor.webp`,
+      `${A}/photo-morning.webp`,
     ],
     sizes: [
       { id: '12x16', label: '12 x 16 in' },
@@ -301,33 +344,48 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
   {
     id: 'store-09',
     title: 'Studio Gift Card Bundle',
-    description: 'Flexible gift card pack for prints, apparel, and custom studio commissions.',
+    description:
+      'Flexible gift card pack for prints, apparel, and custom studio commissions.',
     detailParagraphs: [
       'Redeemable across studio prints, apparel drops, and selected commission slots.',
     ],
     price: '$50.00',
     category: 'other',
     badgeKey: 'photographerProfile.store.badges.other',
-    image: `${A}/photo-morning.jpg`,
+    image: `${A}/photo-morning.webp`,
     gallery: [
-      `${A}/photo-morning.jpg`,
-      `${A}/photo-golden.jpg`,
-      `${A}/photo-harbor.jpg`,
-      `${A}/photo-forest.jpg`,
+      `${A}/photo-morning.webp`,
+      `${A}/photo-golden.webp`,
+      `${A}/photo-harbor.webp`,
+      `${A}/photo-forest.webp`,
     ],
     sizes: [{ id: 'digital', label: 'Digital gift card' }],
   },
 ];
 
 export const getPhotographerStoreProduct = (productId) =>
-  PHOTOGRAPHER_STORE_PRODUCTS.find((product) => product.id === productId) || null;
+  PHOTOGRAPHER_STORE_PRODUCTS.find((product) => product.id === productId) ||
+  null;
 
-export const PROFILE_SORT_OPTIONS = ['newest', 'oldest', 'mostLiked', 'mostViewed'];
+export const PROFILE_SORT_OPTIONS = [
+  'newest',
+  'oldest',
+  'mostLiked',
+  'mostViewed',
+];
 
 export const PROFILE_ALBUM_FILTERS = [
   { id: 'all', value: 'All', shortLabelKey: 'common.filtersShort.all' },
-  { id: 'single', value: 'Single Photo', shortLabelKey: 'common.filtersShort.single' },
-  { id: 'six', value: '6 Photo Story', shortLabelKey: 'common.filtersShort.six' },
+  {
+    id: 'single',
+    value: 'Single Photo',
+    shortLabelKey: 'common.filtersShort.single',
+  },
+  {
+    id: 'six',
+    value: '6 Photo Story',
+    shortLabelKey: 'common.filtersShort.six',
+  },
   {
     id: 'zodiac',
     value: '12 photos',

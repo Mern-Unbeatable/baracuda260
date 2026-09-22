@@ -1,6 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 
 /**
  * Right sidebar drawer for advertise submission details — mirrors CommentDetailsDrawer.
@@ -42,7 +44,8 @@ const AdvertiseDetailsDrawer = memo(({ row, onClose }) => {
       aria-modal="true"
       aria-labelledby="advertise-details-title"
     >
-      <button
+      <Button
+        unstyled
         type="button"
         aria-label={t('adminAds.drawer.close')}
         className="absolute inset-0 cursor-pointer bg-black/40"
@@ -59,19 +62,24 @@ const AdvertiseDetailsDrawer = memo(({ row, onClose }) => {
             </h2>
             <p className="text-[12px] leading-4.5 text-[#6b7280]">{row.code}</p>
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             aria-label={t('adminAds.drawer.close')}
             onClick={onClose}
             className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg border border-[#e5e7eb] text-[16px] text-[#6b7280] hover:bg-[#f3f4f6]"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-6">
           <div className="overflow-hidden rounded-xl">
-            <img src={row.image} alt="" className="aspect-2/1 w-full object-cover" />
+            <Image
+              src={row.image}
+              alt=""
+              className="aspect-2/1 w-full object-cover"
+            />
           </div>
 
           <div className="pt-6">
@@ -79,7 +87,9 @@ const AdvertiseDetailsDrawer = memo(({ row, onClose }) => {
               {t('adminAds.drawer.businessName')}
             </p>
             <div className="mt-2 rounded-xl bg-[#f9fafb] px-4 py-3">
-              <p className="text-[14px] leading-6 text-[#374151]">{t(row.businessNameKey)}</p>
+              <p className="text-[14px] leading-6 text-[#374151]">
+                {t(row.businessNameKey)}
+              </p>
             </div>
           </div>
 
@@ -88,7 +98,9 @@ const AdvertiseDetailsDrawer = memo(({ row, onClose }) => {
               {t('adminAds.drawer.businessLocation')}
             </p>
             <div className="mt-2 rounded-xl bg-[#f9fafb] px-4 py-3">
-              <p className="text-[14px] leading-6 text-[#374151]">{t(row.businessLocationKey)}</p>
+              <p className="text-[14px] leading-6 text-[#374151]">
+                {t(row.businessLocationKey)}
+              </p>
             </div>
           </div>
 
@@ -97,7 +109,9 @@ const AdvertiseDetailsDrawer = memo(({ row, onClose }) => {
               {t('adminAds.drawer.description')}
             </p>
             <div className="mt-2 rounded-xl bg-[#f9fafb] px-4 py-3.5">
-              <p className="text-[14px] leading-6 text-[#374151]">{t(row.descriptionKey)}</p>
+              <p className="text-[14px] leading-6 text-[#374151]">
+                {t(row.descriptionKey)}
+              </p>
             </div>
           </div>
 
@@ -106,7 +120,7 @@ const AdvertiseDetailsDrawer = memo(({ row, onClose }) => {
               {t('adminAds.drawer.customerName')}
             </p>
             <div className="mt-3 flex items-center gap-3">
-              <img
+              <Image
                 src={row.avatar}
                 alt=""
                 width={44}
@@ -117,16 +131,25 @@ const AdvertiseDetailsDrawer = memo(({ row, onClose }) => {
                 <p className="truncate text-[16px] font-semibold leading-5.75 text-[#111827]">
                   {t(row.nameKey)}
                 </p>
-                <p className="truncate text-[12px] leading-4.5 text-[#6b7280]">{row.email}</p>
-                <p className="text-[12px] leading-4.5 text-[#6b7280]">{row.phone}</p>
+                <p className="truncate text-[12px] leading-4.5 text-[#6b7280]">
+                  {row.email}
+                </p>
+                <p className="text-[12px] leading-4.5 text-[#6b7280]">
+                  {row.phone}
+                </p>
               </div>
             </div>
           </div>
 
           <dl className="mt-6 space-y-3 border-t border-[#f3f4f6] pt-5">
             {summaryRows.map(({ labelKey, value }) => (
-              <div key={labelKey} className="flex items-center justify-between gap-4">
-                <dt className="text-[13px] leading-[19.5px] text-[#6b7280]">{t(labelKey)}</dt>
+              <div
+                key={labelKey}
+                className="flex items-center justify-between gap-4"
+              >
+                <dt className="text-[13px] leading-[19.5px] text-[#6b7280]">
+                  {t(labelKey)}
+                </dt>
                 <dd className="text-[13px] font-semibold leading-[19.5px] text-[#111827]">
                   {value}
                 </dd>

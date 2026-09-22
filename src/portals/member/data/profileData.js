@@ -34,12 +34,14 @@ export const validatePasswordChange = (values, t) => {
   const next = {};
   const { currentPassword, newPassword, confirmPassword } = values;
 
-  if (!currentPassword) next.currentPassword = t('userProfile.errors.currentRequired');
+  if (!currentPassword)
+    next.currentPassword = t('userProfile.errors.currentRequired');
   if (!newPassword) next.newPassword = t('userProfile.errors.newRequired');
   else if (newPassword.length < MIN_PASSWORD_LENGTH) {
     next.newPassword = t('userProfile.errors.newTooShort');
   }
-  if (!confirmPassword) next.confirmPassword = t('userProfile.errors.confirmRequired');
+  if (!confirmPassword)
+    next.confirmPassword = t('userProfile.errors.confirmRequired');
   else if (newPassword && confirmPassword !== newPassword) {
     next.confirmPassword = t('userProfile.errors.confirmMismatch');
   }

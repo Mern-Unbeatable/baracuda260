@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import { ImgIcon } from '@/shared/site-chrome';
-import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
+import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
+import { ImgIcon } from '@/shared/site-chrome';
 
 const PlanCard = memo(
   ({
@@ -59,13 +59,20 @@ const PlanCard = memo(
         </div>
         {prize != null ? (
           <p className="text-[16px] font-normal leading-normal text-[#1b1e56]">
-            <span className="text-[32px] font-medium leading-normal text-[#4048cd]">{prize}</span>
+            <span className="text-[32px] font-medium leading-normal text-[#4048cd]">
+              {prize}
+            </span>
             {prizeSuffix}
           </p>
         ) : null}
       </div>
       {ctaLabel ? (
-        <MarketingButton type="button" className="mt-6 w-full" icon={ctaIcon} onClick={onCta}>
+        <MarketingButton
+          type="button"
+          className="mt-6 w-full"
+          icon={ctaIcon}
+          onClick={onCta}
+        >
           {ctaLabel}
         </MarketingButton>
       ) : null}

@@ -1,14 +1,16 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import React, { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
+import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   ADMIN_DETAIL_ASSETS,
   getAdminCompetitionDetailById,
 } from '@/portals/admin/data/adminCompetitionDetailData';
-import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
-import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
+import { ROUTES } from '@/shared/config';
 
 /** Auto-advance interval for multi-photo story strip (ms). */
 const ADMIN_DETAIL_SLIDE_MS = 6000;
@@ -27,7 +29,7 @@ const SignBadge = memo(({ slide, name }) => {
           isBlue ? 'size-7 sm:size-8.75' : 'h-4.5 w-5 sm:h-5.25 sm:w-6'
         } ${slide.iconBoxed ? 'rounded-sm bg-[#4048cd]' : ''}`}
       >
-        <img
+        <Image
           src={slide.icon}
           alt=""
           width={isBlue ? 35 : 24}
@@ -37,7 +39,9 @@ const SignBadge = memo(({ slide, name }) => {
           }`}
         />
       </span>
-      <span className="text-[16px] leading-none text-white sm:text-[20px]">{name}</span>
+      <span className="text-[16px] leading-none text-white sm:text-[20px]">
+        {name}
+      </span>
     </div>
   );
 });
@@ -67,7 +71,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
               : 'rounded bg-[#ee1c25] px-1.5 py-1'
           }`}
         >
-          <img
+          <Image
             src={slide.icon}
             alt=""
             width={35}
@@ -78,29 +82,33 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
         <span className="max-w-full truncate text-center text-[12px] leading-none text-[#2b2b2b] sm:text-[14px] lg:text-[16px] xl:text-[18px]">
           {name}
         </span>
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={onSelect}
           aria-label={name}
           aria-pressed={active}
           className={`relative h-22.5 w-full overflow-hidden rounded-lg ${
-            active ? 'border-[3px] border-[#ee1c25]' : 'border border-transparent'
+            active
+              ? 'border-[3px] border-[#ee1c25]'
+              : 'border border-transparent'
           }`}
         >
-          <img
+          <Image
             src={slide.thumb}
             alt=""
             width={120}
             height={90}
             className="h-full w-full object-cover"
           />
-        </button>
+        </Button>
       </div>
     );
   }
 
   return (
-    <button
+    <Button
+      unstyled
       type="button"
       onClick={onSelect}
       aria-pressed={active}
@@ -114,7 +122,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
               isBlue ? 'bg-[#4048cd]' : 'bg-[#ee1c25]'
             } ${slide.iconBoxed ? 'items-center px-1.5' : ''}`}
           >
-            <img
+            <Image
               src={slide.icon}
               alt=""
               width={24}
@@ -139,7 +147,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
           active ? 'border-[3px] border-[#ee1c25]' : 'border border-transparent'
         }`}
       >
-        <img
+        <Image
           src={slide.thumb}
           alt=""
           width={240}
@@ -147,7 +155,7 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
           className="absolute inset-0 h-full w-full object-cover"
         />
       </span>
-    </button>
+    </Button>
   );
 });
 
@@ -170,7 +178,7 @@ const DetailComments = memo(({ comments }) => {
           >
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <img
+                <Image
                   src={ADMIN_DETAIL_ASSETS.commentAvatar}
                   alt=""
                   width={48}
@@ -182,7 +190,7 @@ const DetailComments = memo(({ comments }) => {
                 </p>
               </div>
               <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-2 py-0.5 text-[13px] text-white sm:text-[14px]">
-                <img
+                <Image
                   src={ADMIN_DETAIL_ASSETS.verified}
                   alt=""
                   width={16}
@@ -234,10 +242,14 @@ const AdminCompetitionDetailContent = memo(() => {
     : detail.sign;
   const heroSrc = hasSlides ? activeSlide.hero : detail.hero;
   const isTwelve = detail.variant === 'twelve';
-  const curveHeight = isTwelve ? 'h-10 sm:h-[72px] xl:h-[103px]' : 'h-8 sm:h-[52px]';
+  const curveHeight = isTwelve
+    ? 'h-10 sm:h-[72px] xl:h-[103px]'
+    : 'h-8 sm:h-[52px]';
 
-  const goPrev = () => setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
-  const goNext = () => setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
+  const goPrev = () =>
+    setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
+  const goNext = () =>
+    setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
 
   return (
     <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8 sm:gap-10">
@@ -253,7 +265,7 @@ const AdminCompetitionDetailContent = memo(() => {
         aria-label={t('adminCompetitionDetail.heroAria')}
         className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]"
       >
-        <img
+        <Image
           src={heroSrc}
           alt=""
           width={1536}
@@ -266,42 +278,47 @@ const AdminCompetitionDetailContent = memo(() => {
 
         {hasSlides ? (
           <>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={goPrev}
               aria-label={t('adminCompetitionDetail.previousPhoto')}
               className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-6 sm:size-12"
             >
-              <img
+              <Image
                 src={ADMIN_DETAIL_ASSETS.arrow}
                 alt=""
                 width={16}
                 height={32}
                 className="h-7 w-3.5 rotate-180 object-contain"
               />
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="button"
               onClick={goNext}
               aria-label={t('adminCompetitionDetail.nextPhoto')}
               className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-6 sm:size-12"
             >
-              <img
+              <Image
                 src={ADMIN_DETAIL_ASSETS.arrow}
                 alt=""
                 width={16}
                 height={32}
                 className="h-7 w-3.5 object-contain"
               />
-            </button>
+            </Button>
           </>
         ) : null}
       </section>
 
       {hasSlides ? (
         <>
-          <div className={`relative w-full overflow-hidden ${curveHeight}`} aria-hidden="true">
-            <img
+          <div
+            className={`relative w-full overflow-hidden ${curveHeight}`}
+            aria-hidden="true"
+          >
+            <Image
               src={detail.curve}
               alt=""
               className={`h-full w-full object-top ${
@@ -393,7 +410,7 @@ const AdminCompetitionDetailContent = memo(() => {
 
         <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf0] bg-white p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div className="flex items-center gap-3">
-            <img
+            <Image
               src={detail.photographerAvatar}
               alt=""
               width={57}

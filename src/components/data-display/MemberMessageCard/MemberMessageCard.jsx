@@ -1,6 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useCallback, useState } from 'react';
 import { Heart, Share2 } from 'lucide-react';
+import React, { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 
 const MemberMessageCard = memo(({ message }) => {
   const { t } = useTranslation();
@@ -24,7 +26,7 @@ const MemberMessageCard = memo(({ message }) => {
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white shadow-sm">
       <div className="flex items-start justify-between gap-3 p-4 pb-3">
         <div className="flex min-w-0 items-center gap-3">
-          <img
+          <Image
             src={message.authorAvatar}
             alt=""
             width={44}
@@ -32,7 +34,9 @@ const MemberMessageCard = memo(({ message }) => {
             className="size-11 shrink-0 rounded-full object-cover"
           />
           <div className="min-w-0">
-            <p className="truncate text-[15px] font-semibold text-[#161c27]">{message.authorName}</p>
+            <p className="truncate text-[15px] font-semibold text-[#161c27]">
+              {message.authorName}
+            </p>
             <p className="text-[13px] text-[#6b7280]">
               {message.postedDate} • {message.postedTime}
             </p>
@@ -43,10 +47,12 @@ const MemberMessageCard = memo(({ message }) => {
         </span>
       </div>
 
-      <p className="px-4 pb-4 text-[14px] leading-6 text-[#494453]">{t(message.bodyKey)}</p>
+      <p className="px-4 pb-4 text-[14px] leading-6 text-[#494453]">
+        {t(message.bodyKey)}
+      </p>
 
       <div className="relative aspect-4/3 w-full overflow-hidden bg-[#f3f4f6]">
-        <img
+        <Image
           src={message.image}
           alt=""
           width={400}
@@ -57,7 +63,8 @@ const MemberMessageCard = memo(({ message }) => {
       </div>
 
       <div className="flex items-center justify-between gap-3 border-t border-[rgba(203,195,213,0.15)] px-4 py-3">
-        <button
+        <Button
+          unstyled
           type="button"
           aria-pressed={liked}
           onClick={() => setLiked((current) => !current)}
@@ -70,15 +77,16 @@ const MemberMessageCard = memo(({ message }) => {
             className={liked ? 'fill-[#ee1c25]' : 'fill-transparent'}
           />
           {t('myMessages.card.likes', { count: displayLikes })}
-        </button>
-        <button
+        </Button>
+        <Button
+          unstyled
           type="button"
           onClick={handleShare}
           className="inline-flex cursor-pointer items-center gap-2 text-[14px] font-medium text-[#4048cd] transition hover:opacity-80"
         >
           <Share2 size={18} strokeWidth={2} aria-hidden="true" />
           {t('myMessages.card.share')}
-        </button>
+        </Button>
       </div>
     </article>
   );

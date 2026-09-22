@@ -1,22 +1,23 @@
-import React, { Component } from "react";
-import { IS_DEV } from "@/shared/config/env";
+import React, { Component } from 'react';
+import Button from '@/components/ui/Button';
+import { IS_DEV } from '@/shared/config/env';
 
 function reportError(error, errorInfo) {
   if (IS_DEV) {
-    console.error("[ErrorBoundary] Caught error:", error, errorInfo);
+    console.error('[ErrorBoundary] Caught error:', error, errorInfo);
     return;
   }
 
   // Production: send only safe, non-sensitive fields — no stack traces or file paths
   try {
     const payload = JSON.stringify({
-      message: error?.message?.slice(0, 200) ?? "Unknown error",
+      message: error?.message?.slice(0, 200) ?? 'Unknown error',
       url: window.location.pathname,
       timestamp: new Date().toISOString(),
     });
     navigator.sendBeacon(
-      "/api/errors",
-      new Blob([payload], { type: "application/json" }),
+      '/api/errors',
+      new Blob([payload], { type: 'application/json' }),
     );
   } catch {
     // Silently ignore — never throw from error reporter
@@ -59,18 +60,20 @@ class ErrorBoundary extends Component {
               </pre>
             )}
             <div className="flex gap-3 justify-center">
-              <button
+              <Button
+                unstyled
                 onClick={this.handleReset}
                 className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
               >
                 Try Again
-              </button>
-              <button
+              </Button>
+              <Button
+                unstyled
                 onClick={() => window.location.reload()}
                 className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300 transition"
               >
                 Reload Page
-              </button>
+              </Button>
             </div>
           </div>
         </div>

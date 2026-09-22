@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { loginSuccess, logout } from '@/app/store/slices/authSlice';
+import store from '@/app/store/store';
 import { API_CONFIG } from '@/shared/config';
 import { API_ENDPOINTS } from './httpEndpoint';
-import store from '@/app/store/store';
-import { logout, loginSuccess } from '@/app/store/slices/authSlice';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -45,7 +45,8 @@ axiosInstance.interceptors.response.use(
     // Retry on network errors or 5xx responses — but NOT on codes that will never succeed
     const attempt = originalRequest._retryCount ?? 0;
     const status = error.response?.status;
-    const isRetryable = !error.response || (status >= 500 && status !== 501 && status !== 505);
+    const isRetryable =
+      !error.response || (status >= 500 && status !== 501 && status !== 505);
     if (isRetryable && attempt < API_CONFIG.RETRY_ATTEMPTS) {
       originalRequest._retryCount = attempt + 1;
       await sleep(API_CONFIG.RETRY_DELAY * originalRequest._retryCount);
@@ -101,7 +102,8 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject({
-      message: error.response?.data?.message || error.message || 'An error occurred',
+      message:
+        error.response?.data?.message || error.message || 'An error occurred',
       status: error.response?.status,
       data: error.response?.data,
     });

@@ -6,16 +6,31 @@ export const MY_STORE_PAGE_SIZE = 8;
 
 export const MY_STORE_CATEGORIES = [
   { id: 'all', value: 'all', labelKey: 'myStore.filters.all' },
-  { id: 'art-prints', value: 'art-prints', labelKey: 'myStore.filters.artPrints' },
+  {
+    id: 'art-prints',
+    value: 'art-prints',
+    labelKey: 'myStore.filters.artPrints',
+  },
   { id: 'handmade', value: 'handmade', labelKey: 'myStore.filters.handmade' },
   { id: 'apparel', value: 'apparel', labelKey: 'myStore.filters.apparel' },
-  { id: 'photobooks', value: 'photobooks', labelKey: 'myStore.filters.photobooks' },
-  { id: 'digital-preset', value: 'digital-preset', labelKey: 'myStore.filters.digitalPreset' },
+  {
+    id: 'photobooks',
+    value: 'photobooks',
+    labelKey: 'myStore.filters.photobooks',
+  },
+  {
+    id: 'digital-preset',
+    value: 'digital-preset',
+    labelKey: 'myStore.filters.digitalPreset',
+  },
   { id: 'other', value: 'other', labelKey: 'myStore.filters.other' },
 ];
 
 export const MY_STORE_CATEGORY_OPTIONS = [
-  { id: 'astrophotography', labelKey: 'myStore.upload.categories.astrophotography' },
+  {
+    id: 'astrophotography',
+    labelKey: 'myStore.upload.categories.astrophotography',
+  },
   { id: 'art-prints', labelKey: 'myStore.upload.categories.artPrints' },
   { id: 'handmade', labelKey: 'myStore.upload.categories.handmade' },
   { id: 'apparel', labelKey: 'myStore.upload.categories.apparel' },
@@ -33,7 +48,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$68.00',
     category: 'art-prints',
     badgeKey: 'myStore.badges.artPrints',
-    image: `${H}/photo-golden.jpg`,
+    image: `${H}/photo-golden.webp`,
     promoted: true,
   },
   {
@@ -44,7 +59,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$54.00',
     category: 'art-prints',
     badgeKey: 'myStore.badges.digitalArtPrint',
-    image: `${H}/photo-harbor.jpg`,
+    image: `${H}/photo-harbor.webp`,
   },
   {
     id: 'store-03',
@@ -54,7 +69,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$92.00',
     category: 'handmade',
     badgeKey: 'myStore.badges.handmadeCrafts',
-    image: `${H}/photo-forest.jpg`,
+    image: `${H}/photo-forest.webp`,
     promoted: true,
   },
   {
@@ -65,7 +80,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$78.00',
     category: 'photobooks',
     badgeKey: 'myStore.badges.photobooks',
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
   },
   {
     id: 'store-05',
@@ -75,7 +90,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$36.00',
     category: 'apparel',
     badgeKey: 'myStore.badges.apparel',
-    image: `${H}/photo-tidal.jpg`,
+    image: `${H}/photo-tidal.webp`,
   },
   {
     id: 'store-06',
@@ -85,7 +100,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$18.00',
     category: 'digital-preset',
     badgeKey: 'myStore.badges.digitalPreset',
-    image: `${H}/photo-morning.jpg`,
+    image: `${H}/photo-morning.webp`,
   },
   {
     id: 'store-07',
@@ -95,7 +110,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$62.00',
     category: 'art-prints',
     badgeKey: 'myStore.badges.artPrints',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
   },
   {
     id: 'store-08',
@@ -105,7 +120,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$44.00',
     category: 'photobooks',
     badgeKey: 'myStore.badges.photobooks',
-    image: `${H}/photo-autumn.jpg`,
+    image: `${H}/photo-autumn.webp`,
   },
   {
     id: 'store-09',
@@ -115,7 +130,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$58.00',
     category: 'art-prints',
     badgeKey: 'myStore.badges.digitalArtPrint',
-    image: `${H}/photo-wings.jpg`,
+    image: `${H}/photo-wings.webp`,
   },
   {
     id: 'store-10',
@@ -125,7 +140,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$72.00',
     category: 'apparel',
     badgeKey: 'myStore.badges.apparel',
-    image: `${H}/photo-silent.jpg`,
+    image: `${H}/photo-silent.webp`,
   },
   {
     id: 'store-11',
@@ -135,7 +150,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$24.00',
     category: 'handmade',
     badgeKey: 'myStore.badges.handmadeCrafts',
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
   },
   {
     id: 'store-12',
@@ -145,7 +160,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$22.00',
     category: 'digital-preset',
     badgeKey: 'myStore.badges.digitalPreset',
-    image: `${H}/photo-golden.jpg`,
+    image: `${H}/photo-golden.webp`,
   },
   {
     id: 'store-13',
@@ -155,7 +170,7 @@ export const MY_STORE_PRODUCTS = [
     price: '$50.00',
     category: 'other',
     badgeKey: 'myStore.badges.other',
-    image: `${H}/photo-morning.jpg`,
+    image: `${H}/photo-morning.webp`,
   },
 ];
 

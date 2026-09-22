@@ -75,7 +75,8 @@ export const formatPrizeMoney = (amount) => {
 /**
  * @param {string} value
  */
-export const isRequiredTextValid = (value) => Boolean(String(value || '').trim());
+export const isRequiredTextValid = (value) =>
+  Boolean(String(value || '').trim());
 
 /**
  * @param {string} value
@@ -177,7 +178,8 @@ export const appendAlbumType = (albumTypes, albumType) => {
  * }} fields
  */
 export const createAlbumTypeFromForm = (name, nextIndex, fields) => {
-  const iconKey = ALBUM_TYPE_ICON_KEYS[(nextIndex - 1) % ALBUM_TYPE_ICON_KEYS.length];
+  const iconKey =
+    ALBUM_TYPE_ICON_KEYS[(nextIndex - 1) % ALBUM_TYPE_ICON_KEYS.length];
   return {
     id: `custom-${nextIndex}`,
     iconKey,

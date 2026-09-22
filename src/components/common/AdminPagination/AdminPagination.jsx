@@ -1,10 +1,12 @@
-import React, { memo } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react';
+import React, { memo } from 'react';
+import Button from '@/components/ui/Button';
+
 const PAGINATION_LEADING_PAGES = [1, 2, 3];
 const PAGINATION_ICON_SIZE = 16;
 
@@ -17,22 +19,25 @@ const PAGINATION_ICON_SIZE = 16;
  *   children: React.ReactNode,
  * }} props
  */
-const PaginationControl = memo(({ label, onClick, disabled, children, active = false }) => (
-  <button
-    type="button"
-    aria-label={label}
-    aria-current={active ? 'page' : undefined}
-    disabled={disabled}
-    onClick={onClick}
-    className={`inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border p-2.5 text-[13px] font-semibold leading-none transition ${
-      active
-        ? 'border-[#ee1c25] bg-[#ee1c25] text-white'
-        : 'border-[#f1f1f1] bg-white text-[#333333] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
-    } disabled:cursor-not-allowed disabled:opacity-40`}
-  >
-    {children}
-  </button>
-));
+const PaginationControl = memo(
+  ({ label, onClick, disabled, children, active = false }) => (
+    <Button
+      unstyled
+      type="button"
+      aria-label={label}
+      aria-current={active ? 'page' : undefined}
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border p-2.5 text-[13px] font-semibold leading-none transition ${
+        active
+          ? 'border-[#ee1c25] bg-[#ee1c25] text-white'
+          : 'border-[#f1f1f1] bg-white text-[#333333] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
+      } disabled:cursor-not-allowed disabled:opacity-40`}
+    >
+      {children}
+    </Button>
+  ),
+);
 
 PaginationControl.displayName = 'PaginationControl';
 
@@ -145,24 +150,28 @@ const AdminPagination = memo((props) => {
 
     return (
       <div className="flex flex-col items-center gap-3 px-4 py-4 text-center md:h-16.75 md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
-        <p className="px-2.5 text-[16px] leading-normal text-[#4048cd]">{showingText}</p>
+        <p className="px-2.5 text-[16px] leading-normal text-[#4048cd]">
+          {showingText}
+        </p>
         <div className="flex items-center justify-center gap-2">
-          <button
+          <Button
+            unstyled
             type="button"
             disabled={isFirstPage}
             onClick={onPrevious}
             className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium capitalize text-[#4048cd] transition hover:bg-[#f6fbff] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {previousLabel}
-          </button>
-          <button
+          </Button>
+          <Button
+            unstyled
             type="button"
             disabled={isLastPage}
             onClick={onNext}
             className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium capitalize text-[#4048cd] transition hover:bg-[#f6fbff] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {nextLabel}
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -192,12 +201,24 @@ const AdminPagination = memo((props) => {
           role="navigation"
           aria-label={navAriaLabel}
         >
-          <button type="button" disabled={isFirstPage} onClick={onPrevious} className={btnClass}>
+          <Button
+            unstyled
+            type="button"
+            disabled={isFirstPage}
+            onClick={onPrevious}
+            className={btnClass}
+          >
             {previousLabel}
-          </button>
-          <button type="button" disabled={isLastPage} onClick={onNext} className={btnClass}>
+          </Button>
+          <Button
+            unstyled
+            type="button"
+            disabled={isLastPage}
+            onClick={onNext}
+            className={btnClass}
+          >
             {nextLabel}
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -231,7 +252,8 @@ const AdminPagination = memo((props) => {
           role="navigation"
           aria-label={navAriaLabel}
         >
-          <button
+          <Button
+            unstyled
             type="button"
             disabled={isFirstPage}
             aria-label={previousAriaLabel}
@@ -239,11 +261,12 @@ const AdminPagination = memo((props) => {
             className={`${pageBtnBase} text-[#7b8596] hover:bg-[#f6fbff] disabled:cursor-not-allowed disabled:opacity-40`}
           >
             ←
-          </button>
+          </Button>
           {pageNumbers.map((pageNumber) => {
             const active = pageNumber === page;
             return (
-              <button
+              <Button
+                unstyled
                 key={pageNumber}
                 type="button"
                 aria-label={pageAriaLabel(pageNumber)}
@@ -256,10 +279,11 @@ const AdminPagination = memo((props) => {
                 }`}
               >
                 {pageNumber}
-              </button>
+              </Button>
             );
           })}
-          <button
+          <Button
+            unstyled
             type="button"
             disabled={isLastPage}
             aria-label={nextAriaLabel}
@@ -267,7 +291,7 @@ const AdminPagination = memo((props) => {
             className={`${pageBtnBase} text-[#7b8596] hover:bg-[#f6fbff] disabled:cursor-not-allowed disabled:opacity-40`}
           >
             →
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -297,12 +321,24 @@ const AdminPagination = memo((props) => {
           role="navigation"
           aria-label={navAriaLabel}
         >
-          <button type="button" disabled={isFirstPage} onClick={onPrevious} className={btnClass}>
+          <Button
+            unstyled
+            type="button"
+            disabled={isFirstPage}
+            onClick={onPrevious}
+            className={btnClass}
+          >
             {previousLabel}
-          </button>
-          <button type="button" disabled={isLastPage} onClick={onNext} className={btnClass}>
+          </Button>
+          <Button
+            unstyled
+            type="button"
+            disabled={isLastPage}
+            onClick={onNext}
+            className={btnClass}
+          >
             {nextLabel}
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -334,7 +370,8 @@ const AdminPagination = memo((props) => {
           role="navigation"
           aria-label={navAriaLabel}
         >
-          <button
+          <Button
+            unstyled
             type="button"
             disabled={isFirstPage}
             aria-label={previousAriaLabel}
@@ -342,11 +379,12 @@ const AdminPagination = memo((props) => {
             className="inline-flex size-7.5 cursor-pointer items-center justify-center rounded-[7px] border border-[#e5e7eb] text-[12px] text-[#6b7280] disabled:cursor-not-allowed disabled:opacity-40"
           >
             ←
-          </button>
+          </Button>
           {pageNumbers.map((pageNumber) => {
             const active = pageNumber === page;
             return (
-              <button
+              <Button
+                unstyled
                 key={pageNumber}
                 type="button"
                 aria-label={pageAriaLabel(pageNumber)}
@@ -359,10 +397,11 @@ const AdminPagination = memo((props) => {
                 }`}
               >
                 {pageNumber}
-              </button>
+              </Button>
             );
           })}
-          <button
+          <Button
+            unstyled
             type="button"
             disabled={isLastPage}
             aria-label={nextAriaLabel}
@@ -370,7 +409,7 @@ const AdminPagination = memo((props) => {
             className="inline-flex size-7.5 cursor-pointer items-center justify-center rounded-[7px] border border-[#e5e7eb] text-[12px] text-[#6b7280] disabled:cursor-not-allowed disabled:opacity-40"
           >
             →
-          </button>
+          </Button>
         </div>
       </div>
     );

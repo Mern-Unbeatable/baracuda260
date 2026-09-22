@@ -1,10 +1,10 @@
 import React, { memo, useLayoutEffect, useRef, useState } from 'react';
-import useSitePageStyles from './useSitePageStyles';
+import PromoBanner from '@/components/marketing/PromoBanner/PromoBanner';
 import SiteAnnouncement from './SiteAnnouncement';
+import SiteFooter from './SiteFooter';
 import SiteHeader from './SiteHeader';
 import StayUpdated from './StayUpdated';
-import SiteFooter from './SiteFooter';
-import PromoBanner from '@/components/marketing/PromoBanner/PromoBanner';
+import useSitePageStyles from './useSitePageStyles';
 
 /**
  * Shared chrome for Figma marketing pages: styles, announcement, header,

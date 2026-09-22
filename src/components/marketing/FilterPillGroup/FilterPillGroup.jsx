@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import Button from '@/components/ui/Button';
 import { FOCUS_RING } from '@/shared/ui/sectionStyles';
 
 const pillClass = (active) =>
@@ -37,7 +38,8 @@ const FilterPillGroup = memo(
           ? 'grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:gap-3 lg:justify-end'
           : 'flex flex-wrap items-center gap-2 sm:gap-4';
 
-    const pillLayoutClass = layout === 'scroll' ? 'shrink-0 whitespace-nowrap' : '';
+    const pillLayoutClass =
+      layout === 'scroll' ? 'shrink-0 whitespace-nowrap' : '';
 
     return (
       <div
@@ -49,21 +51,24 @@ const FilterPillGroup = memo(
           const active = value === item.value;
           const label = renderLabel ? renderLabel(item, active) : item.label;
           return (
-            <button
+            <Button
+              unstyled
               key={item.id ?? item.value}
               type="button"
               role="tab"
               aria-selected={active}
               onClick={() => onChange(item.value)}
               className={[
-                density === 'compact' ? pillClassCompact(active) : pillClass(active),
+                density === 'compact'
+                  ? pillClassCompact(active)
+                  : pillClass(active),
                 pillLayoutClass,
               ]
                 .filter(Boolean)
                 .join(' ')}
             >
               {label}
-            </button>
+            </Button>
           );
         })}
       </div>

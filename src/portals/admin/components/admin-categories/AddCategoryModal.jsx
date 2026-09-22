@@ -1,13 +1,15 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import {
   ADMIN_CATEGORIES_ASSETS,
   CLOSE_ICON_SIZE,
-  } from '@/portals/admin/data/adminCategoriesData';
-import Input from '@/components/ui/Input';
+} from '@/portals/admin/data/adminCategoriesData';
 
 /**
  * Add Category popup — Figma node 339:4813.
@@ -56,7 +58,11 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
   };
 
   const onFormError = () => {
-    toast.error(t('form.errors.checkFields', { defaultValue: 'Please check the form for errors.' }));
+    toast.error(
+      t('form.errors.checkFields', {
+        defaultValue: 'Please check the form for errors.',
+      }),
+    );
   };
 
   return createPortal(
@@ -72,7 +78,10 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
         className="flex w-full max-w-90 flex-col gap-4 rounded-xl bg-white p-5 shadow-[0px_22px_70px_0px_rgba(14,20,35,0.25)]"
         onClick={(event) => event.stopPropagation()}
       >
-        <form onSubmit={handleSubmit(onFormSubmit, onFormError)} className="flex w-full flex-col gap-4">
+        <form
+          onSubmit={handleSubmit(onFormSubmit, onFormError)}
+          className="flex w-full flex-col gap-4"
+        >
           <div className="flex w-full flex-col gap-2.5">
             <div className="flex items-center justify-between gap-3">
               <h2
@@ -81,20 +90,21 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
               >
                 {t('adminCategories.addModal.nameLabel')}
               </h2>
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={onClose}
                 aria-label={t('adminCategories.addModal.close')}
                 className="-mr-1 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition hover:bg-black/5"
               >
-                <img
+                <Image
                   src={ADMIN_CATEGORIES_ASSETS.close}
                   alt=""
                   width={CLOSE_ICON_SIZE}
                   height={CLOSE_ICON_SIZE}
                   className="size-4.5"
                 />
-              </button>
+              </Button>
             </div>
 
             <Input
@@ -104,16 +114,19 @@ const AddCategoryModal = memo(({ open, onClose, onSave }) => {
                 errors.name ? 'border-[#ee1c25]' : 'border-transparent'
               }`}
               error={errors.name}
-              {...register('name', { required: t('adminCategories.addModal.nameRequired') })}
+              {...register('name', {
+                required: t('adminCategories.addModal.nameRequired'),
+              })}
             />
           </div>
 
-          <button
+          <Button
+            unstyled
             type="submit"
             className="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-lg bg-[#ee1c25] px-5 text-[12px] leading-5 text-white transition hover:bg-[#d41921]"
           >
             {t('adminCategories.addModal.save')}
-          </button>
+          </Button>
         </form>
       </div>
     </div>,

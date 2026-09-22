@@ -1,6 +1,7 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useMemo, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 import ChatConversationList from '@/portals/member/components/member-chat/ChatConversationList';
 import ChatMessageArea from '@/portals/member/components/member-chat/ChatMessageArea';
 import {
@@ -19,7 +20,9 @@ const MemberChatContent = memo(() => {
   const [localMessages, setLocalMessages] = useState({});
 
   const activeConversation = useMemo(
-    () => CHAT_CONVERSATIONS.find((conversation) => conversation.id === activeId) ?? null,
+    () =>
+      CHAT_CONVERSATIONS.find((conversation) => conversation.id === activeId) ??
+      null,
     [activeId],
   );
 
@@ -46,7 +49,10 @@ const MemberChatContent = memo(() => {
           type: 'sent',
           variant: 'text',
           text,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          time: new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
           read: true,
         },
       ],
@@ -57,7 +63,9 @@ const MemberChatContent = memo(() => {
   return (
     <div className="mx-auto flex h-full min-h-0 w-full max-w-395 flex-col">
       <div className="flex min-h-0 flex-1 overflow-hidden rounded-[20px] border border-[#ececf0] bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]">
-        <div className={`${showMobileThread ? 'hidden' : 'flex'} h-full min-h-0 lg:flex`}>
+        <div
+          className={`${showMobileThread ? 'hidden' : 'flex'} h-full min-h-0 lg:flex`}
+        >
           <ChatConversationList
             conversations={CHAT_CONVERSATIONS}
             activeId={activeId}
@@ -69,17 +77,20 @@ const MemberChatContent = memo(() => {
           />
         </div>
 
-        <div className={`${showMobileThread ? 'flex' : 'hidden'} min-h-0 min-w-0 flex-1 flex-col lg:flex`}>
+        <div
+          className={`${showMobileThread ? 'flex' : 'hidden'} min-h-0 min-w-0 flex-1 flex-col lg:flex`}
+        >
           {activeConversation ? (
             <>
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={() => setShowMobileThread(false)}
                 className="inline-flex items-center gap-2 border-b border-[#ececf0] px-4 py-3 text-[14px] font-medium text-[#494453] lg:hidden"
               >
                 <ArrowLeft size={18} strokeWidth={2} aria-hidden="true" />
                 {t('memberChat.backToList')}
-              </button>
+              </Button>
               <div className="flex min-h-0 flex-1 flex-col">
                 <ChatMessageArea
                   conversation={activeConversation}

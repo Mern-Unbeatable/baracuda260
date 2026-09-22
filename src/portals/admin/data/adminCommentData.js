@@ -35,10 +35,26 @@ export const STATUS_FILTERS = [
 ];
 
 export const ACTION_MENU_OPTIONS = [
-  { id: 'details', labelKey: 'adminComment.actions.seeDetails', kind: 'details' },
-  { id: COMMENT_STATUS.HIDDEN, labelKey: 'adminComment.actions.hide', kind: 'status' },
-  { id: COMMENT_STATUS.APPROVED, labelKey: 'adminComment.actions.approved', kind: 'status' },
-  { id: COMMENT_STATUS.PENDING, labelKey: 'adminComment.actions.pending', kind: 'status' },
+  {
+    id: 'details',
+    labelKey: 'adminComment.actions.seeDetails',
+    kind: 'details',
+  },
+  {
+    id: COMMENT_STATUS.HIDDEN,
+    labelKey: 'adminComment.actions.hide',
+    kind: 'status',
+  },
+  {
+    id: COMMENT_STATUS.APPROVED,
+    labelKey: 'adminComment.actions.approved',
+    kind: 'status',
+  },
+  {
+    id: COMMENT_STATUS.PENDING,
+    labelKey: 'adminComment.actions.pending',
+    kind: 'status',
+  },
 ];
 
 export const STATUS_LABEL_KEYS = {
@@ -138,8 +154,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.SINGLE,
     date: '2025-07-28',
     status: COMMENT_STATUS.APPROVED,
-    avatar: `${A}/avatar-1.jpg`,
-    photo: `${A}/photo-1.jpg`,
+    avatar: `${A}/avatar-1.webp`,
+    photo: `${A}/photo-1.webp`,
     followers: '1,240',
     uploads: '38',
     visits: '5,200',
@@ -157,8 +173,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.ALBUM6,
     date: '2025-07-28',
     status: COMMENT_STATUS.APPROVED,
-    avatar: `${A}/avatar-2.jpg`,
-    photo: `${A}/photo-2.jpg`,
+    avatar: `${A}/avatar-2.webp`,
+    photo: `${A}/photo-2.webp`,
     followers: '890',
     uploads: '24',
     visits: '3,100',
@@ -176,8 +192,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.ZODIAC,
     date: '2025-07-28',
     status: COMMENT_STATUS.DELETED,
-    avatar: `${A}/avatar-3.jpg`,
-    photo: `${A}/photo-3.jpg`,
+    avatar: `${A}/avatar-3.webp`,
+    photo: `${A}/photo-3.webp`,
     followers: '2,010',
     uploads: '51',
     visits: '6,400',
@@ -195,8 +211,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.SINGLE,
     date: '2025-07-27',
     status: COMMENT_STATUS.PENDING,
-    avatar: `${A}/avatar-4.jpg`,
-    photo: `${A}/photo-4.jpg`,
+    avatar: `${A}/avatar-4.webp`,
+    photo: `${A}/photo-4.webp`,
     followers: '640',
     uploads: '19',
     visits: '2,250',
@@ -214,8 +230,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.ALBUM6,
     date: '2025-07-27',
     status: COMMENT_STATUS.DELETED,
-    avatar: `${A}/avatar-5.jpg`,
-    photo: `${A}/photo-5.jpg`,
+    avatar: `${A}/avatar-5.webp`,
+    photo: `${A}/photo-5.webp`,
     followers: '1,120',
     uploads: '33',
     visits: '4,080',
@@ -233,8 +249,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.ZODIAC,
     date: '2025-07-27',
     status: COMMENT_STATUS.APPROVED,
-    avatar: `${A}/avatar-6.jpg`,
-    photo: `${A}/photo-6.jpg`,
+    avatar: `${A}/avatar-6.webp`,
+    photo: `${A}/photo-6.webp`,
     followers: '3,450',
     uploads: '72',
     visits: '9,800',
@@ -252,8 +268,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.SINGLE,
     date: '2025-07-26',
     status: COMMENT_STATUS.HIDDEN,
-    avatar: `${A}/avatar-7.jpg`,
-    photo: `${A}/photo-7.jpg`,
+    avatar: `${A}/avatar-7.webp`,
+    photo: `${A}/photo-7.webp`,
     followers: '510',
     uploads: '14',
     visits: '1,900',
@@ -271,8 +287,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.ALBUM6,
     date: '2025-07-26',
     status: COMMENT_STATUS.APPROVED,
-    avatar: `${A}/avatar-8.jpg`,
-    photo: `${A}/photo-8.jpg`,
+    avatar: `${A}/avatar-8.webp`,
+    photo: `${A}/photo-8.webp`,
     followers: '1,780',
     uploads: '41',
     visits: '5,600',
@@ -290,8 +306,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.SINGLE,
     date: '2025-07-25',
     status: COMMENT_STATUS.PENDING,
-    avatar: `${A}/avatar-9.jpg`,
-    photo: `${A}/photo-9.jpg`,
+    avatar: `${A}/avatar-9.webp`,
+    photo: `${A}/photo-9.webp`,
     followers: '720',
     uploads: '22',
     visits: '2,640',
@@ -309,8 +325,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.ZODIAC,
     date: '2025-07-25',
     status: COMMENT_STATUS.HIDDEN,
-    avatar: `${A}/avatar-10.jpg`,
-    photo: `${A}/photo-10.jpg`,
+    avatar: `${A}/avatar-10.webp`,
+    photo: `${A}/photo-10.webp`,
     followers: '980',
     uploads: '27',
     visits: '3,320',
@@ -328,8 +344,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.ALBUM6,
     date: '2025-07-24',
     status: COMMENT_STATUS.APPROVED,
-    avatar: `${A}/avatar-11.jpg`,
-    photo: `${A}/photo-11.jpg`,
+    avatar: `${A}/avatar-11.webp`,
+    photo: `${A}/photo-11.webp`,
     followers: '2,240',
     uploads: '58',
     visits: '7,100',
@@ -347,8 +363,8 @@ export const ADMIN_COMMENT_ROWS = [
     type: COMMENT_TYPE.SINGLE,
     date: '2025-07-23',
     status: COMMENT_STATUS.APPROVED,
-    avatar: `${A}/avatar-12.jpg`,
-    photo: `${A}/photo-12.jpg`,
+    avatar: `${A}/avatar-12.webp`,
+    photo: `${A}/photo-12.webp`,
     followers: '1,560',
     uploads: '36',
     visits: '4,900',
@@ -388,12 +404,16 @@ export const updateCommentStatus = (rows, rowId, nextStatus) =>
  * @param {number} totalPages
  * @param {number} [windowSize]
  */
-export const getCommentPageNumbers = (page, totalPages, windowSize = COMMENTS_PAGE_CHROME) => {
+export const getCommentPageNumbers = (
+  page,
+  totalPages,
+  windowSize = COMMENTS_PAGE_CHROME,
+) => {
   const safeTotal = Math.max(1, totalPages);
   const safePage = Math.min(Math.max(1, page), safeTotal);
   const half = Math.floor(windowSize / 2);
   let start = Math.max(1, safePage - half);
-  let end = Math.min(safeTotal, start + windowSize - 1);
+  const end = Math.min(safeTotal, start + windowSize - 1);
   start = Math.max(1, end - windowSize + 1);
   const pages = [];
   for (let n = start; n <= end; n += 1) pages.push(n);

@@ -44,7 +44,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-09-14',
     purchasedLabel: 'Sep 14, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     downloadAvailable: true,
   },
   {
@@ -57,7 +57,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-09-12',
     purchasedLabel: 'Sep 12, 2026',
     badge: '6 Photos Story',
-    image: `${H}/photo-golden.jpg`,
+    image: `${H}/photo-golden.webp`,
     downloadAvailable: true,
   },
   {
@@ -70,7 +70,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-09-10',
     purchasedLabel: 'Sep 10, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-forest.jpg`,
+    image: `${H}/photo-forest.webp`,
     downloadAvailable: true,
   },
   {
@@ -83,7 +83,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-09-08',
     purchasedLabel: 'Sep 8, 2026',
     badge: '12 photos - full Zodiac Story',
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
     downloadAvailable: true,
   },
   {
@@ -96,7 +96,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-09-05',
     purchasedLabel: 'Sep 5, 2026',
     badge: '12 photos - full Zodiac Story',
-    image: `${H}/photo-tidal.jpg`,
+    image: `${H}/photo-tidal.webp`,
     downloadAvailable: false,
   },
   {
@@ -109,7 +109,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-09-03',
     purchasedLabel: 'Sep 3, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-morning.jpg`,
+    image: `${H}/photo-morning.webp`,
     downloadAvailable: true,
   },
   {
@@ -122,7 +122,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-08-28',
     purchasedLabel: 'Aug 28, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-wings.jpg`,
+    image: `${H}/photo-wings.webp`,
     downloadAvailable: true,
   },
   {
@@ -135,7 +135,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-08-22',
     purchasedLabel: 'Aug 22, 2026',
     badge: '6 Photos Story',
-    image: `${H}/photo-autumn.jpg`,
+    image: `${H}/photo-autumn.webp`,
     downloadAvailable: true,
   },
   {
@@ -148,7 +148,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-08-18',
     purchasedLabel: 'Aug 18, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-harbor.jpg`,
+    image: `${H}/photo-harbor.webp`,
     downloadAvailable: true,
   },
   {
@@ -161,7 +161,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-08-12',
     purchasedLabel: 'Aug 12, 2026',
     badge: '12 photos - full Zodiac Story',
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
     downloadAvailable: true,
   },
   {
@@ -174,7 +174,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-08-08',
     purchasedLabel: 'Aug 8, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     downloadAvailable: false,
   },
   {
@@ -187,7 +187,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-08-01',
     purchasedLabel: 'Aug 1, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-golden.jpg`,
+    image: `${H}/photo-golden.webp`,
     downloadAvailable: true,
   },
   {
@@ -200,7 +200,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-07-26',
     purchasedLabel: 'Jul 26, 2026',
     badge: '6 Photos Story',
-    image: `${H}/photo-silent.jpg`,
+    image: `${H}/photo-silent.webp`,
     downloadAvailable: true,
   },
   {
@@ -213,7 +213,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-07-20',
     purchasedLabel: 'Jul 20, 2026',
     badge: '12 photos - full Zodiac Story',
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
     downloadAvailable: true,
   },
   {
@@ -226,7 +226,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-07-14',
     purchasedLabel: 'Jul 14, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-morning.jpg`,
+    image: `${H}/photo-morning.webp`,
     downloadAvailable: true,
   },
   {
@@ -239,7 +239,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-07-08',
     purchasedLabel: 'Jul 8, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-harbor.jpg`,
+    image: `${H}/photo-harbor.webp`,
     downloadAvailable: false,
   },
   {
@@ -252,7 +252,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-07-02',
     purchasedLabel: 'Jul 2, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-wings.jpg`,
+    image: `${H}/photo-wings.webp`,
     downloadAvailable: true,
   },
   {
@@ -265,7 +265,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-06-26',
     purchasedLabel: 'Jun 26, 2026',
     badge: '6 Photos Story',
-    image: `${H}/photo-autumn.jpg`,
+    image: `${H}/photo-autumn.webp`,
     downloadAvailable: true,
   },
   {
@@ -278,7 +278,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-06-18',
     purchasedLabel: 'Jun 18, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     downloadAvailable: true,
   },
   {
@@ -291,7 +291,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-06-10',
     purchasedLabel: 'Jun 10, 2026',
     badge: '12 photos - full Zodiac Story',
-    image: `${H}/photo-zodiac.jpg`,
+    image: `${H}/photo-zodiac.webp`,
     downloadAvailable: true,
   },
   {
@@ -304,7 +304,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-06-04',
     purchasedLabel: 'Jun 4, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-forest.jpg`,
+    image: `${H}/photo-forest.webp`,
     downloadAvailable: true,
   },
   {
@@ -317,7 +317,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-05-28',
     purchasedLabel: 'May 28, 2026',
     badge: '12 photos - full Zodiac Story',
-    image: `${H}/photo-tidal.jpg`,
+    image: `${H}/photo-tidal.webp`,
     downloadAvailable: true,
   },
   {
@@ -330,7 +330,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-05-20',
     purchasedLabel: 'May 20, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-morning.jpg`,
+    image: `${H}/photo-morning.webp`,
     downloadAvailable: true,
   },
   {
@@ -343,7 +343,7 @@ export const PURCHASE_PHOTOS = [
     purchasedAt: '2026-05-12',
     purchasedLabel: 'May 12, 2026',
     badge: 'Single Photo',
-    image: `${H}/photo-city.jpg`,
+    image: `${H}/photo-city.webp`,
     downloadAvailable: true,
   },
 ];

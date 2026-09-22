@@ -41,7 +41,8 @@ export const matchesAlbumType = (badge, albumType) => {
   if (typeNorm.includes('12') || typeNorm.includes('zodiac')) {
     return badgeNorm.includes('12') || badgeNorm.includes('zodiac');
   }
-  if (typeNorm.includes('6')) return badgeNorm.includes('6') && badgeNorm.includes('story');
+  if (typeNorm.includes('6'))
+    return badgeNorm.includes('6') && badgeNorm.includes('story');
   if (typeNorm.includes('single')) return badgeNorm.includes('single');
   return badgeNorm === typeNorm;
 };

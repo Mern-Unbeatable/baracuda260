@@ -1,9 +1,19 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
 import { MoreVertical, Plus } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import DemoProfileDetailModal from '@/portals/admin/components/admin-demo-profiles/DemoProfileDetailModal';
 import {
   ADMIN_DEMO_PROFILES_ASSETS,
   CHEVRON_ICON_SIZE,
@@ -16,9 +26,7 @@ import {
   STATUS_LABEL_KEYS,
 } from '@/portals/admin/data/adminDemoProfilesData';
 import useAdminDemoProfiles from '@/portals/admin/hooks/useAdminDemoProfiles';
-import DemoProfileDetailModal from '@/portals/admin/components/admin-demo-profiles/DemoProfileDetailModal';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import { ROUTES } from '@/shared/config';
 
 const ACTION_MENU_OFFSET_PX = 6;
 const ACTION_MENU_FALLBACK_HEIGHT_PX = 148;
@@ -28,7 +36,9 @@ const MD_MEDIA_QUERY = '(min-width: 768px)';
 
 const useIsMdUp = () => {
   const [isMdUp, setIsMdUp] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia(MD_MEDIA_QUERY).matches : false,
+    typeof window !== 'undefined'
+      ? window.matchMedia(MD_MEDIA_QUERY).matches
+      : false,
   );
 
   useEffect(() => {
@@ -101,88 +111,107 @@ const StatusBadge = memo(({ status }) => {
 });
 StatusBadge.displayName = 'StatusBadge';
 
-const StatusSortSelect = memo(({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
-  const { t } = useTranslation();
-  const rootRef = useRef(null);
-  const activeFilter = STATUS_FILTERS.find((filter) => filter.id === statusFilter) || STATUS_FILTERS[0];
+const StatusSortSelect = memo(
+  ({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
+    const { t } = useTranslation();
+    const rootRef = useRef(null);
+    const activeFilter =
+      STATUS_FILTERS.find((filter) => filter.id === statusFilter) ||
+      STATUS_FILTERS[0];
 
-  useEffect(() => {
-    if (!sortOpen) return undefined;
+    useEffect(() => {
+      if (!sortOpen) return undefined;
 
-    const handlePointerDown = (event) => {
-      if (rootRef.current && !rootRef.current.contains(event.target)) onClose();
-    };
+      const handlePointerDown = (event) => {
+        if (rootRef.current && !rootRef.current.contains(event.target))
+          onClose();
+      };
 
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
+      const handleKeyDown = (event) => {
+        if (event.key === 'Escape') onClose();
+      };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [sortOpen, onClose]);
+      document.addEventListener('mousedown', handlePointerDown);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('mousedown', handlePointerDown);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [sortOpen, onClose]);
 
-  return (
-    <div className="flex flex-wrap items-center gap-5" ref={rootRef}>
-      <p className="text-[14px] leading-normal text-[#373737]">{t('adminDemoProfiles.sortBy')}</p>
-      <div className="relative">
-        <button
-          type="button"
-          aria-expanded={sortOpen}
-          aria-haspopup="listbox"
-          aria-label={t('adminDemoProfiles.filters.aria')}
-          onClick={onToggle}
-          className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-[8px] border border-[#e4e4e4] bg-white p-3 text-left"
-        >
-          <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
-            {t(activeFilter.labelKey)}
-          </span>
-          <img
-            src={ADMIN_DEMO_PROFILES_ASSETS.chevronDown}
-            alt=""
-            width={CHEVRON_ICON_SIZE}
-            height={CHEVRON_ICON_SIZE}
-            className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
-          />
-        </button>
-
-        {sortOpen ? (
-          <ul
-            role="listbox"
+    return (
+      <div className="flex flex-wrap items-center gap-5" ref={rootRef}>
+        <p className="text-[14px] leading-normal text-[#373737]">
+          {t('adminDemoProfiles.sortBy')}
+        </p>
+        <div className="relative">
+          <Button
+            unstyled
+            type="button"
+            aria-expanded={sortOpen}
+            aria-haspopup="listbox"
             aria-label={t('adminDemoProfiles.filters.aria')}
-            className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
+            onClick={onToggle}
+            className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-[8px] border border-[#e4e4e4] bg-white p-3 text-left"
           >
-            {STATUS_FILTERS.map((filter) => {
-              const selected = filter.id === statusFilter;
-              return (
-                <li key={filter.id}>
-                  <button
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    onClick={() => onSelect(filter.id)}
-                    className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
-                      selected ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
-                    }`}
-                  >
-                    {t(filter.labelKey)}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        ) : null}
+            <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
+              {t(activeFilter.labelKey)}
+            </span>
+            <Image
+              src={ADMIN_DEMO_PROFILES_ASSETS.chevronDown}
+              alt=""
+              width={CHEVRON_ICON_SIZE}
+              height={CHEVRON_ICON_SIZE}
+              className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
+            />
+          </Button>
+
+          {sortOpen ? (
+            <ul
+              role="listbox"
+              aria-label={t('adminDemoProfiles.filters.aria')}
+              className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
+            >
+              {STATUS_FILTERS.map((filter) => {
+                const selected = filter.id === statusFilter;
+                return (
+                  <li key={filter.id}>
+                    <Button
+                      unstyled
+                      type="button"
+                      role="option"
+                      aria-selected={selected}
+                      onClick={() => onSelect(filter.id)}
+                      className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
+                        selected
+                          ? 'bg-[#f6fbff] text-[#4048cd]'
+                          : 'text-[#373737]'
+                      }`}
+                    >
+                      {t(filter.labelKey)}
+                    </Button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 StatusSortSelect.displayName = 'StatusSortSelect';
 
 const ProfileActionMenu = memo(
-  ({ profile, isOpen, onToggle, onClose, onSeeDetails, onSetActive, onSetInactive }) => {
+  ({
+    profile,
+    isOpen,
+    onToggle,
+    onClose,
+    onSeeDetails,
+    onSetActive,
+    onSetInactive,
+  }) => {
     const { t } = useTranslation();
     const buttonWrapRef = useRef(null);
     const buttonRef = useRef(null);
@@ -201,12 +230,16 @@ const ProfileActionMenu = memo(
 
       const updatePosition = () => {
         const rect = buttonRef.current.getBoundingClientRect();
-        const menuHeight = menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
+        const menuHeight =
+          menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
         const spaceBelow = window.innerHeight - rect.bottom;
         const openUpward = spaceBelow < menuHeight + ACTION_MENU_OFFSET_PX;
 
         setPlacement({
-          right: Math.max(ACTION_MENU_VIEWPORT_MARGIN_PX, window.innerWidth - rect.right),
+          right: Math.max(
+            ACTION_MENU_VIEWPORT_MARGIN_PX,
+            window.innerWidth - rect.right,
+          ),
           ...(openUpward
             ? { bottom: window.innerHeight - rect.top + ACTION_MENU_OFFSET_PX }
             : { top: rect.bottom + ACTION_MENU_OFFSET_PX }),
@@ -258,16 +291,21 @@ const ProfileActionMenu = memo(
             }}
             className="overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
           >
-            <span className="block h-[3px] w-full bg-[#4048cd]" aria-hidden="true" />
-            <button
+            <span
+              className="block h-[3px] w-full bg-[#4048cd]"
+              aria-hidden="true"
+            />
+            <Button
+              unstyled
               type="button"
               role="menuitem"
               onClick={onSeeDetails}
               className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff]"
             >
               {t('adminDemoProfiles.actions.seeDetails')}
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="button"
               role="menuitem"
               disabled={isActive}
@@ -275,8 +313,9 @@ const ProfileActionMenu = memo(
               className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
             >
               {t('adminDemoProfiles.actions.active')}
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="button"
               role="menuitem"
               disabled={!isActive}
@@ -284,7 +323,7 @@ const ProfileActionMenu = memo(
               className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
             >
               {t('adminDemoProfiles.actions.inactive')}
-            </button>
+            </Button>
           </div>,
           document.body,
         )
@@ -292,7 +331,8 @@ const ProfileActionMenu = memo(
 
     return (
       <div className="relative inline-flex" ref={buttonWrapRef}>
-        <button
+        <Button
+          unstyled
           ref={buttonRef}
           type="button"
           aria-expanded={isOpen}
@@ -304,7 +344,7 @@ const ProfileActionMenu = memo(
           }`}
         >
           <MoreVertical size={MORE_ICON_SIZE} aria-hidden="true" />
-        </button>
+        </Button>
         {menu}
       </div>
     );
@@ -313,7 +353,15 @@ const ProfileActionMenu = memo(
 ProfileActionMenu.displayName = 'ProfileActionMenu';
 
 const ProfileTableRow = memo(
-  ({ profile, openActionId, onToggleAction, onCloseAction, onSeeDetails, onSetActive, onSetInactive }) => {
+  ({
+    profile,
+    openActionId,
+    onToggleAction,
+    onCloseAction,
+    onSeeDetails,
+    onSetActive,
+    onSetInactive,
+  }) => {
     const { t } = useTranslation();
 
     return (
@@ -351,7 +399,15 @@ const ProfileTableRow = memo(
 ProfileTableRow.displayName = 'ProfileTableRow';
 
 const ProfileMobileCard = memo(
-  ({ profile, openActionId, onToggleAction, onCloseAction, onSeeDetails, onSetActive, onSetInactive }) => {
+  ({
+    profile,
+    openActionId,
+    onToggleAction,
+    onCloseAction,
+    onSeeDetails,
+    onSetActive,
+    onSetInactive,
+  }) => {
     const { t } = useTranslation();
 
     return (
@@ -381,13 +437,17 @@ const ProfileMobileCard = memo(
             <span className="text-[13px] leading-5 text-[#7f8ba1]">
               {t('adminDemoProfiles.columns.phone')}
             </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">{profile.phone}</span>
+            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+              {profile.phone}
+            </span>
           </div>
           <div className="flex items-center justify-between gap-3">
             <span className="text-[13px] leading-5 text-[#7f8ba1]">
               {t('adminDemoProfiles.columns.email')}
             </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">{profile.email}</span>
+            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+              {profile.email}
+            </span>
           </div>
           <div className="flex items-center justify-between gap-3">
             <span className="text-[13px] leading-5 text-[#7f8ba1]">
@@ -458,7 +518,10 @@ const AdminDemoProfilesContent = memo(() => {
 
       <DemoProfileStatCards stats={stats} />
 
-      <section aria-label={t('adminDemoProfiles.tableAria')} className="overflow-hidden rounded-[12px] bg-white">
+      <section
+        aria-label={t('adminDemoProfiles.tableAria')}
+        className="overflow-hidden rounded-[12px] bg-white"
+      >
         {visibleProfiles.length > 0 ? (
           isMdUp ? (
             <div className="w-full overflow-x-auto">
@@ -494,15 +557,22 @@ const AdminDemoProfilesContent = memo(() => {
                       onToggleAction={handleToggleAction}
                       onCloseAction={handleCloseAction}
                       onSeeDetails={handleOpenDetails}
-                      onSetActive={(id) => handleSetStatus(id, DEMO_PROFILE_STATUS.ACTIVE)}
-                      onSetInactive={(id) => handleSetStatus(id, DEMO_PROFILE_STATUS.INACTIVE)}
+                      onSetActive={(id) =>
+                        handleSetStatus(id, DEMO_PROFILE_STATUS.ACTIVE)
+                      }
+                      onSetInactive={(id) =>
+                        handleSetStatus(id, DEMO_PROFILE_STATUS.INACTIVE)
+                      }
                     />
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <div className="flex flex-col" data-testid="demo-profiles-mobile-cards">
+            <div
+              className="flex flex-col"
+              data-testid="demo-profiles-mobile-cards"
+            >
               {visibleProfiles.map((profile) => (
                 <ProfileMobileCard
                   key={profile.id}
@@ -511,8 +581,12 @@ const AdminDemoProfilesContent = memo(() => {
                   onToggleAction={handleToggleAction}
                   onCloseAction={handleCloseAction}
                   onSeeDetails={handleOpenDetails}
-                  onSetActive={(id) => handleSetStatus(id, DEMO_PROFILE_STATUS.ACTIVE)}
-                  onSetInactive={(id) => handleSetStatus(id, DEMO_PROFILE_STATUS.INACTIVE)}
+                  onSetActive={(id) =>
+                    handleSetStatus(id, DEMO_PROFILE_STATUS.ACTIVE)
+                  }
+                  onSetInactive={(id) =>
+                    handleSetStatus(id, DEMO_PROFILE_STATUS.INACTIVE)
+                  }
                 />
               ))}
             </div>

@@ -1,15 +1,16 @@
+import { Copy, Facebook, Twitter } from 'lucide-react';
 import React, { memo } from 'react';
-import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Navigate } from 'react-router-dom';
+import Badge from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+import Checkbox from '@/components/ui/Checkbox';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import { ROUTES } from '@/shared/config';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
-import { Copy, Facebook, Twitter } from 'lucide-react';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
-import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
-import Checkbox from '@/components/ui/Checkbox';
-import Card from '@/components/ui/Card';
-import Badge from '@/components/ui/Badge';
 import { useCheckout } from '../hooks/useCheckout';
 
 const WhatsAppIcon = () => (
@@ -32,7 +33,13 @@ const StoreCheckoutMain = memo(() => {
   } = useCheckout();
 
   if (!product) {
-    return <Navigate to={ROUTES.PHOTOGRAPHER_PROFILE} state={{ tab: 'store' }} replace />;
+    return (
+      <Navigate
+        to={ROUTES.PHOTOGRAPHER_PROFILE}
+        state={{ tab: 'store' }}
+        replace
+      />
+    );
   }
 
   return (
@@ -45,16 +52,25 @@ const StoreCheckoutMain = memo(() => {
       <section className="section-py pt-8 sm:pt-12">
         <Shell>
           <div className="mb-10">
-            <h1 className="text-[28px] sm:text-[32px] font-bold text-[#111827]">Complete your order.</h1>
-            <p className="text-[15px] text-[#6b7280] mt-1.5">Everything you need, in one simple checkout.</p>
+            <h1 className="text-[28px] sm:text-[32px] font-bold text-[#111827]">
+              Complete your order.
+            </h1>
+            <p className="text-[15px] text-[#6b7280] mt-1.5">
+              Everything you need, in one simple checkout.
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_400px] gap-8">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_400px] gap-8"
+          >
             <div className={PAGE_STACK}>
               {/* 1. Your Details */}
               <Card>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">1. Your details</h2>
+                  <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">
+                    1. Your details
+                  </h2>
                   <Badge>REQUIRED</Badge>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -62,7 +78,9 @@ const StoreCheckoutMain = memo(() => {
                     label="First Name"
                     placeholder="First name"
                     error={errors.firstName}
-                    {...register('firstName', { required: 'First name is required' })}
+                    {...register('firstName', {
+                      required: 'First name is required',
+                    })}
                   />
                   <Input
                     label="Last Name / Alias"
@@ -76,14 +94,18 @@ const StoreCheckoutMain = memo(() => {
                   type="tel"
                   placeholder="04XX XXX XXX"
                   error={errors.mobile}
-                  {...register('mobile', { required: 'Mobile number is required' })}
+                  {...register('mobile', {
+                    required: 'Mobile number is required',
+                  })}
                 />
               </Card>
 
               {/* 2. Delivery Details */}
               <Card>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">2. Where should we deliver?</h2>
+                  <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">
+                    2. Where should we deliver?
+                  </h2>
                   <Badge>REQUIRED</Badge>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
@@ -119,19 +141,31 @@ const StoreCheckoutMain = memo(() => {
             <div className="lg:sticky lg:top-[100px] self-start">
               <Card>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">Your order</h2>
+                  <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">
+                    Your order
+                  </h2>
                   <Badge>{cartItems.length} ITEMS</Badge>
                 </div>
 
                 <div className="flex flex-col gap-6 mb-8">
                   {cartItems.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-4">
-                      <img src={item.image} alt={item.title} className="w-12 h-12 rounded-lg object-cover shrink-0 bg-white" />
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        className="w-12 h-12 rounded-lg object-cover shrink-0 bg-white"
+                      />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[15px] font-bold text-[#111827] truncate">{item.title}</p>
-                        <p className="text-[13px] text-[#9ca3af] mt-0.5">Quantity x {item.qty}</p>
+                        <p className="text-[15px] font-bold text-[#111827] truncate">
+                          {item.title}
+                        </p>
+                        <p className="text-[13px] text-[#9ca3af] mt-0.5">
+                          Quantity x {item.qty}
+                        </p>
                       </div>
-                      <p className="text-[17px] font-bold text-[#111827]">{item.price}</p>
+                      <p className="text-[17px] font-bold text-[#111827]">
+                        {item.price}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -139,17 +173,25 @@ const StoreCheckoutMain = memo(() => {
                 <div className="flex flex-col gap-3 mb-6 text-[14px] text-[#9ca3af]">
                   <div className="flex justify-between items-center">
                     <span>Subtotal</span>
-                    <span className="text-[16px] font-bold text-[#111827]">{formatPrice(subtotal)}</span>
+                    <span className="text-[16px] font-bold text-[#111827]">
+                      {formatPrice(subtotal)}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span>Delivery</span>
-                    <span className="text-[16px] font-bold text-[#111827]">{formatPrice(delivery)}</span>
+                    <span className="text-[16px] font-bold text-[#111827]">
+                      {formatPrice(delivery)}
+                    </span>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-[22px] font-bold text-[#111827]">Total</span>
-                  <span className="text-[22px] font-bold text-[#111827]">{formatPrice(total)}</span>
+                  <span className="text-[22px] font-bold text-[#111827]">
+                    Total
+                  </span>
+                  <span className="text-[22px] font-bold text-[#111827]">
+                    {formatPrice(total)}
+                  </span>
                 </div>
 
                 <Button type="submit" className="w-full py-3.5 text-[13px]">
@@ -173,28 +215,53 @@ const StoreCheckoutMain = memo(() => {
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/[0.03] to-transparent pointer-events-none"></div>
             <div className="relative z-10">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1 text-[10px] font-medium mb-5">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
                 Community Support
               </div>
               <h2 className="text-[22px] sm:text-[26px] font-semibold leading-[1.3] max-w-2xl">
-                Support this photographer by sharing their profile with your friends!
+                Support this photographer by sharing their profile with your
+                friends!
               </h2>
               <p className="mt-2.5 text-[14px] text-white/70 max-w-2xl">
-                Share their profile on social media and help them get more visibility and votes.
+                Share their profile on social media and help them get more
+                visibility and votes.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <button type="button" className="inline-flex items-center gap-2 rounded-full bg-[#10b981] hover:bg-[#059669] px-4 py-2 text-[12px] font-bold text-white transition">
+                <Button
+                  unstyled
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#10b981] hover:bg-[#059669] px-4 py-2 text-[12px] font-bold text-white transition"
+                >
                   <WhatsAppIcon /> WhatsApp
-                </button>
-                <button type="button" className="inline-flex items-center gap-2 rounded-full bg-[#3b82f6] hover:bg-[#2563eb] px-4 py-2 text-[12px] font-bold text-white transition">
+                </Button>
+                <Button
+                  unstyled
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#3b82f6] hover:bg-[#2563eb] px-4 py-2 text-[12px] font-bold text-white transition"
+                >
                   <Facebook size={14} /> Facebook
-                </button>
-                <button type="button" className="inline-flex items-center justify-center rounded-full bg-[#374151] hover:bg-[#1f2937] size-8 text-white transition">
+                </Button>
+                <Button
+                  unstyled
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-full bg-[#374151] hover:bg-[#1f2937] size-8 text-white transition"
+                >
                   <Twitter size={12} fill="currentColor" stroke="none" />
-                </button>
-                <button type="button" className="inline-flex items-center gap-2 rounded-full bg-white hover:bg-gray-100 px-4 py-2 text-[12px] font-bold text-[#111827] transition">
+                </Button>
+                <Button
+                  unstyled
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-full bg-white hover:bg-gray-100 px-4 py-2 text-[12px] font-bold text-[#111827] transition"
+                >
                   <Copy size={14} /> Copy Profile Link
-                </button>
+                </Button>
               </div>
             </div>
           </div>

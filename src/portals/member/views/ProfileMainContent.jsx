@@ -1,13 +1,4 @@
 import React, { memo, useState } from 'react';
-import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
-import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
-import PhotographerCompetitionBanner from '@/portals/public/photographer/components/PhotographerCompetitionBanner';
-import PhotographerFeaturedVideo from '@/portals/public/photographer/components/PhotographerFeaturedVideo';
-import PhotographerMessagesSection from '@/portals/public/photographer/components/PhotographerMessagesSection';
-import PhotographerProfileTabs from '@/portals/public/photographer/components/PhotographerProfileTabs';
-import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
-import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
-import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
 import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader';
 import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar';
 import {
@@ -17,6 +8,15 @@ import {
   MEMBER_PREMIUM,
   MEMBER_PROFILE,
 } from '@/portals/member/data/memberProfileData';
+import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
+import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
+import PhotographerCompetitionBanner from '@/portals/public/photographer/components/PhotographerCompetitionBanner';
+import PhotographerFeaturedVideo from '@/portals/public/photographer/components/PhotographerFeaturedVideo';
+import PhotographerMessagesSection from '@/portals/public/photographer/components/PhotographerMessagesSection';
+import PhotographerProfileTabs from '@/portals/public/photographer/components/PhotographerProfileTabs';
+import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
+import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
+import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
 import {
   PHOTOGRAPHER_FEATURED_VIDEO,
   PHOTOGRAPHER_STORE_PRODUCTS,
@@ -36,7 +36,9 @@ const ProfileMainContent = memo(() => {
           <MemberProfileStatsBar stats={MEMBER_PROFILE.stats} />
           <PhotographerAboutSection profile={MEMBER_PROFILE} />
           <PhotographerFeaturedVideo video={PHOTOGRAPHER_FEATURED_VIDEO} />
-          <PhotographerTalentAppreciation appreciation={PHOTOGRAPHER_TALENT_APPRECIATION} />
+          <PhotographerTalentAppreciation
+            appreciation={PHOTOGRAPHER_TALENT_APPRECIATION}
+          />
         </>
       ) : null}
 

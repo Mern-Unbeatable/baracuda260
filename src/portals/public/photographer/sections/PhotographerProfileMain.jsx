@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Shell, SitePageLayout } from '@/shared/site-chrome';
+import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
+import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
 import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
 import PhotographerCompetitionBanner from '@/portals/public/photographer/components/PhotographerCompetitionBanner';
@@ -10,8 +11,6 @@ import PhotographerProfileTabs from '@/portals/public/photographer/components/Ph
 import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
-import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
-import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
 import {
   PHOTOGRAPHER_ARTWORK,
   PHOTOGRAPHER_FEATURED,
@@ -22,6 +21,7 @@ import {
   PHOTOGRAPHER_STORE_PRODUCTS,
   PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
+import { Shell, SitePageLayout } from '@/shared/site-chrome';
 
 const PhotographerProfileMain = memo(() => {
   const location = useLocation();
@@ -37,14 +37,19 @@ const PhotographerProfileMain = memo(() => {
       <section className="bg-white section-py-top pb-10 sm:pb-12">
         <Shell>
           <PhotographerProfileHeader profile={PHOTOGRAPHER_PROFILE} />
-          <PhotographerProfileTabs activeTab={activeTab} onChange={setActiveTab} />
+          <PhotographerProfileTabs
+            activeTab={activeTab}
+            onChange={setActiveTab}
+          />
 
           {activeTab === 'profile' ? (
             <>
               <PhotographerStatsBar stats={PHOTOGRAPHER_PROFILE.stats} />
               <PhotographerAboutSection profile={PHOTOGRAPHER_PROFILE} />
               <PhotographerFeaturedVideo video={PHOTOGRAPHER_FEATURED_VIDEO} />
-              <PhotographerTalentAppreciation appreciation={PHOTOGRAPHER_TALENT_APPRECIATION} />
+              <PhotographerTalentAppreciation
+                appreciation={PHOTOGRAPHER_TALENT_APPRECIATION}
+              />
             </>
           ) : null}
 

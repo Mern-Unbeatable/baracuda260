@@ -1,18 +1,19 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Funnel, X } from 'lucide-react';
-import { Shell, SitePageLayout } from '@/shared/site-chrome';
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Pagination from '@/components/common/Pagination/Pagination';
+import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
+import FilterCheckboxGroup from '@/components/marketing/FilterCheckboxGroup/FilterCheckboxGroup';
+import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import Button from '@/components/ui/Button';
 import {
   ALBUM_TYPE_LABEL_KEYS,
   ALBUM_TYPE_VALUES,
   matchesAlbumType,
 } from '@/shared/data/albumTypes';
-import FilterCheckboxGroup from '@/components/marketing/FilterCheckboxGroup/FilterCheckboxGroup';
-import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
-import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
-import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
-import Pagination from '@/components/common/Pagination/Pagination';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import { Shell, SitePageLayout } from '@/shared/site-chrome';
 
 const SHOWCASE_BADGE_KEYS = {
   'Single Photo': 'common.badges.singlePhoto',
@@ -22,10 +23,30 @@ const SHOWCASE_BADGE_KEYS = {
 
 const PAGE_SIZE = 6;
 
-const MAIN_CATEGORIES = ['Nature', 'Portrait', 'Landscape', 'Travel', 'Wedding', 'Macro', 'Fine Art', 'Pets', 'Sports', 'Night Photography'];
+const MAIN_CATEGORIES = [
+  'Nature',
+  'Portrait',
+  'Landscape',
+  'Travel',
+  'Wedding',
+  'Macro',
+  'Fine Art',
+  'Pets',
+  'Sports',
+  'Night Photography',
+];
 
 const CATEGORY_SUBCATEGORIES = {
-  Nature: ['Mountain', 'Forest', 'Wildlife', 'Rivers & Lakes', 'Oceans & Beaches', 'Flowers & Plants', 'Sky & Clouds', 'Weather & Storms'],
+  Nature: [
+    'Mountain',
+    'Forest',
+    'Wildlife',
+    'Rivers & Lakes',
+    'Oceans & Beaches',
+    'Flowers & Plants',
+    'Sky & Clouds',
+    'Weather & Storms',
+  ],
   Portrait: ['Professional', 'Lifestyle', 'Fashion', 'Headshots'],
   Landscape: ['Urban', 'Rural', 'Mountains', 'Desert', 'Seascape'],
   Travel: ['Urban', 'Rural', 'Beach', 'Mountains', 'Cultural'],
@@ -40,7 +61,14 @@ const CATEGORY_SUBCATEGORIES = {
 const CATEGORIES = MAIN_CATEGORIES;
 
 const ShowcaseFiltersPanel = memo(
-  ({ albumTypes, categories, onToggleAlbum, onToggleCategory, i18nPrefix, t }) => (
+  ({
+    albumTypes,
+    categories,
+    onToggleAlbum,
+    onToggleCategory,
+    i18nPrefix,
+    t,
+  }) => (
     <div className="flex flex-col gap-5">
       <FilterCheckboxGroup
         title={t(`${i18nPrefix}.albumType`)}
@@ -54,7 +82,9 @@ const ShowcaseFiltersPanel = memo(
         options={CATEGORIES}
         selected={categories}
         onToggle={onToggleCategory}
-        getLabel={(value) => t(`common.categories.${value}`, { defaultValue: value })}
+        getLabel={(value) =>
+          t(`common.categories.${value}`, { defaultValue: value })
+        }
         subcategories={CATEGORY_SUBCATEGORIES}
       />
     </div>
@@ -94,7 +124,9 @@ const PhotoShowcasePageContent = memo(
 
     const toggle = (setList, value) => {
       setList((prev) =>
-        prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value],
+        prev.includes(value)
+          ? prev.filter((item) => item !== value)
+          : [...prev, value],
       );
     };
 
@@ -122,15 +154,23 @@ const PhotoShowcasePageContent = memo(
 
       return photos.filter((photo) => {
         const albumOk =
-          albumTypes.length === 0 || albumTypes.some((type) => matchesAlbumType(photo.badge, type));
-        const categoryOk = categories.length === 0 || categories.includes(photo.category);
+          albumTypes.length === 0 ||
+          albumTypes.some((type) => matchesAlbumType(photo.badge, type));
+        const categoryOk =
+          categories.length === 0 || categories.includes(photo.category);
         const searchOk =
           !normalizedQuery ||
-          [photo.title, photo.description, photo.author, photo.category, photo.badge, photo.price].some(
-            (field) =>
-              String(field ?? '')
-                .toLowerCase()
-                .includes(normalizedQuery),
+          [
+            photo.title,
+            photo.description,
+            photo.author,
+            photo.category,
+            photo.badge,
+            photo.price,
+          ].some((field) =>
+            String(field ?? '')
+              .toLowerCase()
+              .includes(normalizedQuery),
           );
         return albumOk && categoryOk && searchOk;
       });
@@ -141,7 +181,11 @@ const PhotoShowcasePageContent = memo(
       setPage,
       totalPages,
       pagedItems: pagedPhotos,
-    } = usePaginatedSlice(filteredPhotos, PAGE_SIZE, [albumTypes, categories, query]);
+    } = usePaginatedSlice(filteredPhotos, PAGE_SIZE, [
+      albumTypes,
+      categories,
+      query,
+    ]);
 
     const filterPanelProps = {
       albumTypes,
@@ -171,7 +215,8 @@ const PhotoShowcasePageContent = memo(
               />
               <div className="mt-4 flex flex-col gap-3">
                 {searchBar}
-                <button
+                <Button
+                  unstyled
                   type="button"
                   onClick={() => setFiltersOpen(true)}
                   aria-expanded={filtersOpen}
@@ -181,7 +226,7 @@ const PhotoShowcasePageContent = memo(
                 >
                   <Funnel size={20} strokeWidth={2} aria-hidden="true" />
                   {t(`${i18nPrefix}.filters`)}
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -205,7 +250,9 @@ const PhotoShowcasePageContent = memo(
                     <p className="text-[18px] font-bold text-[#0d0d14]">
                       {t(`${i18nPrefix}.emptyTitle`)}
                     </p>
-                    <p className="mt-2 text-[14px] text-[#6b7280]">{t(`${i18nPrefix}.emptyBody`)}</p>
+                    <p className="mt-2 text-[14px] text-[#6b7280]">
+                      {t(`${i18nPrefix}.emptyBody`)}
+                    </p>
                   </div>
                 ) : (
                   <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -217,9 +264,12 @@ const PhotoShowcasePageContent = memo(
                         imageAlt={photo.title}
                         title={photo.title}
                         titleAs="h2"
-                        badge={t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
-                          defaultValue: photo.badge,
-                        })}
+                        badge={t(
+                          SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge,
+                          {
+                            defaultValue: photo.badge,
+                          },
+                        )}
                         description={photo.description}
                         likes={photo.votes}
                         views={photo.views}
@@ -247,7 +297,8 @@ const PhotoShowcasePageContent = memo(
           className={`fixed inset-0 z-120 lg:hidden ${filtersOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
           aria-hidden={!filtersOpen}
         >
-          <button
+          <Button
+            unstyled
             type="button"
             aria-label={t(`${i18nPrefix}.closeFilters`)}
             onClick={closeFilters}
@@ -268,14 +319,15 @@ const PhotoShowcasePageContent = memo(
               <h2 className="text-[18px] font-bold text-[#3a3a42]">
                 {t(`${i18nPrefix}.filtersTitle`)}
               </h2>
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={closeFilters}
                 aria-label={t(`${i18nPrefix}.closeFilters`)}
                 className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-black/10 text-[#0d0d14] transition hover:bg-[#f3f4f6]"
               >
                 <X size={18} strokeWidth={2} aria-hidden="true" />
-              </button>
+              </Button>
             </div>
             <div className="flex-1 overflow-y-auto px-5 py-6">
               <ShowcaseFiltersPanel {...filterPanelProps} />

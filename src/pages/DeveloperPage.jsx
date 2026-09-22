@@ -1,15 +1,16 @@
+import { Check, ChevronDown, Copy, Menu, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Check, ChevronDown, Copy, Menu, Search, X } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import ComponentPreview from '@/developer/ComponentPreview';
 import {
   COMPONENT_DOCS,
   DOC_CATEGORIES,
   filterComponentDocs,
   getComponentDoc,
 } from '@/developer/catalog';
-import ComponentPreview from '@/developer/ComponentPreview';
-import Input from '@/components/ui/Input';
+import { ROUTES } from '@/shared/config';
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -25,7 +26,10 @@ function HighlightText({ text, query }) {
 
   return parts.map((part, i) =>
     part.toLowerCase() === q.toLowerCase() ? (
-      <mark key={`${part}-${i}`} className="rounded-sm bg-amber-200 px-0.5 text-inherit">
+      <mark
+        key={`${part}-${i}`}
+        className="rounded-sm bg-amber-200 px-0.5 text-inherit"
+      >
         {part}
       </mark>
     ) : (
@@ -51,14 +55,19 @@ function CodeBlock({ code, label }) {
     <div className="min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-slate-950">
       <div className="flex items-center justify-between border-b border-white/10 px-3 py-2">
         <span className="text-xs font-medium text-slate-300">{label}</span>
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={copy}
           className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-slate-300 hover:bg-white/10 hover:text-white"
         >
-          {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+          {copied ? (
+            <Check className="size-3.5" />
+          ) : (
+            <Copy className="size-3.5" />
+          )}
           {copied ? 'Copied' : 'Copy'}
-        </button>
+        </Button>
       </div>
       <pre className="overflow-x-auto p-4 text-xs leading-relaxed text-slate-100 sm:text-sm">
         <code>{code}</code>
@@ -84,13 +93,18 @@ function PropTable({ props = [], required, query = '' }) {
           <tr className="border-b border-gray-200 bg-gray-50">
             <th className="px-3 py-2.5 font-semibold">Prop</th>
             <th className="px-3 py-2.5 font-semibold">Type</th>
-            {!required ? <th className="px-3 py-2.5 font-semibold">Default</th> : null}
+            {!required ? (
+              <th className="px-3 py-2.5 font-semibold">Default</th>
+            ) : null}
             <th className="px-3 py-2.5 font-semibold">Description</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((prop) => (
-            <tr key={prop.name} className="border-b border-gray-100 last:border-0">
+            <tr
+              key={prop.name}
+              className="border-b border-gray-100 last:border-0"
+            >
               <td className="px-3 py-2.5 font-mono text-xs text-[#4048cd] sm:text-sm">
                 <HighlightText text={prop.name} query={query} />
               </td>
@@ -99,7 +113,10 @@ function PropTable({ props = [], required, query = '' }) {
               </td>
               {!required ? (
                 <td className="px-3 py-2.5 font-mono text-xs text-[#6b7280]">
-                  <HighlightText text={prop.defaultValue ?? '—'} query={query} />
+                  <HighlightText
+                    text={prop.defaultValue ?? '—'}
+                    query={query}
+                  />
                 </td>
               ) : null}
               <td className="px-3 py-2.5 text-[#6b7280]">
@@ -136,7 +153,10 @@ function CallbackTable({ props = [], query = '' }) {
           </thead>
           <tbody>
             {rows.map((prop) => (
-              <tr key={prop.name} className="border-b border-gray-100 last:border-0">
+              <tr
+                key={prop.name}
+                className="border-b border-gray-100 last:border-0"
+              >
                 <td className="px-3 py-2.5 font-mono text-xs text-[#4048cd] sm:text-sm">
                   <HighlightText text={prop.name} query={query} />
                 </td>
@@ -200,14 +220,18 @@ function DocPanel({ doc, query = '' }) {
       <section className="min-w-0 space-y-3">
         <h2 className="text-lg font-bold text-[#0d0d14]">Required props</h2>
         <PropTable props={doc.props} required query={query} />
-        <h3 className="pt-2 text-sm font-semibold text-[#0d0d14]">Required usage</h3>
+        <h3 className="pt-2 text-sm font-semibold text-[#0d0d14]">
+          Required usage
+        </h3>
         <CodeBlock label="JSX" code={doc.requiredExample} />
       </section>
 
       <section className="min-w-0 space-y-3">
         <h2 className="text-lg font-bold text-[#0d0d14]">Optional props</h2>
         <PropTable props={doc.props} required={false} query={query} />
-        <h3 className="pt-2 text-sm font-semibold text-[#0d0d14]">Optional usage</h3>
+        <h3 className="pt-2 text-sm font-semibold text-[#0d0d14]">
+          Optional usage
+        </h3>
         <CodeBlock label="JSX" code={doc.optionalExample} />
       </section>
 
@@ -222,7 +246,10 @@ function DocPanel({ doc, query = '' }) {
             </p>
           </div>
           {doc.variants.map((variant) => (
-            <div key={variant.id} className="min-w-0 space-y-3 border-t border-gray-200 pt-6">
+            <div
+              key={variant.id}
+              className="min-w-0 space-y-3 border-t border-gray-200 pt-6"
+            >
               <div>
                 <h3 className="text-base font-semibold text-[#0d0d14]">
                   <HighlightText text={variant.name} query={query} />
@@ -233,9 +260,14 @@ function DocPanel({ doc, query = '' }) {
                   </p>
                 ) : null}
               </div>
-              {variant.example ? <CodeBlock label="JSX" code={variant.example} /> : null}
+              {variant.example ? (
+                <CodeBlock label="JSX" code={variant.example} />
+              ) : null}
               <div className="min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
-                <ComponentPreview previewId={doc.previewId} variantId={variant.id} />
+                <ComponentPreview
+                  previewId={doc.previewId}
+                  variantId={variant.id}
+                />
               </div>
             </div>
           ))}
@@ -263,19 +295,21 @@ function CategoryNav({
 }) {
   return (
     <nav className="flex flex-col gap-1">
-      <button
+      <Button
+        unstyled
         type="button"
         onClick={expandAll}
         className="rounded-lg px-3 py-2 text-left text-sm text-[#0d0d14] hover:bg-gray-50"
       >
         All
-      </button>
+      </Button>
 
       {groups.map((group) => {
         const isOpen = openCategories.has(group.id);
         return (
           <div key={group.id}>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => toggleCategory(group.id)}
               aria-expanded={isOpen}
@@ -296,16 +330,19 @@ function CategoryNav({
                 className={`size-4 shrink-0 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                 aria-hidden
               />
-            </button>
+            </Button>
 
             {isOpen ? (
               <ul className="mt-0.5 mb-1 ml-2 flex flex-col gap-0.5 border-l border-gray-200 pl-2">
                 {group.items.length === 0 ? (
-                  <li className="px-3 py-1.5 text-xs text-[#6b7280]">No matches</li>
+                  <li className="px-3 py-1.5 text-xs text-[#6b7280]">
+                    No matches
+                  </li>
                 ) : (
                   group.items.map((doc) => (
                     <li key={doc.id}>
-                      <button
+                      <Button
+                        unstyled
                         type="button"
                         onClick={() => onSelect(doc.id)}
                         className={[
@@ -316,7 +353,7 @@ function CategoryNav({
                         ].join(' ')}
                       >
                         <HighlightText text={doc.name} query={query} />
-                      </button>
+                      </Button>
                     </li>
                   ))
                 )}
@@ -338,9 +375,14 @@ export default function DeveloperPage() {
     () => DOC_CATEGORIES.filter((c) => c.id !== 'all').map((c) => c.id),
     [],
   );
-  const [openCategories, setOpenCategories] = useState(() => new Set(categoryIds));
+  const [openCategories, setOpenCategories] = useState(
+    () => new Set(categoryIds),
+  );
 
-  const filtered = useMemo(() => filterComponentDocs({ category: 'all', query }), [query]);
+  const filtered = useMemo(
+    () => filterComponentDocs({ category: 'all', query }),
+    [query],
+  );
 
   const selected = useMemo(() => {
     const match = filtered.find((doc) => doc.id === componentId);
@@ -418,22 +460,28 @@ export default function DeveloperPage() {
       <div className="sticky top-0 z-30 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-[95%] flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-10">
           <div className="flex min-w-0 items-start gap-2">
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => setMobileNavOpen(true)}
               className="mt-1 inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-gray-200 text-[#0d0d14] hover:bg-gray-50 lg:hidden"
               aria-label="Open category menu"
             >
               <Menu className="size-5" />
-            </button>
+            </Button>
             <div className="min-w-0">
-              <Link to={ROUTES.HOME} className="text-sm text-[#6b7280] hover:text-[#4048cd]">
+              <Link
+                to={ROUTES.HOME}
+                className="text-sm text-[#6b7280] hover:text-[#4048cd]"
+              >
                 ← Home
               </Link>
-              <h1 className="mt-1 text-xl font-bold text-[#0d0d14] sm:text-2xl">Developer Docs</h1>
+              <h1 className="mt-1 text-xl font-bold text-[#0d0d14] sm:text-2xl">
+                Developer Docs
+              </h1>
               <p className="text-sm text-[#6b7280]">
-                {COMPONENT_DOCS.length} shared components — import, props, examples, live output.
-                Demo data:{' '}
+                {COMPONENT_DOCS.length} shared components — import, props,
+                examples, live output. Demo data:{' '}
                 <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-[11px]">
                   @/data/demoData
                 </code>
@@ -459,13 +507,14 @@ export default function DeveloperPage() {
             <p className="text-[11px] font-semibold tracking-wide text-gray-400 uppercase">
               Category
             </p>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={expandAll}
               className="text-[11px] font-medium text-[#4048cd] hover:underline"
             >
               Expand all
-            </button>
+            </Button>
           </div>
           <CategoryNav
             groups={groups}
@@ -490,14 +539,15 @@ export default function DeveloperPage() {
                 <p className="text-[11px] font-semibold tracking-wide text-gray-400 uppercase">
                   Category
                 </p>
-                <button
+                <Button
+                  unstyled
                   type="button"
                   onClick={() => setMobileNavOpen(false)}
                   className="inline-flex size-8 items-center justify-center rounded-lg hover:bg-gray-50"
                   aria-label="Close category menu"
                 >
                   <X className="size-5" />
-                </button>
+                </Button>
               </div>
               <CategoryNav
                 groups={groups}

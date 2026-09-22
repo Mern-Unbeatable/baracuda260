@@ -1,24 +1,25 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import {
+  Calendar,
   Camera,
+  Clock,
   Compass,
   Heart,
   Trophy,
   Users,
-  Clock,
-  Calendar,
   Wallet,
 } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
+import Image from '@/components/ui/Image';
 import AdminOverviewContent from '@/portals/admin/views/AdminOverviewContent';
 import {
   DASHBOARD_COMPETITIONS,
   DASHBOARD_STATS,
 } from '@/portals/member/data/dashboardAssets';
+import { ROUTES } from '@/shared/config';
 
 const STAT_ICONS = {
   trophy: Trophy,
@@ -46,7 +47,9 @@ const StatCard = memo(({ labelKey, value, iconBg, iconColor, icon }) => {
 
   return (
     <article className="flex flex-col rounded-2xl border border-[rgba(203,195,213,0.2)] bg-white p-5 shadow-sm sm:p-6">
-      <div className={`mb-4 flex size-10 items-center justify-center rounded-lg ${iconBg}`}>
+      <div
+        className={`mb-4 flex size-10 items-center justify-center rounded-lg ${iconBg}`}
+      >
         <Icon size={22} className={iconColor} aria-hidden="true" />
       </div>
       <p className="text-[13px] font-medium uppercase tracking-[0.6px] text-[#494453] sm:text-[16px] sm:leading-4">
@@ -67,7 +70,7 @@ const CompetitionRow = memo(({ item }) => {
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:gap-6 sm:p-4.25">
       <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-32">
-        <img
+        <Image
           src={item.image}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
@@ -88,14 +91,26 @@ const CompetitionRow = memo(({ item }) => {
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2">
           <span className="inline-flex items-center gap-1 text-[13px] font-medium tracking-[0.6px] text-[#494453] sm:text-[14px]">
-            <Users size={14} aria-hidden="true" className="shrink-0 opacity-70" />
+            <Users
+              size={14}
+              aria-hidden="true"
+              className="shrink-0 opacity-70"
+            />
             {t(item.participantsKey)}
           </span>
           <span className="inline-flex items-center gap-1 text-[13px] font-medium tracking-[0.6px] text-[#494453] sm:text-[14px]">
             {item.id === 'portrait' ? (
-              <Calendar size={14} aria-hidden="true" className="shrink-0 opacity-70" />
+              <Calendar
+                size={14}
+                aria-hidden="true"
+                className="shrink-0 opacity-70"
+              />
             ) : (
-              <Clock size={14} aria-hidden="true" className="shrink-0 opacity-70" />
+              <Clock
+                size={14}
+                aria-hidden="true"
+                className="shrink-0 opacity-70"
+              />
             )}
             {t(item.timingKey)}
           </span>
@@ -136,7 +151,10 @@ const UserDashboardView = memo(() => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
   const displayName =
-    user?.fullName || user?.name || user?.username || t('dashboard.defaultName');
+    user?.fullName ||
+    user?.name ||
+    user?.username ||
+    t('dashboard.defaultName');
 
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">

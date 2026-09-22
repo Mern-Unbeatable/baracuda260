@@ -1,10 +1,11 @@
 import React, { memo } from 'react';
-import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useSEO } from '@/shared/hooks/useSEO';
-import { ROUTES } from '@/shared/config';
+import { Navigate } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
 import AdminCompetitionDetailContent from '@/portals/admin/views/AdminCompetitionDetailContent';
+import { ROUTES } from '@/shared/config';
+import { useSEO } from '@/shared/hooks/useSEO';
+
 // import CompetitionDetailsContent from '@/portals/public/competition-details/CompetitionDetailsContent';
 
 const MyCompetitionDetails = memo(() => {
@@ -17,7 +18,12 @@ const MyCompetitionDetails = memo(() => {
           title: 'Competition Photo Details',
           description:
             'Admin competition management — review photo details, votes, views, and photographer info.',
-          keywords: ['competition details', 'photo details', 'admin', 'My12Photos'],
+          keywords: [
+            'competition details',
+            'photo details',
+            'admin',
+            'My12Photos',
+          ],
         }
       : {
           title: 'Competition Details',

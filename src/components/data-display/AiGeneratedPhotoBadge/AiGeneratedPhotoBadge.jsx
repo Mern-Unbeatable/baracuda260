@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { Sparkles } from 'lucide-react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const VARIANT_STYLES = {
@@ -26,29 +26,33 @@ const SIZE_STYLES = {
   },
 };
 
-const AiGeneratedPhotoBadge = memo(({ size = 'sm', variant = 'overlay', className = '' }) => {
-  const { t } = useTranslation();
-  const styles = SIZE_STYLES[size] ?? SIZE_STYLES.sm;
-  const label = t('uploadForm.aiGeneratedBadge');
-  const ariaLabel = t('uploadForm.aiGeneratedBadgeLabel');
-  const variantClass = VARIANT_STYLES[variant] ?? VARIANT_STYLES.overlay;
+const AiGeneratedPhotoBadge = memo(
+  ({ size = 'sm', variant = 'overlay', className = '' }) => {
+    const { t } = useTranslation();
+    const styles = SIZE_STYLES[size] ?? SIZE_STYLES.sm;
+    const label = t('uploadForm.aiGeneratedBadge');
+    const ariaLabel = t('uploadForm.aiGeneratedBadgeLabel');
+    const variantClass = VARIANT_STYLES[variant] ?? VARIANT_STYLES.overlay;
 
-  return (
-    <span
-      className={`inline-flex shrink-0 items-center rounded-full ${variantClass} ${styles.wrap} ${className}`.trim()}
-      title={ariaLabel}
-      aria-label={ariaLabel}
-    >
-      <Sparkles
-        size={styles.icon}
-        strokeWidth={2.4}
-        aria-hidden="true"
-        className={variant === 'overlay' ? 'text-[#c4b5fd]' : 'text-[#6366f1]'}
-      />
-      <span className={styles.label}>{label}</span>
-    </span>
-  );
-});
+    return (
+      <span
+        className={`inline-flex shrink-0 items-center rounded-full ${variantClass} ${styles.wrap} ${className}`.trim()}
+        title={ariaLabel}
+        aria-label={ariaLabel}
+      >
+        <Sparkles
+          size={styles.icon}
+          strokeWidth={2.4}
+          aria-hidden="true"
+          className={
+            variant === 'overlay' ? 'text-[#c4b5fd]' : 'text-[#6366f1]'
+          }
+        />
+        <span className={styles.label}>{label}</span>
+      </span>
+    );
+  },
+);
 
 AiGeneratedPhotoBadge.displayName = 'AiGeneratedPhotoBadge';
 

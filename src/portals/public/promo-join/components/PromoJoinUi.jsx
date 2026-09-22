@@ -1,13 +1,15 @@
-import { Trans, useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef } from 'react';
 import { ArrowUpFromLine, ChevronDown, Info, Upload } from 'lucide-react';
+import React, { memo, useEffect, useRef } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import Input from '@/components/ui/Input';
 import {
   FIELD_BG,
   SIX_PHOTO_ASSETS,
   ZODIAC12_ASSETS,
 } from '@/portals/public/promo-join/promoJoinData';
-import Input from '@/components/ui/Input';
 
 export const FieldLabel = memo(({ children, htmlFor }) => (
   <label
@@ -20,7 +22,10 @@ export const FieldLabel = memo(({ children, htmlFor }) => (
 FieldLabel.displayName = 'FieldLabel';
 
 export const TextField = React.forwardRef(
-  ({ id, label, placeholder, type = 'text', className = '', error, ...props }, ref) => (
+  (
+    { id, label, placeholder, type = 'text', className = '', error, ...props },
+    ref,
+  ) => (
     <div className={className}>
       <Input
         id={id}
@@ -38,30 +43,37 @@ export const TextField = React.forwardRef(
 );
 TextField.displayName = 'TextField';
 
-export const TextAreaField = React.forwardRef(({ id, label, placeholder, rows = 4, error, ...props }, ref) => (
-  <div>
-    <FieldLabel htmlFor={id}>{label}</FieldLabel>
-    <textarea
-      id={id}
-      ref={ref}
-      placeholder={placeholder}
-      rows={rows}
-      className={`w-full resize-y rounded-[10px] ${FIELD_BG} px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30 ${error ? 'border border-red-500' : ''}`}
-      {...props}
-    />
-    {error && <p className="mt-1 text-[11px] text-red-500">{error.message}</p>}
-  </div>
-));
+export const TextAreaField = React.forwardRef(
+  ({ id, label, placeholder, rows = 4, error, ...props }, ref) => (
+    <div>
+      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      <textarea
+        id={id}
+        ref={ref}
+        placeholder={placeholder}
+        rows={rows}
+        className={`w-full resize-y rounded-[10px] ${FIELD_BG} px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#ee1c25]/30 ${error ? 'border border-red-500' : ''}`}
+        {...props}
+      />
+      {error && (
+        <p className="mt-1 text-[11px] text-red-500">{error.message}</p>
+      )}
+    </div>
+  ),
+);
 TextAreaField.displayName = 'TextAreaField';
 
 export const CapsLabel = memo(({ children }) => (
-  <p className="mb-2 text-[11px] font-bold tracking-[0.14em] text-[#8b93a7]">{children}</p>
+  <p className="mb-2 text-[11px] font-bold tracking-[0.14em] text-[#8b93a7]">
+    {children}
+  </p>
 ));
 CapsLabel.displayName = 'CapsLabel';
 
 export const DashedUpload = memo(
   ({ title, hint, onClick, preview, fileName, tall = false }) => (
-    <button
+    <Button
+      unstyled
       type="button"
       onClick={onClick}
       className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#cfd3e6] bg-[#fafbff] px-4 text-center transition hover:border-[#4048cd] hover:bg-[#f4f5ff] ${
@@ -69,13 +81,23 @@ export const DashedUpload = memo(
       }`}
     >
       {preview ? (
-        <img src={preview} alt="" className="max-h-24 rounded-lg object-cover" />
+        <Image
+          src={preview}
+          alt=""
+          className="max-h-24 rounded-lg object-cover"
+        />
       ) : (
-        <ArrowUpFromLine size={22} className="text-[#687186]" aria-hidden="true" />
+        <ArrowUpFromLine
+          size={22}
+          className="text-[#687186]"
+          aria-hidden="true"
+        />
       )}
-      <p className="text-[15px] font-semibold text-[#373737]">{fileName || title}</p>
+      <p className="text-[15px] font-semibold text-[#373737]">
+        {fileName || title}
+      </p>
       {!fileName ? <p className="text-[12px] text-[#9aa3b5]">{hint}</p> : null}
-    </button>
+    </Button>
   ),
 );
 DashedUpload.displayName = 'DashedUpload';
@@ -84,7 +106,8 @@ export const VideoDropzone = memo(({ onClick, files = [] }) => {
   const { t } = useTranslation();
 
   return (
-    <button
+    <Button
+      unstyled
       type="button"
       onClick={onClick}
       className="flex min-h-45 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#d5d8e8] bg-white px-4 py-8 text-center transition hover:border-[#4048cd]"
@@ -99,7 +122,7 @@ export const VideoDropzone = memo(({ onClick, files = [] }) => {
           {t('promoJoin.video.selected', { count: files.length })}
         </p>
       ) : null}
-    </button>
+    </Button>
   );
 });
 VideoDropzone.displayName = 'VideoDropzone';
@@ -108,8 +131,12 @@ const SlotIcon = memo(({ slot }) => {
   if (slot.iconBg && slot.iconOverlay) {
     return (
       <span className="relative size-8.75 shrink-0 overflow-hidden">
-        <img src={slot.iconBg} alt="" className="absolute inset-0 size-8.75 object-contain" />
-        <img
+        <Image
+          src={slot.iconBg}
+          alt=""
+          className="absolute inset-0 size-8.75 object-contain"
+        />
+        <Image
           src={slot.iconOverlay}
           alt=""
           className="absolute left-1/2 top-1/2 max-h-6.5 max-w-6.5 -translate-x-1/2 -translate-y-1/2 object-contain"
@@ -118,7 +145,13 @@ const SlotIcon = memo(({ slot }) => {
     );
   }
   if (slot.icon) {
-    return <img src={slot.icon} alt="" className="size-8.75 shrink-0 object-contain" />;
+    return (
+      <Image
+        src={slot.icon}
+        alt=""
+        className="size-8.75 shrink-0 object-contain"
+      />
+    );
   }
   return null;
 });
@@ -135,15 +168,21 @@ export const ZodiacSlotCard = memo(
       >
         <div className="flex w-full flex-1 flex-col items-center gap-4">
           <div className="flex w-full items-center justify-between">
-            <p className={`text-[18px] font-semibold ${styles.number}`}>#{slot.number}</p>
+            <p className={`text-[18px] font-semibold ${styles.number}`}>
+              #{slot.number}
+            </p>
             <p className="text-[13px] font-medium uppercase tracking-wide text-[#3a3a3a]">
               {t(slot.elementKey)}
             </p>
           </div>
           <div className="flex w-full flex-col items-center gap-2 text-center">
             <SlotIcon slot={slot} />
-            <p className={`text-[18px] font-medium ${styles.name}`}>{t(slot.nameKey)}</p>
-            <p className={`min-h-10 text-[13px] font-medium leading-5 ${styles.range}`}>
+            <p className={`text-[18px] font-medium ${styles.name}`}>
+              {t(slot.nameKey)}
+            </p>
+            <p
+              className={`min-h-10 text-[13px] font-medium leading-5 ${styles.range}`}
+            >
               {t(slot.rangeKey)}
             </p>
           </div>
@@ -154,23 +193,25 @@ export const ZodiacSlotCard = memo(
             src={preview}
             frameClassName="relative mt-auto w-full overflow-hidden rounded-lg border border-black/10"
           >
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={onAddPhoto}
               className="absolute bottom-2 right-2 cursor-pointer rounded-md bg-white/95 px-2.5 py-1 text-xs font-medium text-[#ee1c25] shadow"
             >
               {changeLabel}
-            </button>
+            </Button>
           </UploadedPhotoPreview>
         ) : (
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onAddPhoto}
             className={`mt-auto inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-[14px] font-medium transition hover:bg-black/2 ${styles.buttonBorder} ${styles.buttonText}`}
           >
-            <img src={styles.upload} alt="" className="size-5 shrink-0" />
+            <Image src={styles.upload} alt="" className="size-5 shrink-0" />
             {addLabel}
-          </button>
+          </Button>
         )}
       </article>
     );
@@ -202,22 +243,29 @@ export const ThemePicker = memo(({ themes, themeId, onSelect }) => {
                   </span>
                 </div>
               ) : null}
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={() => onSelect(theme.id)}
                 className={`relative cursor-pointer rounded-xl border p-4 text-left transition ${style.card}`}
               >
                 {selected ? (
-                  <img
+                  <Image
                     src={theme.selectedDot}
                     alt=""
                     className="absolute right-3 top-3 size-3"
                   />
                 ) : null}
                 <div className="flex items-start gap-3">
-                  <img src={theme.icon} alt="" className="mt-0.5 size-6 shrink-0" />
+                  <Image
+                    src={theme.icon}
+                    alt=""
+                    className="mt-0.5 size-6 shrink-0"
+                  />
                   <div>
-                    <p className={`text-[15px] font-bold leading-6 ${style.title}`}>
+                    <p
+                      className={`text-[15px] font-bold leading-6 ${style.title}`}
+                    >
                       {t(theme.titleKey)}
                     </p>
                     <p className={`mt-1 text-[13px] leading-5 ${style.body}`}>
@@ -225,7 +273,7 @@ export const ThemePicker = memo(({ themes, themeId, onSelect }) => {
                     </p>
                   </div>
                 </div>
-              </button>
+              </Button>
             </React.Fragment>
           );
         })}
@@ -237,7 +285,7 @@ ThemePicker.displayName = 'ThemePicker';
 
 export const WaveDivider = memo(({ src, className = 'h-13' }) => (
   <div className="overflow-hidden py-2">
-    <img src={src} alt="" className={`w-full object-contain ${className}`} />
+    <Image src={src} alt="" className={`w-full object-contain ${className}`} />
   </div>
 ));
 WaveDivider.displayName = 'WaveDivider';
@@ -248,7 +296,11 @@ export const Zodiac12Banner = memo(() => {
   return (
     <div className="rounded-2xl bg-[#f0f2f8] px-4 py-5 sm:px-6 sm:py-6">
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-        <img src={ZODIAC12_ASSETS.sun} alt="" className="size-14 shrink-0 sm:size-16" />
+        <Image
+          src={ZODIAC12_ASSETS.sun}
+          alt=""
+          className="size-14 shrink-0 sm:size-16"
+        />
         <div className="min-w-0 flex-1 text-center">
           <p className="text-[16px] font-bold leading-7 text-[#151e31] sm:text-[18px]">
             <Trans
@@ -264,207 +316,249 @@ export const Zodiac12Banner = memo(() => {
             {t('promoJoin.twelve.bannerSubtitle')}
           </p>
         </div>
-        <img src={ZODIAC12_ASSETS.moon} alt="" className="size-14 shrink-0 sm:size-16" />
+        <Image
+          src={ZODIAC12_ASSETS.moon}
+          alt=""
+          className="size-14 shrink-0 sm:size-16"
+        />
       </div>
     </div>
   );
 });
 Zodiac12Banner.displayName = 'Zodiac12Banner';
 
-export const AstroSignSelect = memo(({ open, onToggle, onClose, selected, signs, onSelect, t }) => {
-  const rootRef = useRef(null);
+export const AstroSignSelect = memo(
+  ({ open, onToggle, onClose, selected, signs, onSelect, t }) => {
+    const rootRef = useRef(null);
 
-  useEffect(() => {
-    if (!open) return undefined;
-    const onPointer = (event) => {
-      if (rootRef.current && !rootRef.current.contains(event.target)) onClose();
-    };
-    const onKey = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
-    document.addEventListener('mousedown', onPointer);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open, onClose]);
+    useEffect(() => {
+      if (!open) return undefined;
+      const onPointer = (event) => {
+        if (rootRef.current && !rootRef.current.contains(event.target))
+          onClose();
+      };
+      const onKey = (event) => {
+        if (event.key === 'Escape') onClose();
+      };
+      document.addEventListener('mousedown', onPointer);
+      document.addEventListener('keydown', onKey);
+      return () => {
+        document.removeEventListener('mousedown', onPointer);
+        document.removeEventListener('keydown', onKey);
+      };
+    }, [open, onClose]);
 
-  return (
-    <div ref={rootRef} className="relative">
-      <p className="mb-2 text-[11px] font-bold tracking-[0.14em] text-[#8b93a7]">
-        {t('promoJoin.single.selectSign')}
-      </p>
-      <button
-        type="button"
-        aria-expanded={open}
-        onClick={onToggle}
-        className={`flex h-12 w-full cursor-pointer items-center justify-between gap-3 rounded-[10px] ${FIELD_BG} px-3 text-left`}
-      >
-        <span className="flex min-w-0 items-center gap-3">
-          <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#5850ec] text-[16px] text-white">
-            {selected.symbol || '♍'}
+    return (
+      <div ref={rootRef} className="relative">
+        <p className="mb-2 text-[11px] font-bold tracking-[0.14em] text-[#8b93a7]">
+          {t('promoJoin.single.selectSign')}
+        </p>
+        <Button
+          unstyled
+          type="button"
+          aria-expanded={open}
+          onClick={onToggle}
+          className={`flex h-12 w-full cursor-pointer items-center justify-between gap-3 rounded-[10px] ${FIELD_BG} px-3 text-left`}
+        >
+          <span className="flex min-w-0 items-center gap-3">
+            <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#5850ec] text-[16px] text-white">
+              {selected.symbol || '♍'}
+            </span>
+            <span className="truncate text-[15px] font-medium text-[#151e31]">
+              {t(selected.nameKey)} ({t(selected.rangeKey)})
+            </span>
           </span>
-          <span className="truncate text-[15px] font-medium text-[#151e31]">
-            {t(selected.nameKey)} ({t(selected.rangeKey)})
-          </span>
-        </span>
-        <ChevronDown
-          size={18}
-          className={`shrink-0 text-[#687186] transition ${open ? 'rotate-180' : ''}`}
-        />
-      </button>
-      {open ? (
-        <ul className="absolute left-0 top-full z-20 mt-1 max-h-64 w-full overflow-auto rounded-[10px] border border-[#e4e4e4] bg-white shadow-lg">
-          {signs.map((sign) => (
-            <li key={sign.id}>
-              <button
-                type="button"
-                onClick={() => onSelect(sign.id)}
-                className={`flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left transition hover:bg-[#f6fbff] ${
-                  sign.id === selected.id ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
-                }`}
-              >
-                <span className="inline-flex size-7 items-center justify-center rounded-md bg-[#ecedfa] text-sm">
-                  {sign.symbol}
-                </span>
-                <span className="text-[14px]">
-                  {t(sign.nameKey)} ({t(sign.rangeKey)})
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </div>
-  );
-});
+          <ChevronDown
+            size={18}
+            className={`shrink-0 text-[#687186] transition ${open ? 'rotate-180' : ''}`}
+          />
+        </Button>
+        {open ? (
+          <ul className="absolute left-0 top-full z-20 mt-1 max-h-64 w-full overflow-auto rounded-[10px] border border-[#e4e4e4] bg-white shadow-lg">
+            {signs.map((sign) => (
+              <li key={sign.id}>
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={() => onSelect(sign.id)}
+                  className={`flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left transition hover:bg-[#f6fbff] ${
+                    sign.id === selected.id
+                      ? 'bg-[#f6fbff] text-[#4048cd]'
+                      : 'text-[#373737]'
+                  }`}
+                >
+                  <span className="inline-flex size-7 items-center justify-center rounded-md bg-[#ecedfa] text-sm">
+                    {sign.symbol}
+                  </span>
+                  <span className="text-[14px]">
+                    {t(sign.nameKey)} ({t(sign.rangeKey)})
+                  </span>
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    );
+  },
+);
 AstroSignSelect.displayName = 'AstroSignSelect';
 
-export const StoryMetaPanel = memo(({ story, onPatch, showSubcategory = true }) => {
-  const { t } = useTranslation();
+export const StoryMetaPanel = memo(
+  ({ story, onPatch, showSubcategory = true }) => {
+    const { t } = useTranslation();
 
-  return (
-    <div className="rounded-[14px] bg-[#f3f4ff] p-4 sm:p-5">
-      <div className="flex flex-col gap-4">
-        <div>
-          <CapsLabel>{t('promoJoin.meta.collectionTitle')}</CapsLabel>
-          <Input
-            value={story.title}
-            onChange={(event) => onPatch('title', event.target.value)}
-            placeholder={t('promoJoin.meta.collectionPlaceholder')}
-            inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
-          />
-        </div>
-
-        <div className={`grid grid-cols-1 gap-4 ${showSubcategory ? 'sm:grid-cols-2' : ''}`}>
+    return (
+      <div className="rounded-[14px] bg-[#f3f4ff] p-4 sm:p-5">
+        <div className="flex flex-col gap-4">
           <div>
-            <CapsLabel>{t('promoJoin.meta.artisticCategory')}</CapsLabel>
-            <select
-              value={story.category}
-              onChange={(event) => onPatch('category', event.target.value)}
-              className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[15px] outline-none"
-            >
-              <option value="astrophotography">{t('promoJoin.meta.categories.astrophotography')}</option>
-              <option value="portrait">{t('promoJoin.meta.categories.portrait')}</option>
-              <option value="landscape">{t('promoJoin.meta.categories.landscape')}</option>
-              <option value="street">{t('promoJoin.meta.categories.street')}</option>
-              <option value="abstract">{t('promoJoin.meta.categories.abstract')}</option>
-            </select>
+            <CapsLabel>{t('promoJoin.meta.collectionTitle')}</CapsLabel>
+            <Input
+              value={story.title}
+              onChange={(event) => onPatch('title', event.target.value)}
+              placeholder={t('promoJoin.meta.collectionPlaceholder')}
+              inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
+            />
           </div>
-          {showSubcategory ? (
+
+          <div
+            className={`grid grid-cols-1 gap-4 ${showSubcategory ? 'sm:grid-cols-2' : ''}`}
+          >
             <div>
-              <CapsLabel>{t('promoJoin.meta.subcategory')}</CapsLabel>
+              <CapsLabel>{t('promoJoin.meta.artisticCategory')}</CapsLabel>
               <select
-                value={story.subCategory}
-                onChange={(event) => onPatch('subCategory', event.target.value)}
-                className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[15px] text-[#687186] outline-none"
+                value={story.category}
+                onChange={(event) => onPatch('category', event.target.value)}
+                className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[15px] outline-none"
               >
-                <option value="">{t('promoJoin.meta.subcategoryPlaceholder')}</option>
-                <option value="astrophotography">{t('promoJoin.meta.categories.astrophotography')}</option>
-                <option value="portrait">{t('promoJoin.meta.categories.portrait')}</option>
-                <option value="landscape">{t('promoJoin.meta.categories.landscape')}</option>
+                <option value="astrophotography">
+                  {t('promoJoin.meta.categories.astrophotography')}
+                </option>
+                <option value="portrait">
+                  {t('promoJoin.meta.categories.portrait')}
+                </option>
+                <option value="landscape">
+                  {t('promoJoin.meta.categories.landscape')}
+                </option>
+                <option value="street">
+                  {t('promoJoin.meta.categories.street')}
+                </option>
+                <option value="abstract">
+                  {t('promoJoin.meta.categories.abstract')}
+                </option>
               </select>
             </div>
-          ) : null}
-        </div>
+            {showSubcategory ? (
+              <div>
+                <CapsLabel>{t('promoJoin.meta.subcategory')}</CapsLabel>
+                <select
+                  value={story.subCategory}
+                  onChange={(event) =>
+                    onPatch('subCategory', event.target.value)
+                  }
+                  className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[15px] text-[#687186] outline-none"
+                >
+                  <option value="">
+                    {t('promoJoin.meta.subcategoryPlaceholder')}
+                  </option>
+                  <option value="astrophotography">
+                    {t('promoJoin.meta.categories.astrophotography')}
+                  </option>
+                  <option value="portrait">
+                    {t('promoJoin.meta.categories.portrait')}
+                  </option>
+                  <option value="landscape">
+                    {t('promoJoin.meta.categories.landscape')}
+                  </option>
+                </select>
+              </div>
+            ) : null}
+          </div>
 
-        <div>
-          <CapsLabel>{t('promoJoin.meta.story')}</CapsLabel>
-          <textarea
-            value={story.story}
-            onChange={(event) => onPatch('story', event.target.value)}
-            placeholder={t('promoJoin.meta.storyPlaceholder')}
-            rows={4}
-            className="w-full resize-y rounded-[10px] border border-[#e4e8f8] bg-white px-4 py-3 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
-          />
-        </div>
+          <div>
+            <CapsLabel>{t('promoJoin.meta.story')}</CapsLabel>
+            <textarea
+              value={story.story}
+              onChange={(event) => onPatch('story', event.target.value)}
+              placeholder={t('promoJoin.meta.storyPlaceholder')}
+              rows={4}
+              className="w-full resize-y rounded-[10px] border border-[#e4e8f8] bg-white px-4 py-3 text-[15px] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
+            />
+          </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[
-            ['resolution', 'promoJoin.meta.resolution'],
-            ['fileSize', 'promoJoin.meta.fileSize'],
-            ['quality', 'promoJoin.meta.quality'],
-          ].map(([key, labelKey]) => (
-            <div key={key}>
-              <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
-                {t(labelKey)}
-              </label>
-              <Input
-                value={story[key]}
-                onChange={(event) => onPatch(key, event.target.value)}
-                inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
-              />
-            </div>
-          ))}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {[
+              ['resolution', 'promoJoin.meta.resolution'],
+              ['fileSize', 'promoJoin.meta.fileSize'],
+              ['quality', 'promoJoin.meta.quality'],
+            ].map(([key, labelKey]) => (
+              <div key={key}>
+                <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
+                  {t(labelKey)}
+                </label>
+                <Input
+                  value={story[key]}
+                  onChange={(event) => onPatch(key, event.target.value)}
+                  inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 StoryMetaPanel.displayName = 'StoryMetaPanel';
 
-export const ComplianceBlock = memo(({ aiCreated, copyrightOk, onAi, onCopyright, quality, onQuality }) => {
-  const { t } = useTranslation();
+export const ComplianceBlock = memo(
+  ({ aiCreated, copyrightOk, onAi, onCopyright, quality, onQuality }) => {
+    const { t } = useTranslation();
 
-  return (
-    <div className="rounded-[14px] bg-[#f3f4ff] p-4 sm:p-5">
-      <div className="mb-4">
-        <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
-          {t('promoJoin.meta.quality')}
-        </label>
-        <Input
-          value={quality}
-          onChange={(event) => onQuality(event.target.value)}
-          inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
-        />
-      </div>
-      <p className="mb-3 text-[14px] font-medium text-[#373737]">{t('promoJoin.meta.aiQuestion')}</p>
-      <div className="mb-4 flex flex-wrap gap-5">
-        {['yes', 'no'].map((value) => (
-          <label key={value} className="inline-flex cursor-pointer items-center gap-2 text-[14px] text-[#373737]">
-            <input
-              type="checkbox"
-              checked={aiCreated === value}
-              onChange={() => onAi(aiCreated === value ? '' : value)}
-              className="size-4 rounded border-[#cfd3e6] accent-[#ee1c25]"
-            />
-            {t(`promoJoin.meta.${value}`)}
+    return (
+      <div className="rounded-[14px] bg-[#f3f4ff] p-4 sm:p-5">
+        <div className="mb-4">
+          <label className="mb-2 block text-[13px] font-semibold text-[#687186]">
+            {t('promoJoin.meta.quality')}
           </label>
-        ))}
+          <Input
+            value={quality}
+            onChange={(event) => onQuality(event.target.value)}
+            inputClassName="h-11 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[14px] outline-none"
+          />
+        </div>
+        <p className="mb-3 text-[14px] font-medium text-[#373737]">
+          {t('promoJoin.meta.aiQuestion')}
+        </p>
+        <div className="mb-4 flex flex-wrap gap-5">
+          {['yes', 'no'].map((value) => (
+            <label
+              key={value}
+              className="inline-flex cursor-pointer items-center gap-2 text-[14px] text-[#373737]"
+            >
+              <input
+                type="checkbox"
+                checked={aiCreated === value}
+                onChange={() => onAi(aiCreated === value ? '' : value)}
+                className="size-4 rounded border-[#cfd3e6] accent-[#ee1c25]"
+              />
+              {t(`promoJoin.meta.${value}`)}
+            </label>
+          ))}
+        </div>
+        <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-5 text-[#4b556f]">
+          <input
+            type="checkbox"
+            checked={copyrightOk}
+            onChange={(event) => onCopyright(event.target.checked)}
+            className="mt-0.5 size-4 shrink-0 rounded border-[#cfd3e6] accent-[#ee1c25]"
+          />
+          <span>{t('promoJoin.meta.copyright')}</span>
+        </label>
       </div>
-      <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-5 text-[#4b556f]">
-        <input
-          type="checkbox"
-          checked={copyrightOk}
-          onChange={(event) => onCopyright(event.target.checked)}
-          className="mt-0.5 size-4 shrink-0 rounded border-[#cfd3e6] accent-[#ee1c25]"
-        />
-        <span>{t('promoJoin.meta.copyright')}</span>
-      </label>
-    </div>
-  );
-});
+    );
+  },
+);
 ComplianceBlock.displayName = 'ComplianceBlock';
 
 export { SIX_PHOTO_ASSETS, ZODIAC12_ASSETS };

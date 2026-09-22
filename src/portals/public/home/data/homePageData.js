@@ -3,9 +3,9 @@
 const A = '/assets/home';
 
 export const homeAssets = {
-  winnerEmma: `${A}/winner-emma.jpg`,
-  winnerDavid: `${A}/winner-david.jpg`,
-  winnerMarie: `${A}/winner-marie.jpg`,
+  winnerEmma: `${A}/winner-emma.webp`,
+  winnerDavid: `${A}/winner-david.webp`,
+  winnerMarie: `${A}/winner-marie.webp`,
   trophy: `${A}/icon-trophy.svg`,
   users: `${A}/icon-users.svg`,
   formats: `${A}/icon-formats.svg`,
@@ -14,9 +14,9 @@ export const homeAssets = {
   globe: `${A}/icon-globe.svg`,
   starFull: `${A}/star-full.svg`,
   starHalf: `${A}/star-half.svg`,
-  avatarAnna: `${A}/avatar-anna.jpg`,
-  avatarPiotr: `${A}/avatar-piotr.jpg`,
-  avatarMarta: `${A}/avatar-marta.jpg`,
+  avatarAnna: `${A}/avatar-anna.webp`,
+  avatarPiotr: `${A}/avatar-piotr.webp`,
+  avatarMarta: `${A}/avatar-marta.webp`,
 };
 
 export const HOME_WINNERS = [
@@ -47,12 +47,36 @@ export const HOME_WINNERS = [
 ];
 
 export const HOME_FEATURES = [
-  { icon: homeAssets.trophy, titleKey: 'home.features.prizesTitle', textKey: 'home.features.prizesText' },
-  { icon: homeAssets.users, titleKey: 'home.features.votingTitle', textKey: 'home.features.votingText' },
-  { icon: homeAssets.formats, titleKey: 'home.features.formatsTitle', textKey: 'home.features.formatsText' },
-  { icon: homeAssets.star, titleKey: 'home.features.hallTitle', textKey: 'home.features.hallText' },
-  { icon: homeAssets.free, titleKey: 'home.features.freeTitle', textKey: 'home.features.freeText' },
-  { icon: homeAssets.globe, titleKey: 'home.features.globalTitle', textKey: 'home.features.globalText' },
+  {
+    icon: homeAssets.trophy,
+    titleKey: 'home.features.prizesTitle',
+    textKey: 'home.features.prizesText',
+  },
+  {
+    icon: homeAssets.users,
+    titleKey: 'home.features.votingTitle',
+    textKey: 'home.features.votingText',
+  },
+  {
+    icon: homeAssets.formats,
+    titleKey: 'home.features.formatsTitle',
+    textKey: 'home.features.formatsText',
+  },
+  {
+    icon: homeAssets.star,
+    titleKey: 'home.features.hallTitle',
+    textKey: 'home.features.hallText',
+  },
+  {
+    icon: homeAssets.free,
+    titleKey: 'home.features.freeTitle',
+    textKey: 'home.features.freeText',
+  },
+  {
+    icon: homeAssets.globe,
+    titleKey: 'home.features.globalTitle',
+    textKey: 'home.features.globalText',
+  },
 ];
 
 export const HOME_TESTIMONIALS = [

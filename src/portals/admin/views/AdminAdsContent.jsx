@@ -1,16 +1,23 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { MoreVertical } from 'lucide-react';
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import AdvertiseDetailsDrawer from '@/components/data-display/AdvertiseDetailsDrawer/AdvertiseDetailsDrawer';
+import Button from '@/components/ui/Button';
 import {
   ACTION_MENU_OPTIONS,
   ADS_STATUS,
   MORE_ICON_SIZE,
 } from '@/portals/admin/data/adminAdsData';
 import useAdminAds from '@/portals/admin/hooks/useAdminAds';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
-import AdvertiseDetailsDrawer from '@/components/data-display/AdvertiseDetailsDrawer/AdvertiseDetailsDrawer';
 
 const ACTION_MENU_OFFSET_PX = 6;
 const ACTION_MENU_FALLBACK_HEIGHT_PX = 120;
@@ -20,7 +27,9 @@ const MD_MEDIA_QUERY = '(min-width: 768px)';
 
 const useIsMdUp = () => {
   const [isMdUp, setIsMdUp] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia(MD_MEDIA_QUERY).matches : false,
+    typeof window !== 'undefined'
+      ? window.matchMedia(MD_MEDIA_QUERY).matches
+      : false,
   );
 
   useEffect(() => {
@@ -60,12 +69,16 @@ const AdsActionMenu = memo(
 
       const updatePosition = () => {
         const rect = buttonRef.current.getBoundingClientRect();
-        const menuHeight = menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
+        const menuHeight =
+          menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
         const spaceBelow = window.innerHeight - rect.bottom;
         const openUpward = spaceBelow < menuHeight + ACTION_MENU_OFFSET_PX;
 
         setPlacement({
-          right: Math.max(ACTION_MENU_VIEWPORT_MARGIN_PX, window.innerWidth - rect.right),
+          right: Math.max(
+            ACTION_MENU_VIEWPORT_MARGIN_PX,
+            window.innerWidth - rect.right,
+          ),
           ...(openUpward
             ? { bottom: window.innerHeight - rect.top + ACTION_MENU_OFFSET_PX }
             : { top: rect.bottom + ACTION_MENU_OFFSET_PX }),
@@ -107,7 +120,9 @@ const AdsActionMenu = memo(
           <div
             ref={menuRef}
             role="menu"
-            aria-label={t('adminAds.actions.menuAria', { name: t(row.nameKey) })}
+            aria-label={t('adminAds.actions.menuAria', {
+              name: t(row.nameKey),
+            })}
             style={{
               position: 'fixed',
               zIndex: 50,
@@ -117,9 +132,13 @@ const AdsActionMenu = memo(
             }}
             className="overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
           >
-            <span className="block h-[3px] w-full bg-[#4048cd]" aria-hidden="true" />
+            <span
+              className="block h-[3px] w-full bg-[#4048cd]"
+              aria-hidden="true"
+            />
             {ACTION_MENU_OPTIONS.map((option) => (
-              <button
+              <Button
+                unstyled
                 key={option.id}
                 type="button"
                 role="menuitem"
@@ -130,7 +149,7 @@ const AdsActionMenu = memo(
                 className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff]"
               >
                 {t(option.labelKey)}
-              </button>
+              </Button>
             ))}
           </div>,
           document.body,
@@ -139,7 +158,8 @@ const AdsActionMenu = memo(
 
     return (
       <div className="relative inline-flex" ref={buttonWrapRef}>
-        <button
+        <Button
+          unstyled
           ref={buttonRef}
           type="button"
           aria-expanded={isOpen}
@@ -151,7 +171,7 @@ const AdsActionMenu = memo(
           }`}
         >
           <MoreVertical size={MORE_ICON_SIZE} aria-hidden="true" />
-        </button>
+        </Button>
         {menu}
       </div>
     );
@@ -171,12 +191,21 @@ AdsActionMenu.displayName = 'AdsActionMenu';
  * }} props
  */
 const AdsTableRow = memo(
-  ({ row, openActionId, onToggleAction, onCloseAction, onSeeDetails, onSelectStatus }) => {
+  ({
+    row,
+    openActionId,
+    onToggleAction,
+    onCloseAction,
+    onSeeDetails,
+    onSelectStatus,
+  }) => {
     const { t } = useTranslation();
     const rejected = row.status === ADS_STATUS.REJECTED;
 
     return (
-      <tr className={`border-b border-[#e4e4e4] ${rejected ? 'opacity-50' : ''}`}>
+      <tr
+        className={`border-b border-[#e4e4e4] ${rejected ? 'opacity-50' : ''}`}
+      >
         <td className="min-w-[160px] px-[26px] py-6 text-[16px] leading-6 text-[#0c0c0c]">
           {t(row.nameKey)}
         </td>
@@ -237,7 +266,14 @@ const ADS_TABLE_COLUMNS = [
 ];
 
 const AdsTable = memo(
-  ({ rows, openActionId, onToggleAction, onCloseAction, onSeeDetails, onSelectStatus }) => {
+  ({
+    rows,
+    openActionId,
+    onToggleAction,
+    onCloseAction,
+    onSeeDetails,
+    onSelectStatus,
+  }) => {
     const { t } = useTranslation();
 
     return (
@@ -289,7 +325,14 @@ AdsTable.displayName = 'AdsTable';
  * }} props
  */
 const AdsMobileCards = memo(
-  ({ rows, openActionId, onToggleAction, onCloseAction, onSeeDetails, onSelectStatus }) => {
+  ({
+    rows,
+    openActionId,
+    onToggleAction,
+    onCloseAction,
+    onSeeDetails,
+    onSelectStatus,
+  }) => {
     const { t } = useTranslation();
 
     return (
@@ -306,7 +349,9 @@ const AdsMobileCards = memo(
                 <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
                   {t(row.nameKey)}
                 </p>
-                <p className="mt-1 text-[14px] leading-5 text-[#687186]">{row.email}</p>
+                <p className="mt-1 text-[14px] leading-5 text-[#687186]">
+                  {row.email}
+                </p>
               </div>
               <AdsActionMenu
                 row={row}
@@ -322,7 +367,9 @@ const AdsMobileCards = memo(
                 <span className="text-[13px] leading-5 text-[#7f8ba1]">
                   {t('adminAds.columns.phone')}
                 </span>
-                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">{row.phone}</span>
+                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+                  {row.phone}
+                </span>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <span className="text-[13px] leading-5 text-[#7f8ba1]">
@@ -344,7 +391,9 @@ const AdsMobileCards = memo(
                 <span className="text-[13px] leading-5 text-[#7f8ba1]">
                   {t('adminAds.columns.price')}
                 </span>
-                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">{row.price}</span>
+                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+                  {row.price}
+                </span>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <span className="text-[13px] leading-5 text-[#7f8ba1]">
@@ -390,7 +439,10 @@ const AdminAdsContent = memo(() => {
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <AdminPageHeader title={t('adminAds.title')} description={t('adminAds.subtitle')} />
+      <AdminPageHeader
+        title={t('adminAds.title')}
+        description={t('adminAds.subtitle')}
+      />
 
       <section
         aria-label={t('adminAds.tableAria')}
@@ -417,7 +469,9 @@ const AdminAdsContent = memo(() => {
             />
           )
         ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">{t('adminAds.empty')}</p>
+          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+            {t('adminAds.empty')}
+          </p>
         )}
 
         <AdminPagination
@@ -429,7 +483,11 @@ const AdminAdsContent = memo(() => {
           isLastPage={isLastPage}
           onPrevious={handlePreviousPage}
           onNext={handleNextPage}
-          showingText={t('adminAds.pagination.showing', { from, to, total: resultsTotal })}
+          showingText={t('adminAds.pagination.showing', {
+            from,
+            to,
+            total: resultsTotal,
+          })}
           previousLabel={t('adminAds.pagination.previous')}
           nextLabel={t('adminAds.pagination.next')}
         />

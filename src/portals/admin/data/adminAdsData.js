@@ -17,12 +17,20 @@ export const ADS_STATUS = {
 
 export const ACTION_MENU_OPTIONS = [
   { id: 'details', labelKey: 'adminAds.actions.seeDetails', kind: 'details' },
-  { id: ADS_STATUS.PUBLISHED, labelKey: 'adminAds.actions.publish', kind: 'status' },
-  { id: ADS_STATUS.REJECTED, labelKey: 'adminAds.actions.reject', kind: 'status' },
+  {
+    id: ADS_STATUS.PUBLISHED,
+    labelKey: 'adminAds.actions.publish',
+    kind: 'status',
+  },
+  {
+    id: ADS_STATUS.REJECTED,
+    labelKey: 'adminAds.actions.reject',
+    kind: 'status',
+  },
 ];
 
-const SHARED_IMAGE = '/assets/competition-details/hero.jpg';
-const SHARED_AVATAR = '/assets/competition-details/avatar-1.jpg';
+const SHARED_IMAGE = '/assets/competition-details/hero.webp';
+const SHARED_AVATAR = '/assets/competition-details/avatar-1.webp';
 
 export const ADMIN_ADS_ROWS = [
   {
@@ -61,7 +69,7 @@ export const ADMIN_ADS_ROWS = [
     businessNameKey: 'adminAds.rows.marcus.businessName',
     businessLocationKey: 'adminAds.rows.marcus.businessLocation',
     descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-2.jpg',
+    avatar: '/assets/competition-details/avatar-2.webp',
     adsStartDate: '8/24/2026',
     adsEndDate: '9/10/2026',
     totalDaysKey: 'adminAds.drawer.totalDaysValueAlt',
@@ -82,7 +90,7 @@ export const ADMIN_ADS_ROWS = [
     businessNameKey: 'adminAds.rows.sofia.businessName',
     businessLocationKey: 'adminAds.rows.sofia.businessLocation',
     descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-3.jpg',
+    avatar: '/assets/competition-details/avatar-3.webp',
     adsStartDate: '8/23/2026',
     adsEndDate: '9/2/2026',
     totalDaysKey: 'adminAds.drawer.totalDaysValue',
@@ -103,7 +111,7 @@ export const ADMIN_ADS_ROWS = [
     businessNameKey: 'adminAds.rows.james.businessName',
     businessLocationKey: 'adminAds.rows.james.businessLocation',
     descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-4.jpg',
+    avatar: '/assets/competition-details/avatar-4.webp',
     adsStartDate: '8/22/2026',
     adsEndDate: '9/8/2026',
     totalDaysKey: 'adminAds.drawer.totalDaysValueAlt',
@@ -124,7 +132,7 @@ export const ADMIN_ADS_ROWS = [
     businessNameKey: 'adminAds.rows.amira.businessName',
     businessLocationKey: 'adminAds.rows.amira.businessLocation',
     descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-5.jpg',
+    avatar: '/assets/competition-details/avatar-5.webp',
     adsStartDate: '8/21/2026',
     adsEndDate: '9/4/2026',
     totalDaysKey: 'adminAds.drawer.totalDaysValue',
@@ -166,7 +174,7 @@ export const ADMIN_ADS_ROWS = [
     businessNameKey: 'adminAds.rows.nina.businessName',
     businessLocationKey: 'adminAds.rows.nina.businessLocation',
     descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-2.jpg',
+    avatar: '/assets/competition-details/avatar-2.webp',
     adsStartDate: '8/19/2026',
     adsEndDate: '9/1/2026',
     totalDaysKey: 'adminAds.drawer.totalDaysValue',
@@ -176,7 +184,9 @@ export const ADMIN_ADS_ROWS = [
 
 export const paginateAds = (rows, page, pageSize) => {
   const start = (page - 1) * pageSize;
-  return rows.filter((row) => row.status !== ADS_STATUS.REJECTED).slice(start, start + pageSize);
+  return rows
+    .filter((row) => row.status !== ADS_STATUS.REJECTED)
+    .slice(start, start + pageSize);
 };
 
 export const getAdsTotal = (rows) =>

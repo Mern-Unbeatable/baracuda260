@@ -1,6 +1,16 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   ACTION_MENU_OPTIONS,
   ADMIN_COMMENT_ASSETS,
@@ -16,8 +26,6 @@ import {
   TYPE_STYLES,
 } from '@/portals/admin/data/adminCommentData';
 import useAdminComment from '@/portals/admin/hooks/useAdminComment';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 
 const ACTION_MENU_OFFSET_PX = 6;
 const ACTION_MENU_FALLBACK_HEIGHT_PX = 148;
@@ -30,7 +38,9 @@ const LG_MEDIA_QUERY = '(min-width: 1024px)';
  */
 const useIsLgUp = () => {
   const [isLgUp, setIsLgUp] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia(LG_MEDIA_QUERY).matches : false,
+    typeof window !== 'undefined'
+      ? window.matchMedia(LG_MEDIA_QUERY).matches
+      : false,
   );
 
   useEffect(() => {
@@ -55,7 +65,10 @@ const StatusBadge = memo(({ status }) => {
     <span
       className={`inline-flex h-[22.5px] items-center gap-1.25 rounded-[99px] px-2.25 py-0.75 ${style.bg}`}
     >
-      <span className={`size-1.25 shrink-0 rounded-[2.5px] ${style.dot}`} aria-hidden="true" />
+      <span
+        className={`size-1.25 shrink-0 rounded-[2.5px] ${style.dot}`}
+        aria-hidden="true"
+      />
       <span
         className={`text-[11px] font-semibold leading-[16.5px] tracking-[0.11px] whitespace-nowrap ${style.text}`}
       >
@@ -103,7 +116,8 @@ const StatusFilterTabs = memo(({ statusFilter, onSelect }) => {
       {STATUS_FILTERS.map((filter) => {
         const active = filter.id === statusFilter;
         return (
-          <button
+          <Button
+            unstyled
             key={filter.id}
             type="button"
             role="tab"
@@ -116,7 +130,7 @@ const StatusFilterTabs = memo(({ statusFilter, onSelect }) => {
             }`}
           >
             {t(filter.labelKey)}
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -151,12 +165,16 @@ const CommentActionMenu = memo(
 
       const updatePosition = () => {
         const rect = buttonRef.current.getBoundingClientRect();
-        const menuHeight = menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
+        const menuHeight =
+          menuRef.current?.offsetHeight || ACTION_MENU_FALLBACK_HEIGHT_PX;
         const spaceBelow = window.innerHeight - rect.bottom;
         const openUpward = spaceBelow < menuHeight + ACTION_MENU_OFFSET_PX;
 
         setPlacement({
-          right: Math.max(ACTION_MENU_VIEWPORT_MARGIN_PX, window.innerWidth - rect.right),
+          right: Math.max(
+            ACTION_MENU_VIEWPORT_MARGIN_PX,
+            window.innerWidth - rect.right,
+          ),
           ...(openUpward
             ? { bottom: window.innerHeight - rect.top + ACTION_MENU_OFFSET_PX }
             : { top: rect.bottom + ACTION_MENU_OFFSET_PX }),
@@ -198,7 +216,9 @@ const CommentActionMenu = memo(
           <ul
             ref={menuRef}
             role="menu"
-            aria-label={t('adminComment.actions.menuAria', { name: t(row.nameKey) })}
+            aria-label={t('adminComment.actions.menuAria', {
+              name: t(row.nameKey),
+            })}
             style={{
               position: 'fixed',
               zIndex: 60,
@@ -212,7 +232,8 @@ const CommentActionMenu = memo(
               const isDetails = option.kind === 'details';
               return (
                 <li key={option.id}>
-                  <button
+                  <Button
+                    unstyled
                     type="button"
                     role="menuitem"
                     onClick={() => {
@@ -222,7 +243,7 @@ const CommentActionMenu = memo(
                     className="flex w-full cursor-pointer items-center bg-white px-2.5 py-1.25 text-left text-[16px] leading-6 text-[#222] transition hover:bg-[#f6fbff] focus-visible:bg-[#f6fbff]"
                   >
                     {t(option.labelKey)}
-                  </button>
+                  </Button>
                 </li>
               );
             })}
@@ -233,7 +254,8 @@ const CommentActionMenu = memo(
 
     return (
       <div className="relative inline-flex" ref={buttonWrapRef}>
-        <button
+        <Button
+          unstyled
           ref={buttonRef}
           type="button"
           aria-expanded={isOpen}
@@ -244,14 +266,14 @@ const CommentActionMenu = memo(
             isOpen ? 'bg-[#f3f4f6]' : 'hover:bg-[#f9fafb]'
           }`}
         >
-          <img
+          <Image
             src={ADMIN_COMMENT_ASSETS.more}
             alt=""
             width={MORE_ICON_SIZE}
             height={MORE_ICON_SIZE}
             className="size-5"
           />
-        </button>
+        </Button>
         {menu}
       </div>
     );
@@ -289,8 +311,14 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
   if (!row) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-70" role="dialog" aria-modal="true" aria-labelledby="comment-details-title">
-      <button
+    <div
+      className="fixed inset-0 z-70"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="comment-details-title"
+    >
+      <Button
+        unstyled
         type="button"
         aria-label={t('adminComment.drawer.close')}
         className="absolute inset-0 cursor-pointer bg-black/40"
@@ -309,20 +337,21 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
           </div>
           <div className="flex items-center gap-3">
             <StatusBadge status={row.status} />
-            <button
+            <Button
+              unstyled
               type="button"
               aria-label={t('adminComment.drawer.close')}
               onClick={onClose}
               className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[16px] text-[#6b7280] hover:bg-[#f3f4f6]"
             >
               ✕
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-6">
           <div className="relative h-45 overflow-hidden rounded-xl">
-            <img
+            <Image
               src={row.photo}
               alt=""
               className="absolute inset-0 size-full object-cover"
@@ -331,7 +360,9 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
               <p className="text-[16px] font-semibold leading-5.75 text-white">
                 {t(row.photoTitleKey)}
               </p>
-              <p className="text-[12px] leading-4.5 text-white/85">{t(row.categoryKey)}</p>
+              <p className="text-[12px] leading-4.5 text-white/85">
+                {t(row.categoryKey)}
+              </p>
             </div>
           </div>
 
@@ -340,7 +371,9 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
               {t('adminComment.drawer.commentLabel')}
             </p>
             <div className="mt-2 rounded-xl border border-[#f3f4f6] bg-[#f9fafb] px-4.75 py-3.5">
-              <p className="text-[14px] leading-6 text-[#374151]">{t(row.commentKey)}</p>
+              <p className="text-[14px] leading-6 text-[#374151]">
+                {t(row.commentKey)}
+              </p>
             </div>
           </div>
 
@@ -349,7 +382,7 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
               {t('adminComment.drawer.photographerProfile')}
             </p>
             <div className="mt-3 flex items-center gap-3">
-              <img
+              <Image
                 src={row.avatar}
                 alt=""
                 width={44}
@@ -360,7 +393,9 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
                 <p className="truncate text-[16px] font-semibold leading-5.75 text-[#111827]">
                   {t(row.nameKey)}
                 </p>
-                <p className="truncate text-[12px] leading-4.5 text-[#6b7280]">{row.email}</p>
+                <p className="truncate text-[12px] leading-4.5 text-[#6b7280]">
+                  {row.email}
+                </p>
                 <p className="text-[12px] leading-4.5 text-[#6b7280]">
                   📍 {t(row.countryKey)}
                 </p>
@@ -368,19 +403,25 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
             </div>
             <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[#f3f4f6] pt-3.5">
               <div className="text-center">
-                <p className="text-[16px] font-bold leading-6 text-[#111827]">{row.followers}</p>
+                <p className="text-[16px] font-bold leading-6 text-[#111827]">
+                  {row.followers}
+                </p>
                 <p className="text-[11px] leading-4.25 text-[#9ca3af]">
                   {t('adminComment.drawer.followers')}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-[16px] font-bold leading-6 text-[#111827]">{row.uploads}</p>
+                <p className="text-[16px] font-bold leading-6 text-[#111827]">
+                  {row.uploads}
+                </p>
                 <p className="text-[11px] leading-4.25 text-[#9ca3af]">
                   {t('adminComment.drawer.uploads')}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-[16px] font-bold leading-6 text-[#111827]">{row.visits}</p>
+                <p className="text-[16px] font-bold leading-6 text-[#111827]">
+                  {row.visits}
+                </p>
                 <p className="text-[11px] leading-4.25 text-[#9ca3af]">
                   {t('adminComment.drawer.visits')}
                 </p>
@@ -393,28 +434,31 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
               {t('adminComment.drawer.adminActions')}
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={() => onSelectStatus(row.id, COMMENT_STATUS.APPROVED)}
                 className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#bbf7d0] bg-[#dcfce7] px-3 text-[14px] font-semibold text-[#166534] hover:bg-[#bbf7d0]"
               >
                 {t('adminComment.drawer.approve')}
-              </button>
-              <button
+              </Button>
+              <Button
+                unstyled
                 type="button"
                 onClick={() => onSelectStatus(row.id, COMMENT_STATUS.HIDDEN)}
                 className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#e5e7eb] bg-[#f3f4f6] px-3 text-[14px] font-semibold text-[#4b5563] hover:bg-[#e5e7eb]"
               >
                 {t('adminComment.drawer.hide')}
-              </button>
+              </Button>
             </div>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => onSelectStatus(row.id, COMMENT_STATUS.DELETED)}
               className="mt-2 inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-[10px] border border-[#fecaca] bg-[#fef2f2] px-3 text-[14px] font-semibold text-[#991b1b] hover:bg-[#fee2e2]"
             >
               {t('adminComment.drawer.delete')}
-            </button>
+            </Button>
           </div>
         </div>
       </aside>
@@ -475,7 +519,7 @@ const CommentTableRow = memo(
         </td>
         <td className="px-2 py-3.5">
           <div className="flex min-w-0 items-center gap-2">
-            <img
+            <Image
               src={row.avatar}
               alt=""
               width={AVATAR_SIZE}
@@ -494,7 +538,7 @@ const CommentTableRow = memo(
         </td>
         <td className="px-2 py-3.5">
           <div className="flex min-w-0 items-center gap-2">
-            <img
+            <Image
               src={row.photo}
               alt=""
               width={PHOTO_THUMB_SIZE}
@@ -515,7 +559,9 @@ const CommentTableRow = memo(
           <TypeBadge type={row.type} />
         </td>
         <td className="max-w-60 px-2 py-5.5">
-          <p className="truncate text-[13px] leading-[19.5px] text-[#374151]">{t(row.commentKey)}</p>
+          <p className="truncate text-[13px] leading-[19.5px] text-[#374151]">
+            {t(row.commentKey)}
+          </p>
         </td>
         <td className="px-2 py-5.5 text-[12px] leading-4.5 whitespace-nowrap text-[#9ca3af]">
           {row.date}
@@ -666,7 +712,7 @@ const CommentsMobileCards = memo(
                   aria-label={t('adminComment.selectRow', { code: row.code })}
                   className="mt-1 size-3.75 cursor-pointer rounded-xs border border-[#767676]"
                 />
-                <img
+                <Image
                   src={row.avatar}
                   alt=""
                   width={AVATAR_SIZE}
@@ -693,7 +739,7 @@ const CommentsMobileCards = memo(
               />
             </div>
             <div className="flex items-center gap-2">
-              <img
+              <Image
                 src={row.photo}
                 alt=""
                 width={PHOTO_THUMB_SIZE}
@@ -704,7 +750,9 @@ const CommentsMobileCards = memo(
                 <p className="truncate text-[12px] font-semibold text-[#111827]">
                   {t(row.photoTitleKey)}
                 </p>
-                <p className="text-[11px] text-[#9ca3af]">{t(row.categoryKey)}</p>
+                <p className="text-[11px] text-[#9ca3af]">
+                  {t(row.categoryKey)}
+                </p>
               </div>
             </div>
             <p className="line-clamp-2 text-[13px] leading-[19.5px] text-[#374151]">
@@ -745,8 +793,12 @@ const CommentStatCards = memo(() => {
               {card.icon}
             </span>
           </div>
-          <p className="pt-3.5 text-[32px] font-extrabold leading-8 text-[#111827]">{card.value}</p>
-          <p className={`pt-2 text-[11px] font-semibold leading-[16.5px] ${card.hintClass}`}>
+          <p className="pt-3.5 text-[32px] font-extrabold leading-8 text-[#111827]">
+            {card.value}
+          </p>
+          <p
+            className={`pt-2 text-[11px] font-semibold leading-[16.5px] ${card.hintClass}`}
+          >
             {t(card.hintKey)}
           </p>
         </article>
@@ -809,7 +861,10 @@ const AdminCommentContent = memo(() => {
               ({resultsTotal})
             </span>
           </p>
-          <StatusFilterTabs statusFilter={statusFilter} onSelect={handleStatusFilterChange} />
+          <StatusFilterTabs
+            statusFilter={statusFilter}
+            onSelect={handleStatusFilterChange}
+          />
         </div>
 
         {visibleRows.length > 0 ? (
@@ -862,7 +917,9 @@ const AdminCommentContent = memo(() => {
           navAriaLabel={t('adminComment.pagination.aria')}
           previousAriaLabel={t('adminComment.pagination.previous')}
           nextAriaLabel={t('adminComment.pagination.next')}
-          pageAriaLabel={(pageNumber) => t('adminComment.pagination.page', { page: pageNumber })}
+          pageAriaLabel={(pageNumber) =>
+            t('adminComment.pagination.page', { page: pageNumber })
+          }
         />
       </section>
 

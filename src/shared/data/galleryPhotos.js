@@ -15,7 +15,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '8,420',
     badge: 'Single Photo',
     category: 'Landscape',
-    image: `${A}/photo-golden.jpg`,
+    image: `${A}/photo-golden.webp`,
     description:
       'Warm golden-hour light settles over a quiet scene. Soft shadows and a cinematic glow create a peaceful, story-rich atmosphere.',
     isAiGenerated: true,
@@ -30,7 +30,7 @@ const GALLERY_PHOTOS_RAW = [
     badge: '6 Photos Story',
     sixStoryVariant: 'aries',
     category: 'Nature',
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
     description:
       "I'm excited to share my new Summer Collection from the Polish countryside — misty forests, golden light, and quiet seasonal detail.",
   },
@@ -43,7 +43,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '8,110',
     badge: 'Single Photo',
     category: 'Wildlife',
-    image: `${A}/photo-wings.jpg`,
+    image: `${A}/photo-wings.webp`,
     description:
       'A close portrait capturing expressive eyes and fine detail. Soft natural light and shallow depth of field keep the subject sharp against a gentle background.',
   },
@@ -57,7 +57,7 @@ const GALLERY_PHOTOS_RAW = [
     badge: '6 Photos Story',
     sixStoryVariant: 'libra',
     category: 'Street Photography',
-    image: `${A}/photo-city.jpg`,
+    image: `${A}/photo-city.webp`,
     description:
       'Night city lights stretch across glass towers and wet streets. Cool blues and neon highlights build a cinematic after-midnight mood.',
     isAiGenerated: true,
@@ -71,7 +71,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '11,080',
     badge: '12 photos - full Zodiac Story',
     category: 'Fine Art',
-    image: `${A}/photo-tidal.jpg`,
+    image: `${A}/photo-tidal.webp`,
     description:
       'A tidal shoreline story told across connected zodiac frames. Soft sea light and layered horizons guide the viewer through memory and motion.',
     isAiGenerated: true,
@@ -85,7 +85,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '7,650',
     badge: 'Single Photo',
     category: 'Nature',
-    image: `${A}/photo-forest.jpg`,
+    image: `${A}/photo-forest.webp`,
     description:
       'Tall trees form a natural cathedral of light and shadow. Mist and soft beams emphasize scale, stillness, and quiet grandeur.',
   },
@@ -98,7 +98,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '6,980',
     badge: 'Single Photo',
     category: 'Landscape',
-    image: `${A}/photo-morning.jpg`,
+    image: `${A}/photo-morning.webp`,
     description:
       'Early light washes across open fields. Long shadows and soft haze create a peaceful morning landscape full of warmth and space.',
   },
@@ -111,7 +111,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '15,220',
     badge: '12 photos - full Zodiac Story',
     category: 'Fine Art',
-    image: `${A}/photo-zodiac.jpg`,
+    image: `${A}/photo-zodiac.webp`,
     description:
       'A full zodiac story told through twelve connected frames. Symbolic motifs, rich color, and careful pacing guide the viewer through the journey.',
   },
@@ -124,7 +124,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '7,650',
     badge: 'Single Photo',
     category: 'Nature',
-    image: `${A}/photo-forest.jpg`,
+    image: `${A}/photo-forest.webp`,
     description:
       'Tall trees form a natural cathedral of light and shadow. Mist and soft beams emphasize scale, stillness, and quiet grandeur.',
   },
@@ -137,7 +137,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '6,980',
     badge: 'Single Photo',
     category: 'Landscape',
-    image: `${A}/photo-morning.jpg`,
+    image: `${A}/photo-morning.webp`,
     description:
       'Early light washes across open fields. Long shadows and soft haze create a peaceful morning landscape full of warmth and space.',
   },
@@ -150,7 +150,7 @@ const GALLERY_PHOTOS_RAW = [
     views: '15,220',
     badge: '12 photos - full Zodiac Story',
     category: 'Fine Art',
-    image: `${A}/photo-zodiac.jpg`,
+    image: `${A}/photo-zodiac.webp`,
     description:
       'A full zodiac story told through twelve connected frames. Symbolic motifs, rich color, and careful pacing guide the viewer through the journey.',
   },

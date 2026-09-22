@@ -7,7 +7,12 @@ const BuyPhotos = memo(() => {
     title: 'Buy Photos',
     description:
       'Explore and buy premium photos from the My12Photos community — filter by album type and category.',
-    keywords: ['buy photos', 'premium photos', 'my12photos', 'photography marketplace'],
+    keywords: [
+      'buy photos',
+      'premium photos',
+      'my12photos',
+      'photography marketplace',
+    ],
   });
 
   return <BuyPhotosMain />;

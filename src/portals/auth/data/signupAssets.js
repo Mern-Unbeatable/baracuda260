@@ -2,7 +2,7 @@
 const A = '/assets/signup';
 
 export const SIGNUP_ASSETS = {
-  hero: `${A}/hero.jpg`,
+  hero: `${A}/hero.webp`,
 };
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

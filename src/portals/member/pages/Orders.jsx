@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
 import OrdersContent from '@/portals/member/views/OrdersContent';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const Orders = memo(() => {
   useSEO({
     title: 'Orders',
-    description: 'View and manage orders placed for your store products on My12Photos.',
+    description:
+      'View and manage orders placed for your store products on My12Photos.',
     keywords: ['orders', 'store orders', 'seller', 'My12Photos'],
   });
 

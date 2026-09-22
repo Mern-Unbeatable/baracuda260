@@ -1,6 +1,7 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
 import { Bell } from 'lucide-react';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import Image from '@/components/ui/Image';
 
 const MemberNotificationItem = memo(({ item }) => {
   const { t } = useTranslation();
@@ -10,13 +11,24 @@ const MemberNotificationItem = memo(({ item }) => {
       {item.type === 'platform' ? (
         <span className="inline-flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#ecedfa] ring-1 ring-[#ececf0]">
           {item.icon ? (
-            <img src={item.icon} alt="" width={32} height={32} className="size-8 object-contain" />
+            <Image
+              src={item.icon}
+              alt=""
+              width={32}
+              height={32}
+              className="size-8 object-contain"
+            />
           ) : (
-            <Bell size={20} strokeWidth={2} aria-hidden="true" className="text-[#4048cd]" />
+            <Bell
+              size={20}
+              strokeWidth={2}
+              aria-hidden="true"
+              className="text-[#4048cd]"
+            />
           )}
         </span>
       ) : (
-        <img
+        <Image
           src={item.avatar}
           alt=""
           width={48}

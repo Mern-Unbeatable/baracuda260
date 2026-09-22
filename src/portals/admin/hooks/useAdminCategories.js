@@ -10,7 +10,9 @@ import {
 /**
  * Category chip list + Add Category modal state.
  */
-export default function useAdminCategories(initialCategories = ADMIN_CATEGORY_ITEMS) {
+export default function useAdminCategories(
+  initialCategories = ADMIN_CATEGORY_ITEMS,
+) {
   const [categories, setCategories] = useState(initialCategories);
   const [nextCustomIndex, setNextCustomIndex] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

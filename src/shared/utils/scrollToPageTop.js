@@ -4,7 +4,9 @@ export function scrollToPageTop(behavior = 'smooth') {
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
 
-  document.querySelectorAll('[data-lenis-prevent], main .overflow-y-auto').forEach((el) => {
-    el.scrollTop = 0;
-  });
+  document
+    .querySelectorAll('[data-lenis-prevent], main .overflow-y-auto')
+    .forEach((el) => {
+      el.scrollTop = 0;
+    });
 }

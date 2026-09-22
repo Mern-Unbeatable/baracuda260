@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
+  filterGalleryCards,
   GALLERY_CARDS,
   GALLERY_TOTAL_PAGES,
-  filterGalleryCards,
 } from '@/portals/admin/data/adminGalleryData';
 
 /**

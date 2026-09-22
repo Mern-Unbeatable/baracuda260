@@ -1,27 +1,35 @@
-import AdminPageHeader from "@/components/common/AdminPageHeader/AdminPageHeader";
-import { useTranslation } from 'react-i18next';
+import { Calendar, Clock, Eye, Heart } from 'lucide-react';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Heart, Eye, Calendar, Clock } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
   CARD_IMAGE_HEIGHT,
   CARD_IMAGE_WIDTH,
+  getPromotedDetailPath,
   PROMOTED_FILTERS,
   PROMOTED_TYPE_KEYS,
-  getPromotedDetailPath,
 } from '@/portals/admin/data/adminPromotedProductsData';
 import useAdminPromotedProductsShowcase from '@/portals/admin/hooks/useAdminPromotedProductsShowcase';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import { ROUTES } from '@/shared/config';
 
 const PromotedCard = memo(({ card }) => {
   const { t } = useTranslation();
-  const detailPath = getPromotedDetailPath(card.id, ROUTES.ADMIN_PROMOTED_PRODUCTS_DETAIL);
+  const detailPath = getPromotedDetailPath(
+    card.id,
+    ROUTES.ADMIN_PROMOTED_PRODUCTS_DETAIL,
+  );
 
   return (
     <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)]">
-      <Link to={detailPath} className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60">
-        <img
+      <Link
+        to={detailPath}
+        className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
+      >
+        <Image
           src={card.image}
           alt=""
           width={CARD_IMAGE_WIDTH}
@@ -85,12 +93,18 @@ PromotedCard.displayName = 'PromotedCard';
 
 const SimpleCard = memo(({ card }) => {
   const { t } = useTranslation();
-  const detailPath = getPromotedDetailPath(card.id, ROUTES.ADMIN_PROMOTED_PRODUCTS_DETAIL);
+  const detailPath = getPromotedDetailPath(
+    card.id,
+    ROUTES.ADMIN_PROMOTED_PRODUCTS_DETAIL,
+  );
 
   return (
     <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)]">
-      <Link to={detailPath} className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60">
-        <img
+      <Link
+        to={detailPath}
+        className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
+      >
+        <Image
           src={card.image}
           alt=""
           width={CARD_IMAGE_WIDTH}
@@ -153,7 +167,8 @@ const PromotedTypeFilters = memo(({ activeFilter, onFilterClick }) => {
         const isAll = filter.id === 'all';
 
         return (
-          <button
+          <Button
+            unstyled
             key={filter.id}
             type="button"
             aria-pressed={selected}
@@ -167,7 +182,7 @@ const PromotedTypeFilters = memo(({ activeFilter, onFilterClick }) => {
             }`}
           >
             {t(filter.labelKey)}
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -206,13 +221,18 @@ const AdminPromotedProductsContent = memo(() => {
     <div className="flex w-full flex-col gap-6 sm:gap-8">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <AdminPageHeader title={t('adminPromoted.title')} />
-        <PromotedTypeFilters activeFilter={activeFilter} onFilterClick={handleFilterClick} />
+        <PromotedTypeFilters
+          activeFilter={activeFilter}
+          onFilterClick={handleFilterClick}
+        />
       </header>
 
       <ShowcaseGrid cards={visibleCards} />
 
       {visibleCards.length === 0 ? (
-        <p className="text-center text-[16px] text-[#6b7280]">{t('adminPromoted.empty')}</p>
+        <p className="text-center text-[16px] text-[#6b7280]">
+          {t('adminPromoted.empty')}
+        </p>
       ) : null}
 
       <div className="flex justify-center pt-2 sm:pt-4">
@@ -226,7 +246,9 @@ const AdminPromotedProductsContent = memo(() => {
           prevLabel={t('adminPromoted.pagination.prev')}
           nextLabel={t('adminPromoted.pagination.next')}
           lastLabel={t('adminPromoted.pagination.last')}
-          pageLabel={(pageNumber) => t('adminPromoted.pagination.page', { page: pageNumber })}
+          pageLabel={(pageNumber) =>
+            t('adminPromoted.pagination.page', { page: pageNumber })
+          }
         />
       </div>
     </div>

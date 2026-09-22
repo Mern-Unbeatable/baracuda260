@@ -1,6 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
 import { Calendar, Clock, Heart, MessageSquare, Share2 } from 'lucide-react';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 
 const PhotographerMessagesSection = memo(({ messages }) => {
   const { t } = useTranslation();
@@ -10,7 +12,11 @@ const PhotographerMessagesSection = memo(({ messages }) => {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <MessageSquare size={22} className="shrink-0 text-[#4048cd]" aria-hidden="true" />
+            <MessageSquare
+              size={22}
+              className="shrink-0 text-[#4048cd]"
+              aria-hidden="true"
+            />
             <h2 className="text-[20px] font-bold text-[#111827] sm:text-[22px]">
               {t('photographerProfile.posts.title')}
             </h2>
@@ -20,7 +26,9 @@ const PhotographerMessagesSection = memo(({ messages }) => {
           </p>
         </div>
         <span className="inline-flex w-fit shrink-0 rounded-full bg-[#f3f4f6] px-3 py-1.5 text-[13px] font-medium text-[#6b7280]">
-          {t('photographerProfile.posts.publishedCount', { count: messages.length })}
+          {t('photographerProfile.posts.publishedCount', {
+            count: messages.length,
+          })}
         </span>
       </div>
 
@@ -32,7 +40,7 @@ const PhotographerMessagesSection = memo(({ messages }) => {
           >
             <div className="flex items-start justify-between gap-3 border-b border-black/8 px-4 py-4 sm:px-5">
               <div className="flex min-w-0 items-start gap-3">
-                <img
+                <Image
                   src={message.avatar}
                   alt=""
                   width={48}
@@ -40,7 +48,9 @@ const PhotographerMessagesSection = memo(({ messages }) => {
                   className="size-12 shrink-0 rounded-full object-cover"
                 />
                 <div>
-                  <p className="text-[15px] font-semibold text-[#111827]">{message.author}</p>
+                  <p className="text-[15px] font-semibold text-[#111827]">
+                    {message.author}
+                  </p>
                   <p className="mt-0.5 flex flex-wrap items-center gap-3 text-[13px] text-[#6b7280]">
                     <span className="inline-flex items-center gap-1">
                       <Calendar size={14} aria-hidden="true" />
@@ -59,10 +69,12 @@ const PhotographerMessagesSection = memo(({ messages }) => {
             </div>
 
             <div className="px-4 py-4 sm:px-5">
-              <p className="text-[15px] leading-6 text-[#374151]">{message.text}</p>
+              <p className="text-[15px] leading-6 text-[#374151]">
+                {message.text}
+              </p>
               {message.image ? (
                 <div className="mt-4 overflow-hidden rounded-xl">
-                  <img
+                  <Image
                     src={message.image}
                     alt=""
                     className="h-64 w-full object-cover sm:h-80 lg:h-96"
@@ -73,16 +85,22 @@ const PhotographerMessagesSection = memo(({ messages }) => {
 
             <div className="flex items-center justify-between border-t border-black/8 px-4 py-3 sm:px-5">
               <span className="inline-flex items-center gap-1.5 text-[14px] font-medium text-[#ee1c25]">
-                <Heart size={16} strokeWidth={2} aria-hidden="true" className="fill-[#ee1c25] text-[#ee1c25]" />
+                <Heart
+                  size={16}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                  className="fill-[#ee1c25] text-[#ee1c25]"
+                />
                 {t('photographerProfile.posts.likes', { count: message.likes })}
               </span>
-              <button
+              <Button
+                unstyled
                 type="button"
                 className="inline-flex cursor-pointer items-center gap-1.5 text-[14px] font-medium text-[#4048cd]"
               >
                 <Share2 size={16} strokeWidth={2} aria-hidden="true" />
                 {t('galleryDetail.share')}
-              </button>
+              </Button>
             </div>
           </article>
         ))}

@@ -1,7 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo, useMemo, useState } from 'react';
-import { ROUTES } from '@/shared/config';
-import { ImgIcon, Shell, SitePageLayout, useMonthMenu } from '@/shared/site-chrome';
+import { useTranslation } from 'react-i18next';
+import Pagination from '@/components/common/Pagination/Pagination';
+import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
+import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import Button from '@/components/ui/Button';
 import {
   matchesWinnerAlbumFilter,
   SHOWCASE_BADGE_KEYS,
@@ -10,11 +13,14 @@ import {
   WINNERS_ARCHIVE as WINNERS,
   winnerDetailPath,
 } from '@/portals/public/winners/data/winnersArchive';
-import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
-import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
-import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
-import Pagination from '@/components/common/Pagination/Pagination';
+import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import {
+  ImgIcon,
+  Shell,
+  SitePageLayout,
+  useMonthMenu,
+} from '@/shared/site-chrome';
 
 const PAGE_SIZE = 8;
 
@@ -52,7 +58,8 @@ const WinnersContent = memo(() => {
   const filteredWinners = useMemo(
     () =>
       WINNERS.filter(
-        (item) => item.month === month && matchesWinnerAlbumFilter(item, filterTab),
+        (item) =>
+          item.month === month && matchesWinnerAlbumFilter(item, filterTab),
       ),
     [filterTab, month],
   );
@@ -86,7 +93,8 @@ const WinnersContent = memo(() => {
             description={t('winners.subtitle')}
             end={
               <div className="relative shrink-0 self-start" ref={monthRef}>
-                <button
+                <Button
+                  unstyled
                   type="button"
                   aria-haspopup="listbox"
                   aria-expanded={monthOpen}
@@ -101,7 +109,7 @@ const WinnersContent = memo(() => {
                   >
                     <ImgIcon src={ASSETS.chevron} size={24} />
                   </span>
-                </button>
+                </Button>
 
                 {monthOpen ? (
                   <ul
@@ -113,7 +121,8 @@ const WinnersContent = memo(() => {
                       const selected = name === month;
                       return (
                         <li key={name} role="option" aria-selected={selected}>
-                          <button
+                          <Button
+                            unstyled
                             type="button"
                             onClick={() => {
                               setMonth(name);
@@ -127,7 +136,7 @@ const WinnersContent = memo(() => {
                           >
                             <ImgIcon src={ASSETS.calendar} size={12} />
                             {t(`common.months.${name}`)}
-                          </button>
+                          </Button>
                         </li>
                       );
                     })}
@@ -148,15 +157,21 @@ const WinnersContent = memo(() => {
               onChange={setFilterTab}
               density="compact"
               layout="scroll"
-              ariaLabel={t('winners.filterAria', { defaultValue: 'Filter winners by album type' })}
+              ariaLabel={t('winners.filterAria', {
+                defaultValue: 'Filter winners by album type',
+              })}
               className="lg:justify-end"
             />
           </div>
 
           {filteredWinners.length === 0 ? (
             <div className="mt-11 rounded-xl border border-dashed border-black/15 px-6 py-16 text-center">
-              <p className="text-[18px] font-bold text-[#0d0d14]">{t('winners.emptyTitle')}</p>
-              <p className="mt-2 text-[14px] text-[#6b7280]">{t('winners.emptyBody')}</p>
+              <p className="text-[18px] font-bold text-[#0d0d14]">
+                {t('winners.emptyTitle')}
+              </p>
+              <p className="mt-2 text-[14px] text-[#6b7280]">
+                {t('winners.emptyBody')}
+              </p>
             </div>
           ) : (
             <>
@@ -169,9 +184,12 @@ const WinnersContent = memo(() => {
                     imageAlt={item.title}
                     title={item.title}
                     titleAs="h2"
-                    badge={t(SHOWCASE_BADGE_KEYS[item.albumBadge] || item.albumBadge, {
-                      defaultValue: item.albumBadge,
-                    })}
+                    badge={t(
+                      SHOWCASE_BADGE_KEYS[item.albumBadge] || item.albumBadge,
+                      {
+                        defaultValue: item.albumBadge,
+                      },
+                    )}
                     description={item.description}
                     likes={item.votes}
                     views={item.views}
@@ -181,7 +199,9 @@ const WinnersContent = memo(() => {
                     })}
                     extraPhotosLabel={
                       item.extraPhotoCount != null
-                        ? t('winners.extraPhotos', { count: item.extraPhotoCount })
+                        ? t('winners.extraPhotos', {
+                            count: item.extraPhotoCount,
+                          })
                         : undefined
                     }
                   />

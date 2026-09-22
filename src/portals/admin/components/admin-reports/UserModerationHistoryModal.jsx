@@ -1,7 +1,16 @@
-import { useTranslation } from 'react-i18next';
+import {
+  ExternalLink,
+  History,
+  Mail,
+  MapPin,
+  TriangleAlert,
+  X,
+} from 'lucide-react';
 import React, { memo, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { ExternalLink, History, MapPin, Mail, TriangleAlert, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import { MODERATION_HISTORY } from '@/portals/admin/data/adminReportsData';
 
 /**
@@ -32,9 +41,21 @@ const UserModerationHistoryModal = memo(({ open, onClose }) => {
   if (!open) return null;
 
   const statCards = [
-    { id: 'totalReports', value: history.stats.totalReports, valueClass: 'text-[#ee1c25]' },
-    { id: 'warnings', value: history.stats.warnings, valueClass: 'text-[#d97706]' },
-    { id: 'suspensions', value: history.stats.suspensions, valueClass: 'text-[#111827]' },
+    {
+      id: 'totalReports',
+      value: history.stats.totalReports,
+      valueClass: 'text-[#ee1c25]',
+    },
+    {
+      id: 'warnings',
+      value: history.stats.warnings,
+      valueClass: 'text-[#d97706]',
+    },
+    {
+      id: 'suspensions',
+      value: history.stats.suspensions,
+      valueClass: 'text-[#111827]',
+    },
     { id: 'bans', value: history.stats.bans, valueClass: 'text-[#111827]' },
   ];
 
@@ -70,19 +91,20 @@ const UserModerationHistoryModal = memo(({ open, onClose }) => {
               </p>
             </div>
           </div>
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={onClose}
             aria-label={t('adminReports.history.close')}
             className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-white/80 transition hover:bg-white/10"
           >
             <X size={18} aria-hidden="true" />
-          </button>
+          </Button>
         </header>
 
         <div className="flex-1 overflow-y-auto px-6 py-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-            <img
+            <Image
               src={history.avatar}
               alt=""
               width={72}
@@ -102,7 +124,11 @@ const UserModerationHistoryModal = memo(({ open, onClose }) => {
                   <Mail size={14} aria-hidden="true" />
                   {history.email}
                 </span>
-                <span>{t('adminReports.history.memberSince', { date: history.memberSince })}</span>
+                <span>
+                  {t('adminReports.history.memberSince', {
+                    date: history.memberSince,
+                  })}
+                </span>
               </div>
               <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#fee2e2] px-3 py-1 text-[12px] font-semibold text-[#991b1b]">
                 <TriangleAlert size={14} aria-hidden="true" />
@@ -120,7 +146,9 @@ const UserModerationHistoryModal = memo(({ open, onClose }) => {
                 <p className="text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af]">
                   {t(`adminReports.history.stats.${card.id}`)}
                 </p>
-                <p className={`pt-2 text-[28px] font-extrabold leading-8 ${card.valueClass}`}>
+                <p
+                  className={`pt-2 text-[28px] font-extrabold leading-8 ${card.valueClass}`}
+                >
                   {card.value}
                 </p>
               </article>
@@ -145,17 +173,22 @@ const UserModerationHistoryModal = memo(({ open, onClose }) => {
                   <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#6b7280]">
                     {t(item.previewKey)}
                   </p>
-                  <p className="mt-1 text-[12px] text-[#9ca3af] sm:hidden">{item.date}</p>
+                  <p className="mt-1 text-[12px] text-[#9ca3af] sm:hidden">
+                    {item.date}
+                  </p>
                 </div>
                 <div className="mt-3 flex shrink-0 items-center gap-4 sm:mt-0">
-                  <span className="hidden text-[12px] text-[#9ca3af] sm:inline">{item.date}</span>
-                  <button
+                  <span className="hidden text-[12px] text-[#9ca3af] sm:inline">
+                    {item.date}
+                  </span>
+                  <Button
+                    unstyled
                     type="button"
                     className="inline-flex cursor-pointer items-center gap-1 text-[14px] font-semibold text-[#2563eb] hover:underline"
                   >
                     {t('adminReports.history.open')}
                     <ExternalLink size={14} aria-hidden="true" />
-                  </button>
+                  </Button>
                 </div>
               </li>
             ))}

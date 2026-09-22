@@ -1,14 +1,15 @@
 import React, { memo } from 'react';
-import { useSEO } from '@/shared/hooks/useSEO';
-import { ROUTES } from '@/shared/config';
 import SinglePhotoContent from '@/portals/member/views/SinglePhotoContent';
+import { ROUTES } from '@/shared/config';
+import { useSEO } from '@/shared/hooks/useSEO';
 
 const uploadHub = ROUTES.ADMIN_SELL_PHOTOS_UPLOAD;
 
 const SellPhotosUploadSingle = memo(() => {
   useSEO({
     title: 'Single Photo — Sell',
-    description: 'Upload a single photo for sale with zodiac sign and pricing details on My12Photos.',
+    description:
+      'Upload a single photo for sale with zodiac sign and pricing details on My12Photos.',
     keywords: ['single photo', 'sell', 'upload', 'My12Photos'],
   });
 

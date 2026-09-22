@@ -1,19 +1,22 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
-import { SITE_ASSETS } from './siteAssets';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
 import ImgIcon from './ImgIcon';
 import Shell from './Shell';
+import { SITE_ASSETS } from './siteAssets';
 
 const PANEL_CLASS = {
   page: 'relative min-h-[320px] overflow-hidden rounded-2xl bg-[#4048cd] px-4 py-16 sm:min-h-[400px] sm:px-8 sm:py-20 xl:min-h-[465px]',
   home: 'relative overflow-hidden rounded-2xl bg-[#4048cd] px-4 py-16 sm:px-8 sm:py-20',
-  detail: 'relative overflow-hidden rounded-2xl bg-[#4048cd] px-4 py-14 sm:px-8 sm:py-16 xl:py-20',
+  detail:
+    'relative overflow-hidden rounded-2xl bg-[#4048cd] px-4 py-14 sm:px-8 sm:py-16 xl:py-20',
 };
 
 const INNER_CLASS = {
   page: 'relative mx-auto flex h-full max-w-[640px] flex-col items-center justify-center gap-8 text-center',
   home: 'relative mx-auto flex max-w-[640px] flex-col items-center gap-8 text-center',
-  detail: 'relative mx-auto flex max-w-[640px] flex-col items-center gap-8 text-center',
+  detail:
+    'relative mx-auto flex max-w-[640px] flex-col items-center gap-8 text-center',
 };
 
 /**
@@ -58,12 +61,13 @@ const StayUpdated = memo(({ variant = 'page' }) => {
                   className="w-full bg-transparent text-[12px] text-[#222] outline-none placeholder:text-[#7d7d7d]"
                 />
               </label>
-              <button
+              <Button
+                unstyled
                 type="submit"
                 className="cursor-pointer rounded-[27px] bg-[#ee1c25] px-8 py-2 text-[15px] font-semibold leading-tight text-white"
               >
                 {t('newsletter.subscribe')}
-              </button>
+              </Button>
             </form>
           </div>
         </div>

@@ -7,7 +7,7 @@ export const CHAT_CONVERSATIONS = [
     id: 'chat-azunyan',
     name: 'Azunyan U. Wu',
     handle: '@azusanakano_1997',
-    avatar: `${A}/avatar-anna.jpg`,
+    avatar: `${A}/avatar-anna.webp`,
     previewKey: 'memberChat.previews.azunyan',
     time: '12:25',
     unread: 0,
@@ -17,7 +17,7 @@ export const CHAT_CONVERSATIONS = [
     id: 'chat-mckinsey',
     name: 'McKinsey Vermillion',
     handle: '@mckinsey_v',
-    avatar: `${A}/avatar-marta.jpg`,
+    avatar: `${A}/avatar-marta.webp`,
     previewKey: 'memberChat.previews.default',
     time: '12:25',
     unread: 999,
@@ -27,7 +27,7 @@ export const CHAT_CONVERSATIONS = [
     id: 'chat-elena',
     name: 'Elena Vance',
     handle: '@elenavance',
-    avatar: `${A}/avatar-photographer.jpg`,
+    avatar: `${A}/avatar-photographer.webp`,
     previewKey: 'memberChat.previews.default',
     time: '11:02',
     unread: 8,
@@ -37,7 +37,7 @@ export const CHAT_CONVERSATIONS = [
     id: 'chat-piotr',
     name: 'Piotr Mazur',
     handle: '@piotrmazur',
-    avatar: `${A}/avatar-piotr.jpg`,
+    avatar: `${A}/avatar-piotr.webp`,
     previewKey: 'memberChat.previews.default',
     time: '10:48',
     unread: 2,
@@ -47,7 +47,7 @@ export const CHAT_CONVERSATIONS = [
     id: 'chat-sofia',
     name: 'Sofia Reyes',
     handle: '@sofiareyes',
-    avatar: `${A}/avatar-anna.jpg`,
+    avatar: `${A}/avatar-anna.webp`,
     previewKey: 'memberChat.previews.default',
     time: '09:15',
     unread: 7,
@@ -57,7 +57,7 @@ export const CHAT_CONVERSATIONS = [
     id: 'chat-michael',
     name: 'Michael Brown',
     handle: '@michaelbrown',
-    avatar: `${A}/avatar-piotr.jpg`,
+    avatar: `${A}/avatar-piotr.webp`,
     previewKey: 'memberChat.previews.default',
     time: 'Yesterday',
     unread: 0,
@@ -67,7 +67,7 @@ export const CHAT_CONVERSATIONS = [
     id: 'chat-kasia',
     name: 'Kasia Lewandowska',
     handle: '@kasial',
-    avatar: `${A}/avatar-marta.jpg`,
+    avatar: `${A}/avatar-marta.webp`,
     previewKey: 'memberChat.previews.default',
     time: 'Yesterday',
     unread: 0,
@@ -94,7 +94,7 @@ export const CHAT_DEMO_MESSAGES = {
     {
       type: 'received',
       variant: 'video',
-      poster: `${A}/photo-golden.jpg`,
+      poster: `${A}/photo-golden.webp`,
       time: '09:18',
     },
     { type: 'date', labelKey: 'memberChat.dates.today' },
@@ -117,7 +117,8 @@ export const CHAT_DEMO_MESSAGES = {
   ],
 };
 
-export const getDefaultChatConversationId = () => CHAT_CONVERSATIONS[0]?.id ?? null;
+export const getDefaultChatConversationId = () =>
+  CHAT_CONVERSATIONS[0]?.id ?? null;
 
 export const getChatMessages = (conversationId) =>
   CHAT_DEMO_MESSAGES[conversationId] ?? [

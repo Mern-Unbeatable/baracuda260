@@ -1,4 +1,7 @@
-import { ALBUM_TYPE_LABEL_KEYS, matchesAlbumType } from '@/shared/data/albumTypes';
+import {
+  ALBUM_TYPE_LABEL_KEYS,
+  matchesAlbumType,
+} from '@/shared/data/albumTypes';
 
 const A = '/assets/home';
 
@@ -26,7 +29,7 @@ export const WINNERS_ARCHIVE = [
     rank: '1st PLACE',
     album: 'Single Photo',
     albumBadge: 'Single Photo',
-    image: `${A}/photo-forest.jpg`,
+    image: `${A}/photo-forest.webp`,
   },
   {
     id: 'winner-zodiac-journey',
@@ -40,7 +43,7 @@ export const WINNERS_ARCHIVE = [
     album: '12 photos - full Zodiac Story',
     albumBadge: '12 photos - full Zodiac Story',
     extraPhotoCount: 11,
-    image: `${A}/photo-zodiac.jpg`,
+    image: `${A}/photo-zodiac.webp`,
   },
   {
     id: 'winner-wings-marsh',
@@ -53,7 +56,7 @@ export const WINNERS_ARCHIVE = [
     rank: '3rd PLACE',
     album: 'Single Photo',
     albumBadge: 'Single Photo',
-    image: `${A}/photo-wings.jpg`,
+    image: `${A}/photo-wings.webp`,
   },
   {
     id: 'winner-six-story',
@@ -67,7 +70,7 @@ export const WINNERS_ARCHIVE = [
     album: '6 Photos',
     albumBadge: '6 Photos Story',
     extraPhotoCount: 5,
-    image: `${A}/photo-autumn.jpg`,
+    image: `${A}/photo-autumn.webp`,
   },
   {
     id: 'winner-morning-fields',
@@ -80,7 +83,7 @@ export const WINNERS_ARCHIVE = [
     rank: '2nd PLACE',
     album: 'Single Photo',
     albumBadge: 'Single Photo',
-    image: `${A}/photo-morning.jpg`,
+    image: `${A}/photo-morning.webp`,
   },
   {
     id: 'winner-tidal-memory',
@@ -94,7 +97,7 @@ export const WINNERS_ARCHIVE = [
     album: '12 photos - full Zodiac Story',
     albumBadge: '12 photos - full Zodiac Story',
     extraPhotoCount: 11,
-    image: `${A}/photo-tidal.jpg`,
+    image: `${A}/photo-tidal.webp`,
   },
   {
     id: 'winner-city-midnight',
@@ -108,7 +111,7 @@ export const WINNERS_ARCHIVE = [
     album: '6 Photos',
     albumBadge: '6 Photos Story',
     extraPhotoCount: 5,
-    image: `${A}/photo-city.jpg`,
+    image: `${A}/photo-city.webp`,
   },
   {
     id: 'winner-golden-hour',
@@ -121,7 +124,7 @@ export const WINNERS_ARCHIVE = [
     rank: '1st PLACE',
     album: 'Single Photo',
     albumBadge: 'Single Photo',
-    image: `${A}/winner-golden.jpg`,
+    image: `${A}/winner-golden.webp`,
   },
 ];
 
@@ -140,19 +143,27 @@ export const SHOWCASE_BADGE_KEYS = {
 
 export const matchesWinnerAlbumFilter = (item, filterTab) => {
   if (filterTab === 'All Entries') return true;
-  return item.album === filterTab || matchesAlbumType(item.albumBadge, filterTab);
+  return (
+    item.album === filterTab || matchesAlbumType(item.albumBadge, filterTab)
+  );
 };
 
-export const getWinnerById = (id) => WINNERS_ARCHIVE.find((entry) => entry.id === id) ?? null;
+export const getWinnerById = (id) =>
+  WINNERS_ARCHIVE.find((entry) => entry.id === id) ?? null;
 
 export const winnerDetailPath = (id) => `/winners/${id}`;
 
 /** Shape expected by GalleryDetailView (single variant). */
 export function toWinnerDetailEntry(winner, t) {
-  const badgeLabel = t(SHOWCASE_BADGE_KEYS[winner.albumBadge] || winner.albumBadge, {
-    defaultValue: winner.albumBadge,
-  });
-  const albumLabel = t(ALBUM_TYPE_LABEL_KEYS[winner.album] ?? 'common.singlePhoto');
+  const badgeLabel = t(
+    SHOWCASE_BADGE_KEYS[winner.albumBadge] || winner.albumBadge,
+    {
+      defaultValue: winner.albumBadge,
+    },
+  );
+  const albumLabel = t(
+    ALBUM_TYPE_LABEL_KEYS[winner.album] ?? 'common.singlePhoto',
+  );
   const votesDigits = String(winner.votes ?? '').replace(/\D/g, '');
 
   return {
@@ -163,7 +174,8 @@ export function toWinnerDetailEntry(winner, t) {
     category: albumLabel,
     votes: votesDigits,
     views: winner.views ?? '12,400',
-    description: winner.description ?? t('winnersDetail.summary', { title: winner.title }),
+    description:
+      winner.description ?? t('winnersDetail.summary', { title: winner.title }),
     photographer: winner.photographer ?? 'Kasia L.',
   };
 }

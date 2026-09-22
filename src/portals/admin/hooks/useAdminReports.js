@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import {
   ADMIN_REPORTS_ROWS,
-  REPORTS_PAGE_SIZE,
   computeReportStats,
   filterReportsByStatus,
   paginateReports,
+  REPORTS_PAGE_SIZE,
   updateReportStatus,
 } from '@/portals/admin/data/adminReportsData';
 
@@ -25,7 +25,8 @@ export default function useAdminReports(
   const visibleRows = paginateReports(filteredRows, safePage, pageSize);
   const stats = computeReportStats(rows);
   const from = resultsTotal === 0 ? 0 : (safePage - 1) * pageSize + 1;
-  const to = resultsTotal === 0 ? 0 : Math.min(safePage * pageSize, resultsTotal);
+  const to =
+    resultsTotal === 0 ? 0 : Math.min(safePage * pageSize, resultsTotal);
 
   const handleStatusFilterChange = (nextFilter) => {
     setStatusFilter(nextFilter || 'all');

@@ -21,8 +21,14 @@ export const DEMO_PROFILE_STATUS = {
 
 export const STATUS_FILTERS = [
   { id: 'all', labelKey: 'adminDemoProfiles.filters.all' },
-  { id: DEMO_PROFILE_STATUS.ACTIVE, labelKey: 'adminDemoProfiles.filters.active' },
-  { id: DEMO_PROFILE_STATUS.INACTIVE, labelKey: 'adminDemoProfiles.filters.inactive' },
+  {
+    id: DEMO_PROFILE_STATUS.ACTIVE,
+    labelKey: 'adminDemoProfiles.filters.active',
+  },
+  {
+    id: DEMO_PROFILE_STATUS.INACTIVE,
+    labelKey: 'adminDemoProfiles.filters.inactive',
+  },
 ];
 
 export const STATUS_LABEL_KEYS = {
@@ -45,8 +51,9 @@ export const STATUS_STYLES = {
 
 export const DEMO_PROFILES_PAGE_SIZE = 10;
 export const DEMO_PROFILE_BIO_MAX_LENGTH = 250;
-export const DEMO_PROFILE_DEFAULT_AVATAR = '/assets/competition-details/avatar-1.jpg';
-export const DEMO_PROFILE_DEFAULT_BANNER = '/assets/home/photo-forest.jpg';
+export const DEMO_PROFILE_DEFAULT_AVATAR =
+  '/assets/competition-details/avatar-1.webp';
+export const DEMO_PROFILE_DEFAULT_BANNER = '/assets/home/photo-forest.webp';
 
 export const EMPTY_DEMO_PROFILE_FORM = {
   fullName: '',
@@ -64,8 +71,12 @@ export const EMPTY_DEMO_PROFILE_FORM = {
 
 export const computeDemoProfileStats = (profiles) => ({
   total: profiles.length,
-  active: profiles.filter((profile) => profile.status === DEMO_PROFILE_STATUS.ACTIVE).length,
-  inactive: profiles.filter((profile) => profile.status === DEMO_PROFILE_STATUS.INACTIVE).length,
+  active: profiles.filter(
+    (profile) => profile.status === DEMO_PROFILE_STATUS.ACTIVE,
+  ).length,
+  inactive: profiles.filter(
+    (profile) => profile.status === DEMO_PROFILE_STATUS.INACTIVE,
+  ).length,
 });
 
 export const DEMO_PROFILES_STAT_CARDS = [
@@ -97,8 +108,8 @@ export const DEMO_PROFILES = [
     phone: '+1 555 201 3344',
     email: 'elena@photocraft.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-forest.jpg`,
-    avatar: `${D}/photographer.jpg`,
+    banner: `${H}/photo-forest.webp`,
+    avatar: `${D}/photographer.webp`,
     aboutKey: 'adminDemoProfiles.profiles.elena.about',
     socialUrl: 'instagram.com/elenavasquez',
   },
@@ -109,8 +120,8 @@ export const DEMO_PROFILES = [
     phone: '+44 7700 900123',
     email: 'marcus@studio.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-golden.jpg`,
-    avatar: `${AV}/avatar-2.jpg`,
+    banner: `${H}/photo-golden.webp`,
+    avatar: `${AV}/avatar-2.webp`,
     aboutKey: 'adminDemoProfiles.profiles.marcus.about',
     socialUrl: 'instagram.com/marcuschen',
   },
@@ -121,8 +132,8 @@ export const DEMO_PROFILES = [
     phone: '+34 612 345 678',
     email: 'sofia@lens.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-morning.jpg`,
-    avatar: `${AV}/avatar-3.jpg`,
+    banner: `${H}/photo-morning.webp`,
+    avatar: `${AV}/avatar-3.webp`,
     aboutKey: 'adminDemoProfiles.profiles.sofia.about',
     socialUrl: 'instagram.com/sofiarod',
   },
@@ -133,8 +144,8 @@ export const DEMO_PROFILES = [
     phone: '+234 803 456 7890',
     email: 'james@frame.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-city.jpg`,
-    avatar: `${AV}/avatar-4.jpg`,
+    banner: `${H}/photo-city.webp`,
+    avatar: `${AV}/avatar-4.webp`,
     aboutKey: 'adminDemoProfiles.profiles.james.about',
     socialUrl: 'instagram.com/jamesokafor',
   },
@@ -145,8 +156,8 @@ export const DEMO_PROFILES = [
     phone: '+91 98765 43210',
     email: 'priya@capture.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-wings.jpg`,
-    avatar: `${AV}/avatar-5.jpg`,
+    banner: `${H}/photo-wings.webp`,
+    avatar: `${AV}/avatar-5.webp`,
     aboutKey: 'adminDemoProfiles.profiles.priya.about',
     socialUrl: 'instagram.com/priyasharma',
   },
@@ -157,8 +168,8 @@ export const DEMO_PROFILES = [
     phone: '+353 87 123 4567',
     email: 'liam@shot.io',
     status: DEMO_PROFILE_STATUS.INACTIVE,
-    banner: `${H}/photo-harbor.jpg`,
-    avatar: `${AV}/avatar-1.jpg`,
+    banner: `${H}/photo-harbor.webp`,
+    avatar: `${AV}/avatar-1.webp`,
     aboutKey: 'adminDemoProfiles.profiles.liam.about',
     socialUrl: 'instagram.com/liamobrien',
   },
@@ -169,8 +180,8 @@ export const DEMO_PROFILES = [
     phone: '+81 90 1234 5678',
     email: 'yuki@photo.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-tidal.jpg`,
-    avatar: `${AV}/avatar-2.jpg`,
+    banner: `${H}/photo-tidal.webp`,
+    avatar: `${AV}/avatar-2.webp`,
     aboutKey: 'adminDemoProfiles.profiles.yuki.about',
     socialUrl: 'instagram.com/yukitanaka',
   },
@@ -181,8 +192,8 @@ export const DEMO_PROFILES = [
     phone: '+234 802 987 6543',
     email: 'amara@vision.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-silent.jpg`,
-    avatar: `${AV}/avatar-3.jpg`,
+    banner: `${H}/photo-silent.webp`,
+    avatar: `${AV}/avatar-3.webp`,
     aboutKey: 'adminDemoProfiles.profiles.amara.about',
     socialUrl: 'instagram.com/amarao',
   },
@@ -193,8 +204,8 @@ export const DEMO_PROFILES = [
     phone: '+52 55 1234 5678',
     email: 'carlos@lens.io',
     status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-zodiac.jpg`,
-    avatar: `${AV}/avatar-4.jpg`,
+    banner: `${H}/photo-zodiac.webp`,
+    avatar: `${AV}/avatar-4.webp`,
     aboutKey: 'adminDemoProfiles.profiles.carlos.about',
     socialUrl: 'instagram.com/carlosm',
   },
@@ -205,8 +216,8 @@ export const DEMO_PROFILES = [
     phone: '+48 600 123 456',
     email: 'nina@foto.io',
     status: DEMO_PROFILE_STATUS.INACTIVE,
-    banner: `${H}/photo-autumn.jpg`,
-    avatar: `${AV}/avatar-5.jpg`,
+    banner: `${H}/photo-autumn.webp`,
+    avatar: `${AV}/avatar-5.webp`,
     aboutKey: 'adminDemoProfiles.profiles.nina.about',
     socialUrl: 'instagram.com/ninak',
   },
@@ -274,9 +285,11 @@ const slugifyUsername = (username) =>
 
 export const isRequiredTextValid = (value) => Boolean(value?.trim());
 
-export const isEmailValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+export const isEmailValid = (value) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
 
-export const isBioValid = (value) => String(value || '').length <= DEMO_PROFILE_BIO_MAX_LENGTH;
+export const isBioValid = (value) =>
+  String(value || '').length <= DEMO_PROFILE_BIO_MAX_LENGTH;
 
 export const normalizeUsername = (value) => {
   const trimmed = String(value || '').trim();
@@ -309,7 +322,9 @@ export const buildDemoProfileFromForm = (values) => {
     phone: values.phone.trim(),
     email: values.email.trim(),
     about: values.bio.trim(),
-    status: values.isActive ? DEMO_PROFILE_STATUS.ACTIVE : DEMO_PROFILE_STATUS.INACTIVE,
+    status: values.isActive
+      ? DEMO_PROFILE_STATUS.ACTIVE
+      : DEMO_PROFILE_STATUS.INACTIVE,
     banner: values.coverPhotoPreview || DEMO_PROFILE_DEFAULT_BANNER,
     avatar: values.profilePhotoPreview || DEMO_PROFILE_DEFAULT_AVATAR,
     socialUrl: socialLinks[0] || '',

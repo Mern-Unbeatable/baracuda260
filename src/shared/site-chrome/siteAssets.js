@@ -4,14 +4,14 @@ const A = '/assets/home';
 export const SITE_ASSET_BASE = A;
 
 export const SITE_ASSETS = {
-  logo: '/assets/logo/logo.png',
-  logoFooter: '/assets/logo/logo.png',
+  logo: '/assets/logo/logo.webp',
+  logoFooter: '/assets/logo/logo.webp',
   chevron: `${A}/chevron-down.svg`,
   mail: `${A}/icon-mail.svg`,
   ig: `${A}/icon-ig.svg`,
   fb: `${A}/icon-fb.svg`,
   x: `${A}/icon-x.svg`,
-  newsletterBg: `${A}/newsletter-bg.png`,
+  newsletterBg: `${A}/newsletter-bg.webp`,
 };
 
 /** Build a path under /assets/home */

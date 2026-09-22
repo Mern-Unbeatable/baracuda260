@@ -6,19 +6,19 @@ const A = '/assets/admin-business-link';
 
 export const ADMIN_BUSINESS_LINK_ASSETS = {
   eye: `${A}/icon-eye.svg`,
-  hero: `${A}/hero.jpg`,
+  hero: `${A}/hero.webp`,
   arrow: `${A}/icon-arrow.svg`,
   copy: `${A}/icon-copy.svg`,
   ariesWhite: `${A}/icon-aries-white.svg`,
-  photographer: `${A}/photographer.jpg`,
+  photographer: `${A}/photographer.webp`,
   curve: `${A}/curve.svg`,
   divider: `${A}/divider.svg`,
   thumbs: [
-    `${A}/thumb-1.jpg`,
-    `${A}/thumb-2.jpg`,
-    `${A}/thumb-3.jpg`,
-    `${A}/thumb-4.jpg`,
-    `${A}/thumb-5.jpg`,
+    `${A}/thumb-1.webp`,
+    `${A}/thumb-2.webp`,
+    `${A}/thumb-3.webp`,
+    `${A}/thumb-4.webp`,
+    `${A}/thumb-5.webp`,
   ],
 };
 
@@ -115,9 +115,11 @@ export const BUSINESS_LINK_DETAIL_ALBUM = {
     iconBg: slide.iconBg,
     iconOverlay: slide.iconOverlay,
     thumb:
-      ADMIN_BUSINESS_LINK_ASSETS.thumbs[index % ADMIN_BUSINESS_LINK_ASSETS.thumbs.length] ||
-      slide.thumb,
-    hero: index === 0 ? ADMIN_BUSINESS_LINK_ASSETS.hero : slide.hero || slide.thumb,
+      ADMIN_BUSINESS_LINK_ASSETS.thumbs[
+        index % ADMIN_BUSINESS_LINK_ASSETS.thumbs.length
+      ] || slide.thumb,
+    hero:
+      index === 0 ? ADMIN_BUSINESS_LINK_ASSETS.hero : slide.hero || slide.thumb,
   })),
 };
 

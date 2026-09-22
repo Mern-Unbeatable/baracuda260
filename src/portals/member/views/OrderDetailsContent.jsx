@@ -1,7 +1,3 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import {
   ArrowLeft,
   BadgeCheck,
@@ -14,16 +10,24 @@ import {
   ShieldCheck,
   X,
 } from 'lucide-react';
-import { ROUTES } from '@/shared/config';
+import React, { memo } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import {
+  getOrderById,
   ORDER_STATUS,
   ORDER_STATUS_LABEL_KEYS,
   ORDER_STATUS_STYLES,
-  getOrderById,
 } from '@/portals/member/data/myOrdersData';
+import { ROUTES } from '@/shared/config';
 
 const SectionLabel = memo(({ children }) => (
-  <h2 className="text-[11px] font-semibold tracking-[0.16em] text-[#98a0b3]">{children}</h2>
+  <h2 className="text-[11px] font-semibold tracking-[0.16em] text-[#98a0b3]">
+    {children}
+  </h2>
 ));
 SectionLabel.displayName = 'SectionLabel';
 
@@ -76,10 +80,18 @@ const ProgressStep = memo(({ state, title, detail, meta, isLast }) => {
 
       <div className="min-w-0 flex-1 pt-0.5">
         <div className="flex items-start justify-between gap-3">
-          <p className={`text-[14px] font-semibold leading-5 ${titleClass}`}>{title}</p>
-          <p className={`shrink-0 text-[12px] font-medium leading-5 ${metaClass}`}>{meta}</p>
+          <p className={`text-[14px] font-semibold leading-5 ${titleClass}`}>
+            {title}
+          </p>
+          <p
+            className={`shrink-0 text-[12px] font-medium leading-5 ${metaClass}`}
+          >
+            {meta}
+          </p>
         </div>
-        <p className={`mt-0.5 text-[13px] leading-5 ${detailClass}`}>{detail}</p>
+        <p className={`mt-0.5 text-[13px] leading-5 ${detailClass}`}>
+          {detail}
+        </p>
       </div>
     </div>
   );
@@ -117,30 +129,38 @@ const OrderDetailsContent = memo(() => {
           {t('myOrders.detail.back')}
         </Link>
         <div className="flex items-center gap-0.5">
-          <button
+          <Button
+            unstyled
             type="button"
             onClick={handleInvoice}
-            aria-label={t('myOrders.invoiceAria', { number: order.orderNumber })}
+            aria-label={t('myOrders.invoiceAria', {
+              number: order.orderNumber,
+            })}
             className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#111827]"
           >
             <FileText size={18} aria-hidden="true" />
-          </button>
-          <button
+          </Button>
+          <Button
+            unstyled
             type="button"
             onClick={handleClose}
             aria-label={t('myOrders.detail.close')}
             className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#111827]"
           >
             <X size={18} aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       </div>
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0">
           <h1 className="text-[22px] font-bold leading-7 tracking-[-0.3px] text-[#111827] sm:text-[26px] sm:leading-8">
-            <span className="font-semibold text-[#9ca3af]">{t('myOrders.detail.titlePrefix')}</span>{' '}
-            <span>{t('myOrders.detail.titleOrder', { number: order.orderNumber })}</span>
+            <span className="font-semibold text-[#9ca3af]">
+              {t('myOrders.detail.titlePrefix')}
+            </span>{' '}
+            <span>
+              {t('myOrders.detail.titleOrder', { number: order.orderNumber })}
+            </span>
           </h1>
           <p className="mt-1.5 text-[13px] text-[#6b7280]">
             {t('myOrders.detail.placedAt', { date: order.placedAt })}
@@ -149,7 +169,10 @@ const OrderDetailsContent = memo(() => {
         <span
           className={`inline-flex h-7 shrink-0 items-center gap-1.5 self-start rounded-full px-3 text-[12px] font-semibold ${statusStyle.badge}`}
         >
-          <span className={`size-1.5 rounded-full ${statusStyle.dot}`} aria-hidden="true" />
+          <span
+            className={`size-1.5 rounded-full ${statusStyle.dot}`}
+            aria-hidden="true"
+          />
           {t(ORDER_STATUS_LABEL_KEYS[order.status])}
         </span>
       </header>
@@ -214,13 +237,15 @@ const OrderDetailsContent = memo(() => {
         <SectionLabel>{t('myOrders.detail.purchasedProduct')}</SectionLabel>
         <div className="mt-4 flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-start gap-3.5">
-            <img
+            <Image
               src={order.image}
               alt={order.productTitle}
               className="size-16 shrink-0 rounded-[10px] object-cover sm:size-18"
             />
             <div className="min-w-0">
-              <p className="text-[15px] font-bold leading-5 text-[#111827]">{order.productTitle}</p>
+              <p className="text-[15px] font-bold leading-5 text-[#111827]">
+                {order.productTitle}
+              </p>
               <p className="mt-1 text-[13px] text-[#6b7280]">
                 {t('myOrders.soldBy', { store: order.storeName })}
               </p>
@@ -232,7 +257,9 @@ const OrderDetailsContent = memo(() => {
               </p>
             </div>
           </div>
-          <p className="shrink-0 pt-0.5 text-[16px] font-bold text-[#111827]">{order.productSubtotal}</p>
+          <p className="shrink-0 pt-0.5 text-[16px] font-bold text-[#111827]">
+            {order.productSubtotal}
+          </p>
         </div>
       </section>
 
@@ -252,26 +279,32 @@ const OrderDetailsContent = memo(() => {
                   {t('myOrders.detail.verifiedCreator')}
                 </span>
               </div>
-              <p className="mt-1 text-[15px] font-bold leading-5 text-[#111827]">{order.storeName}</p>
-              <p className="mt-0.5 text-[13px] text-[#6b7280]">{order.sellerName}</p>
+              <p className="mt-1 text-[15px] font-bold leading-5 text-[#111827]">
+                {order.storeName}
+              </p>
+              <p className="mt-0.5 text-[13px] text-[#6b7280]">
+                {order.sellerName}
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap gap-2.5">
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={() => toast(t('myOrders.detail.visitStoreSoon'))}
               className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#e5e7eb] bg-white px-4 text-[13px] font-semibold text-[#374151] transition hover:bg-[#f9fafb]"
             >
               {t('myOrders.detail.visitStore')}
-            </button>
-            <button
+            </Button>
+            <Button
+              unstyled
               type="button"
               onClick={() => toast(t('myOrders.detail.messageSoon'))}
               className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-[10px] border border-[#86d4b0] bg-white px-4 text-[13px] font-semibold text-[#1f9d6a] transition hover:bg-[#f3fbf7]"
             >
               <MessageSquare size={14} aria-hidden="true" />
               {t('myOrders.detail.message')}
-            </button>
+            </Button>
           </div>
         </div>
       </section>
@@ -304,8 +337,14 @@ const OrderDetailsContent = memo(() => {
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[#eef0f4] pt-3.5 text-[12px] text-[#6b7280]">
           <span className="inline-flex items-center gap-2">
-            <CreditCard size={15} className="text-[#9ca3af]" aria-hidden="true" />
-            {t('myOrders.detail.paymentMethod', { method: order.paymentMethod })}
+            <CreditCard
+              size={15}
+              className="text-[#9ca3af]"
+              aria-hidden="true"
+            />
+            {t('myOrders.detail.paymentMethod', {
+              method: order.paymentMethod,
+            })}
           </span>
           <span>{order.paymentDate}</span>
         </div>
@@ -315,12 +354,18 @@ const OrderDetailsContent = memo(() => {
         <SectionLabel>{t('myOrders.detail.shippingInfo')}</SectionLabel>
         <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div className="flex items-start gap-2.5">
-            <MapPin size={16} className="mt-0.5 shrink-0 text-[#9ca3af]" aria-hidden="true" />
+            <MapPin
+              size={16}
+              className="mt-0.5 shrink-0 text-[#9ca3af]"
+              aria-hidden="true"
+            />
             <div>
               <p className="text-[13px] font-semibold text-[#111827]">
                 {t('myOrders.detail.shippingAddress')}
               </p>
-              <p className="mt-1 text-[13px] font-medium text-[#374151]">{order.shippingName}</p>
+              <p className="mt-1 text-[13px] font-medium text-[#374151]">
+                {order.shippingName}
+              </p>
               {order.shippingLines.map((line) => (
                 <p key={line} className="text-[13px] leading-5 text-[#6b7280]">
                   {line}
@@ -329,8 +374,12 @@ const OrderDetailsContent = memo(() => {
             </div>
           </div>
           <div className="sm:text-left">
-            <p className="text-[13px] text-[#9ca3af]">{t('myOrders.detail.estimatedDelivery')}</p>
-            <p className="mt-1.5 text-[15px] font-bold text-[#1f9d6a]">{order.deliveryEstimate}</p>
+            <p className="text-[13px] text-[#9ca3af]">
+              {t('myOrders.detail.estimatedDelivery')}
+            </p>
+            <p className="mt-1.5 text-[15px] font-bold text-[#1f9d6a]">
+              {order.deliveryEstimate}
+            </p>
           </div>
         </div>
       </section>

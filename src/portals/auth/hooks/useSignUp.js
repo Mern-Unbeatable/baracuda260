@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { loginSuccess } from '@/app/store/slices/authSlice';
-import { envVar } from '@/shared/config/env';
-import { ROUTES } from '@/shared/config';
-import { httpMethods } from '@/shared/lib/httpMethods';
-import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
 import { EMAIL_REGEX } from '@/portals/auth/data/signupAssets';
+import { ROUTES } from '@/shared/config';
+import { envVar } from '@/shared/config/env';
+import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
+import { httpMethods } from '@/shared/lib/httpMethods';
 
 export function useSignUp() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const [globalError, setGlobalError] = useState(null);
 
   const {
@@ -60,14 +60,22 @@ export function useSignUp() {
         return;
       }
 
-      const { data: responseData, error } = await httpMethods.post(API_ENDPOINTS.AUTH.REGISTER, payload);
+      const { data: responseData, error } = await httpMethods.post(
+        API_ENDPOINTS.AUTH.REGISTER,
+        payload,
+      );
 
       if (error) {
-        setGlobalError(error?.data?.message ?? error?.message ?? t('signup.registerFailed'));
+        setGlobalError(
+          error?.data?.message ?? error?.message ?? t('signup.registerFailed'),
+        );
         return;
       }
 
-      const token = responseData?.token ?? responseData?.data?.token ?? responseData?.accessToken;
+      const token =
+        responseData?.token ??
+        responseData?.data?.token ??
+        responseData?.accessToken;
       const user = responseData?.user ??
         responseData?.data?.user ?? {
           email: payload.email,
@@ -77,7 +85,7 @@ export function useSignUp() {
       dispatch(loginSuccess({ user, token }));
       navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
     } catch (_err) {
-        setGlobalError(t('signup.registerFailed'));
+      setGlobalError(t('signup.registerFailed'));
     }
   };
 

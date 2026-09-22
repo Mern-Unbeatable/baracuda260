@@ -1,6 +1,12 @@
-import { useTranslation } from 'react-i18next';
-import React, { memo, useEffect, useRef } from 'react';
 import { MoreVertical } from 'lucide-react';
+import React, { memo, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import SuspendUserModal from '@/portals/admin/components/admin-users/SuspendUserModal';
 import {
   ADMIN_USERS_ASSETS,
   CHEVRON_ICON_SIZE,
@@ -9,10 +15,6 @@ import {
   USER_STATUS,
 } from '@/portals/admin/data/adminUsersData';
 import useAdminUsers from '@/portals/admin/hooks/useAdminUsers';
-import SuspendUserModal from '@/portals/admin/components/admin-users/SuspendUserModal';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
-import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
-import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
 
 /**
  * @param {{ status: string }} props
@@ -55,86 +57,96 @@ StatusBadge.displayName = 'StatusBadge';
  *   onSelect: (filterId: string) => void,
  * }} props
  */
-const StatusSortSelect = memo(({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
-  const { t } = useTranslation();
-  const rootRef = useRef(null);
-  const activeFilter = STATUS_FILTERS.find((filter) => filter.id === statusFilter) || STATUS_FILTERS[0];
+const StatusSortSelect = memo(
+  ({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
+    const { t } = useTranslation();
+    const rootRef = useRef(null);
+    const activeFilter =
+      STATUS_FILTERS.find((filter) => filter.id === statusFilter) ||
+      STATUS_FILTERS[0];
 
-  useEffect(() => {
-    if (!sortOpen) return undefined;
+    useEffect(() => {
+      if (!sortOpen) return undefined;
 
-    const handlePointerDown = (event) => {
-      if (rootRef.current && !rootRef.current.contains(event.target)) {
-        onClose();
-      }
-    };
+      const handlePointerDown = (event) => {
+        if (rootRef.current && !rootRef.current.contains(event.target)) {
+          onClose();
+        }
+      };
 
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
+      const handleKeyDown = (event) => {
+        if (event.key === 'Escape') onClose();
+      };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [sortOpen, onClose]);
+      document.addEventListener('mousedown', handlePointerDown);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('mousedown', handlePointerDown);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [sortOpen, onClose]);
 
-  return (
-    <div className="flex flex-wrap items-center gap-5" ref={rootRef}>
-      <p className="text-[14px] leading-normal text-[#373737]">{t('adminUsers.sortBy')}</p>
-      <div className="relative">
-        <button
-          type="button"
-          aria-expanded={sortOpen}
-          aria-haspopup="listbox"
-          aria-label={t('adminUsers.filters.aria')}
-          onClick={onToggle}
-          className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-lg border border-[#e4e4e4] bg-white p-3 text-left"
-        >
-          <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
-            {t(activeFilter.labelKey)}
-          </span>
-          <img
-            src={ADMIN_USERS_ASSETS.chevronDown}
-            alt=""
-            width={CHEVRON_ICON_SIZE}
-            height={CHEVRON_ICON_SIZE}
-            className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
-          />
-        </button>
-
-        {sortOpen ? (
-          <ul
-            role="listbox"
+    return (
+      <div className="flex flex-wrap items-center gap-5" ref={rootRef}>
+        <p className="text-[14px] leading-normal text-[#373737]">
+          {t('adminUsers.sortBy')}
+        </p>
+        <div className="relative">
+          <Button
+            unstyled
+            type="button"
+            aria-expanded={sortOpen}
+            aria-haspopup="listbox"
             aria-label={t('adminUsers.filters.aria')}
-            className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-lg"
+            onClick={onToggle}
+            className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-lg border border-[#e4e4e4] bg-white p-3 text-left"
           >
-            {STATUS_FILTERS.map((filter) => {
-              const selected = filter.id === statusFilter;
-              return (
-                <li key={filter.id}>
-                  <button
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    onClick={() => onSelect(filter.id)}
-                    className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
-                      selected ? 'bg-[#f6fbff] text-[#4048cd]' : 'text-[#373737]'
-                    }`}
-                  >
-                    {t(filter.labelKey)}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        ) : null}
+            <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
+              {t(activeFilter.labelKey)}
+            </span>
+            <Image
+              src={ADMIN_USERS_ASSETS.chevronDown}
+              alt=""
+              width={CHEVRON_ICON_SIZE}
+              height={CHEVRON_ICON_SIZE}
+              className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
+            />
+          </Button>
+
+          {sortOpen ? (
+            <ul
+              role="listbox"
+              aria-label={t('adminUsers.filters.aria')}
+              className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-lg"
+            >
+              {STATUS_FILTERS.map((filter) => {
+                const selected = filter.id === statusFilter;
+                return (
+                  <li key={filter.id}>
+                    <Button
+                      unstyled
+                      type="button"
+                      role="option"
+                      aria-selected={selected}
+                      onClick={() => onSelect(filter.id)}
+                      className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
+                        selected
+                          ? 'bg-[#f6fbff] text-[#4048cd]'
+                          : 'text-[#373737]'
+                      }`}
+                    >
+                      {t(filter.labelKey)}
+                    </Button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 StatusSortSelect.displayName = 'StatusSortSelect';
 
@@ -152,61 +164,69 @@ StatusSortSelect.displayName = 'StatusSortSelect';
  *   onSuspend: () => void,
  * }} props
  */
-const UserActionMenu = memo(({ user, isOpen, onToggle, onClose, onActivate, onSuspend }) => {
-  const { t } = useTranslation();
-  const buttonWrapRef = useRef(null);
-  const buttonRef = useRef(null);
-  const isActive = user.status === USER_STATUS.ACTIVE;
-  const menuLabel = t('adminUsers.actions.menu', { name: t(user.nameKey) });
+const UserActionMenu = memo(
+  ({ user, isOpen, onToggle, onClose, onActivate, onSuspend }) => {
+    const { t } = useTranslation();
+    const buttonWrapRef = useRef(null);
+    const buttonRef = useRef(null);
+    const isActive = user.status === USER_STATUS.ACTIVE;
+    const menuLabel = t('adminUsers.actions.menu', { name: t(user.nameKey) });
 
-  return (
-    <div className="relative inline-flex" ref={buttonWrapRef}>
-      <button
-        ref={buttonRef}
-        type="button"
-        aria-expanded={isOpen}
-        aria-haspopup="menu"
-        aria-label={menuLabel}
-        onClick={onToggle}
-        className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#373737] transition hover:bg-[#f6fbff] ${
-          isOpen ? 'bg-[#f6fbff]' : ''
-        }`}
-      >
-        <MoreVertical size={20} aria-hidden="true" />
-      </button>
+    return (
+      <div className="relative inline-flex" ref={buttonWrapRef}>
+        <Button
+          unstyled
+          ref={buttonRef}
+          type="button"
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
+          aria-label={menuLabel}
+          onClick={onToggle}
+          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#373737] transition hover:bg-[#f6fbff] ${
+            isOpen ? 'bg-[#f6fbff]' : ''
+          }`}
+        >
+          <MoreVertical size={20} aria-hidden="true" />
+        </Button>
 
-      <PortalDropdown
-        open={isOpen}
-        onClose={onClose}
-        buttonRef={buttonRef}
-        buttonWrapRef={buttonWrapRef}
-        width={140}
-        aria-label={menuLabel}
-        className="overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
-      >
-        <span className="block h-0.75 w-full bg-[#4048cd]" aria-hidden="true" />
-        <button
-          type="button"
-          role="menuitem"
-          disabled={isActive}
-          onClick={onActivate}
-          className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
+        <PortalDropdown
+          open={isOpen}
+          onClose={onClose}
+          buttonRef={buttonRef}
+          buttonWrapRef={buttonWrapRef}
+          width={140}
+          aria-label={menuLabel}
+          className="overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
         >
-          {t('adminUsers.actions.active')}
-        </button>
-        <button
-          type="button"
-          role="menuitem"
-          disabled={!isActive}
-          onClick={onSuspend}
-          className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
-        >
-          {t('adminUsers.actions.suspendOption')}
-        </button>
-      </PortalDropdown>
-    </div>
-  );
-});
+          <span
+            className="block h-0.75 w-full bg-[#4048cd]"
+            aria-hidden="true"
+          />
+          <Button
+            unstyled
+            type="button"
+            role="menuitem"
+            disabled={isActive}
+            onClick={onActivate}
+            className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
+          >
+            {t('adminUsers.actions.active')}
+          </Button>
+          <Button
+            unstyled
+            type="button"
+            role="menuitem"
+            disabled={!isActive}
+            onClick={onSuspend}
+            className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
+          >
+            {t('adminUsers.actions.suspendOption')}
+          </Button>
+        </PortalDropdown>
+      </div>
+    );
+  },
+);
 
 UserActionMenu.displayName = 'UserActionMenu';
 
@@ -227,39 +247,48 @@ UserActionMenu.displayName = 'UserActionMenu';
  *   onCloseActionMenu: () => void,
  * }} props
  */
-const UserTableRow = memo(({ user, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => {
-  const { t } = useTranslation();
+const UserTableRow = memo(
+  ({
+    user,
+    onActivate,
+    onSuspend,
+    openActionMenuId,
+    onToggleActionMenu,
+    onCloseActionMenu,
+  }) => {
+    const { t } = useTranslation();
 
-  return (
-    <tr className="border-b border-[#e4e4e4]">
-      <td className="min-w-40 px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">
-        {t(user.nameKey)}
-      </td>
-      <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 break-all text-[#0c0c0c]">
-        {user.email}
-      </td>
-      <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
-        {user.phone}
-      </td>
-      <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
-        {user.registeredDate}
-      </td>
-      <td className="min-w-45 px-6.5 py-6">
-        <StatusBadge status={user.status} />
-      </td>
-      <td className="min-w-25 px-6.5 py-6">
-        <UserActionMenu
-          user={user}
-          isOpen={openActionMenuId === user.id}
-          onToggle={() => onToggleActionMenu(user.id)}
-          onClose={onCloseActionMenu}
-          onActivate={() => onActivate(user.id)}
-          onSuspend={() => onSuspend(user.id)}
-        />
-      </td>
-    </tr>
-  );
-});
+    return (
+      <tr className="border-b border-[#e4e4e4]">
+        <td className="min-w-40 px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">
+          {t(user.nameKey)}
+        </td>
+        <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 break-all text-[#0c0c0c]">
+          {user.email}
+        </td>
+        <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
+          {user.phone}
+        </td>
+        <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
+          {user.registeredDate}
+        </td>
+        <td className="min-w-45 px-6.5 py-6">
+          <StatusBadge status={user.status} />
+        </td>
+        <td className="min-w-25 px-6.5 py-6">
+          <UserActionMenu
+            user={user}
+            isOpen={openActionMenuId === user.id}
+            onToggle={() => onToggleActionMenu(user.id)}
+            onClose={onCloseActionMenu}
+            onActivate={() => onActivate(user.id)}
+            onSuspend={() => onSuspend(user.id)}
+          />
+        </td>
+      </tr>
+    );
+  },
+);
 
 UserTableRow.displayName = 'UserTableRow';
 
@@ -281,45 +310,66 @@ UserTableRow.displayName = 'UserTableRow';
  *   onCloseActionMenu: () => void,
  * }} props
  */
-const UserMobileCard = memo(({ user, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => {
-  const { t } = useTranslation();
+const UserMobileCard = memo(
+  ({
+    user,
+    onActivate,
+    onSuspend,
+    openActionMenuId,
+    onToggleActionMenu,
+    onCloseActionMenu,
+  }) => {
+    const { t } = useTranslation();
 
-  return (
-    <article className="flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">{t(user.nameKey)}</p>
-          <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">{user.email}</p>
+    return (
+      <article className="flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
+              {t(user.nameKey)}
+            </p>
+            <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">
+              {user.email}
+            </p>
+          </div>
+          <UserActionMenu
+            user={user}
+            isOpen={openActionMenuId === user.id}
+            onToggle={() => onToggleActionMenu(user.id)}
+            onClose={onCloseActionMenu}
+            onActivate={() => onActivate(user.id)}
+            onSuspend={() => onSuspend(user.id)}
+          />
         </div>
-        <UserActionMenu
-          user={user}
-          isOpen={openActionMenuId === user.id}
-          onToggle={() => onToggleActionMenu(user.id)}
-          onClose={onCloseActionMenu}
-          onActivate={() => onActivate(user.id)}
-          onSuspend={() => onSuspend(user.id)}
-        />
-      </div>
 
-      <div className="grid grid-cols-1 gap-2">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-[13px] leading-5 text-[#7f8ba1]">{t('adminUsers.columns.phone')}</span>
-          <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">{user.phone}</span>
+        <div className="grid grid-cols-1 gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+              {t('adminUsers.columns.phone')}
+            </span>
+            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+              {user.phone}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+              {t('adminUsers.columns.registeredDate')}
+            </span>
+            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+              {user.registeredDate}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+              {t('adminUsers.columns.status')}
+            </span>
+            <StatusBadge status={user.status} />
+          </div>
         </div>
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-[13px] leading-5 text-[#7f8ba1]">
-            {t('adminUsers.columns.registeredDate')}
-          </span>
-          <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">{user.registeredDate}</span>
-        </div>
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-[13px] leading-5 text-[#7f8ba1]">{t('adminUsers.columns.status')}</span>
-          <StatusBadge status={user.status} />
-        </div>
-      </div>
-    </article>
-  );
-});
+      </article>
+    );
+  },
+);
 
 UserMobileCard.displayName = 'UserMobileCard';
 
@@ -333,21 +383,30 @@ UserMobileCard.displayName = 'UserMobileCard';
  *   onCloseActionMenu: () => void,
  * }} props
  */
-const UsersMobileCards = memo(({ users, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => (
-  <div className="flex flex-col md:hidden" data-testid="users-mobile-cards">
-    {users.map((user) => (
-      <UserMobileCard
-        key={user.id}
-        user={user}
-        onActivate={onActivate}
-        onSuspend={onSuspend}
-        openActionMenuId={openActionMenuId}
-        onToggleActionMenu={onToggleActionMenu}
-        onCloseActionMenu={onCloseActionMenu}
-      />
-    ))}
-  </div>
-));
+const UsersMobileCards = memo(
+  ({
+    users,
+    onActivate,
+    onSuspend,
+    openActionMenuId,
+    onToggleActionMenu,
+    onCloseActionMenu,
+  }) => (
+    <div className="flex flex-col md:hidden" data-testid="users-mobile-cards">
+      {users.map((user) => (
+        <UserMobileCard
+          key={user.id}
+          user={user}
+          onActivate={onActivate}
+          onSuspend={onSuspend}
+          openActionMenuId={openActionMenuId}
+          onToggleActionMenu={onToggleActionMenu}
+          onCloseActionMenu={onCloseActionMenu}
+        />
+      ))}
+    </div>
+  ),
+);
 
 UsersMobileCards.displayName = 'UsersMobileCards';
 
@@ -361,51 +420,60 @@ UsersMobileCards.displayName = 'UsersMobileCards';
  *   onCloseActionMenu: () => void,
  * }} props
  */
-const UsersTable = memo(({ users, onActivate, onSuspend, openActionMenuId, onToggleActionMenu, onCloseActionMenu }) => {
-  const { t } = useTranslation();
+const UsersTable = memo(
+  ({
+    users,
+    onActivate,
+    onSuspend,
+    openActionMenuId,
+    onToggleActionMenu,
+    onCloseActionMenu,
+  }) => {
+    const { t } = useTranslation();
 
-  return (
-    <div className="hidden w-full overflow-x-auto rounded-xl bg-white md:block">
-      <table className="w-full min-w-245 border-collapse text-left">
-        <thead>
-          <tr className="bg-[#f6fbff]">
-            <th className="rounded-tl-xl px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-              {t('adminUsers.columns.name')}
-            </th>
-            <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-              {t('adminUsers.columns.email')}
-            </th>
-            <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-              {t('adminUsers.columns.phone')}
-            </th>
-            <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-              {t('adminUsers.columns.registeredDate')}
-            </th>
-            <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-              {t('adminUsers.columns.status')}
-            </th>
-            <th className="rounded-tr-xl px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-              {t('adminUsers.columns.action')}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <UserTableRow
-              key={user.id}
-              user={user}
-              onActivate={onActivate}
-              onSuspend={onSuspend}
-              openActionMenuId={openActionMenuId}
-              onToggleActionMenu={onToggleActionMenu}
-              onCloseActionMenu={onCloseActionMenu}
-            />
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-});
+    return (
+      <div className="hidden w-full overflow-x-auto rounded-xl bg-white md:block">
+        <table className="w-full min-w-245 border-collapse text-left">
+          <thead>
+            <tr className="bg-[#f6fbff]">
+              <th className="rounded-tl-xl px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
+                {t('adminUsers.columns.name')}
+              </th>
+              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
+                {t('adminUsers.columns.email')}
+              </th>
+              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
+                {t('adminUsers.columns.phone')}
+              </th>
+              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
+                {t('adminUsers.columns.registeredDate')}
+              </th>
+              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
+                {t('adminUsers.columns.status')}
+              </th>
+              <th className="rounded-tr-xl px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
+                {t('adminUsers.columns.action')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <UserTableRow
+                key={user.id}
+                user={user}
+                onActivate={onActivate}
+                onSuspend={onSuspend}
+                openActionMenuId={openActionMenuId}
+                onToggleActionMenu={onToggleActionMenu}
+                onCloseActionMenu={onCloseActionMenu}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  },
+);
 
 UsersTable.displayName = 'UsersTable';
 
@@ -478,7 +546,9 @@ const AdminUsersContent = memo(() => {
             />
           </>
         ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">{t('adminUsers.empty')}</p>
+          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+            {t('adminUsers.empty')}
+          </p>
         )}
 
         <AdminPagination

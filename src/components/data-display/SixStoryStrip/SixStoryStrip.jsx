@@ -1,4 +1,6 @@
 import React, { memo } from 'react';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 
 const SixStoryStrip = memo(({ slides, activeIndex, onSelect, stripAccent }) => {
   const blueAccent = stripAccent === 'blue';
@@ -8,7 +10,10 @@ const SixStoryStrip = memo(({ slides, activeIndex, onSelect, stripAccent }) => {
       <div className="flex min-w-245 flex-col gap-2.5 lg:min-w-0">
         <div className="grid grid-cols-6 gap-3 xl:gap-5">
           {slides.map((slide) => (
-            <div key={slide.id} className="flex items-center justify-between gap-1">
+            <div
+              key={slide.id}
+              className="flex items-center justify-between gap-1"
+            >
               <div className="flex min-w-0 items-center gap-1.5 sm:gap-2.5">
                 <span
                   className={
@@ -19,7 +24,7 @@ const SixStoryStrip = memo(({ slides, activeIndex, onSelect, stripAccent }) => {
                       : 'inline-flex shrink-0 items-end rounded bg-[#ee1c25] px-1.5 py-1 sm:px-2.5 sm:py-1.25'
                   }
                 >
-                  <img
+                  <Image
                     src={slide.icon}
                     alt=""
                     width={35}
@@ -27,7 +32,9 @@ const SixStoryStrip = memo(({ slides, activeIndex, onSelect, stripAccent }) => {
                     className={
                       blueAccent
                         ? `object-contain ${
-                            slide.iconBoxed ? 'h-4 w-4 sm:h-5 sm:w-5' : 'h-full w-full'
+                            slide.iconBoxed
+                              ? 'h-4 w-4 sm:h-5 sm:w-5'
+                              : 'h-full w-full'
                           }`
                         : 'h-4 w-4.5 object-contain sm:h-5.25 sm:w-6'
                     }
@@ -50,7 +57,8 @@ const SixStoryStrip = memo(({ slides, activeIndex, onSelect, stripAccent }) => {
 
         <div className="grid grid-cols-6 gap-3 xl:gap-5">
           {slides.map((slide, index) => (
-            <button
+            <Button
+              unstyled
               key={`${slide.id}-thumb`}
               type="button"
               onClick={() => onSelect(index)}
@@ -62,14 +70,14 @@ const SixStoryStrip = memo(({ slides, activeIndex, onSelect, stripAccent }) => {
                   : 'border border-transparent'
               }`}
             >
-              <img
+              <Image
                 src={slide.thumb}
                 alt={slide.sign}
                 width={240}
                 height={120}
                 className="h-full w-full object-cover"
               />
-            </button>
+            </Button>
           ))}
         </div>
       </div>

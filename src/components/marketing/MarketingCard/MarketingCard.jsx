@@ -11,9 +11,17 @@ const VARIANT = {
 };
 
 const MarketingCard = memo(
-  ({ as: Tag = 'article', variant = 'default', className = '', children, ...rest }) => (
+  ({
+    as: Tag = 'article',
+    variant = 'default',
+    className = '',
+    children,
+    ...rest
+  }) => (
     <Tag
-      className={[VARIANT[variant] ?? VARIANT.default, className].filter(Boolean).join(' ')}
+      className={[VARIANT[variant] ?? VARIANT.default, className]
+        .filter(Boolean)
+        .join(' ')}
       {...rest}
     >
       {children}

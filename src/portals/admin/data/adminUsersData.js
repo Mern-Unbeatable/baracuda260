@@ -33,7 +33,8 @@ export const CLOSE_ICON_SIZE = 18;
 /**
  * @param {string} reason
  */
-export const isSuspendReasonValid = (reason) => Boolean(String(reason || '').trim());
+export const isSuspendReasonValid = (reason) =>
+  Boolean(String(reason || '').trim());
 
 export const ADMIN_USERS = [
   {

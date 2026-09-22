@@ -71,7 +71,10 @@ export const TYPE_LABEL_KEYS = {
 
 export const TYPE_STYLES = {
   [ANNOUNCEMENT_TYPE.WINNER]: { bg: 'bg-[#fff7ed]', text: 'text-[#c2410c]' },
-  [ANNOUNCEMENT_TYPE.COMPETITION]: { bg: 'bg-[#f5f3ff]', text: 'text-[#7c3aed]' },
+  [ANNOUNCEMENT_TYPE.COMPETITION]: {
+    bg: 'bg-[#f5f3ff]',
+    text: 'text-[#7c3aed]',
+  },
   [ANNOUNCEMENT_TYPE.PROMOTION]: { bg: 'bg-[#fdf2f8]', text: 'text-[#db2777]' },
   [ANNOUNCEMENT_TYPE.GENERAL]: { bg: 'bg-[#eff6ff]', text: 'text-[#2563eb]' },
   [ANNOUNCEMENT_TYPE.IMPORTANT]: { bg: 'bg-[#fff7ed]', text: 'text-[#ea580c]' },
@@ -84,9 +87,21 @@ export const PRIORITY_LABEL_KEYS = {
 };
 
 export const PRIORITY_DOT_STYLES = {
-  [ANNOUNCEMENT_PRIORITY.HIGH]: ['bg-[#ef4444]', 'bg-[#ef4444]', 'bg-[#ef4444]'],
-  [ANNOUNCEMENT_PRIORITY.MEDIUM]: ['bg-[#f97316]', 'bg-[#f97316]', 'bg-transparent border border-[#d1d5db]'],
-  [ANNOUNCEMENT_PRIORITY.LOW]: ['bg-[#d1d5db]', 'bg-transparent border border-[#d1d5db]', 'bg-transparent border border-[#d1d5db]'],
+  [ANNOUNCEMENT_PRIORITY.HIGH]: [
+    'bg-[#ef4444]',
+    'bg-[#ef4444]',
+    'bg-[#ef4444]',
+  ],
+  [ANNOUNCEMENT_PRIORITY.MEDIUM]: [
+    'bg-[#f97316]',
+    'bg-[#f97316]',
+    'bg-transparent border border-[#d1d5db]',
+  ],
+  [ANNOUNCEMENT_PRIORITY.LOW]: [
+    'bg-[#d1d5db]',
+    'bg-transparent border border-[#d1d5db]',
+    'bg-transparent border border-[#d1d5db]',
+  ],
 };
 
 export const ANNOUNCEMENT_STAT_CARDS = [
@@ -130,12 +145,28 @@ export const ANNOUNCEMENT_STAT_CARDS = [
 
 export const ACTION_MENU_OPTIONS = [
   { id: 'edit', labelKey: 'adminAnnouncements.actions.edit' },
-  { id: ANNOUNCEMENT_STATUS.ACTIVE, labelKey: 'adminAnnouncements.actions.setActive' },
-  { id: ANNOUNCEMENT_STATUS.INACTIVE, labelKey: 'adminAnnouncements.actions.setInactive' },
+  {
+    id: ANNOUNCEMENT_STATUS.ACTIVE,
+    labelKey: 'adminAnnouncements.actions.setActive',
+  },
+  {
+    id: ANNOUNCEMENT_STATUS.INACTIVE,
+    labelKey: 'adminAnnouncements.actions.setInactive',
+  },
   { id: 'delete', labelKey: 'adminAnnouncements.actions.delete' },
 ];
 
-const buildRow = (id, code, emoji, titleKey, type, startKey, endKey, priority, status) => ({
+const buildRow = (
+  id,
+  code,
+  emoji,
+  titleKey,
+  type,
+  startKey,
+  endKey,
+  priority,
+  status,
+) => ({
   id,
   code,
   emoji,
@@ -420,12 +451,16 @@ export const paginateAnnouncements = (rows, page, pageSize) => {
   return rows.slice(start, start + pageSize);
 };
 
-export const getAnnouncementPageNumbers = (page, totalPages, windowSize = ANNOUNCEMENTS_PAGE_CHROME) => {
+export const getAnnouncementPageNumbers = (
+  page,
+  totalPages,
+  windowSize = ANNOUNCEMENTS_PAGE_CHROME,
+) => {
   const safeTotal = Math.max(1, totalPages);
   const safePage = Math.min(Math.max(1, page), safeTotal);
   const half = Math.floor(windowSize / 2);
   let start = Math.max(1, safePage - half);
-  let end = Math.min(safeTotal, start + windowSize - 1);
+  const end = Math.min(safeTotal, start + windowSize - 1);
   start = Math.max(1, end - windowSize + 1);
   const pages = [];
   for (let n = start; n <= end; n += 1) pages.push(n);
@@ -453,24 +488,48 @@ export const ANNOUNCEMENT_EMOJI_OPTIONS = [
 ];
 
 export const ANNOUNCEMENT_TYPE_OPTIONS = [
-  { id: ANNOUNCEMENT_TYPE.GENERAL, labelKey: 'adminAnnouncements.types.general' },
+  {
+    id: ANNOUNCEMENT_TYPE.GENERAL,
+    labelKey: 'adminAnnouncements.types.general',
+  },
   { id: ANNOUNCEMENT_TYPE.WINNER, labelKey: 'adminAnnouncements.types.winner' },
-  { id: ANNOUNCEMENT_TYPE.COMPETITION, labelKey: 'adminAnnouncements.types.competition' },
-  { id: ANNOUNCEMENT_TYPE.PROMOTION, labelKey: 'adminAnnouncements.types.promotion' },
-  { id: ANNOUNCEMENT_TYPE.IMPORTANT, labelKey: 'adminAnnouncements.types.important' },
+  {
+    id: ANNOUNCEMENT_TYPE.COMPETITION,
+    labelKey: 'adminAnnouncements.types.competition',
+  },
+  {
+    id: ANNOUNCEMENT_TYPE.PROMOTION,
+    labelKey: 'adminAnnouncements.types.promotion',
+  },
+  {
+    id: ANNOUNCEMENT_TYPE.IMPORTANT,
+    labelKey: 'adminAnnouncements.types.important',
+  },
 ];
 
 export const ANNOUNCEMENT_LINK_OPTIONS = [
   { id: 'none', labelKey: 'adminAnnouncements.modal.links.none' },
-  { id: 'competitions', labelKey: 'adminAnnouncements.modal.links.competitions' },
+  {
+    id: 'competitions',
+    labelKey: 'adminAnnouncements.modal.links.competitions',
+  },
   { id: 'gallery', labelKey: 'adminAnnouncements.modal.links.gallery' },
   { id: 'winners', labelKey: 'adminAnnouncements.modal.links.winners' },
 ];
 
 export const ANNOUNCEMENT_PRIORITY_OPTIONS = [
-  { id: ANNOUNCEMENT_PRIORITY.HIGH, labelKey: 'adminAnnouncements.priority.high' },
-  { id: ANNOUNCEMENT_PRIORITY.MEDIUM, labelKey: 'adminAnnouncements.priority.medium' },
-  { id: ANNOUNCEMENT_PRIORITY.LOW, labelKey: 'adminAnnouncements.priority.low' },
+  {
+    id: ANNOUNCEMENT_PRIORITY.HIGH,
+    labelKey: 'adminAnnouncements.priority.high',
+  },
+  {
+    id: ANNOUNCEMENT_PRIORITY.MEDIUM,
+    labelKey: 'adminAnnouncements.priority.medium',
+  },
+  {
+    id: ANNOUNCEMENT_PRIORITY.LOW,
+    labelKey: 'adminAnnouncements.priority.low',
+  },
 ];
 
 export const EMPTY_ANNOUNCEMENT_FORM = {
@@ -496,7 +555,8 @@ export const getAnnouncementScheduleStart = (row, t) =>
 export const getAnnouncementScheduleEnd = (row, t) =>
   row.endLabel ?? (row.endKey ? t(row.endKey) : '');
 
-export const isRequiredTextValid = (value) => Boolean(String(value || '').trim());
+export const isRequiredTextValid = (value) =>
+  Boolean(String(value || '').trim());
 
 export const isAnnouncementMessageValid = (value) => {
   const text = String(value || '').trim();
@@ -514,7 +574,11 @@ const formatDisplayDate = (dateValue, timeValue) => {
   if (!dateValue) return '';
   const date = new Date(`${dateValue}T${timeValue || '00:00'}`);
   if (Number.isNaN(date.getTime())) return dateValue;
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 };
 
 export const getNextAnnouncementCode = (rows) => {
@@ -530,7 +594,9 @@ export const buildAnnouncementFromForm = (values, rows) => {
   const endLabel = values.noEndDate
     ? undefined
     : formatDisplayDate(values.endDate, values.endTime);
-  const endKey = values.noEndDate ? 'adminAnnouncements.schedule.manual' : undefined;
+  const endKey = values.noEndDate
+    ? 'adminAnnouncements.schedule.manual'
+    : undefined;
 
   return {
     id: `ann-${Date.now()}`,

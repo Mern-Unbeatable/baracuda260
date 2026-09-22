@@ -1,13 +1,15 @@
-import { useTranslation } from 'react-i18next';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
+import AddCategoryModal from '@/portals/admin/components/admin-categories/AddCategoryModal';
 import {
   ADMIN_CATEGORIES_ASSETS,
   PLUS_ICON_SIZE,
   TRASH_ICON_SIZE,
 } from '@/portals/admin/data/adminCategoriesData';
 import useAdminCategories from '@/portals/admin/hooks/useAdminCategories';
-import AddCategoryModal from '@/portals/admin/components/admin-categories/AddCategoryModal';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 
 /**
  * @param {{
@@ -44,20 +46,21 @@ const CategoryChip = memo(({ category, onRemove }) => {
       <span className="text-[16px] font-medium leading-6 whitespace-nowrap text-[#666dd7]">
         {label}
       </span>
-      <button
+      <Button
+        unstyled
         type="button"
         aria-label={t('adminCategories.remove', { name: label })}
         onClick={() => onRemove(category.id)}
         className="inline-flex size-5 shrink-0 cursor-pointer items-center justify-center"
       >
-        <img
+        <Image
           src={ADMIN_CATEGORIES_ASSETS.trash}
           alt=""
           width={TRASH_ICON_SIZE}
           height={TRASH_ICON_SIZE}
           className="size-5"
         />
-      </button>
+      </Button>
     </div>
   );
 });
@@ -95,12 +98,13 @@ const AdminCategoriesContent = memo(() => {
             <h2 className="text-[24px] font-medium leading-normal text-black">
               {t('adminCategories.panelTitle')}
             </h2>
-            <button
+            <Button
+              unstyled
               type="button"
               onClick={handleOpenAddModal}
               className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg bg-[#ee1c25] px-5 py-3 text-[12px] leading-5 text-white transition hover:bg-[#d41921]"
             >
-              <img
+              <Image
                 src={ADMIN_CATEGORIES_ASSETS.plus}
                 alt=""
                 width={PLUS_ICON_SIZE}
@@ -108,7 +112,7 @@ const AdminCategoriesContent = memo(() => {
                 className="size-4"
               />
               {t('adminCategories.add')}
-            </button>
+            </Button>
           </div>
 
           <div className="h-px w-full bg-[#e4e4e4]" aria-hidden="true" />

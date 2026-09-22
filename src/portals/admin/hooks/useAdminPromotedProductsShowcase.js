@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
+  filterPromotedCards,
   PROMOTED_CARDS,
   PROMOTED_TOTAL_PAGES,
-  filterPromotedCards,
 } from '@/portals/admin/data/adminPromotedProductsData';
 
 export default function useAdminPromotedProductsShowcase(

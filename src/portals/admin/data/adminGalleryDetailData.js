@@ -37,7 +37,8 @@ const GALLERY_DETAIL_ID_MAP = {
   'wings-2': 'wings',
 };
 
-const resolveBaseId = (id) => GALLERY_DETAIL_ID_MAP[id] || id.replace(/-(2|b)$/, '');
+const resolveBaseId = (id) =>
+  GALLERY_DETAIL_ID_MAP[id] || id.replace(/-(2|b)$/, '');
 
 /** Map showcase card id → admin gallery detail variant. */
 export const getAdminGalleryDetailById = (id) => {

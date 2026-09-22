@@ -34,14 +34,44 @@ export const ANSWER_MODAL_MODE = {
 };
 
 export const EDITOR_TOOLBAR = [
-  { id: 'bold', assetKey: 'bold', labelKey: 'adminSupport.modal.toolbar.bold', wrap: ['**', '**'] },
-  { id: 'italic', assetKey: 'italic', labelKey: 'adminSupport.modal.toolbar.italic', wrap: ['*', '*'] },
+  {
+    id: 'bold',
+    assetKey: 'bold',
+    labelKey: 'adminSupport.modal.toolbar.bold',
+    wrap: ['**', '**'],
+  },
+  {
+    id: 'italic',
+    assetKey: 'italic',
+    labelKey: 'adminSupport.modal.toolbar.italic',
+    wrap: ['*', '*'],
+  },
   { id: 'divider-1', type: 'divider' },
-  { id: 'listUl', assetKey: 'listUl', labelKey: 'adminSupport.modal.toolbar.listUl', prefix: '- ' },
-  { id: 'listOl', assetKey: 'listOl', labelKey: 'adminSupport.modal.toolbar.listOl', prefix: '1. ' },
+  {
+    id: 'listUl',
+    assetKey: 'listUl',
+    labelKey: 'adminSupport.modal.toolbar.listUl',
+    prefix: '- ',
+  },
+  {
+    id: 'listOl',
+    assetKey: 'listOl',
+    labelKey: 'adminSupport.modal.toolbar.listOl',
+    prefix: '1. ',
+  },
   { id: 'divider-2', type: 'divider' },
-  { id: 'link', assetKey: 'link', labelKey: 'adminSupport.modal.toolbar.link', wrap: ['[', '](url)'] },
-  { id: 'image', assetKey: 'image', labelKey: 'adminSupport.modal.toolbar.image', wrap: ['![', '](url)'] },
+  {
+    id: 'link',
+    assetKey: 'link',
+    labelKey: 'adminSupport.modal.toolbar.link',
+    wrap: ['[', '](url)'],
+  },
+  {
+    id: 'image',
+    assetKey: 'image',
+    labelKey: 'adminSupport.modal.toolbar.image',
+    wrap: ['![', '](url)'],
+  },
 ];
 
 /** Mock tickets matching Figma 339:4651 / 339:4819 / 339:4863. */
@@ -155,7 +185,10 @@ export const applyEditorTool = (value, selection, tool) => {
     const next = `${value.slice(0, start)}${before}${selected}${after}${value.slice(end)}`;
     return {
       value: next,
-      selection: { start: start + before.length, end: start + before.length + selected.length },
+      selection: {
+        start: start + before.length,
+        end: start + before.length + selected.length,
+      },
     };
   }
 

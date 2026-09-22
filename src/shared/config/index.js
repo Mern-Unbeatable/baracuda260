@@ -122,7 +122,10 @@ export const API_CONFIG = {
 
 export const SEO_CONFIG = {
   DEFAULT_TITLE: envVar('SEO_TITLE', 'My12Photos'),
-  DEFAULT_DESCRIPTION: envVar('SEO_DESCRIPTION', 'A professional React application'),
+  DEFAULT_DESCRIPTION: envVar(
+    'SEO_DESCRIPTION',
+    'A professional React application',
+  ),
   DEFAULT_KEYWORDS: envVar('SEO_KEYWORDS', 'react,vite,tailwind').split(','),
   SITE_URL: typeof window !== 'undefined' ? window.location.origin : '',
 };
