@@ -20,7 +20,7 @@ const HomeHero = memo(() => {
           key={src}
           src={src}
           alt=""
-          priority={true}
+          priority={index === 0}
           width={1920}
           height={890}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
