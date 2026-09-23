@@ -69,7 +69,7 @@ import {
   DEMO_SIX_STORY_SLIDES,
   DEMO_TWELVE_STORY_SLIDES,
   DEMO_VIDEO,
-} from '@/data/demoData';
+} from '@/developer/demoData';
 import {
   ALBUM_TYPE_LABEL_KEYS,
   ALBUM_TYPE_VALUES,

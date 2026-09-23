@@ -2,7 +2,7 @@
  * Component documentation catalog for /developer.
  * Keep in sync when adding shared UI used across the app.
  *
- * Demo payloads: `import { DEMO_* } from '@/data/demoData'`
+ * Demo payloads: `import { DEMO_* } from '@/developer/demoData'`
  */
 
 export const DOC_CATEGORIES = [
@@ -22,7 +22,7 @@ export const COMPONENT_DOCS = [
       'Gallery / home photo card with save badge, stats row, and report menu.',
     path: 'src/components/data-display/PhotoShowcaseCard/',
     importExample:
-      "import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard'\nimport { DEMO_SHOWCASE_PHOTO } from '@/data/demoData'",
+      "import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard'\nimport { DEMO_SHOWCASE_PHOTO } from '@/developer/demoData'",
     props: [
       {
         name: 'href',
@@ -169,7 +169,7 @@ export const COMPONENT_DOCS = [
       'Lavender metadata panel — credit, resolution, file type, categories, etc.',
     path: 'src/components/data-display/GalleryDetailImageDetails/',
     importExample:
-      "import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails'\nimport { DEMO_IMAGE_DETAILS } from '@/data/demoData'",
+      "import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails'\nimport { DEMO_IMAGE_DETAILS } from '@/developer/demoData'",
     props: [
       {
         name: 'details',
@@ -197,7 +197,7 @@ export const COMPONENT_DOCS = [
       'Member panel artwork card with footer states (active, ended, profile-only).',
     path: 'src/components/data-display/MemberArtworkCard/',
     importExample:
-      "import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard'\nimport { DEMO_ARTWORK_ITEM } from '@/data/demoData'",
+      "import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard'\nimport { DEMO_ARTWORK_ITEM } from '@/developer/demoData'",
     props: [
       {
         name: 'item',
@@ -598,7 +598,7 @@ export const COMPONENT_DOCS = [
       'Competition / album-type pricing card — Single Photo, 6 Photos Story, Zodiac Album.',
     path: 'src/components/marketing/PlanCard/',
     importExample:
-      "import PlanCard from '@/components/marketing/PlanCard/PlanCard'\nimport { DEMO_COMPETITION_CARDS } from '@/data/demoData'",
+      "import PlanCard from '@/components/marketing/PlanCard/PlanCard'\nimport { DEMO_COMPETITION_CARDS } from '@/developer/demoData'",
     props: [
       {
         name: 'title',
@@ -981,7 +981,7 @@ export const COMPONENT_DOCS = [
       'Full photo detail page — single, 6 Photos Story, or 12-photo zodiac.',
     path: 'src/components/data-display/GalleryDetailView/',
     importExample:
-      "import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView'\nimport { DEMO_GALLERY_ENTRY_SINGLE, DEMO_GALLERY_ENTRY_SIX, DEMO_GALLERY_ENTRY_TWELVE } from '@/data/demoData'",
+      "import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView'\nimport { DEMO_GALLERY_ENTRY_SINGLE, DEMO_GALLERY_ENTRY_SIX, DEMO_GALLERY_ENTRY_TWELVE } from '@/developer/demoData'",
     props: [
       {
         name: 'entry',
@@ -1037,7 +1037,7 @@ export const COMPONENT_DOCS = [
     summary: 'Support photographer donation form on gallery detail.',
     path: 'src/components/data-display/GalleryDetailDonation/',
     importExample:
-      "import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation'\nimport { DEMO_DONATION } from '@/data/demoData'",
+      "import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation'\nimport { DEMO_DONATION } from '@/developer/demoData'",
     props: [
       {
         name: 'photographer',
@@ -1079,7 +1079,7 @@ export const COMPONENT_DOCS = [
     summary: 'Hero video player with play/pause overlay.',
     path: 'src/components/data-display/GalleryDetailVideo/',
     importExample:
-      "import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo'\nimport { DEMO_VIDEO } from '@/data/demoData'",
+      "import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo'\nimport { DEMO_VIDEO } from '@/developer/demoData'",
     props: [
       {
         name: 'poster',
@@ -1111,7 +1111,7 @@ export const COMPONENT_DOCS = [
     summary: '6 Photos Story thumbnail strip + zodiac sign row.',
     path: 'src/components/data-display/SixStoryStrip/',
     importExample:
-      "import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip'\nimport { DEMO_SIX_STORY_SLIDES } from '@/data/demoData'",
+      "import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip'\nimport { DEMO_SIX_STORY_SLIDES } from '@/developer/demoData'",
     props: [
       {
         name: 'slides',
@@ -1149,7 +1149,7 @@ export const COMPONENT_DOCS = [
     summary: '12-photo zodiac strip with red/blue theme per slide.',
     path: 'src/components/data-display/TwelveStoryStrip/',
     importExample:
-      "import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip'\nimport { DEMO_TWELVE_STORY_SLIDES } from '@/data/demoData'",
+      "import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip'\nimport { DEMO_TWELVE_STORY_SLIDES } from '@/developer/demoData'",
     props: [
       {
         name: 'slides',
@@ -1181,7 +1181,7 @@ export const COMPONENT_DOCS = [
     summary: 'Marketplace photo detail — specs, price, buy CTA, image details.',
     path: 'src/components/data-display/BuyPhotoDetailView/',
     importExample:
-      "import BuyPhotoDetailView from '@/components/data-display/BuyPhotoDetailView/BuyPhotoDetailView'\nimport { DEMO_BUY_PHOTO } from '@/data/demoData'",
+      "import BuyPhotoDetailView from '@/components/data-display/BuyPhotoDetailView/BuyPhotoDetailView'\nimport { DEMO_BUY_PHOTO } from '@/developer/demoData'",
     props: [
       {
         name: 'photo',
@@ -1228,7 +1228,7 @@ export const COMPONENT_DOCS = [
     summary: 'Dashboard stat tile (My Artwork page header row).',
     path: 'src/components/data-display/MemberArtworkStatCard/',
     importExample:
-      "import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard'\nimport { DEMO_ARTWORK_STAT } from '@/data/demoData'",
+      "import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard'\nimport { DEMO_ARTWORK_STAT } from '@/developer/demoData'",
     props: [
       {
         name: 'labelKey',
@@ -1273,7 +1273,7 @@ export const COMPONENT_DOCS = [
       'Competition footer slot inside MemberArtworkCard (active / ended / profile).',
     path: 'src/components/data-display/MemberArtworkCardFooter/',
     importExample:
-      "import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCardFooter/MemberArtworkCardFooter'\nimport { DEMO_ARTWORK_ITEM } from '@/data/demoData'",
+      "import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCardFooter/MemberArtworkCardFooter'\nimport { DEMO_ARTWORK_ITEM } from '@/developer/demoData'",
     props: [
       {
         name: 'item',
@@ -1303,7 +1303,7 @@ export const COMPONENT_DOCS = [
       'Sell-photos grid card (price, expiry, same shell as artwork card).',
     path: 'src/components/data-display/MemberSellPhotoCard/',
     importExample:
-      "import MemberSellPhotoCard from '@/components/data-display/MemberSellPhotoCard/MemberSellPhotoCard'\nimport { DEMO_SELL_PHOTO_ITEM } from '@/data/demoData'",
+      "import MemberSellPhotoCard from '@/components/data-display/MemberSellPhotoCard/MemberSellPhotoCard'\nimport { DEMO_SELL_PHOTO_ITEM } from '@/developer/demoData'",
     props: [
       {
         name: 'item',
@@ -1347,7 +1347,7 @@ export const COMPONENT_DOCS = [
     summary: 'Favourite photographer card with follow toggle and stats.',
     path: 'src/components/data-display/MemberFavouritePhotographerCard/',
     importExample:
-      "import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard'\nimport { DEMO_FAVOURITE_PHOTOGRAPHER } from '@/data/demoData'",
+      "import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard'\nimport { DEMO_FAVOURITE_PHOTOGRAPHER } from '@/developer/demoData'",
     props: [
       {
         name: 'photographer',
@@ -1375,7 +1375,7 @@ export const COMPONENT_DOCS = [
     summary: 'Promote artwork modal with tier radio selection.',
     path: 'src/components/forms/MemberPromotePanel/',
     importExample:
-      "import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel'\nimport { DEMO_ARTWORK_ITEM } from '@/data/demoData'",
+      "import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel'\nimport { DEMO_ARTWORK_ITEM } from '@/developer/demoData'",
     props: [
       {
         name: 'item',
@@ -1448,7 +1448,7 @@ export const COMPONENT_DOCS = [
     summary: 'Public profile header — avatar, follow, message.',
     path: 'src/components/data-display/PhotographerProfileHeader/',
     importExample:
-      "import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader'\nimport { DEMO_PHOTOGRAPHER_PROFILE } from '@/data/demoData'",
+      "import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader'\nimport { DEMO_PHOTOGRAPHER_PROFILE } from '@/developer/demoData'",
     props: [
       {
         name: 'profile',
@@ -1468,7 +1468,7 @@ export const COMPONENT_DOCS = [
     summary: 'Six-stat grid under photographer profile header.',
     path: 'src/components/data-display/PhotographerStatsBar/',
     importExample:
-      "import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar'\nimport { DEMO_PHOTOGRAPHER_PROFILE } from '@/data/demoData'",
+      "import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar'\nimport { DEMO_PHOTOGRAPHER_PROFILE } from '@/developer/demoData'",
     props: [
       {
         name: 'stats',
@@ -1489,7 +1489,7 @@ export const COMPONENT_DOCS = [
     summary: 'News / message card with image, likes, share.',
     path: 'src/components/data-display/MemberMessageCard/',
     importExample:
-      "import MemberMessageCard from '@/components/data-display/MemberMessageCard/MemberMessageCard'\nimport { DEMO_MESSAGE } from '@/data/demoData'",
+      "import MemberMessageCard from '@/components/data-display/MemberMessageCard/MemberMessageCard'\nimport { DEMO_MESSAGE } from '@/developer/demoData'",
     props: [
       {
         name: 'message',
@@ -1510,7 +1510,7 @@ export const COMPONENT_DOCS = [
     summary: 'Single notification row (platform or user avatar).',
     path: 'src/components/data-display/MemberNotificationItem/',
     importExample:
-      "import MemberNotificationItem from '@/components/data-display/MemberNotificationItem/MemberNotificationItem'\nimport { DEMO_NOTIFICATION } from '@/data/demoData'",
+      "import MemberNotificationItem from '@/components/data-display/MemberNotificationItem/MemberNotificationItem'\nimport { DEMO_NOTIFICATION } from '@/developer/demoData'",
     props: [
       {
         name: 'item',
@@ -1530,7 +1530,7 @@ export const COMPONENT_DOCS = [
     summary: 'Member panel profile — cover image + avatar overlap.',
     path: 'src/components/data-display/MemberProfileCoverHeader/',
     importExample:
-      "import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader'\nimport { DEMO_MEMBER_PROFILE } from '@/data/demoData'",
+      "import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader'\nimport { DEMO_MEMBER_PROFILE } from '@/developer/demoData'",
     props: [
       {
         name: 'profile',
@@ -1550,7 +1550,7 @@ export const COMPONENT_DOCS = [
     summary: 'Member profile stats row (7 metrics incl. premium photos).',
     path: 'src/components/data-display/MemberProfileStatsBar/',
     importExample:
-      "import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar'\nimport { DEMO_MEMBER_PROFILE } from '@/data/demoData'",
+      "import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar'\nimport { DEMO_MEMBER_PROFILE } from '@/developer/demoData'",
     props: [
       {
         name: 'stats',
@@ -1676,7 +1676,7 @@ export const COMPONENT_DOCS = [
     summary: 'Zodiac sign pill overlaid on a story slide — red or blue accent.',
     path: 'src/components/data-display/SignBadge/',
     importExample:
-      "import SignBadge from '@/components/data-display/SignBadge/SignBadge'\nimport { DEMO_SIGN_SLIDE } from '@/data/demoData'",
+      "import SignBadge from '@/components/data-display/SignBadge/SignBadge'\nimport { DEMO_SIGN_SLIDE } from '@/developer/demoData'",
     props: [
       {
         name: 'slide',
@@ -1818,7 +1818,7 @@ export const COMPONENT_DOCS = [
       'Overflow menu on artwork cards — edit, delete, promote. Closes on outside click and Escape.',
     path: 'src/components/data-display/MemberArtworkActionsMenu/',
     importExample:
-      "import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu'\nimport { DEMO_ARTWORK_ITEM } from '@/data/demoData'",
+      "import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu'\nimport { DEMO_ARTWORK_ITEM } from '@/developer/demoData'",
     props: [
       {
         name: 'item',
@@ -1862,7 +1862,7 @@ export const COMPONENT_DOCS = [
       'Paginated global leaderboard table for a competition entry, highlighting the current user.',
     path: 'src/components/data-display/MemberArtworkGlobalRankings/',
     importExample:
-      "import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings'\nimport { DEMO_RANKINGS } from '@/data/demoData'",
+      "import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings'\nimport { DEMO_RANKINGS } from '@/developer/demoData'",
     props: [
       {
         name: 'rankings',
