@@ -6,6 +6,14 @@ import AdminPagination from '@/components/common/AdminPagination/AdminPagination
 import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table';
 import SuspendUserModal from '@/portals/admin/components/admin-users/SuspendUserModal';
 import {
   ADMIN_USERS_ASSETS,
@@ -259,23 +267,15 @@ const UserTableRow = memo(
     const { t } = useTranslation();
 
     return (
-      <tr className="border-b border-[#e4e4e4]">
-        <td className="min-w-40 px-6.5 py-6 text-[16px] leading-6 text-[#0c0c0c]">
-          {t(user.nameKey)}
-        </td>
-        <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 break-all text-[#0c0c0c]">
-          {user.email}
-        </td>
-        <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
-          {user.phone}
-        </td>
-        <td className="min-w-45 px-6.5 py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
-          {user.registeredDate}
-        </td>
-        <td className="min-w-45 px-6.5 py-6">
+      <TableRow>
+        <TableCell className="min-w-40">{t(user.nameKey)}</TableCell>
+        <TableCell className="min-w-45 break-all">{user.email}</TableCell>
+        <TableCell className="min-w-45">{user.phone}</TableCell>
+        <TableCell className="min-w-45">{user.registeredDate}</TableCell>
+        <TableCell className="min-w-45">
           <StatusBadge status={user.status} />
-        </td>
-        <td className="min-w-25 px-6.5 py-6">
+        </TableCell>
+        <TableCell className="min-w-25">
           <UserActionMenu
             user={user}
             isOpen={openActionMenuId === user.id}
@@ -284,8 +284,8 @@ const UserTableRow = memo(
             onActivate={() => onActivate(user.id)}
             onSuspend={() => onSuspend(user.id)}
           />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     );
   },
 );
@@ -432,45 +432,35 @@ const UsersTable = memo(
     const { t } = useTranslation();
 
     return (
-      <div className="hidden w-full overflow-x-auto rounded-xl bg-white md:block">
-        <table className="w-full min-w-245 border-collapse text-left">
-          <thead>
-            <tr className="bg-[#f6fbff]">
-              <th className="rounded-tl-xl px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-                {t('adminUsers.columns.name')}
-              </th>
-              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-                {t('adminUsers.columns.email')}
-              </th>
-              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-                {t('adminUsers.columns.phone')}
-              </th>
-              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-                {t('adminUsers.columns.registeredDate')}
-              </th>
-              <th className="px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-                {t('adminUsers.columns.status')}
-              </th>
-              <th className="rounded-tr-xl px-6.5 py-3 text-[16px] font-normal leading-6 text-black">
-                {t('adminUsers.columns.action')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <UserTableRow
-                key={user.id}
-                user={user}
-                onActivate={onActivate}
-                onSuspend={onSuspend}
-                openActionMenuId={openActionMenuId}
-                onToggleActionMenu={onToggleActionMenu}
-                onCloseActionMenu={onCloseActionMenu}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table className="min-w-245" wrapperClassName="hidden md:block">
+        <TableHeader>
+          <TableRow isHeader>
+            <TableHead className="rounded-tl-xl">
+              {t('adminUsers.columns.name')}
+            </TableHead>
+            <TableHead>{t('adminUsers.columns.email')}</TableHead>
+            <TableHead>{t('adminUsers.columns.phone')}</TableHead>
+            <TableHead>{t('adminUsers.columns.registeredDate')}</TableHead>
+            <TableHead>{t('adminUsers.columns.status')}</TableHead>
+            <TableHead className="rounded-tr-xl">
+              {t('adminUsers.columns.action')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {users.map((user) => (
+            <UserTableRow
+              key={user.id}
+              user={user}
+              onActivate={onActivate}
+              onSuspend={onSuspend}
+              openActionMenuId={openActionMenuId}
+              onToggleActionMenu={onToggleActionMenu}
+              onCloseActionMenu={onCloseActionMenu}
+            />
+          ))}
+        </TableBody>
+      </Table>
     );
   },
 );
