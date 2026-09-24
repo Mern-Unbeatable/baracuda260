@@ -8,6 +8,14 @@ import React, {
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -218,26 +226,28 @@ const PayoutTableRow = memo(
     const { t } = useTranslation();
 
     return (
-      <tr className={isEven ? 'bg-[#fff5f5]' : 'bg-white'}>
-        <td className="px-4 py-4 text-[14px] leading-5 text-[#263147] sm:px-5">
+      <TableRow
+        className={isEven ? 'border-b-0 bg-[#fff5f5] hover:bg-[#fff5f5]' : 'border-b-0 bg-white hover:bg-white'}
+      >
+        <TableCell className="px-4 py-4 text-[14px] leading-5 text-[#263147] sm:px-5">
           {t(row.dateKey)}
-        </td>
-        <td className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
+        </TableCell>
+        <TableCell className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
           {t(row.typeKey)}
-        </td>
-        <td className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
+        </TableCell>
+        <TableCell className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
           {t(row.accountTypeKey)}
-        </td>
-        <td className="whitespace-nowrap px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
+        </TableCell>
+        <TableCell className="whitespace-nowrap px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
           {row.accountNumber}
-        </td>
-        <td className="px-4 py-4 text-[14px] font-semibold leading-5 text-[#263147] sm:px-5">
+        </TableCell>
+        <TableCell className="px-4 py-4 text-[14px] font-semibold leading-5 text-[#263147] sm:px-5">
           {row.amount}
-        </td>
-        <td className="px-4 py-4 sm:px-5">
+        </TableCell>
+        <TableCell className="px-4 py-4 sm:px-5">
           <StatusText status={row.status} />
-        </td>
-        <td className="px-4 py-4 sm:px-5">
+        </TableCell>
+        <TableCell className="px-4 py-4 sm:px-5">
           <PayoutActionMenu
             row={row}
             isOpen={openActionId === row.id}
@@ -245,8 +255,8 @@ const PayoutTableRow = memo(
             onClose={onCloseAction}
             onSelectStatus={onSelectStatus}
           />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     );
   },
 );
@@ -257,48 +267,49 @@ const PayoutTable = memo(
     const { t } = useTranslation();
 
     return (
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-175 border-collapse text-left">
-          <thead>
-            <tr className="border-b border-[#e8ebf1] bg-[#f7f8fa]">
-              <th className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
-                {t('adminPayouts.columns.date')}
-              </th>
-              <th className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
-                {t('adminPayouts.columns.type')}
-              </th>
-              <th className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
-                {t('adminPayouts.columns.accountType')}
-              </th>
-              <th className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
-                {t('adminPayouts.columns.accountNumber')}
-              </th>
-              <th className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
-                {t('adminPayouts.columns.amount')}
-              </th>
-              <th className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
-                {t('adminPayouts.columns.status')}
-              </th>
-              <th className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
-                {t('adminPayouts.columns.action')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, index) => (
-              <PayoutTableRow
-                key={row.id}
-                row={row}
-                isEven={index % 2 === 0}
-                openActionId={openActionId}
-                onToggleAction={onToggleAction}
-                onCloseAction={onCloseAction}
-                onSelectStatus={onSelectStatus}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        className="min-w-175"
+        wrapperClassName="w-full overflow-x-auto rounded-none bg-transparent"
+      >
+        <TableHeader>
+          <TableRow className="border-b border-[#e8ebf1] bg-[#f7f8fa] hover:bg-[#f7f8fa]">
+            <TableHead className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
+              {t('adminPayouts.columns.date')}
+            </TableHead>
+            <TableHead className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
+              {t('adminPayouts.columns.type')}
+            </TableHead>
+            <TableHead className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
+              {t('adminPayouts.columns.accountType')}
+            </TableHead>
+            <TableHead className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
+              {t('adminPayouts.columns.accountNumber')}
+            </TableHead>
+            <TableHead className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
+              {t('adminPayouts.columns.amount')}
+            </TableHead>
+            <TableHead className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
+              {t('adminPayouts.columns.status')}
+            </TableHead>
+            <TableHead className="px-4 py-3.5 text-[13px] font-bold leading-4 text-[#263147] sm:px-5">
+              {t('adminPayouts.columns.action')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row, index) => (
+            <PayoutTableRow
+              key={row.id}
+              row={row}
+              isEven={index % 2 === 0}
+              openActionId={openActionId}
+              onToggleAction={onToggleAction}
+              onCloseAction={onCloseAction}
+              onSelectStatus={onSelectStatus}
+            />
+          ))}
+        </TableBody>
+      </Table>
     );
   },
 );

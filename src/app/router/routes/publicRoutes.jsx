@@ -58,7 +58,7 @@ const WinnerDetail = lazy(
 const Privacy = lazy(() => import('@/portals/public/legal/privacy/Privacy'));
 const Terms = lazy(() => import('@/portals/public/legal/terms/Terms'));
 const Cookies = lazy(() => import('@/portals/public/legal/cookies/Cookies'));
-const DeveloperPage = lazy(() => import('@/pages/DeveloperPage'));
+const DeveloperPage = lazy(() => import('@/developer/DeveloperPage'));
 
 export const publicRoutes = (
   <>

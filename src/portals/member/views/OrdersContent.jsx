@@ -12,6 +12,14 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
 import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -267,125 +275,130 @@ const OrdersContent = memo(() => {
         </div>
       </div>
 
-      <section className="overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0px_1px_2px_rgba(15,23,42,0.03)]">
-        <div className="overflow-x-auto">
-          <table className="min-w-275 w-full border-collapse">
-            <thead>
-              <tr className="border-b border-[#eef0f4]">
-                <th className={headCell}>
-                  <span className="inline-flex items-center gap-1">
-                    {t('storeOrders.columns.orderId')}
-                    <ArrowUpDown size={12} aria-hidden="true" />
-                  </span>
-                </th>
-                <th className={headCell}>
-                  {t('storeOrders.columns.customer')}
-                </th>
-                <th className={headCell}>{t('storeOrders.columns.product')}</th>
-                <th className={headCell}>
-                  <span className="inline-flex items-center gap-1">
-                    {t('storeOrders.columns.date')}
-                    <ArrowUpDown size={12} aria-hidden="true" />
-                  </span>
-                </th>
-                <th className={headCell}>
-                  <span className="inline-flex items-center gap-1">
-                    {t('storeOrders.columns.total')}
-                    <ArrowUpDown size={12} aria-hidden="true" />
-                  </span>
-                </th>
-                <th className={headCell}>{t('storeOrders.columns.admin')}</th>
-                <th className={headCell}>
-                  {t('storeOrders.columns.earnings')}
-                </th>
-                <th className={headCell}>{t('storeOrders.columns.status')}</th>
-                <th className={`${headCell} text-right`}>
-                  {t('storeOrders.columns.action')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {pagedItems.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={9}
-                    className="px-4 py-12 text-center text-[14px] text-[#6b7280]"
+      <Table
+        className="min-w-275"
+        wrapperClassName="border-[#e8eaef] shadow-[0px_1px_2px_rgba(15,23,42,0.03)]"
+      >
+        <TableHeader>
+          <TableRow className="border-b border-[#eef0f4] bg-transparent hover:bg-transparent">
+            <TableHead className={headCell}>
+              <span className="inline-flex items-center gap-1">
+                {t('storeOrders.columns.orderId')}
+                <ArrowUpDown size={12} aria-hidden="true" />
+              </span>
+            </TableHead>
+            <TableHead className={headCell}>
+              {t('storeOrders.columns.customer')}
+            </TableHead>
+            <TableHead className={headCell}>
+              {t('storeOrders.columns.product')}
+            </TableHead>
+            <TableHead className={headCell}>
+              <span className="inline-flex items-center gap-1">
+                {t('storeOrders.columns.date')}
+                <ArrowUpDown size={12} aria-hidden="true" />
+              </span>
+            </TableHead>
+            <TableHead className={headCell}>
+              <span className="inline-flex items-center gap-1">
+                {t('storeOrders.columns.total')}
+                <ArrowUpDown size={12} aria-hidden="true" />
+              </span>
+            </TableHead>
+            <TableHead className={headCell}>
+              {t('storeOrders.columns.admin')}
+            </TableHead>
+            <TableHead className={headCell}>
+              {t('storeOrders.columns.earnings')}
+            </TableHead>
+            <TableHead className={headCell}>
+              {t('storeOrders.columns.status')}
+            </TableHead>
+            <TableHead className={`${headCell} text-right`}>
+              {t('storeOrders.columns.action')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {pagedItems.length === 0 ? (
+            <TableRow className="border-b-0 hover:bg-transparent">
+              <TableCell
+                colSpan={9}
+                className="px-4 py-12 text-center text-[14px] text-[#6b7280]"
+              >
+                {t('storeOrders.empty')}
+              </TableCell>
+            </TableRow>
+          ) : (
+            pagedItems.map((order) => (
+              <TableRow
+                key={order.id}
+                className="border-[#f1f3f7] last:border-b-0"
+              >
+                <TableCell className="px-3 py-4">
+                  <Link
+                    to={ROUTES.ADMIN_ORDERS_DETAIL.replace(':id', order.id)}
+                    className="text-[13px] font-bold text-[#111827] transition hover:text-[#4048cd]"
                   >
-                    {t('storeOrders.empty')}
-                  </td>
-                </tr>
-              ) : (
-                pagedItems.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="border-b border-[#f1f3f7] last:border-b-0"
-                  >
-                    <td className="px-3 py-4 align-middle">
-                      <Link
-                        to={ROUTES.ADMIN_ORDERS_DETAIL.replace(':id', order.id)}
-                        className="text-[13px] font-bold text-[#111827] transition hover:text-[#4048cd]"
-                      >
-                        #{order.orderNumber}
-                      </Link>
-                    </td>
-                    <td className="px-3 py-4 align-middle">
-                      <div className="flex items-center gap-2.5">
-                        <span
-                          className={`inline-flex size-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${order.avatarClass}`}
-                        >
-                          {order.customerInitials}
-                        </span>
-                        <span className="text-[13px] font-semibold text-[#111827]">
-                          {order.customerName}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-3 py-4 align-middle">
-                      <div className="flex max-w-65 items-center gap-2.5">
-                        <Image
-                          src={order.image}
-                          alt=""
-                          className="size-10 shrink-0 rounded-lg object-cover"
-                          loading="lazy"
-                        />
-                        <div className="min-w-0">
-                          <p className="truncate text-[13px] font-semibold text-[#111827]">
-                            {order.productTitle}
-                          </p>
-                          <p className="text-[11px] text-[#9aa3b5]">
-                            {t('storeOrders.qty', { count: order.quantity })}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-3 py-4 align-middle text-[13px] text-[#6b7280]">
-                      {order.date}
-                    </td>
-                    <td className="px-3 py-4 align-middle text-[13px] font-bold text-[#111827]">
-                      {order.total}
-                    </td>
-                    <td className="px-3 py-4 align-middle text-[12px] text-[#9aa3b5]">
-                      {order.commission}
-                    </td>
-                    <td className="px-3 py-4 align-middle text-[13px] font-bold text-[#059669]">
-                      {order.earnings}
-                    </td>
-                    <td className="px-3 py-4 align-middle">
-                      <StatusBadge status={order.status} />
-                    </td>
-                    <td className="px-3 py-4 align-middle">
-                      <RowActions
-                        order={order}
-                        onStatusChange={handleStatusChange}
-                      />
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
+                    #{order.orderNumber}
+                  </Link>
+                </TableCell>
+                <TableCell className="px-3 py-4">
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className={`inline-flex size-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${order.avatarClass}`}
+                    >
+                      {order.customerInitials}
+                    </span>
+                    <span className="text-[13px] font-semibold text-[#111827]">
+                      {order.customerName}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="px-3 py-4">
+                  <div className="flex max-w-65 items-center gap-2.5">
+                    <Image
+                      src={order.image}
+                      alt=""
+                      className="size-10 shrink-0 rounded-lg object-cover"
+                      loading="lazy"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-[13px] font-semibold text-[#111827]">
+                        {order.productTitle}
+                      </p>
+                      <p className="text-[11px] text-[#9aa3b5]">
+                        {t('storeOrders.qty', { count: order.quantity })}
+                      </p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="px-3 py-4 text-[13px] text-[#6b7280]">
+                  {order.date}
+                </TableCell>
+                <TableCell className="px-3 py-4 text-[13px] font-bold text-[#111827]">
+                  {order.total}
+                </TableCell>
+                <TableCell className="px-3 py-4 text-[12px] text-[#9aa3b5]">
+                  {order.commission}
+                </TableCell>
+                <TableCell className="px-3 py-4 text-[13px] font-bold text-[#059669]">
+                  {order.earnings}
+                </TableCell>
+                <TableCell className="px-3 py-4">
+                  <StatusBadge status={order.status} />
+                </TableCell>
+                <TableCell className="px-3 py-4">
+                  <RowActions
+                    order={order}
+                    onStatusChange={handleStatusChange}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
 
       {filtered.length > 0 ? (
         <footer className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
