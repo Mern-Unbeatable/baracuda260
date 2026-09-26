@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 import { Route } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
 
-const seg = (route) => route.replace(`${ROUTES.ADMIN}/`, '');
+const seg = (route) => route.replace(`${ROUTES.USER}/`, '');
 
 const Dashboard = lazy(() => import('@/portals/member/pages/Dashboard'));
 const MyArtwork = lazy(() => import('@/portals/member/pages/MyArtwork'));
@@ -94,10 +94,15 @@ const ProfileMainContent = lazy(
   () => import('@/portals/member/views/ProfileMainContent'),
 );
 
+
+const BusinessPhotos = lazy(() => import('@/portals/admin/pages/BusinessPhotos'));
+const BusinessLinkDetails = lazy(() => import('@/portals/admin/pages/BusinessLinkDetails'));
+const SettingsRoute = lazy(() => import('@/portals/admin/pages/SettingsRoute'));
+
 export const memberRoutes = (
   <>
-    <Route path={seg(ROUTES.ADMIN_DASHBOARD)} element={<Dashboard />} />
-    <Route path={seg(ROUTES.ADMIN_MY_ARTWORK)} element={<MyArtwork />}>
+    <Route path={seg(ROUTES.USER_DASHBOARD)} element={<Dashboard />} />
+    <Route path={seg(ROUTES.USER_MY_ARTWORK)} element={<MyArtwork />}>
       <Route index element={<MyArtworkContent />} />
       <Route path="upload" element={<MyArtworkUploadHub />} />
       <Route path="upload/single" element={<MyArtworkUploadSingle />} />
@@ -105,14 +110,11 @@ export const memberRoutes = (
       <Route path="upload/zodiac" element={<MyArtworkUploadZodiac />} />
       <Route path=":id" element={<MyArtworkDetail />} />
     </Route>
-    <Route
-      path={seg(ROUTES.ADMIN_NEWS_MESSAGES)}
-      element={<NewsMessages />}
-    >
+    <Route path={seg(ROUTES.USER_NEWS_MESSAGES)} element={<NewsMessages />}>
       <Route index element={<MyMessagesContent />} />
       <Route path="upload" element={<MyMessageUpload />} />
     </Route>
-    <Route path={seg(ROUTES.ADMIN_SELL_PHOTOS)} element={<SellPhotos />}>
+    <Route path={seg(ROUTES.USER_SELL_PHOTOS)} element={<SellPhotos />}>
       <Route index element={<SellPhotosContent />} />
       <Route path="upload" element={<SellPhotosUploadHub />} />
       <Route path="upload/single" element={<SellPhotosUploadSingle />} />
@@ -120,56 +122,54 @@ export const memberRoutes = (
       <Route path="upload/zodiac" element={<SellPhotosUploadZodiac />} />
       <Route path=":id" element={<SellPhotosDetail />} />
     </Route>
-    <Route path={seg(ROUTES.ADMIN_MY_STORE)} element={<MyStore />} />
+    <Route path={seg(ROUTES.USER_MY_STORE)} element={<MyStore />} />
     <Route
-      path={seg(ROUTES.ADMIN_MY_STORE_UPLOAD)}
+      path={seg(ROUTES.USER_MY_STORE_UPLOAD)}
       element={<MyStoreUpload />}
     />
+    <Route path={seg(ROUTES.USER_MY_STORE_EDIT)} element={<MyStoreUpload />} />
     <Route
-      path={seg(ROUTES.ADMIN_MY_STORE_EDIT)}
-      element={<MyStoreUpload />}
-    />
-    <Route
-      path={seg(ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS)}
+      path={seg(ROUTES.USER_FAVOURITE_PHOTOGRAPHERS)}
       element={<FavouritePhotographers />}
     />
     <Route
-      path={seg(ROUTES.ADMIN_PURCHASE_PHOTOS)}
+      path={seg(ROUTES.USER_PURCHASE_PHOTOS)}
       element={<PurchasePhotos />}
     />
-    <Route path={seg(ROUTES.ADMIN_MY_ORDERS)} element={<MyOrders />} />
+    <Route path={seg(ROUTES.USER_MY_ORDERS)} element={<MyOrders />} />
     <Route
-      path={seg(ROUTES.ADMIN_MY_ORDERS_DETAIL)}
+      path={seg(ROUTES.USER_MY_ORDERS_DETAIL)}
       element={<OrderDetails />}
     />
-    <Route path={seg(ROUTES.ADMIN_ORDERS)} element={<Orders />} />
+    <Route path={seg(ROUTES.USER_ORDERS)} element={<Orders />} />
     <Route
-      path={seg(ROUTES.ADMIN_ORDERS_DETAIL)}
+      path={seg(ROUTES.USER_ORDERS_DETAIL)}
       element={<SellerOrderDetails />}
     />
     <Route
-      path={seg(ROUTES.ADMIN_MY_COMPETITIONS)}
+      path={seg(ROUTES.USER_MY_COMPETITIONS)}
       element={<MyCompetitions />}
     />
     <Route
-      path={seg(ROUTES.ADMIN_MY_COMPETITION_DETAIL)}
+      path={seg(ROUTES.USER_MY_COMPETITION_DETAIL)}
       element={<MyCompetitionDetails />}
     />
-    <Route path={seg(ROUTES.ADMIN_CHAT)} element={<Chat />} />
+    <Route path={seg(ROUTES.USER_CHAT)} element={<Chat />} />
+    <Route path={seg(ROUTES.USER_NOTIFICATIONS)} element={<Notifications />} />
     <Route
-      path={seg(ROUTES.ADMIN_NOTIFICATIONS)}
-      element={<Notifications />}
-    />
-    <Route
-      path={seg(ROUTES.ADMIN_PRIZE_PAYMENTS)}
+      path={seg(ROUTES.USER_PRIZE_PAYMENTS)}
       element={<PrizePayments />}
     />
-    <Route path={seg(ROUTES.ADMIN_CONTACT_US)} element={<ContactUs />} />
-    <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<Profile />}>
+    <Route path={seg(ROUTES.USER_CONTACT_US)} element={<ContactUs />} />
+    <Route path={seg(ROUTES.USER_PROFILE)} element={<Profile />}>
       <Route index element={<ProfileMainContent />} />
       <Route path="following" element={<ProfileFollowing />} />
       <Route path="followers" element={<ProfileFollowers />} />
       <Route path="settings" element={<ProfileSettings />} />
     </Route>
+  
+    <Route path={seg(ROUTES.USER_BUSINESS_PHOTOS)} element={<BusinessPhotos />} />
+    <Route path={seg(ROUTES.USER_BUSINESS_PHOTOS_DETAIL)} element={<BusinessLinkDetails />} />
+    <Route path={seg(ROUTES.USER_SETTINGS)} element={<SettingsRoute />} />
   </>
 );

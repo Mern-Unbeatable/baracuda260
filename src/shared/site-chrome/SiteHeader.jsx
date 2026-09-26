@@ -7,12 +7,14 @@ import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { ROUTES, SITE_NAV_LINKS } from '@/shared/config';
 import { ACTION_BTN_PRIMARY } from '@/shared/ui/actionStyles';
+import { getDashboardRouteByRole } from '@/shared/utils/roles';
 import AppLink from './AppLink';
 import { SITE_ASSETS } from './siteAssets';
 
 const SiteHeader = memo(({ activeHref }) => {
   const { t } = useTranslation();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector((state) => state.auth.user);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = SITE_NAV_LINKS.map(({ labelKey, href }) => ({
@@ -25,7 +27,7 @@ const SiteHeader = memo(({ activeHref }) => {
 
   const authActions = isAuthenticated ? (
     <AppLink
-      href={ROUTES.ADMIN_DASHBOARD}
+      href={getDashboardRouteByRole(user?.role)}
       onClick={() => setMenuOpen(false)}
       className={headerBtnClass}
     >

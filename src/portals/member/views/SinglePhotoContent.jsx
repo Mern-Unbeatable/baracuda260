@@ -56,8 +56,8 @@ ZodiacIcon.displayName = 'ZodiacIcon';
  */
 const SinglePhotoContent = memo(
   ({
-    backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
-    uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+    backHref = ROUTES.USER_UPLOAD_PHOTOS,
+    uploadAnotherHref = ROUTES.USER_UPLOAD_PHOTOS,
     purpose = 'artwork',
     defaultPrice = '$2.00',
   }) => {

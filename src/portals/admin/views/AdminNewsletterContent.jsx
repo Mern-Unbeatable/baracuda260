@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
@@ -11,6 +12,8 @@ import {
   CHECK_ICON_SIZE,
   CLOSE_ICON_SIZE,
   COMPOSER_ICON_SIZE,
+  formatSubscribedDate,
+  NEWSLETTER_FORM_DEFAULTS,
   RECIPIENT_ICON_SIZE,
   RECIPIENT_OPTIONS,
   TOOLBAR_ICON_SIZE,
@@ -23,89 +26,124 @@ const fieldLabelClass =
 const inputClass =
   'w-full rounded-[12px] border border-[#e2e8f0] bg-white px-[17px] py-[15px] text-[16px] text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:border-[#4048cd] focus:ring-2 focus:ring-[#4048cd]/10';
 
+const SKELETON_ROW_COUNT = 6;
+
 /**
  * @param {{
- *   option: { id: string, titleKey: string, subtitleKey: string, icon: string },
+ *   option: { id: string, target: string | null, titleKey: string, subtitleKey: string, icon: string },
  *   selected: boolean,
+ *   subscriberCount: number,
  *   onSelect: () => void,
  * }} props
  */
-const RecipientOption = memo(({ option, selected, onSelect }) => {
-  const { t } = useTranslation();
-  const iconSrc = ADMIN_NEWSLETTER_ASSETS[option.icon];
+const RecipientOption = memo(
+  ({ option, selected, subscriberCount, onSelect }) => {
+    const { t } = useTranslation();
+    const iconSrc = ADMIN_NEWSLETTER_ASSETS[option.icon];
+    const isAvailable = Boolean(option.target);
 
-  return (
-    <Button
-      unstyled
-      type="button"
-      onClick={onSelect}
-      aria-pressed={selected}
-      className={`flex w-full cursor-pointer items-center justify-between rounded-2xl text-left transition ${
-        selected
-          ? 'border-2 border-[#4048cd] bg-[rgba(239,246,255,0.3)] p-4.5'
-          : 'border border-[#e2e8f0] bg-white p-4.25 hover:border-[#cbd5e1]'
-      }`}
-    >
-      <span className="flex min-w-0 items-center">
-        <span
-          className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${
-            selected ? 'bg-[#4048cd]' : 'bg-[#f8fafc]'
-          }`}
-        >
-          <Image
-            src={iconSrc}
-            alt=""
-            width={RECIPIENT_ICON_SIZE}
-            height={RECIPIENT_ICON_SIZE}
-            className="size-6"
-          />
-        </span>
-        <span className="flex min-w-0 flex-col pl-4">
-          <span className="text-[16px] font-semibold leading-6 text-[#0f172a]">
-            {t(option.titleKey)}
+    return (
+      <Button
+        unstyled
+        type="button"
+        onClick={onSelect}
+        disabled={!isAvailable}
+        aria-pressed={selected}
+        className={`flex w-full items-center justify-between rounded-2xl text-left transition ${
+          selected
+            ? 'cursor-pointer border-2 border-[#4048cd] bg-[rgba(239,246,255,0.3)] p-4.5'
+            : 'border border-[#e2e8f0] bg-white p-4.25'
+        } ${
+          isAvailable
+            ? 'cursor-pointer hover:border-[#cbd5e1]'
+            : 'cursor-not-allowed opacity-60'
+        }`}
+      >
+        <span className="flex min-w-0 items-center">
+          <span
+            className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${
+              selected ? 'bg-[#4048cd]' : 'bg-[#f8fafc]'
+            }`}
+          >
+            <Image
+              src={iconSrc}
+              alt=""
+              width={RECIPIENT_ICON_SIZE}
+              height={RECIPIENT_ICON_SIZE}
+              className="size-6"
+            />
           </span>
-          <span className="text-[14px] leading-5.25 text-[#64748b]">
-            {t(option.subtitleKey)}
+          <span className="flex min-w-0 flex-col pl-4">
+            <span className="text-[16px] font-semibold leading-6 text-[#0f172a]">
+              {t(option.titleKey)}
+            </span>
+            <span className="text-[14px] leading-5.25 text-[#64748b]">
+              {isAvailable
+                ? t(option.subtitleKey, { count: subscriberCount })
+                : t('adminNewsletter.recipients.comingSoon')}
+            </span>
           </span>
         </span>
-      </span>
-      {selected ? (
-        <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#4048cd]">
-          <Image
-            src={ADMIN_NEWSLETTER_ASSETS.check}
-            alt=""
-            width={CHECK_ICON_SIZE}
-            height={CHECK_ICON_SIZE}
-            className="size-4"
+        {selected ? (
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#4048cd]">
+            <Image
+              src={ADMIN_NEWSLETTER_ASSETS.check}
+              alt=""
+              width={CHECK_ICON_SIZE}
+              height={CHECK_ICON_SIZE}
+              className="size-4"
+            />
+          </span>
+        ) : (
+          <span
+            className="size-6 shrink-0 rounded-full border-2 border-[#e2e8f0]"
+            aria-hidden="true"
           />
-        </span>
-      ) : (
-        <span
-          className="size-6 shrink-0 rounded-full border-2 border-[#e2e8f0]"
-          aria-hidden="true"
-        />
-      )}
-    </Button>
-  );
-});
+        )}
+      </Button>
+    );
+  },
+);
 
 RecipientOption.displayName = 'RecipientOption';
+
+const SubscriberListSkeleton = () => (
+  <div className="flex flex-col gap-3 px-5 py-6" aria-busy="true">
+    {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
+      <div
+        key={index}
+        className="h-10 w-full animate-pulse rounded-lg bg-[#f3f4f6]"
+      />
+    ))}
+  </div>
+);
 
 /**
  * Admin Newsletter — Figma node 346:1740.
  */
 const AdminNewsletterContent = memo(() => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const bannerInputId = useId();
 
   const {
     subscribers,
+    isLoading,
+    isError,
+    isFetching,
+    loadErrorMessage,
+    refetch,
+    range,
+    isFirstPage,
+    isLastPage,
+    handlePreviousPage,
+    handleNextPage,
     bannerName,
     bannerError,
+    bannerInputKey,
     handleBannerChange,
     recipientId,
     setRecipientId,
-    selectedSubscriberIds,
+    selectedEmails,
     handleToggleSubscriber,
     composerOpen,
     setComposerOpen,
@@ -116,22 +154,15 @@ const AdminNewsletterContent = memo(() => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      subject: '',
-      emailTitle: '',
-      content: '',
-      ctaText: 'View More',
-      ctaUrl: '',
-    },
-  });
+  } = useForm({ defaultValues: NEWSLETTER_FORM_DEFAULTS });
 
   const isSelectMode = recipientId === 'selected';
-  const selectedCount = selectedSubscriberIds.length;
+  const selectedCount = selectedEmails.length;
 
-  const onFormSubmit = (_data) => {
-    doSend();
+  const onFormSubmit = (values) => {
+    doSend(values, { onSuccess: () => reset(NEWSLETTER_FORM_DEFAULTS) });
   };
 
   const onFormError = () => {
@@ -153,7 +184,7 @@ const AdminNewsletterContent = memo(() => {
         {/* Subscriber list — natural height on mobile; capped scroll on xl only */}
         <section
           aria-label={t('adminNewsletter.tableAria')}
-          className={`w-full self-start overflow-hidden rounded-xl bg-white xl:max-w-188.25 xl:flex-1 ${
+          className={`w-full self-start overflow-hidden rounded-xl bg-white xl:sticky xl:top-6 xl:z-10 xl:max-w-188.25 xl:flex-1 ${
             isSelectMode ? 'ring-2 ring-[#4048cd]/40' : ''
           }`}
         >
@@ -178,47 +209,93 @@ const AdminNewsletterContent = memo(() => {
               {t('adminNewsletter.columns.subscribedDate')}
             </div>
           </div>
-          <ul className="scrollbar-newsletter flex flex-col overflow-y-auto xl:max-h-[calc(100dvh-11rem)] xl:overflow-y-scroll">
-            {subscribers.map((row) => {
-              const isSelected = selectedSubscriberIds.includes(row.id);
+          {isLoading ? (
+            <SubscriberListSkeleton />
+          ) : isError ? (
+            <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
+              <p className="text-[16px] text-[#ee1c25]">{loadErrorMessage}</p>
+              <Button
+                unstyled
+                type="button"
+                onClick={() => refetch()}
+                className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium text-[#4048cd] transition hover:bg-[#f6fbff]"
+              >
+                {t('adminNewsletter.retry')}
+              </Button>
+            </div>
+          ) : subscribers.length === 0 ? (
+            <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+              {t('adminNewsletter.empty')}
+            </p>
+          ) : (
+            <ul
+              aria-busy={isFetching}
+              className={`scrollbar-newsletter flex flex-col overflow-y-auto transition-opacity xl:max-h-[calc(100dvh-12rem)] xl:overflow-y-auto ${
+                isFetching ? 'opacity-60' : ''
+              }`}
+            >
+              {subscribers.map((row) => {
+                const isSelected = selectedEmails.includes(row.email);
 
-              return (
-                <li
-                  key={row.id}
-                  className={`flex items-center justify-between border-b border-[#e4e4e4] px-4 last:border-b-0 ${
-                    isSelectMode && isSelected
-                      ? 'bg-[rgba(239,246,255,0.45)]'
-                      : ''
-                  }`}
-                >
-                  {isSelectMode ? (
-                    <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-2.5 py-4 sm:py-6">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => handleToggleSubscriber(row.id)}
-                        className="size-4 shrink-0 cursor-pointer accent-[#4048cd]"
-                        aria-label={t(
-                          'adminNewsletter.recipients.selectSubscriber',
-                          { email: row.email },
-                        )}
-                      />
-                      <span className="break-all text-[14px] leading-6 text-[#0c0c0c] sm:text-[16px]">
-                        {row.email}
-                      </span>
-                    </label>
-                  ) : (
-                    <div className="min-w-0 flex-1 px-2.5 py-4 text-[14px] leading-6 text-[#0c0c0c] sm:py-6 sm:text-[16px]">
-                      <span className="break-all">{row.email}</span>
+                return (
+                  <li
+                    key={row.id}
+                    className={`flex items-center justify-between border-b border-[#e4e4e4] px-4 last:border-b-0 ${
+                      isSelectMode && isSelected
+                        ? 'bg-[rgba(239,246,255,0.45)]'
+                        : ''
+                    }`}
+                  >
+                    {isSelectMode ? (
+                      <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-2.5 py-4 sm:py-6">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleToggleSubscriber(row.email)}
+                          className="size-4 shrink-0 cursor-pointer accent-[#4048cd]"
+                          aria-label={t(
+                            'adminNewsletter.recipients.selectSubscriber',
+                            { email: row.email },
+                          )}
+                        />
+                        <span className="break-all text-[14px] leading-6 text-[#0c0c0c] sm:text-[16px]">
+                          {row.email}
+                        </span>
+                      </label>
+                    ) : (
+                      <div className="min-w-0 flex-1 px-2.5 py-4 text-[14px] leading-6 text-[#0c0c0c] sm:py-6 sm:text-[16px]">
+                        <span className="break-all">{row.email}</span>
+                      </div>
+                    )}
+                    <div className="w-35 shrink-0 px-2.5 py-4 text-right text-[14px] leading-6 text-[#0c0c0c] sm:w-45 sm:py-6 sm:text-left sm:text-[16px]">
+                      {formatSubscribedDate(row.subscribedAt, i18n.language)}
                     </div>
-                  )}
-                  <div className="w-35 shrink-0 px-2.5 py-4 text-right text-[14px] leading-6 text-[#0c0c0c] sm:w-45 sm:py-6 sm:text-left sm:text-[16px]">
-                    {row.subscribedDate}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {!isLoading && !isError && (
+            <AdminPagination
+              variant="businessLink"
+              from={range.from}
+              to={range.to}
+              total={range.total}
+              isFirstPage={isFirstPage || isFetching}
+              isLastPage={isLastPage || isFetching}
+              onPrevious={handlePreviousPage}
+              onNext={handleNextPage}
+              showingText={t('adminNewsletter.pagination.showing', {
+                from: range.from,
+                to: range.to,
+                total: range.total,
+              })}
+              previousLabel={t('adminNewsletter.pagination.previous')}
+              nextLabel={t('adminNewsletter.pagination.next')}
+              navAriaLabel={t('adminNewsletter.pagination.aria')}
+            />
+          )}
         </section>
 
         {/* Composer + recipients — never stretch to match list height */}
@@ -411,9 +488,10 @@ const AdminNewsletterContent = memo(() => {
                       </span>
                     </span>
                     <input
+                      key={bannerInputKey}
                       id={bannerInputId}
                       type="file"
-                      accept="image/png,image/jpeg,.png,.jpg,.webp"
+                      accept="image/png,image/jpeg,.png,.jpg,.jpeg"
                       className="sr-only"
                       onChange={handleBannerChange}
                     />
@@ -491,6 +569,7 @@ const AdminNewsletterContent = memo(() => {
                   key={option.id}
                   option={option}
                   selected={recipientId === option.id}
+                  subscriberCount={range.total}
                   onSelect={() => setRecipientId(option.id)}
                 />
               ))}

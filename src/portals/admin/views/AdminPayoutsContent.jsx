@@ -227,7 +227,11 @@ const PayoutTableRow = memo(
 
     return (
       <TableRow
-        className={isEven ? 'border-b-0 bg-[#fff5f5] hover:bg-[#fff5f5]' : 'border-b-0 bg-white hover:bg-white'}
+        className={
+          isEven
+            ? 'border-b-0 bg-[#fff5f5] hover:bg-[#fff5f5]'
+            : 'border-b-0 bg-white hover:bg-white'
+        }
       >
         <TableCell className="px-4 py-4 text-[14px] leading-5 text-[#263147] sm:px-5">
           {t(row.dateKey)}

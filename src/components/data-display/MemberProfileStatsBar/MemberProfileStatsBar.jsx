@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
 
 const STAT_ITEMS = [
-  { key: 'followers', href: ROUTES.ADMIN_PROFILE_FOLLOWERS },
-  { key: 'following', href: ROUTES.ADMIN_PROFILE_FOLLOWING },
+  { key: 'followers', href: ROUTES.USER_PROFILE_FOLLOWERS },
+  { key: 'following', href: ROUTES.USER_PROFILE_FOLLOWING },
   { key: 'profileVisitors' },
   { key: 'totalArtwork' },
   { key: 'competitionEntries' },

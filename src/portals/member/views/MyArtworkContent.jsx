@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
-import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard';
+import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
 import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
 import MemberFilterSelect from '@/portals/member/components/member-artwork/MemberFilterSelect';
@@ -69,7 +69,7 @@ const MyArtworkContent = memo(() => {
           </p>
         </div>
         <Link
-          to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD}
+          to={ROUTES.USER_MY_ARTWORK_UPLOAD}
           className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-5 py-2.5 text-[16px] leading-6 text-white shadow-sm transition hover:bg-[#d41921]"
         >
           <Plus size={16} strokeWidth={2} aria-hidden="true" />
@@ -82,7 +82,7 @@ const MyArtworkContent = memo(() => {
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5 xl:gap-5"
       >
         {MY_ARTWORK_STATS.map((stat) => (
-          <MemberArtworkStatCard key={stat.id} {...stat} />
+          <DashboardStatCard key={stat.id} {...stat} />
         ))}
       </section>
 

@@ -1,5 +1,7 @@
 /** Admin Categories — Figma node 339:3170 / Add popup 339:4813. */
 
+import { getLocalizedText } from '@/shared/utils/localizedText';
+
 const A = '/assets/admin-categories';
 
 export const ADMIN_CATEGORIES_ASSETS = {
@@ -12,50 +14,43 @@ export const PLUS_ICON_SIZE = 16;
 export const TRASH_ICON_SIZE = 20;
 export const CLOSE_ICON_SIZE = 18;
 
-export const ADMIN_CATEGORY_ITEMS = [
-  { id: 'nature', labelKey: 'adminCategories.items.nature' },
-  { id: 'portrait', labelKey: 'adminCategories.items.portrait' },
-  { id: 'wildlife', labelKey: 'adminCategories.items.wildlife' },
-  { id: 'landscape', labelKey: 'adminCategories.items.landscape' },
-  { id: 'street', labelKey: 'adminCategories.items.street' },
-  { id: 'architecture', labelKey: 'adminCategories.items.architecture' },
-  { id: 'black-white', labelKey: 'adminCategories.items.blackWhite' },
-  { id: 'travel', labelKey: 'adminCategories.items.travel' },
-  { id: 'wedding', labelKey: 'adminCategories.items.wedding' },
-  { id: 'macro', labelKey: 'adminCategories.items.macro' },
-  { id: 'fine-art', labelKey: 'adminCategories.items.fineArt' },
-  { id: 'pets', labelKey: 'adminCategories.items.pets' },
-  { id: 'sports', labelKey: 'adminCategories.items.sports' },
-  { id: 'night', labelKey: 'adminCategories.items.night' },
-];
+export const getCategoryName = getLocalizedText;
+
+/**
+ * "Street & Night Photography" -> "street-night-photography"
+ * @param {string} value
+ */
+export const slugify = (value) =>
+  String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/ł/g, 'l')
+    .replace(/Ł/g, 'L')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
 /**
  * @param {string} name
  */
-export const isCategoryNameValid = (name) => Boolean(String(name || '').trim());
+export const isCategoryNameValid = (name) => Boolean(slugify(name));
 
 /**
- * @param {typeof ADMIN_CATEGORY_ITEMS} categories
- * @param {string} categoryId
+ * @param {string} name
+ * @param {string} [parentId]
  */
-export const removeCategoryById = (categories, categoryId) =>
-  categories.filter((category) => category.id !== categoryId);
-
-/**
- * @param {typeof ADMIN_CATEGORY_ITEMS} categories
- * @param {{ id: string, labelKey?: string, label?: string }} category
- */
-export const appendCategory = (categories, category) => {
-  if (!category?.id) return categories;
-  if (categories.some((item) => item.id === category.id)) return categories;
-  return [...categories, category];
+export const buildCategoryPayload = (name, parentId) => {
+  const trimmedName = String(name || '').trim();
+  return {
+    name: { en: trimmedName },
+    slug: slugify(trimmedName),
+    ...(parentId ? { parentId } : {}),
+  };
 };
 
 /**
- * @param {string} name
- * @param {number} nextIndex
+ * @param {Array<{ subcategories?: Array<object> }>} categories
  */
-export const createCategoryFromName = (name, nextIndex) => ({
-  id: `custom-${nextIndex}`,
-  label: String(name || '').trim(),
-});
+export const flattenSubcategories = (categories) =>
+  categories.flatMap((category) => category.subcategories ?? []);

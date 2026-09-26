@@ -30,7 +30,7 @@ const MyMessagesContent = memo(() => {
           </p>
         </div>
         <Link
-          to={ROUTES.ADMIN_NEWS_MESSAGES_UPLOAD}
+          to={ROUTES.USER_NEWS_MESSAGES_UPLOAD}
           className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-5 py-2.5 text-[16px] leading-6 text-white shadow-sm transition hover:bg-[#d41921]"
         >
           <Plus size={16} strokeWidth={2} aria-hidden="true" />

@@ -10,8 +10,12 @@ import Sidebar from '@/layouts/AppShellLayout/adminSidebar/Sidebar';
 import AdminComingSoonContent from '@/portals/admin/views/AdminComingSoonContent';
 import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import { ROUTES } from '@/shared/config';
+import { isAdminRole } from '@/shared/utils/roles';
 
-const normalizePath = (pathname) => pathname.replace(/\/+$/, '') || '/';
+const normalizePath = (pathname) => {
+  if (!pathname) return null;
+  return pathname.replace(/\/+$/, '') || '/';
+};
 
 const Layout = memo(() => {
   const { t } = useTranslation();
@@ -20,41 +24,69 @@ const Layout = memo(() => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(true);
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = isAdminRole(user?.role);
   const currentPath = normalizePath(location.pathname);
   const isAdminReadyPage =
     currentPath === normalizePath(ROUTES.ADMIN_DASHBOARD) ||
+    currentPath === normalizePath(ROUTES.USER_DASHBOARD) ||
     currentPath === normalizePath(ROUTES.ADMIN_MY_COMPETITIONS) ||
+    currentPath === normalizePath(ROUTES.USER_MY_COMPETITIONS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_MY_COMPETITIONS)}/`) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_MY_COMPETITIONS)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_GALLERY) ||
+    currentPath === normalizePath(ROUTES.USER_GALLERY) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_GALLERY)}/`) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_GALLERY)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_PREMIUM_PHOTOS) ||
+    currentPath === normalizePath(ROUTES.USER_PREMIUM_PHOTOS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PREMIUM_PHOTOS)}/`) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_PREMIUM_PHOTOS)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS) ||
-    currentPath.startsWith(
-      `${normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS)}/`,
-    ) ||
+    currentPath === normalizePath(ROUTES.USER_PROMOTED_PRODUCTS) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS)}/`) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_PROMOTED_PRODUCTS)}/`) ||
     // currentPath === normalizePath(ROUTES.ADMIN_SUBMISSIONS) ||
+    // currentPath === normalizePath(ROUTES.USER_SUBMISSIONS) ||
     currentPath === normalizePath(ROUTES.ADMIN_USERS) ||
+    currentPath === normalizePath(ROUTES.USER_USERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_CATEGORIES) ||
+    currentPath === normalizePath(ROUTES.USER_CATEGORIES) ||
     currentPath === normalizePath(ROUTES.ADMIN_ALBUM_TYPES) ||
+    currentPath === normalizePath(ROUTES.USER_ALBUM_TYPES) ||
     currentPath === normalizePath(ROUTES.ADMIN_WINNERS) ||
+    currentPath === normalizePath(ROUTES.USER_WINNERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_PAYOUTS) ||
+    currentPath === normalizePath(ROUTES.USER_PAYOUTS) ||
     currentPath === normalizePath(ROUTES.ADMIN_SUPPORT) ||
+    currentPath === normalizePath(ROUTES.USER_SUPPORT) ||
     currentPath === normalizePath(ROUTES.ADMIN_NEWSLETTER) ||
+    currentPath === normalizePath(ROUTES.USER_NEWSLETTER) ||
     currentPath === normalizePath(ROUTES.ADMIN_COMMENT) ||
+    currentPath === normalizePath(ROUTES.USER_COMMENT) ||
     currentPath === normalizePath(ROUTES.ADMIN_ADS) ||
+    currentPath === normalizePath(ROUTES.USER_ADS) ||
     currentPath === normalizePath(ROUTES.ADMIN_DEMO_PROFILES) ||
+    currentPath === normalizePath(ROUTES.USER_DEMO_PROFILES) ||
     currentPath === normalizePath(ROUTES.ADMIN_DEMO_PROFILES_CREATE) ||
+    currentPath === normalizePath(ROUTES.USER_DEMO_PROFILES_CREATE) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROMO_LINKS) ||
+    currentPath === normalizePath(ROUTES.USER_PROMO_LINKS) ||
     currentPath === normalizePath(ROUTES.ADMIN_REPORTS) ||
+    currentPath === normalizePath(ROUTES.USER_REPORTS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_REPORTS)}/`) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_REPORTS)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_MARKETING_STATISTICS) ||
+    currentPath === normalizePath(ROUTES.USER_MARKETING_STATISTICS) ||
     currentPath === normalizePath(ROUTES.ADMIN_SETTINGS) ||
+    currentPath === normalizePath(ROUTES.USER_SETTINGS) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROFILE) ||
+    currentPath === normalizePath(ROUTES.USER_PROFILE) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROFILE)}/`) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_PROFILE)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS) ||
+    currentPath === normalizePath(ROUTES.USER_BUSINESS_PHOTOS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS)}/`);
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_BUSINESS_PHOTOS)}/`);
 
   useEffect(() => {
     const handleKey = (event) => {

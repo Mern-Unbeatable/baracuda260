@@ -3,7 +3,7 @@ import Zodiac12Content from '@/portals/member/views/Zodiac12Content';
 import { ROUTES } from '@/shared/config';
 import { useSEO } from '@/shared/hooks/useSEO';
 
-const uploadHub = ROUTES.ADMIN_SELL_PHOTOS_UPLOAD;
+const uploadHub = ROUTES.USER_SELL_PHOTOS_UPLOAD;
 
 const SellPhotosUploadZodiac = memo(() => {
   useSEO({

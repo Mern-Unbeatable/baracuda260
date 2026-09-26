@@ -1,5 +1,4 @@
 import {
-  ArrowUpRight,
   Camera,
   Globe,
   PenTool,
@@ -12,51 +11,14 @@ import React, { memo } from 'react';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import { useMarketingStatistics } from '@/portals/admin/hooks/useMarketingStatistics';
 
-const StatCard = ({
-  title,
-  value,
-  percentage,
-  icon: Icon,
-  subtitle,
-  gradient,
-}) => (
-  <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-[0px_4px_20px_-4px_rgba(22,28,39,0.05)] transition-all hover:shadow-[0px_8px_30px_-4px_rgba(22,28,39,0.1)]">
-    <div className="relative z-10 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <div
-          className={`flex size-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-sm`}
-        >
-          <Icon size={24} strokeWidth={2} />
-        </div>
-        {percentage != null && (
-          <div className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-sm font-semibold text-emerald-700">
-            <ArrowUpRight size={16} />
-            {percentage}%
-          </div>
-        )}
-      </div>
-      <div>
-        <p className="text-sm font-medium text-gray-500">{title}</p>
-        <div className="mt-1 flex items-baseline gap-2">
-          <h3 className="font-manrope text-3xl font-bold tracking-tight text-gray-900">
-            {typeof value === 'number' ? value.toLocaleString() : value}
-          </h3>
-        </div>
-        {subtitle && <p className="mt-2 text-sm text-gray-500">{subtitle}</p>}
-      </div>
-    </div>
-    <div
-      className={`absolute -bottom-12 -right-12 size-32 rounded-full bg-gradient-to-br ${gradient} opacity-5 blur-2xl`}
-    />
-  </div>
-);
+import AdminMarketingStatCard from '@/components/data-display/AdminMarketingStatCard/AdminMarketingStatCard';
 
 const AdminMarketingStatisticsContent = memo(() => {
   const { data, loading } = useMarketingStatistics();
 
   if (loading) {
     return (
-      <div className="flex h-[400px] w-full items-center justify-center">
+      <div className="flex h-100 w-full items-center justify-center">
         <div className="size-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
       </div>
     );
@@ -76,21 +38,21 @@ const AdminMarketingStatisticsContent = memo(() => {
       />
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
+        <AdminMarketingStatCard
           title="Total Registered Profiles"
           value={total}
           icon={Users}
           gradient="from-blue-600 to-indigo-600"
           subtitle="Baseline metric for all conversions"
         />
-        <StatCard
+        <AdminMarketingStatCard
           title="Daily Website Visits"
           value={data.traffic.dailyWebsiteVisits}
           icon={Globe}
           gradient="from-emerald-500 to-teal-600"
           subtitle="Total unique hits today"
         />
-        <StatCard
+        <AdminMarketingStatCard
           title="Active 'My Store' Owners"
           value={data.storeStats.activeStores}
           percentage={calcPct(data.storeStats.activeStores)}
@@ -98,7 +60,7 @@ const AdminMarketingStatisticsContent = memo(() => {
           gradient="from-orange-500 to-amber-600"
           subtitle={`${data.storeStats.storesWithProducts.toLocaleString()} have active products`}
         />
-        <StatCard
+        <AdminMarketingStatCard
           title="Store Owners Buying 'Promote'"
           value={data.storeStats.storesBoughtPromote}
           percentage={(
@@ -117,7 +79,7 @@ const AdminMarketingStatisticsContent = memo(() => {
           User Behavior & Engagement
         </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <StatCard
+          <AdminMarketingStatCard
             title="Photos + Competitions"
             value={data.behaviorStats.addedPhotosAndCompetitions}
             percentage={calcPct(data.behaviorStats.addedPhotosAndCompetitions)}
@@ -125,7 +87,7 @@ const AdminMarketingStatisticsContent = memo(() => {
             gradient="from-violet-600 to-fuchsia-600"
             subtitle="Highly engaged users"
           />
-          <StatCard
+          <AdminMarketingStatCard
             title="Photos Only (No Competitions)"
             value={data.behaviorStats.onlyAddedPhotos}
             percentage={calcPct(data.behaviorStats.onlyAddedPhotos)}
@@ -133,7 +95,7 @@ const AdminMarketingStatisticsContent = memo(() => {
             gradient="from-cyan-500 to-blue-600"
             subtitle="Casual users"
           />
-          <StatCard
+          <AdminMarketingStatCard
             title="Bought Photo/Album 'Promote'"
             value={data.promotionStats.boughtPhotoAlbumPromote}
             percentage={calcPct(data.promotionStats.boughtPhotoAlbumPromote)}

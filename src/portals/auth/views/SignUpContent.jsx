@@ -1,17 +1,18 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
-import AuthPageChrome from '@/portals/auth/components/auth/auth/AuthPageChrome';
-import { SIGNUP_ASSETS } from '@/portals/auth/data/signupAssets';
+import Dropzone from '@/components/ui/Dropzone';
+import { Eye, EyeOff } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { useSignUp } from '../hooks/useSignUp';
 
 /**
- * Sign Up page UI — Figma node 111:1024 (baracuda260 Copy).
+ * Sign Up page UI — New Full-Page Centered Design
  */
 const SignUpContent = memo(() => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -23,216 +24,271 @@ const SignUpContent = memo(() => {
   } = useSignUp();
 
   const fieldClass = (hasError) =>
-    `h-[52px] w-full rounded-lg bg-[#ecedfa] px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:ring-2 focus:ring-[#ee1c25]/25 sm:h-[60px] ${
+    `h-[52px] w-full rounded-md bg-[#eef0f7] px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:ring-2 focus:ring-[#ee1c25]/25 sm:h-[56px] ${
       hasError ? 'ring-2 ring-red-400' : ''
     }`;
 
   const labelClass =
-    'block text-[15px] font-medium leading-5 text-[#373737] sm:text-[16px] mb-2 sm:mb-2.5';
+    'block text-[14px] font-semibold leading-5 text-[#373737] mb-2';
 
   return (
-    <div className="signup-page-root relative min-h-dvh w-full overflow-x-hidden bg-white">
-      <AuthPageChrome backLabelKey="signup.backHome" />
+    <div className="flex min-h-dvh w-full items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-5xl">
+        <header className="mb-10 text-left">
+          <h2 className="text-[32px] font-bold tracking-tight text-[#111827] sm:text-[40px]">
+            Create your Account
+          </h2>
+        </header>
 
-      <div className="grid min-h-dvh w-full grid-cols-1 lg:grid-cols-[minmax(0,724fr)_minmax(0,720fr)]">
-        <aside className="relative h-55 overflow-hidden sm:h-75 md:h-90 lg:h-auto lg:min-h-dvh">
-          <Image
-            src={SIGNUP_ASSETS.hero}
-            alt=""
-            width={724}
-            height={1024}
-            className="absolute inset-0 h-full w-full object-cover object-center"
+        {globalError ? (
+          <div
+            role="alert"
+            className="mb-8 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          >
+            {globalError}
+          </div>
+        ) : null}
+
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex flex-col gap-6 sm:gap-8"
+        >
+          {/* Row 1: Full Name | Username */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Input
+              id="signup-full-name"
+              type="text"
+              autoComplete="name"
+              label="Full Name"
+              placeholder="Enter your full name"
+              error={errors.fullName}
+              aria-invalid={Boolean(errors.fullName)}
+              inputClassName={fieldClass(Boolean(errors.fullName))}
+              labelClassName={labelClass}
+              {...register('fullName', {
+                required: 'Full Name is required',
+                pattern: {
+                  value: /^[a-zA-Z\s]*$/,
+                  message: 'Full Name can only contain letters and spaces',
+                },
+              })}
+            />
+            <Input
+              id="signup-username"
+              type="text"
+              autoComplete="username"
+              label="Username"
+              placeholder="@username"
+              error={errors.username}
+              aria-invalid={Boolean(errors.username)}
+              inputClassName={fieldClass(Boolean(errors.username))}
+              labelClassName={labelClass}
+              {...register('username', { required: 'Username is required' })}
+            />
+          </div>
+
+          {/* Row 2: Email | Phone */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Input
+              id="signup-email"
+              type="email"
+              autoComplete="email"
+              label="Email"
+              placeholder="Enter your email.."
+              error={errors.email}
+              aria-invalid={Boolean(errors.email)}
+              inputClassName={fieldClass(Boolean(errors.email))}
+              labelClassName={labelClass}
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: 'Invalid email address',
+                },
+              })}
+            />
+            <Input
+              id="signup-phone"
+              type="tel"
+              autoComplete="tel"
+              label="Phone Number"
+              placeholder="Enter your Phone number.."
+              error={errors.phone}
+              aria-invalid={Boolean(errors.phone)}
+              inputClassName={fieldClass(Boolean(errors.phone))}
+              labelClassName={labelClass}
+              {...register('phone', {
+                required: 'Phone Number is required',
+                pattern: {
+                  value: /^\+?[0-9\s-]+$/,
+                  message:
+                    'Phone Number can only contain numbers, spaces, and dashes',
+                },
+              })}
+            />
+          </div>
+
+          {/* Country */}
+          <Input
+            id="signup-country"
+            type="text"
+            autoComplete="country-name"
+            label="Country"
+            placeholder="Country Name"
+            error={errors.country}
+            aria-invalid={Boolean(errors.country)}
+            inputClassName={fieldClass(Boolean(errors.country))}
+            labelClassName={labelClass}
+            {...register('country', { required: 'Country is required' })}
           />
-          <div className="absolute inset-x-0 top-0 bg-linear-to-b from-black/50 via-black/15 to-transparent px-4 pb-8 pt-16 sm:px-6 sm:pt-18 lg:hidden">
-            <div className="max-w-70">
-              <p className="text-[28px] font-bold leading-tight tracking-[-0.5px] text-white sm:text-[36px]">
-                {t('signup.brandTitle')}
-              </p>
-              <p className="mt-1 text-[11px] font-normal uppercase tracking-[1.4px] text-white/90 sm:text-[14px] sm:tracking-[1.8px]">
-                {t('signup.brandTagline')}
-              </p>
-            </div>
-          </div>
-          <div className="absolute inset-x-0 bottom-0 hidden bg-linear-to-t from-black/55 via-black/20 to-transparent p-8 pb-13 pl-11.5 lg:block">
-            <div className="max-w-md rounded-2xl px-4 py-2">
-              <h1 className="text-[48px] font-bold leading-14 tracking-[-0.96px] text-white">
-                {t('signup.brandTitle')}
-              </h1>
-              <p className="mt-2 text-[18px] font-normal uppercase leading-7 tracking-[1.8px] text-white/90">
-                {t('signup.brandTagline')}
-              </p>
-            </div>
-          </div>
-        </aside>
 
-        <section className="relative flex w-full items-start justify-center bg-white px-4 py-8 shadow-none sm:px-8 sm:py-10 md:px-10 lg:min-h-dvh lg:items-center lg:py-12 lg:shadow-[-7px_0_11.4px_rgba(0,0,0,0.25)]">
-          <div className="flex w-full max-w-153.75 flex-col gap-7 sm:gap-9">
-            <header>
-              <h2 className="text-center text-[26px] font-semibold leading-normal text-[#0c0c0c] sm:text-[32px] lg:text-[40px]">
-                {t('signup.title')}
-              </h2>
-            </header>
-
-            {globalError ? (
-              <div
-                role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-              >
-                {globalError}
-              </div>
-            ) : null}
-
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className="flex w-full flex-col gap-6 sm:gap-7.5"
+          {/* About */}
+          <div>
+            <label
+              htmlFor="signup-about"
+              className="mb-2 block text-[14px] font-semibold leading-5 text-[#373737]"
             >
-              <div className="flex w-full flex-col gap-3.5 sm:gap-4">
-                <Input
-                  id="signup-full-name"
-                  type="text"
-                  autoComplete="name"
-                  label={t('signup.fullName')}
-                  placeholder={t('signup.fullNamePlaceholder')}
-                  error={errors.fullName}
-                  aria-invalid={Boolean(errors.fullName)}
-                  aria-describedby={
-                    errors.fullName ? 'signup-full-name-error' : undefined
-                  }
-                  inputClassName={fieldClass(Boolean(errors.fullName))}
-                  labelClassName={labelClass}
-                  {...register('fullName', {
-                    required: t('signup.fullNameRequired'),
-                  })}
-                />
-
-                <Input
-                  id="signup-username"
-                  type="text"
-                  autoComplete="username"
-                  label={t('signup.username')}
-                  placeholder={t('signup.usernamePlaceholder')}
-                  error={errors.username}
-                  aria-invalid={Boolean(errors.username)}
-                  aria-describedby={
-                    errors.username ? 'signup-username-error' : undefined
-                  }
-                  inputClassName={fieldClass(Boolean(errors.username))}
-                  labelClassName={labelClass}
-                  {...register('username', {
-                    required: t('signup.usernameRequired'),
-                  })}
-                />
-
-                <Input
-                  id="signup-email"
-                  type="email"
-                  autoComplete="email"
-                  label={t('signup.email')}
-                  placeholder={t('signup.emailPlaceholder')}
-                  error={errors.email}
-                  aria-invalid={Boolean(errors.email)}
-                  aria-describedby={
-                    errors.email ? 'signup-email-error' : undefined
-                  }
-                  inputClassName={fieldClass(Boolean(errors.email))}
-                  labelClassName={labelClass}
-                  {...register('email', {
-                    required: t('signup.emailRequired'),
-                    pattern: {
-                      value: EMAIL_REGEX,
-                      message: t('signup.emailInvalid'),
-                    },
-                  })}
-                />
-
-                <Input
-                  id="signup-phone"
-                  type="tel"
-                  autoComplete="tel"
-                  label={t('signup.phone')}
-                  placeholder={t('signup.phonePlaceholder')}
-                  error={errors.phone}
-                  aria-invalid={Boolean(errors.phone)}
-                  aria-describedby={
-                    errors.phone ? 'signup-phone-error' : undefined
-                  }
-                  inputClassName={fieldClass(Boolean(errors.phone))}
-                  labelClassName={labelClass}
-                  {...register('phone', {
-                    required: t('signup.phoneRequired'),
-                  })}
-                />
-
-                <Input
-                  id="signup-country"
-                  type="text"
-                  autoComplete="country-name"
-                  label={t('signup.country')}
-                  placeholder={t('signup.countryPlaceholder')}
-                  error={errors.country}
-                  aria-invalid={Boolean(errors.country)}
-                  aria-describedby={
-                    errors.country ? 'signup-country-error' : undefined
-                  }
-                  inputClassName={fieldClass(Boolean(errors.country))}
-                  labelClassName={labelClass}
-                  {...register('country', {
-                    required: t('signup.countryRequired'),
-                  })}
-                />
-
-                <Input
-                  id="signup-password"
-                  type="password"
-                  autoComplete="new-password"
-                  label={t('signup.password')}
-                  placeholder={t('signup.passwordPlaceholder')}
-                  error={errors.password}
-                  aria-invalid={Boolean(errors.password)}
-                  aria-describedby={
-                    errors.password ? 'signup-password-error' : undefined
-                  }
-                  inputClassName={fieldClass(Boolean(errors.password))}
-                  labelClassName={labelClass}
-                  {...register('password', {
-                    required: t('signup.passwordRequired'),
-                    minLength: {
-                      value: 8,
-                      message: t('signup.passwordTooShort'),
-                    },
-                  })}
-                />
-              </div>
-
-              <div className="flex w-full flex-col items-center gap-5 pb-4 sm:gap-6">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  unstyled
-                  className="inline-flex h-12 w-full items-center justify-center rounded-lg bg-[#ee1c25] px-4 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {isSubmitting ? (
-                    <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  ) : null}
-                  {isSubmitting ? t('signup.submitting') : t('signup.submit')}
-                </Button>
-
-                <p className="text-center text-[15px] leading-normal text-[#a7a7a7] sm:text-[16px]">
-                  <span className="text-[#0c0c0c]">
-                    {t('signup.haveAccount')}{' '}
-                  </span>
-                  <Link
-                    to={ROUTES.LOGIN}
-                    className="font-semibold text-[#ee1c25]"
-                  >
-                    {t('signup.logIn')}
-                  </Link>
-                </p>
-              </div>
-            </form>
+              About{' '}
+              <span className="text-[12px] font-normal uppercase text-gray-500">
+                ( MAX 150 WORDS )
+              </span>
+            </label>
+            <textarea
+              id="signup-about"
+              rows={4}
+              placeholder="write about your information"
+              className={`w-full rounded-md bg-[#eef0f7] px-[14px] py-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:ring-2 focus:ring-[#ee1c25]/25 ${
+                errors.about ? 'ring-2 ring-red-400' : ''
+              }`}
+              {...register('about', { required: 'About is required' })}
+            />
+            {errors.about && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.about.message}
+              </p>
+            )}
           </div>
-        </section>
+
+          {/* Social Media Link */}
+          <div>
+            <Input
+              id="signup-social"
+              type="url"
+              label="Social Media Link"
+              placeholder="https://instagram.com/username"
+              error={errors.socialLink}
+              aria-invalid={Boolean(errors.socialLink)}
+              inputClassName="h-[52px] w-full rounded-md border border-[#e5e7eb] bg-white px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:border-[#ee1c25] focus:ring-1 focus:ring-[#ee1c25]"
+              labelClassName={labelClass}
+              {...register('socialLink')}
+            />
+            <button
+              type="button"
+              className="mt-2 text-[14px] font-semibold text-[#ee1c25] transition hover:text-[#d41921]"
+            >
+              Add Another
+            </button>
+          </div>
+
+          {/* Photos */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label className={labelClass}>Profile Photo</label>
+              <Dropzone
+                id="signup-profile-photo"
+                label="Upload Profile Photo"
+                sublabel="JPG, PNG or WebP • 400x400px"
+                accept="image/jpeg, image/png, image/webp"
+                className="h-32"
+                {...register('profilePhoto')}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Cover Photo</label>
+              <Dropzone
+                id="signup-cover-photo"
+                label="Upload Cover Photo"
+                sublabel="JPG, PNG or WebP • 1600x600px"
+                accept="image/jpeg, image/png, image/webp"
+                className="h-32"
+                {...register('coverPhoto')}
+              />
+            </div>
+          </div>
+
+          {/* Video */}
+          <div>
+            <label className={labelClass}>Introduction Video</label>
+            <Dropzone
+              id="signup-video"
+              label="Upload Video"
+              sublabel="MP4 • maximum 3 minute video"
+              accept="video/mp4"
+              className="h-40"
+              {...register('video')}
+            />
+          </div>
+
+          {/* Password */}
+          <div className="relative">
+            <Input
+              id="signup-password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              label="Password"
+              placeholder="write a strong password"
+              error={errors.password}
+              aria-invalid={Boolean(errors.password)}
+              inputClassName={`${fieldClass(Boolean(errors.password))} pr-12`}
+              labelClassName={labelClass}
+              {...register('password', {
+                required: 'Password is required',
+                minLength: {
+                  value: 8,
+                  message: 'Password must be at least 8 characters',
+                },
+              })}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-[38px] flex h-[24px] w-[24px] items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none sm:top-[40px]"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? (
+                <EyeOff className="size-5" />
+              ) : (
+                <Eye className="size-5" />
+              )}
+            </button>
+          </div>
+
+          {/* Submit */}
+          <div className="mt-4 flex w-full flex-col items-center gap-5 sm:gap-6">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              unstyled
+              className="inline-flex h-[52px] w-full items-center justify-center rounded-md bg-[#ee1c25] px-4 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSubmitting ? (
+                <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : null}
+              Sign UP
+            </Button>
+
+            <p className="text-center text-[15px] leading-normal text-[#111827] sm:text-[16px]">
+              Already Have an account{' '}
+              <Link
+                to={ROUTES.LOGIN}
+                className="font-bold text-[#ee1c25] hover:underline"
+              >
+                Log In
+              </Link>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );

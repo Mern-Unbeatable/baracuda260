@@ -29,6 +29,9 @@ import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import GalleryDetailBreadcrumb from './GalleryDetailBreadcrumb';
 
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/app/store/slices/authSlice';
+
 const GalleryDetailView = memo(
   ({
     entry,
@@ -38,6 +41,8 @@ const GalleryDetailView = memo(
     rootClassName: rootClassNameProp,
   }) => {
     const { t } = useTranslation();
+    const user = useSelector(selectUser);
+
     const config =
       GALLERY_DETAIL_VARIANTS[variant] || GALLERY_DETAIL_VARIANTS.single;
     const rootClassName = rootClassNameProp ?? config.rootClassName;
@@ -45,6 +50,20 @@ const GalleryDetailView = memo(
     const slides = story.slides || [];
     const slideCount = slides.length;
     const showStoryChrome = Boolean(config.stripLayout) && slideCount > 1;
+
+    // A simple heuristic for mock data matching: check if user's name matches the author's or photographer's name
+    const isOwnSubmission = Boolean(
+      user &&
+        (user.id === story.userId ||
+          (user.firstName &&
+            story.photographer
+              ?.toLowerCase()
+              .includes(user.firstName.toLowerCase())) ||
+          (user.username &&
+            story.photographer
+              ?.toLowerCase()
+              .includes(user.username.toLowerCase()))),
+    );
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [comment, setComment] = useState('');
@@ -249,7 +268,15 @@ const GalleryDetailView = memo(
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <MarketingButton type="button">
+                <MarketingButton
+                  type="button"
+                  disabled={isOwnSubmission}
+                  title={
+                    isOwnSubmission
+                      ? t('galleryDetail.cannotVoteOwn')
+                      : undefined
+                  }
+                >
                   <ImgIcon src={ASSETS.voteHeart} size={20} />
                   {t('galleryDetail.castVote')}
                 </MarketingButton>

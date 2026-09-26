@@ -105,7 +105,7 @@ const OrderDetailsContent = memo(() => {
   const order = getOrderById(id);
 
   if (!order) {
-    return <Navigate to={ROUTES.ADMIN_MY_ORDERS} replace />;
+    return <Navigate to={ROUTES.USER_MY_ORDERS} replace />;
   }
 
   const statusStyle = ORDER_STATUS_STYLES[order.status];
@@ -115,14 +115,14 @@ const OrderDetailsContent = memo(() => {
   };
 
   const handleClose = () => {
-    navigate(ROUTES.ADMIN_MY_ORDERS);
+    navigate(ROUTES.USER_MY_ORDERS);
   };
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-4 sm:gap-5">
       <div className="flex items-center justify-between gap-3">
         <Link
-          to={ROUTES.ADMIN_MY_ORDERS}
+          to={ROUTES.USER_MY_ORDERS}
           className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#6b7280] transition hover:text-[#4048cd]"
         >
           <ArrowLeft size={14} aria-hidden="true" />

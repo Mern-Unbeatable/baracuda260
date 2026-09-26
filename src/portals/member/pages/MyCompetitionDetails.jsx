@@ -5,12 +5,13 @@ import { selectUser } from '@/app/store/slices/authSlice';
 import AdminCompetitionDetailContent from '@/portals/admin/views/AdminCompetitionDetailContent';
 import { ROUTES } from '@/shared/config';
 import { useSEO } from '@/shared/hooks/useSEO';
+import { isAdminRole } from '@/shared/utils/roles';
 
 // import CompetitionDetailsContent from '@/portals/public/competition-details/CompetitionDetailsContent';
 
 const MyCompetitionDetails = memo(() => {
   const user = useSelector(selectUser);
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = isAdminRole(user?.role);
 
   useSEO(
     isAdmin
@@ -34,7 +35,7 @@ const MyCompetitionDetails = memo(() => {
   );
 
   if (!isAdmin) {
-    return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />;
+    return <Navigate to={ROUTES.USER_DASHBOARD} replace />;
   }
 
   return <AdminCompetitionDetailContent />;

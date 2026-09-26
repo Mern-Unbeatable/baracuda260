@@ -63,6 +63,8 @@ const StatusBadge = memo(({ status }) => {
 });
 StatusBadge.displayName = 'StatusBadge';
 
+import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
+
 const StatCards = memo(() => {
   const { t } = useTranslation();
 
@@ -72,34 +74,25 @@ const StatCards = memo(() => {
       className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
     >
       {STORE_ORDERS_STAT_CARDS.map((card) => {
-        const Icon = STAT_ICONS[card.icon] || ShoppingBag;
+        let iconBg = card.iconBg;
+        let iconColor = 'text-current';
+        
+        // Extract icon color from iconBg string if it's there (e.g. 'bg-[#eef2ff] text-[#4048cd]')
+        if (iconBg && iconBg.includes('text-')) {
+          const parts = iconBg.split(' ');
+          iconBg = parts.find(p => p.startsWith('bg-')) || iconBg;
+          iconColor = parts.find(p => p.startsWith('text-')) || iconColor;
+        }
+
         return (
-          <article
+          <DashboardStatCard
             key={card.id}
-            className={`rounded-[14px] border px-5 py-4 shadow-[0px_1px_2px_rgba(0,0,0,0.04)] ${card.cardClass}`}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[11px] font-bold tracking-[0.14em] text-[#8b93a7]">
-                  {t(card.labelKey)}
-                </p>
-                <p
-                  className={`mt-2 text-[26px] font-extrabold leading-none ${card.valueClass}`}
-                >
-                  {STORE_ORDERS_SUMMARY[card.id]}
-                </p>
-                <p className="mt-1.5 text-[12px] font-medium text-[#687186]">
-                  {t(card.hintKey)}
-                </p>
-              </div>
-              <span
-                className={`inline-flex size-10 shrink-0 items-center justify-center rounded-[10px] ${card.iconBg}`}
-                aria-hidden="true"
-              >
-                <Icon size={18} />
-              </span>
-            </div>
-          </article>
+            labelKey={card.labelKey}
+            value={STORE_ORDERS_SUMMARY[card.id]}
+            icon={card.icon}
+            iconBg={iconBg}
+            iconColor={iconColor}
+          />
         );
       })}
     </div>
@@ -130,7 +123,7 @@ const RowActions = memo(({ order, onStatusChange }) => {
   const buttonWrapRef = useRef(null);
   const buttonRef = useRef(null);
 
-  const detailHref = ROUTES.ADMIN_ORDERS_DETAIL.replace(':id', order.id);
+  const detailHref = ROUTES.USER_ORDERS_DETAIL.replace(':id', order.id);
   const menuLabel = t('storeOrders.actions.menu', {
     number: order.orderNumber,
   });
@@ -337,7 +330,7 @@ const OrdersContent = memo(() => {
               >
                 <TableCell className="px-3 py-4">
                   <Link
-                    to={ROUTES.ADMIN_ORDERS_DETAIL.replace(':id', order.id)}
+                    to={ROUTES.USER_ORDERS_DETAIL.replace(':id', order.id)}
                     className="text-[13px] font-bold text-[#111827] transition hover:text-[#4048cd]"
                   >
                     #{order.orderNumber}

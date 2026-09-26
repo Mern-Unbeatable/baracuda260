@@ -5,6 +5,9 @@ import PageLoader from '../ui/PageLoader';
 
 const Login = lazy(() => import('@/portals/auth/pages/Login'));
 const SignUp = lazy(() => import('@/portals/auth/pages/SignUp'));
+const PasswordRecovery = lazy(
+  () => import('@/portals/auth/pages/PasswordRecovery'),
+);
 const PromoJoin = lazy(() => import('@/portals/public/promo-join/PromoJoin'));
 
 export const authRoutes = (
@@ -22,6 +25,14 @@ export const authRoutes = (
       element={
         <Suspense fallback={<PageLoader />}>
           <SignUp />
+        </Suspense>
+      }
+    />
+    <Route
+      path={ROUTES.FORGOT_PASSWORD}
+      element={
+        <Suspense fallback={<PageLoader />}>
+          <PasswordRecovery />
         </Suspense>
       }
     />

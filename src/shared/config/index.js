@@ -34,7 +34,37 @@ export const ROUTES = {
   DEVELOPER_COMPONENT: '/developer/:componentId',
   LOGIN: '/login',
   SIGNUP: '/signup',
+  FORGOT_PASSWORD: '/forgot-password',
   JOIN_PROMO: '/join/promo/:code',
+
+  USER: '/user',
+  USER_DASHBOARD: '/user/dashboard',
+  USER_MY_ARTWORK: '/user/my-artwork',
+  USER_NEWS_MESSAGES: '/user/news-messages',
+  USER_SELL_PHOTOS: '/user/sell-photos',
+  USER_MY_STORE: '/user/my-store',
+  USER_MY_STORE_UPLOAD: '/user/my-store/upload',
+  USER_MY_STORE_EDIT: '/user/my-store/upload/:id',
+  USER_FAVOURITE_PHOTOGRAPHERS: '/user/favourite-photographers',
+  USER_PURCHASE_PHOTOS: '/user/purchase-photos',
+  USER_MY_ORDERS: '/user/my-orders',
+  USER_MY_ORDERS_DETAIL: '/user/my-orders/:id',
+  USER_ORDERS: '/user/orders',
+  USER_ORDERS_DETAIL: '/user/orders/:id',
+  USER_MY_COMPETITIONS: '/user/my-competitions',
+  USER_MY_COMPETITION_DETAIL: '/user/my-competitions/:id',
+  USER_CHAT: '/user/chat',
+  USER_NOTIFICATIONS: '/user/notifications',
+  USER_PRIZE_PAYMENTS: '/user/prize-payments',
+  USER_CONTACT_US: '/user/contact-us',
+  USER_PROFILE: '/user/profile',
+  USER_PROFILE_FOLLOWING: '/user/profile/following',
+  USER_PROFILE_FOLLOWERS: '/user/profile/followers',
+  USER_PROFILE_SETTINGS: '/user/profile/settings',
+  USER_BUSINESS_PHOTOS: '/user/business-link-photos',
+  USER_BUSINESS_PHOTOS_DETAIL: '/user/business-link-photos/:id',
+  USER_SETTINGS: '/user/settings',
+
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_UPLOAD_PHOTOS: '/admin/upload-photos',
@@ -112,8 +142,14 @@ export const SITE_NAV_LINKS = [
   { labelKey: 'nav.about', href: ROUTES.ABOUT },
 ];
 
+const API_ORIGIN = envVar('API_BASE_URL', 'https://backend.c4r.co.uk').replace(
+  /\/$/,
+  '',
+);
+
 export const API_CONFIG = {
-  BASE_URL: envVar('API_BASE_URL', 'https://backend.c4r.co.uk'),
+  ORIGIN: API_ORIGIN,
+  BASE_URL: `${API_ORIGIN}/api`,
   VITALS_ENDPOINT: envVar('VITALS_ENDPOINT', ''),
   TIMEOUT: envInt('API_TIMEOUT', 10000),
   RETRY_ATTEMPTS: envInt('API_RETRY_ATTEMPTS', 3),

@@ -1,42 +1,58 @@
-import { useState } from 'react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { BUSINESS_LINK_PAGE_SIZE } from '@/portals/admin/data/adminBusinessLinkData';
 import {
-  ADMIN_BUSINESS_LINK_ROWS,
-  BUSINESS_LINK_PAGE_SIZE,
-  getBusinessLinkResultRange,
-  paginateBusinessLinkRows,
-} from '@/portals/admin/data/adminBusinessLinkData';
+  ADMIN_BUSINESS_LINKS_QUERY_KEY,
+  getAdminBusinessLinksApi,
+} from '@/shared/api/businessLinks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 
 /**
- * Pagination for Admin Business Link Photos table.
+ * Server-paginated Admin Business Link Photos table.
  */
 export default function useAdminBusinessLink(
-  initialRows = ADMIN_BUSINESS_LINK_ROWS,
   pageSize = BUSINESS_LINK_PAGE_SIZE,
 ) {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
 
-  const total = initialRows.length;
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const safePage = Math.min(page, totalPages);
-  const visibleRows = paginateBusinessLinkRows(initialRows, safePage, pageSize);
-  const range = getBusinessLinkResultRange(safePage, pageSize, total);
+  const listQuery = useQuery({
+    queryKey: [...ADMIN_BUSINESS_LINKS_QUERY_KEY, 'list', page, pageSize],
+    queryFn: () => getAdminBusinessLinksApi({ page, limit: pageSize }),
+    placeholderData: keepPreviousData,
+  });
 
-  const handlePreviousPage = () => {
-    setPage((current) => Math.max(1, current - 1));
+  const rows = listQuery.data?.items ?? [];
+  const meta = listQuery.data?.meta;
+  const total = meta?.total ?? 0;
+  const totalPages = Math.max(1, meta?.totalPages ?? 1);
+
+  useEffect(() => {
+    if (meta && page > totalPages) setPage(totalPages);
+  }, [meta, page, totalPages]);
+
+  const goToPage = (nextPage) => {
+    setPage(Math.min(Math.max(1, nextPage), totalPages));
   };
 
-  const handleNextPage = () => {
-    setPage((current) => Math.min(totalPages, current + 1));
-  };
+  const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const to = total === 0 ? 0 : Math.min(from + rows.length - 1, total);
 
   return {
-    visibleRows,
-    page: safePage,
-    totalPages,
-    range,
-    isFirstPage: safePage <= 1,
-    isLastPage: safePage >= totalPages,
-    handlePreviousPage,
-    handleNextPage,
+    rows,
+    isLoading: listQuery.isLoading,
+    isError: listQuery.isError,
+    isFetching: listQuery.isFetching,
+    loadErrorMessage: getApiErrorMessage(
+      listQuery.error,
+      t('adminBusinessLink.loadError'),
+    ),
+    refetch: listQuery.refetch,
+    range: { from, to, total },
+    isFirstPage: page <= 1,
+    isLastPage: page >= totalPages,
+    handlePreviousPage: () => goToPage(page - 1),
+    handleNextPage: () => goToPage(page + 1),
   };
 }

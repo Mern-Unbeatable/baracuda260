@@ -65,7 +65,7 @@ const MemberSellPhotoDetailContent = memo(() => {
   }, [detail, showStoryChrome, slideCount]);
 
   if (!detail) {
-    return <Navigate to={ROUTES.ADMIN_SELL_PHOTOS} replace />;
+    return <Navigate to={ROUTES.USER_SELL_PHOTOS} replace />;
   }
 
   const activeSlide = slides[activeIndex] || slides[0];
@@ -112,7 +112,7 @@ const MemberSellPhotoDetailContent = memo(() => {
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-6 sm:gap-8">
       <Link
-        to={ROUTES.ADMIN_SELL_PHOTOS}
+        to={ROUTES.USER_SELL_PHOTOS}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
       >
         <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />

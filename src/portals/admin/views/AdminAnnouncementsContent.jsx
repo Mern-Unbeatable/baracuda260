@@ -10,6 +10,14 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import CreateAnnouncementModal from '@/portals/admin/components/admin-announcements/CreateAnnouncementModal';
@@ -56,36 +64,23 @@ const useIsLgUp = () => {
   return isLgUp;
 };
 
-const AnnouncementStatCards = memo(() => {
-  const { t } = useTranslation();
+import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 
+const AnnouncementStatCards = memo(() => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {ANNOUNCEMENT_STAT_CARDS.map((card) => (
-        <article
+        <AdminBasicStatCard
           key={card.id}
-          className="rounded-[14px] border border-[#f3f4f6] bg-white px-5.75 py-5.25 shadow-[0px_1px_2px_rgba(0,0,0,0.06)]"
-        >
-          <div className="flex items-start justify-between">
-            <p className="text-[12px] font-semibold leading-4.5 tracking-[0.24px] text-[#6b7280]">
-              {t(card.labelKey)}
-            </p>
-            <span
-              className={`inline-flex size-8.5 items-center justify-center rounded-[9px] text-[16px] leading-6 ${card.iconBg}`}
-              aria-hidden="true"
-            >
-              {card.icon}
-            </span>
-          </div>
-          <p className="pt-3.5 text-[32px] font-extrabold leading-8 text-[#111827]">
-            {card.value}
-          </p>
-          <p
-            className={`pt-2 text-[11px] font-semibold leading-[16.5px] ${card.hintClass}`}
-          >
-            {t(card.hintKey)}
-          </p>
-        </article>
+          labelKey={card.labelKey}
+          value={card.value}
+          icon={card.icon}
+          iconBg={card.iconBg}
+          hintKey={card.hintKey}
+          hintClass={card.hintClass}
+          borderClass="border-[#f3f4f6]"
+          valueClass="text-[#111827]"
+        />
       ))}
     </div>
   );
@@ -314,8 +309,8 @@ const AnnouncementTableRow = memo(
     const scheduleEnd = getAnnouncementScheduleEnd(row, t);
 
     return (
-      <tr className="border-b border-[#f3f4f6]">
-        <td className="px-5 py-4">
+      <TableRow className="border-b border-[#f3f4f6]">
+        <TableCell className="px-5">
           <div className="flex min-w-0 items-start gap-2.5">
             <span className="text-[18px] leading-none" aria-hidden="true">
               {row.emoji}
@@ -329,11 +324,11 @@ const AnnouncementTableRow = memo(
               </p>
             </div>
           </div>
-        </td>
-        <td className="px-2 py-4">
+        </TableCell>
+        <TableCell>
           <TypeBadge type={row.type} />
-        </td>
-        <td className="px-2 py-4">
+        </TableCell>
+        <TableCell>
           <div className="text-[12px] leading-[18px] text-[#9ca3af]">
             <p>
               <span className="text-[#6b7280]">
@@ -348,14 +343,14 @@ const AnnouncementTableRow = memo(
               {scheduleEnd}
             </p>
           </div>
-        </td>
-        <td className="px-2 py-4">
+        </TableCell>
+        <TableCell>
           <PriorityIndicator priority={row.priority} />
-        </td>
-        <td className="px-2 py-4">
+        </TableCell>
+        <TableCell>
           <StatusBadge status={row.status} />
-        </td>
-        <td className="px-5 py-4">
+        </TableCell>
+        <TableCell className="px-5">
           <AnnouncementActionMenu
             row={row}
             isOpen={openActionId === row.id}
@@ -363,8 +358,8 @@ const AnnouncementTableRow = memo(
             onClose={onCloseAction}
             onSelectAction={onSelectAction}
           />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     );
   },
 );
@@ -375,41 +370,39 @@ const AnnouncementsTable = memo(
     const { t } = useTranslation();
 
     return (
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-[980px] border-collapse text-left">
-          <thead>
-            <tr className="border-b border-[#f3f4f6]">
-              {[
-                'announcement',
-                'type',
-                'schedule',
-                'priority',
-                'status',
-                'action',
-              ].map((column) => (
-                <th
-                  key={column}
-                  className="px-2 py-3.75 text-[11px] font-bold leading-[16.5px] tracking-[0.55px] uppercase text-[#9ca3af] first:px-5 last:px-5"
-                >
-                  {t(`adminAnnouncements.columns.${column}`)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <AnnouncementTableRow
-                key={row.id}
-                row={row}
-                openActionId={openActionId}
-                onToggleAction={onToggleAction}
-                onCloseAction={onCloseAction}
-                onSelectAction={onSelectAction}
-              />
+      <Table className="min-w-[980px]">
+        <TableHeader>
+          <TableRow isHeader className="border-b border-[#f3f4f6]">
+            {[
+              'announcement',
+              'type',
+              'schedule',
+              'priority',
+              'status',
+              'action',
+            ].map((column) => (
+              <TableHead
+                key={column}
+                className="text-[11px] font-bold leading-[16.5px] tracking-[0.55px] uppercase text-[#9ca3af] first:px-5 last:px-5"
+              >
+                {t(`adminAnnouncements.columns.${column}`)}
+              </TableHead>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row) => (
+            <AnnouncementTableRow
+              key={row.id}
+              row={row}
+              openActionId={openActionId}
+              onToggleAction={onToggleAction}
+              onCloseAction={onCloseAction}
+              onSelectAction={onSelectAction}
+            />
+          ))}
+        </TableBody>
+      </Table>
     );
   },
 );

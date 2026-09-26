@@ -45,87 +45,88 @@ import Image from '@/components/ui/Image';
 import { ADMIN_OVERVIEW_ASSETS } from '@/portals/admin/data/adminOverviewData';
 import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import { ROUTES } from '@/shared/config';
+import { isAdminRole } from '@/shared/utils/roles';
 
 const USER_NAV_ITEMS = [
   {
     labelKey: 'dashboard.nav.dashboard',
-    path: ROUTES.ADMIN_DASHBOARD,
+    path: ROUTES.USER_DASHBOARD,
     icon: LayoutDashboard,
   },
   {
     labelKey: 'dashboard.nav.artworkManagement',
-    path: ROUTES.ADMIN_MY_ARTWORK,
+    path: ROUTES.USER_MY_ARTWORK,
     icon: Images,
   },
   {
     labelKey: 'dashboard.nav.newsMessages',
-    path: ROUTES.ADMIN_NEWS_MESSAGES,
+    path: ROUTES.USER_NEWS_MESSAGES,
     icon: Newspaper,
   },
   {
     labelKey: 'dashboard.nav.sellPhotos',
-    path: ROUTES.ADMIN_SELL_PHOTOS,
+    path: ROUTES.USER_SELL_PHOTOS,
     icon: Store,
   },
   {
     labelKey: 'dashboard.nav.myStore',
-    path: ROUTES.ADMIN_MY_STORE,
+    path: ROUTES.USER_MY_STORE,
     icon: Package,
   },
   {
     labelKey: 'dashboard.nav.orders',
-    path: ROUTES.ADMIN_ORDERS,
+    path: ROUTES.USER_ORDERS,
     icon: ShoppingCart,
   },
   {
     labelKey: 'dashboard.nav.myOrders',
-    path: ROUTES.ADMIN_MY_ORDERS,
+    path: ROUTES.USER_MY_ORDERS,
     icon: ClipboardList,
   },
   {
     labelKey: 'dashboard.nav.favouritePhotographers',
-    path: ROUTES.ADMIN_FAVOURITE_PHOTOGRAPHERS,
+    path: ROUTES.USER_FAVOURITE_PHOTOGRAPHERS,
     icon: Star,
   },
-  // { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.ADMIN_MY_COMPETITIONS, icon: Trophy },
+  // { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.USER_MY_COMPETITIONS, icon: Trophy },
   {
     labelKey: 'dashboard.nav.businessPhotos',
-    path: ROUTES.ADMIN_BUSINESS_PHOTOS,
+    path: ROUTES.USER_BUSINESS_PHOTOS,
     icon: Link2,
   },
   {
     labelKey: 'dashboard.nav.chat',
-    path: ROUTES.ADMIN_CHAT,
+    path: ROUTES.USER_CHAT,
     icon: MessageSquare,
   },
   {
     labelKey: 'dashboard.nav.notifications',
-    path: ROUTES.ADMIN_NOTIFICATIONS,
+    path: ROUTES.USER_NOTIFICATIONS,
     icon: Bell,
   },
   {
     labelKey: 'dashboard.nav.prizePayments',
-    path: ROUTES.ADMIN_PRIZE_PAYMENTS,
+    path: ROUTES.USER_PRIZE_PAYMENTS,
     icon: Wallet,
   },
   {
     labelKey: 'dashboard.nav.contactUs',
-    path: ROUTES.ADMIN_CONTACT_US,
+    path: ROUTES.USER_CONTACT_US,
     icon: MessageCircleQuestion,
   },
   {
     labelKey: 'dashboard.nav.purchasePhotos',
-    path: ROUTES.ADMIN_PURCHASE_PHOTOS,
+    path: ROUTES.USER_PURCHASE_PHOTOS,
     icon: ShoppingBag,
   },
   {
     labelKey: 'dashboard.nav.profile',
-    path: ROUTES.ADMIN_PROFILE,
+    path: ROUTES.USER_PROFILE,
     icon: UserRound,
   },
   {
     labelKey: 'dashboard.nav.settings',
-    path: ROUTES.ADMIN_SETTINGS,
+    path: ROUTES.USER_SETTINGS,
     icon: Settings,
   },
 ];
@@ -278,7 +279,7 @@ const Sidebar = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = isAdminRole(user?.role);
   const { t } = useTranslation();
 
   const displayName =
@@ -325,7 +326,7 @@ const Sidebar = ({
               <NavLink
                 key={`${path}-${labelKey}`}
                 to={path}
-                end={path === ROUTES.ADMIN_DASHBOARD}
+                end={path === ROUTES.ADMIN_DASHBOARD || path === ROUTES.USER_DASHBOARD}
                 title={t(labelKey)}
                 onClick={() => {
                   onClose();
@@ -415,7 +416,7 @@ const Sidebar = ({
                     <li key={`${group.id}-${labelKey}`}>
                       <NavLink
                         to={path}
-                        end={path === ROUTES.ADMIN_DASHBOARD}
+                        end={path === ROUTES.ADMIN_DASHBOARD || path === ROUTES.USER_DASHBOARD}
                         onClick={onClose}
                         className={getNavClass}
                       >
@@ -460,7 +461,7 @@ const Sidebar = ({
                   <li key={path}>
                     <NavLink
                       to={path}
-                      end={path === ROUTES.ADMIN_DASHBOARD}
+                      end={path === ROUTES.ADMIN_DASHBOARD || path === ROUTES.USER_DASHBOARD}
                       onClick={() => {
                         onClose();
                         if (autoCollapse && onAutoCollapse) onAutoCollapse();

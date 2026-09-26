@@ -4,10 +4,11 @@ import { selectUser } from '@/app/store/slices/authSlice';
 import AdminBusinessLinkContent from '@/portals/admin/views/AdminBusinessLinkContent';
 import BusinessLinkContent from '@/portals/member/views/BusinessLinkContent';
 import { useSEO } from '@/shared/hooks/useSEO';
+import { isAdminRole } from '@/shared/utils/roles';
 
 const BusinessPhotos = memo(() => {
   const user = useSelector(selectUser);
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = isAdminRole(user?.role);
 
   useSEO({
     title: 'Business Link Photos',

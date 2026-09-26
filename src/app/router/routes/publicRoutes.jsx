@@ -82,15 +82,9 @@ export const publicRoutes = (
         path={ROUTES.BUY_PHOTOS_CHECKOUT}
         element={<BuyPhotosCheckout />}
       />
-      <Route
-        path={ROUTES.BUY_PHOTOS_SUCCESS}
-        element={<BuyPhotosSuccess />}
-      />
+      <Route path={ROUTES.BUY_PHOTOS_SUCCESS} element={<BuyPhotosSuccess />} />
       <Route path={ROUTES.BUY_PHOTOS_DETAIL} element={<BuyPhotoDetail />} />
-      <Route
-        path={ROUTES.GALLERY_SIX_DETAIL}
-        element={<GallerySixDetail />}
-      />
+      <Route path={ROUTES.GALLERY_SIX_DETAIL} element={<GallerySixDetail />} />
       <Route
         path={ROUTES.GALLERY_SIX_BLUE_DETAIL}
         element={<GallerySixBlueDetail />}

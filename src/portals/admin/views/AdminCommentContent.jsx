@@ -9,6 +9,14 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -495,8 +503,8 @@ const CommentTableRow = memo(
     const { t } = useTranslation();
 
     return (
-      <tr className="border-b border-[#f9fafb]">
-        <td className="px-5 py-4.5">
+      <TableRow className="border-b border-[#f9fafb]">
+        <TableCell>
           <input
             type="checkbox"
             checked={selected}
@@ -504,8 +512,8 @@ const CommentTableRow = memo(
             aria-label={t('adminComment.selectRow', { code: row.code })}
             className="size-3.75 cursor-pointer rounded-xs border border-[#767676]"
           />
-        </td>
-        <td className="px-2 py-4.5">
+        </TableCell>
+        <TableCell>
           <div className="flex items-center gap-1.5">
             {row.pinned ? (
               <span className="text-[11px] leading-[16.5px]" aria-hidden="true">
@@ -516,8 +524,8 @@ const CommentTableRow = memo(
               {row.code}
             </span>
           </div>
-        </td>
-        <td className="px-2 py-3.5">
+        </TableCell>
+        <TableCell>
           <div className="flex min-w-0 items-center gap-2">
             <Image
               src={row.avatar}
@@ -535,8 +543,8 @@ const CommentTableRow = memo(
               </p>
             </div>
           </div>
-        </td>
-        <td className="px-2 py-3.5">
+        </TableCell>
+        <TableCell>
           <div className="flex min-w-0 items-center gap-2">
             <Image
               src={row.photo}
@@ -554,22 +562,22 @@ const CommentTableRow = memo(
               </p>
             </div>
           </div>
-        </td>
-        <td className="px-2 py-5.5">
+        </TableCell>
+        <TableCell>
           <TypeBadge type={row.type} />
-        </td>
-        <td className="max-w-60 px-2 py-5.5">
+        </TableCell>
+        <TableCell className="max-w-60">
           <p className="truncate text-[13px] leading-[19.5px] text-[#374151]">
             {t(row.commentKey)}
           </p>
-        </td>
-        <td className="px-2 py-5.5 text-[12px] leading-4.5 whitespace-nowrap text-[#9ca3af]">
+        </TableCell>
+        <TableCell className="text-[12px] leading-4.5 whitespace-nowrap text-[#9ca3af]">
           {row.date}
-        </td>
-        <td className="px-2 py-5.5">
+        </TableCell>
+        <TableCell>
           <StatusBadge status={row.status} />
-        </td>
-        <td className="px-5 py-4.5">
+        </TableCell>
+        <TableCell>
           <CommentActionMenu
             row={row}
             isOpen={openActionId === row.id}
@@ -578,8 +586,8 @@ const CommentTableRow = memo(
             onSeeDetails={onSeeDetails}
             onSelectStatus={onSelectStatus}
           />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     );
   },
 );
@@ -616,55 +624,53 @@ const CommentsTable = memo(
     const { t } = useTranslation();
 
     return (
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-300 border-collapse text-left">
-          <thead>
-            <tr className="border-b border-[#f3f4f6]">
-              <th className="px-5 py-3.75">
-                <input
-                  type="checkbox"
-                  checked={allVisibleSelected}
-                  onChange={onToggleSelectAll}
-                  aria-label={t('adminComment.selectAll')}
-                  className="size-3.75 cursor-pointer rounded-xs border border-[#767676]"
-                />
-              </th>
-              {[
-                'commentId',
-                'user',
-                'photo',
-                'type',
-                'comment',
-                'date',
-                'status',
-                'actions',
-              ].map((column) => (
-                <th
-                  key={column}
-                  className="px-2 py-3.75 text-[11px] font-bold leading-[16.5px] tracking-[0.55px] uppercase text-[#9ca3af]"
-                >
-                  {t(`adminComment.columns.${column}`)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <CommentTableRow
-                key={row.id}
-                row={row}
-                selected={selectedIds.has(row.id)}
-                openActionId={openActionId}
-                onToggleSelected={onToggleSelected}
-                onToggleAction={onToggleAction}
-                onCloseAction={onCloseAction}
-                onSeeDetails={onSeeDetails}
-                onSelectStatus={onSelectStatus}
+      <Table className="min-w-300">
+        <TableHeader>
+          <TableRow isHeader className="border-b border-[#f3f4f6]">
+            <TableHead className="px-5">
+              <input
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={onToggleSelectAll}
+                aria-label={t('adminComment.selectAll')}
+                className="size-3.75 cursor-pointer rounded-xs border border-[#767676]"
               />
+            </TableHead>
+            {[
+              'commentId',
+              'user',
+              'photo',
+              'type',
+              'comment',
+              'date',
+              'status',
+              'actions',
+            ].map((column) => (
+              <TableHead
+                key={column}
+                className="text-[11px] font-bold leading-[16.5px] tracking-[0.55px] uppercase text-[#9ca3af]"
+              >
+                {t(`adminComment.columns.${column}`)}
+              </TableHead>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row) => (
+            <CommentTableRow
+              key={row.id}
+              row={row}
+              selected={selectedIds.has(row.id)}
+              openActionId={openActionId}
+              onToggleSelected={onToggleSelected}
+              onToggleAction={onToggleAction}
+              onCloseAction={onCloseAction}
+              onSeeDetails={onSeeDetails}
+              onSelectStatus={onSelectStatus}
+            />
+          ))}
+        </TableBody>
+      </Table>
     );
   },
 );
@@ -772,36 +778,23 @@ const CommentsMobileCards = memo(
 
 CommentsMobileCards.displayName = 'CommentsMobileCards';
 
-const CommentStatCards = memo(() => {
-  const { t } = useTranslation();
+import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 
+const CommentStatCards = memo(() => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {COMMENT_STAT_CARDS.map((card) => (
-        <article
+        <AdminBasicStatCard
           key={card.id}
-          className="rounded-[14px] border border-[#f3f4f6] bg-white px-5.75 py-5.25 shadow-[0px_1px_2px_rgba(0,0,0,0.06)]"
-        >
-          <div className="flex items-start justify-between">
-            <p className="text-[12px] font-semibold leading-4.5 tracking-[0.24px] text-[#6b7280]">
-              {t(card.labelKey)}
-            </p>
-            <span
-              className={`inline-flex size-8.5 items-center justify-center rounded-[9px] text-[16px] leading-6 ${card.iconBg}`}
-              aria-hidden="true"
-            >
-              {card.icon}
-            </span>
-          </div>
-          <p className="pt-3.5 text-[32px] font-extrabold leading-8 text-[#111827]">
-            {card.value}
-          </p>
-          <p
-            className={`pt-2 text-[11px] font-semibold leading-[16.5px] ${card.hintClass}`}
-          >
-            {t(card.hintKey)}
-          </p>
-        </article>
+          labelKey={card.labelKey}
+          value={card.value}
+          icon={card.icon}
+          iconBg={card.iconBg}
+          hintKey={card.hintKey}
+          hintClass={card.hintClass}
+          borderClass="border-[#f3f4f6]"
+          valueClass="text-[#111827]"
+        />
       ))}
     </div>
   );

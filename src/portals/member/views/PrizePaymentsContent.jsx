@@ -7,6 +7,14 @@ import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
+import {
   DONATION_TRANSACTION_ROWS,
   DONATIONS_SUMMARY,
   PAYMENT_HISTORY_ROWS,
@@ -114,10 +122,6 @@ StatusText.displayName = 'StatusText';
 
 const PrizingTable = memo(() => {
   const { t } = useTranslation();
-  const headCell =
-    'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell =
-    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -133,48 +137,60 @@ const PrizingTable = memo(() => {
         </h2>
       </div>
 
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-240 w-full border-collapse">
-          <thead>
-            <tr className="bg-[#f6fbff]">
-              <th className={headCell}>
-                {t('prizePayments.prizing.columns.month')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.prizing.columns.name')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.prizing.columns.category')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.prizing.columns.albumType')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.prizing.columns.position')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.prizing.columns.votes')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.prizing.columns.prize')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {PRIZING_ROWS.map((row) => (
-              <tr key={row.id} className="border-t border-[#ececf0]">
-                <td className={bodyCell}>{t(row.monthKey)}</td>
-                <td className={bodyCell}>{t(row.competitionKey)}</td>
-                <td className={bodyCell}>{t(row.categoryKey)}</td>
-                <td className={bodyCell}>{t(row.albumTypeKey)}</td>
-                <td className={bodyCell}>{t(row.positionKey)}</td>
-                <td className={bodyCell}>{row.votes}</td>
-                <td className={bodyCell}>{row.prize}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table className="min-w-240">
+        <TableHeader>
+          <TableRow isHeader>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.prizing.columns.month')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.prizing.columns.name')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.prizing.columns.category')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.prizing.columns.albumType')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.prizing.columns.position')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.prizing.columns.votes')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.prizing.columns.prize')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {PRIZING_ROWS.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.monthKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.competitionKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.categoryKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.albumTypeKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.positionKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.votes}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.prize}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <TablePagination showingKey="prizePayments.prizing.showing" tone="red" />
     </section>
@@ -185,10 +201,6 @@ PrizingTable.displayName = 'PrizingTable';
 
 const DonationsTable = memo(() => {
   const { t } = useTranslation();
-  const headCell =
-    'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell =
-    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -207,44 +219,54 @@ const DonationsTable = memo(() => {
         </p>
       </div>
 
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-240 w-full border-collapse">
-          <thead>
-            <tr className="bg-[#f6fbff]">
-              <th className={headCell}>
-                {t('prizePayments.donations.columns.date')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.donations.columns.donor')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.donations.columns.email')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.donations.columns.donation')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.donations.columns.platformFee')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.donations.columns.yourEarnings')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {DONATION_TRANSACTION_ROWS.map((row) => (
-              <tr key={row.id} className="border-t border-[#ececf0]">
-                <td className={bodyCell}>{t(row.dateKey)}</td>
-                <td className={bodyCell}>{t(row.donorKey)}</td>
-                <td className={bodyCell}>{row.email}</td>
-                <td className={bodyCell}>{row.donation}</td>
-                <td className={bodyCell}>{row.platformFee}</td>
-                <td className={bodyCell}>{row.yourEarnings}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table className="min-w-240">
+        <TableHeader>
+          <TableRow isHeader>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.donations.columns.date')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.donations.columns.donor')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.donations.columns.email')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.donations.columns.donation')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.donations.columns.platformFee')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.donations.columns.yourEarnings')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {DONATION_TRANSACTION_ROWS.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.dateKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.donorKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.email}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.donation}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.platformFee}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.yourEarnings}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <TablePagination
         showingKey="prizePayments.donations.showing"
@@ -277,11 +299,6 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
       );
     });
   }, [search, statusFilter, t]);
-
-  const headCell =
-    'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell =
-    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -356,67 +373,75 @@ const PhotoSalesTable = memo(({ onRequestPayout }) => {
         </div>
       </div>
 
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-275 w-full border-collapse">
-          <thead>
-            <tr className="bg-[#f6fbff]">
-              <th className={headCell}>
-                {t('prizePayments.photoSales.columns.date')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.photoSales.columns.buyer')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.photoSales.columns.email')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.photoSales.columns.photo')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.photoSales.columns.salePrice')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.photoSales.columns.yourEarnings')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.photoSales.columns.action')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRows.map((row) => (
-              <tr key={row.id} className="border-t border-[#ececf0]">
-                <td className={bodyCell}>{t(row.dateKey)}</td>
-                <td className={bodyCell}>{t(row.buyerKey)}</td>
-                <td className={bodyCell}>{row.email}</td>
-                <td className={bodyCell}>
-                  <span className="inline-flex items-center gap-3">
-                    <Image
-                      src={row.image}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="size-10 shrink-0 rounded-md object-cover"
-                    />
-                    <span>{t(row.photoKey)}</span>
-                  </span>
-                </td>
-                <td className={bodyCell}>{row.salePrice}</td>
-                <td className={bodyCell}>{row.yourEarnings}</td>
-                <td className={bodyCell}>
-                  <Button
-                    unstyled
-                    type="button"
-                    className="text-[14px] font-medium text-[#4048cd] hover:underline"
-                  >
-                    {t('prizePayments.photoSales.details')}
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table className="min-w-275">
+        <TableHeader>
+          <TableRow isHeader>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.photoSales.columns.date')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.photoSales.columns.buyer')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.photoSales.columns.email')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.photoSales.columns.photo')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.photoSales.columns.salePrice')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.photoSales.columns.yourEarnings')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.photoSales.columns.action')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredRows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.dateKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.buyerKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.email}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                <span className="inline-flex items-center gap-3">
+                  <Image
+                    src={row.image}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="size-10 shrink-0 rounded-md object-cover"
+                  />
+                  <span>{t(row.photoKey)}</span>
+                </span>
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.salePrice}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.yourEarnings}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                <Button
+                  unstyled
+                  type="button"
+                  className="text-[14px] font-medium text-[#4048cd] hover:underline"
+                >
+                  {t('prizePayments.photoSales.details')}
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <TablePagination
         showingKey="prizePayments.photoSales.showing"
@@ -430,10 +455,6 @@ PhotoSalesTable.displayName = 'PhotoSalesTable';
 
 const PaymentHistoryTable = memo(() => {
   const { t } = useTranslation();
-  const headCell =
-    'px-3 py-3 text-left text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#7a7484]';
-  const bodyCell =
-    'px-3 py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]';
 
   return (
     <section
@@ -449,49 +470,57 @@ const PaymentHistoryTable = memo(() => {
         </h2>
       </div>
 
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-225 w-full border-collapse">
-          <thead>
-            <tr className="bg-[#f6fbff]">
-              <th className={headCell}>
-                {t('prizePayments.paymentHistory.columns.date')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.paymentHistory.columns.type')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.paymentHistory.columns.accountType')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.paymentHistory.columns.accountNumber')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.paymentHistory.columns.amount')}
-              </th>
-              <th className={headCell}>
-                {t('prizePayments.paymentHistory.columns.status')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {PAYMENT_HISTORY_ROWS.map((row, index) => (
-              <tr
-                key={row.id}
-                className={`border-t border-[#ececf0] ${index % 2 === 0 ? 'bg-[#fff5f5]' : 'bg-white'}`}
-              >
-                <td className={bodyCell}>{t(row.dateKey)}</td>
-                <td className={bodyCell}>{t(row.typeKey)}</td>
-                <td className={bodyCell}>{t(row.accountTypeKey)}</td>
-                <td className={bodyCell}>{row.accountNumber}</td>
-                <td className={bodyCell}>{row.amount}</td>
-                <td className={bodyCell}>
-                  <StatusText status={row.status} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table className="min-w-225">
+        <TableHeader>
+          <TableRow isHeader>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.paymentHistory.columns.date')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.paymentHistory.columns.type')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.paymentHistory.columns.accountType')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.paymentHistory.columns.accountNumber')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.paymentHistory.columns.amount')}
+            </TableHead>
+            <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+              {t('prizePayments.paymentHistory.columns.status')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {PAYMENT_HISTORY_ROWS.map((row, index) => (
+            <TableRow
+              key={row.id}
+              className={index % 2 === 0 ? 'bg-[#fff5f5]' : 'bg-white'}
+            >
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.dateKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.typeKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {t(row.accountTypeKey)}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.accountNumber}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                {row.amount}
+              </TableCell>
+              <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                <StatusText status={row.status} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <TablePagination
         showingKey="prizePayments.paymentHistory.showing"

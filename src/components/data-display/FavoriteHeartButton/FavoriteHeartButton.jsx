@@ -10,52 +10,76 @@ const parseVotes = (value) => {
 
 const formatVotes = (n) => n.toLocaleString('en-US');
 
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/app/store/slices/authSlice';
+
 /**
  * Heart control for gallery / showcase cards — toggles favorite without navigating.
  */
-const FavoriteHeartButton = memo(({ initialVotes = '0', title = '' }) => {
-  const { t } = useTranslation();
-  const baseVotes = parseVotes(initialVotes);
-  const [favorited, setFavorited] = useState(false);
+const FavoriteHeartButton = memo(
+  ({ initialVotes = '0', title = '', photographer = '', userId = '' }) => {
+    const { t } = useTranslation();
+    const user = useSelector(selectUser);
+    const baseVotes = parseVotes(initialVotes);
+    const [favorited, setFavorited] = useState(false);
 
-  const displayVotes = favorited ? baseVotes + 1 : baseVotes;
+    // Heuristic to check if this is the user's own photo
+    const isOwnSubmission = Boolean(
+      user &&
+        (user.id === userId ||
+          (user.firstName &&
+            photographer
+              ?.toLowerCase()
+              .includes(user.firstName.toLowerCase())) ||
+          (user.username &&
+            photographer?.toLowerCase().includes(user.username.toLowerCase()))),
+    );
 
-  const handleClick = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setFavorited((prev) => !prev);
-  };
+    const displayVotes = favorited ? baseVotes + 1 : baseVotes;
 
-  return (
-    <Button
-      unstyled
-      type="button"
-      onClick={handleClick}
-      aria-pressed={favorited}
-      aria-label={
-        favorited
-          ? t('gallery.unfavorite', {
-              title,
-              defaultValue: `Unfavorite ${title}`,
-            })
-          : t('gallery.favorite', { title, defaultValue: `Favorite ${title}` })
-      }
-      className="inline-flex cursor-pointer items-center gap-1.5 rounded-md text-[14px] text-[#6b7280] transition hover:text-[#e53935]"
-    >
-      <Heart
-        size={22}
-        strokeWidth={2}
-        aria-hidden="true"
-        className={
+    const handleClick = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (isOwnSubmission) return;
+      setFavorited((prev) => !prev);
+    };
+
+    return (
+      <Button
+        unstyled
+        type="button"
+        onClick={handleClick}
+        aria-pressed={favorited}
+        disabled={isOwnSubmission}
+        title={isOwnSubmission ? t('galleryDetail.cannotVoteOwn') : undefined}
+        aria-label={
           favorited
-            ? 'fill-[#e53935] text-[#e53935]'
-            : 'fill-transparent text-[#e53935]'
+            ? t('gallery.unfavorite', {
+                title,
+                defaultValue: `Unfavorite ${title}`,
+              })
+            : t('gallery.favorite', {
+                title,
+                defaultValue: `Favorite ${title}`,
+              })
         }
-      />
-      <span>{formatVotes(displayVotes)}</span>
-    </Button>
-  );
-});
+        className={`inline-flex items-center gap-1.5 rounded-md text-[14px] text-[#6b7280] transition ${isOwnSubmission ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-[#e53935]'}`}
+      >
+        <Heart
+          size={22}
+          strokeWidth={2}
+          aria-hidden="true"
+          className={
+            favorited
+              ? 'fill-[#e53935] text-[#e53935]'
+              : 'fill-transparent text-[#e53935]'
+          }
+        />
+        <span>{formatVotes(displayVotes)}</span>
+      </Button>
+    );
+  },
+);
 
 FavoriteHeartButton.displayName = 'FavoriteHeartButton';
 

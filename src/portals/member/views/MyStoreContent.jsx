@@ -34,7 +34,7 @@ const MyStoreContent = memo(() => {
   );
 
   const handleEdit = (product) => {
-    navigate(ROUTES.ADMIN_MY_STORE_EDIT.replace(':id', product.id));
+    navigate(ROUTES.USER_MY_STORE_EDIT.replace(':id', product.id));
   };
 
   const handleDelete = (product) => {
@@ -71,7 +71,7 @@ const MyStoreContent = memo(() => {
         </div>
 
         <Link
-          to={ROUTES.ADMIN_MY_STORE_UPLOAD}
+          to={ROUTES.USER_MY_STORE_UPLOAD}
           className="inline-flex w-fit cursor-pointer items-center justify-center gap-2 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[15px] font-bold text-white transition hover:bg-[#d41921] sm:text-[16px]"
         >
           <Plus size={18} aria-hidden="true" />

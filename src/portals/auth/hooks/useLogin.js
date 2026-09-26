@@ -3,17 +3,15 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { loginSuccess } from '@/app/store/slices/authSlice';
-import {
-  DEMO_ACCOUNTS,
-  DEMO_PASSWORD,
-  getDemoAccount,
-} from '@/portals/auth/data/demoAccounts';
 import { EMAIL_REGEX } from '@/portals/auth/data/loginAssets';
 import { ROUTES } from '@/shared/config';
-import { envVar } from '@/shared/config/env';
-import { API_ENDPOINTS } from '@/shared/lib/httpEndpoint';
-import { httpMethods } from '@/shared/lib/httpMethods';
+import { loginApi } from '@/shared/api/auth.api';
+import {
+  getDashboardRouteByRole,
+  getPortalByRole,
+} from '@/shared/utils/roles';
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -26,113 +24,70 @@ export function useLogin() {
   const {
     register,
     handleSubmit,
-    setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     defaultValues: {
-      email: envVar('DEV_DEFAULT_EMAIL', '') || DEMO_ACCOUNTS.admin.email,
-      password: envVar('DEV_DEFAULT_PASSWORD', '') || DEMO_PASSWORD,
+      email: '',
+      password: '',
       rememberMe: false,
     },
   });
 
   const rememberMeValue = watch('rememberMe');
 
-  const goToDashboard = () => {
+  const goToDashboard = (userRole) => {
+    const from = location.state?.from?.pathname;
+    const portal = getPortalByRole(userRole);
     const destination =
-      location.state?.from?.pathname ?? ROUTES.ADMIN_DASHBOARD;
+      from && portal && from.startsWith(`${portal}/`)
+        ? from
+        : getDashboardRouteByRole(userRole);
     navigate(destination, { replace: true });
   };
 
-  const completeDemoLogin = (account) => {
-    dispatch(
-      loginSuccess({
-        user: {
-          email: account.email,
-          fullName: account.fullName,
-          role: account.role,
-          rememberMe: rememberMeValue,
-        },
-        token: 'demo',
-      }),
-    );
-    goToDashboard();
-  };
+  const loginMutation = useMutation({
+    mutationFn: loginApi,
+    onSuccess: (response) => {
+      const responseData = response?.data;
+      const token =
+        responseData?.data?.accessToken || responseData?.accessToken;
+      const user = responseData?.data?.user || responseData?.user;
 
-  const handleDemoQuickLogin = (role) => {
-    const account = DEMO_ACCOUNTS[role];
-    if (!account) return;
-    setGlobalError(null);
-    setValue('email', account.email);
-    setValue('password', DEMO_PASSWORD);
-    // Directly submit since we bypass actual network in demo if found
-    completeDemoLogin(account);
-  };
+      if (!token || !user) {
+        setGlobalError('Invalid response from server.');
+        return;
+      }
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      dispatch(loginSuccess({ user, token }));
+      goToDashboard(user.role);
+    },
+    onError: (error) => {
+      setGlobalError(
+        error?.response?.data?.message ??
+        error?.message ??
+        t('login.invalidCredentials'),
+      );
+    },
+  });
 
   const onSubmit = async (data) => {
     setGlobalError(null);
-
-    try {
-      const demoAccount = getDemoAccount(data.email, data.password);
-      if (demoAccount) {
-        completeDemoLogin(demoAccount);
-        return;
-      }
-
-      if (envVar('DEV_MOCK_AUTH') === 'true') {
-        dispatch(
-          loginSuccess({
-            user: {
-              email: data.email,
-              rememberMe: data.rememberMe,
-              role: 'user',
-              fullName: data.email,
-            },
-            token: null,
-          }),
-        );
-        goToDashboard();
-        return;
-      }
-
-      const { data: responseData, error } = await httpMethods.post(
-        API_ENDPOINTS.AUTH.LOGIN,
-        {
-          email: data.email,
-          password: data.password,
-          rememberMe: data.rememberMe,
-        },
-      );
-
-      if (error) {
-        setGlobalError(
-          error?.data?.message ??
-            error?.message ??
-            t('login.invalidCredentials'),
-        );
-        return;
-      }
-
-      const token =
-        responseData?.token ??
-        responseData?.data?.token ??
-        responseData?.accessToken;
-      const user = responseData?.user ?? responseData?.data?.user ?? null;
-      dispatch(loginSuccess({ user, token }));
-      goToDashboard();
-    } catch (_err) {
-      setGlobalError(t('login.invalidCredentials'));
-    }
+    loginMutation.mutate({
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return {
     register,
     handleSubmit: handleSubmit(onSubmit),
     errors,
-    isSubmitting,
+    isSubmitting: loginMutation.isPending,
     globalError,
-    handleDemoQuickLogin,
     rememberMeValue,
     t,
     EMAIL_REGEX,

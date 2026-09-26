@@ -24,10 +24,27 @@ const router = createBrowserRouter(
       {authRoutes}
 
       <Route
+        path={ROUTES.USER}
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute portal={ROUTES.USER}>
+              <AppShellLayout />
+            </ProtectedRoute>
+          </Suspense>
+        }
+      >
+        <Route
+          index
+          element={<Navigate to={ROUTES.USER_DASHBOARD} replace />}
+        />
+        {memberRoutes}
+      </Route>
+
+      <Route
         path={ROUTES.ADMIN}
         element={
           <Suspense fallback={<PageLoader />}>
-            <ProtectedRoute>
+            <ProtectedRoute portal={ROUTES.ADMIN}>
               <AppShellLayout />
             </ProtectedRoute>
           </Suspense>
@@ -37,13 +54,13 @@ const router = createBrowserRouter(
           index
           element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />}
         />
-        {memberRoutes}
+
         {adminRoutes}
       </Route>
 
       <Route path="*" element={<NotFound />} />
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 export default router;

@@ -20,14 +20,9 @@ import {
   DASHBOARD_STATS,
 } from '@/portals/member/data/dashboardAssets';
 import { ROUTES } from '@/shared/config';
+import { isAdminRole } from '@/shared/utils/roles';
 
-const STAT_ICONS = {
-  trophy: Trophy,
-  camera: Camera,
-  heart: Heart,
-  wallet: Wallet,
-  compass: Compass,
-};
+import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
 
 const BADGE_TONES = {
   gold: 'bg-[#ffddb8] text-[#2a1700]',
@@ -40,29 +35,6 @@ const STATUS_TONES = {
   muted: 'text-[#494453]',
   gold: 'text-[#855300]',
 };
-
-const StatCard = memo(({ labelKey, value, iconBg, iconColor, icon }) => {
-  const { t } = useTranslation();
-  const Icon = STAT_ICONS[icon] ?? Trophy;
-
-  return (
-    <article className="flex flex-col rounded-2xl border border-[rgba(203,195,213,0.2)] bg-white p-5 shadow-sm sm:p-6">
-      <div
-        className={`mb-4 flex size-10 items-center justify-center rounded-lg ${iconBg}`}
-      >
-        <Icon size={22} className={iconColor} aria-hidden="true" />
-      </div>
-      <p className="text-[13px] font-medium uppercase tracking-[0.6px] text-[#494453] sm:text-[16px] sm:leading-4">
-        {t(labelKey)}
-      </p>
-      <p className="mt-2 text-[28px] font-bold tracking-[-0.64px] text-[#161c27] sm:text-[32px] sm:leading-10">
-        {value}
-      </p>
-    </article>
-  );
-});
-
-StatCard.displayName = 'StatCard';
 
 const CompetitionRow = memo(({ item }) => {
   const { t } = useTranslation();
@@ -133,7 +105,7 @@ const CompetitionRow = memo(({ item }) => {
         </div>
         {/* My Competitions page temporarily disabled
         <Link
-          to={ROUTES.ADMIN_MY_COMPETITIONS}
+          to={ROUTES.USER_MY_COMPETITIONS}
           aria-label={t('dashboard.competitions.openItem')}
           className="inline-flex size-10 items-center justify-center rounded-xl bg-[#e8eeff] text-[#532aa8] transition hover:bg-[#d9e2ff]"
         >
@@ -172,7 +144,7 @@ const UserDashboardView = memo(() => {
           </p>
           <div className="pt-3 sm:pt-4">
             <Link
-              to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD}
+              to={ROUTES.USER_MY_ARTWORK_UPLOAD}
               className="inline-flex items-center gap-2 rounded-full bg-[#ee1c25] px-6 py-3 text-[13px] font-semibold tracking-[0.28px] text-white transition hover:bg-[#d41921] sm:px-8 sm:text-[14px]"
             >
               <Camera size={18} aria-hidden="true" />
@@ -187,7 +159,7 @@ const UserDashboardView = memo(() => {
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-5"
       >
         {DASHBOARD_STATS.map((stat) => (
-          <StatCard key={stat.id} {...stat} />
+          <DashboardStatCard key={stat.id} {...stat} />
         ))}
       </section>
 
@@ -203,7 +175,7 @@ const UserDashboardView = memo(() => {
           </div>
           {/* My Competitions page temporarily disabled
           <Link
-            to={ROUTES.ADMIN_MY_COMPETITIONS}
+            to={ROUTES.USER_MY_COMPETITIONS}
             className="inline-flex items-center gap-1 text-[14px] font-bold text-[#532aa8] transition hover:text-[#432089] sm:text-[16px]"
           >
             {t('dashboard.competitions.viewAll')}
@@ -232,7 +204,7 @@ UserDashboardView.displayName = 'UserDashboardView';
 const DashboardContent = memo(() => {
   const user = useSelector(selectUser);
 
-  if (user?.role === 'admin') {
+  if (isAdminRole(user?.role)) {
     return <AdminOverviewContent />;
   }
 

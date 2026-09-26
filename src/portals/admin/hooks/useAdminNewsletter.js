@@ -1,43 +1,65 @@
-import { useState } from 'react';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import {
-  ADMIN_NEWSLETTER_SUBSCRIBERS,
-  DEFAULT_CTA_TEXT,
+  buildNewsletterCampaignFormData,
   DEFAULT_RECIPIENT_ID,
+  getRecipientTarget,
   isBannerFileAllowed,
+  NEWSLETTER_PAGE_SIZE,
 } from '@/portals/admin/data/adminNewsletterData';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  ADMIN_NEWSLETTER_SUBSCRIBERS_QUERY_KEY,
+  getNewsletterSubscribersApi,
+  sendNewsletterCampaignApi,
+} from '@/shared/api/newsletter.api';
 
 /**
- * Admin Newsletter composer + recipient selection state (Figma 346:1740).
+ * Admin Newsletter — server-paginated subscribers + campaign composer (Figma 346:1740).
  */
-const useAdminNewsletter = () => {
+const useAdminNewsletter = (pageSize = NEWSLETTER_PAGE_SIZE) => {
   const { t } = useTranslation();
-  const [subject, setSubject] = useState('');
-  const [emailTitle, setEmailTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [ctaText, setCtaText] = useState(DEFAULT_CTA_TEXT);
-  const [ctaUrl, setCtaUrl] = useState('');
-  const [bannerName, setBannerName] = useState('');
+  const [page, setPage] = useState(1);
+  const [banner, setBanner] = useState(null);
   const [bannerError, setBannerError] = useState('');
+  const [bannerInputKey, setBannerInputKey] = useState(0);
   const [recipientId, setRecipientId] = useState(DEFAULT_RECIPIENT_ID);
-  const [selectedSubscriberIds, setSelectedSubscriberIds] = useState([]);
+  const [selectedEmails, setSelectedEmails] = useState([]);
   const [composerOpen, setComposerOpen] = useState(true);
-  const [sending, setSending] = useState(false);
-  const [attempted, setAttempted] = useState(false);
+
+  const listQuery = useQuery({
+    queryKey: [...ADMIN_NEWSLETTER_SUBSCRIBERS_QUERY_KEY, page, pageSize],
+    queryFn: () => getNewsletterSubscribersApi({ page, limit: pageSize }),
+    placeholderData: keepPreviousData,
+  });
+
+  const subscribers = listQuery.data?.items ?? [];
+  const meta = listQuery.data?.meta;
+  const total = meta?.total ?? 0;
+  const totalPages = Math.max(1, meta?.totalPages ?? 1);
+
+  useEffect(() => {
+    if (meta && page > totalPages) setPage(totalPages);
+  }, [meta, page, totalPages]);
+
+  const sendMutation = useMutation({ mutationFn: sendNewsletterCampaignApi });
 
   const handleRecipientChange = (nextRecipientId) => {
+    if (!getRecipientTarget(nextRecipientId)) return;
     setRecipientId(nextRecipientId);
     if (nextRecipientId !== 'selected') {
-      setSelectedSubscriberIds([]);
+      setSelectedEmails([]);
     }
   };
 
-  const handleToggleSubscriber = (subscriberId) => {
-    setSelectedSubscriberIds((current) =>
-      current.includes(subscriberId)
-        ? current.filter((id) => id !== subscriberId)
-        : [...current, subscriberId],
+  /** Backend `selectedIds` takes subscriber emails, so selection is keyed by email. */
+  const handleToggleSubscriber = (email) => {
+    setSelectedEmails((current) =>
+      current.includes(email)
+        ? current.filter((item) => item !== email)
+        : [...current, email],
     );
   };
 
@@ -45,72 +67,87 @@ const useAdminNewsletter = () => {
     const file = event.target.files?.[0];
     if (!file) return;
     if (!isBannerFileAllowed(file)) {
-      setBannerName('');
+      setBanner(null);
       setBannerError('adminNewsletter.composer.bannerInvalid');
       return;
     }
     setBannerError('');
-    setBannerName(file.name);
+    setBanner(file);
   };
 
-  const isSubjectValid = subject.trim().length > 0;
-  const isContentValid = content.trim().length > 0;
-  const isRecipientsValid =
-    recipientId !== 'selected' || selectedSubscriberIds.length > 0;
-  const isFormValid = isSubjectValid && isContentValid && isRecipientsValid;
+  const resetBanner = () => {
+    setBanner(null);
+    setBannerError('');
+    setBannerInputKey((key) => key + 1);
+  };
 
-  const handleSend = () => {
-    setAttempted(true);
-    if (!isFormValid) {
-      if (!isRecipientsValid) {
-        toast.error(t('adminNewsletter.send.recipientsRequired'));
-      } else {
-        toast.error(t('adminNewsletter.send.validationError'));
-      }
+  /**
+   * @param {import('@/portals/admin/data/adminNewsletterData').NEWSLETTER_FORM_DEFAULTS} values
+   * @param {{ onSuccess?: () => void }} [options]
+   */
+  const handleSend = (values, { onSuccess } = {}) => {
+    const target = getRecipientTarget(recipientId);
+    if (!target || (target === 'SELECTED' && selectedEmails.length === 0)) {
+      toast.error(t('adminNewsletter.send.recipientsRequired'));
       return;
     }
-    setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      setAttempted(false);
-      toast.success(t('adminNewsletter.send.success'));
-      setSubject('');
-      setEmailTitle('');
-      setContent('');
-      setCtaText(DEFAULT_CTA_TEXT);
-      setCtaUrl('');
-      setBannerName('');
-      setBannerError('');
-      setSelectedSubscriberIds([]);
-      setRecipientId(DEFAULT_RECIPIENT_ID);
-    }, 1200);
+
+    sendMutation.mutate(
+      buildNewsletterCampaignFormData(values, {
+        target,
+        banner,
+        selectedEmails,
+      }),
+      {
+        onSuccess: (response) => {
+          toast.success(response?.message || t('adminNewsletter.send.success'));
+          resetBanner();
+          setSelectedEmails([]);
+          setRecipientId(DEFAULT_RECIPIENT_ID);
+          onSuccess?.();
+        },
+        onError: (error) => {
+          toast.error(
+            getApiErrorMessage(error, t('adminNewsletter.send.error')),
+          );
+        },
+      },
+    );
   };
 
+  const goToPage = (nextPage) => {
+    setPage(Math.min(Math.max(1, nextPage), totalPages));
+  };
+
+  const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const to = total === 0 ? 0 : Math.min(from + subscribers.length - 1, total);
+
   return {
-    subscribers: ADMIN_NEWSLETTER_SUBSCRIBERS,
-    subject,
-    setSubject,
-    emailTitle,
-    setEmailTitle,
-    content,
-    setContent,
-    ctaText,
-    setCtaText,
-    ctaUrl,
-    setCtaUrl,
-    bannerName,
+    subscribers,
+    isLoading: listQuery.isLoading,
+    isError: listQuery.isError,
+    isFetching: listQuery.isFetching,
+    loadErrorMessage: getApiErrorMessage(
+      listQuery.error,
+      t('adminNewsletter.loadError'),
+    ),
+    refetch: listQuery.refetch,
+    range: { from, to, total },
+    isFirstPage: page <= 1,
+    isLastPage: page >= totalPages,
+    handlePreviousPage: () => goToPage(page - 1),
+    handleNextPage: () => goToPage(page + 1),
+    bannerName: banner?.name ?? '',
     bannerError,
+    bannerInputKey,
     handleBannerChange,
     recipientId,
     setRecipientId: handleRecipientChange,
-    selectedSubscriberIds,
+    selectedEmails,
     handleToggleSubscriber,
     composerOpen,
     setComposerOpen,
-    sending,
-    attempted,
-    isFormValid,
-    isRecipientsValid,
+    sending: sendMutation.isPending,
     handleSend,
   };
 };

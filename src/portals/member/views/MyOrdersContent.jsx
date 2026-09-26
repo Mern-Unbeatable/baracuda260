@@ -65,6 +65,8 @@ const StatusBadge = memo(({ status, deliveredOn }) => {
 });
 StatusBadge.displayName = 'StatusBadge';
 
+import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
+
 const OrderStatCards = memo(({ stats }) => {
   const { t } = useTranslation();
 
@@ -74,32 +76,24 @@ const OrderStatCards = memo(({ stats }) => {
       className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
     >
       {MY_ORDERS_STAT_CARDS.map((card) => {
-        const Icon = STAT_ICONS[card.icon] || Package;
+        let iconBg = card.iconBg;
+        let iconColor = 'text-current';
+        
+        if (iconBg && iconBg.includes('text-')) {
+          const parts = iconBg.split(' ');
+          iconBg = parts.find(p => p.startsWith('bg-')) || iconBg;
+          iconColor = parts.find(p => p.startsWith('text-')) || iconColor;
+        }
+
         return (
-          <article
+          <DashboardStatCard
             key={card.id}
-            className={`rounded-[14px] border px-5 py-4 shadow-[0px_1px_2px_rgba(0,0,0,0.04)] ${card.cardClass}`}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[11px] font-bold tracking-[0.14em] text-[#8b93a7]">
-                  {t(card.labelKey)}
-                </p>
-                <p className="mt-2 text-[28px] font-extrabold leading-none text-[#111827]">
-                  {stats[card.id].value}
-                </p>
-                <p className="mt-1.5 text-[12px] font-medium text-[#687186]">
-                  {t(card.hintKey)}
-                </p>
-              </div>
-              <span
-                className={`inline-flex size-9 shrink-0 items-center justify-center rounded-[10px] ${card.iconBg}`}
-                aria-hidden="true"
-              >
-                <Icon size={18} />
-              </span>
-            </div>
-          </article>
+            labelKey={card.labelKey}
+            value={stats[card.id].value}
+            icon={card.icon}
+            iconBg={iconBg}
+            iconColor={iconColor}
+          />
         );
       })}
     </div>
@@ -109,7 +103,7 @@ OrderStatCards.displayName = 'OrderStatCards';
 
 const OrderCard = memo(({ order }) => {
   const { t } = useTranslation();
-  const detailHref = ROUTES.ADMIN_MY_ORDERS_DETAIL.replace(':id', order.id);
+  const detailHref = ROUTES.USER_MY_ORDERS_DETAIL.replace(':id', order.id);
 
   const handleCopy = async () => {
     try {

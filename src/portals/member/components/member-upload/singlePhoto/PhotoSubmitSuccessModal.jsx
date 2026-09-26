@@ -12,7 +12,7 @@ import { ROUTES } from '@/shared/config';
  * Backdrop blur 6px; card 672×409, radius 24; CTAs red #ee1c25 + blue #4048cd.
  */
 const PhotoSubmitSuccessModal = memo(
-  ({ open, onClose, uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS }) => {
+  ({ open, onClose, uploadAnotherHref = ROUTES.USER_UPLOAD_PHOTOS }) => {
     const { t } = useTranslation();
 
     useEffect(() => {

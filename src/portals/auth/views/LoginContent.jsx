@@ -20,7 +20,6 @@ const LoginContent = memo(() => {
     errors,
     isSubmitting,
     globalError,
-    handleDemoQuickLogin,
     t,
     EMAIL_REGEX,
   } = useLogin();
@@ -82,7 +81,7 @@ const LoginContent = memo(() => {
               </p>
             </header>
 
-            <div className="mb-6 flex flex-col gap-3">
+            {/* <div className="mb-6 flex flex-col gap-3">
               <p className="text-center text-[13px] leading-5 text-[#7a7484]">
                 {t('login.demoHint')}
               </p>
@@ -106,7 +105,7 @@ const LoginContent = memo(() => {
                   {t('login.demoAdmin')}
                 </Button>
               </div>
-            </div>
+            </div> */}
 
             {globalError ? (
               <div
@@ -169,13 +168,12 @@ const LoginContent = memo(() => {
                   >
                     {t('login.password')}
                   </label>
-                  <Button
-                    unstyled
-                    type="button"
-                    className="shrink-0 text-[15px] leading-6 text-[#ee1c25] sm:text-[16px]"
+                  <Link
+                    to={ROUTES.FORGOT_PASSWORD}
+                    className="shrink-0 text-[15px] font-medium leading-6 text-[#ee1c25] hover:underline sm:text-[16px]"
                   >
                     {t('login.forgotPassword')}
-                  </Button>
+                  </Link>
                 </div>
                 <div className="relative">
                   <span className="pointer-events-none absolute left-4 top-1/2 flex h-5.25 w-4 -translate-y-1/2 items-center justify-center overflow-hidden z-10">
