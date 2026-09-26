@@ -10,6 +10,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 import {
   Table,
   TableBody,
@@ -20,22 +21,20 @@ import {
 } from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
-import CreateAnnouncementModal from '@/portals/admin/components/admin-announcements/CreateAnnouncementModal';
+import AnnouncementFormModal from '@/portals/admin/components/admin-announcements/AnnouncementFormModal';
 import {
   ACTION_MENU_OPTIONS,
   ADMIN_ANNOUNCEMENTS_ASSETS,
   ANNOUNCEMENT_STAT_CARDS,
   ANNOUNCEMENT_STATUS,
   ANNOUNCEMENT_TYPE,
-  getAnnouncementScheduleEnd,
-  getAnnouncementScheduleStart,
-  getAnnouncementTitle,
+  formatScheduleDate,
+  getAnnouncementStatus,
+  getAnnouncementTypeLabel,
   MORE_ICON_SIZE,
   PRIORITY_DOT_STYLES,
   PRIORITY_LABEL_KEYS,
-  STATUS_LABEL_KEYS,
   STATUS_STYLES,
-  TYPE_LABEL_KEYS,
   TYPE_STYLES,
 } from '@/portals/admin/data/adminAnnouncementsData';
 import useAdminAnnouncements from '@/portals/admin/hooks/useAdminAnnouncements';
@@ -45,6 +44,7 @@ const ACTION_MENU_FALLBACK_HEIGHT_PX = 148;
 const ACTION_MENU_VIEWPORT_MARGIN_PX = 8;
 const ACTION_MENU_WIDTH_PX = 176;
 const LG_MEDIA_QUERY = '(min-width: 1024px)';
+const SKELETON_ROW_COUNT = 5;
 
 const useIsLgUp = () => {
   const [isLgUp, setIsLgUp] = useState(() =>
@@ -64,38 +64,35 @@ const useIsLgUp = () => {
   return isLgUp;
 };
 
-import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
-
-const AnnouncementStatCards = memo(() => {
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {ANNOUNCEMENT_STAT_CARDS.map((card) => (
-        <AdminBasicStatCard
-          key={card.id}
-          labelKey={card.labelKey}
-          value={card.value}
-          icon={card.icon}
-          iconBg={card.iconBg}
-          hintKey={card.hintKey}
-          hintClass={card.hintClass}
-          borderClass="border-[#f3f4f6]"
-          valueClass="text-[#111827]"
-        />
-      ))}
-    </div>
-  );
-});
+const AnnouncementStatCards = memo(({ stats, isLoading }) => (
+  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+    {ANNOUNCEMENT_STAT_CARDS.map((card) => (
+      <AdminBasicStatCard
+        key={card.id}
+        labelKey={card.labelKey}
+        value={isLoading ? '—' : (stats?.[card.id] ?? 0)}
+        icon={card.icon}
+        iconBg={card.iconBg}
+        hintKey={card.hintKey}
+        hintClass={card.hintClass}
+        borderClass="border-[#f3f4f6]"
+        valueClass="text-[#111827]"
+      />
+    ))}
+  </div>
+));
 AnnouncementStatCards.displayName = 'AnnouncementStatCards';
 
 const TypeBadge = memo(({ type }) => {
   const { t } = useTranslation();
-  const style = TYPE_STYLES[type] || TYPE_STYLES[ANNOUNCEMENT_TYPE.GENERAL];
+  const style =
+    TYPE_STYLES[type] || TYPE_STYLES[ANNOUNCEMENT_TYPE.GENERAL_ANNOUNCEMENT];
 
   return (
     <span
       className={`inline-flex h-6 items-center rounded-[99px] px-2.5 text-[11px] font-semibold leading-[16.5px] whitespace-nowrap ${style.bg} ${style.text}`}
     >
-      {t(TYPE_LABEL_KEYS[type])}
+      {getAnnouncementTypeLabel(t, type)}
     </span>
   );
 });
@@ -116,7 +113,9 @@ const PriorityIndicator = memo(({ priority }) => {
         ))}
       </span>
       <span className="text-[12px] font-medium leading-4.5 text-[#374151]">
-        {t(PRIORITY_LABEL_KEYS[priority])}
+        {PRIORITY_LABEL_KEYS[priority]
+          ? t(PRIORITY_LABEL_KEYS[priority])
+          : priority}
       </span>
     </div>
   );
@@ -152,8 +151,9 @@ const StatusIcon = memo(({ icon, className }) => {
 });
 StatusIcon.displayName = 'StatusIcon';
 
-const StatusBadge = memo(({ status }) => {
+const StatusBadge = memo(({ announcement }) => {
   const { t } = useTranslation();
+  const status = getAnnouncementStatus(announcement);
   const style =
     STATUS_STYLES[status] || STATUS_STYLES[ANNOUNCEMENT_STATUS.EXPIRED];
 
@@ -165,15 +165,67 @@ const StatusBadge = memo(({ status }) => {
       <span
         className={`text-[11px] font-semibold leading-[16.5px] whitespace-nowrap ${style.text}`}
       >
-        {t(STATUS_LABEL_KEYS[status])}
+        {t(`adminAnnouncements.status.${status}`, {
+          defaultValue: announcement.displayStatus || status,
+        })}
       </span>
     </span>
   );
 });
 StatusBadge.displayName = 'StatusBadge';
 
+const AnnouncementSchedule = memo(({ row, className = '' }) => {
+  const { t, i18n } = useTranslation();
+  const start = formatScheduleDate(row.startDate, row.startTime, i18n.language);
+  const end = row.noEndDate
+    ? t('adminAnnouncements.schedule.manual')
+    : formatScheduleDate(row.endDate, row.endTime, i18n.language) || '—';
+
+  return (
+    <div className={`text-[12px] leading-[18px] text-[#9ca3af] ${className}`}>
+      <p>
+        <span className="text-[#6b7280]">
+          {t('adminAnnouncements.schedule.start')}
+        </span>{' '}
+        {start || '—'}
+      </p>
+      <p className="pt-0.5">
+        <span className="text-[#6b7280]">
+          {t('adminAnnouncements.schedule.end')}
+        </span>{' '}
+        {end}
+      </p>
+    </div>
+  );
+});
+AnnouncementSchedule.displayName = 'AnnouncementSchedule';
+
+const AnnouncementSummary = memo(({ row, wrap = false }) => (
+  <div className="flex min-w-0 items-start gap-2.5">
+    <span className="text-[18px] leading-none" aria-hidden="true">
+      {row.icon || '📢'}
+    </span>
+    <div className="min-w-0">
+      <p
+        className={`text-[13px] font-semibold leading-[19.5px] text-[#111827] ${
+          wrap ? '' : 'truncate'
+        }`}
+        title={row.message}
+      >
+        {row.message}
+      </p>
+      {row.link ? (
+        <p className="truncate pt-0.5 text-[11px] font-medium leading-[16.5px] text-[#4048cd]">
+          {row.link}
+        </p>
+      ) : null}
+    </div>
+  </div>
+));
+AnnouncementSummary.displayName = 'AnnouncementSummary';
+
 const AnnouncementActionMenu = memo(
-  ({ row, isOpen, onToggle, onClose, onSelectAction }) => {
+  ({ row, isOpen, isBusy, onToggle, onClose, onSelectAction }) => {
     const { t } = useTranslation();
     const buttonWrapRef = useRef(null);
     const buttonRef = useRef(null);
@@ -234,16 +286,16 @@ const AnnouncementActionMenu = memo(
       };
     }, [isOpen, onClose]);
 
-    const rowTitle = getAnnouncementTitle(row, t);
+    const menuLabel = t('adminAnnouncements.actions.menu', {
+      title: row.message,
+    });
 
     const menu = isOpen
       ? createPortal(
           <ul
             ref={menuRef}
             role="menu"
-            aria-label={t('adminAnnouncements.actions.menu', {
-              title: rowTitle,
-            })}
+            aria-label={menuLabel}
             style={{
               position: 'fixed',
               zIndex: 60,
@@ -259,8 +311,8 @@ const AnnouncementActionMenu = memo(
                   unstyled
                   type="button"
                   role="menuitem"
-                  disabled={option.id === row.status}
-                  onClick={() => onSelectAction(row.id, option.id)}
+                  disabled={option.id === row.activeState}
+                  onClick={() => onSelectAction(row, option.id)}
                   className="flex w-full cursor-pointer items-center bg-white px-2.5 py-1.25 text-left text-[16px] leading-6 text-[#222] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
                 >
                   {t(option.labelKey)}
@@ -280,9 +332,10 @@ const AnnouncementActionMenu = memo(
           type="button"
           aria-expanded={isOpen}
           aria-haspopup="menu"
-          aria-label={t('adminAnnouncements.actions.menu', { title: rowTitle })}
+          aria-label={menuLabel}
+          disabled={isBusy}
           onClick={() => onToggle(row.id)}
-          className={`inline-flex size-7 cursor-pointer items-center justify-center rounded-[7px] border border-[#e5e7eb] bg-white transition ${
+          className={`inline-flex size-7 cursor-pointer items-center justify-center rounded-[7px] border border-[#e5e7eb] bg-white transition disabled:cursor-wait disabled:opacity-50 ${
             isOpen ? 'bg-[#f3f4f6]' : 'hover:bg-[#f9fafb]'
           }`}
         >
@@ -301,192 +354,205 @@ const AnnouncementActionMenu = memo(
 );
 AnnouncementActionMenu.displayName = 'AnnouncementActionMenu';
 
-const AnnouncementTableRow = memo(
-  ({ row, openActionId, onToggleAction, onCloseAction, onSelectAction }) => {
-    const { t } = useTranslation();
-    const title = getAnnouncementTitle(row, t);
-    const scheduleStart = getAnnouncementScheduleStart(row, t);
-    const scheduleEnd = getAnnouncementScheduleEnd(row, t);
+/**
+ * @typedef {{
+ *   openActionId: string | null,
+ *   busyId: string | null,
+ *   onToggleAction: (id: string) => void,
+ *   onCloseAction: () => void,
+ *   onSelectAction: (row: object, actionId: string) => void,
+ * }} AnnouncementRowActions
+ */
 
-    return (
-      <TableRow className="border-b border-[#f3f4f6]">
-        <TableCell className="px-5">
-          <div className="flex min-w-0 items-start gap-2.5">
-            <span className="text-[18px] leading-none" aria-hidden="true">
-              {row.emoji}
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-[13px] font-semibold leading-[19.5px] text-[#111827]">
-                {title}
-              </p>
-              <p className="pt-0.5 text-[11px] font-medium leading-[16.5px] text-[#9ca3af]">
-                {row.code}
-              </p>
-            </div>
-          </div>
-        </TableCell>
-        <TableCell>
-          <TypeBadge type={row.type} />
-        </TableCell>
-        <TableCell>
-          <div className="text-[12px] leading-[18px] text-[#9ca3af]">
-            <p>
-              <span className="text-[#6b7280]">
-                {t('adminAnnouncements.schedule.start')}
-              </span>{' '}
-              {scheduleStart}
-            </p>
-            <p className="pt-0.5">
-              <span className="text-[#6b7280]">
-                {t('adminAnnouncements.schedule.end')}
-              </span>{' '}
-              {scheduleEnd}
-            </p>
-          </div>
-        </TableCell>
-        <TableCell>
-          <PriorityIndicator priority={row.priority} />
-        </TableCell>
-        <TableCell>
-          <StatusBadge status={row.status} />
-        </TableCell>
-        <TableCell className="px-5">
-          <AnnouncementActionMenu
-            row={row}
-            isOpen={openActionId === row.id}
-            onToggle={onToggleAction}
-            onClose={onCloseAction}
-            onSelectAction={onSelectAction}
-          />
-        </TableCell>
-      </TableRow>
-    );
-  },
+/** @param {{ row: object, actions: AnnouncementRowActions }} props */
+const RowActionMenu = ({ row, actions }) => (
+  <AnnouncementActionMenu
+    row={row}
+    isOpen={actions.openActionId === row.id}
+    isBusy={actions.busyId === row.id}
+    onToggle={actions.onToggleAction}
+    onClose={actions.onCloseAction}
+    onSelectAction={actions.onSelectAction}
+  />
 );
+
+/** @param {{ row: object, actions: AnnouncementRowActions }} props */
+const AnnouncementTableRow = memo(({ row, actions }) => (
+  <TableRow
+    className={`border-b border-[#f3f4f6] transition-opacity ${
+      actions.busyId === row.id ? 'opacity-60' : ''
+    }`}
+  >
+    <TableCell className="max-w-[360px] px-5">
+      <AnnouncementSummary row={row} />
+    </TableCell>
+    <TableCell>
+      <TypeBadge type={row.type} />
+    </TableCell>
+    <TableCell>
+      <AnnouncementSchedule row={row} />
+    </TableCell>
+    <TableCell>
+      <PriorityIndicator priority={row.priority} />
+    </TableCell>
+    <TableCell>
+      <StatusBadge announcement={row} />
+    </TableCell>
+    <TableCell className="px-5">
+      <RowActionMenu row={row} actions={actions} />
+    </TableCell>
+  </TableRow>
+));
 AnnouncementTableRow.displayName = 'AnnouncementTableRow';
 
-const AnnouncementsTable = memo(
-  ({ rows, openActionId, onToggleAction, onCloseAction, onSelectAction }) => {
-    const { t } = useTranslation();
+/** @param {{ rows: object[], actions: AnnouncementRowActions }} props */
+const AnnouncementsTable = memo(({ rows, actions }) => {
+  const { t } = useTranslation();
 
-    return (
-      <Table className="min-w-[980px]">
-        <TableHeader>
-          <TableRow isHeader className="border-b border-[#f3f4f6]">
-            {[
-              'announcement',
-              'type',
-              'schedule',
-              'priority',
-              'status',
-              'action',
-            ].map((column) => (
-              <TableHead
-                key={column}
-                className="text-[11px] font-bold leading-[16.5px] tracking-[0.55px] uppercase text-[#9ca3af] first:px-5 last:px-5"
-              >
-                {t(`adminAnnouncements.columns.${column}`)}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rows.map((row) => (
-            <AnnouncementTableRow
-              key={row.id}
-              row={row}
-              openActionId={openActionId}
-              onToggleAction={onToggleAction}
-              onCloseAction={onCloseAction}
-              onSelectAction={onSelectAction}
-            />
+  return (
+    <Table className="min-w-[980px]">
+      <TableHeader>
+        <TableRow isHeader className="border-b border-[#f3f4f6]">
+          {[
+            'announcement',
+            'type',
+            'schedule',
+            'priority',
+            'status',
+            'action',
+          ].map((column) => (
+            <TableHead
+              key={column}
+              className="text-[11px] font-bold leading-[16.5px] tracking-[0.55px] uppercase text-[#9ca3af] first:px-5 last:px-5"
+            >
+              {t(`adminAnnouncements.columns.${column}`)}
+            </TableHead>
           ))}
-        </TableBody>
-      </Table>
-    );
-  },
-);
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {rows.map((row) => (
+          <AnnouncementTableRow key={row.id} row={row} actions={actions} />
+        ))}
+      </TableBody>
+    </Table>
+  );
+});
 AnnouncementsTable.displayName = 'AnnouncementsTable';
 
-const AnnouncementMobileCard = memo(
-  ({ row, openActionId, onToggleAction, onCloseAction, onSelectAction }) => {
-    const { t } = useTranslation();
-    const title = getAnnouncementTitle(row, t);
-    const scheduleStart = getAnnouncementScheduleStart(row, t);
-    const scheduleEnd = getAnnouncementScheduleEnd(row, t);
-
-    return (
-      <article className="flex flex-col gap-3 border-b border-[#f3f4f6] px-4 py-4 last:border-b-0">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-start gap-2.5">
-            <span className="text-[18px] leading-none" aria-hidden="true">
-              {row.emoji}
-            </span>
-            <div className="min-w-0">
-              <p className="text-[14px] font-semibold leading-5 text-[#111827]">
-                {title}
-              </p>
-              <p className="pt-0.5 text-[11px] text-[#9ca3af]">{row.code}</p>
-            </div>
-          </div>
-          <AnnouncementActionMenu
-            row={row}
-            isOpen={openActionId === row.id}
-            onToggle={onToggleAction}
-            onClose={onCloseAction}
-            onSelectAction={onSelectAction}
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <TypeBadge type={row.type} />
-          <StatusBadge status={row.status} />
-        </div>
-        <PriorityIndicator priority={row.priority} />
-        <div className="text-[12px] leading-[18px] text-[#9ca3af]">
-          <p>
-            <span className="text-[#6b7280]">
-              {t('adminAnnouncements.schedule.start')}
-            </span>{' '}
-            {scheduleStart}
-          </p>
-          <p>
-            <span className="text-[#6b7280]">
-              {t('adminAnnouncements.schedule.end')}
-            </span>{' '}
-            {scheduleEnd}
-          </p>
-        </div>
-      </article>
-    );
-  },
-);
+/** @param {{ row: object, actions: AnnouncementRowActions }} props */
+const AnnouncementMobileCard = memo(({ row, actions }) => (
+  <article
+    className={`flex flex-col gap-3 border-b border-[#f3f4f6] px-4 py-4 transition-opacity last:border-b-0 ${
+      actions.busyId === row.id ? 'opacity-60' : ''
+    }`}
+  >
+    <div className="flex items-start justify-between gap-3">
+      <AnnouncementSummary row={row} wrap />
+      <RowActionMenu row={row} actions={actions} />
+    </div>
+    <div className="flex flex-wrap items-center gap-2">
+      <TypeBadge type={row.type} />
+      <StatusBadge announcement={row} />
+    </div>
+    <PriorityIndicator priority={row.priority} />
+    <AnnouncementSchedule row={row} />
+  </article>
+));
 AnnouncementMobileCard.displayName = 'AnnouncementMobileCard';
+
+const AnnouncementsSkeleton = () => (
+  <div className="flex flex-col gap-3 px-5 py-6" aria-busy="true">
+    {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
+      <div
+        key={index}
+        className="h-14 w-full animate-pulse rounded-lg bg-[#f3f4f6]"
+      />
+    ))}
+  </div>
+);
 
 const AdminAnnouncementsContent = memo(() => {
   const { t } = useTranslation();
   const isLgUp = useIsLgUp();
   const {
-    visibleRows,
+    rows,
+    isLoading,
+    isError,
+    isFetching,
+    loadErrorMessage,
+    refetch,
+    stats,
+    isStatsLoading,
     page,
     pageNumbers,
-    resultsFrom,
-    resultsTo,
-    resultsTotal,
-    resultsCount,
+    range,
     isFirstPage,
     isLastPage,
+    busyId,
     openActionId,
-    isCreateModalOpen,
     handleToggleAction,
     handleCloseAction,
     handleSelectAction,
     handlePreviousPage,
     handleNextPage,
     handleSelectPage,
+    isModalOpen,
+    isEditMode,
+    editingAnnouncement,
+    isDetailLoading,
+    isDetailError,
+    detailErrorMessage,
+    refetchDetail,
+    isSaving,
     handleOpenCreateModal,
-    handleCloseCreateModal,
-    handleCreateAnnouncement,
+    handleCloseModal,
+    handleSubmitAnnouncement,
   } = useAdminAnnouncements();
+
+  /** @type {AnnouncementRowActions} */
+  const actions = {
+    openActionId,
+    busyId,
+    onToggleAction: handleToggleAction,
+    onCloseAction: handleCloseAction,
+    onSelectAction: handleSelectAction,
+  };
+
+  let body;
+  if (isLoading) {
+    body = <AnnouncementsSkeleton />;
+  } else if (isError) {
+    body = (
+      <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
+        <p className="text-[16px] text-[#ee1c25]">{loadErrorMessage}</p>
+        <Button
+          unstyled
+          type="button"
+          onClick={() => refetch()}
+          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium text-[#4048cd] transition hover:bg-[#f6fbff]"
+        >
+          {t('adminAnnouncements.retry')}
+        </Button>
+      </div>
+    );
+  } else if (rows.length === 0) {
+    body = (
+      <p className="px-6 py-10 text-center text-[16px] text-[#6b7280]">
+        {t('adminAnnouncements.empty')}
+      </p>
+    );
+  } else if (isLgUp) {
+    body = <AnnouncementsTable rows={rows} actions={actions} />;
+  } else {
+    body = (
+      <div className="flex flex-col" data-testid="announcements-mobile-cards">
+        {rows.map((row) => (
+          <AnnouncementMobileCard key={row.id} row={row} actions={actions} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex w-full flex-col gap-6 py-2 sm:py-4">
@@ -506,73 +572,59 @@ const AdminAnnouncementsContent = memo(() => {
         </Button>
       </div>
 
-      <AnnouncementStatCards />
+      <AnnouncementStatCards stats={stats} isLoading={isStatsLoading} />
 
       <section
         aria-label={t('adminAnnouncements.tableAria')}
+        aria-busy={isFetching}
         className="overflow-hidden rounded-2xl border border-[#f3f4f6] bg-white shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)]"
       >
-        {visibleRows.length > 0 ? (
-          isLgUp ? (
-            <AnnouncementsTable
-              rows={visibleRows}
-              openActionId={openActionId}
-              onToggleAction={handleToggleAction}
-              onCloseAction={handleCloseAction}
-              onSelectAction={handleSelectAction}
-            />
-          ) : (
-            <div
-              className="flex flex-col"
-              data-testid="announcements-mobile-cards"
-            >
-              {visibleRows.map((row) => (
-                <AnnouncementMobileCard
-                  key={row.id}
-                  row={row}
-                  openActionId={openActionId}
-                  onToggleAction={handleToggleAction}
-                  onCloseAction={handleCloseAction}
-                  onSelectAction={handleSelectAction}
-                />
-              ))}
-            </div>
-          )
-        ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#6b7280]">
-            {t('adminAnnouncements.empty')}
-          </p>
-        )}
+        <div
+          className={`transition-opacity ${
+            isFetching && !isLoading ? 'opacity-60' : ''
+          }`}
+        >
+          {body}
+        </div>
 
-        <AdminPagination
-          variant="comment"
-          count={resultsCount}
-          total={resultsTotal}
-          page={page}
-          pageNumbers={pageNumbers}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-          onSelectPage={handleSelectPage}
-          showingText={t('adminAnnouncements.pagination.showing', {
-            from: resultsFrom,
-            to: resultsTo,
-            total: resultsTotal,
-          })}
-          navAriaLabel={t('adminAnnouncements.pagination.aria')}
-          previousAriaLabel={t('adminAnnouncements.pagination.previous')}
-          nextAriaLabel={t('adminAnnouncements.pagination.next')}
-          pageAriaLabel={(pageNumber) =>
-            t('adminAnnouncements.pagination.page', { page: pageNumber })
-          }
-        />
+        {!isLoading && !isError && range.total > 0 ? (
+          <AdminPagination
+            variant="comment"
+            count={range.count}
+            total={range.total}
+            page={page}
+            pageNumbers={pageNumbers}
+            isFirstPage={isFirstPage || isFetching}
+            isLastPage={isLastPage || isFetching}
+            onPrevious={handlePreviousPage}
+            onNext={handleNextPage}
+            onSelectPage={handleSelectPage}
+            showingText={t('adminAnnouncements.pagination.showing', {
+              from: range.from,
+              to: range.to,
+              total: range.total,
+            })}
+            navAriaLabel={t('adminAnnouncements.pagination.aria')}
+            previousAriaLabel={t('adminAnnouncements.pagination.previous')}
+            nextAriaLabel={t('adminAnnouncements.pagination.next')}
+            pageAriaLabel={(pageNumber) =>
+              t('adminAnnouncements.pagination.page', { page: pageNumber })
+            }
+          />
+        ) : null}
       </section>
 
-      <CreateAnnouncementModal
-        open={isCreateModalOpen}
-        onClose={handleCloseCreateModal}
-        onCreate={handleCreateAnnouncement}
+      <AnnouncementFormModal
+        open={isModalOpen}
+        isEdit={isEditMode}
+        announcement={editingAnnouncement}
+        isLoading={isDetailLoading}
+        isError={isDetailError}
+        errorMessage={detailErrorMessage}
+        onRetry={() => refetchDetail()}
+        isSaving={isSaving}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitAnnouncement}
       />
     </div>
   );

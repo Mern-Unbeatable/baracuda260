@@ -1,31 +1,144 @@
-import { useState } from 'react';
 import {
-  ADMIN_ANNOUNCEMENT_ROWS,
-  ANNOUNCEMENTS_PAGE_CHROME,
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import {
+  ACTIVE_STATE,
   ANNOUNCEMENTS_PAGE_SIZE,
-  buildAnnouncementFromForm,
+  buildActiveStatePayload,
+  buildAnnouncementPayload,
   getAnnouncementPageNumbers,
-  paginateAnnouncements,
-  updateAnnouncementStatus,
 } from '@/portals/admin/data/adminAnnouncementsData';
+import {
+  ADMIN_ANNOUNCEMENTS_QUERY_KEY,
+  createAdminAnnouncementApi,
+  deleteAdminAnnouncementApi,
+  getAdminAnnouncementApi,
+  getAdminAnnouncementStatsApi,
+  getAdminAnnouncementsApi,
+  updateAdminAnnouncementApi,
+} from '@/shared/api/announcements.api';
+import { getApiErrorMessage } from '@/shared/api/client';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
+const MODAL_MODE = { CREATE: 'create', EDIT: 'edit' };
+
+/**
+ * Announcements list (server-paginated), stats, and create/edit/delete actions.
+ */
 export default function useAdminAnnouncements(
-  initialRows = ADMIN_ANNOUNCEMENT_ROWS,
   pageSize = ANNOUNCEMENTS_PAGE_SIZE,
 ) {
-  const [rows, setRows] = useState(initialRows);
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [openActionId, setOpenActionId] = useState(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState(null);
+  const [editingId, setEditingId] = useState(null);
 
-  const resultsTotal = rows.length;
-  const computedPages = Math.max(1, Math.ceil(resultsTotal / pageSize));
-  const totalPages = Math.max(ANNOUNCEMENTS_PAGE_CHROME, computedPages);
-  const safePage = Math.min(page, totalPages);
-  const visibleRows = paginateAnnouncements(rows, safePage, pageSize);
-  const pageNumbers = getAnnouncementPageNumbers(safePage, totalPages);
-  const resultsFrom = resultsTotal === 0 ? 0 : (safePage - 1) * pageSize + 1;
-  const resultsTo = Math.min(safePage * pageSize, resultsTotal);
+  const listQuery = useQuery({
+    queryKey: [...ADMIN_ANNOUNCEMENTS_QUERY_KEY, 'list', page, pageSize],
+    queryFn: () => getAdminAnnouncementsApi({ page, limit: pageSize }),
+    placeholderData: keepPreviousData,
+  });
+
+  const statsQuery = useQuery({
+    queryKey: [...ADMIN_ANNOUNCEMENTS_QUERY_KEY, 'stats'],
+    queryFn: getAdminAnnouncementStatsApi,
+  });
+
+  const detailQuery = useQuery({
+    queryKey: [...ADMIN_ANNOUNCEMENTS_QUERY_KEY, 'detail', editingId],
+    queryFn: () => getAdminAnnouncementApi(editingId),
+    enabled: modalMode === MODAL_MODE.EDIT && Boolean(editingId),
+  });
+
+  const rows = listQuery.data?.items ?? [];
+  const total = listQuery.data?.meta.total ?? 0;
+  const totalPages = Math.max(1, listQuery.data?.meta.totalPages ?? 1);
+
+  useEffect(() => {
+    if (listQuery.data && page > totalPages) setPage(totalPages);
+  }, [listQuery.data, page, totalPages]);
+
+  const refreshAnnouncements = () =>
+    queryClient.invalidateQueries({ queryKey: ADMIN_ANNOUNCEMENTS_QUERY_KEY });
+
+  const closeModal = () => {
+    setModalMode(null);
+    setEditingId(null);
+  };
+
+  const createMutation = useMutation({
+    mutationFn: createAdminAnnouncementApi,
+    onSuccess: () => {
+      refreshAnnouncements();
+      setPage(1);
+      closeModal();
+      toast.success(t('adminAnnouncements.toast.created'));
+    },
+    onError: (error) => {
+      toast.error(
+        getApiErrorMessage(error, t('adminAnnouncements.toast.createError')),
+      );
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateAdminAnnouncementApi,
+    onSuccess: () => {
+      refreshAnnouncements();
+      closeModal();
+      toast.success(t('adminAnnouncements.toast.updated'));
+    },
+    onError: (error) => {
+      toast.error(
+        getApiErrorMessage(error, t('adminAnnouncements.toast.updateError')),
+      );
+    },
+  });
+
+  const activeStateMutation = useMutation({
+    mutationFn: updateAdminAnnouncementApi,
+    onSuccess: (_data, { payload }) => {
+      refreshAnnouncements();
+      toast.success(
+        payload.activeState === ACTIVE_STATE.ACTIVE
+          ? t('adminAnnouncements.toast.activated')
+          : t('adminAnnouncements.toast.deactivated'),
+      );
+    },
+    onError: (error) => {
+      toast.error(
+        getApiErrorMessage(error, t('adminAnnouncements.toast.updateError')),
+      );
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteAdminAnnouncementApi,
+    onSuccess: () => {
+      refreshAnnouncements();
+      toast.success(t('adminAnnouncements.toast.deleted'));
+    },
+    onError: (error) => {
+      toast.error(
+        getApiErrorMessage(error, t('adminAnnouncements.toast.deleteError')),
+      );
+    },
+  });
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
+
+  const busyId =
+    (activeStateMutation.isPending && activeStateMutation.variables?.id) ||
+    (deleteMutation.isPending && deleteMutation.variables) ||
+    null;
 
   const handleToggleAction = (rowId) => {
     setOpenActionId((current) => (current === rowId ? null : rowId));
@@ -33,66 +146,110 @@ export default function useAdminAnnouncements(
 
   const handleCloseAction = () => setOpenActionId(null);
 
-  const handleSelectAction = (rowId, actionId) => {
-    if (actionId === 'edit' || actionId === 'delete') {
-      setOpenActionId(null);
+  const handleDelete = async (row) => {
+    const confirmed = await confirmDestructiveAction({
+      title: t('adminAnnouncements.confirmDelete.title'),
+      text: row.message,
+      confirmButtonText: t('adminAnnouncements.confirmDelete.confirm'),
+      cancelButtonText: t('adminAnnouncements.confirmDelete.cancel'),
+    });
+    if (confirmed) deleteMutation.mutate(row.id);
+  };
+
+  const handleSelectAction = (row, actionId) => {
+    setOpenActionId(null);
+
+    if (actionId === 'edit') {
+      setEditingId(row.id);
+      setModalMode(MODAL_MODE.EDIT);
       return;
     }
-    setRows((current) => updateAnnouncementStatus(current, rowId, actionId));
-    setOpenActionId(null);
+
+    if (actionId === 'delete') {
+      handleDelete(row);
+      return;
+    }
+
+    if (actionId === row.activeState || busyId) return;
+    activeStateMutation.mutate({
+      id: row.id,
+      payload: buildActiveStatePayload(row, actionId),
+    });
   };
 
-  const handlePreviousPage = () => {
-    setPage((current) => Math.max(1, current - 1));
-    setOpenActionId(null);
-  };
-
-  const handleNextPage = () => {
-    setPage((current) => Math.min(totalPages, current + 1));
-    setOpenActionId(null);
-  };
-
-  const handleSelectPage = (nextPage) => {
+  const goToPage = (nextPage) => {
     setPage(Math.min(Math.max(1, nextPage), totalPages));
     setOpenActionId(null);
   };
 
   const handleOpenCreateModal = () => {
     setOpenActionId(null);
-    setIsCreateModalOpen(true);
+    setEditingId(null);
+    setModalMode(MODAL_MODE.CREATE);
   };
 
-  const handleCloseCreateModal = () => setIsCreateModalOpen(false);
-
-  const handleCreateAnnouncement = (values) => {
-    setRows((current) => [
-      buildAnnouncementFromForm(values, current),
-      ...current,
-    ]);
-    setPage(1);
-    setIsCreateModalOpen(false);
+  const handleCloseModal = () => {
+    if (isSaving) return;
+    closeModal();
   };
+
+  const handleSubmitAnnouncement = (values) => {
+    if (isSaving) return;
+
+    if (modalMode === MODAL_MODE.EDIT && editingId) {
+      updateMutation.mutate({
+        id: editingId,
+        payload: buildAnnouncementPayload(values, {
+          previousLink: detailQuery.data?.link,
+        }),
+      });
+      return;
+    }
+
+    createMutation.mutate(buildAnnouncementPayload(values));
+  };
+
+  const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const to = total === 0 ? 0 : from + rows.length - 1;
 
   return {
-    visibleRows,
-    page: safePage,
-    pageNumbers,
-    resultsFrom,
-    resultsTo,
-    resultsTotal,
-    resultsCount: visibleRows.length,
-    isFirstPage: safePage <= 1,
-    isLastPage: safePage >= totalPages,
+    rows,
+    isLoading: listQuery.isLoading,
+    isError: listQuery.isError,
+    isFetching: listQuery.isFetching,
+    loadErrorMessage: getApiErrorMessage(
+      listQuery.error,
+      t('adminAnnouncements.loadError'),
+    ),
+    refetch: listQuery.refetch,
+    stats: statsQuery.data ?? null,
+    isStatsLoading: statsQuery.isLoading,
+    page,
+    pageNumbers: getAnnouncementPageNumbers(page, totalPages),
+    range: { from, to, total, count: rows.length },
+    isFirstPage: page <= 1,
+    isLastPage: page >= totalPages,
+    busyId,
     openActionId,
-    isCreateModalOpen,
     handleToggleAction,
     handleCloseAction,
     handleSelectAction,
-    handlePreviousPage,
-    handleNextPage,
-    handleSelectPage,
+    handlePreviousPage: () => goToPage(page - 1),
+    handleNextPage: () => goToPage(page + 1),
+    handleSelectPage: goToPage,
+    isModalOpen: Boolean(modalMode),
+    isEditMode: modalMode === MODAL_MODE.EDIT,
+    editingAnnouncement: detailQuery.data ?? null,
+    isDetailLoading: detailQuery.isLoading,
+    isDetailError: detailQuery.isError,
+    detailErrorMessage: getApiErrorMessage(
+      detailQuery.error,
+      t('adminAnnouncements.modal.loadError'),
+    ),
+    refetchDetail: detailQuery.refetch,
+    isSaving,
     handleOpenCreateModal,
-    handleCloseCreateModal,
-    handleCreateAnnouncement,
+    handleCloseModal,
+    handleSubmitAnnouncement,
   };
 }

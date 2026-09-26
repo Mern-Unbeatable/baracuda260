@@ -1,28 +1,82 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import {
-  ADMIN_ALBUM_TYPE_ITEMS,
-  appendAlbumType,
-  createAlbumTypeFromForm,
-  isAlbumTypeFormValid,
+  buildAlbumTypePayload,
   MODAL_MODE,
-  parseFeaturedLines,
-  parsePrizeMoney,
-  updateAlbumTypeById,
 } from '@/portals/admin/data/adminAlbumTypesData';
+import {
+  ADMIN_ALBUM_TYPES_QUERY_KEY,
+  createAlbumTypeApi,
+  deleteAlbumTypeApi,
+  getAlbumTypesApi,
+  updateAlbumTypeApi,
+} from '@/shared/api/albumTypes.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 
 /**
- * Album type cards + create/edit modal state.
+ * Album types from `/v1/album-types`, plus the create/edit modal state.
  */
-export default function useAdminAlbumTypes(
-  initialAlbumTypes = ADMIN_ALBUM_TYPE_ITEMS,
-) {
-  const [albumTypes, setAlbumTypes] = useState(initialAlbumTypes);
-  const [nextCustomIndex, setNextCustomIndex] = useState(1);
+export default function useAdminAlbumTypes() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [modalMode, setModalMode] = useState(null);
   const [editingAlbumTypeId, setEditingAlbumTypeId] = useState(null);
 
+  const albumTypesQuery = useQuery({
+    queryKey: ADMIN_ALBUM_TYPES_QUERY_KEY,
+    queryFn: getAlbumTypesApi,
+  });
+
+  const albumTypes = albumTypesQuery.data ?? [];
   const editingAlbumType =
     albumTypes.find((albumType) => albumType.id === editingAlbumTypeId) || null;
+
+  const closeModal = () => {
+    setModalMode(null);
+    setEditingAlbumTypeId(null);
+  };
+
+  const refreshAlbumTypes = () =>
+    queryClient.invalidateQueries({ queryKey: ADMIN_ALBUM_TYPES_QUERY_KEY });
+
+  const createMutation = useMutation({
+    mutationFn: createAlbumTypeApi,
+    onSuccess: () => {
+      refreshAlbumTypes();
+      closeModal();
+      toast.success(t('adminAlbumTypes.createSuccess'));
+    },
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, t('adminAlbumTypes.createError')));
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateAlbumTypeApi,
+    onSuccess: () => {
+      refreshAlbumTypes();
+      closeModal();
+      toast.success(t('adminAlbumTypes.updateSuccess'));
+    },
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, t('adminAlbumTypes.updateError')));
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteAlbumTypeApi,
+    onSuccess: () => {
+      refreshAlbumTypes();
+      toast.success(t('adminAlbumTypes.deleteSuccess'));
+    },
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, t('adminAlbumTypes.deleteError')));
+    },
+  });
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
 
   const handleOpenCreateModal = () => {
     setEditingAlbumTypeId(null);
@@ -35,43 +89,40 @@ export default function useAdminAlbumTypes(
   };
 
   const handleCloseModal = () => {
-    setModalMode(null);
-    setEditingAlbumTypeId(null);
+    if (isSaving) return;
+    closeModal();
   };
 
   const handleSaveAlbumType = (values) => {
-    if (!isAlbumTypeFormValid(values)) return;
-
-    const name = values.name.trim();
-    const description = values.description.trim();
-    const features = parseFeaturedLines(values.featured);
-    const prizeMoney = parsePrizeMoney(values.prizeMoney);
+    if (isSaving) return;
 
     if (modalMode === MODAL_MODE.EDIT && editingAlbumTypeId) {
-      setAlbumTypes((current) =>
-        updateAlbumTypeById(current, editingAlbumTypeId, {
-          name,
-          description,
-          features,
-          prizeMoney,
-        }),
-      );
-      handleCloseModal();
+      updateMutation.mutate({
+        id: editingAlbumTypeId,
+        payload: buildAlbumTypePayload(values, { includeKind: false }),
+      });
       return;
     }
 
-    const nextAlbumType = createAlbumTypeFromForm(name, nextCustomIndex, {
-      description,
-      features,
-      prizeMoney,
-    });
-    setAlbumTypes((current) => appendAlbumType(current, nextAlbumType));
-    setNextCustomIndex((current) => current + 1);
-    handleCloseModal();
+    createMutation.mutate(buildAlbumTypePayload(values, { includeKind: true }));
+  };
+
+  const handleDeleteAlbumType = (albumTypeId) => {
+    if (deleteMutation.isPending) return;
+    deleteMutation.mutate(albumTypeId);
   };
 
   return {
     albumTypes,
+    isLoading: albumTypesQuery.isLoading,
+    isError: albumTypesQuery.isError,
+    loadErrorMessage: getApiErrorMessage(
+      albumTypesQuery.error,
+      t('adminAlbumTypes.loadError'),
+    ),
+    refetch: albumTypesQuery.refetch,
+    isSaving,
+    deletingId: deleteMutation.isPending ? deleteMutation.variables : null,
     modalMode,
     editingAlbumType,
     isModalOpen: Boolean(modalMode),
@@ -79,5 +130,6 @@ export default function useAdminAlbumTypes(
     handleOpenEditModal,
     handleCloseModal,
     handleSaveAlbumType,
+    handleDeleteAlbumType,
   };
 }

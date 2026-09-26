@@ -589,11 +589,14 @@
     "subtitle": "Zarządzaj zarejestrowanymi użytkownikami",
     "tableAria": "Tabela zarejestrowanych użytkowników",
     "empty": "Brak użytkowników pasujących do tego filtra.",
+    "retry": "Spróbuj ponownie",
+    "loadError": "Nie udało się wczytać użytkowników.",
     "sortBy": "Sortuj według:",
     "filters": {
       "aria": "Filtruj użytkowników według statusu",
       "all": "Wszystkie statusy",
       "active": "Aktywny",
+      "pending": "Oczekujący",
       "suspended": "Zawieszony"
     },
     "columns": {
@@ -606,12 +609,23 @@
     },
     "status": {
       "active": "Aktywny",
-      "suspended": "Zawieszony"
+      "suspended": "Zawieszony",
+      "pending": "Oczekujący"
+    },
+    "roles": {
+      "user": "Użytkownik",
+      "admin": "Administrator"
     },
     "actions": {
       "menu": "Akcje dla {{name}}",
+      "viewDetails": "Zobacz szczegóły",
       "active": "Aktywny",
       "suspendOption": "Zawieś"
+    },
+    "statusUpdate": {
+      "activated": "Użytkownik aktywowany.",
+      "suspended": "Użytkownik zawieszony.",
+      "error": "Nie udało się zaktualizować statusu użytkownika."
     },
     "suspendModal": {
       "title": "Zawieś użytkownika",
@@ -620,32 +634,31 @@
       "reasonPlaceholder": "Dlaczego zawieszasz tego użytkownika",
       "reasonRequired": "Podaj powód.",
       "cancel": "Anuluj",
-      "confirm": "Zawieś"
+      "confirm": "Zawieś",
+      "submitting": "Zawieszanie…"
+    },
+    "detailsModal": {
+      "title": "Szczegóły użytkownika",
+      "close": "Zamknij szczegóły użytkownika",
+      "loadError": "Nie udało się wczytać szczegółów użytkownika.",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "role": "Rola",
+      "verification": "Weryfikacja",
+      "verified": "Zweryfikowany",
+      "notVerified": "Niezweryfikowany",
+      "location": "Lokalizacja",
+      "joined": "Dołączył",
+      "lastLogin": "Ostatnie logowanie",
+      "never": "Nigdy",
+      "bio": "Bio",
+      "suspendReason": "Powód zawieszenia",
+      "suspendedAt": "Zawieszono {{date}}"
     },
     "pagination": {
       "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
       "previous": "Poprzednia",
       "next": "Następna"
-    },
-    "rows": {
-      "john": {
-        "name": "John Anderson"
-      },
-      "sarah": {
-        "name": "Sarah Mitchell"
-      },
-      "buildpro": {
-        "name": "BuildPro Corp"
-      },
-      "mike": {
-        "name": "Mike Johnson"
-      },
-      "construction": {
-        "name": "Construction Ltd"
-      },
-      "emily": {
-        "name": "Emily Davis"
-      }
     }
   },
   "adminCategories": {
@@ -734,39 +747,35 @@
       "nameRequired": "Podaj nazwę typu albumu.",
       "prizeRequired": "Podaj prawidłową kwotę nagrody.",
       "descriptionRequired": "Podaj opis.",
-      "featuredRequired": "Podaj co najmniej jedną wyróżnioną pozycję.",
       "cancel": "Anuluj",
       "save": "Zapisz zmiany",
-      "close": "Zamknij okno typu albumu"
+      "close": "Zamknij okno typu albumu",
+      "kindLabel": "Format albumu",
+      "create": "Utwórz typ albumu",
+      "saving": "Zapisywanie…"
     },
-    "items": {
-      "single": {
-        "name": "Pojedyncze zdjęcie",
-        "description": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia — oceniane przez społeczność.",
-        "features": {
-          "monthly": "Comiesięczny konkurs",
-          "voting": "Publiczne głosowanie społeczności",
-          "prizes": "Top 3 wygrywa nagrody pieniężne"
-        }
-      },
-      "six": {
-        "name": "Historia 6 zdjęć",
-        "description": "Stwórz wizualną narrację z sześciu starannie ułożonych obrazów, które prowadzą widza przez łuk historii.",
-        "features": {
-          "storytelling": "Sekwencyjne opowiadanie",
-          "votes": "Głosy społeczności",
-          "wins": "Wygrywa najlepsza historia"
-        }
-      },
-      "zodiac": {
-        "name": "12 zdjęć - pełna historia Zodiaku",
-        "description": "Stwórz kompletną, zodiakalną podróż wizualną w dwunastu wspaniałych obrazach — nasz największy format.",
-        "features": {
-          "arc": "Wizualny łuk 12 znaków",
-          "order": "Wyświetlanie w kolejności zodiaku",
-          "grand": "Kategoria nagrody głównej"
-        }
-      }
+    "retry": "Spróbuj ponownie",
+    "loadError": "Nie udało się wczytać typów albumów.",
+    "empty": "Brak typów albumów. Utwórz pierwszy, aby zacząć.",
+    "inactive": "Nieaktywny",
+    "deleteAlbum": "Usuń typ albumu",
+    "deleteAria": "Usuń {{name}}",
+    "createSuccess": "Typ albumu został utworzony.",
+    "createError": "Nie udało się utworzyć typu albumu.",
+    "updateSuccess": "Typ albumu został zaktualizowany.",
+    "updateError": "Nie udało się zaktualizować typu albumu.",
+    "deleteSuccess": "Typ albumu został usunięty.",
+    "deleteError": "Nie udało się usunąć typu albumu.",
+    "confirmDelete": {
+      "title": "Usunąć „{{name}}”?",
+      "text": "Ten typ albumu zostanie trwale usunięty.",
+      "confirm": "Tak, usuń",
+      "cancel": "Anuluj"
+    },
+    "kinds": {
+      "SINGLE": "Pojedyncze zdjęcie (1 zdjęcie)",
+      "SIX": "Historia (6 zdjęć)",
+      "TWELVE": "Historia zodiaku (12 zdjęć)"
     }
   },
   "adminPayouts": {
@@ -1474,6 +1483,10 @@
       "expired": {
         "label": "Wygasłe",
         "hint": "Nieaktywne"
+      },
+      "inactive": {
+        "label": "Nieaktywne",
+        "hint": "Wyłączone ręcznie"
       }
     },
     "columns": {
@@ -1490,11 +1503,16 @@
       "manual": "Ręcznie"
     },
     "types": {
-      "winner": "Ogłoszenie zwycięzcy",
-      "competition": "Konkurs",
+      "general_announcement": "Ogłoszenie ogólne",
+      "important_notice": "Ważne ogłoszenie",
+      "competition_announcement": "Ogłoszenie konkursu",
+      "competition_reminder": "Przypomnienie o konkursie",
+      "winner_announcement": "Ogłoszenie zwycięzców",
+      "event_announcement": "Ogłoszenie wydarzenia",
+      "new_feature": "Nowa funkcja",
+      "website_update": "Aktualizacja strony",
       "promotion": "Promocja",
-      "general": "Ogólne",
-      "important": "Ważna informacja"
+      "community_news": "Wiadomości społeczności"
     },
     "priority": {
       "high": "Wysoki",
@@ -1524,7 +1542,7 @@
     "modal": {
       "title": "Utwórz ogłoszenie",
       "subtitle": "Utwórz krótkie ogłoszenie, które pojawi się nad nawigacją strony.",
-      "close": "Zamknij okno tworzenia ogłoszenia",
+      "close": "Zamknij okno ogłoszenia",
       "messageLabel": "Treść ogłoszenia",
       "messagePlaceholder": "Wpisz treść ogłoszenia...",
       "messageRequired": "Treść ogłoszenia jest wymagana.",
@@ -1544,134 +1562,32 @@
       "priorityHint": "Ogłoszenia o wyższym priorytecie pojawiają się pierwsze na pasku przewijania.",
       "cancel": "Anuluj",
       "submit": "Utwórz ogłoszenie",
-      "links": {
-        "none": "Bez linku",
-        "competitions": "Konkursy",
-        "gallery": "Galeria",
-        "winners": "Zwycięzcy"
-      }
+      "editTitle": "Edytuj ogłoszenie",
+      "editSubtitle": "Zaktualizuj ogłoszenie wyświetlane nad nawigacją strony.",
+      "save": "Zapisz zmiany",
+      "saving": "Zapisywanie…",
+      "loadError": "Nie udało się wczytać tego ogłoszenia.",
+      "linkPlaceholder": "https://… lub /competitions (opcjonalnie)",
+      "startDateRequired": "Data rozpoczęcia jest wymagana.",
+      "endDateRequired": "Data zakończenia jest wymagana.",
+      "endDateBeforeStart": "Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."
     },
-    "rows": {
-      "mayWinners": {
-        "title": "Ogłoszono zwycięzców maja 2026",
-        "start": "1 maj 2026",
-        "end": "30 cze 2026"
-      },
-      "juneCompetition": {
-        "title": "Konkurs czerwcowy otwarty",
-        "start": "1 cze 2026",
-        "end": "31 lip 2026"
-      },
-      "prizePool": {
-        "title": "Pula nagród zwiększona do 500 $",
-        "start": "1 lip 2026",
-        "end": "31 sie 2026"
-      },
-      "maintenance": {
-        "title": "Planowana konserwacja platformy",
-        "start": "15 cze 2026",
-        "end": "16 cze 2026"
-      },
-      "deadline": {
-        "title": "Ważne: przedłużono termin nadsyłania",
-        "start": "10 cze 2026",
-        "end": "20 cze 2026"
-      },
-      "summerGallery": {
-        "title": "Letnia kolekcja galerii",
-        "start": "10 maj 2026",
-        "end": "31 maj 2026"
-      },
-      "aprilWinners": {
-        "title": "Ogłoszono zwycięzców kwietnia 2026",
-        "start": "1 kwi 2026",
-        "end": "30 kwi 2026"
-      },
-      "julyCompetition": {
-        "title": "Zapowiedź konkursu lipcowego",
-        "start": "1 lip 2026",
-        "end": "15 sie 2026"
-      },
-      "premiumLaunch": {
-        "title": "Oferta premiery zdjęć premium",
-        "start": "1 mar 2026",
-        "end": "31 mar 2026"
-      },
-      "newsletter": {
-        "title": "Przypomnienie o zapisie do newslettera",
-        "start": "1 lut 2026",
-        "end": "28 lut 2026"
-      },
-      "policyUpdate": {
-        "title": "Aktualizacja polityki prywatności",
-        "start": "5 sty 2026",
-        "end": "20 sty 2026"
-      },
-      "goldenHour": {
-        "title": "Otwarty wyzwanie Golden Hour",
-        "start": "1 gru 2025",
-        "end": "31 gru 2025"
-      },
-      "referral": {
-        "title": "Bonus za polecenie znajomego",
-        "start": "1 lis 2025",
-        "end": "30 lis 2025"
-      },
-      "calendar": {
-        "title": "Kalendarz konkursów 2026",
-        "start": "1 paź 2025",
-        "end": "31 paź 2025"
-      },
-      "marchWinners": {
-        "title": "Ogłoszono zwycięzców marca 2026",
-        "start": "1 mar 2026",
-        "end": "31 mar 2026"
-      },
-      "featureLaunch": {
-        "title": "Nowe funkcje galerii",
-        "start": "1 wrz 2025",
-        "end": "30 wrz 2025"
-      },
-      "community": {
-        "title": "Tydzień społeczności",
-        "start": "1 sie 2025",
-        "end": "31 sie 2025"
-      },
-      "votingReminder": {
-        "title": "Głosowanie kończy się za 48 godzin",
-        "start": "10 lip 2025",
-        "end": "12 lip 2025"
-      },
-      "seascape": {
-        "title": "Otwarty konkurs krajobrazu morskiego",
-        "start": "1 cze 2025",
-        "end": "30 cze 2025"
-      },
-      "spotlight": {
-        "title": "Seria Photographer Spotlight",
-        "start": "1 maj 2025",
-        "end": "31 maj 2025"
-      },
-      "submissionTips": {
-        "title": "Wskazówki dotyczące zgłoszeń",
-        "start": "1 kwi 2025",
-        "end": "30 kwi 2025"
-      },
-      "anniversary": {
-        "title": "Rocznica My12Photos",
-        "start": "1 mar 2025",
-        "end": "15 mar 2025"
-      },
-      "tools": {
-        "title": "Nowe narzędzia administracyjne",
-        "start": "1 lut 2025",
-        "end": "28 lut 2025"
-      },
-      "flashSale": {
-        "title": "Flash sale albumów premium",
-        "start": "1 sty 2025",
-        "end": "7 sty 2025"
-      }
+    "retry": "Spróbuj ponownie",
+    "loadError": "Nie udało się wczytać ogłoszeń.",
+    "toast": {
+      "created": "Ogłoszenie zostało utworzone.",
+      "createError": "Nie udało się utworzyć ogłoszenia.",
+      "updated": "Ogłoszenie zostało zaktualizowane.",
+      "updateError": "Nie udało się zaktualizować ogłoszenia.",
+      "activated": "Ogłoszenie zostało aktywowane.",
+      "deactivated": "Ogłoszenie zostało dezaktywowane.",
+      "deleted": "Ogłoszenie zostało usunięte.",
+      "deleteError": "Nie udało się usunąć ogłoszenia."
+    },
+    "confirmDelete": {
+      "title": "Usunąć to ogłoszenie?",
+      "confirm": "Tak, usuń",
+      "cancel": "Anuluj"
     }
   },
   "adminNewsletter": {

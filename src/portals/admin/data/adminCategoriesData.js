@@ -43,7 +43,7 @@ export const isCategoryNameValid = (name) => Boolean(slugify(name));
 export const buildCategoryPayload = (name, parentId) => {
   const trimmedName = String(name || '').trim();
   return {
-    name: { en: trimmedName },
+    name: trimmedName,
     slug: slugify(trimmedName),
     ...(parentId ? { parentId } : {}),
   };

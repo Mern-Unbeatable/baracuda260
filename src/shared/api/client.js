@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_CONFIG } from '@/shared/config';
+import i18n, { DEFAULT_LOCALE } from '@/shared/i18n/i18n';
 
 export const apiClient = axios.create({
   baseURL: API_CONFIG.BASE_URL,
@@ -10,11 +11,20 @@ export const apiClient = axios.create({
   },
 });
 
+const getErrorDetails = (details) =>
+  (Array.isArray(details) ? details : [])
+    .map((detail) =>
+      typeof detail === 'string' ? detail : detail?.message || '',
+    )
+    .filter(Boolean)
+    .join('\n');
+
 export const getApiErrorMessage = (error, fallback) =>
-  error?.response?.data?.error ??
-  error?.response?.data?.message ??
-  error?.message ??
-  fallback;
+  getErrorDetails(error?.response?.data?.details) ||
+  (error?.response?.data?.error ??
+    error?.response?.data?.message ??
+    error?.message ??
+    fallback);
 
 apiClient.interceptors.request.use(
   (config) => {
@@ -22,6 +32,11 @@ apiClient.interceptors.request.use(
 
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (config.headers) {
+      config.headers['Accept-Language'] =
+        i18n.resolvedLanguage || i18n.language || DEFAULT_LOCALE;
     }
 
     return config;

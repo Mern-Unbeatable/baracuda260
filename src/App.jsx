@@ -1,5 +1,5 @@
-import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
@@ -7,6 +7,7 @@ import router from '@/app/router';
 import store from '@/app/store/store';
 import ErrorBoundary from '@/components/common/ErrorBoundary/ErrorBoundary';
 import { TOAST_CONFIG } from '@/shared/config';
+import i18n from '@/shared/i18n/i18n';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -20,6 +21,16 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  // Cached responses were translated server-side via Accept-Language, so
+  // they are stale as soon as the user picks another language.
+  useEffect(() => {
+    const handleLanguageChanged = () => {
+      queryClient.invalidateQueries();
+    };
+    i18n.on('languageChanged', handleLanguageChanged);
+    return () => i18n.off('languageChanged', handleLanguageChanged);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>

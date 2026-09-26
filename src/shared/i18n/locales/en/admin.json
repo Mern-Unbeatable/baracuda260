@@ -585,11 +585,14 @@
     "subtitle": "Manage Registered User",
     "tableAria": "Registered users table",
     "empty": "No users match this filter.",
+    "retry": "Try again",
+    "loadError": "Could not load users.",
     "sortBy": "Sort By:",
     "filters": {
       "aria": "Filter users by status",
       "all": "All Status",
       "active": "Active",
+      "pending": "Pending",
       "suspended": "Suspended"
     },
     "columns": {
@@ -602,12 +605,23 @@
     },
     "status": {
       "active": "Active",
-      "suspended": "Suspended"
+      "suspended": "Suspended",
+      "pending": "Pending"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin"
     },
     "actions": {
       "menu": "Actions for {{name}}",
+      "viewDetails": "View details",
       "active": "Active",
       "suspendOption": "Suspend"
+    },
+    "statusUpdate": {
+      "activated": "User activated.",
+      "suspended": "User suspended.",
+      "error": "Could not update the user status."
     },
     "suspendModal": {
       "title": "Suspend User",
@@ -616,32 +630,31 @@
       "reasonPlaceholder": "Why Suspend this user",
       "reasonRequired": "Please enter a reason.",
       "cancel": "Cancel",
-      "confirm": "Suspend"
+      "confirm": "Suspend",
+      "submitting": "Suspending…"
+    },
+    "detailsModal": {
+      "title": "User details",
+      "close": "Close user details",
+      "loadError": "Could not load user details.",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "verification": "Verification",
+      "verified": "Verified",
+      "notVerified": "Not verified",
+      "location": "Location",
+      "joined": "Joined",
+      "lastLogin": "Last login",
+      "never": "Never",
+      "bio": "Bio",
+      "suspendReason": "Suspension reason",
+      "suspendedAt": "Suspended on {{date}}"
     },
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
       "previous": "Previous",
       "next": "Next"
-    },
-    "rows": {
-      "john": {
-        "name": "John Anderson"
-      },
-      "sarah": {
-        "name": "Sarah Mitchell"
-      },
-      "buildpro": {
-        "name": "BuildPro Corp"
-      },
-      "mike": {
-        "name": "Mike Johnson"
-      },
-      "construction": {
-        "name": "Construction Ltd"
-      },
-      "emily": {
-        "name": "Emily Davis"
-      }
     }
   },
   "adminCategories": {
@@ -730,39 +743,35 @@
       "nameRequired": "Please enter an album type name.",
       "prizeRequired": "Please enter a valid prize amount.",
       "descriptionRequired": "Please enter a description.",
-      "featuredRequired": "Please enter at least one featured item.",
       "cancel": "Cancel",
       "save": "Save changes",
-      "close": "Close album type dialog"
+      "close": "Close album type dialog",
+      "kindLabel": "Album format",
+      "create": "Create album type",
+      "saving": "Saving…"
     },
-    "items": {
-      "single": {
-        "name": "Single Photo",
-        "description": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story — judged by the community.",
-        "features": {
-          "monthly": "Monthly competition",
-          "voting": "Public community voting",
-          "prizes": "Top 3 win cash prizes"
-        }
-      },
-      "six": {
-        "name": "6 Photos Story",
-        "description": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
-        "features": {
-          "storytelling": "Sequential storytelling",
-          "votes": "Community votes",
-          "wins": "Best story wins"
-        }
-      },
-      "zodiac": {
-        "name": "12 photos - full Zodiac Story",
-        "description": "Create a complete zodiac-themed visual journey across twelve stunning images — our grandest format.",
-        "features": {
-          "arc": "12-sign visual arc",
-          "order": "Zodiac-order display",
-          "grand": "Grand prize category"
-        }
-      }
+    "retry": "Retry",
+    "loadError": "Could not load album types.",
+    "empty": "No album types yet. Create one to get started.",
+    "inactive": "Inactive",
+    "deleteAlbum": "Delete album type",
+    "deleteAria": "Delete {{name}}",
+    "createSuccess": "Album type created.",
+    "createError": "Could not create the album type.",
+    "updateSuccess": "Album type updated.",
+    "updateError": "Could not update the album type.",
+    "deleteSuccess": "Album type deleted.",
+    "deleteError": "Could not delete the album type.",
+    "confirmDelete": {
+      "title": "Delete \"{{name}}\"?",
+      "text": "This album type will be removed permanently.",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
+    },
+    "kinds": {
+      "SINGLE": "Single photo (1 photo)",
+      "SIX": "Photo story (6 photos)",
+      "TWELVE": "Zodiac story (12 photos)"
     }
   },
   "adminPayouts": {
@@ -1468,6 +1477,10 @@
       "expired": {
         "label": "Expired",
         "hint": "No longer active"
+      },
+      "inactive": {
+        "label": "Inactive",
+        "hint": "Turned off manually"
       }
     },
     "columns": {
@@ -1484,11 +1497,16 @@
       "manual": "Manual"
     },
     "types": {
-      "winner": "Winner Announcement",
-      "competition": "Competition",
+      "general_announcement": "General Announcement",
+      "important_notice": "Important Notice",
+      "competition_announcement": "Competition Announcement",
+      "competition_reminder": "Competition Reminder",
+      "winner_announcement": "Winner Announcement",
+      "event_announcement": "Event Announcement",
+      "new_feature": "New Feature",
+      "website_update": "Website Update",
       "promotion": "Promotion",
-      "general": "General",
-      "important": "Important Notice"
+      "community_news": "Community News"
     },
     "priority": {
       "high": "High",
@@ -1518,7 +1536,7 @@
     "modal": {
       "title": "Create Announcement",
       "subtitle": "Create a short announcement that will appear above the website navigation.",
-      "close": "Close create announcement dialog",
+      "close": "Close announcement dialog",
       "messageLabel": "Announcement Message",
       "messagePlaceholder": "Enter announcement message...",
       "messageRequired": "Announcement message is required.",
@@ -1538,134 +1556,32 @@
       "priorityHint": "Higher priority announcements appear first in the scrolling bar.",
       "cancel": "Cancel",
       "submit": "Create Announcement",
-      "links": {
-        "none": "No Link",
-        "competitions": "Competitions",
-        "gallery": "Gallery",
-        "winners": "Winners"
-      }
+      "editTitle": "Edit Announcement",
+      "editSubtitle": "Update the announcement shown above the website navigation.",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "loadError": "Could not load this announcement.",
+      "linkPlaceholder": "https://… or /competitions (optional)",
+      "startDateRequired": "Start date is required.",
+      "endDateRequired": "End date is required.",
+      "endDateBeforeStart": "End date cannot be before the start date."
     },
-    "rows": {
-      "mayWinners": {
-        "title": "May 2026 Winners Announced",
-        "start": "May 1, 2026",
-        "end": "Jun 30, 2026"
-      },
-      "juneCompetition": {
-        "title": "June Competition Now Open",
-        "start": "Jun 1, 2026",
-        "end": "Jul 31, 2026"
-      },
-      "prizePool": {
-        "title": "Prize Pool Increased to $500",
-        "start": "Jul 1, 2026",
-        "end": "Aug 31, 2026"
-      },
-      "maintenance": {
-        "title": "Platform Maintenance Notice",
-        "start": "Jun 15, 2026",
-        "end": "Jun 16, 2026"
-      },
-      "deadline": {
-        "title": "Important: Submission Deadline Extended",
-        "start": "Jun 10, 2026",
-        "end": "Jun 20, 2026"
-      },
-      "summerGallery": {
-        "title": "Summer Gallery Collection Live",
-        "start": "May 10, 2026",
-        "end": "May 31, 2026"
-      },
-      "aprilWinners": {
-        "title": "April 2026 Winners Announced",
-        "start": "Apr 1, 2026",
-        "end": "Apr 30, 2026"
-      },
-      "julyCompetition": {
-        "title": "July Competition Preview",
-        "start": "Jul 1, 2026",
-        "end": "Aug 15, 2026"
-      },
-      "premiumLaunch": {
-        "title": "Premium Photos Launch Offer",
-        "start": "Mar 1, 2026",
-        "end": "Mar 31, 2026"
-      },
-      "newsletter": {
-        "title": "Newsletter Signup Reminder",
-        "start": "Feb 1, 2026",
-        "end": "Feb 28, 2026"
-      },
-      "policyUpdate": {
-        "title": "Privacy Policy Update",
-        "start": "Jan 5, 2026",
-        "end": "Jan 20, 2026"
-      },
-      "goldenHour": {
-        "title": "Golden Hour Challenge Open",
-        "start": "Dec 1, 2025",
-        "end": "Dec 31, 2025"
-      },
-      "referral": {
-        "title": "Refer a Friend Bonus",
-        "start": "Nov 1, 2025",
-        "end": "Nov 30, 2025"
-      },
-      "calendar": {
-        "title": "2026 Competition Calendar",
-        "start": "Oct 1, 2025",
-        "end": "Oct 31, 2025"
-      },
-      "marchWinners": {
-        "title": "March 2026 Winners Announced",
-        "start": "Mar 1, 2026",
-        "end": "Mar 31, 2026"
-      },
-      "featureLaunch": {
-        "title": "New Gallery Features Live",
-        "start": "Sep 1, 2025",
-        "end": "Sep 30, 2025"
-      },
-      "community": {
-        "title": "Community Spotlight Week",
-        "start": "Aug 1, 2025",
-        "end": "Aug 31, 2025"
-      },
-      "votingReminder": {
-        "title": "Voting Ends in 48 Hours",
-        "start": "Jul 10, 2025",
-        "end": "Jul 12, 2025"
-      },
-      "seascape": {
-        "title": "Seascape Competition Open",
-        "start": "Jun 1, 2025",
-        "end": "Jun 30, 2025"
-      },
-      "spotlight": {
-        "title": "Photographer Spotlight Series",
-        "start": "May 1, 2025",
-        "end": "May 31, 2025"
-      },
-      "submissionTips": {
-        "title": "Submission Tips & Guidelines",
-        "start": "Apr 1, 2025",
-        "end": "Apr 30, 2025"
-      },
-      "anniversary": {
-        "title": "My12Photos Anniversary Celebration",
-        "start": "Mar 1, 2025",
-        "end": "Mar 15, 2025"
-      },
-      "tools": {
-        "title": "New Admin Tools Available",
-        "start": "Feb 1, 2025",
-        "end": "Feb 28, 2025"
-      },
-      "flashSale": {
-        "title": "Flash Sale on Premium Albums",
-        "start": "Jan 1, 2025",
-        "end": "Jan 7, 2025"
-      }
+    "retry": "Retry",
+    "loadError": "Could not load announcements.",
+    "toast": {
+      "created": "Announcement created.",
+      "createError": "Could not create the announcement.",
+      "updated": "Announcement updated.",
+      "updateError": "Could not update the announcement.",
+      "activated": "Announcement activated.",
+      "deactivated": "Announcement deactivated.",
+      "deleted": "Announcement deleted.",
+      "deleteError": "Could not delete the announcement."
+    },
+    "confirmDelete": {
+      "title": "Delete this announcement?",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
     }
   },
   "adminNewsletter": {

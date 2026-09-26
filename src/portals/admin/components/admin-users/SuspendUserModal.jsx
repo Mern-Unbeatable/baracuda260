@@ -15,9 +15,10 @@ import {
  *   open: boolean,
  *   onClose: () => void,
  *   onConfirm: (reason: string) => void,
+ *   isSubmitting?: boolean,
  * }} props
  */
-const SuspendUserModal = memo(({ open, onClose, onConfirm }) => {
+const SuspendUserModal = memo(({ open, onClose, onConfirm, isSubmitting }) => {
   const { t } = useTranslation();
   const titleId = useId();
   const reasonId = useId();
@@ -52,7 +53,7 @@ const SuspendUserModal = memo(({ open, onClose, onConfirm }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setAttempted(true);
-    if (!reasonValid) return;
+    if (!reasonValid || isSubmitting) return;
     onConfirm(reason.trim());
   };
 
@@ -137,16 +138,20 @@ const SuspendUserModal = memo(({ open, onClose, onConfirm }) => {
               unstyled
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-[6px] border border-[#dfe4ea] px-[17px] py-[9px] text-[12px] leading-4 text-[#536070] transition hover:bg-[#f9fafb]"
+              disabled={isSubmitting}
+              className="cursor-pointer rounded-[6px] border border-[#dfe4ea] px-[17px] py-[9px] text-[12px] leading-4 text-[#536070] transition hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {t('adminUsers.suspendModal.cancel')}
             </Button>
             <Button
               unstyled
               type="submit"
-              className="cursor-pointer rounded-[6px] bg-[#f31d2c] px-4 py-2 text-[12px] leading-4 text-white shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
+              disabled={isSubmitting}
+              className="cursor-pointer rounded-[6px] bg-[#f31d2c] px-4 py-2 text-[12px] leading-4 text-white shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {t('adminUsers.suspendModal.confirm')}
+              {isSubmitting
+                ? t('adminUsers.suspendModal.submitting')
+                : t('adminUsers.suspendModal.confirm')}
             </Button>
           </div>
         </form>

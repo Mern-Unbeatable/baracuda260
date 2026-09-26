@@ -16,7 +16,7 @@ import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
 /**
  * @param {{
- *   item: { id: string, name: Record<string, string> },
+ *   item: { id: string, name: string },
  *   isDeleting: boolean,
  *   onRemove: (id: string) => void,
  * }} props
@@ -72,7 +72,7 @@ TaxonomyChip.displayName = 'TaxonomyChip';
  *   title: string,
  *   addLabel: string,
  *   emptyText: string,
- *   items: Array<{ id: string, name: Record<string, string> }>,
+ *   items: Array<{ id: string, name: string }>,
  *   status: 'loading' | 'error' | 'ready',
  *   errorMessage?: string,
  *   onRetry: () => void,

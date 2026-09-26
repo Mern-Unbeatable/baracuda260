@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
-import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
 import {
   Table,
   TableBody,
@@ -14,47 +12,33 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/data-display/Table';
+import Button from '@/components/ui/Button';
+import Image from '@/components/ui/Image';
 import SuspendUserModal from '@/portals/admin/components/admin-users/SuspendUserModal';
+import UserDetailsModal from '@/portals/admin/components/admin-users/UserDetailsModal';
+import UserStatusBadge from '@/portals/admin/components/admin-users/UserStatusBadge';
 import {
   ADMIN_USERS_ASSETS,
   CHEVRON_ICON_SIZE,
+  formatUserDate,
   STATUS_FILTERS,
-  STATUS_LABEL_KEYS,
   USER_STATUS,
 } from '@/portals/admin/data/adminUsersData';
 import useAdminUsers from '@/portals/admin/hooks/useAdminUsers';
 
+const SKELETON_ROW_COUNT = 6;
+
 /**
- * @param {{ status: string }} props
+ * @typedef {{
+ *   openActionMenuId: string | null,
+ *   updatingId: string | null,
+ *   onToggleActionMenu: (id: string) => void,
+ *   onCloseActionMenu: () => void,
+ *   onViewDetails: (id: string) => void,
+ *   onActivate: (id: string) => void,
+ *   onSuspend: (id: string) => void,
+ * }} UserRowActions
  */
-const StatusBadge = memo(({ status }) => {
-  const { t } = useTranslation();
-  const isActive = status === USER_STATUS.ACTIVE;
-
-  return (
-    <span
-      className={`inline-flex h-7.5 items-center gap-1.25 rounded-lg px-2.25 py-1.25 ${
-        isActive ? 'bg-[#eef7f3]' : 'bg-[#f2f1f8]'
-      }`}
-    >
-      <span
-        className={`size-1.5 shrink-0 rounded-[3px] ${
-          isActive ? 'bg-[#268262]' : 'bg-[#766f9a]'
-        }`}
-        aria-hidden="true"
-      />
-      <span
-        className={`text-[13px] font-bold leading-4.75 whitespace-nowrap ${
-          isActive ? 'text-[#268262]' : 'text-[#766f9a]'
-        }`}
-      >
-        {t(STATUS_LABEL_KEYS[status])}
-      </span>
-    </span>
-  );
-});
-
-StatusBadge.displayName = 'StatusBadge';
 
 /**
  * @param {{
@@ -137,7 +121,7 @@ const StatusSortSelect = memo(
                       role="option"
                       aria-selected={selected}
                       onClick={() => onSelect(filter.id)}
-                      className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
+                      className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] whitespace-nowrap transition hover:bg-[#f6fbff] ${
                         selected
                           ? 'bg-[#f6fbff] text-[#4048cd]'
                           : 'text-[#373737]'
@@ -158,314 +142,210 @@ const StatusSortSelect = memo(
 
 StatusSortSelect.displayName = 'StatusSortSelect';
 
-/**
- * @param {{
- *   user: {
- *     id: string,
- *     nameKey: string,
- *     status: string,
- *   },
- *   isOpen: boolean,
- *   onToggle: () => void,
- *   onClose: () => void,
- *   onActivate: () => void,
- *   onSuspend: () => void,
- * }} props
- */
-const UserActionMenu = memo(
-  ({ user, isOpen, onToggle, onClose, onActivate, onSuspend }) => {
-    const { t } = useTranslation();
-    const buttonWrapRef = useRef(null);
-    const buttonRef = useRef(null);
-    const isActive = user.status === USER_STATUS.ACTIVE;
-    const menuLabel = t('adminUsers.actions.menu', { name: t(user.nameKey) });
+const MENU_ITEM_CLASS =
+  'w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50';
 
-    return (
-      <div className="relative inline-flex" ref={buttonWrapRef}>
+/**
+ * The table row and the mobile card both render a menu for the same user, so
+ * each needs its own key: the hidden copy's portal would otherwise treat clicks
+ * on the visible menu as outside clicks and close it.
+ *
+ * @param {{ user: object, actions: UserRowActions, variant: 'table' | 'card' }} props
+ */
+const UserActionMenu = memo(({ user, actions, variant }) => {
+  const { t } = useTranslation();
+  const buttonWrapRef = useRef(null);
+  const buttonRef = useRef(null);
+  const menuKey = `${variant}:${user.id}`;
+  const isOpen = actions.openActionMenuId === menuKey;
+  const isUpdating = actions.updatingId === user.id;
+  const menuLabel = t('adminUsers.actions.menu', {
+    name: user.name || user.email,
+  });
+
+  return (
+    <div className="relative inline-flex" ref={buttonWrapRef}>
+      <Button
+        unstyled
+        ref={buttonRef}
+        type="button"
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        aria-label={menuLabel}
+        disabled={isUpdating}
+        onClick={() => actions.onToggleActionMenu(menuKey)}
+        className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-wait disabled:opacity-50 ${
+          isOpen ? 'bg-[#f6fbff]' : ''
+        }`}
+      >
+        <MoreVertical size={20} aria-hidden="true" />
+      </Button>
+
+      <PortalDropdown
+        open={isOpen}
+        onClose={actions.onCloseActionMenu}
+        buttonRef={buttonRef}
+        buttonWrapRef={buttonWrapRef}
+        width={160}
+        aria-label={menuLabel}
+        className="overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
+      >
+        <span className="block h-0.75 w-full bg-[#4048cd]" aria-hidden="true" />
         <Button
           unstyled
-          ref={buttonRef}
           type="button"
-          aria-expanded={isOpen}
-          aria-haspopup="menu"
-          aria-label={menuLabel}
-          onClick={onToggle}
-          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#373737] transition hover:bg-[#f6fbff] ${
-            isOpen ? 'bg-[#f6fbff]' : ''
-          }`}
+          role="menuitem"
+          onClick={() => actions.onViewDetails(user.id)}
+          className={MENU_ITEM_CLASS}
         >
-          <MoreVertical size={20} aria-hidden="true" />
+          {t('adminUsers.actions.viewDetails')}
         </Button>
-
-        <PortalDropdown
-          open={isOpen}
-          onClose={onClose}
-          buttonRef={buttonRef}
-          buttonWrapRef={buttonWrapRef}
-          width={140}
-          aria-label={menuLabel}
-          className="overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
+        <Button
+          unstyled
+          type="button"
+          role="menuitem"
+          disabled={user.status === USER_STATUS.ACTIVE}
+          onClick={() => actions.onActivate(user.id)}
+          className={MENU_ITEM_CLASS}
         >
-          <span
-            className="block h-0.75 w-full bg-[#4048cd]"
-            aria-hidden="true"
-          />
-          <Button
-            unstyled
-            type="button"
-            role="menuitem"
-            disabled={isActive}
-            onClick={onActivate}
-            className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
-          >
-            {t('adminUsers.actions.active')}
-          </Button>
-          <Button
-            unstyled
-            type="button"
-            role="menuitem"
-            disabled={!isActive}
-            onClick={onSuspend}
-            className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
-          >
-            {t('adminUsers.actions.suspendOption')}
-          </Button>
-        </PortalDropdown>
-      </div>
-    );
-  },
-);
+          {t('adminUsers.actions.active')}
+        </Button>
+        <Button
+          unstyled
+          type="button"
+          role="menuitem"
+          disabled={user.status === USER_STATUS.SUSPENDED}
+          onClick={() => actions.onSuspend(user.id)}
+          className={MENU_ITEM_CLASS}
+        >
+          {t('adminUsers.actions.suspendOption')}
+        </Button>
+      </PortalDropdown>
+    </div>
+  );
+});
 
 UserActionMenu.displayName = 'UserActionMenu';
 
 /**
- * @param {{
- *   user: {
- *     id: string,
- *     nameKey: string,
- *     email: string,
- *     phone: string,
- *     registeredDate: string,
- *     status: string,
- *   },
- *   onActivate: (id: string) => void,
- *   onSuspend: (id: string) => void,
- *   openActionMenuId: string | null,
- *   onToggleActionMenu: (id: string) => void,
- *   onCloseActionMenu: () => void,
- * }} props
+ * @param {{ user: object, actions: UserRowActions }} props
  */
-const UserTableRow = memo(
-  ({
-    user,
-    onActivate,
-    onSuspend,
-    openActionMenuId,
-    onToggleActionMenu,
-    onCloseActionMenu,
-  }) => {
-    const { t } = useTranslation();
+const UserTableRow = memo(({ user, actions }) => {
+  const { i18n } = useTranslation();
 
-    return (
-      <TableRow>
-        <TableCell className="min-w-40">{t(user.nameKey)}</TableCell>
-        <TableCell className="min-w-45 break-all">{user.email}</TableCell>
-        <TableCell className="min-w-45">{user.phone}</TableCell>
-        <TableCell className="min-w-45">{user.registeredDate}</TableCell>
-        <TableCell className="min-w-45">
-          <StatusBadge status={user.status} />
-        </TableCell>
-        <TableCell className="min-w-25">
-          <UserActionMenu
-            user={user}
-            isOpen={openActionMenuId === user.id}
-            onToggle={() => onToggleActionMenu(user.id)}
-            onClose={onCloseActionMenu}
-            onActivate={() => onActivate(user.id)}
-            onSuspend={() => onSuspend(user.id)}
-          />
-        </TableCell>
-      </TableRow>
-    );
-  },
-);
+  return (
+    <TableRow>
+      <TableCell className="min-w-40">{user.name || '—'}</TableCell>
+      <TableCell className="min-w-45 break-all">{user.email}</TableCell>
+      <TableCell className="min-w-45">{user.phone || '—'}</TableCell>
+      <TableCell className="min-w-45">
+        {formatUserDate(user.createdAt, i18n.language)}
+      </TableCell>
+      <TableCell className="min-w-45">
+        <UserStatusBadge status={user.status} />
+      </TableCell>
+      <TableCell className="min-w-25">
+        <UserActionMenu user={user} actions={actions} variant="table" />
+      </TableCell>
+    </TableRow>
+  );
+});
 
 UserTableRow.displayName = 'UserTableRow';
 
 /**
- * Mobile card for a single user row.
- * @param {{
- *   user: {
- *     id: string,
- *     nameKey: string,
- *     email: string,
- *     phone: string,
- *     registeredDate: string,
- *     status: string,
- *   },
- *   onActivate: (id: string) => void,
- *   onSuspend: (id: string) => void,
- *   openActionMenuId: string | null,
- *   onToggleActionMenu: (id: string) => void,
- *   onCloseActionMenu: () => void,
- * }} props
+ * @param {{ user: object, actions: UserRowActions }} props
  */
-const UserMobileCard = memo(
-  ({
-    user,
-    onActivate,
-    onSuspend,
-    openActionMenuId,
-    onToggleActionMenu,
-    onCloseActionMenu,
-  }) => {
-    const { t } = useTranslation();
+const UserMobileCard = memo(({ user, actions }) => {
+  const { t, i18n } = useTranslation();
 
-    return (
-      <article className="flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
-              {t(user.nameKey)}
-            </p>
-            <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">
-              {user.email}
-            </p>
-          </div>
-          <UserActionMenu
-            user={user}
-            isOpen={openActionMenuId === user.id}
-            onToggle={() => onToggleActionMenu(user.id)}
-            onClose={onCloseActionMenu}
-            onActivate={() => onActivate(user.id)}
-            onSuspend={() => onSuspend(user.id)}
-          />
+  return (
+    <article className="flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
+            {user.name || '—'}
+          </p>
+          <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">
+            {user.email}
+          </p>
         </div>
+        <UserActionMenu user={user} actions={actions} variant="card" />
+      </div>
 
-        <div className="grid grid-cols-1 gap-2">
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
-              {t('adminUsers.columns.phone')}
-            </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {user.phone}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
-              {t('adminUsers.columns.registeredDate')}
-            </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {user.registeredDate}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
-              {t('adminUsers.columns.status')}
-            </span>
-            <StatusBadge status={user.status} />
-          </div>
+      <div className="grid grid-cols-1 gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-[13px] leading-5 text-[#7f8ba1]">
+            {t('adminUsers.columns.phone')}
+          </span>
+          <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+            {user.phone || '—'}
+          </span>
         </div>
-      </article>
-    );
-  },
-);
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-[13px] leading-5 text-[#7f8ba1]">
+            {t('adminUsers.columns.registeredDate')}
+          </span>
+          <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+            {formatUserDate(user.createdAt, i18n.language)}
+          </span>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-[13px] leading-5 text-[#7f8ba1]">
+            {t('adminUsers.columns.status')}
+          </span>
+          <UserStatusBadge status={user.status} />
+        </div>
+      </div>
+    </article>
+  );
+});
 
 UserMobileCard.displayName = 'UserMobileCard';
 
 /**
- * @param {{
- *   users: Array<{ id: string, status: string }>,
- *   onActivate: (id: string) => void,
- *   onSuspend: (id: string) => void,
- *   openActionMenuId: string | null,
- *   onToggleActionMenu: (id: string) => void,
- *   onCloseActionMenu: () => void,
- * }} props
+ * @param {{ users: object[], actions: UserRowActions }} props
  */
-const UsersMobileCards = memo(
-  ({
-    users,
-    onActivate,
-    onSuspend,
-    openActionMenuId,
-    onToggleActionMenu,
-    onCloseActionMenu,
-  }) => (
-    <div className="flex flex-col md:hidden" data-testid="users-mobile-cards">
-      {users.map((user) => (
-        <UserMobileCard
-          key={user.id}
-          user={user}
-          onActivate={onActivate}
-          onSuspend={onSuspend}
-          openActionMenuId={openActionMenuId}
-          onToggleActionMenu={onToggleActionMenu}
-          onCloseActionMenu={onCloseActionMenu}
-        />
-      ))}
-    </div>
-  ),
-);
+const UsersTable = memo(({ users, actions }) => {
+  const { t } = useTranslation();
 
-UsersMobileCards.displayName = 'UsersMobileCards';
-
-/**
- * @param {{
- *   users: Array<{ id: string, status: string }>,
- *   onActivate: (id: string) => void,
- *   onSuspend: (id: string) => void,
- *   openActionMenuId: string | null,
- *   onToggleActionMenu: (id: string) => void,
- *   onCloseActionMenu: () => void,
- * }} props
- */
-const UsersTable = memo(
-  ({
-    users,
-    onActivate,
-    onSuspend,
-    openActionMenuId,
-    onToggleActionMenu,
-    onCloseActionMenu,
-  }) => {
-    const { t } = useTranslation();
-
-    return (
-      <Table className="min-w-245" wrapperClassName="hidden md:block">
-        <TableHeader>
-          <TableRow isHeader>
-            <TableHead className="rounded-tl-xl">
-              {t('adminUsers.columns.name')}
-            </TableHead>
-            <TableHead>{t('adminUsers.columns.email')}</TableHead>
-            <TableHead>{t('adminUsers.columns.phone')}</TableHead>
-            <TableHead>{t('adminUsers.columns.registeredDate')}</TableHead>
-            <TableHead>{t('adminUsers.columns.status')}</TableHead>
-            <TableHead className="rounded-tr-xl">
-              {t('adminUsers.columns.action')}
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <UserTableRow
-              key={user.id}
-              user={user}
-              onActivate={onActivate}
-              onSuspend={onSuspend}
-              openActionMenuId={openActionMenuId}
-              onToggleActionMenu={onToggleActionMenu}
-              onCloseActionMenu={onCloseActionMenu}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    );
-  },
-);
+  return (
+    <Table className="min-w-245" wrapperClassName="hidden md:block">
+      <TableHeader>
+        <TableRow isHeader>
+          <TableHead className="rounded-tl-xl">
+            {t('adminUsers.columns.name')}
+          </TableHead>
+          <TableHead>{t('adminUsers.columns.email')}</TableHead>
+          <TableHead>{t('adminUsers.columns.phone')}</TableHead>
+          <TableHead>{t('adminUsers.columns.registeredDate')}</TableHead>
+          <TableHead>{t('adminUsers.columns.status')}</TableHead>
+          <TableHead className="rounded-tr-xl">
+            {t('adminUsers.columns.action')}
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {users.map((user) => (
+          <UserTableRow key={user.id} user={user} actions={actions} />
+        ))}
+      </TableBody>
+    </Table>
+  );
+});
 
 UsersTable.displayName = 'UsersTable';
+
+const UsersTableSkeleton = () => (
+  <div className="flex flex-col gap-3 px-5 py-6" aria-busy="true">
+    {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
+      <div
+        key={index}
+        className="h-12 w-full animate-pulse rounded-lg bg-[#f3f4f6]"
+      />
+    ))}
+  </div>
+);
 
 /**
  * Admin Users Management — Figma node 339:2960.
@@ -475,12 +355,25 @@ const AdminUsersContent = memo(() => {
   const {
     statusFilter,
     sortOpen,
-    visibleUsers,
+    users,
+    isLoading,
+    isError,
+    isFetching,
+    loadErrorMessage,
+    refetch,
     range,
     isFirstPage,
     isLastPage,
+    updatingId,
+    isSuspending,
     isSuspendModalOpen,
     openActionMenuId,
+    isDetailsOpen,
+    detailsUser,
+    isDetailsLoading,
+    isDetailsError,
+    detailsErrorMessage,
+    refetchDetails,
     handleStatusFilterChange,
     handleToggleSort,
     handleCloseSort,
@@ -492,7 +385,59 @@ const AdminUsersContent = memo(() => {
     handleRequestSuspend,
     handleCloseSuspendModal,
     handleConfirmSuspend,
+    handleOpenDetails,
+    handleCloseDetails,
   } = useAdminUsers();
+
+  /** @type {UserRowActions} */
+  const actions = {
+    openActionMenuId,
+    updatingId,
+    onToggleActionMenu: handleToggleActionMenu,
+    onCloseActionMenu: handleCloseActionMenu,
+    onViewDetails: handleOpenDetails,
+    onActivate: handleActivateUser,
+    onSuspend: handleRequestSuspend,
+  };
+
+  let body;
+  if (isLoading) {
+    body = <UsersTableSkeleton />;
+  } else if (isError) {
+    body = (
+      <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
+        <p className="text-[16px] text-[#ee1c25]">{loadErrorMessage}</p>
+        <Button
+          unstyled
+          type="button"
+          onClick={() => refetch()}
+          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium text-[#4048cd] transition hover:bg-[#f6fbff]"
+        >
+          {t('adminUsers.retry')}
+        </Button>
+      </div>
+    );
+  } else if (users.length === 0) {
+    body = (
+      <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+        {t('adminUsers.empty')}
+      </p>
+    );
+  } else {
+    body = (
+      <>
+        <div
+          className="flex flex-col md:hidden"
+          data-testid="users-mobile-cards"
+        >
+          {users.map((user) => (
+            <UserMobileCard key={user.id} user={user} actions={actions} />
+          ))}
+        </div>
+        <UsersTable users={users} actions={actions} />
+      </>
+    );
+  }
 
   return (
     <div className="flex w-full flex-col gap-5">
@@ -514,56 +459,53 @@ const AdminUsersContent = memo(() => {
 
       <section
         aria-label={t('adminUsers.tableAria')}
+        aria-busy={isFetching}
         className="overflow-hidden rounded-xl bg-white"
       >
-        {visibleUsers.length > 0 ? (
-          <>
-            <UsersMobileCards
-              users={visibleUsers}
-              onActivate={handleActivateUser}
-              onSuspend={handleRequestSuspend}
-              openActionMenuId={openActionMenuId}
-              onToggleActionMenu={handleToggleActionMenu}
-              onCloseActionMenu={handleCloseActionMenu}
-            />
-            <UsersTable
-              users={visibleUsers}
-              onActivate={handleActivateUser}
-              onSuspend={handleRequestSuspend}
-              openActionMenuId={openActionMenuId}
-              onToggleActionMenu={handleToggleActionMenu}
-              onCloseActionMenu={handleCloseActionMenu}
-            />
-          </>
-        ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
-            {t('adminUsers.empty')}
-          </p>
-        )}
+        <div
+          className={`transition-opacity ${
+            isFetching && !isLoading ? 'opacity-60' : ''
+          }`}
+        >
+          {body}
+        </div>
 
-        <AdminPagination
-          variant="users"
-          from={range.from}
-          to={range.to}
-          total={range.total}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-          showingText={t('adminUsers.pagination.showing', {
-            from: range.from,
-            to: range.to,
-            total: range.total,
-          })}
-          previousLabel={t('adminUsers.pagination.previous')}
-          nextLabel={t('adminUsers.pagination.next')}
-        />
+        {!isLoading && !isError && (
+          <AdminPagination
+            variant="users"
+            from={range.from}
+            to={range.to}
+            total={range.total}
+            isFirstPage={isFirstPage || isFetching}
+            isLastPage={isLastPage || isFetching}
+            onPrevious={handlePreviousPage}
+            onNext={handleNextPage}
+            showingText={t('adminUsers.pagination.showing', {
+              from: range.from,
+              to: range.to,
+              total: range.total,
+            })}
+            previousLabel={t('adminUsers.pagination.previous')}
+            nextLabel={t('adminUsers.pagination.next')}
+          />
+        )}
       </section>
 
       <SuspendUserModal
         open={isSuspendModalOpen}
         onClose={handleCloseSuspendModal}
         onConfirm={handleConfirmSuspend}
+        isSubmitting={isSuspending}
+      />
+
+      <UserDetailsModal
+        open={isDetailsOpen}
+        user={detailsUser}
+        isLoading={isDetailsLoading}
+        isError={isDetailsError}
+        errorMessage={detailsErrorMessage}
+        onRetry={() => refetchDetails()}
+        onClose={handleCloseDetails}
       />
     </div>
   );

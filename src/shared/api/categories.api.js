@@ -8,7 +8,7 @@ export const getCategoriesApi = async () => {
 };
 
 export const createCategoryApi = async (payload) => {
-  // payload: { name: { en }, slug, parentId? }
+  // payload: { name, slug, parentId? }
   const response = await apiClient.post('/v1/categories', payload);
   return response?.data;
 };

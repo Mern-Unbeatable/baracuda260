@@ -1,5 +1,6 @@
 /**
- * Backend text fields are localized objects, e.g. `{ en: 'Nature' }`.
+ * Backend text fields are either already translated for the request's
+ * `Accept-Language` (plain strings) or localized objects, e.g. `{ en: 'Nature' }`.
  * @param {Record<string, string> | string | null | undefined} value
  * @param {string} [language]
  */

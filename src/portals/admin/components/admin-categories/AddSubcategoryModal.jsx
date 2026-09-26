@@ -23,7 +23,7 @@ const EMPTY_FORM = { categoryId: '', name: '' };
  *   open: boolean,
  *   onClose: () => void,
  *   onSave: (values: { categoryId: string, name: string }) => void,
- *   categories: Array<{ id: string, name: Record<string, string> }>,
+ *   categories: Array<{ id: string, name: string }>,
  *   isSaving?: boolean,
  * }} props
  */
