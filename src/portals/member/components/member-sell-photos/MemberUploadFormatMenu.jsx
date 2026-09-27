@@ -8,19 +8,19 @@ import { ROUTES } from '@/shared/config';
 const UPLOAD_OPTIONS = [
   {
     id: 'single',
-    href: ROUTES.ADMIN_SELL_PHOTOS_UPLOAD_SINGLE,
+    href: ROUTES.USER_SELL_PHOTOS_UPLOAD_SINGLE,
     titleKey: 'sellPhotos.uploadMenu.single.title',
     descriptionKey: 'sellPhotos.uploadMenu.single.description',
   },
   {
     id: 'six',
-    href: ROUTES.ADMIN_SELL_PHOTOS_UPLOAD_SIX,
+    href: ROUTES.USER_SELL_PHOTOS_UPLOAD_SIX,
     titleKey: 'sellPhotos.uploadMenu.six.title',
     descriptionKey: 'sellPhotos.uploadMenu.six.description',
   },
   {
     id: 'zodiac',
-    href: ROUTES.ADMIN_SELL_PHOTOS_UPLOAD_ZODIAC12,
+    href: ROUTES.USER_SELL_PHOTOS_UPLOAD_ZODIAC12,
     titleKey: 'sellPhotos.uploadMenu.zodiac.title',
     descriptionKey: 'sellPhotos.uploadMenu.zodiac.description',
   },

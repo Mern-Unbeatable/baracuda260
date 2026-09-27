@@ -1,59 +1,85 @@
-import { useState } from 'react';
 import {
-  ADMIN_USERS,
-  filterUsersByStatus,
-  getUsersPageRange,
-  paginateUsers,
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import {
+  DEFAULT_STATUS_FILTER,
   USER_STATUS,
   USERS_PAGE_SIZE,
 } from '@/portals/admin/data/adminUsersData';
+import {
+  ADMIN_USERS_QUERY_KEY,
+  getAdminUserApi,
+  getAdminUsersApi,
+  updateAdminUserStatusApi,
+} from '@/shared/api/adminUsers.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 
 /**
- * Status filter, pagination, and suspend/reactivate for Admin Users.
+ * Server-paginated users list with status filter, details, and suspend/activate.
  */
-export default function useAdminUsers(
-  initialUsers = ADMIN_USERS,
-  pageSize = USERS_PAGE_SIZE,
-) {
-  const [users, setUsers] = useState(initialUsers);
-  const [statusFilter, setStatusFilter] = useState('all');
+export default function useAdminUsers(pageSize = USERS_PAGE_SIZE) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const [statusFilter, setStatusFilter] = useState(DEFAULT_STATUS_FILTER);
   const [page, setPage] = useState(1);
   const [sortOpen, setSortOpen] = useState(false);
   const [openActionMenuId, setOpenActionMenuId] = useState(null);
-  const [suspendTargetId, setSuspendTargetId] = useState(null);
+  const [suspendTarget, setSuspendTarget] = useState(null);
+  const [detailsId, setDetailsId] = useState(null);
 
-  const filteredUsers = filterUsersByStatus(users, statusFilter);
-  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
-  const safePage = Math.min(page, totalPages);
-  const visibleUsers = paginateUsers(filteredUsers, safePage, pageSize);
-  const range = getUsersPageRange(safePage, pageSize, filteredUsers.length);
-  const suspendTarget =
-    users.find((user) => user.id === suspendTargetId) || null;
+  const listQuery = useQuery({
+    queryKey: [...ADMIN_USERS_QUERY_KEY, 'list', statusFilter, page, pageSize],
+    queryFn: () =>
+      getAdminUsersApi({ page, limit: pageSize, status: statusFilter }),
+    placeholderData: keepPreviousData,
+  });
+
+  const detailsQuery = useQuery({
+    queryKey: [...ADMIN_USERS_QUERY_KEY, 'detail', detailsId],
+    queryFn: () => getAdminUserApi(detailsId),
+    enabled: Boolean(detailsId),
+  });
+
+  const users = listQuery.data?.items ?? [];
+  const meta = listQuery.data?.meta;
+  const total = meta?.total ?? 0;
+  const totalPages = Math.max(1, meta?.totalPages ?? 1);
+
+  useEffect(() => {
+    if (meta && page > totalPages) setPage(totalPages);
+  }, [meta, page, totalPages]);
+
+  const statusMutation = useMutation({
+    mutationFn: updateAdminUserStatusApi,
+    onSuccess: (_response, { status }) => {
+      queryClient.invalidateQueries({ queryKey: ADMIN_USERS_QUERY_KEY });
+      toast.success(
+        status === USER_STATUS.SUSPENDED
+          ? t('adminUsers.statusUpdate.suspended')
+          : t('adminUsers.statusUpdate.activated'),
+      );
+    },
+    onError: (error) => {
+      toast.error(
+        getApiErrorMessage(error, t('adminUsers.statusUpdate.error')),
+      );
+    },
+  });
 
   const handleStatusFilterChange = (nextFilter) => {
-    setStatusFilter(nextFilter || 'all');
+    setStatusFilter(nextFilter || DEFAULT_STATUS_FILTER);
     setPage(1);
     setSortOpen(false);
   };
 
-  const handleToggleSort = () => {
-    setSortOpen((open) => !open);
-  };
-
-  const handleCloseSort = () => {
-    setSortOpen(false);
-  };
-
-  const handlePreviousPage = () => {
-    setPage((current) => Math.max(1, current - 1));
-  };
-
-  const handleNextPage = () => {
-    setPage((current) => Math.min(totalPages, current + 1));
-  };
-
-  const handleToggleActionMenu = (userId) => {
-    setOpenActionMenuId((current) => (current === userId ? null : userId));
+  const handleToggleActionMenu = (menuKey) => {
+    setOpenActionMenuId((current) => (current === menuKey ? null : menuKey));
   };
 
   const handleCloseActionMenu = () => {
@@ -61,72 +87,92 @@ export default function useAdminUsers(
   };
 
   const handleActivateUser = (userId) => {
-    const target = users.find((user) => user.id === userId);
-    if (!target || target.status === USER_STATUS.ACTIVE) {
-      setOpenActionMenuId(null);
-      return;
-    }
-
-    setUsers((current) =>
-      current.map((user) =>
-        user.id === userId
-          ? { ...user, status: USER_STATUS.ACTIVE, suspendReason: undefined }
-          : user,
-      ),
-    );
     setOpenActionMenuId(null);
+    const target = users.find((user) => user.id === userId);
+    if (!target || target.status === USER_STATUS.ACTIVE) return;
+    statusMutation.mutate({ id: userId, status: USER_STATUS.ACTIVE });
   };
 
   const handleRequestSuspend = (userId) => {
-    const target = users.find((user) => user.id === userId);
-    if (!target || target.status === USER_STATUS.SUSPENDED) {
-      setOpenActionMenuId(null);
-      return;
-    }
-
-    setSuspendTargetId(userId);
     setOpenActionMenuId(null);
+    const target = users.find((user) => user.id === userId);
+    if (!target || target.status === USER_STATUS.SUSPENDED) return;
+    setSuspendTarget(target);
   };
 
   const handleCloseSuspendModal = () => {
-    setSuspendTargetId(null);
+    if (statusMutation.isPending) return;
+    setSuspendTarget(null);
   };
 
   const handleConfirmSuspend = (reason) => {
-    if (!suspendTargetId || !reason) return;
-
-    setUsers((current) =>
-      current.map((user) =>
-        user.id === suspendTargetId
-          ? { ...user, status: USER_STATUS.SUSPENDED, suspendReason: reason }
-          : user,
-      ),
+    if (!suspendTarget || !reason) return;
+    statusMutation.mutate(
+      { id: suspendTarget.id, status: USER_STATUS.SUSPENDED, reason },
+      { onSuccess: () => setSuspendTarget(null) },
     );
-    setSuspendTargetId(null);
   };
+
+  const handleOpenDetails = (userId) => {
+    setOpenActionMenuId(null);
+    setDetailsId(userId);
+  };
+
+  const handleCloseDetails = () => {
+    setDetailsId(null);
+  };
+
+  const goToPage = (nextPage) => {
+    setPage(Math.min(Math.max(1, nextPage), totalPages));
+    setOpenActionMenuId(null);
+  };
+
+  const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const to = total === 0 ? 0 : Math.min(from + users.length - 1, total);
 
   return {
     statusFilter,
     sortOpen,
-    visibleUsers,
-    range,
-    page: safePage,
-    totalPages,
-    isFirstPage: safePage <= 1,
-    isLastPage: safePage >= totalPages,
+    users,
+    isLoading: listQuery.isLoading,
+    isError: listQuery.isError,
+    isFetching: listQuery.isFetching,
+    loadErrorMessage: getApiErrorMessage(
+      listQuery.error,
+      t('adminUsers.loadError'),
+    ),
+    refetch: listQuery.refetch,
+    range: { from, to, total },
+    isFirstPage: page <= 1,
+    isLastPage: page >= totalPages,
+    updatingId: statusMutation.isPending ? statusMutation.variables?.id : null,
+    isSuspending:
+      statusMutation.isPending &&
+      statusMutation.variables?.status === USER_STATUS.SUSPENDED,
     suspendTarget,
-    openActionMenuId,
     isSuspendModalOpen: Boolean(suspendTarget),
+    openActionMenuId,
+    isDetailsOpen: Boolean(detailsId),
+    detailsUser: detailsQuery.data ?? null,
+    isDetailsLoading: detailsQuery.isLoading,
+    isDetailsError: detailsQuery.isError,
+    detailsErrorMessage: getApiErrorMessage(
+      detailsQuery.error,
+      t('adminUsers.detailsModal.loadError'),
+    ),
+    refetchDetails: detailsQuery.refetch,
     handleStatusFilterChange,
-    handleToggleSort,
-    handleCloseSort,
-    handlePreviousPage,
-    handleNextPage,
+    handleToggleSort: () => setSortOpen((open) => !open),
+    handleCloseSort: () => setSortOpen(false),
+    handlePreviousPage: () => goToPage(page - 1),
+    handleNextPage: () => goToPage(page + 1),
     handleToggleActionMenu,
     handleCloseActionMenu,
     handleActivateUser,
     handleRequestSuspend,
     handleCloseSuspendModal,
     handleConfirmSuspend,
+    handleOpenDetails,
+    handleCloseDetails,
   };
 }

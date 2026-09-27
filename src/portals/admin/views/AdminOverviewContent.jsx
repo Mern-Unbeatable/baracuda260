@@ -29,24 +29,7 @@ import {
   VISITOR_DATA,
 } from '@/portals/admin/data/adminOverviewData';
 
-const StatCard = memo(({ labelKey, valueKey }) => {
-  const { t } = useTranslation();
-
-  return (
-    <article
-      className={`flex min-w-0 flex-1 flex-col rounded-2xl bg-white p-5 sm:p-6 ${CARD_BORDER} ${CARD_SHADOW}`}
-    >
-      <p className="text-[15px] leading-6 text-[#7a8497] sm:text-[16px]">
-        {t(labelKey)}
-      </p>
-      <p className="mt-3 text-[26px] font-bold leading-tight tracking-[-1.2px] text-[#172033] sm:mt-4 sm:text-[30px]">
-        {t(valueKey)}
-      </p>
-    </article>
-  );
-});
-
-StatCard.displayName = 'StatCard';
+import AdminOverviewStatCard from '@/components/data-display/AdminOverviewStatCard/AdminOverviewStatCard';
 
 const VisitorChart = memo(() => {
   const { t } = useTranslation();
@@ -554,7 +537,7 @@ const AdminOverviewContent = memo(() => {
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
           {OVERVIEW_STATS_PRIMARY.map((stat) => (
-            <StatCard
+            <AdminOverviewStatCard
               key={stat.id}
               labelKey={stat.labelKey}
               valueKey={stat.valueKey}
@@ -563,7 +546,7 @@ const AdminOverviewContent = memo(() => {
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:gap-5">
           {OVERVIEW_STATS_SECONDARY.map((stat) => (
-            <StatCard
+            <AdminOverviewStatCard
               key={stat.id}
               labelKey={stat.labelKey}
               valueKey={stat.valueKey}

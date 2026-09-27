@@ -36,7 +36,7 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
               {profile.name}
             </h1>
             <Link
-              to={ROUTES.ADMIN_SETTINGS}
+              to={ROUTES.USER_SETTINGS}
               aria-label={t('memberProfile.editProfile')}
               className="inline-flex size-7 items-center justify-center rounded-full text-[#ee1c25] transition hover:bg-[#fde8e9]"
             >

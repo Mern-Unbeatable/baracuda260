@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '@/app/store/slices/authSlice';
 import DashboardContent from '@/portals/member/views/DashboardContent';
 import { useSEO } from '@/shared/hooks/useSEO';
+import { isAdminRole } from '@/shared/utils/roles';
 
 const Dashboard = memo(() => {
   const user = useSelector(selectUser);
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = isAdminRole(user?.role);
 
   useSEO(
     isAdmin

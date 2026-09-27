@@ -1,22 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   BUSINESS_LINK_SLIDE_MS,
-  getBusinessLinkDetailById,
+  buildBusinessAlbumSlides,
 } from '@/portals/admin/data/adminBusinessLinkData';
+import {
+  ADMIN_BUSINESS_LINKS_QUERY_KEY,
+  getAdminBusinessLinkApi,
+} from '@/shared/api/businessLinks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 
 /**
- * 12-photo album carousel state for Business Link Details.
- * @param {string | undefined} submissionId
+ * Business album details + photo carousel state.
+ * @param {string | undefined} businessAlbumId
  */
-export default function useAdminBusinessLinkDetail(submissionId) {
-  const detail = getBusinessLinkDetailById(submissionId);
-  const slides = detail?.slides || [];
-  const slideCount = slides.length;
+export default function useAdminBusinessLinkDetail(businessAlbumId) {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const detailQuery = useQuery({
+    queryKey: [...ADMIN_BUSINESS_LINKS_QUERY_KEY, 'detail', businessAlbumId],
+    queryFn: () => getAdminBusinessLinkApi(businessAlbumId),
+    enabled: Boolean(businessAlbumId),
+    retry: (failureCount, error) =>
+      error?.response?.status !== 404 && failureCount < 1,
+  });
+  const errorBody = detailQuery.error?.response?.data;
+
+  const detail = detailQuery.data ?? null;
+  const slides = useMemo(
+    () => buildBusinessAlbumSlides(detail?.images),
+    [detail?.images],
+  );
+  const slideCount = slides.length;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: restart the carousel when another album opens
   useEffect(() => {
     setActiveIndex(0);
-  }, [submissionId]);
+  }, [businessAlbumId]);
 
   useEffect(() => {
     if (slideCount <= 1) return undefined;
@@ -24,7 +46,7 @@ export default function useAdminBusinessLinkDetail(submissionId) {
       setActiveIndex((current) => (current + 1) % slideCount);
     }, BUSINESS_LINK_SLIDE_MS);
     return () => window.clearInterval(timerId);
-  }, [slideCount, submissionId]);
+  }, [slideCount]);
 
   const goPrev = () => {
     setActiveIndex((current) => (current === 0 ? slideCount - 1 : current - 1));
@@ -40,6 +62,15 @@ export default function useAdminBusinessLinkDetail(submissionId) {
 
   return {
     detail,
+    isLoading: detailQuery.isLoading,
+    isError: detailQuery.isError,
+    isNotFound: detailQuery.error?.response?.status === 404,
+    notFoundMessage: errorBody?.error || errorBody?.message || '',
+    errorMessage: getApiErrorMessage(
+      detailQuery.error,
+      t('adminBusinessLink.detail.loadError'),
+    ),
+    refetch: detailQuery.refetch,
     slides,
     activeIndex,
     activeSlide: slides[activeIndex] || slides[0] || null,

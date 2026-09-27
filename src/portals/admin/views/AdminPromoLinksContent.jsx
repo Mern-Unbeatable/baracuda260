@@ -23,6 +23,14 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
 import GeneratePromoLinkModal from '@/portals/admin/components/admin-promo-links/GeneratePromoLinkModal';
 import PromoLinkCreatedModal from '@/portals/admin/components/admin-promo-links/PromoLinkCreatedModal';
@@ -80,33 +88,24 @@ const useIsMdUp = () => {
   return isMdUp;
 };
 
-const PromoLinkStatCards = memo(({ stats }) => {
-  const { t } = useTranslation();
+import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 
+const PromoLinkStatCards = memo(({ stats }) => {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
       {PROMO_LINKS_STAT_CARDS.map((card) => {
         const Icon = STAT_ICONS[card.Icon] || Link2;
         return (
-          <article
+          <AdminBasicStatCard
             key={card.id}
-            className="rounded-[14px] border border-[#f3f4f6] bg-white px-5 py-4 shadow-[0px_1px_2px_rgba(0,0,0,0.06)]"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-[12px] font-semibold leading-4.5 tracking-[0.24px] text-[#6b7280]">
-                {t(card.labelKey)}
-              </p>
-              <span
-                className={`inline-flex size-8.5 shrink-0 items-center justify-center rounded-[9px] ${card.iconBg}`}
-                aria-hidden="true"
-              >
-                <Icon size={16} />
-              </span>
-            </div>
-            <p className="pt-3 text-[28px] font-extrabold leading-8 text-[#111827] sm:text-[32px]">
-              {stats[card.id]}
-            </p>
-          </article>
+            labelKey={card.labelKey}
+            value={stats[card.id]}
+            icon={<Icon size={16} />}
+            iconBg={card.iconBg}
+            borderClass="border-[#f3f4f6]"
+            valueClass="text-[#111827] sm:text-[32px]"
+            cardClass="px-5 py-4"
+          />
         );
       })}
     </div>
@@ -474,29 +473,29 @@ const PromoLinkTableRow = memo(
     onSeeDetails,
     onSetReward,
   }) => (
-    <tr className="border-b border-[#e4e4e4]">
-      <td className="min-w-[110px] px-4 py-5 text-[15px] font-semibold leading-6 text-[#4048cd] sm:px-[22px]">
+    <TableRow className="border-b border-[#e4e4e4]">
+      <TableCell className="min-w-[110px] text-[15px] font-semibold leading-6 text-[#4048cd]">
         {link.linkId}
-      </td>
-      <td className="min-w-[220px] px-4 py-5 sm:px-[22px]">
+      </TableCell>
+      <TableCell className="min-w-[220px]">
         <CopyUrlButton code={link.code} />
-      </td>
-      <td className="min-w-[140px] px-4 py-5 text-[14px] leading-6 whitespace-nowrap text-[#0c0c0c] sm:px-[22px]">
+      </TableCell>
+      <TableCell className="min-w-[140px] text-[14px] leading-6 whitespace-nowrap text-[#0c0c0c]">
         {formatIssuedAt(link.issuedAt)}
-      </td>
-      <td className="min-w-[110px] px-4 py-5 sm:px-[22px]">
+      </TableCell>
+      <TableCell className="min-w-[110px]">
         <ValidityText link={link} />
-      </td>
-      <td className="min-w-[110px] px-4 py-5 sm:px-[22px]">
+      </TableCell>
+      <TableCell className="min-w-[110px]">
         <StatusBadge status={link.status} />
-      </td>
-      <td className="min-w-[150px] px-4 py-5 sm:px-[22px]">
+      </TableCell>
+      <TableCell className="min-w-[150px]">
         <ChecklistBadge link={link} />
-      </td>
-      <td className="min-w-[120px] px-4 py-5 text-[14px] leading-6 text-[#0c0c0c] sm:px-[22px]">
+      </TableCell>
+      <TableCell className="min-w-[120px] text-[14px] leading-6 text-[#0c0c0c]">
         <RewardLabel reward={link.reward} />
-      </td>
-      <td className="min-w-[72px] px-4 py-5 sm:px-[22px]">
+      </TableCell>
+      <TableCell className="min-w-[72px]">
         <PromoLinkActionMenu
           link={link}
           isOpen={openActionId === link.id}
@@ -505,8 +504,8 @@ const PromoLinkTableRow = memo(
           onSeeDetails={() => onSeeDetails(link.id)}
           onSetReward={(reward) => onSetReward(link.id, reward)}
         />
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   ),
 );
 PromoLinkTableRow.displayName = 'PromoLinkTableRow';
@@ -687,51 +686,41 @@ const AdminPromoLinksContent = memo(() => {
       >
         {visibleLinks.length > 0 ? (
           isMdUp ? (
-            <div className="w-full overflow-x-auto">
-              <table className="w-full min-w-[1100px] border-collapse text-left">
-                <thead>
-                  <tr className="bg-[#f6fbff]">
-                    <th className="rounded-tl-[12px] px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.linkId')}
-                    </th>
-                    <th className="px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.url')}
-                    </th>
-                    <th className="px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.dateIssued')}
-                    </th>
-                    <th className="px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.validity')}
-                    </th>
-                    <th className="px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.status')}
-                    </th>
-                    <th className="px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.checklist')}
-                    </th>
-                    <th className="px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.reward')}
-                    </th>
-                    <th className="rounded-tr-[12px] px-[22px] py-3 text-[15px] font-normal leading-6 text-black">
-                      {t('adminPromoLinks.columns.action')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {visibleLinks.map((link) => (
-                    <PromoLinkTableRow
-                      key={link.id}
-                      link={link}
-                      openActionId={openActionId}
-                      onToggleAction={handleToggleAction}
-                      onCloseAction={handleCloseAction}
-                      onSeeDetails={handleOpenDetails}
-                      onSetReward={handleSetReward}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table className="min-w-[1100px]">
+              <TableHeader>
+                <TableRow isHeader>
+                  <TableHead className="rounded-tl-[12px]">
+                    {t('adminPromoLinks.columns.linkId')}
+                  </TableHead>
+                  <TableHead>{t('adminPromoLinks.columns.url')}</TableHead>
+                  <TableHead>
+                    {t('adminPromoLinks.columns.dateIssued')}
+                  </TableHead>
+                  <TableHead>{t('adminPromoLinks.columns.validity')}</TableHead>
+                  <TableHead>{t('adminPromoLinks.columns.status')}</TableHead>
+                  <TableHead>
+                    {t('adminPromoLinks.columns.checklist')}
+                  </TableHead>
+                  <TableHead>{t('adminPromoLinks.columns.reward')}</TableHead>
+                  <TableHead className="rounded-tr-[12px]">
+                    {t('adminPromoLinks.columns.action')}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {visibleLinks.map((link) => (
+                  <PromoLinkTableRow
+                    key={link.id}
+                    link={link}
+                    openActionId={openActionId}
+                    onToggleAction={handleToggleAction}
+                    onCloseAction={handleCloseAction}
+                    onSeeDetails={handleOpenDetails}
+                    onSetReward={handleSetReward}
+                  />
+                ))}
+              </TableBody>
+            </Table>
           ) : (
             <div
               className="flex flex-col"

@@ -18,7 +18,7 @@ const ProfileSettings = memo(() => {
   return (
     <div className="flex w-full flex-col gap-6">
       <Link
-        to={ROUTES.ADMIN_PROFILE}
+        to={ROUTES.USER_PROFILE}
         className="inline-flex w-fit items-center gap-1.5 text-[14px] font-medium text-[#4048cd] transition hover:text-[#363eb8]"
       >
         <ChevronLeft size={18} strokeWidth={2} aria-hidden="true" />

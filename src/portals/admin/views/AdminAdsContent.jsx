@@ -11,10 +11,23 @@ import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
 import AdvertiseDetailsDrawer from '@/components/data-display/AdvertiseDetailsDrawer/AdvertiseDetailsDrawer';
-import Button from '@/components/ui/Button';
 import {
-  ACTION_MENU_OPTIONS,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
+import Button from '@/components/ui/Button';
+import AdsStatusBadge from '@/portals/admin/components/admin-ads/AdsStatusBadge';
+import {
   ADS_STATUS,
+  formatAdAmount,
+  formatAdDate,
+  getActionMenuOptions,
+  getBusinessTypeLabel,
+  getPageNameLabel,
   MORE_ICON_SIZE,
 } from '@/portals/admin/data/adminAdsData';
 import useAdminAds from '@/portals/admin/hooks/useAdminAds';
@@ -24,6 +37,7 @@ const ACTION_MENU_FALLBACK_HEIGHT_PX = 120;
 const ACTION_MENU_VIEWPORT_MARGIN_PX = 8;
 const ACTION_MENU_WIDTH_PX = 176;
 const MD_MEDIA_QUERY = '(min-width: 768px)';
+const SKELETON_ROW_COUNT = 5;
 
 const useIsMdUp = () => {
   const [isMdUp, setIsMdUp] = useState(() =>
@@ -47,6 +61,7 @@ const useIsMdUp = () => {
  * @param {{
  *   row: object,
  *   isOpen: boolean,
+ *   isUpdating: boolean,
  *   onToggle: (rowId: string) => void,
  *   onClose: () => void,
  *   onSeeDetails: (rowId: string) => void,
@@ -54,7 +69,15 @@ const useIsMdUp = () => {
  * }} props
  */
 const AdsActionMenu = memo(
-  ({ row, isOpen, onToggle, onClose, onSeeDetails, onSelectStatus }) => {
+  ({
+    row,
+    isOpen,
+    isUpdating,
+    onToggle,
+    onClose,
+    onSeeDetails,
+    onSelectStatus,
+  }) => {
     const { t } = useTranslation();
     const buttonWrapRef = useRef(null);
     const buttonRef = useRef(null);
@@ -121,7 +144,7 @@ const AdsActionMenu = memo(
             ref={menuRef}
             role="menu"
             aria-label={t('adminAds.actions.menuAria', {
-              name: t(row.nameKey),
+              name: row.name,
             })}
             style={{
               position: 'fixed',
@@ -136,7 +159,7 @@ const AdsActionMenu = memo(
               className="block h-[3px] w-full bg-[#4048cd]"
               aria-hidden="true"
             />
-            {ACTION_MENU_OPTIONS.map((option) => (
+            {getActionMenuOptions(row.status).map((option) => (
               <Button
                 unstyled
                 key={option.id}
@@ -164,9 +187,11 @@ const AdsActionMenu = memo(
           type="button"
           aria-expanded={isOpen}
           aria-haspopup="menu"
-          aria-label={t('adminAds.actions.menu', { name: t(row.nameKey) })}
+          aria-label={t('adminAds.actions.menu', { name: row.name })}
+          aria-busy={isUpdating}
+          disabled={isUpdating}
           onClick={() => onToggle(row.id)}
-          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-[6px] text-[#373737] transition ${
+          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-[6px] text-[#373737] transition disabled:cursor-wait disabled:opacity-50 ${
             isOpen ? 'bg-[#f6fbff]' : 'hover:bg-[#f6fbff]'
           }`}
         >
@@ -181,79 +206,32 @@ const AdsActionMenu = memo(
 AdsActionMenu.displayName = 'AdsActionMenu';
 
 /**
- * @param {{
- *   row: object,
+ * Shared row props for the desktop table and the mobile cards.
+ * @typedef {{
  *   openActionId: string | null,
+ *   updatingId: string | null,
  *   onToggleAction: (rowId: string) => void,
  *   onCloseAction: () => void,
  *   onSeeDetails: (rowId: string) => void,
  *   onSelectStatus: (rowId: string, status: string) => void,
- * }} props
+ * }} AdsRowActions
  */
-const AdsTableRow = memo(
-  ({
-    row,
-    openActionId,
-    onToggleAction,
-    onCloseAction,
-    onSeeDetails,
-    onSelectStatus,
-  }) => {
-    const { t } = useTranslation();
-    const rejected = row.status === ADS_STATUS.REJECTED;
-
-    return (
-      <tr
-        className={`border-b border-[#e4e4e4] ${rejected ? 'opacity-50' : ''}`}
-      >
-        <td className="min-w-[160px] px-[26px] py-6 text-[16px] leading-6 text-[#0c0c0c]">
-          {t(row.nameKey)}
-        </td>
-        <td className="min-w-[180px] px-[26px] py-6 text-[16px] leading-6 break-all text-[#0c0c0c]">
-          {row.email}
-        </td>
-        <td className="min-w-[160px] px-[26px] py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
-          {row.phone}
-        </td>
-        <td className="min-w-[160px] px-[26px] py-6 text-[16px] leading-6 text-[#0c0c0c]">
-          {t(row.businessTypeKey)}
-        </td>
-        <td className="min-w-[140px] px-[26px] py-6 text-[16px] leading-6 text-[#0c0c0c]">
-          {t(row.pageNameKey)}
-        </td>
-        <td className="min-w-[100px] px-[26px] py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
-          {row.price}
-        </td>
-        <td className="min-w-[140px] px-[26px] py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c]">
-          {row.uploadDate}
-        </td>
-        <td className="min-w-[100px] px-[26px] py-6">
-          <AdsActionMenu
-            row={row}
-            isOpen={openActionId === row.id}
-            onToggle={onToggleAction}
-            onClose={onCloseAction}
-            onSeeDetails={onSeeDetails}
-            onSelectStatus={onSelectStatus}
-          />
-        </td>
-      </tr>
-    );
-  },
-);
-
-AdsTableRow.displayName = 'AdsTableRow';
 
 /**
- * @param {{
- *   rows: object[],
- *   openActionId: string | null,
- *   onToggleAction: (rowId: string) => void,
- *   onCloseAction: () => void,
- *   onSeeDetails: (rowId: string) => void,
- *   onSelectStatus: (rowId: string, status: string) => void,
- * }} props
+ * @param {{ row: object, actions: AdsRowActions }} props
  */
+const AdsRowActionMenu = ({ row, actions }) => (
+  <AdsActionMenu
+    row={row}
+    isOpen={actions.openActionId === row.id}
+    isUpdating={actions.updatingId === row.id}
+    onToggle={actions.onToggleAction}
+    onClose={actions.onCloseAction}
+    onSeeDetails={actions.onSeeDetails}
+    onSelectStatus={actions.onSelectStatus}
+  />
+);
+
 const ADS_TABLE_COLUMNS = [
   'name',
   'email',
@@ -261,83 +239,101 @@ const ADS_TABLE_COLUMNS = [
   'businessType',
   'pageName',
   'price',
+  'status',
   'uploadedDate',
   'actions',
 ];
 
-const AdsTable = memo(
-  ({
-    rows,
-    openActionId,
-    onToggleAction,
-    onCloseAction,
-    onSeeDetails,
-    onSelectStatus,
-  }) => {
-    const { t } = useTranslation();
+/**
+ * @param {{ rows: object[], actions: AdsRowActions }} props
+ */
+const AdsTable = memo(({ rows, actions }) => {
+  const { t, i18n } = useTranslation();
 
-    return (
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-[1180px] border-collapse text-left">
-          <thead>
-            <tr className="bg-[#f6fbff]">
-              {ADS_TABLE_COLUMNS.map((column, index) => (
-                <th
-                  key={column}
-                  className={`px-[26px] py-3 text-[16px] font-normal leading-6 text-black ${
-                    index === 0 ? 'rounded-tl-[12px]' : ''
-                  } ${index === ADS_TABLE_COLUMNS.length - 1 ? 'rounded-tr-[12px]' : ''}`}
-                >
-                  {t(`adminAds.columns.${column}`)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <AdsTableRow
-                key={row.id}
-                row={row}
-                openActionId={openActionId}
-                onToggleAction={onToggleAction}
-                onCloseAction={onCloseAction}
-                onSeeDetails={onSeeDetails}
-                onSelectStatus={onSelectStatus}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  },
-);
+  return (
+    <Table className="min-w-[1180px]">
+      <TableHeader>
+        <TableRow isHeader>
+          {ADS_TABLE_COLUMNS.map((column, index) => (
+            <TableHead
+              key={column}
+              className={`text-[16px] font-normal leading-6 text-black ${
+                index === 0 ? 'rounded-tl-[12px]' : ''
+              } ${index === ADS_TABLE_COLUMNS.length - 1 ? 'rounded-tr-[12px]' : ''}`}
+            >
+              {t(`adminAds.columns.${column}`)}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {rows.map((row) => (
+          <TableRow
+            key={row.id}
+            className={row.status === ADS_STATUS.REJECTED ? 'opacity-50' : ''}
+          >
+            <TableCell className="min-w-[160px]">{row.name}</TableCell>
+            <TableCell className="min-w-[180px] break-all">
+              {row.email}
+            </TableCell>
+            <TableCell className="min-w-[160px] whitespace-nowrap">
+              {row.phone}
+            </TableCell>
+            <TableCell className="min-w-[160px]">
+              {getBusinessTypeLabel(t, row.businessType)}
+            </TableCell>
+            <TableCell className="min-w-[140px]">
+              {getPageNameLabel(t, row.selectPage)}
+            </TableCell>
+            <TableCell className="min-w-[100px] whitespace-nowrap">
+              {formatAdAmount(row.amount, i18n.language)}
+            </TableCell>
+            <TableCell className="min-w-[110px]">
+              <AdsStatusBadge status={row.status} />
+            </TableCell>
+            <TableCell className="min-w-[140px] whitespace-nowrap">
+              {formatAdDate(row.createdAt, i18n.language)}
+            </TableCell>
+            <TableCell className="min-w-[100px]">
+              <AdsRowActionMenu row={row} actions={actions} />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+});
 
 AdsTable.displayName = 'AdsTable';
 
 /**
- * @param {{
- *   rows: object[],
- *   openActionId: string | null,
- *   onToggleAction: (rowId: string) => void,
- *   onCloseAction: () => void,
- *   onSeeDetails: (rowId: string) => void,
- *   onSelectStatus: (rowId: string, status: string) => void,
- * }} props
+ * @param {{ rows: object[], actions: AdsRowActions }} props
  */
-const AdsMobileCards = memo(
-  ({
-    rows,
-    openActionId,
-    onToggleAction,
-    onCloseAction,
-    onSeeDetails,
-    onSelectStatus,
-  }) => {
-    const { t } = useTranslation();
+const AdsMobileCards = memo(({ rows, actions }) => {
+  const { t, i18n } = useTranslation();
 
-    return (
-      <div className="flex flex-col">
-        {rows.map((row) => (
+  return (
+    <div className="flex flex-col">
+      {rows.map((row) => {
+        const details = [
+          { key: 'phone', value: row.phone },
+          {
+            key: 'businessType',
+            value: getBusinessTypeLabel(t, row.businessType),
+          },
+          { key: 'pageName', value: getPageNameLabel(t, row.selectPage) },
+          { key: 'price', value: formatAdAmount(row.amount, i18n.language) },
+          {
+            key: 'status',
+            value: <AdsStatusBadge status={row.status} />,
+          },
+          {
+            key: 'uploadedDate',
+            value: formatAdDate(row.createdAt, i18n.language),
+          },
+        ];
+
+        return (
           <article
             key={row.id}
             className={`flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0 ${
@@ -347,83 +343,71 @@ const AdsMobileCards = memo(
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
-                  {t(row.nameKey)}
+                  {row.name}
                 </p>
-                <p className="mt-1 text-[14px] leading-5 text-[#687186]">
+                <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">
                   {row.email}
                 </p>
               </div>
-              <AdsActionMenu
-                row={row}
-                isOpen={openActionId === row.id}
-                onToggle={onToggleAction}
-                onClose={onCloseAction}
-                onSeeDetails={onSeeDetails}
-                onSelectStatus={onSelectStatus}
-              />
+              <AdsRowActionMenu row={row} actions={actions} />
             </div>
             <div className="grid grid-cols-1 gap-2">
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[13px] leading-5 text-[#7f8ba1]">
-                  {t('adminAds.columns.phone')}
-                </span>
-                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-                  {row.phone}
-                </span>
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[13px] leading-5 text-[#7f8ba1]">
-                  {t('adminAds.columns.businessType')}
-                </span>
-                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-                  {t(row.businessTypeKey)}
-                </span>
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[13px] leading-5 text-[#7f8ba1]">
-                  {t('adminAds.columns.pageName')}
-                </span>
-                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-                  {t(row.pageNameKey)}
-                </span>
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[13px] leading-5 text-[#7f8ba1]">
-                  {t('adminAds.columns.price')}
-                </span>
-                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-                  {row.price}
-                </span>
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[13px] leading-5 text-[#7f8ba1]">
-                  {t('adminAds.columns.uploadedDate')}
-                </span>
-                <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-                  {row.uploadDate}
-                </span>
-              </div>
+              {details.map(({ key, value }) => (
+                <div
+                  key={key}
+                  className="flex items-center justify-between gap-3"
+                >
+                  <span className="text-[13px] leading-5 text-[#7f8ba1]">
+                    {t(`adminAds.columns.${key}`)}
+                  </span>
+                  <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+                    {value}
+                  </span>
+                </div>
+              ))}
             </div>
           </article>
-        ))}
-      </div>
-    );
-  },
-);
+        );
+      })}
+    </div>
+  );
+});
 
 AdsMobileCards.displayName = 'AdsMobileCards';
 
+const AdsTableSkeleton = () => (
+  <div className="flex flex-col gap-3 px-5 py-6" aria-busy="true">
+    {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
+      <div
+        key={index}
+        className="h-12 w-full animate-pulse rounded-lg bg-[#f3f4f6]"
+      />
+    ))}
+  </div>
+);
+
 /**
- * Admin Ads Management — table with sidebar details drawer.
+ * Admin Ads Management — server-paginated table with sidebar details drawer.
  */
 const AdminAdsContent = memo(() => {
   const { t } = useTranslation();
   const isMdUp = useIsMdUp();
   const {
+    rows,
+    isLoading,
+    isError,
+    isFetching,
+    loadErrorMessage,
+    refetch,
+    updatingId,
     openActionId,
-    detailsRow,
-    visibleRows,
-    resultsTotal,
+    isDetailsOpen,
+    detailsAd,
+    isDetailsLoading,
+    isDetailsError,
+    detailsErrorMessage,
+    refetchDetails,
+    total,
     from,
     to,
     isFirstPage,
@@ -437,6 +421,45 @@ const AdminAdsContent = memo(() => {
     handleNextPage,
   } = useAdminAds();
 
+  /** @type {AdsRowActions} */
+  const actions = {
+    openActionId,
+    updatingId,
+    onToggleAction: handleToggleAction,
+    onCloseAction: handleCloseAction,
+    onSeeDetails: handleOpenDetails,
+    onSelectStatus: handleRowStatusChange,
+  };
+
+  let body;
+  if (isLoading) {
+    body = <AdsTableSkeleton />;
+  } else if (isError) {
+    body = (
+      <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
+        <p className="text-[16px] text-[#ee1c25]">{loadErrorMessage}</p>
+        <Button
+          unstyled
+          type="button"
+          onClick={() => refetch()}
+          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium text-[#4048cd] transition hover:bg-[#f6fbff]"
+        >
+          {t('adminAds.retry')}
+        </Button>
+      </div>
+    );
+  } else if (rows.length === 0) {
+    body = (
+      <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+        {t('adminAds.empty')}
+      </p>
+    );
+  } else if (isMdUp) {
+    body = <AdsTable rows={rows} actions={actions} />;
+  } else {
+    body = <AdsMobileCards rows={rows} actions={actions} />;
+  }
+
   return (
     <div className="flex w-full flex-col gap-5">
       <AdminPageHeader
@@ -446,54 +469,47 @@ const AdminAdsContent = memo(() => {
 
       <section
         aria-label={t('adminAds.tableAria')}
+        aria-busy={isFetching}
         className="overflow-hidden rounded-[12px] bg-white"
       >
-        {visibleRows.length > 0 ? (
-          isMdUp ? (
-            <AdsTable
-              rows={visibleRows}
-              openActionId={openActionId}
-              onToggleAction={handleToggleAction}
-              onCloseAction={handleCloseAction}
-              onSeeDetails={handleOpenDetails}
-              onSelectStatus={handleRowStatusChange}
-            />
-          ) : (
-            <AdsMobileCards
-              rows={visibleRows}
-              openActionId={openActionId}
-              onToggleAction={handleToggleAction}
-              onCloseAction={handleCloseAction}
-              onSeeDetails={handleOpenDetails}
-              onSelectStatus={handleRowStatusChange}
-            />
-          )
-        ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
-            {t('adminAds.empty')}
-          </p>
-        )}
+        <div
+          className={`transition-opacity ${
+            isFetching && !isLoading ? 'opacity-60' : ''
+          }`}
+        >
+          {body}
+        </div>
 
-        <AdminPagination
-          variant="users"
-          from={from}
-          to={to}
-          total={resultsTotal}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-          showingText={t('adminAds.pagination.showing', {
-            from,
-            to,
-            total: resultsTotal,
-          })}
-          previousLabel={t('adminAds.pagination.previous')}
-          nextLabel={t('adminAds.pagination.next')}
-        />
+        {!isLoading && !isError && (
+          <AdminPagination
+            variant="users"
+            from={from}
+            to={to}
+            total={total}
+            isFirstPage={isFirstPage || isFetching}
+            isLastPage={isLastPage || isFetching}
+            onPrevious={handlePreviousPage}
+            onNext={handleNextPage}
+            showingText={t('adminAds.pagination.showing', {
+              from,
+              to,
+              total,
+            })}
+            previousLabel={t('adminAds.pagination.previous')}
+            nextLabel={t('adminAds.pagination.next')}
+          />
+        )}
       </section>
 
-      <AdvertiseDetailsDrawer row={detailsRow} onClose={handleCloseDetails} />
+      <AdvertiseDetailsDrawer
+        open={isDetailsOpen}
+        ad={detailsAd}
+        isLoading={isDetailsLoading}
+        isError={isDetailsError}
+        errorMessage={detailsErrorMessage}
+        onRetry={refetchDetails}
+        onClose={handleCloseDetails}
+      />
     </div>
   );
 });

@@ -3,7 +3,7 @@ import Zodiac12Content from '@/portals/member/views/Zodiac12Content';
 import { ROUTES } from '@/shared/config';
 import { useSEO } from '@/shared/hooks/useSEO';
 
-const uploadHub = ROUTES.ADMIN_MY_ARTWORK_UPLOAD;
+const uploadHub = ROUTES.USER_MY_ARTWORK_UPLOAD;
 
 const MyArtworkUploadZodiac = memo(() => {
   useSEO({

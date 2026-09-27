@@ -165,7 +165,7 @@ const SellerOrderDetailsContent = memo(() => {
   });
 
   if (!baseOrder) {
-    return <Navigate to={ROUTES.ADMIN_ORDERS} replace />;
+    return <Navigate to={ROUTES.USER_ORDERS} replace />;
   }
 
   const order = { ...baseOrder, status };
@@ -180,7 +180,7 @@ const SellerOrderDetailsContent = memo(() => {
   };
 
   const handleClose = () => {
-    navigate(ROUTES.ADMIN_ORDERS);
+    navigate(ROUTES.USER_ORDERS);
   };
 
   const handleMarkStatus = () => {

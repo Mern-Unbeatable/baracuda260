@@ -5,15 +5,15 @@ import LanguageSwitcher from '@/components/common/LanguageSwitcher/LanguageSwitc
 import { ROUTES } from '@/shared/config';
 
 /**
- * Shared auth chrome: back-home + language switcher (login / signup).
+ * Shared auth chrome: back link (home by default) + language switcher.
  */
-const AuthPageChrome = memo(({ backLabelKey }) => {
+const AuthPageChrome = memo(({ backLabelKey, backTo = ROUTES.HOME }) => {
   const { t } = useTranslation();
 
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-4 sm:p-5 md:p-6">
       <Link
-        to={ROUTES.HOME}
+        to={backTo}
         aria-label={t(backLabelKey)}
         className="pointer-events-auto inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white/95 text-[#0c0c0c] shadow-[0_2px_10px_rgba(0,0,0,0.18)] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ee1c25]"
       >

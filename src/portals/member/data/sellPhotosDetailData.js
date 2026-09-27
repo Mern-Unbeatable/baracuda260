@@ -10,7 +10,7 @@ import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
 import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 
 export const sellPhotoDetailPath = (id) =>
-  `${ROUTES.ADMIN_SELL_PHOTOS}/${encodeURIComponent(id)}`;
+  `${ROUTES.USER_SELL_PHOTOS}/${encodeURIComponent(id)}`;
 
 const resolveVariant = (item) => {
   const albumBadge = item.albumBadge ?? '';

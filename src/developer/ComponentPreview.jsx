@@ -14,7 +14,7 @@ import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkAct
 import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
 import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCardFooter/MemberArtworkCardFooter';
 import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
-import MemberArtworkStatCard from '@/components/data-display/MemberArtworkStatCard/MemberArtworkStatCard';
+import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
 import MemberFavouritePhotographerCard from '@/components/data-display/MemberFavouritePhotographerCard/MemberFavouritePhotographerCard';
 import MemberMessageCard from '@/components/data-display/MemberMessageCard/MemberMessageCard';
 import MemberNotificationItem from '@/components/data-display/MemberNotificationItem/MemberNotificationItem';
@@ -503,7 +503,7 @@ const PREVIEWS = {
     />
   ),
   'member-artwork-stat-card': () => (
-    <MemberArtworkStatCard {...DEMO_ARTWORK_STAT} />
+    <DashboardStatCard {...DEMO_ARTWORK_STAT} />
   ),
   'member-artwork-card-footer': MemberArtworkCardFooterPreview,
   'member-sell-photo-card': () => (

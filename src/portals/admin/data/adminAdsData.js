@@ -1,24 +1,19 @@
 /** Admin Ads Management — table + sidebar details drawer. */
 
-const A = '/assets/admin-comment';
-
-export const ADMIN_ADS_ASSETS = {
-  more: `${A}/icon-more.svg`,
-};
-
 export const MORE_ICON_SIZE = 20;
-export const ADS_PAGE_SIZE = 12;
+export const ADS_PAGE_SIZE = 10;
 
 export const ADS_STATUS = {
-  ACTIVE: 'active',
-  PUBLISHED: 'published',
-  REJECTED: 'rejected',
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED',
 };
 
 export const ACTION_MENU_OPTIONS = [
   { id: 'details', labelKey: 'adminAds.actions.seeDetails', kind: 'details' },
   {
-    id: ADS_STATUS.PUBLISHED,
+    id: ADS_STATUS.ACTIVE,
     labelKey: 'adminAds.actions.publish',
     kind: 'status',
   },
@@ -29,168 +24,92 @@ export const ACTION_MENU_OPTIONS = [
   },
 ];
 
-const SHARED_IMAGE = '/assets/competition-details/hero.webp';
-const SHARED_AVATAR = '/assets/competition-details/avatar-1.webp';
+/** Hide the status option the ad is already in. */
+export const getActionMenuOptions = (status) =>
+  ACTION_MENU_OPTIONS.filter(
+    (option) => option.kind !== 'status' || option.id !== status,
+  );
 
-export const ADMIN_ADS_ROWS = [
-  {
-    id: 'ad-1',
-    code: 'AD-0001',
-    nameKey: 'adminAds.rows.elena.name',
-    email: 'elena.v@mail.com',
-    phone: '+01780053624',
-    businessTypeKey: 'adminAds.businessTypes.online',
-    pageNameKey: 'adminAds.pageNames.premiumPhotos',
-    price: '$35',
-    uploadDate: '8/25/2026',
-    status: ADS_STATUS.ACTIVE,
-    image: SHARED_IMAGE,
-    businessNameKey: 'adminAds.rows.elena.businessName',
-    businessLocationKey: 'adminAds.rows.elena.businessLocation',
-    descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: SHARED_AVATAR,
-    adsStartDate: '8/25/2026',
-    adsEndDate: '9/6/2026',
-    totalDaysKey: 'adminAds.drawer.totalDaysValue',
-    subtotal: '$865.00',
-  },
-  {
-    id: 'ad-2',
-    code: 'AD-0002',
-    nameKey: 'adminAds.rows.marcus.name',
-    email: 'marcus.k@mail.com',
-    phone: '+01780053625',
-    businessTypeKey: 'adminAds.businessTypes.local',
-    pageNameKey: 'adminAds.pageNames.buyPhotos',
-    price: '$60',
-    uploadDate: '8/24/2026',
-    status: ADS_STATUS.ACTIVE,
-    image: SHARED_IMAGE,
-    businessNameKey: 'adminAds.rows.marcus.businessName',
-    businessLocationKey: 'adminAds.rows.marcus.businessLocation',
-    descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-2.webp',
-    adsStartDate: '8/24/2026',
-    adsEndDate: '9/10/2026',
-    totalDaysKey: 'adminAds.drawer.totalDaysValueAlt',
-    subtotal: '$1,240.00',
-  },
-  {
-    id: 'ad-3',
-    code: 'AD-0003',
-    nameKey: 'adminAds.rows.sofia.name',
-    email: 'sofia.r@mail.com',
-    phone: '+01780053626',
-    businessTypeKey: 'adminAds.businessTypes.online',
-    pageNameKey: 'adminAds.pageNames.gallery',
-    price: '$35',
-    uploadDate: '8/23/2026',
-    status: ADS_STATUS.ACTIVE,
-    image: SHARED_IMAGE,
-    businessNameKey: 'adminAds.rows.sofia.businessName',
-    businessLocationKey: 'adminAds.rows.sofia.businessLocation',
-    descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-3.webp',
-    adsStartDate: '8/23/2026',
-    adsEndDate: '9/2/2026',
-    totalDaysKey: 'adminAds.drawer.totalDaysValue',
-    subtotal: '$620.00',
-  },
-  {
-    id: 'ad-4',
-    code: 'AD-0004',
-    nameKey: 'adminAds.rows.james.name',
-    email: 'james.p@mail.com',
-    phone: '+01780053627',
-    businessTypeKey: 'adminAds.businessTypes.local',
-    pageNameKey: 'adminAds.pageNames.competitions',
-    price: '$60',
-    uploadDate: '8/22/2026',
-    status: ADS_STATUS.ACTIVE,
-    image: SHARED_IMAGE,
-    businessNameKey: 'adminAds.rows.james.businessName',
-    businessLocationKey: 'adminAds.rows.james.businessLocation',
-    descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-4.webp',
-    adsStartDate: '8/22/2026',
-    adsEndDate: '9/8/2026',
-    totalDaysKey: 'adminAds.drawer.totalDaysValueAlt',
-    subtotal: '$980.00',
-  },
-  {
-    id: 'ad-5',
-    code: 'AD-0005',
-    nameKey: 'adminAds.rows.amira.name',
-    email: 'amira.h@mail.com',
-    phone: '+01780053628',
-    businessTypeKey: 'adminAds.businessTypes.online',
-    pageNameKey: 'adminAds.pageNames.premiumPhotos',
-    price: '$35',
-    uploadDate: '8/21/2026',
-    status: ADS_STATUS.ACTIVE,
-    image: SHARED_IMAGE,
-    businessNameKey: 'adminAds.rows.amira.businessName',
-    businessLocationKey: 'adminAds.rows.amira.businessLocation',
-    descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-5.webp',
-    adsStartDate: '8/21/2026',
-    adsEndDate: '9/4/2026',
-    totalDaysKey: 'adminAds.drawer.totalDaysValue',
-    subtotal: '$735.00',
-  },
-  {
-    id: 'ad-6',
-    code: 'AD-0006',
-    nameKey: 'adminAds.rows.luca.name',
-    email: 'luca.m@mail.com',
-    phone: '+01780053629',
-    businessTypeKey: 'adminAds.businessTypes.local',
-    pageNameKey: 'adminAds.pageNames.leaderboard',
-    price: '$60',
-    uploadDate: '8/20/2026',
-    status: ADS_STATUS.ACTIVE,
-    image: SHARED_IMAGE,
-    businessNameKey: 'adminAds.rows.luca.businessName',
-    businessLocationKey: 'adminAds.rows.luca.businessLocation',
-    descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: SHARED_AVATAR,
-    adsStartDate: '8/20/2026',
-    adsEndDate: '9/12/2026',
-    totalDaysKey: 'adminAds.drawer.totalDaysValueAlt',
-    subtotal: '$1,560.00',
-  },
-  {
-    id: 'ad-7',
-    code: 'AD-0007',
-    nameKey: 'adminAds.rows.nina.name',
-    email: 'nina.w@mail.com',
-    phone: '+01780053630',
-    businessTypeKey: 'adminAds.businessTypes.online',
-    pageNameKey: 'adminAds.pageNames.buyPhotos',
-    price: '$35',
-    uploadDate: '8/19/2026',
-    status: ADS_STATUS.ACTIVE,
-    image: SHARED_IMAGE,
-    businessNameKey: 'adminAds.rows.nina.businessName',
-    businessLocationKey: 'adminAds.rows.nina.businessLocation',
-    descriptionKey: 'adminAds.drawer.sampleDescription',
-    avatar: '/assets/competition-details/avatar-2.webp',
-    adsStartDate: '8/19/2026',
-    adsEndDate: '9/1/2026',
-    totalDaysKey: 'adminAds.drawer.totalDaysValue',
-    subtotal: '$455.00',
-  },
-];
-
-export const paginateAds = (rows, page, pageSize) => {
-  const start = (page - 1) * pageSize;
-  return rows
-    .filter((row) => row.status !== ADS_STATUS.REJECTED)
-    .slice(start, start + pageSize);
+export const ADS_STATUS_STYLES = {
+  [ADS_STATUS.PENDING]: 'bg-[#fff7e6] text-[#b45309]',
+  [ADS_STATUS.ACTIVE]: 'bg-[#e8f8ef] text-[#15803d]',
+  [ADS_STATUS.REJECTED]: 'bg-[#fdecec] text-[#ee1c25]',
+  [ADS_STATUS.EXPIRED]: 'bg-[#f1f2f4] text-[#687186]',
 };
 
-export const getAdsTotal = (rows) =>
-  rows.filter((row) => row.status !== ADS_STATUS.REJECTED).length;
+const BUSINESS_TYPE_LABEL_KEYS = {
+  ONLINE: 'adminAds.businessTypes.online',
+  LOCAL: 'adminAds.businessTypes.local',
+};
 
-export const updateAdStatus = (rows, rowId, nextStatus) =>
-  rows.map((row) => (row.id === rowId ? { ...row, status: nextStatus } : row));
+const PAGE_NAME_LABEL_KEYS = {
+  home: 'adminAds.pageNames.home',
+  gallery: 'adminAds.pageNames.gallery',
+  competitions: 'adminAds.pageNames.competitions',
+  'buy photos': 'adminAds.pageNames.buyPhotos',
+  'premium photos': 'adminAds.pageNames.premiumPhotos',
+  leaderboard: 'adminAds.pageNames.leaderboard',
+};
+
+/**
+ * @param {(key: string, options?: object) => string} t
+ * @param {string | null | undefined} businessType
+ */
+export const getBusinessTypeLabel = (t, businessType) => {
+  const key = BUSINESS_TYPE_LABEL_KEYS[String(businessType).toUpperCase()];
+  return key ? t(key) : businessType || '—';
+};
+
+/**
+ * @param {(key: string, options?: object) => string} t
+ * @param {string | null | undefined} page
+ */
+export const getPageNameLabel = (t, page) => {
+  const key = PAGE_NAME_LABEL_KEYS[String(page).trim().toLowerCase()];
+  return key ? t(key) : page || '—';
+};
+
+/**
+ * @param {(key: string, options?: object) => string} t
+ * @param {string | null | undefined} status
+ */
+export const getStatusLabel = (t, status) =>
+  t(`adminAds.status.${String(status).toLowerCase()}`, {
+    defaultValue: status || '—',
+  });
+
+/**
+ * @param {string | null | undefined} isoDate
+ * @param {string} [locale]
+ */
+export const formatAdDate = (isoDate, locale) => {
+  if (!isoDate) return '—';
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) return '—';
+  return date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  });
+};
+
+/**
+ * Backend sends amount as a string, e.g. "60".
+ * @param {string | number | null | undefined} amount
+ * @param {string} [locale]
+ * @param {{ fixedDecimals?: boolean }} [options]
+ */
+export const formatAdAmount = (
+  amount,
+  locale,
+  { fixedDecimals = false } = {},
+) => {
+  const value = Number(amount);
+  if (amount == null || amount === '' || Number.isNaN(value)) return '—';
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: fixedDecimals ? 2 : 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+};

@@ -2,6 +2,14 @@ import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -358,8 +366,8 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
   const medal = isMedalRank(winner.rank);
 
   return (
-    <tr className="border-b border-[rgba(0,0,0,0.2)] last:border-b-0">
-      <td className="px-4 py-[22px] sm:px-6">
+    <TableRow>
+      <TableCell className="sm:px-6">
         {medal ? (
           <RankMedal rank={winner.rank} size="table" />
         ) : (
@@ -367,8 +375,8 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
             {getRankDisplay(winner.rank)}
           </span>
         )}
-      </td>
-      <td className="px-3 py-4 sm:px-4">
+      </TableCell>
+      <TableCell className="sm:px-4">
         <div className="flex items-center gap-3">
           <div
             className="shrink-0 overflow-hidden rounded-full bg-[#f0f2f5]"
@@ -380,17 +388,23 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
             {t(winner.nameKey)}
           </span>
         </div>
-      </td>
-      <td className="hidden px-3 py-[22px] text-[14px] leading-5 text-[#6b7280] sm:table-cell md:px-4">
+      </TableCell>
+      <TableCell className="hidden text-[14px] leading-5 text-[#6b7280] sm:table-cell md:px-4">
         {t(winner.cityKey)}
-      </td>
-      <td className="px-3 py-[22px] text-right text-[14px] font-extrabold leading-5 text-[#0d0d14] md:px-4">
+      </TableCell>
+      <TableCell
+        align="right"
+        className="text-[14px] font-extrabold leading-5 text-[#0d0d14] md:px-4"
+      >
         {formatCount(winner.votes, locale)}
-      </td>
-      <td className="hidden px-3 py-[22px] text-right text-[14px] leading-5 text-[#6b7280] md:table-cell md:px-4">
+      </TableCell>
+      <TableCell
+        align="right"
+        className="hidden text-[14px] leading-5 text-[#6b7280] md:table-cell md:px-4"
+      >
         {formatCount(winner.points, locale)}
-      </td>
-      <td className="px-4 py-[22px] text-right sm:px-6">
+      </TableCell>
+      <TableCell align="right" className="sm:px-6">
         <Button
           unstyled
           type="button"
@@ -406,8 +420,8 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
             className="size-6"
           />
         </Button>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 });
 
@@ -542,42 +556,49 @@ const AdminWinnersContent = memo(() => {
         aria-label={t('adminWinners.tableAria')}
         className="overflow-hidden rounded-[16px] border border-[rgba(0,0,0,0.2)] bg-white"
       >
-        <div className="hidden overflow-x-auto md:block">
-          <table className="w-full min-w-[720px] border-collapse">
-            <thead>
-              <tr className="border-b border-[rgba(0,0,0,0.2)] bg-[#f7f8fa]">
-                <th className="px-4 py-4 text-left text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] sm:px-6">
-                  {t('adminWinners.columns.rank')}
-                </th>
-                <th className="px-3 py-4 text-left text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] md:px-4">
-                  {t('adminWinners.columns.photographer')}
-                </th>
-                <th className="hidden px-3 py-4 text-left text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] sm:table-cell md:px-4">
-                  {t('adminWinners.columns.city')}
-                </th>
-                <th className="px-3 py-4 text-right text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] md:px-4">
-                  {t('adminWinners.columns.votes')}
-                </th>
-                <th className="hidden px-3 py-4 text-right text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] md:table-cell md:px-4">
-                  {t('adminWinners.columns.points')}
-                </th>
-                <th className="px-4 py-4 text-right text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] sm:px-6">
-                  {t('adminWinners.columns.action')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {winners.map((winner) => (
-                <WinnerTableRow
-                  key={winner.id}
-                  winner={winner}
-                  locale={locale}
-                  onView={handleViewWinner}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table className="min-w-[720px]" wrapperClassName="hidden md:block">
+          <TableHeader>
+            <TableRow isHeader>
+              <TableHead className="text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
+                {t('adminWinners.columns.rank')}
+              </TableHead>
+              <TableHead className="text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
+                {t('adminWinners.columns.photographer')}
+              </TableHead>
+              <TableHead className="hidden text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] sm:table-cell">
+                {t('adminWinners.columns.city')}
+              </TableHead>
+              <TableHead
+                align="right"
+                className="text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]"
+              >
+                {t('adminWinners.columns.votes')}
+              </TableHead>
+              <TableHead
+                align="right"
+                className="hidden text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280] md:table-cell"
+              >
+                {t('adminWinners.columns.points')}
+              </TableHead>
+              <TableHead
+                align="right"
+                className="text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]"
+              >
+                {t('adminWinners.columns.action')}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {winners.map((winner) => (
+              <WinnerTableRow
+                key={winner.id}
+                winner={winner}
+                locale={locale}
+                onView={handleViewWinner}
+              />
+            ))}
+          </TableBody>
+        </Table>
 
         <div className="md:hidden">
           {winners.map((winner) => (

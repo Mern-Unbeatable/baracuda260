@@ -211,7 +211,7 @@ const BusinessLinkContent = memo(() => {
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
       <Link
-        to={ROUTES.ADMIN_DASHBOARD}
+        to={ROUTES.USER_DASHBOARD}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
       >
         <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />

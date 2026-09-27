@@ -8,20 +8,14 @@ import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
 import {
   ADMIN_ALBUM_TYPES_ASSETS,
+  ALBUM_TYPE_KINDS,
   CLOSE_ICON_SIZE,
   getAlbumTypeFormDefaults,
-  isFeaturedValid,
   isPrizeMoneyValid,
   MODAL_MODE,
-  parseFeaturedLines,
 } from '@/portals/admin/data/adminAlbumTypesData';
 
-const EMPTY_FORM = {
-  name: '',
-  prizeMoney: '',
-  description: '',
-  featured: '',
-};
+const EMPTY_FORM = getAlbumTypeFormDefaults(null);
 
 /**
  * Create / Edit Album type modal — Figma 339:3909 / 339:3630.
@@ -29,8 +23,10 @@ const EMPTY_FORM = {
  *   open: boolean,
  *   mode: 'create' | 'edit' | null,
  *   albumType?: object | null,
+ *   isSaving?: boolean,
  *   onClose: () => void,
  *   onSave: (values: {
+ *     kind: string,
  *     name: string,
  *     prizeMoney: string,
  *     description: string,
@@ -39,9 +35,10 @@ const EMPTY_FORM = {
  * }} props
  */
 const AlbumTypeModal = memo(
-  ({ open, mode, albumType = null, onClose, onSave }) => {
+  ({ open, mode, albumType = null, isSaving = false, onClose, onSave }) => {
     const { t } = useTranslation();
     const titleId = useId();
+    const kindId = useId();
 
     const {
       register,
@@ -53,14 +50,14 @@ const AlbumTypeModal = memo(
     });
 
     useEffect(() => {
-      if (!open) return undefined;
-
+      if (!open) return;
       reset(
-        getAlbumTypeFormDefaults(
-          t,
-          mode === MODAL_MODE.EDIT ? albumType : null,
-        ),
+        getAlbumTypeFormDefaults(mode === MODAL_MODE.EDIT ? albumType : null),
       );
+    }, [open, mode, albumType, reset]);
+
+    useEffect(() => {
+      if (!open) return undefined;
 
       const previousOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
@@ -74,24 +71,14 @@ const AlbumTypeModal = memo(
         document.body.style.overflow = previousOverflow;
         window.removeEventListener('keydown', handleKeyDown);
       };
-    }, [open, mode, albumType, onClose, t, reset]);
+    }, [open, onClose]);
 
     if (!open) return null;
 
     const isEdit = mode === MODAL_MODE.EDIT;
 
     const onFormSubmit = (data) => {
-      const featuredValid = isFeaturedValid(parseFeaturedLines(data.featured));
-      if (!featuredValid) {
-        // Handled by validation rules
-      }
-
-      onSave({
-        name: data.name.trim(),
-        prizeMoney: data.prizeMoney.trim(),
-        description: data.description.trim(),
-        featured: data.featured.trim(),
-      });
+      onSave(data);
     };
 
     const onFormError = () => {
@@ -160,6 +147,32 @@ const AlbumTypeModal = memo(
             onSubmit={handleSubmit(onFormSubmit, onFormError)}
             className="flex flex-col px-6 py-5"
           >
+            {isEdit ? null : (
+              <div className="flex w-full flex-col pb-4">
+                <label
+                  htmlFor={kindId}
+                  className="text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block"
+                >
+                  {t('adminAlbumTypes.modal.kindLabel')}
+                  <span className="text-[#f31d2c]" aria-hidden="true">
+                    {' '}
+                    *
+                  </span>
+                </label>
+                <select
+                  id={kindId}
+                  className={`box-border h-10 cursor-pointer px-3 ${fieldClass(errors.kind)}`}
+                  {...register('kind', { required: true })}
+                >
+                  {ALBUM_TYPE_KINDS.map((kind) => (
+                    <option key={kind} value={kind}>
+                      {t(`adminAlbumTypes.kinds.${kind}`)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex min-w-0 flex-col">
                 <Input
@@ -239,30 +252,15 @@ const AlbumTypeModal = memo(
             <div className="flex w-full flex-col pt-4">
               <label className="text-[14px] font-medium leading-5 text-[#455163] mb-1.5 block">
                 {t('adminAlbumTypes.modal.featuredLabel')}
-                <span className="text-[#f31d2c]" aria-hidden="true">
-                  {' '}
-                  *
-                </span>
               </label>
               <div>
                 <textarea
                   rows={3}
                   placeholder={t('adminAlbumTypes.modal.featuredPlaceholder')}
-                  aria-invalid={!!errors.featured}
-                  className={`h-20 w-full resize-none px-3 py-2.5 ${fieldClass(errors.featured)}`}
-                  {...register('featured', {
-                    required: t('adminAlbumTypes.modal.featuredRequired'),
-                    validate: (value) =>
-                      isFeaturedValid(parseFeaturedLines(value)) ||
-                      t('adminAlbumTypes.modal.featuredRequired'),
-                  })}
+                  className={`h-20 w-full resize-none px-3 py-2.5 ${fieldClass(false)}`}
+                  {...register('featured')}
                 />
               </div>
-              {errors.featured ? (
-                <p className="mt-1.5 text-[13px] text-[#ee1c25]">
-                  {errors.featured.message}
-                </p>
-              ) : null}
             </div>
 
             <div className="flex items-start justify-end gap-3 pt-6">
@@ -270,16 +268,22 @@ const AlbumTypeModal = memo(
                 unstyled
                 type="button"
                 onClick={onClose}
-                className="cursor-pointer rounded-lg border border-[#dfe4ea] px-5 py-2.5 text-[14px] font-medium leading-5 text-[#536070] transition hover:bg-[#f9fafb]"
+                disabled={isSaving}
+                className="cursor-pointer rounded-lg border border-[#dfe4ea] px-5 py-2.5 text-[14px] font-medium leading-5 text-[#536070] transition hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {t('adminAlbumTypes.modal.cancel')}
               </Button>
               <Button
                 unstyled
                 type="submit"
-                className="cursor-pointer rounded-lg bg-[#f31d2c] px-5 py-2.5 text-[14px] font-medium leading-5 text-white shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
+                disabled={isSaving}
+                className="cursor-pointer rounded-lg bg-[#f31d2c] px-5 py-2.5 text-[14px] font-medium leading-5 text-white shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921] disabled:cursor-wait disabled:opacity-60"
               >
-                {t('adminAlbumTypes.modal.save')}
+                {isSaving
+                  ? t('adminAlbumTypes.modal.saving')
+                  : isEdit
+                    ? t('adminAlbumTypes.modal.save')
+                    : t('adminAlbumTypes.modal.create')}
               </Button>
             </div>
           </form>

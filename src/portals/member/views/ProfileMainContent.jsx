@@ -1,4 +1,5 @@
 import React, { memo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader';
 import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar';
 import {
@@ -15,6 +16,7 @@ import PhotographerFeaturedVideo from '@/portals/public/photographer/components/
 import PhotographerMessagesSection from '@/portals/public/photographer/components/PhotographerMessagesSection';
 import PhotographerProfileTabs from '@/portals/public/photographer/components/PhotographerProfileTabs';
 import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
+import PhotographerSlideshowsSection from '@/portals/public/photographer/components/PhotographerSlideshowsSection';
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
 import {
@@ -22,9 +24,13 @@ import {
   PHOTOGRAPHER_STORE_PRODUCTS,
   PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
+import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 
 const ProfileMainContent = memo(() => {
-  const [activeTab, setActiveTab] = useState('profile');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() =>
+    searchParams.has(SLIDESHOW_SEARCH_PARAM) ? 'artwork' : 'profile',
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col pb-8 sm:pb-10">
@@ -45,6 +51,10 @@ const ProfileMainContent = memo(() => {
       {activeTab === 'artwork' ? (
         <>
           <PhotographerCompetitionBanner featured={MEMBER_FEATURED} />
+          <PhotographerSlideshowsSection
+            canManage
+            ownerName={MEMBER_PROFILE.name}
+          />
           <PhotographerArtworkGrid
             titleKey="photographerProfile.artwork.title"
             subtitleKey="photographerProfile.artwork.subtitle"

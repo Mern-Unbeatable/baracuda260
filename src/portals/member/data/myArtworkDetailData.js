@@ -12,7 +12,7 @@ import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 const DETAIL_DESCRIPTION_KEY = 'myArtwork.detail.description';
 
 export const myArtworkDetailPath = (id) =>
-  `${ROUTES.ADMIN_MY_ARTWORK}/${encodeURIComponent(id)}`;
+  `${ROUTES.USER_MY_ARTWORK}/${encodeURIComponent(id)}`;
 
 const resolveVariant = (item) => {
   const albumBadge = item.albumBadge ?? '';

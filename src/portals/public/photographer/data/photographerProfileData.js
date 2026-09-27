@@ -1,4 +1,4 @@
-import { GALLERY_PHOTOS } from '@/shared/data/galleryPhotos';
+import { GALLERY_PHOTOS, galleryDetailPath } from '@/shared/data/galleryPhotos';
 
 const A = '/assets/home';
 
@@ -43,17 +43,45 @@ export const PHOTOGRAPHER_FEATURED_VIDEO = {
   title: 'Polish countryside sunrise',
 };
 
-export const PHOTOGRAPHER_FEATURED = {
-  badge: 'CURRENTLY IN COMPETITION',
-  uploaded: 'Aug 05, 2026',
-  title: 'August International Photography Competition 2026',
-  subtitle: 'Summer Sunset in Tatra',
-  votes: 342,
-  rank: 12,
-  votingEnds: 'Aug 31, 2026',
-  image: PHOTOGRAPHER_ASSETS.featuredHero,
-  detailHref: '/gallery/golden-hour-silence',
-};
+/** Entries currently in competition; the banner shows arrows when there is more than one. */
+export const PHOTOGRAPHER_FEATURED = [
+  {
+    id: 'august-international-2026',
+    badge: 'CURRENTLY IN COMPETITION',
+    uploaded: 'Aug 05, 2026',
+    title: 'August International Photography Competition 2026',
+    subtitle: 'Summer Sunset in Tatra',
+    votes: 342,
+    rank: 12,
+    votingEnds: 'Aug 31, 2026',
+    image: PHOTOGRAPHER_ASSETS.featuredHero,
+    detailHref: galleryDetailPath('golden-hour-silence'),
+  },
+  {
+    id: 'september-landscape-2026',
+    badge: 'CURRENTLY IN COMPETITION',
+    uploaded: 'Sep 03, 2026',
+    title: 'September Landscape Masters 2026',
+    subtitle: 'Forest Cathedral',
+    votes: 286,
+    rank: 7,
+    votingEnds: 'Sep 30, 2026',
+    image: `${A}/photo-forest.webp`,
+    detailHref: galleryDetailPath('forest-cathedral'),
+  },
+  {
+    id: 'autumn-city-2026',
+    badge: 'CURRENTLY IN COMPETITION',
+    uploaded: 'Sep 10, 2026',
+    title: 'Autumn Street & City Awards 2026',
+    subtitle: 'City After Midnight',
+    votes: 198,
+    rank: 19,
+    votingEnds: 'Oct 05, 2026',
+    image: `${A}/photo-city.webp`,
+    detailHref: galleryDetailPath('city-after-midnight'),
+  },
+];
 
 export const PHOTOGRAPHER_TALENT_APPRECIATION = {
   weekly: { gold: 1, silver: 0, bronze: 1 },

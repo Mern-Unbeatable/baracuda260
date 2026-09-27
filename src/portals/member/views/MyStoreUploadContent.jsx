@@ -191,14 +191,14 @@ const MyStoreUploadContent = memo(() => {
         ? t('myStore.upload.updateSuccess')
         : t('myStore.upload.success'),
     );
-    navigate(ROUTES.ADMIN_MY_STORE);
+    navigate(ROUTES.USER_MY_STORE);
   };
 
   return (
     <div className="mx-auto flex w-full max-w-230 flex-col gap-5">
       <div className="flex items-center gap-3">
         <Link
-          to={ROUTES.ADMIN_MY_STORE}
+          to={ROUTES.USER_MY_STORE}
           className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-[#e4e4e4] bg-white text-[#373737] transition hover:bg-[#f6f7f9]"
           aria-label={t('myStore.upload.back')}
         >

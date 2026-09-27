@@ -3,7 +3,7 @@ import SixPhotoContent from '@/portals/member/views/SixPhotoContent';
 import { ROUTES } from '@/shared/config';
 import { useSEO } from '@/shared/hooks/useSEO';
 
-const uploadHub = ROUTES.ADMIN_MY_ARTWORK_UPLOAD;
+const uploadHub = ROUTES.USER_MY_ARTWORK_UPLOAD;
 
 const MyArtworkUploadSix = memo(() => {
   useSEO({

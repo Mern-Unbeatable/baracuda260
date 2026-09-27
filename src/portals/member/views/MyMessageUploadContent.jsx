@@ -46,13 +46,13 @@ const MyMessageUploadContent = memo(() => {
     }
 
     toast.success(t('myMessages.upload.success'));
-    navigate(ROUTES.ADMIN_NEWS_MESSAGES);
+    navigate(ROUTES.USER_NEWS_MESSAGES);
   };
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 sm:gap-8">
       <Link
-        to={ROUTES.ADMIN_NEWS_MESSAGES}
+        to={ROUTES.USER_NEWS_MESSAGES}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
       >
         <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />

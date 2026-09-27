@@ -41,18 +41,34 @@ const SettingsRoute = lazy(() => import('@/portals/admin/pages/SettingsRoute'));
 const MarketingStatistics = lazy(
   () => import('@/portals/admin/pages/MarketingStatistics'),
 );
+const Dashboard = lazy(() => import('@/portals/member/pages/Dashboard'));
+const MyCompetitions = lazy(
+  () => import('@/portals/member/pages/MyCompetitions'),
+);
+const MyCompetitionDetails = lazy(
+  () => import('@/portals/member/pages/MyCompetitionDetails'),
+);
+const AdminProfile = lazy(() => import('@/portals/admin/pages/AdminProfile'));
 
 export const adminRoutes = (
   <>
+    <Route path={seg(ROUTES.ADMIN_DASHBOARD)} element={<Dashboard />} />
+    <Route
+      path={seg(ROUTES.ADMIN_MY_COMPETITIONS)}
+      element={<MyCompetitions />}
+    />
+    <Route
+      path={seg(ROUTES.ADMIN_MY_COMPETITION_DETAIL)}
+      element={<MyCompetitionDetails />}
+    />
+    <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<AdminProfile />} />
     <Route
       path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)}
       element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD} replace />}
     />
     <Route
       path={seg(ROUTES.ADMIN_UPLOAD_SINGLE)}
-      element={
-        <Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD_SINGLE} replace />
-      }
+      element={<Navigate to={ROUTES.ADMIN_MY_ARTWORK_UPLOAD_SINGLE} replace />}
     />
     <Route
       path={seg(ROUTES.ADMIN_UPLOAD_SIX)}
@@ -100,26 +116,17 @@ export const adminRoutes = (
       element={<BusinessLinkDetails />}
     />
     <Route path={seg(ROUTES.ADMIN_SETTINGS)} element={<SettingsRoute />} />
-    <Route
-      path={seg(ROUTES.ADMIN_NEWSLETTER)}
-      element={<AdminNewsletter />}
-    />
+    <Route path={seg(ROUTES.ADMIN_NEWSLETTER)} element={<AdminNewsletter />} />
     <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComment />} />
     <Route path={seg(ROUTES.ADMIN_ADS)} element={<AdsManagement />} />
-    <Route
-      path={seg(ROUTES.ADMIN_DEMO_PROFILES)}
-      element={<DemoProfiles />}
-    />
+    <Route path={seg(ROUTES.ADMIN_DEMO_PROFILES)} element={<DemoProfiles />} />
     <Route
       path={seg(ROUTES.ADMIN_DEMO_PROFILES_CREATE)}
       element={<DemoProfilesCreate />}
     />
     <Route path={seg(ROUTES.ADMIN_PROMO_LINKS)} element={<PromoLinks />} />
     <Route path={seg(ROUTES.ADMIN_REPORTS)} element={<Reports />} />
-    <Route
-      path={seg(ROUTES.ADMIN_REPORTS_DETAIL)}
-      element={<ReportDetail />}
-    />
+    <Route path={seg(ROUTES.ADMIN_REPORTS_DETAIL)} element={<ReportDetail />} />
     <Route
       path={seg(ROUTES.ADMIN_MARKETING_STATISTICS)}
       element={<MarketingStatistics />}

@@ -10,6 +10,7 @@ export const MORE_ICON_SIZE = 20;
 export const ANNOUNCEMENTS_PAGE_SIZE = 10;
 export const ANNOUNCEMENTS_PAGE_CHROME = 3;
 
+/** Computed by the backend (`displayStatus`), lower-cased for lookups. */
 export const ANNOUNCEMENT_STATUS = {
   ACTIVE: 'active',
   SCHEDULED: 'scheduled',
@@ -17,25 +18,30 @@ export const ANNOUNCEMENT_STATUS = {
   INACTIVE: 'inactive',
 };
 
+/** Admin-controlled switch (`activeState`). */
+export const ACTIVE_STATE = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+};
+
+/** Must match the backend enum exactly; anything else is rejected with a 400. */
 export const ANNOUNCEMENT_TYPE = {
-  WINNER: 'winner',
-  COMPETITION: 'competition',
+  GENERAL_ANNOUNCEMENT: 'general_announcement',
+  IMPORTANT_NOTICE: 'important_notice',
+  COMPETITION_ANNOUNCEMENT: 'competition_announcement',
+  COMPETITION_REMINDER: 'competition_reminder',
+  WINNER_ANNOUNCEMENT: 'winner_announcement',
+  EVENT_ANNOUNCEMENT: 'event_announcement',
+  NEW_FEATURE: 'new_feature',
+  WEBSITE_UPDATE: 'website_update',
   PROMOTION: 'promotion',
-  GENERAL: 'general',
-  IMPORTANT: 'important',
+  COMMUNITY_NEWS: 'community_news',
 };
 
 export const ANNOUNCEMENT_PRIORITY = {
   HIGH: 'high',
   MEDIUM: 'medium',
   LOW: 'low',
-};
-
-export const STATUS_LABEL_KEYS = {
-  [ANNOUNCEMENT_STATUS.ACTIVE]: 'adminAnnouncements.status.active',
-  [ANNOUNCEMENT_STATUS.SCHEDULED]: 'adminAnnouncements.status.scheduled',
-  [ANNOUNCEMENT_STATUS.EXPIRED]: 'adminAnnouncements.status.expired',
-  [ANNOUNCEMENT_STATUS.INACTIVE]: 'adminAnnouncements.status.inactive',
 };
 
 export const STATUS_STYLES = {
@@ -61,23 +67,44 @@ export const STATUS_STYLES = {
   },
 };
 
-export const TYPE_LABEL_KEYS = {
-  [ANNOUNCEMENT_TYPE.WINNER]: 'adminAnnouncements.types.winner',
-  [ANNOUNCEMENT_TYPE.COMPETITION]: 'adminAnnouncements.types.competition',
-  [ANNOUNCEMENT_TYPE.PROMOTION]: 'adminAnnouncements.types.promotion',
-  [ANNOUNCEMENT_TYPE.GENERAL]: 'adminAnnouncements.types.general',
-  [ANNOUNCEMENT_TYPE.IMPORTANT]: 'adminAnnouncements.types.important',
-};
-
 export const TYPE_STYLES = {
-  [ANNOUNCEMENT_TYPE.WINNER]: { bg: 'bg-[#fff7ed]', text: 'text-[#c2410c]' },
-  [ANNOUNCEMENT_TYPE.COMPETITION]: {
+  [ANNOUNCEMENT_TYPE.GENERAL_ANNOUNCEMENT]: {
+    bg: 'bg-[#eff6ff]',
+    text: 'text-[#2563eb]',
+  },
+  [ANNOUNCEMENT_TYPE.IMPORTANT_NOTICE]: {
+    bg: 'bg-[#fff7ed]',
+    text: 'text-[#ea580c]',
+  },
+  [ANNOUNCEMENT_TYPE.COMPETITION_ANNOUNCEMENT]: {
     bg: 'bg-[#f5f3ff]',
     text: 'text-[#7c3aed]',
   },
+  [ANNOUNCEMENT_TYPE.COMPETITION_REMINDER]: {
+    bg: 'bg-[#eef2ff]',
+    text: 'text-[#4f46e5]',
+  },
+  [ANNOUNCEMENT_TYPE.WINNER_ANNOUNCEMENT]: {
+    bg: 'bg-[#fefce8]',
+    text: 'text-[#a16207]',
+  },
+  [ANNOUNCEMENT_TYPE.EVENT_ANNOUNCEMENT]: {
+    bg: 'bg-[#ecfeff]',
+    text: 'text-[#0e7490]',
+  },
+  [ANNOUNCEMENT_TYPE.NEW_FEATURE]: {
+    bg: 'bg-[#ecfdf3]',
+    text: 'text-[#15803d]',
+  },
+  [ANNOUNCEMENT_TYPE.WEBSITE_UPDATE]: {
+    bg: 'bg-[#f1f5f9]',
+    text: 'text-[#475569]',
+  },
   [ANNOUNCEMENT_TYPE.PROMOTION]: { bg: 'bg-[#fdf2f8]', text: 'text-[#db2777]' },
-  [ANNOUNCEMENT_TYPE.GENERAL]: { bg: 'bg-[#eff6ff]', text: 'text-[#2563eb]' },
-  [ANNOUNCEMENT_TYPE.IMPORTANT]: { bg: 'bg-[#fff7ed]', text: 'text-[#ea580c]' },
+  [ANNOUNCEMENT_TYPE.COMMUNITY_NEWS]: {
+    bg: 'bg-[#fff1f2]',
+    text: 'text-[#e11d48]',
+  },
 };
 
 export const PRIORITY_LABEL_KEYS = {
@@ -108,7 +135,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
   {
     id: 'total',
     labelKey: 'adminAnnouncements.stats.total.label',
-    value: '24',
     hintKey: 'adminAnnouncements.stats.total.hint',
     hintClass: 'text-[#6b7280]',
     icon: '▢',
@@ -117,7 +143,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
   {
     id: 'active',
     labelKey: 'adminAnnouncements.stats.active.label',
-    value: '2',
     hintKey: 'adminAnnouncements.stats.active.hint',
     hintClass: 'text-[#16a34a]',
     icon: '●',
@@ -126,7 +151,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
   {
     id: 'scheduled',
     labelKey: 'adminAnnouncements.stats.scheduled.label',
-    value: '2',
     hintKey: 'adminAnnouncements.stats.scheduled.hint',
     hintClass: 'text-[#2563eb]',
     icon: '◷',
@@ -135,321 +159,30 @@ export const ANNOUNCEMENT_STAT_CARDS = [
   {
     id: 'expired',
     labelKey: 'adminAnnouncements.stats.expired.label',
-    value: '19',
     hintKey: 'adminAnnouncements.stats.expired.hint',
     hintClass: 'text-[#6b7280]',
     icon: '✕',
     iconBg: 'bg-[#f3f4f6] text-[#6b7280]',
   },
+  {
+    id: 'inactive',
+    labelKey: 'adminAnnouncements.stats.inactive.label',
+    hintKey: 'adminAnnouncements.stats.inactive.hint',
+    hintClass: 'text-[#ca8a04]',
+    icon: '■',
+    iconBg: 'bg-[#fefce8] text-[#ca8a04]',
+  },
 ];
 
 export const ACTION_MENU_OPTIONS = [
   { id: 'edit', labelKey: 'adminAnnouncements.actions.edit' },
+  { id: ACTIVE_STATE.ACTIVE, labelKey: 'adminAnnouncements.actions.setActive' },
   {
-    id: ANNOUNCEMENT_STATUS.ACTIVE,
-    labelKey: 'adminAnnouncements.actions.setActive',
-  },
-  {
-    id: ANNOUNCEMENT_STATUS.INACTIVE,
+    id: ACTIVE_STATE.INACTIVE,
     labelKey: 'adminAnnouncements.actions.setInactive',
   },
   { id: 'delete', labelKey: 'adminAnnouncements.actions.delete' },
 ];
-
-const buildRow = (
-  id,
-  code,
-  emoji,
-  titleKey,
-  type,
-  startKey,
-  endKey,
-  priority,
-  status,
-) => ({
-  id,
-  code,
-  emoji,
-  titleKey,
-  type,
-  startKey,
-  endKey,
-  priority,
-  status,
-});
-
-export const ADMIN_ANNOUNCEMENT_ROWS = [
-  buildRow(
-    'ann-1024',
-    'ANN-1024',
-    '🥳',
-    'adminAnnouncements.rows.mayWinners.title',
-    ANNOUNCEMENT_TYPE.WINNER,
-    'adminAnnouncements.rows.mayWinners.start',
-    'adminAnnouncements.rows.mayWinners.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1025',
-    'ANN-1025',
-    '🚩',
-    'adminAnnouncements.rows.juneCompetition.title',
-    ANNOUNCEMENT_TYPE.COMPETITION,
-    'adminAnnouncements.rows.juneCompetition.start',
-    'adminAnnouncements.rows.juneCompetition.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.ACTIVE,
-  ),
-  buildRow(
-    'ann-1026',
-    'ANN-1026',
-    '🏆',
-    'adminAnnouncements.rows.prizePool.title',
-    ANNOUNCEMENT_TYPE.PROMOTION,
-    'adminAnnouncements.rows.prizePool.start',
-    'adminAnnouncements.rows.prizePool.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.SCHEDULED,
-  ),
-  buildRow(
-    'ann-1027',
-    'ANN-1027',
-    '📢',
-    'adminAnnouncements.rows.maintenance.title',
-    ANNOUNCEMENT_TYPE.GENERAL,
-    'adminAnnouncements.rows.maintenance.start',
-    'adminAnnouncements.rows.maintenance.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.INACTIVE,
-  ),
-  buildRow(
-    'ann-1028',
-    'ANN-1028',
-    '📢',
-    'adminAnnouncements.rows.deadline.title',
-    ANNOUNCEMENT_TYPE.IMPORTANT,
-    'adminAnnouncements.rows.deadline.start',
-    'adminAnnouncements.rows.deadline.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.ACTIVE,
-  ),
-  buildRow(
-    'ann-1029',
-    'ANN-1029',
-    '📸',
-    'adminAnnouncements.rows.summerGallery.title',
-    ANNOUNCEMENT_TYPE.GENERAL,
-    'adminAnnouncements.rows.summerGallery.start',
-    'adminAnnouncements.rows.summerGallery.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1030',
-    'ANN-1030',
-    '🏅',
-    'adminAnnouncements.rows.aprilWinners.title',
-    ANNOUNCEMENT_TYPE.WINNER,
-    'adminAnnouncements.rows.aprilWinners.start',
-    'adminAnnouncements.rows.aprilWinners.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1031',
-    'ANN-1031',
-    '🎯',
-    'adminAnnouncements.rows.julyCompetition.title',
-    ANNOUNCEMENT_TYPE.COMPETITION,
-    'adminAnnouncements.rows.julyCompetition.start',
-    'adminAnnouncements.rows.julyCompetition.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.SCHEDULED,
-  ),
-  buildRow(
-    'ann-1032',
-    'ANN-1032',
-    '💎',
-    'adminAnnouncements.rows.premiumLaunch.title',
-    ANNOUNCEMENT_TYPE.PROMOTION,
-    'adminAnnouncements.rows.premiumLaunch.start',
-    'adminAnnouncements.rows.premiumLaunch.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1033',
-    'ANN-1033',
-    '🔔',
-    'adminAnnouncements.rows.newsletter.title',
-    ANNOUNCEMENT_TYPE.GENERAL,
-    'adminAnnouncements.rows.newsletter.start',
-    'adminAnnouncements.rows.newsletter.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1034',
-    'ANN-1034',
-    '⚠️',
-    'adminAnnouncements.rows.policyUpdate.title',
-    ANNOUNCEMENT_TYPE.IMPORTANT,
-    'adminAnnouncements.rows.policyUpdate.start',
-    'adminAnnouncements.rows.policyUpdate.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1035',
-    'ANN-1035',
-    '🌅',
-    'adminAnnouncements.rows.goldenHour.title',
-    ANNOUNCEMENT_TYPE.COMPETITION,
-    'adminAnnouncements.rows.goldenHour.start',
-    'adminAnnouncements.rows.goldenHour.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1036',
-    'ANN-1036',
-    '🎁',
-    'adminAnnouncements.rows.referral.title',
-    ANNOUNCEMENT_TYPE.PROMOTION,
-    'adminAnnouncements.rows.referral.start',
-    'adminAnnouncements.rows.referral.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1037',
-    'ANN-1037',
-    '📅',
-    'adminAnnouncements.rows.calendar.title',
-    ANNOUNCEMENT_TYPE.GENERAL,
-    'adminAnnouncements.rows.calendar.start',
-    'adminAnnouncements.rows.calendar.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1038',
-    'ANN-1038',
-    '🏆',
-    'adminAnnouncements.rows.marchWinners.title',
-    ANNOUNCEMENT_TYPE.WINNER,
-    'adminAnnouncements.rows.marchWinners.start',
-    'adminAnnouncements.rows.marchWinners.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1039',
-    'ANN-1039',
-    '🚀',
-    'adminAnnouncements.rows.featureLaunch.title',
-    ANNOUNCEMENT_TYPE.PROMOTION,
-    'adminAnnouncements.rows.featureLaunch.start',
-    'adminAnnouncements.rows.featureLaunch.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1040',
-    'ANN-1040',
-    '📢',
-    'adminAnnouncements.rows.community.title',
-    ANNOUNCEMENT_TYPE.GENERAL,
-    'adminAnnouncements.rows.community.start',
-    'adminAnnouncements.rows.community.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1041',
-    'ANN-1041',
-    '⏰',
-    'adminAnnouncements.rows.votingReminder.title',
-    ANNOUNCEMENT_TYPE.IMPORTANT,
-    'adminAnnouncements.rows.votingReminder.start',
-    'adminAnnouncements.rows.votingReminder.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1042',
-    'ANN-1042',
-    '🌊',
-    'adminAnnouncements.rows.seascape.title',
-    ANNOUNCEMENT_TYPE.COMPETITION,
-    'adminAnnouncements.rows.seascape.start',
-    'adminAnnouncements.rows.seascape.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1043',
-    'ANN-1043',
-    '✨',
-    'adminAnnouncements.rows.spotlight.title',
-    ANNOUNCEMENT_TYPE.PROMOTION,
-    'adminAnnouncements.rows.spotlight.start',
-    'adminAnnouncements.rows.spotlight.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1044',
-    'ANN-1044',
-    '📝',
-    'adminAnnouncements.rows.submissionTips.title',
-    ANNOUNCEMENT_TYPE.GENERAL,
-    'adminAnnouncements.rows.submissionTips.start',
-    'adminAnnouncements.rows.submissionTips.end',
-    ANNOUNCEMENT_PRIORITY.LOW,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1045',
-    'ANN-1045',
-    '🎉',
-    'adminAnnouncements.rows.anniversary.title',
-    ANNOUNCEMENT_TYPE.WINNER,
-    'adminAnnouncements.rows.anniversary.start',
-    'adminAnnouncements.rows.anniversary.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1046',
-    'ANN-1046',
-    '🛠️',
-    'adminAnnouncements.rows.tools.title',
-    ANNOUNCEMENT_TYPE.GENERAL,
-    'adminAnnouncements.rows.tools.start',
-    'adminAnnouncements.rows.tools.end',
-    ANNOUNCEMENT_PRIORITY.MEDIUM,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-  buildRow(
-    'ann-1047',
-    'ANN-1047',
-    '🔥',
-    'adminAnnouncements.rows.flashSale.title',
-    ANNOUNCEMENT_TYPE.PROMOTION,
-    'adminAnnouncements.rows.flashSale.start',
-    'adminAnnouncements.rows.flashSale.end',
-    ANNOUNCEMENT_PRIORITY.HIGH,
-    ANNOUNCEMENT_STATUS.EXPIRED,
-  ),
-];
-
-export const paginateAnnouncements = (rows, page, pageSize) => {
-  const safePage = Math.max(1, page);
-  const start = (safePage - 1) * pageSize;
-  return rows.slice(start, start + pageSize);
-};
 
 export const getAnnouncementPageNumbers = (
   page,
@@ -467,9 +200,6 @@ export const getAnnouncementPageNumbers = (
   return pages;
 };
 
-export const updateAnnouncementStatus = (rows, rowId, nextStatus) =>
-  rows.map((row) => (row.id === rowId ? { ...row, status: nextStatus } : row));
-
 export const ANNOUNCEMENT_MESSAGE_MAX = 120;
 
 export const ANNOUNCEMENT_EMOJI_OPTIONS = [
@@ -479,6 +209,7 @@ export const ANNOUNCEMENT_EMOJI_OPTIONS = [
   '🚩',
   '📷',
   '🔥',
+  '🚀',
   '💰',
   '⭐',
   '📢',
@@ -487,130 +218,128 @@ export const ANNOUNCEMENT_EMOJI_OPTIONS = [
   '🎁',
 ];
 
-export const ANNOUNCEMENT_TYPE_OPTIONS = [
-  {
-    id: ANNOUNCEMENT_TYPE.GENERAL,
-    labelKey: 'adminAnnouncements.types.general',
-  },
-  { id: ANNOUNCEMENT_TYPE.WINNER, labelKey: 'adminAnnouncements.types.winner' },
-  {
-    id: ANNOUNCEMENT_TYPE.COMPETITION,
-    labelKey: 'adminAnnouncements.types.competition',
-  },
-  {
-    id: ANNOUNCEMENT_TYPE.PROMOTION,
-    labelKey: 'adminAnnouncements.types.promotion',
-  },
-  {
-    id: ANNOUNCEMENT_TYPE.IMPORTANT,
-    labelKey: 'adminAnnouncements.types.important',
-  },
-];
-
-export const ANNOUNCEMENT_LINK_OPTIONS = [
-  { id: 'none', labelKey: 'adminAnnouncements.modal.links.none' },
-  {
-    id: 'competitions',
-    labelKey: 'adminAnnouncements.modal.links.competitions',
-  },
-  { id: 'gallery', labelKey: 'adminAnnouncements.modal.links.gallery' },
-  { id: 'winners', labelKey: 'adminAnnouncements.modal.links.winners' },
-];
+export const ANNOUNCEMENT_TYPE_OPTIONS = Object.values(ANNOUNCEMENT_TYPE);
 
 export const ANNOUNCEMENT_PRIORITY_OPTIONS = [
-  {
-    id: ANNOUNCEMENT_PRIORITY.HIGH,
-    labelKey: 'adminAnnouncements.priority.high',
-  },
-  {
-    id: ANNOUNCEMENT_PRIORITY.MEDIUM,
-    labelKey: 'adminAnnouncements.priority.medium',
-  },
-  {
-    id: ANNOUNCEMENT_PRIORITY.LOW,
-    labelKey: 'adminAnnouncements.priority.low',
-  },
+  ANNOUNCEMENT_PRIORITY.HIGH,
+  ANNOUNCEMENT_PRIORITY.MEDIUM,
+  ANNOUNCEMENT_PRIORITY.LOW,
 ];
 
 export const EMPTY_ANNOUNCEMENT_FORM = {
   message: '',
-  emoji: '🎉',
-  type: ANNOUNCEMENT_TYPE.GENERAL,
-  link: 'none',
+  icon: '🎉',
+  type: ANNOUNCEMENT_TYPE.GENERAL_ANNOUNCEMENT,
+  link: '',
   startDate: '',
   startTime: '',
   endDate: '',
   endTime: '',
   noEndDate: false,
-  status: ANNOUNCEMENT_STATUS.ACTIVE,
+  activeState: ACTIVE_STATE.ACTIVE,
   priority: ANNOUNCEMENT_PRIORITY.MEDIUM,
 };
 
-export const getAnnouncementTitle = (row, t) =>
-  row.title ?? (row.titleKey ? t(row.titleKey) : '');
+const humanize = (value) => {
+  const text = String(value || '').replace(/_/g, ' ');
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
 
-export const getAnnouncementScheduleStart = (row, t) =>
-  row.startLabel ?? (row.startKey ? t(row.startKey) : '');
+/**
+ * @param {(key: string, options?: object) => string} t
+ * @param {string} type
+ */
+export const getAnnouncementTypeLabel = (t, type) =>
+  t(`adminAnnouncements.types.${type}`, { defaultValue: humanize(type) });
 
-export const getAnnouncementScheduleEnd = (row, t) =>
-  row.endLabel ?? (row.endKey ? t(row.endKey) : '');
+/**
+ * @param {{ displayStatus?: string, activeState?: string }} announcement
+ */
+export const getAnnouncementStatus = (announcement) =>
+  String(announcement.displayStatus || announcement.activeState || '')
+    .trim()
+    .toLowerCase();
 
-export const isRequiredTextValid = (value) =>
-  Boolean(String(value || '').trim());
+/** `2026-10-01T00:00:00.000Z` → `2026-10-01` (the calendar day the admin picked). */
+const toDateInputValue = (value) => (value ? String(value).slice(0, 10) : '');
+
+/**
+ * @param {string | null} date
+ * @param {string | null} time
+ * @param {string} [locale]
+ */
+export const formatScheduleDate = (date, time, locale) => {
+  const day = toDateInputValue(date);
+  if (!day) return '';
+  const parsed = new Date(`${day}T00:00:00`);
+  const label = Number.isNaN(parsed.getTime())
+    ? day
+    : parsed.toLocaleDateString(locale, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+  return time ? `${label} · ${time}` : label;
+};
 
 export const isAnnouncementMessageValid = (value) => {
   const text = String(value || '').trim();
   return text.length > 0 && text.length <= ANNOUNCEMENT_MESSAGE_MAX;
 };
 
-export const isAnnouncementFormValid = (values) => {
-  if (!isAnnouncementMessageValid(values.message)) return false;
-  if (!isRequiredTextValid(values.startDate)) return false;
-  if (!values.noEndDate && !isRequiredTextValid(values.endDate)) return false;
-  return true;
-};
-
-const formatDisplayDate = (dateValue, timeValue) => {
-  if (!dateValue) return '';
-  const date = new Date(`${dateValue}T${timeValue || '00:00'}`);
-  if (Number.isNaN(date.getTime())) return dateValue;
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-};
-
-export const getNextAnnouncementCode = (rows) => {
-  const maxCode = rows.reduce((max, row) => {
-    const match = String(row.code || '').match(/ANN-(\d+)/);
-    return match ? Math.max(max, Number(match[1])) : max;
-  }, 1023);
-  return `ANN-${maxCode + 1}`;
-};
-
-export const buildAnnouncementFromForm = (values, rows) => {
-  const startLabel = formatDisplayDate(values.startDate, values.startTime);
-  const endLabel = values.noEndDate
-    ? undefined
-    : formatDisplayDate(values.endDate, values.endTime);
-  const endKey = values.noEndDate
-    ? 'adminAnnouncements.schedule.manual'
-    : undefined;
-
+/**
+ * @param {object | null | undefined} announcement
+ * @returns {typeof EMPTY_ANNOUNCEMENT_FORM}
+ */
+export const getAnnouncementFormValues = (announcement) => {
+  if (!announcement) return EMPTY_ANNOUNCEMENT_FORM;
   return {
-    id: `ann-${Date.now()}`,
-    code: getNextAnnouncementCode(rows),
-    emoji: values.emoji || '📢',
-    title: values.message.trim(),
-    type: values.type,
-    link: values.link,
-    startLabel,
-    ...(endKey ? { endKey } : { endLabel }),
-    priority: values.priority,
-    status:
-      values.status === ANNOUNCEMENT_STATUS.INACTIVE
-        ? ANNOUNCEMENT_STATUS.INACTIVE
-        : ANNOUNCEMENT_STATUS.ACTIVE,
+    message: announcement.message ?? '',
+    icon: announcement.icon || EMPTY_ANNOUNCEMENT_FORM.icon,
+    type: announcement.type || EMPTY_ANNOUNCEMENT_FORM.type,
+    link: announcement.link ?? '',
+    startDate: toDateInputValue(announcement.startDate),
+    startTime: announcement.startTime ?? '',
+    endDate: toDateInputValue(announcement.endDate),
+    endTime: announcement.endTime ?? '',
+    noEndDate: Boolean(announcement.noEndDate),
+    activeState: announcement.activeState || ACTIVE_STATE.ACTIVE,
+    priority: announcement.priority || EMPTY_ANNOUNCEMENT_FORM.priority,
   };
 };
+
+/**
+ * @param {typeof EMPTY_ANNOUNCEMENT_FORM} values
+ * @param {{ previousLink?: string | null }} [options]
+ */
+export const buildAnnouncementPayload = (values, { previousLink } = {}) => {
+  const link = String(values.link || '').trim();
+  const noEndDate = Boolean(values.noEndDate);
+
+  return {
+    message: values.message.trim(),
+    icon: values.icon,
+    type: values.type,
+    ...(link ? { link } : previousLink ? { link: null } : {}),
+    startDate: values.startDate,
+    ...(values.startTime ? { startTime: values.startTime } : {}),
+    ...(!noEndDate && {
+      endDate: values.endDate,
+      ...(values.endTime ? { endTime: values.endTime } : {}),
+    }),
+    noEndDate,
+    activeState: values.activeState,
+    priority: values.priority,
+  };
+};
+
+/**
+ * Full PUT body for an existing announcement with only `activeState` changed.
+ * @param {object} announcement
+ * @param {string} activeState
+ */
+export const buildActiveStatePayload = (announcement, activeState) =>
+  buildAnnouncementPayload(
+    { ...getAnnouncementFormValues(announcement), activeState },
+    { previousLink: announcement.link },
+  );

@@ -147,8 +147,8 @@ ZodiacSlotCard.displayName = 'ZodiacSlotCard';
  */
 const Zodiac12Content = memo(
   ({
-    backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
-    uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+    backHref = ROUTES.USER_UPLOAD_PHOTOS,
+    uploadAnotherHref = ROUTES.USER_UPLOAD_PHOTOS,
     purpose = 'artwork',
     defaultPrice = '$5.00',
   }) => {

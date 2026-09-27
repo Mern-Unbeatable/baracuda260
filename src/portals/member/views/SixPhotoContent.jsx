@@ -150,8 +150,8 @@ ZodiacSlotCard.displayName = 'ZodiacSlotCard';
  */
 const SixPhotoContent = memo(
   ({
-    backHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
-    uploadAnotherHref = ROUTES.ADMIN_UPLOAD_PHOTOS,
+    backHref = ROUTES.USER_UPLOAD_PHOTOS,
+    uploadAnotherHref = ROUTES.USER_UPLOAD_PHOTOS,
     purpose = 'artwork',
     defaultPrice = '$5.00',
   }) => {

@@ -11,6 +11,14 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import DemoProfileDetailModal from '@/portals/admin/components/admin-demo-profiles/DemoProfileDetailModal';
@@ -52,31 +60,21 @@ const useIsMdUp = () => {
   return isMdUp;
 };
 
-const DemoProfileStatCards = memo(({ stats }) => {
-  const { t } = useTranslation();
+import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 
+const DemoProfileStatCards = memo(({ stats }) => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {DEMO_PROFILES_STAT_CARDS.map((card) => (
-        <article
+        <AdminBasicStatCard
           key={card.id}
-          className="rounded-[14px] border border-[#f3f4f6] bg-white px-5.75 py-5.25 shadow-[0px_1px_2px_rgba(0,0,0,0.06)]"
-        >
-          <div className="flex items-start justify-between">
-            <p className="text-[12px] font-semibold leading-4.5 tracking-[0.24px] text-[#6b7280]">
-              {t(card.labelKey)}
-            </p>
-            <span
-              className={`inline-flex size-8.5 items-center justify-center rounded-[9px] text-[16px] font-bold leading-6 ${card.iconBg}`}
-              aria-hidden="true"
-            >
-              {card.icon}
-            </span>
-          </div>
-          <p className="pt-3.5 text-[32px] font-extrabold leading-8 text-[#111827]">
-            {stats[card.id]}
-          </p>
-        </article>
+          labelKey={card.labelKey}
+          value={stats[card.id]}
+          icon={card.icon}
+          iconBg={card.iconBg}
+          borderClass="border-[#f3f4f6]"
+          valueClass="text-[#111827]"
+        />
       ))}
     </div>
   );
@@ -365,23 +363,23 @@ const ProfileTableRow = memo(
     const { t } = useTranslation();
 
     return (
-      <tr className="border-b border-[#e4e4e4]">
-        <td className="min-w-[160px] px-[26px] py-6 text-[16px] leading-6 text-[#0c0c0c]">
+      <TableRow>
+        <TableCell className="min-w-[160px]">
           {getDemoProfileDisplayName(profile, t)}
-        </td>
-        <td className="min-w-[140px] px-[26px] py-6 text-[16px] leading-6 text-[#0c0c0c]">
+        </TableCell>
+        <TableCell className="min-w-[140px]">
           {getDemoProfileDisplayUsername(profile, t)}
-        </td>
-        <td className="hidden min-w-[180px] px-[26px] py-6 text-[16px] leading-6 whitespace-nowrap text-[#0c0c0c] sm:table-cell">
+        </TableCell>
+        <TableCell className="hidden min-w-[180px] whitespace-nowrap sm:table-cell">
           {profile.phone}
-        </td>
-        <td className="min-w-[180px] px-[26px] py-6 text-[16px] leading-6 break-all text-[#0c0c0c]">
+        </TableCell>
+        <TableCell className="min-w-[180px] break-all">
           {profile.email}
-        </td>
-        <td className="min-w-[140px] px-[26px] py-6">
+        </TableCell>
+        <TableCell className="min-w-[140px]">
           <StatusBadge status={profile.status} />
-        </td>
-        <td className="min-w-[100px] px-[26px] py-6">
+        </TableCell>
+        <TableCell className="min-w-[100px]">
           <ProfileActionMenu
             profile={profile}
             isOpen={openActionId === profile.id}
@@ -391,8 +389,8 @@ const ProfileTableRow = memo(
             onSetActive={() => onSetActive(profile.id)}
             onSetInactive={() => onSetInactive(profile.id)}
           />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     );
   },
 );
@@ -524,50 +522,48 @@ const AdminDemoProfilesContent = memo(() => {
       >
         {visibleProfiles.length > 0 ? (
           isMdUp ? (
-            <div className="w-full overflow-x-auto">
-              <table className="w-full min-w-[980px] border-collapse text-left">
-                <thead>
-                  <tr className="bg-[#f6fbff]">
-                    <th className="rounded-tl-[12px] px-[26px] py-3 text-[16px] font-normal leading-6 text-black">
-                      {t('adminDemoProfiles.columns.profile')}
-                    </th>
-                    <th className="px-[26px] py-3 text-[16px] font-normal leading-6 text-black">
-                      {t('adminDemoProfiles.columns.username')}
-                    </th>
-                    <th className="hidden px-[26px] py-3 text-[16px] font-normal leading-6 text-black sm:table-cell">
-                      {t('adminDemoProfiles.columns.phone')}
-                    </th>
-                    <th className="px-[26px] py-3 text-[16px] font-normal leading-6 text-black">
-                      {t('adminDemoProfiles.columns.email')}
-                    </th>
-                    <th className="px-[26px] py-3 text-[16px] font-normal leading-6 text-black">
-                      {t('adminDemoProfiles.columns.status')}
-                    </th>
-                    <th className="rounded-tr-[12px] px-[26px] py-3 text-[16px] font-normal leading-6 text-black">
-                      {t('adminDemoProfiles.columns.action')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {visibleProfiles.map((profile) => (
-                    <ProfileTableRow
-                      key={profile.id}
-                      profile={profile}
-                      openActionId={openActionId}
-                      onToggleAction={handleToggleAction}
-                      onCloseAction={handleCloseAction}
-                      onSeeDetails={handleOpenDetails}
-                      onSetActive={(id) =>
-                        handleSetStatus(id, DEMO_PROFILE_STATUS.ACTIVE)
-                      }
-                      onSetInactive={(id) =>
-                        handleSetStatus(id, DEMO_PROFILE_STATUS.INACTIVE)
-                      }
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table className="min-w-[980px]">
+              <TableHeader>
+                <TableRow isHeader>
+                  <TableHead className="rounded-tl-[12px] px-[26px]">
+                    {t('adminDemoProfiles.columns.profile')}
+                  </TableHead>
+                  <TableHead className="px-[26px]">
+                    {t('adminDemoProfiles.columns.username')}
+                  </TableHead>
+                  <TableHead className="hidden px-[26px] sm:table-cell">
+                    {t('adminDemoProfiles.columns.phone')}
+                  </TableHead>
+                  <TableHead className="px-[26px]">
+                    {t('adminDemoProfiles.columns.email')}
+                  </TableHead>
+                  <TableHead className="px-[26px]">
+                    {t('adminDemoProfiles.columns.status')}
+                  </TableHead>
+                  <TableHead className="rounded-tr-[12px] px-[26px]">
+                    {t('adminDemoProfiles.columns.action')}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {visibleProfiles.map((profile) => (
+                  <ProfileTableRow
+                    key={profile.id}
+                    profile={profile}
+                    openActionId={openActionId}
+                    onToggleAction={handleToggleAction}
+                    onCloseAction={handleCloseAction}
+                    onSeeDetails={handleOpenDetails}
+                    onSetActive={(id) =>
+                      handleSetStatus(id, DEMO_PROFILE_STATUS.ACTIVE)
+                    }
+                    onSetInactive={(id) =>
+                      handleSetStatus(id, DEMO_PROFILE_STATUS.INACTIVE)
+                    }
+                  />
+                ))}
+              </TableBody>
+            </Table>
           ) : (
             <div
               className="flex flex-col"

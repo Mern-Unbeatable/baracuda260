@@ -585,11 +585,14 @@
     "subtitle": "Manage Registered User",
     "tableAria": "Registered users table",
     "empty": "No users match this filter.",
+    "retry": "Try again",
+    "loadError": "Could not load users.",
     "sortBy": "Sort By:",
     "filters": {
       "aria": "Filter users by status",
       "all": "All Status",
       "active": "Active",
+      "pending": "Pending",
       "suspended": "Suspended"
     },
     "columns": {
@@ -602,12 +605,23 @@
     },
     "status": {
       "active": "Active",
-      "suspended": "Suspended"
+      "suspended": "Suspended",
+      "pending": "Pending"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin"
     },
     "actions": {
       "menu": "Actions for {{name}}",
+      "viewDetails": "View details",
       "active": "Active",
       "suspendOption": "Suspend"
+    },
+    "statusUpdate": {
+      "activated": "User activated.",
+      "suspended": "User suspended.",
+      "error": "Could not update the user status."
     },
     "suspendModal": {
       "title": "Suspend User",
@@ -616,32 +630,31 @@
       "reasonPlaceholder": "Why Suspend this user",
       "reasonRequired": "Please enter a reason.",
       "cancel": "Cancel",
-      "confirm": "Suspend"
+      "confirm": "Suspend",
+      "submitting": "Suspending…"
+    },
+    "detailsModal": {
+      "title": "User details",
+      "close": "Close user details",
+      "loadError": "Could not load user details.",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "verification": "Verification",
+      "verified": "Verified",
+      "notVerified": "Not verified",
+      "location": "Location",
+      "joined": "Joined",
+      "lastLogin": "Last login",
+      "never": "Never",
+      "bio": "Bio",
+      "suspendReason": "Suspension reason",
+      "suspendedAt": "Suspended on {{date}}"
     },
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
       "previous": "Previous",
       "next": "Next"
-    },
-    "rows": {
-      "john": {
-        "name": "John Anderson"
-      },
-      "sarah": {
-        "name": "Sarah Mitchell"
-      },
-      "buildpro": {
-        "name": "BuildPro Corp"
-      },
-      "mike": {
-        "name": "Mike Johnson"
-      },
-      "construction": {
-        "name": "Construction Ltd"
-      },
-      "emily": {
-        "name": "Emily Davis"
-      }
     }
   },
   "adminCategories": {
@@ -653,12 +666,42 @@
     "add": "Add Category",
     "remove": "Remove {{name}}",
     "empty": "No categories yet. Add your first category.",
+    "saving": "Saving…",
+    "retry": "Try again",
+    "loadError": "Could not load categories.",
+    "createSuccess": "Category created.",
+    "createError": "Could not create the category.",
+    "deleteSuccess": "Deleted.",
+    "deleteError": "Could not delete. Please try again.",
+    "confirmDelete": {
+      "title": "Delete \"{{name}}\"?",
+      "text": "This cannot be undone.",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
+    },
     "addModal": {
       "nameLabel": "Category name",
       "namePlaceholder": "Category name",
       "nameRequired": "Please enter a category name.",
       "save": "Save",
       "close": "Close add category dialog"
+    },
+    "subcategory": {
+      "panelAria": "Subcategory management",
+      "panelTitle": "Subcategory",
+      "add": "Add Subcategory",
+      "empty": "No subcategories yet. Add your first subcategory.",
+      "createSuccess": "Subcategory created.",
+      "addModal": {
+        "categoryLabel": "Select Category",
+        "categoryPlaceholder": "Category name",
+        "categoryRequired": "Please select a category.",
+        "nameLabel": "Subcategory name",
+        "namePlaceholder": "Subcategory name",
+        "nameRequired": "Please enter a subcategory name.",
+        "save": "Save",
+        "close": "Close add subcategory dialog"
+      }
     },
     "items": {
       "nature": "Nature",
@@ -700,39 +743,35 @@
       "nameRequired": "Please enter an album type name.",
       "prizeRequired": "Please enter a valid prize amount.",
       "descriptionRequired": "Please enter a description.",
-      "featuredRequired": "Please enter at least one featured item.",
       "cancel": "Cancel",
       "save": "Save changes",
-      "close": "Close album type dialog"
+      "close": "Close album type dialog",
+      "kindLabel": "Album format",
+      "create": "Create album type",
+      "saving": "Saving…"
     },
-    "items": {
-      "single": {
-        "name": "Single Photo",
-        "description": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story — judged by the community.",
-        "features": {
-          "monthly": "Monthly competition",
-          "voting": "Public community voting",
-          "prizes": "Top 3 win cash prizes"
-        }
-      },
-      "six": {
-        "name": "6 Photos Story",
-        "description": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
-        "features": {
-          "storytelling": "Sequential storytelling",
-          "votes": "Community votes",
-          "wins": "Best story wins"
-        }
-      },
-      "zodiac": {
-        "name": "12 photos - full Zodiac Story",
-        "description": "Create a complete zodiac-themed visual journey across twelve stunning images — our grandest format.",
-        "features": {
-          "arc": "12-sign visual arc",
-          "order": "Zodiac-order display",
-          "grand": "Grand prize category"
-        }
-      }
+    "retry": "Retry",
+    "loadError": "Could not load album types.",
+    "empty": "No album types yet. Create one to get started.",
+    "inactive": "Inactive",
+    "deleteAlbum": "Delete album type",
+    "deleteAria": "Delete {{name}}",
+    "createSuccess": "Album type created.",
+    "createError": "Could not create the album type.",
+    "updateSuccess": "Album type updated.",
+    "updateError": "Could not update the album type.",
+    "deleteSuccess": "Album type deleted.",
+    "deleteError": "Could not delete the album type.",
+    "confirmDelete": {
+      "title": "Delete \"{{name}}\"?",
+      "text": "This album type will be removed permanently.",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
+    },
+    "kinds": {
+      "SINGLE": "Single photo (1 photo)",
+      "SIX": "Photo story (6 photos)",
+      "TWELVE": "Zodiac story (12 photos)"
     }
   },
   "adminPayouts": {
@@ -815,6 +854,8 @@
     "subtitle": "Review uploaded 12-photo albums, generate business links, and manage submissions.",
     "tableAria": "Business link submissions table",
     "empty": "No business link submissions yet.",
+    "retry": "Try again",
+    "loadError": "Could not load business link submissions.",
     "columns": {
       "user": "User",
       "email": "Email",
@@ -832,43 +873,9 @@
       "previous": "Previous",
       "next": "Next"
     },
-    "rows": {
-      "john": {
-        "user": "John Anderson",
-        "country": "Chin"
-      },
-      "sarah": {
-        "user": "Sarah Mitchell",
-        "country": "Japan"
-      },
-      "buildpro": {
-        "user": "BuildPro Corp",
-        "country": "Bangladesh"
-      },
-      "mike": {
-        "user": "Mike Johnson",
-        "country": "USA"
-      },
-      "construction": {
-        "user": "Construction Ltd",
-        "country": "Canada"
-      },
-      "emily": {
-        "user": "Emily Davis",
-        "country": "India"
-      },
-      "david": {
-        "user": "David Chen",
-        "country": "USA"
-      }
-    },
     "detail": {
       "back": "Back to Business Link Photos",
       "notFound": "This business link submission could not be found.",
-      "name": "Amelia Carter",
-      "country": "United States",
-      "uploaded": "Jul 24, 2026",
-      "statusBadge": "Business Link Photos",
       "phone": "Phone",
       "countryLabel": "Country",
       "uploadedLabel": "Uploaded",
@@ -877,17 +884,25 @@
       "previousPhoto": "Previous photo",
       "nextPhoto": "Next photo",
       "selectPhoto": "Select photo {{number}} {{sign}}",
-      "typeBadge": "Single Photo",
-      "categoryBadge": "Nature",
-      "photoTitle": "Chasing the Neon Stream",
-      "photoDescription": "A young man walking confidently along a quiet city street during golden hour, wearing a casual white t-shirt, black jeans, and clean white sneakers. His hands are relaxed by his sides, with a natural walking posture and a calm expression. Soft sunlight creates warm highlights and long shadows on the pavement. Modern buildings, green trees, and a slightly blurred urban background add depth to the scene. Captured in a cinematic, photorealistic style with shallow depth of field, ultra-realistic, high detail, 8K quality.",
       "linkLabel": "Generated Business Link",
       "autoGenerated": "Auto-generated",
       "copyLink": "Copy Link",
       "copySuccess": "Business link copied",
       "copyFailed": "Could not copy the business link",
       "photographerLabel": "Photographer",
-      "photographer": "Wong Kar-Wai"
+      "loadError": "Could not load the business album.",
+      "noPhotos": "This album has no photos yet.",
+      "untitled": "Untitled album",
+      "aiGenerated": "AI Generated",
+      "kinds": {
+        "single": "Single Photo",
+        "six": "6 Photos Story",
+        "twelve": "12 Photos Zodiac Story"
+      },
+      "status": {
+        "published": "Published",
+        "unpublished": "Not Published"
+      }
     }
   },
   "adminComment": {
@@ -1064,6 +1079,10 @@
     "subtitle": "Donor Advertisement Management Dashboard",
     "tableAria": "Ads management table",
     "empty": "No advertisements to display.",
+    "retry": "Try again",
+    "loadError": "Could not load advertisements.",
+    "statusUpdateSuccess": "Advertisement status updated.",
+    "statusUpdateError": "Could not update the status.",
     "columns": {
       "name": "Name",
       "email": "Email",
@@ -1071,14 +1090,22 @@
       "businessType": "Business Type",
       "pageName": "Page Name",
       "price": "Price",
+      "status": "Status",
       "uploadedDate": "Uploaded Date",
       "actions": "Actions"
+    },
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "rejected": "Rejected",
+      "expired": "Expired"
     },
     "businessTypes": {
       "online": "Online Business",
       "local": "Local Business"
     },
     "pageNames": {
+      "home": "Home",
       "premiumPhotos": "Premium Photos",
       "buyPhotos": "Buy Photos",
       "gallery": "Gallery",
@@ -1104,52 +1131,19 @@
       "adsEndDate": "Ads End Date",
       "totalDays": "Total Days",
       "subtotal": "Subtotal",
-      "totalDaysValue": "14 Days",
-      "totalDaysValueAlt": "17 Days",
-      "sampleDescription": "Absolutely breathtaking composition! The way the light hits the mountain ridge is pure magic. This deserves to be in a gallery."
+      "website": "Website",
+      "pageName": "Page",
+      "businessType": "Business Type",
+      "paymentId": "Payment ID",
+      "loadError": "Could not load advertisement details.",
+      "daysValue_one": "{{count}} Day",
+      "daysValue_other": "{{count}} Days"
     },
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
       "aria": "Ads pagination",
       "previous": "Previous",
       "next": "Next"
-    },
-    "rows": {
-      "elena": {
-        "name": "Elena Vasquez",
-        "businessName": "Laz Pharma",
-        "businessLocation": "Dhaka 1201"
-      },
-      "marcus": {
-        "name": "Marcus Klein",
-        "businessName": "Urban Lens Studio",
-        "businessLocation": "Berlin 10115"
-      },
-      "sofia": {
-        "name": "Sofia Rivera",
-        "businessName": "Cloud Nine Cafe",
-        "businessLocation": "Madrid 28001"
-      },
-      "james": {
-        "name": "James Porter",
-        "businessName": "Peak Gear Co.",
-        "businessLocation": "Denver 80202"
-      },
-      "amira": {
-        "name": "Amira Hassan",
-        "businessName": "Desert Bloom Spa",
-        "businessLocation": "Dubai 00000"
-      },
-      "luca": {
-        "name": "Luca Moretti",
-        "businessName": "Vista Travel",
-        "businessLocation": "Rome 00118"
-      },
-      "nina": {
-        "name": "Nina Weber",
-        "businessName": "Frame & Focus",
-        "businessLocation": "Vienna 1010"
-      }
     }
   },
   "adminReports": {
@@ -1483,6 +1477,10 @@
       "expired": {
         "label": "Expired",
         "hint": "No longer active"
+      },
+      "inactive": {
+        "label": "Inactive",
+        "hint": "Turned off manually"
       }
     },
     "columns": {
@@ -1499,11 +1497,16 @@
       "manual": "Manual"
     },
     "types": {
-      "winner": "Winner Announcement",
-      "competition": "Competition",
+      "general_announcement": "General Announcement",
+      "important_notice": "Important Notice",
+      "competition_announcement": "Competition Announcement",
+      "competition_reminder": "Competition Reminder",
+      "winner_announcement": "Winner Announcement",
+      "event_announcement": "Event Announcement",
+      "new_feature": "New Feature",
+      "website_update": "Website Update",
       "promotion": "Promotion",
-      "general": "General",
-      "important": "Important Notice"
+      "community_news": "Community News"
     },
     "priority": {
       "high": "High",
@@ -1533,7 +1536,7 @@
     "modal": {
       "title": "Create Announcement",
       "subtitle": "Create a short announcement that will appear above the website navigation.",
-      "close": "Close create announcement dialog",
+      "close": "Close announcement dialog",
       "messageLabel": "Announcement Message",
       "messagePlaceholder": "Enter announcement message...",
       "messageRequired": "Announcement message is required.",
@@ -1553,143 +1556,50 @@
       "priorityHint": "Higher priority announcements appear first in the scrolling bar.",
       "cancel": "Cancel",
       "submit": "Create Announcement",
-      "links": {
-        "none": "No Link",
-        "competitions": "Competitions",
-        "gallery": "Gallery",
-        "winners": "Winners"
-      }
+      "editTitle": "Edit Announcement",
+      "editSubtitle": "Update the announcement shown above the website navigation.",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "loadError": "Could not load this announcement.",
+      "linkPlaceholder": "https://… or /competitions (optional)",
+      "startDateRequired": "Start date is required.",
+      "endDateRequired": "End date is required.",
+      "endDateBeforeStart": "End date cannot be before the start date."
     },
-    "rows": {
-      "mayWinners": {
-        "title": "May 2026 Winners Announced",
-        "start": "May 1, 2026",
-        "end": "Jun 30, 2026"
-      },
-      "juneCompetition": {
-        "title": "June Competition Now Open",
-        "start": "Jun 1, 2026",
-        "end": "Jul 31, 2026"
-      },
-      "prizePool": {
-        "title": "Prize Pool Increased to $500",
-        "start": "Jul 1, 2026",
-        "end": "Aug 31, 2026"
-      },
-      "maintenance": {
-        "title": "Platform Maintenance Notice",
-        "start": "Jun 15, 2026",
-        "end": "Jun 16, 2026"
-      },
-      "deadline": {
-        "title": "Important: Submission Deadline Extended",
-        "start": "Jun 10, 2026",
-        "end": "Jun 20, 2026"
-      },
-      "summerGallery": {
-        "title": "Summer Gallery Collection Live",
-        "start": "May 10, 2026",
-        "end": "May 31, 2026"
-      },
-      "aprilWinners": {
-        "title": "April 2026 Winners Announced",
-        "start": "Apr 1, 2026",
-        "end": "Apr 30, 2026"
-      },
-      "julyCompetition": {
-        "title": "July Competition Preview",
-        "start": "Jul 1, 2026",
-        "end": "Aug 15, 2026"
-      },
-      "premiumLaunch": {
-        "title": "Premium Photos Launch Offer",
-        "start": "Mar 1, 2026",
-        "end": "Mar 31, 2026"
-      },
-      "newsletter": {
-        "title": "Newsletter Signup Reminder",
-        "start": "Feb 1, 2026",
-        "end": "Feb 28, 2026"
-      },
-      "policyUpdate": {
-        "title": "Privacy Policy Update",
-        "start": "Jan 5, 2026",
-        "end": "Jan 20, 2026"
-      },
-      "goldenHour": {
-        "title": "Golden Hour Challenge Open",
-        "start": "Dec 1, 2025",
-        "end": "Dec 31, 2025"
-      },
-      "referral": {
-        "title": "Refer a Friend Bonus",
-        "start": "Nov 1, 2025",
-        "end": "Nov 30, 2025"
-      },
-      "calendar": {
-        "title": "2026 Competition Calendar",
-        "start": "Oct 1, 2025",
-        "end": "Oct 31, 2025"
-      },
-      "marchWinners": {
-        "title": "March 2026 Winners Announced",
-        "start": "Mar 1, 2026",
-        "end": "Mar 31, 2026"
-      },
-      "featureLaunch": {
-        "title": "New Gallery Features Live",
-        "start": "Sep 1, 2025",
-        "end": "Sep 30, 2025"
-      },
-      "community": {
-        "title": "Community Spotlight Week",
-        "start": "Aug 1, 2025",
-        "end": "Aug 31, 2025"
-      },
-      "votingReminder": {
-        "title": "Voting Ends in 48 Hours",
-        "start": "Jul 10, 2025",
-        "end": "Jul 12, 2025"
-      },
-      "seascape": {
-        "title": "Seascape Competition Open",
-        "start": "Jun 1, 2025",
-        "end": "Jun 30, 2025"
-      },
-      "spotlight": {
-        "title": "Photographer Spotlight Series",
-        "start": "May 1, 2025",
-        "end": "May 31, 2025"
-      },
-      "submissionTips": {
-        "title": "Submission Tips & Guidelines",
-        "start": "Apr 1, 2025",
-        "end": "Apr 30, 2025"
-      },
-      "anniversary": {
-        "title": "My12Photos Anniversary Celebration",
-        "start": "Mar 1, 2025",
-        "end": "Mar 15, 2025"
-      },
-      "tools": {
-        "title": "New Admin Tools Available",
-        "start": "Feb 1, 2025",
-        "end": "Feb 28, 2025"
-      },
-      "flashSale": {
-        "title": "Flash Sale on Premium Albums",
-        "start": "Jan 1, 2025",
-        "end": "Jan 7, 2025"
-      }
+    "retry": "Retry",
+    "loadError": "Could not load announcements.",
+    "toast": {
+      "created": "Announcement created.",
+      "createError": "Could not create the announcement.",
+      "updated": "Announcement updated.",
+      "updateError": "Could not update the announcement.",
+      "activated": "Announcement activated.",
+      "deactivated": "Announcement deactivated.",
+      "deleted": "Announcement deleted.",
+      "deleteError": "Could not delete the announcement."
+    },
+    "confirmDelete": {
+      "title": "Delete this announcement?",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
     }
   },
   "adminNewsletter": {
     "title": "Newsletter",
     "subtitle": "Manage newsletter subscribers and email campaigns.",
     "tableAria": "Newsletter subscribers",
+    "empty": "No subscribers yet.",
+    "retry": "Try again",
+    "loadError": "Could not load newsletter subscribers.",
     "columns": {
       "email": "Email",
       "subscribedDate": "Subscribed Date"
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "aria": "Subscribers pagination",
+      "previous": "Previous",
+      "next": "Next"
     },
     "composer": {
       "title": "Email Composer",
@@ -1718,7 +1628,8 @@
       "validationError": "Please fill in the required fields.",
       "subjectRequired": "Subject is required.",
       "contentRequired": "Content is required.",
-      "recipientsRequired": "Select at least one subscriber."
+      "recipientsRequired": "Select at least one subscriber.",
+      "error": "Could not send the newsletter."
     },
     "recipients": {
       "title": "Recipients",
@@ -1728,7 +1639,8 @@
       "selectSubscriber": "Select {{email}}",
       "everyone": {
         "title": "Send to Everyone",
-        "subtitle": "All 18,420 subscribers"
+        "subtitle_one": "{{count}} subscriber",
+        "subtitle_other": "All {{count}} subscribers"
       },
       "selected": {
         "title": "Send to Selected Users",
@@ -1737,7 +1649,8 @@
       "new": {
         "title": "Send to New Subscribers",
         "subtitle": "Joined in the last 7 days"
-      }
+      },
+      "comingSoon": "Coming soon"
     }
   },
   "adminSupport": {

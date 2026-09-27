@@ -3,6 +3,14 @@ import { useTranslation } from 'react-i18next';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { ROUTES } from '@/shared/config';
@@ -130,40 +138,43 @@ const LeaderboardStandings = memo(() => {
       </div>
 
       <div className="hidden overflow-x-auto rounded-2xl border border-black/20 bg-white md:block">
-        <table className="w-full min-w-160 table-fixed border-collapse text-left">
-          <thead>
-            <tr className="border-b border-black/20 bg-[#f7f8fa] text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
-              <th className="w-1/5 px-6 py-4 font-extrabold">
+        <Table className="w-full min-w-160 table-fixed">
+          <TableHeader>
+            <TableRow
+              isHeader
+              className="border-b border-black/20 bg-[#f7f8fa]"
+            >
+              <TableHead className="w-1/5 text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
                 {t('common.rank')}
-              </th>
-              <th className="w-1/5 px-6 py-4 font-extrabold">
+              </TableHead>
+              <TableHead className="w-1/5 text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
                 {t('common.photographer')}
-              </th>
-              <th className="w-1/5 px-6 py-4 font-extrabold">
+              </TableHead>
+              <TableHead className="w-1/5 text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
                 {t('common.city')}
-              </th>
-              <th className="w-1/5 px-6 py-4 font-extrabold">
+              </TableHead>
+              <TableHead className="w-1/5 text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
                 {t('common.votes')}
-              </th>
-              <th className="w-1/5 px-6 py-4 font-extrabold">
+              </TableHead>
+              <TableHead className="w-1/5 text-[10px] font-extrabold uppercase tracking-[1px] text-[#6b7280]">
                 {t('common.points')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {LEADERBOARD_ROWS.map((row) => (
-              <tr
+              <TableRow
                 key={row.name}
                 className="border-b border-black/20 last:border-b-0"
               >
-                <td
-                  className={`px-6 py-5 text-[16px] font-extrabold ${
+                <TableCell
+                  className={`text-[16px] font-extrabold ${
                     row.rank.length <= 1 ? 'text-[#6b7280]' : 'text-[#e31837]'
                   }`}
                 >
                   {row.rank}
-                </td>
-                <td className="px-6 py-5">
+                </TableCell>
+                <TableCell>
                   <div className="flex min-w-0 items-center gap-3">
                     {row.avatar ? (
                       <Image
@@ -182,20 +193,20 @@ const LeaderboardStandings = memo(() => {
                       {row.name}
                     </span>
                   </div>
-                </td>
-                <td className="px-6 py-5 text-[14px] text-[#6b7280]">
+                </TableCell>
+                <TableCell className="text-[14px] text-[#6b7280]">
                   {t(`common.cities.${row.cityKey}`)}
-                </td>
-                <td className="px-6 py-5 text-[14px] font-extrabold text-[#0d0d14]">
+                </TableCell>
+                <TableCell className="text-[14px] font-extrabold text-[#0d0d14]">
                   {row.votes}
-                </td>
-                <td className="px-6 py-5 text-[14px] text-[#6b7280]">
+                </TableCell>
+                <TableCell className="text-[14px] text-[#6b7280]">
                   {row.points}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </>
   );
