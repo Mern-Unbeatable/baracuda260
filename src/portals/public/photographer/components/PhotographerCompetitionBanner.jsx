@@ -1,12 +1,11 @@
 import { ChevronLeft, ChevronRight, Heart, Trophy } from 'lucide-react';
 import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { selectUser } from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
-
-import { useSelector } from 'react-redux';
-import { selectUser } from '@/app/store/slices/authSlice';
 
 const PhotographerCompetitionBanner = memo(
   ({ featured, photographerName, userId }) => {
@@ -44,7 +43,7 @@ const PhotographerCompetitionBanner = memo(
               type="button"
               aria-label={t('photographerProfile.featured.previous')}
               onClick={() => go(-1)}
-              className="absolute -left-2 top-1/2 z-10 hidden size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-[#111827] shadow-md sm:inline-flex lg:-left-5"
+              className="absolute -left-2 top-1/2 z-10 inline-flex size-9 -translate-y-1/2 cursor-pointer select-none items-center justify-center rounded-full bg-white text-[#111827] shadow-md transition hover:scale-105 hover:shadow-lg sm:size-10 lg:-left-5"
             >
               <ChevronLeft size={20} aria-hidden="true" />
             </Button>
@@ -53,7 +52,7 @@ const PhotographerCompetitionBanner = memo(
               type="button"
               aria-label={t('photographerProfile.featured.next')}
               onClick={() => go(1)}
-              className="absolute -right-2 top-1/2 z-10 hidden size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-[#111827] shadow-md sm:inline-flex lg:-right-5"
+              className="absolute -right-2 top-1/2 z-10 inline-flex size-9 -translate-y-1/2 cursor-pointer select-none items-center justify-center rounded-full bg-white text-[#111827] shadow-md transition hover:scale-105 hover:shadow-lg sm:size-10 lg:-right-5"
             >
               <ChevronRight size={20} aria-hidden="true" />
             </Button>

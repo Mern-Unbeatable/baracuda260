@@ -3,8 +3,9 @@ import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
-import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
 import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
+import MemberArtworkCard from '@/components/data-display/MemberArtworkCard/MemberArtworkCard';
+import CreateSlideshowButton from '@/components/data-display/Slideshow/CreateSlideshowButton';
 import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
 import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
 import MemberFilterSelect from '@/portals/member/components/member-artwork/MemberFilterSelect';
@@ -68,13 +69,16 @@ const MyArtworkContent = memo(() => {
             {t('myArtwork.subtitle')}
           </p>
         </div>
-        <Link
-          to={ROUTES.USER_MY_ARTWORK_UPLOAD}
-          className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-5 py-2.5 text-[16px] leading-6 text-white shadow-sm transition hover:bg-[#d41921]"
-        >
-          <Plus size={16} strokeWidth={2} aria-hidden="true" />
-          {t('myArtwork.uploadCta')}
-        </Link>
+        <div className="flex shrink-0 flex-wrap items-center gap-3">
+          <CreateSlideshowButton className="rounded-xl border border-[#c7cbf2] bg-white px-5 py-2.5 text-[16px] leading-6 text-[#4048cd] shadow-sm hover:bg-[#f5f6ff]" />
+          <Link
+            to={ROUTES.USER_MY_ARTWORK_UPLOAD}
+            className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-5 py-2.5 text-[16px] leading-6 text-white shadow-sm transition hover:bg-[#d41921]"
+          >
+            <Plus size={16} strokeWidth={2} aria-hidden="true" />
+            {t('myArtwork.uploadCta')}
+          </Link>
+        </div>
       </header>
 
       <section

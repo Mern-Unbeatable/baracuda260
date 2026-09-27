@@ -1,9 +1,10 @@
-import React, { memo, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
 import Dropzone from '@/components/ui/Dropzone';
-import { Eye, EyeOff } from 'lucide-react';
+import Input from '@/components/ui/Input';
+import AuthPageChrome from '@/portals/auth/components/auth/auth/AuthPageChrome';
 import { ROUTES } from '@/shared/config';
 import { useSignUp } from '../hooks/useSignUp';
 
@@ -23,6 +24,17 @@ const SignUpContent = memo(() => {
     EMAIL_REGEX,
   } = useSignUp();
 
+  const errorAlertRef = useRef(null);
+
+  useEffect(() => {
+    if (globalError) {
+      errorAlertRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [globalError]);
+
   const fieldClass = (hasError) =>
     `h-[52px] w-full rounded-md bg-[#eef0f7] px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:ring-2 focus:ring-[#ee1c25]/25 sm:h-[56px] ${
       hasError ? 'ring-2 ring-red-400' : ''
@@ -32,7 +44,9 @@ const SignUpContent = memo(() => {
     'block text-[14px] font-semibold leading-5 text-[#373737] mb-2';
 
   return (
-    <div className="flex min-h-dvh w-full items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative flex min-h-dvh w-full items-center justify-center bg-white px-4 pb-12 pt-20 sm:px-6 sm:pt-24 lg:px-8">
+      <AuthPageChrome backLabelKey="signup.backToLogin" backTo={ROUTES.LOGIN} />
+
       <div className="w-full max-w-5xl">
         <header className="mb-10 text-left">
           <h2 className="text-[32px] font-bold tracking-tight text-[#111827] sm:text-[40px]">
@@ -42,10 +56,19 @@ const SignUpContent = memo(() => {
 
         {globalError ? (
           <div
+            ref={errorAlertRef}
             role="alert"
             className="mb-8 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
           >
-            {globalError}
+            {globalError.includes('\n') ? (
+              <ul className="list-disc space-y-1 pl-5">
+                {globalError.split('\n').map((message) => (
+                  <li key={message}>{message}</li>
+                ))}
+              </ul>
+            ) : (
+              globalError
+            )}
           </div>
         ) : null}
 
@@ -179,7 +202,9 @@ const SignUpContent = memo(() => {
               placeholder="https://instagram.com/username"
               error={errors.socialLink}
               aria-invalid={Boolean(errors.socialLink)}
-              inputClassName="h-[52px] w-full rounded-md border border-[#e5e7eb] bg-white px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:border-[#ee1c25] focus:ring-1 focus:ring-[#ee1c25]"
+              inputClassName={`h-[52px] w-full rounded-md border bg-white px-[14px] text-[14px] leading-5 text-[#0c0c0c] placeholder:text-[#8c8c8c] outline-none transition focus:border-[#ee1c25] focus:ring-1 focus:ring-[#ee1c25] ${
+                errors.socialLink ? 'border-red-400' : 'border-[#e5e7eb]'
+              }`}
               labelClassName={labelClass}
               {...register('socialLink')}
             />
@@ -201,8 +226,19 @@ const SignUpContent = memo(() => {
                 sublabel="JPG, PNG or WebP • 400x400px"
                 accept="image/jpeg, image/png, image/webp"
                 className="h-32"
-                {...register('profilePhoto')}
+                previewClassName="aspect-square w-40"
+                error={errors.profilePhoto}
+                aria-invalid={Boolean(errors.profilePhoto)}
+                {...register('profilePhoto', {
+                  validate: (files) =>
+                    files?.length > 0 || 'Profile Photo is required',
+                })}
               />
+              {errors.profilePhoto && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.profilePhoto.message}
+                </p>
+              )}
             </div>
             <div>
               <label className={labelClass}>Cover Photo</label>
@@ -212,8 +248,19 @@ const SignUpContent = memo(() => {
                 sublabel="JPG, PNG or WebP • 1600x600px"
                 accept="image/jpeg, image/png, image/webp"
                 className="h-32"
-                {...register('coverPhoto')}
+                previewClassName="aspect-[8/3] w-full"
+                error={errors.coverPhoto}
+                aria-invalid={Boolean(errors.coverPhoto)}
+                {...register('coverPhoto', {
+                  validate: (files) =>
+                    files?.length > 0 || 'Cover Photo is required',
+                })}
               />
+              {errors.coverPhoto && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.coverPhoto.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -226,8 +273,19 @@ const SignUpContent = memo(() => {
               sublabel="MP4 • maximum 3 minute video"
               accept="video/mp4"
               className="h-40"
-              {...register('video')}
+              previewClassName="aspect-video max-h-80 w-full"
+              error={errors.video}
+              aria-invalid={Boolean(errors.video)}
+              {...register('video', {
+                validate: (files) =>
+                  files?.length > 0 || 'Introduction Video is required',
+              })}
             />
+            {errors.video && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.video.message}
+              </p>
+            )}
           </div>
 
           {/* Password */}

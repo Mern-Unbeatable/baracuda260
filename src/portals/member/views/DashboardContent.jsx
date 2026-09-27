@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
+import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
+import CreateSlideshowButton from '@/components/data-display/Slideshow/CreateSlideshowButton';
 import Image from '@/components/ui/Image';
 import AdminOverviewContent from '@/portals/admin/views/AdminOverviewContent';
 import {
@@ -21,8 +23,6 @@ import {
 } from '@/portals/member/data/dashboardAssets';
 import { ROUTES } from '@/shared/config';
 import { isAdminRole } from '@/shared/utils/roles';
-
-import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
 
 const BADGE_TONES = {
   gold: 'bg-[#ffddb8] text-[#2a1700]',
@@ -142,7 +142,7 @@ const UserDashboardView = memo(() => {
           <p className="max-w-xl text-[15px] leading-normal text-white/70 sm:text-[18px] lg:text-[20px]">
             {t('dashboard.welcomeBody')}
           </p>
-          <div className="pt-3 sm:pt-4">
+          <div className="flex flex-wrap items-center gap-3 pt-3 sm:pt-4">
             <Link
               to={ROUTES.USER_MY_ARTWORK_UPLOAD}
               className="inline-flex items-center gap-2 rounded-full bg-[#ee1c25] px-6 py-3 text-[13px] font-semibold tracking-[0.28px] text-white transition hover:bg-[#d41921] sm:px-8 sm:text-[14px]"
@@ -150,6 +150,7 @@ const UserDashboardView = memo(() => {
               <Camera size={18} aria-hidden="true" />
               {t('dashboard.uploadCta')}
             </Link>
+            <CreateSlideshowButton className="rounded-full border border-white/30 bg-white/10 px-6 py-3 text-[13px] font-semibold tracking-[0.28px] text-white backdrop-blur-sm hover:bg-white/20 sm:px-8 sm:text-[14px]" />
           </div>
         </div>
       </section>

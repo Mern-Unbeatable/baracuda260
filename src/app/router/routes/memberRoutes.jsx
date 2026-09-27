@@ -1,5 +1,5 @@
 import React, { lazy } from 'react';
-import { Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import { ROUTES } from '@/shared/config';
 
 const seg = (route) => route.replace(`${ROUTES.USER}/`, '');
@@ -94,14 +94,33 @@ const ProfileMainContent = lazy(
   () => import('@/portals/member/views/ProfileMainContent'),
 );
 
-
-const BusinessPhotos = lazy(() => import('@/portals/admin/pages/BusinessPhotos'));
-const BusinessLinkDetails = lazy(() => import('@/portals/admin/pages/BusinessLinkDetails'));
+const BusinessPhotos = lazy(
+  () => import('@/portals/admin/pages/BusinessPhotos'),
+);
+const BusinessLinkDetails = lazy(
+  () => import('@/portals/admin/pages/BusinessLinkDetails'),
+);
 const SettingsRoute = lazy(() => import('@/portals/admin/pages/SettingsRoute'));
 
 export const memberRoutes = (
   <>
     <Route path={seg(ROUTES.USER_DASHBOARD)} element={<Dashboard />} />
+    <Route
+      path={seg(ROUTES.USER_UPLOAD_PHOTOS)}
+      element={<Navigate to={ROUTES.USER_MY_ARTWORK_UPLOAD} replace />}
+    />
+    <Route
+      path={seg(ROUTES.USER_UPLOAD_SINGLE)}
+      element={<Navigate to={ROUTES.USER_MY_ARTWORK_UPLOAD_SINGLE} replace />}
+    />
+    <Route
+      path={seg(ROUTES.USER_UPLOAD_SIX)}
+      element={<Navigate to={ROUTES.USER_MY_ARTWORK_UPLOAD_SIX} replace />}
+    />
+    <Route
+      path={seg(ROUTES.USER_UPLOAD_ZODIAC12)}
+      element={<Navigate to={ROUTES.USER_MY_ARTWORK_UPLOAD_ZODIAC12} replace />}
+    />
     <Route path={seg(ROUTES.USER_MY_ARTWORK)} element={<MyArtwork />}>
       <Route index element={<MyArtworkContent />} />
       <Route path="upload" element={<MyArtworkUploadHub />} />
@@ -156,10 +175,7 @@ export const memberRoutes = (
     />
     <Route path={seg(ROUTES.USER_CHAT)} element={<Chat />} />
     <Route path={seg(ROUTES.USER_NOTIFICATIONS)} element={<Notifications />} />
-    <Route
-      path={seg(ROUTES.USER_PRIZE_PAYMENTS)}
-      element={<PrizePayments />}
-    />
+    <Route path={seg(ROUTES.USER_PRIZE_PAYMENTS)} element={<PrizePayments />} />
     <Route path={seg(ROUTES.USER_CONTACT_US)} element={<ContactUs />} />
     <Route path={seg(ROUTES.USER_PROFILE)} element={<Profile />}>
       <Route index element={<ProfileMainContent />} />
@@ -167,9 +183,15 @@ export const memberRoutes = (
       <Route path="followers" element={<ProfileFollowers />} />
       <Route path="settings" element={<ProfileSettings />} />
     </Route>
-  
-    <Route path={seg(ROUTES.USER_BUSINESS_PHOTOS)} element={<BusinessPhotos />} />
-    <Route path={seg(ROUTES.USER_BUSINESS_PHOTOS_DETAIL)} element={<BusinessLinkDetails />} />
+
+    <Route
+      path={seg(ROUTES.USER_BUSINESS_PHOTOS)}
+      element={<BusinessPhotos />}
+    />
+    <Route
+      path={seg(ROUTES.USER_BUSINESS_PHOTOS_DETAIL)}
+      element={<BusinessLinkDetails />}
+    />
     <Route path={seg(ROUTES.USER_SETTINGS)} element={<SettingsRoute />} />
   </>
 );

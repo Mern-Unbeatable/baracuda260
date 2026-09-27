@@ -28,6 +28,45 @@
   }
 }
 
+/* ── Slideshow player ────────────────────────────────────────────────────── */
+/* The progress bar doubles as the slide timer (its animationend advances the slide). */
+@keyframes slideshow-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes slideshow-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.slideshow-progress {
+  transform-origin: left center;
+  animation-name: slideshow-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.slideshow-kenburns {
+  animation-name: slideshow-kenburns;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slideshow-kenburns {
+    animation: none;
+  }
+}
+
 @layer utilities {
   .animate-nav-arrow {
     animation: nav-arrow 1.2s ease-in-out infinite;

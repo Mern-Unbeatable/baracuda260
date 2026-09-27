@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
 import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
@@ -9,6 +9,7 @@ import PhotographerFeaturedVideo from '@/portals/public/photographer/components/
 import PhotographerMessagesSection from '@/portals/public/photographer/components/PhotographerMessagesSection';
 import PhotographerProfileTabs from '@/portals/public/photographer/components/PhotographerProfileTabs';
 import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
+import PhotographerSlideshowsSection from '@/portals/public/photographer/components/PhotographerSlideshowsSection';
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
 import {
@@ -21,11 +22,17 @@ import {
   PHOTOGRAPHER_STORE_PRODUCTS,
   PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
+import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 
 const PhotographerProfileMain = memo(() => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState(location.state?.tab || 'profile');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(
+    () =>
+      location.state?.tab ||
+      (searchParams.has(SLIDESHOW_SEARCH_PARAM) ? 'artwork' : 'profile'),
+  );
 
   return (
     <SitePageLayout
@@ -56,6 +63,9 @@ const PhotographerProfileMain = memo(() => {
           {activeTab === 'artwork' ? (
             <>
               <PhotographerCompetitionBanner featured={PHOTOGRAPHER_FEATURED} />
+              <PhotographerSlideshowsSection
+                ownerName={PHOTOGRAPHER_PROFILE.name}
+              />
               <PhotographerArtworkGrid
                 titleKey="photographerProfile.artwork.title"
                 subtitleKey="photographerProfile.artwork.subtitle"
