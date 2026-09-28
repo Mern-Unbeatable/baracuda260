@@ -11,6 +11,7 @@ import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import Button from '@/components/ui/Button';
 import { SLIDESHOW_SLIDE_MS } from '@/shared/data/slideshows';
 
@@ -258,12 +259,15 @@ const SlideshowPlayer = memo(({ slideshow, ownerName, onClose }) => {
             <h2 className="truncate text-[16px] font-semibold leading-6 sm:text-[18px]">
               {slideshow.title}
             </h2>
-            <p className="truncate text-[13px] leading-5 text-white/70">
-              {ownerName
-                ? `${t('photographerProfile.slideshows.player.by', { name: ownerName })} · `
-                : ''}
-              {counter}
-            </p>
+            <div className="flex flex-wrap items-center gap-2 text-[13px] leading-5 text-white/70">
+              <span className="truncate">
+                {ownerName
+                  ? `${t('photographerProfile.slideshows.player.by', { name: ownerName })} · `
+                  : ''}
+                {counter}
+              </span>
+              <PhotographerAwardCounters size="sm" className="shrink-0" />
+            </div>
           </div>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
