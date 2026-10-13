@@ -5,8 +5,8 @@ import { PHOTOGRAPHER_TALENT_APPRECIATION } from '@/portals/public/photographer/
 
 const COUNTER_STYLES = {
   gold: {
-    badge: 'bg-[#fefce8] border-[#fef08a] text-[#854d0e]',
-    icon: 'text-[#ca8a04]',
+    badge: 'bg-gradient-to-r from-[#fef08a] via-[#fde047] to-[#facc15] border-[#eab308] text-[#713f12] shadow-xs',
+    icon: 'text-[#854d0e]',
     labelKey: 'photographerProfile.appreciation.tiers.gold',
     defaultLabel: 'Gold Camera',
   },
