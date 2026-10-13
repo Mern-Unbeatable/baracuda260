@@ -6,9 +6,9 @@ import { getDaysUntilNextSundayMidnight } from '@/shared/utils/weekReset';
 
 const TIER_STYLES = {
   gold: {
-    icon: 'text-[#ca8a04]',
-    iconBg: 'bg-[#fefce8] border border-[#fef08a]',
-    btn: 'bg-[#fef08a] text-[#854d0e] hover:bg-[#eab308] hover:text-white',
+    icon: 'text-[#854d0e]',
+    iconBg: 'bg-gradient-to-r from-[#fef08a] via-[#fde047] to-[#facc15] border border-[#eab308]',
+    btn: 'bg-gradient-to-r from-[#fde047] to-[#eab308] text-[#713f12] font-semibold hover:from-[#eab308] hover:to-[#ca8a04] hover:text-white',
     dot: 'bg-[#eab308]',
   },
   silver: {
