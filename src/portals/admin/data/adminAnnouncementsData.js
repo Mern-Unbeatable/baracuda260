@@ -293,11 +293,19 @@ export const isAnnouncementMessageValid = (value) => {
  */
 export const getAnnouncementFormValues = (announcement) => {
   if (!announcement) return EMPTY_ANNOUNCEMENT_FORM;
+  const rawLink = announcement.link;
+  const link =
+    typeof rawLink === 'string'
+      ? rawLink
+      : typeof rawLink === 'object' && rawLink !== null
+        ? rawLink.url || rawLink.text || ''
+        : '';
+
   return {
     message: announcement.message ?? '',
     icon: announcement.icon || EMPTY_ANNOUNCEMENT_FORM.icon,
     type: announcement.type || EMPTY_ANNOUNCEMENT_FORM.type,
-    link: announcement.link ?? '',
+    link,
     startDate: toDateInputValue(announcement.startDate),
     startTime: announcement.startTime ?? '',
     endDate: toDateInputValue(announcement.endDate),
@@ -310,17 +318,29 @@ export const getAnnouncementFormValues = (announcement) => {
 
 /**
  * @param {typeof EMPTY_ANNOUNCEMENT_FORM} values
- * @param {{ previousLink?: string | null }} [options]
+ * @param {{ previousLink?: string | object | null }} [options]
  */
 export const buildAnnouncementPayload = (values, { previousLink } = {}) => {
-  const link = String(values.link || '').trim();
+  const linkStr = String(values.link || '').trim();
   const noEndDate = Boolean(values.noEndDate);
+
+  let linkPayload;
+  if (!linkStr) {
+    linkPayload = previousLink ? null : undefined;
+  } else if (typeof previousLink === 'object' && previousLink !== null) {
+    linkPayload = {
+      url: linkStr,
+      text: previousLink.text || linkStr,
+    };
+  } else {
+    linkPayload = linkStr;
+  }
 
   return {
     message: values.message.trim(),
     icon: values.icon,
     type: values.type,
-    ...(link ? { link } : previousLink ? { link: null } : {}),
+    ...(linkPayload !== undefined ? { link: linkPayload } : {}),
     startDate: values.startDate,
     ...(values.startTime ? { startTime: values.startTime } : {}),
     ...(!noEndDate && {

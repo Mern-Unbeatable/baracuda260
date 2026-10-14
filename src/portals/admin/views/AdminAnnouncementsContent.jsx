@@ -200,28 +200,56 @@ const AnnouncementSchedule = memo(({ row, className = '' }) => {
 });
 AnnouncementSchedule.displayName = 'AnnouncementSchedule';
 
-const AnnouncementSummary = memo(({ row, wrap = false }) => (
-  <div className="flex min-w-0 items-start gap-2.5">
-    <span className="text-[18px] leading-none" aria-hidden="true">
-      {row.icon || '📢'}
-    </span>
-    <div className="min-w-0">
-      <p
-        className={`text-[13px] font-semibold leading-[19.5px] text-[#111827] ${
-          wrap ? '' : 'truncate'
-        }`}
-        title={row.message}
-      >
-        {row.message}
-      </p>
-      {row.link ? (
-        <p className="truncate pt-0.5 text-[11px] font-medium leading-[16.5px] text-[#4048cd]">
-          {row.link}
+const AnnouncementSummary = memo(({ row, wrap = false }) => {
+  const link = row?.link;
+  const linkText =
+    typeof link === 'string'
+      ? link
+      : typeof link === 'object' && link !== null
+        ? link.text || link.url || ''
+        : '';
+  const linkHref =
+    typeof link === 'string'
+      ? link
+      : typeof link === 'object' && link !== null
+        ? link.url || link.text || ''
+        : '';
+
+  return (
+    <div className="flex min-w-0 items-start gap-2.5">
+      <span className="text-[18px] leading-none" aria-hidden="true">
+        {typeof row.icon === 'string' ? row.icon : '📢'}
+      </span>
+      <div className="min-w-0">
+        <p
+          className={`text-[13px] font-semibold leading-[19.5px] text-[#111827] ${
+            wrap ? '' : 'truncate'
+          }`}
+          title={typeof row.message === 'string' ? row.message : ''}
+        >
+          {typeof row.message === 'string' ? row.message : String(row.message ?? '')}
         </p>
-      ) : null}
+        {linkText ? (
+          linkHref ? (
+            <a
+              href={linkHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block truncate pt-0.5 text-[11px] font-medium leading-[16.5px] text-[#4048cd] hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {linkText}
+            </a>
+          ) : (
+            <p className="truncate pt-0.5 text-[11px] font-medium leading-[16.5px] text-[#4048cd]">
+              {linkText}
+            </p>
+          )
+        ) : null}
+      </div>
     </div>
-  </div>
-));
+  );
+});
 AnnouncementSummary.displayName = 'AnnouncementSummary';
 
 const AnnouncementActionMenu = memo(

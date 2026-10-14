@@ -85,7 +85,7 @@ const Layout = memo(() => {
     currentPath.startsWith(`${normalizePath(ROUTES.USER_PROFILE)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS) ||
     currentPath === normalizePath(ROUTES.USER_BUSINESS_PHOTOS) ||
-    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS)}/`);
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS)}/`) ||
     currentPath.startsWith(`${normalizePath(ROUTES.USER_BUSINESS_PHOTOS)}/`);
 
   useEffect(() => {
