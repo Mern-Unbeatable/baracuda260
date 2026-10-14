@@ -59,8 +59,9 @@ export default function useAdminAnnouncements(
   });
 
   const rows = listQuery.data?.items ?? [];
-  const total = listQuery.data?.meta.total ?? 0;
-  const totalPages = Math.max(1, listQuery.data?.meta.totalPages ?? 1);
+  const meta = listQuery.data?.meta;
+  const total = meta?.total ?? 0;
+  const totalPages = Math.max(1, meta?.totalPages ?? 1);
 
   useEffect(() => {
     if (listQuery.data && page > totalPages) setPage(totalPages);
