@@ -36,7 +36,7 @@ const PhotographerTalentAppreciation = memo(
 
     const [awards, setAwards] = useState(appreciation.tiers);
     const [weekly, setWeekly] = useState(appreciation.weekly);
-    const [resetDays, setResetDays] = useState(() =>
+    const [resetDays] = useState(() =>
       getDaysUntilNextSundayMidnight(),
     );
 
@@ -63,14 +63,6 @@ const PhotographerTalentAppreciation = memo(
         ),
       );
       setWeekly((prev) => ({ ...prev, [tierId]: 0 }));
-    };
-
-    const simulateWeek = () => {
-      setWeekly({ gold: 1, silver: 1, bronze: 1 });
-      setAwards((prev) =>
-        prev.map((tier) => ({ ...tier, awardedThisWeek: false })),
-      );
-      setResetDays(getDaysUntilNextSundayMidnight());
     };
 
     return (
@@ -152,39 +144,29 @@ const PhotographerTalentAppreciation = memo(
             })}
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 rounded-xl bg-[#f3f4f6] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <p className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#6b7280]">
-                <CalendarDays size={14} aria-hidden="true" />
-                {t('photographerProfile.appreciation.resetIn', {
-                  days: resetDays,
-                })}
-              </p>
-              <p className="text-[11px] font-bold tracking-widest text-[#9ca3af]">
-                {t('photographerProfile.appreciation.weeklyLabel')}
-              </p>
-              {['gold', 'silver', 'bronze'].map((id) => (
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl bg-[#f3f4f6] px-4 py-3">
+            <p className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#6b7280]">
+              <CalendarDays size={14} aria-hidden="true" />
+              {t('photographerProfile.appreciation.resetIn', {
+                days: resetDays,
+              })}
+            </p>
+            <p className="text-[11px] font-bold tracking-widest text-[#9ca3af]">
+              {t('photographerProfile.appreciation.weeklyLabel')}
+            </p>
+            {['gold', 'silver', 'bronze'].map((id) => (
+              <span
+                key={id}
+                className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#374151]"
+              >
                 <span
-                  key={id}
-                  className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#374151]"
-                >
-                  <span
-                    className={`size-2 rounded-full ${TIER_STYLES[id].dot}`}
-                    aria-hidden="true"
-                  />
-                  {t(`photographerProfile.appreciation.tiers.${id}`)}{' '}
-                  <span className="text-[#9ca3af]">{weekly[id]}/1</span>
-                </span>
-              ))}
-            </div>
-            <Button
-              unstyled
-              type="button"
-              onClick={simulateWeek}
-              className="cursor-pointer text-[12px] font-semibold text-[#4048cd] transition hover:underline"
-            >
-              {t('photographerProfile.appreciation.simulate')}
-            </Button>
+                  className={`size-2 rounded-full ${TIER_STYLES[id].dot}`}
+                  aria-hidden="true"
+                />
+                {t(`photographerProfile.appreciation.tiers.${id}`)}{' '}
+                <span className="text-[#9ca3af]">{weekly[id]}/1</span>
+              </span>
+            ))}
           </div>
         </div>
       </section>
