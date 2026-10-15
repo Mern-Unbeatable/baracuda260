@@ -19,12 +19,13 @@ import {
  *   open: boolean,
  *   mode: 'compose' | 'published' | null,
  *   ticket: object | null,
+ *   isSubmitting?: boolean,
  *   onClose: () => void,
  *   onPublish: (answer: string) => void,
  * }} props
  */
 const AnswerPublishModal = memo(
-  ({ open, mode, ticket, onClose, onPublish }) => {
+  ({ open, mode, ticket, isSubmitting = false, onClose, onPublish }) => {
     const { t } = useTranslation();
     const titleId = useId();
     const answerId = useId();
@@ -55,7 +56,11 @@ const AnswerPublishModal = memo(
     if (!open || !ticket || !mode) return null;
 
     const isCompose = mode === ANSWER_MODAL_MODE.COMPOSE;
-    const questionText = t(ticket.fullQuestionKey || ticket.previewKey);
+    const questionText =
+      ticket.message ||
+      ticket.title ||
+      (ticket.fullQuestionKey ? t(ticket.fullQuestionKey) : '') ||
+      (ticket.previewKey ? t(ticket.previewKey) : '');
     const publishedAnswer = getTicketAnswerText(ticket, t);
     const answerValid = answer.trim().length > 0;
     const showAnswerError = attempted && !answerValid;
@@ -81,7 +86,7 @@ const AnswerPublishModal = memo(
     const handlePublish = (event) => {
       event.preventDefault();
       setAttempted(true);
-      if (!answerValid) return;
+      if (!answerValid || isSubmitting) return;
       onPublish(answer.trim());
     };
 
@@ -127,6 +132,27 @@ const AnswerPublishModal = memo(
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 sm:px-10 sm:py-16 lg:px-16">
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
+              {/* User details if present */}
+              {ticket.user || ticket.name || ticket.email ? (
+                <div className="flex items-center gap-3 rounded-xl border border-[#eeeef0] bg-[#f9fafb] p-3 text-xs text-[#6b7280]">
+                  {ticket.user?.avatar || ticket.avatar ? (
+                    <img
+                      src={ticket.user?.avatar || ticket.avatar}
+                      alt={ticket.user?.name || ticket.name || 'User'}
+                      className="size-9 rounded-full object-cover"
+                    />
+                  ) : null}
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-[#111827]">
+                      {ticket.user?.name || ticket.name}
+                    </span>
+                    <span className="text-[#6b7280]">
+                      {ticket.user?.email || ticket.email}
+                    </span>
+                  </div>
+                </div>
+              ) : null}
+
               <div className="flex items-center gap-3">
                 <Image
                   src={ADMIN_SUPPORT_ASSETS.questionBadge}
@@ -143,6 +169,33 @@ const AnswerPublishModal = memo(
               <blockquote className="rounded-xl border-l-4 border-[#3a42bb] bg-[#f3f3f5] py-6 pl-7 pr-6 text-[15px] italic leading-6 text-[#4a454f] sm:text-[16px]">
                 &ldquo;{questionText}&rdquo;
               </blockquote>
+
+              {/* Attachments if any */}
+              {Array.isArray(ticket.attachments) &&
+              ticket.attachments.length > 0 ? (
+                <div className="flex flex-col gap-2">
+                  <span className="text-[14px] font-medium text-[#4a454f]">
+                    Attachments:
+                  </span>
+                  <div className="flex flex-wrap gap-3">
+                    {ticket.attachments.map((url, idx) => (
+                      <a
+                        key={idx}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative block size-20 overflow-hidden rounded-lg border border-[#e5e7eb] shadow-sm transition hover:opacity-90"
+                      >
+                        <img
+                          src={url}
+                          alt={`Attachment ${idx + 1}`}
+                          className="size-full object-cover"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
               {isCompose ? (
                 <form
@@ -219,9 +272,12 @@ const AnswerPublishModal = memo(
                     <Button
                       unstyled
                       type="submit"
-                      className="inline-flex h-12.75 cursor-pointer items-center justify-center rounded-sm bg-[#ee1c25] px-6 text-[16px] font-medium leading-5 tracking-[0.14px] text-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition hover:bg-[#d41820] sm:px-10"
+                      disabled={isSubmitting}
+                      className="inline-flex h-12.75 cursor-pointer items-center justify-center rounded-sm bg-[#ee1c25] px-6 text-[16px] font-medium leading-5 tracking-[0.14px] text-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition hover:bg-[#d41820] disabled:cursor-not-allowed disabled:opacity-60 sm:px-10"
                     >
-                      {t('adminSupport.modal.publish')}
+                      {isSubmitting
+                        ? t('common.loading', 'Publishing...')
+                        : t('adminSupport.modal.publish')}
                     </Button>
                   </div>
                 </form>
@@ -231,7 +287,14 @@ const AnswerPublishModal = memo(
                     {t('adminSupport.modal.answerLabel')}
                   </p>
                   <blockquote className="rounded-xl border-l-4 border-[#d91922] bg-[#f3f3f5] py-6 pl-7 pr-6 text-[15px] italic leading-6 text-[#4a454f] sm:text-[16px]">
-                    &lsquo;{publishedAnswer}&rsquo;
+                    {/<[a-z][\s\S]*>/i.test(publishedAnswer) ? (
+                      <div
+                        className="prose prose-sm max-w-none not-italic text-[#4a454f] [&_p]:mb-2 [&_p:last-child]:mb-0"
+                        dangerouslySetInnerHTML={{ __html: publishedAnswer }}
+                      />
+                    ) : (
+                      <>&lsquo;{publishedAnswer}&rsquo;</>
+                    )}
                   </blockquote>
                   <div className="flex justify-end pt-2">
                     <Button

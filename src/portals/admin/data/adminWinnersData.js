@@ -40,7 +40,7 @@ export const ALBUM_FORMATS = [
   { id: 'zodiac', labelKey: 'adminWinners.formats.zodiac' },
 ];
 
-export const DEFAULT_ALBUM_FORMAT = 'six';
+export const DEFAULT_ALBUM_FORMAT = 'single';
 
 export const MONTH_OPTIONS = [
   { id: '2026-01', monthKey: 'adminWinners.months.january', year: 2026 },
@@ -57,7 +57,7 @@ export const MONTH_OPTIONS = [
   { id: '2026-12', monthKey: 'adminWinners.months.december', year: 2026 },
 ];
 
-export const DEFAULT_MONTH_ID = '2026-07';
+export const DEFAULT_MONTH_ID = '2026-09';
 
 /** Shared photographer rows for July 2026 (Figma 339:4188). */
 const JULY_SIX_WINNERS = [
@@ -164,12 +164,17 @@ export const getWinnersForFormat = (formatId) =>
  * @param {typeof JULY_SIX_WINNERS} winners
  */
 export const getPodiumWinners = (winners) => {
-  const byRank = (rank) =>
-    winners.find((winner) => winner.rank === rank) || null;
+  if (!Array.isArray(winners)) return { first: null, second: null, third: null };
+  const byRank = (rank, placeStr) =>
+    winners.find(
+      (winner) =>
+        winner.rank === rank ||
+        (winner.place && String(winner.place).toUpperCase() === placeStr),
+    ) || null;
   return {
-    second: byRank(2),
-    first: byRank(1),
-    third: byRank(3),
+    second: byRank(2, 'SECOND'),
+    first: byRank(1, 'FIRST'),
+    third: byRank(3, 'THIRD'),
   };
 };
 
