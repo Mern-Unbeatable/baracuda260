@@ -827,7 +827,8 @@
     "errors": {
       "cannotChangePaid": "Nie można zmienić statusu wypłaty, która została już OPŁACONA"
     },
-    "finalized": "Wypłata sfinalizowana",
+    "empty": "Nie znaleziono wniosków o wypłatę",
+    "loading": "Ładowanie wniosków o wypłatę...",
     "actions": {
       "menu": "Akcje",
       "menuAria": "Zmień status"

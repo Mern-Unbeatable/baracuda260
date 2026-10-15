@@ -823,7 +823,8 @@
     "errors": {
       "cannotChangePaid": "Cannot change status of a payout that has already been PAID"
     },
-    "finalized": "Payout finalized",
+    "empty": "No payout requests found",
+    "loading": "Loading payout requests...",
     "actions": {
       "menu": "Actions",
       "menuAria": "Change status"
@@ -1158,6 +1159,8 @@
     "title": "Reports & Moderation",
     "subtitle": "Review reported content and users, take appropriate action, and manage moderation cases. Keep the community safe and compliant with platform policies.",
     "tableAria": "Reports and moderation table",
+    "loading": "Loading reports...",
+    "loadingDetail": "Loading report details...",
     "empty": "No reports match this filter.",
     "reportCount": "{{count}} Reports",
     "columns": {
@@ -1327,6 +1330,7 @@
     "addComingSoon": "Add demo profile will be available soon.",
     "sortBy": "Sort By:",
     "tableAria": "Demo profiles table",
+    "loading": "Loading demo profiles...",
     "empty": "No demo profiles match this filter.",
     "stats": {
       "total": "Total Profiles",

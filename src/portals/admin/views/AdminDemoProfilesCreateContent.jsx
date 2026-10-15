@@ -7,15 +7,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import { useQueryClient } from '@tanstack/react-query';
 import {
-  appendDemoProfile,
-  buildDemoProfileFromForm,
   DEMO_PROFILE_BIO_MAX_LENGTH,
   DEMO_PROFILE_STATUS,
   STATUS_LABEL_KEYS,
   STATUS_STYLES,
 } from '@/portals/admin/data/adminDemoProfilesData';
-import { createDemoProfileApi } from '@/shared/api/demoProfiles.api';
+import {
+  createDemoProfileApi,
+  DEMO_PROFILES_QUERY_KEY,
+  DEMO_PROFILES_STATS_QUERY_KEY,
+} from '@/shared/api/demoProfiles.api';
 import { ROUTES } from '@/shared/config';
 
 const fieldLabelClass =
@@ -122,6 +125,7 @@ StatusToggle.displayName = 'StatusToggle';
 const AdminDemoProfilesCreateContent = memo(() => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const profilePhotoId = useId();
   const coverPhotoId = useId();
   const profilePhotoRef = useRef(null);
@@ -199,19 +203,16 @@ const AdminDemoProfilesCreateContent = memo(() => {
           profilePhoto: profilePhotoFile,
           coverPhoto: coverPhotoFile,
         });
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
+          queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
+        }, 500);
       } catch (apiErr) {
-        console.warn('createDemoProfileApi error, falling back to local store:', apiErr);
+        console.warn('createDemoProfileApi error:', apiErr);
       }
 
-      appendDemoProfile(
-        buildDemoProfileFromForm({
-          ...data,
-          isActive,
-          socialLinks: socialLinksStr,
-          profilePhotoName,
-          coverPhotoName,
-        }),
-      );
       toast.success(t('adminDemoProfiles.create.success'));
       navigate(ROUTES.ADMIN_DEMO_PROFILES);
     } finally {

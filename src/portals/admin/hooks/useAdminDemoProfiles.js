@@ -1,15 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  computeDemoProfileStats,
-  DEMO_PROFILES_PAGE_SIZE,
-  filterDemoProfilesByStatus,
-  getDemoProfileById,
-  getDemoProfilesStore,
-  paginateDemoProfiles,
-  setDemoProfilesStore,
-  updateDemoProfileStatus,
-} from '@/portals/admin/data/adminDemoProfilesData';
+import { DEMO_PROFILES_PAGE_SIZE } from '@/portals/admin/data/adminDemoProfilesData';
 import {
   DEMO_PROFILES_QUERY_KEY,
   DEMO_PROFILES_STATS_QUERY_KEY,
@@ -20,11 +11,10 @@ import {
 } from '@/shared/api/demoProfiles.api';
 
 export default function useAdminDemoProfiles(
-  initialProfiles = getDemoProfilesStore(),
+  _initialProfiles = [],
   pageSize = DEMO_PROFILES_PAGE_SIZE,
 ) {
   const queryClient = useQueryClient();
-  const [profiles, setProfiles] = useState(initialProfiles);
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [sortOpen, setSortOpen] = useState(false);
@@ -71,28 +61,20 @@ export default function useAdminDemoProfiles(
     retry: 1,
   });
 
-  // Fallback calculation for local mock data if API is loading or not present
-  const localFilteredProfiles = filterDemoProfilesByStatus(profiles, statusFilter);
-  const localTotalPages = Math.max(1, Math.ceil(localFilteredProfiles.length / pageSize));
-  const safePage = Math.min(page, remoteProfilesData?.meta?.totalPages || localTotalPages);
-
-  const visibleProfiles =
-    remoteProfilesData?.items ??
-    paginateDemoProfiles(localFilteredProfiles, safePage, pageSize);
-
+  const visibleProfiles = remoteProfilesData?.items ?? [];
   const resultsTotal =
-    remoteProfilesData?.meta?.totalRecords ?? localFilteredProfiles.length;
+    remoteProfilesData?.meta?.totalRecords ?? visibleProfiles.length;
   const totalPages =
-    remoteProfilesData?.meta?.totalPages ?? localTotalPages;
+    remoteProfilesData?.meta?.totalPages ??
+    Math.max(1, Math.ceil(resultsTotal / pageSize));
+  const safePage = Math.min(page, Math.max(1, totalPages));
 
   const resultsFrom =
     resultsTotal === 0 ? 0 : (safePage - 1) * pageSize + 1;
   const resultsTo = Math.min(safePage * pageSize, resultsTotal);
 
-  const stats = remoteStats ?? computeDemoProfileStats(profiles);
-
-  const localDetail = getDemoProfileById(profiles, detailProfileId);
-  const detailProfile = remoteDetail || localDetail;
+  const stats = remoteStats ?? { total: 0, active: 0, inactive: 0 };
+  const detailProfile = remoteDetail ?? null;
 
   const handleStatusFilterChange = (nextFilter) => {
     setStatusFilter(nextFilter || 'all');
@@ -127,14 +109,13 @@ export default function useAdminDemoProfiles(
       await updateDemoProfileStatusApi(profileId, nextStatus);
       queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
-    } catch {
-      // Gracefully fall back to local store
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
+      }, 500);
+    } catch (err) {
+      console.error('Failed to update demo profile status:', err);
     }
-    setProfiles((current) => {
-      const next = updateDemoProfileStatus(current, profileId, nextStatus);
-      setDemoProfilesStore(next);
-      return next;
-    });
     setOpenActionId(null);
   };
 
@@ -144,18 +125,13 @@ export default function useAdminDemoProfiles(
       await updateDemoProfileStatusApi(detailProfileId, 'inactive');
       queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
-    } catch {
-      // Gracefully fall back to local store
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
+      }, 500);
+    } catch (err) {
+      console.error('Failed to deactivate demo profile:', err);
     }
-    setProfiles((current) => {
-      const next = updateDemoProfileStatus(
-        current,
-        detailProfileId,
-        'inactive',
-      );
-      setDemoProfilesStore(next);
-      return next;
-    });
     setDetailProfileId(null);
   };
 
@@ -170,7 +146,7 @@ export default function useAdminDemoProfiles(
   };
 
   return {
-    profiles,
+    profiles: visibleProfiles,
     stats,
     statusFilter,
     sortOpen,

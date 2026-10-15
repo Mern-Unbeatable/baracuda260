@@ -100,135 +100,14 @@ export const DEMO_PROFILES_STAT_CARDS = [
   },
 ];
 
-export const DEMO_PROFILES = [
-  {
-    id: 'elena-vasquez',
-    nameKey: 'adminDemoProfiles.profiles.elena.name',
-    usernameKey: 'adminDemoProfiles.profiles.elena.username',
-    phone: '+1 555 201 3344',
-    email: 'elena@photocraft.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-forest.webp`,
-    avatar: `${D}/photographer.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.elena.about',
-    socialUrl: 'instagram.com/elenavasquez',
-  },
-  {
-    id: 'marcus-chen',
-    nameKey: 'adminDemoProfiles.profiles.marcus.name',
-    usernameKey: 'adminDemoProfiles.profiles.marcus.username',
-    phone: '+44 7700 900123',
-    email: 'marcus@studio.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-golden.webp`,
-    avatar: `${AV}/avatar-2.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.marcus.about',
-    socialUrl: 'instagram.com/marcuschen',
-  },
-  {
-    id: 'sofia-rodriguez',
-    nameKey: 'adminDemoProfiles.profiles.sofia.name',
-    usernameKey: 'adminDemoProfiles.profiles.sofia.username',
-    phone: '+34 612 345 678',
-    email: 'sofia@lens.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-morning.webp`,
-    avatar: `${AV}/avatar-3.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.sofia.about',
-    socialUrl: 'instagram.com/sofiarod',
-  },
-  {
-    id: 'james-okafor',
-    nameKey: 'adminDemoProfiles.profiles.james.name',
-    usernameKey: 'adminDemoProfiles.profiles.james.username',
-    phone: '+234 803 456 7890',
-    email: 'james@frame.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-city.webp`,
-    avatar: `${AV}/avatar-4.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.james.about',
-    socialUrl: 'instagram.com/jamesokafor',
-  },
-  {
-    id: 'priya-sharma',
-    nameKey: 'adminDemoProfiles.profiles.priya.name',
-    usernameKey: 'adminDemoProfiles.profiles.priya.username',
-    phone: '+91 98765 43210',
-    email: 'priya@capture.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-wings.webp`,
-    avatar: `${AV}/avatar-5.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.priya.about',
-    socialUrl: 'instagram.com/priyasharma',
-  },
-  {
-    id: 'liam-obrien',
-    nameKey: 'adminDemoProfiles.profiles.liam.name',
-    usernameKey: 'adminDemoProfiles.profiles.liam.username',
-    phone: '+353 87 123 4567',
-    email: 'liam@shot.io',
-    status: DEMO_PROFILE_STATUS.INACTIVE,
-    banner: `${H}/photo-harbor.webp`,
-    avatar: `${AV}/avatar-1.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.liam.about',
-    socialUrl: 'instagram.com/liamobrien',
-  },
-  {
-    id: 'yuki-tanaka',
-    nameKey: 'adminDemoProfiles.profiles.yuki.name',
-    usernameKey: 'adminDemoProfiles.profiles.yuki.username',
-    phone: '+81 90 1234 5678',
-    email: 'yuki@photo.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-tidal.webp`,
-    avatar: `${AV}/avatar-2.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.yuki.about',
-    socialUrl: 'instagram.com/yukitanaka',
-  },
-  {
-    id: 'amara-okonkwo',
-    nameKey: 'adminDemoProfiles.profiles.amara.name',
-    usernameKey: 'adminDemoProfiles.profiles.amara.username',
-    phone: '+234 802 987 6543',
-    email: 'amara@vision.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-silent.webp`,
-    avatar: `${AV}/avatar-3.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.amara.about',
-    socialUrl: 'instagram.com/amarao',
-  },
-  {
-    id: 'carlos-mendez',
-    nameKey: 'adminDemoProfiles.profiles.carlos.name',
-    usernameKey: 'adminDemoProfiles.profiles.carlos.username',
-    phone: '+52 55 1234 5678',
-    email: 'carlos@lens.io',
-    status: DEMO_PROFILE_STATUS.ACTIVE,
-    banner: `${H}/photo-zodiac.webp`,
-    avatar: `${AV}/avatar-4.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.carlos.about',
-    socialUrl: 'instagram.com/carlosm',
-  },
-  {
-    id: 'nina-kowalski',
-    nameKey: 'adminDemoProfiles.profiles.nina.name',
-    usernameKey: 'adminDemoProfiles.profiles.nina.username',
-    phone: '+48 600 123 456',
-    email: 'nina@foto.io',
-    status: DEMO_PROFILE_STATUS.INACTIVE,
-    banner: `${H}/photo-autumn.webp`,
-    avatar: `${AV}/avatar-5.webp`,
-    aboutKey: 'adminDemoProfiles.profiles.nina.about',
-    socialUrl: 'instagram.com/ninak',
-  },
-];
+export const DEMO_PROFILES = [];
 
-let demoProfilesStore = [...DEMO_PROFILES];
+let demoProfilesStore = [];
 
 export const getDemoProfilesStore = () => demoProfilesStore;
 
 export const resetDemoProfilesStore = () => {
-  demoProfilesStore = [...DEMO_PROFILES];
+  demoProfilesStore = [];
 };
 
 export const appendDemoProfile = (profile) => {
@@ -241,7 +120,7 @@ export const setDemoProfilesStore = (profiles) => {
   return demoProfilesStore;
 };
 
-export const DEMO_PROFILES_STATS = computeDemoProfileStats(DEMO_PROFILES);
+export const DEMO_PROFILES_STATS = { total: 0, active: 0, inactive: 0 };
 
 export const CHEVRON_ICON_SIZE = 24;
 export const MORE_ICON_SIZE = 20;

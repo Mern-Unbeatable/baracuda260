@@ -68,102 +68,33 @@ export const PAYOUT_TABS = [
   { id: 'store', labelKey: 'adminPayouts.tabs.store' },
 ];
 
-const SHARED_ROWS = [
-  {
-    id: 'row-1',
-    dateKey: 'adminPayouts.rows.r1.date',
-    typeKey: 'adminPayouts.columns.withdrawal',
-    accountTypeKey: 'adminPayouts.columns.paypal',
-    accountNumber: '(702) 555-0122',
-    amount: '$1,250.00',
-    status: PAYOUT_STATUS.APPROVED,
-  },
-  {
-    id: 'row-2',
-    dateKey: 'adminPayouts.rows.r2.date',
-    typeKey: 'adminPayouts.columns.withdrawal',
-    accountTypeKey: 'adminPayouts.columns.paypal',
-    accountNumber: '(406) 555-0120',
-    amount: '$1,250.00',
-    status: PAYOUT_STATUS.APPROVED,
-  },
-  {
-    id: 'row-3',
-    dateKey: 'adminPayouts.rows.r3.date',
-    typeKey: 'adminPayouts.columns.withdrawal',
-    accountTypeKey: 'adminPayouts.columns.paypal',
-    accountNumber: '(205) 555-0100',
-    amount: '$1,250.00',
-    status: PAYOUT_STATUS.APPROVED,
-  },
-  {
-    id: 'row-4',
-    dateKey: 'adminPayouts.rows.r4.date',
-    typeKey: 'adminPayouts.columns.withdrawal',
-    accountTypeKey: 'adminPayouts.columns.paypal',
-    accountNumber: '(229) 555-0109',
-    amount: '$1,250.00',
-    status: PAYOUT_STATUS.APPROVED,
-  },
-  {
-    id: 'row-5',
-    dateKey: 'adminPayouts.rows.r5.date',
-    typeKey: 'adminPayouts.columns.withdrawal',
-    accountTypeKey: 'adminPayouts.columns.paypal',
-    accountNumber: '(319) 555-0115',
-    amount: '$1,250.00',
-    status: PAYOUT_STATUS.APPROVED,
-  },
-  {
-    id: 'row-6',
-    dateKey: 'adminPayouts.rows.r6.date',
-    typeKey: 'adminPayouts.columns.withdrawal',
-    accountTypeKey: 'adminPayouts.columns.paypal',
-    accountNumber: '(317) 555-0113',
-    amount: '$1,250.00',
-    status: PAYOUT_STATUS.APPROVED,
-  },
-  {
-    id: 'row-7',
-    dateKey: 'adminPayouts.rows.r7.date',
-    typeKey: 'adminPayouts.columns.withdrawal',
-    accountTypeKey: 'adminPayouts.columns.paypal',
-    accountNumber: '(480) 555-0108',
-    amount: '$1,250.00',
-    status: PAYOUT_STATUS.APPROVED,
-  },
-];
-
-const prefixRows = (rows, prefix) =>
-  rows.map((r) => ({ ...r, id: `${prefix}-${r.id}` }));
-
 export const PAYOUT_SECTIONS = [
   {
     id: 'prize',
     titleKey: 'adminPayouts.sections.prize.title',
     subtitleKey: 'adminPayouts.sections.prize.subtitle',
     tabLabelKey: 'adminPayouts.tabs.prize',
-    rows: prefixRows(SHARED_ROWS, 'prize'),
+    rows: [],
   },
   {
     id: 'donation',
     titleKey: 'adminPayouts.sections.donation.title',
     subtitleKey: 'adminPayouts.sections.donation.subtitle',
     tabLabelKey: 'adminPayouts.tabs.donation',
-    rows: prefixRows(SHARED_ROWS, 'donation'),
+    rows: [],
   },
   {
     id: 'premium',
     titleKey: 'adminPayouts.sections.premium.title',
     subtitleKey: 'adminPayouts.sections.premium.subtitle',
     tabLabelKey: 'adminPayouts.tabs.premium',
-    rows: prefixRows(SHARED_ROWS, 'premium'),
+    rows: [],
   },
   {
     id: 'store',
     titleKey: 'adminPayouts.sections.store.title',
     subtitleKey: 'adminPayouts.sections.store.subtitle',
     tabLabelKey: 'adminPayouts.tabs.store',
-    rows: prefixRows(SHARED_ROWS, 'store'),
+    rows: [],
   },
 ];

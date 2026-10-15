@@ -497,10 +497,18 @@ const AdminPayoutsContent = memo(() => {
       <PayoutTabs activeTab={activeTab} onChange={handleTabChange} />
 
       <div className="overflow-hidden rounded-2xl border border-[#e8ebf1] bg-white shadow-[0px_4px_15px_0px_rgba(27,39,69,0.02)]">
-        {isLoading && activeSection.rows.length === 0 ? (
+        {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
             <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
-            <span className="text-sm font-medium">Loading payout requests...</span>
+            <span className="text-sm font-medium">
+              {t('adminPayouts.loading', 'Loading payout requests...')}
+            </span>
+          </div>
+        ) : activeSection.rows.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
+            <span className="text-sm font-medium">
+              {t('adminPayouts.empty', 'No payout requests found')}
+            </span>
           </div>
         ) : (
           <>

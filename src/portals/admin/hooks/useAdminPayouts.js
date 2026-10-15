@@ -14,13 +14,12 @@ import {
 } from '@/shared/api/payouts.api';
 
 export default function useAdminPayouts(
-  initialSections = PAYOUT_SECTIONS,
+  sections = PAYOUT_SECTIONS,
   pageSize = PAYOUTS_PAGE_SIZE,
 ) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [sections, setSections] = useState(initialSections);
-  const [activeTab, setActiveTab] = useState(initialSections[0]?.id || 'prize');
+  const [activeTab, setActiveTab] = useState(sections[0]?.id || 'prize');
   const [page, setPage] = useState(1);
   const [openActionId, setOpenActionId] = useState(null);
 
@@ -31,14 +30,14 @@ export default function useAdminPayouts(
     retry: 1,
   });
 
-  const localSection = useMemo(
+  const activeSectionMeta = useMemo(
     () => sections.find((section) => section.id === activeTab) || sections[0],
     [activeTab, sections],
   );
 
-  const rows = remoteData?.rows ?? localSection.rows;
+  const rows = remoteData?.rows ?? [];
   const meta = remoteData?.meta;
-  const totalRecords = meta?.totalRecords ?? localSection.rows.length;
+  const totalRecords = meta?.totalRecords ?? rows.length;
   const totalPages = meta?.totalPages ?? Math.max(1, Math.ceil(totalRecords / pageSize));
   const safePage = Math.min(page, totalPages);
 
@@ -46,9 +45,9 @@ export default function useAdminPayouts(
   const resultsTo = Math.min(safePage * pageSize, totalRecords);
 
   const activeSection = useMemo(() => ({
-    ...localSection,
+    ...activeSectionMeta,
     rows,
-  }), [localSection, rows]);
+  }), [activeSectionMeta, rows]);
 
   const statusMutation = useMutation({
     mutationFn: ({ id, status }) => updateAdminPayoutStatusApi(id, status),
@@ -73,16 +72,6 @@ export default function useAdminPayouts(
           ),
         };
       });
-
-      // Also update local section fallback
-      setSections((current) =>
-        current.map((section) => ({
-          ...section,
-          rows: section.rows.map((row) =>
-            row.id === id ? { ...row, status: normalized, rawStatus } : row,
-          ),
-        })),
-      );
 
       return { previousQueries, id, normalized, rawStatus };
     },

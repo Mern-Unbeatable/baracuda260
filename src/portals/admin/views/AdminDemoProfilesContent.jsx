@@ -522,10 +522,12 @@ const AdminDemoProfilesContent = memo(() => {
         aria-label={t('adminDemoProfiles.tableAria')}
         className="overflow-hidden rounded-[12px] bg-white"
       >
-        {isLoading && visibleProfiles.length === 0 ? (
+        {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
             <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
-            <span className="text-[14px] font-medium">Loading demo profiles...</span>
+            <span className="text-[14px] font-medium">
+              {t('adminDemoProfiles.loading', 'Loading demo profiles...')}
+            </span>
           </div>
         ) : visibleProfiles.length > 0 ? (
           isMdUp ? (
@@ -595,9 +597,11 @@ const AdminDemoProfilesContent = memo(() => {
             </div>
           )
         ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
-            {t('adminDemoProfiles.empty')}
-          </p>
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
+            <p className="text-[16px] text-[#687186]">
+              {t('adminDemoProfiles.empty')}
+            </p>
+          </div>
         )}
 
         <AdminPagination
