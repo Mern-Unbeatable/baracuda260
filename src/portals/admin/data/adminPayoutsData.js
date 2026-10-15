@@ -12,6 +12,8 @@ export const MORE_ICON_SIZE = 20;
 export const PAYOUT_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
+  PAID: 'paid',
+  REJECTED: 'rejected',
 };
 
 export const STATUS_STYLES = {
@@ -25,16 +27,36 @@ export const STATUS_STYLES = {
     dot: 'bg-[#268262]',
     text: 'text-[#268262]',
   },
+  appoved: {
+    bg: 'bg-[#eef7f3]',
+    dot: 'bg-[#268262]',
+    text: 'text-[#268262]',
+  },
+  [PAYOUT_STATUS.PAID]: {
+    bg: 'bg-[#eef7f3]',
+    dot: 'bg-[#268262]',
+    text: 'text-[#268262]',
+  },
+  [PAYOUT_STATUS.REJECTED]: {
+    bg: 'bg-[#fff1f2]',
+    dot: 'bg-[#ee1c25]',
+    text: 'text-[#ee1c25]',
+  },
 };
 
 export const STATUS_LABEL_KEYS = {
   [PAYOUT_STATUS.PENDING]: 'adminPayouts.status.pending',
   [PAYOUT_STATUS.APPROVED]: 'adminPayouts.status.approved',
+  appoved: 'adminPayouts.status.approved',
+  [PAYOUT_STATUS.PAID]: 'adminPayouts.status.paid',
+  [PAYOUT_STATUS.REJECTED]: 'adminPayouts.status.rejected',
 };
 
 export const ACTION_STATUS_OPTIONS = [
-  { id: PAYOUT_STATUS.PENDING, labelKey: 'adminPayouts.status.pending' },
-  { id: PAYOUT_STATUS.APPROVED, labelKey: 'adminPayouts.status.approved' },
+  { id: 'PENDING', labelKey: 'adminPayouts.status.pending', labelFallback: 'Pending' },
+  { id: 'APPROVED', labelKey: 'adminPayouts.status.approved', labelFallback: 'Approved' },
+  { id: 'PAID', labelKey: 'adminPayouts.status.paid', labelFallback: 'Paid' },
+  { id: 'REJECTED', labelKey: 'adminPayouts.status.rejected', labelFallback: 'Rejected' },
 ];
 
 export const PAYOUTS_PAGE_SIZE = 7;

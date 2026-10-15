@@ -470,6 +470,8 @@ const AdminDemoProfilesContent = memo(() => {
     detailProfile,
     stats,
     visibleProfiles,
+    isLoading,
+    isDetailLoading,
     resultsFrom,
     resultsTo,
     resultsTotal,
@@ -520,7 +522,12 @@ const AdminDemoProfilesContent = memo(() => {
         aria-label={t('adminDemoProfiles.tableAria')}
         className="overflow-hidden rounded-[12px] bg-white"
       >
-        {visibleProfiles.length > 0 ? (
+        {isLoading && visibleProfiles.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
+            <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+            <span className="text-[14px] font-medium">Loading demo profiles...</span>
+          </div>
+        ) : visibleProfiles.length > 0 ? (
           isMdUp ? (
             <Table className="min-w-[980px]">
               <TableHeader>
@@ -615,6 +622,7 @@ const AdminDemoProfilesContent = memo(() => {
       <DemoProfileDetailModal
         open={Boolean(detailProfile)}
         profile={detailProfile}
+        isLoading={isDetailLoading}
         onClose={handleCloseDetails}
         onDeactivate={handleDeactivateProfile}
       />

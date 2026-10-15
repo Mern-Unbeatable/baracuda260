@@ -814,8 +814,16 @@
     },
     "status": {
       "pending": "Pending",
-      "approved": "Approved"
+      "approved": "Approved",
+      "paid": "Paid",
+      "rejected": "Rejected"
     },
+    "statusUpdateSuccess": "Payout status updated successfully",
+    "statusUpdateError": "Failed to update payout status",
+    "errors": {
+      "cannotChangePaid": "Cannot change status of a payout that has already been PAID"
+    },
+    "finalized": "Payout finalized",
     "actions": {
       "menu": "Actions",
       "menuAria": "Change status"

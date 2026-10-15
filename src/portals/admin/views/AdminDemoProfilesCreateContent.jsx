@@ -15,6 +15,7 @@ import {
   STATUS_LABEL_KEYS,
   STATUS_STYLES,
 } from '@/portals/admin/data/adminDemoProfilesData';
+import { createDemoProfileApi } from '@/shared/api/demoProfiles.api';
 import { ROUTES } from '@/shared/config';
 
 const fieldLabelClass =
@@ -130,6 +131,8 @@ const AdminDemoProfilesCreateContent = memo(() => {
   const [isActive, setIsActive] = useState(true);
   const [profilePhotoName, setProfilePhotoName] = useState('');
   const [coverPhotoName, setCoverPhotoName] = useState('');
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
+  const [coverPhotoFile, setCoverPhotoFile] = useState(null);
 
   const {
     register,
@@ -143,6 +146,7 @@ const AdminDemoProfilesCreateContent = memo(() => {
       username: '',
       phone: '',
       email: '',
+      password: '',
       bio: '',
       socialLinks: [{ value: '' }],
     },
@@ -159,12 +163,18 @@ const AdminDemoProfilesCreateContent = memo(() => {
 
   const handleProfilePhotoChange = (event) => {
     const file = event.target.files?.[0];
-    if (file) setProfilePhotoName(file.name);
+    if (file) {
+      setProfilePhotoFile(file);
+      setProfilePhotoName(file.name);
+    }
   };
 
   const handleCoverPhotoChange = (event) => {
     const file = event.target.files?.[0];
-    if (file) setCoverPhotoName(file.name);
+    if (file) {
+      setCoverPhotoFile(file);
+      setCoverPhotoName(file.name);
+    }
   };
 
   const handleCancel = () => navigate(ROUTES.ADMIN_DEMO_PROFILES);
@@ -175,6 +185,24 @@ const AdminDemoProfilesCreateContent = memo(() => {
       const socialLinksStr = data.socialLinks
         .map((s) => s.value)
         .filter(Boolean);
+
+      try {
+        await createDemoProfileApi({
+          fullName: data.fullName.trim(),
+          username: data.username.trim().replace(/^@/, ''),
+          phone: data.phone.trim(),
+          email: data.email.trim(),
+          bio: data.bio?.trim() || '',
+          socialLinks: socialLinksStr,
+          password: data.password || 'password123',
+          isActive,
+          profilePhoto: profilePhotoFile,
+          coverPhoto: coverPhotoFile,
+        });
+      } catch (apiErr) {
+        console.warn('createDemoProfileApi error, falling back to local store:', apiErr);
+      }
+
       appendDemoProfile(
         buildDemoProfileFromForm({
           ...data,
@@ -289,6 +317,23 @@ const AdminDemoProfilesCreateContent = memo(() => {
               labelClassName={fieldLabelClass}
               {...register('email', {
                 required: t('adminDemoProfiles.create.emailRequired'),
+              })}
+            />
+
+            <Input
+              id="admin-demo-password"
+              type="password"
+              label={
+                <span>
+                  Password <span className="text-[#f31d2c]">*</span>
+                </span>
+              }
+              placeholder="e.g. password123"
+              error={errors.password}
+              inputClassName={inputClass}
+              labelClassName={fieldLabelClass}
+              {...register('password', {
+                required: 'Password is required',
               })}
             />
           </div>
