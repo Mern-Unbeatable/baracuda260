@@ -34,11 +34,15 @@ const ACTION_MENU_VIEWPORT_MARGIN_PX = 8;
 
 const StatusText = memo(({ status }) => {
   const { t } = useTranslation();
-  const style = STATUS_STYLES[status] || STATUS_STYLES.approved;
+  const normalized = String(status || '').toLowerCase();
+  const style = STATUS_STYLES[normalized] || STATUS_STYLES.approved;
+  const label = STATUS_LABEL_KEYS[normalized]
+    ? t(STATUS_LABEL_KEYS[normalized])
+    : normalized.toUpperCase();
 
   return (
     <span className={`text-[14px] font-semibold leading-5 ${style.text}`}>
-      {t(STATUS_LABEL_KEYS[status])}
+      {label}
     </span>
   );
 });
@@ -80,7 +84,7 @@ const PayoutTabs = memo(({ activeTab, onChange }) => {
 PayoutTabs.displayName = 'PayoutTabs';
 
 const PayoutActionMenu = memo(
-  ({ row, isOpen, onToggle, onClose, onSelectStatus }) => {
+  ({ row, isOpen, isUpdating, onToggle, onClose, onSelectStatus }) => {
     const { t } = useTranslation();
     const buttonWrapRef = useRef(null);
     const buttonRef = useRef(null);
@@ -124,8 +128,12 @@ const PayoutActionMenu = memo(
       if (!isOpen) return undefined;
 
       const handlePointerDown = (event) => {
-        const inButton = buttonWrapRef.current?.contains(event.target);
-        const inMenu = menuRef.current?.contains(event.target);
+        const inButton =
+          buttonWrapRef.current?.contains(event.target) ||
+          event.target.closest?.('[data-payout-button="true"]');
+        const inMenu =
+          menuRef.current?.contains(event.target) ||
+          event.target.closest?.('[data-payout-menu="true"]');
         if (!inButton && !inMenu) onClose();
       };
 
@@ -146,17 +154,23 @@ const PayoutActionMenu = memo(
           <ul
             ref={menuRef}
             role="listbox"
+            data-payout-menu="true"
             aria-label={t('adminPayouts.actions.menuAria')}
             style={{
               position: 'fixed',
-              zIndex: 50,
+              zIndex: 9999,
               visibility: placement ? 'visible' : 'hidden',
               ...placement,
             }}
             className="min-w-36 overflow-hidden rounded-[10px] border border-[#e8ebf1] bg-white py-1 shadow-[0_10px_30px_rgba(27,39,69,0.12)]"
           >
             {ACTION_STATUS_OPTIONS.map((option) => {
-              const selected = option.id === row.status;
+              const rowStatus = String(row.status || '').toLowerCase();
+              const optId = option.id.toLowerCase();
+              const selected = optId === rowStatus;
+              const isPaid = rowStatus === 'paid';
+              const isOptionBlocked = isPaid && optId !== 'paid';
+              const optStyle = STATUS_STYLES[optId] || STATUS_STYLES.approved;
               return (
                 <li key={option.id}>
                   <Button
@@ -164,18 +178,26 @@ const PayoutActionMenu = memo(
                     type="button"
                     role="option"
                     aria-selected={selected}
-                    onClick={() => onSelectStatus(row.id, option.id)}
-                    className={`flex w-full cursor-pointer items-center gap-2 px-3.5 py-2.5 text-left text-[14px] font-medium leading-5 transition hover:bg-[#f6fbff] ${
-                      selected
-                        ? 'bg-[#f6fbff] text-[#4048cd]'
-                        : 'text-[#373737]'
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectStatus(row.id, option.id);
+                    }}
+                    className={`flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[14px] font-medium leading-5 transition ${
+                      isOptionBlocked
+                        ? 'cursor-not-allowed opacity-40 hover:bg-[#fff1f2]'
+                        : selected
+                          ? 'cursor-pointer bg-[#f6fbff] text-[#4048cd]'
+                          : 'cursor-pointer text-[#373737] hover:bg-[#f6fbff]'
                     }`}
                   >
                     <span
-                      className={`size-1.5 shrink-0 rounded-full ${STATUS_STYLES[option.id]?.dot || 'bg-[#8b95a5]'}`}
+                      className={`size-1.5 shrink-0 rounded-full ${optStyle.dot}`}
                       aria-hidden="true"
                     />
-                    {t(option.labelKey)}
+                    {t(option.labelKey, { defaultValue: option.labelFallback || option.id })}
                   </Button>
                 </li>
               );
@@ -186,26 +208,31 @@ const PayoutActionMenu = memo(
       : null;
 
     return (
-      <div className="relative inline-flex" ref={buttonWrapRef}>
+      <div className="relative inline-flex" ref={buttonWrapRef} data-payout-button="true">
         <Button
           unstyled
           ref={buttonRef}
           type="button"
+          disabled={isUpdating}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           aria-label={t('adminPayouts.actions.menu')}
           onClick={() => onToggle(row.id)}
           className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-lg transition ${
             isOpen ? 'bg-[#f0f2f5]' : 'hover:bg-[#f6f7f9]'
-          }`}
+          } ${isUpdating ? 'cursor-not-allowed opacity-60' : ''}`}
         >
-          <Image
-            src={ADMIN_PAYOUTS_ASSETS.more}
-            alt=""
-            width={MORE_ICON_SIZE}
-            height={MORE_ICON_SIZE}
-            className="size-5"
-          />
+          {isUpdating ? (
+            <div className="size-4 animate-spin rounded-full border-2 border-[#4048cd] border-t-transparent" />
+          ) : (
+            <Image
+              src={ADMIN_PAYOUTS_ASSETS.more}
+              alt=""
+              width={MORE_ICON_SIZE}
+              height={MORE_ICON_SIZE}
+              className="size-5"
+            />
+          )}
         </Button>
         {menu}
       </div>
@@ -219,6 +246,7 @@ const PayoutTableRow = memo(
     row,
     isEven,
     openActionId,
+    updatingRowId,
     onToggleAction,
     onCloseAction,
     onSelectStatus,
@@ -234,13 +262,13 @@ const PayoutTableRow = memo(
         }
       >
         <TableCell className="px-4 py-4 text-[14px] leading-5 text-[#263147] sm:px-5">
-          {t(row.dateKey)}
+          {row.dateFormatted || (row.dateKey ? t(row.dateKey) : row.date)}
         </TableCell>
         <TableCell className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
-          {t(row.typeKey)}
+          {row.type || (row.typeKey ? t(row.typeKey) : 'Withdrawal')}
         </TableCell>
         <TableCell className="px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
-          {t(row.accountTypeKey)}
+          {row.accountType || (row.accountTypeKey ? t(row.accountTypeKey) : 'PayPal')}
         </TableCell>
         <TableCell className="whitespace-nowrap px-4 py-4 text-[14px] leading-5 text-[#59657a] sm:px-5">
           {row.accountNumber}
@@ -254,8 +282,9 @@ const PayoutTableRow = memo(
         <TableCell className="px-4 py-4 sm:px-5">
           <PayoutActionMenu
             row={row}
-            isOpen={openActionId === row.id}
-            onToggle={onToggleAction}
+            isOpen={openActionId === `desktop-${row.id}`}
+            isUpdating={updatingRowId === row.id}
+            onToggle={() => onToggleAction(`desktop-${row.id}`)}
             onClose={onCloseAction}
             onSelectStatus={onSelectStatus}
           />
@@ -267,7 +296,7 @@ const PayoutTableRow = memo(
 PayoutTableRow.displayName = 'PayoutTableRow';
 
 const PayoutTable = memo(
-  ({ rows, openActionId, onToggleAction, onCloseAction, onSelectStatus }) => {
+  ({ rows, openActionId, updatingRowId, onToggleAction, onCloseAction, onSelectStatus }) => {
     const { t } = useTranslation();
 
     return (
@@ -307,6 +336,7 @@ const PayoutTable = memo(
               row={row}
               isEven={index % 2 === 0}
               openActionId={openActionId}
+              updatingRowId={updatingRowId}
               onToggleAction={onToggleAction}
               onCloseAction={onCloseAction}
               onSelectStatus={onSelectStatus}
@@ -320,7 +350,7 @@ const PayoutTable = memo(
 PayoutTable.displayName = 'PayoutTable';
 
 const PayoutMobileCards = memo(
-  ({ rows, openActionId, onToggleAction, onCloseAction, onSelectStatus }) => {
+  ({ rows, openActionId, updatingRowId, onToggleAction, onCloseAction, onSelectStatus }) => {
     const { t } = useTranslation();
 
     return (
@@ -332,12 +362,13 @@ const PayoutMobileCards = memo(
           >
             <div className="flex items-center justify-between">
               <span className="text-[14px] font-semibold text-[#263147]">
-                {t(row.dateKey)}
+                {row.dateFormatted || (row.dateKey ? t(row.dateKey) : row.date)}
               </span>
               <PayoutActionMenu
                 row={row}
-                isOpen={openActionId === row.id}
-                onToggle={onToggleAction}
+                isOpen={openActionId === `mobile-${row.id}`}
+                isUpdating={updatingRowId === row.id}
+                onToggle={() => onToggleAction(`mobile-${row.id}`)}
                 onClose={onCloseAction}
                 onSelectStatus={onSelectStatus}
               />
@@ -347,13 +378,17 @@ const PayoutMobileCards = memo(
                 <p className="text-[#8b95a5]">
                   {t('adminPayouts.columns.type')}
                 </p>
-                <p className="text-[#59657a]">{t(row.typeKey)}</p>
+                <p className="text-[#59657a]">
+                  {row.type || (row.typeKey ? t(row.typeKey) : 'Withdrawal')}
+                </p>
               </div>
               <div>
                 <p className="text-[#8b95a5]">
                   {t('adminPayouts.columns.accountType')}
                 </p>
-                <p className="text-[#59657a]">{t(row.accountTypeKey)}</p>
+                <p className="text-[#59657a]">
+                  {row.accountType || (row.accountTypeKey ? t(row.accountTypeKey) : 'PayPal')}
+                </p>
               </div>
               <div>
                 <p className="text-[#8b95a5]">
@@ -377,37 +412,55 @@ const PayoutMobileCards = memo(
 );
 PayoutMobileCards.displayName = 'PayoutMobileCards';
 
-const SectionFooter = memo(({ rowCount }) => {
-  const { t } = useTranslation();
+const SectionFooter = memo(
+  ({
+    from = 1,
+    to = 0,
+    total = 0,
+    isFirstPage = true,
+    isLastPage = true,
+    onPrevious,
+    onNext,
+  }) => {
+    const { t } = useTranslation();
 
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0f2f5] px-4 py-4 sm:px-5">
-      <p className="text-[13px] font-medium text-[#c9922a]">
-        {t('adminPayouts.pagination.showing', {
-          from: 1,
-          to: rowCount,
-          total: rowCount,
-        })}
-      </p>
-      <div className="flex items-center gap-2">
-        <Button
-          unstyled
-          type="button"
-          className="rounded-md border border-[#e0b35a] bg-white px-3.5 py-1.5 text-[13px] font-medium text-[#c9922a] transition hover:bg-[#fff8eb]"
-        >
-          {t('adminPayouts.pagination.previous')}
-        </Button>
-        <Button
-          unstyled
-          type="button"
-          className="rounded-md border border-[#e0b35a] bg-[#e0b35a] px-3.5 py-1.5 text-[13px] font-semibold text-white transition hover:bg-[#d4a64a]"
-        >
-          {t('adminPayouts.pagination.next')}
-        </Button>
+    return (
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0f2f5] px-4 py-4 sm:px-5">
+        <p className="text-[13px] font-medium text-[#c9922a]">
+          {t('adminPayouts.pagination.showing', {
+            from: total === 0 ? 0 : from,
+            to,
+            total,
+          })}
+        </p>
+        <div className="flex items-center gap-2">
+          <Button
+            unstyled
+            type="button"
+            disabled={isFirstPage}
+            onClick={onPrevious}
+            className={`rounded-md border border-[#e0b35a] bg-white px-3.5 py-1.5 text-[13px] font-medium text-[#c9922a] transition hover:bg-[#fff8eb] ${
+              isFirstPage ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+            }`}
+          >
+            {t('adminPayouts.pagination.previous')}
+          </Button>
+          <Button
+            unstyled
+            type="button"
+            disabled={isLastPage}
+            onClick={onNext}
+            className={`rounded-md border border-[#e0b35a] bg-[#e0b35a] px-3.5 py-1.5 text-[13px] font-semibold text-white transition hover:bg-[#d4a64a] ${
+              isLastPage ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+            }`}
+          >
+            {t('adminPayouts.pagination.next')}
+          </Button>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 SectionFooter.displayName = 'SectionFooter';
 
 const AdminPayoutsContent = memo(() => {
@@ -416,10 +469,19 @@ const AdminPayoutsContent = memo(() => {
     activeTab,
     activeSection,
     openActionId,
+    isLoading,
+    updatingRowId,
+    resultsFrom,
+    resultsTo,
+    totalRecords,
+    isFirstPage,
+    isLastPage,
     handleTabChange,
     handleToggleAction,
     handleCloseAction,
     handleRowStatusChange,
+    handlePreviousPage,
+    handleNextPage,
   } = useAdminPayouts();
 
   if (!activeSection) return null;
@@ -435,23 +497,50 @@ const AdminPayoutsContent = memo(() => {
       <PayoutTabs activeTab={activeTab} onChange={handleTabChange} />
 
       <div className="overflow-hidden rounded-2xl border border-[#e8ebf1] bg-white shadow-[0px_4px_15px_0px_rgba(27,39,69,0.02)]">
-        <div className="hidden md:block">
-          <PayoutTable
-            rows={activeSection.rows}
-            openActionId={openActionId}
-            onToggleAction={handleToggleAction}
-            onCloseAction={handleCloseAction}
-            onSelectStatus={handleRowStatusChange}
-          />
-        </div>
-        <PayoutMobileCards
-          rows={activeSection.rows}
-          openActionId={openActionId}
-          onToggleAction={handleToggleAction}
-          onCloseAction={handleCloseAction}
-          onSelectStatus={handleRowStatusChange}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
+            <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+            <span className="text-sm font-medium">
+              {t('adminPayouts.loading', 'Loading payout requests...')}
+            </span>
+          </div>
+        ) : activeSection.rows.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
+            <span className="text-sm font-medium">
+              {t('adminPayouts.empty', 'No payout requests found')}
+            </span>
+          </div>
+        ) : (
+          <>
+            <div className="hidden md:block">
+              <PayoutTable
+                rows={activeSection.rows}
+                openActionId={openActionId}
+                updatingRowId={updatingRowId}
+                onToggleAction={handleToggleAction}
+                onCloseAction={handleCloseAction}
+                onSelectStatus={handleRowStatusChange}
+              />
+            </div>
+            <PayoutMobileCards
+              rows={activeSection.rows}
+              openActionId={openActionId}
+              updatingRowId={updatingRowId}
+              onToggleAction={handleToggleAction}
+              onCloseAction={handleCloseAction}
+              onSelectStatus={handleRowStatusChange}
+            />
+          </>
+        )}
+        <SectionFooter
+          from={resultsFrom}
+          to={resultsTo}
+          total={totalRecords}
+          isFirstPage={isFirstPage}
+          isLastPage={isLastPage}
+          onPrevious={handlePreviousPage}
+          onNext={handleNextPage}
         />
-        <SectionFooter rowCount={activeSection.rows.length} />
       </div>
     </div>
   );
@@ -460,3 +549,4 @@ const AdminPayoutsContent = memo(() => {
 AdminPayoutsContent.displayName = 'AdminPayoutsContent';
 
 export default AdminPayoutsContent;
+

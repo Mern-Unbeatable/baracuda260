@@ -818,8 +818,17 @@
     },
     "status": {
       "pending": "Oczekujące",
-      "approved": "Zatwierdzono"
+      "approved": "Zatwierdzono",
+      "paid": "Opłacono",
+      "rejected": "Odrzucono"
     },
+    "statusUpdateSuccess": "Status wypłaty został pomyślnie zaktualizowany",
+    "statusUpdateError": "Nie udało się zaktualizować statusu wypłaty",
+    "errors": {
+      "cannotChangePaid": "Nie można zmienić statusu wypłaty, która została już OPŁACONA"
+    },
+    "empty": "Nie znaleziono wniosków o wypłatę",
+    "loading": "Ładowanie wniosków o wypłatę...",
     "actions": {
       "menu": "Akcje",
       "menuAria": "Zmień status"

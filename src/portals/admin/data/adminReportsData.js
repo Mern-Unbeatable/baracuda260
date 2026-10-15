@@ -15,9 +15,9 @@ export const REPORTS_PAGE_SIZE = 12;
 export const MORE_ICON_SIZE = 20;
 
 export const REPORT_STATUS = {
-  PENDING: 'pending',
-  UNDER_REVIEW: 'underReview',
-  RESOLVED: 'resolved',
+  PENDING: 'PENDING',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  RESOLVED: 'RESOLVED',
 };
 
 export const REPORT_TYPE = {
@@ -34,32 +34,47 @@ export const REPORT_REASON = {
 
 export const STATUS_FILTERS = [
   { id: 'all', labelKey: 'adminReports.filters.all' },
-  { id: REPORT_STATUS.PENDING, labelKey: 'adminReports.filters.pending' },
-  {
-    id: REPORT_STATUS.UNDER_REVIEW,
-    labelKey: 'adminReports.filters.underReview',
-  },
-  { id: REPORT_STATUS.RESOLVED, labelKey: 'adminReports.filters.resolved' },
+  { id: 'PENDING', labelKey: 'adminReports.filters.pending' },
+  { id: 'UNDER_REVIEW', labelKey: 'adminReports.filters.underReview' },
+  { id: 'RESOLVED', labelKey: 'adminReports.filters.resolved' },
 ];
 
 export const STATUS_LABEL_KEYS = {
-  [REPORT_STATUS.PENDING]: 'adminReports.status.pending',
-  [REPORT_STATUS.UNDER_REVIEW]: 'adminReports.status.underReview',
-  [REPORT_STATUS.RESOLVED]: 'adminReports.status.resolved',
+  PENDING: 'adminReports.status.pending',
+  pending: 'adminReports.status.pending',
+  UNDER_REVIEW: 'adminReports.status.underReview',
+  underReview: 'adminReports.status.underReview',
+  RESOLVED: 'adminReports.status.resolved',
+  resolved: 'adminReports.status.resolved',
 };
 
 export const STATUS_STYLES = {
-  [REPORT_STATUS.PENDING]: {
+  PENDING: {
     bg: 'bg-[#fef3c7]',
     dot: 'bg-[#d97706]',
     text: 'text-[#92400e]',
   },
-  [REPORT_STATUS.UNDER_REVIEW]: {
+  pending: {
+    bg: 'bg-[#fef3c7]',
+    dot: 'bg-[#d97706]',
+    text: 'text-[#92400e]',
+  },
+  UNDER_REVIEW: {
     bg: 'bg-[#dbeafe]',
     dot: 'bg-[#2563eb]',
     text: 'text-[#1e40af]',
   },
-  [REPORT_STATUS.RESOLVED]: {
+  underReview: {
+    bg: 'bg-[#dbeafe]',
+    dot: 'bg-[#2563eb]',
+    text: 'text-[#1e40af]',
+  },
+  RESOLVED: {
+    bg: 'bg-[#dcfce7]',
+    dot: 'bg-[#16a34a]',
+    text: 'text-[#166534]',
+  },
+  resolved: {
     bg: 'bg-[#dcfce7]',
     dot: 'bg-[#16a34a]',
     text: 'text-[#166534]',
@@ -81,12 +96,12 @@ export const REASON_LABEL_KEYS = {
 export const ACTION_MENU_OPTIONS = [
   { id: 'view', labelKey: 'adminReports.actions.viewReport', kind: 'navigate' },
   {
-    id: REPORT_STATUS.RESOLVED,
+    id: 'RESOLVED',
     labelKey: 'adminReports.actions.markResolved',
     kind: 'status',
   },
   {
-    id: REPORT_STATUS.UNDER_REVIEW,
+    id: 'UNDER_REVIEW',
     labelKey: 'adminReports.actions.markUnderReview',
     kind: 'status',
   },
@@ -204,232 +219,18 @@ export const MODERATION_HISTORY = {
   ],
 };
 
-export const ADMIN_REPORTS_ROWS = [
-  {
-    id: 'rep-1',
-    code: 'REP-1024',
-    reportedByKey: 'adminReports.people.albert',
-    reportedItemKey: 'adminReports.items.morningLight',
-    type: REPORT_TYPE.SINGLE,
-    reason: REPORT_REASON.COPYRIGHT,
-    reportedUserKey: 'adminReports.people.victor.name',
-    reportedUserReportCount: 5,
-    reportedDate: '05/01/2026',
-    status: REPORT_STATUS.RESOLVED,
-    reasonCommentKey: 'adminReports.detail.reasonComment',
-    reporter: {
-      nameKey: 'adminReports.people.claire.name',
-      roleKey: 'adminReports.people.claire.role',
-      locationKey: 'adminReports.people.claire.location',
-      avatar: '/assets/competition-details/avatar-1.webp',
-    },
-    reportedUser: {
-      nameKey: 'adminReports.people.victor.name',
-      roleKey: 'adminReports.people.victor.role',
-      locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.webp',
-      reportCount: 1,
-      warnings: 0,
-    },
-    media: {
-      ...SHARED_MEDIA,
-      slides: SIX_STORY_SLIDES,
-      albumLabelKey: 'adminReports.detail.sixPhotos',
-    },
-  },
-  {
-    id: 'rep-2',
-    code: 'REP-1023',
-    reportedByKey: 'adminReports.people.marvin',
-    reportedItemKey: 'adminReports.items.neonStream',
-    type: REPORT_TYPE.ALBUM6,
-    reason: REPORT_REASON.HARMFUL,
-    reportedUserKey: 'adminReports.people.victor.name',
-    reportedUserReportCount: 5,
-    reportedDate: '05/01/2026',
-    status: REPORT_STATUS.PENDING,
-    reasonCommentKey: 'adminReports.detail.reasonCommentHarmful',
-    reporter: {
-      nameKey: 'adminReports.people.marvin',
-      roleKey: 'adminReports.people.marvinRole',
-      locationKey: 'adminReports.people.marvinLocation',
-      avatar: '/assets/competition-details/avatar-2.webp',
-    },
-    reportedUser: {
-      nameKey: 'adminReports.people.victor.name',
-      roleKey: 'adminReports.people.victor.role',
-      locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.webp',
-      reportCount: 1,
-      warnings: 0,
-    },
-    media: {
-      ...SHARED_MEDIA,
-      slides: SIX_STORY_SLIDES,
-      albumLabelKey: 'adminReports.detail.sixPhotos',
-    },
-  },
-  {
-    id: 'rep-3',
-    code: 'REP-1022',
-    reportedByKey: 'adminReports.people.ronald',
-    reportedItemKey: 'adminReports.items.neonStream',
-    type: REPORT_TYPE.ZODIAC,
-    reason: REPORT_REASON.STOLEN,
-    reportedUserKey: 'adminReports.people.victor.name',
-    reportedUserReportCount: 5,
-    reportedDate: '05/01/2026',
-    status: REPORT_STATUS.UNDER_REVIEW,
-    reasonCommentKey: 'adminReports.detail.reasonCommentStolen',
-    reporter: {
-      nameKey: 'adminReports.people.ronald',
-      roleKey: 'adminReports.people.ronaldRole',
-      locationKey: 'adminReports.people.ronaldLocation',
-      avatar: '/assets/competition-details/avatar-4.webp',
-    },
-    reportedUser: {
-      nameKey: 'adminReports.people.victor.name',
-      roleKey: 'adminReports.people.victor.role',
-      locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.webp',
-      reportCount: 1,
-      warnings: 0,
-    },
-    media: {
-      ...SHARED_MEDIA,
-      slides: SIX_STORY_SLIDES,
-      albumLabelKey: 'adminReports.detail.zodiacStory',
-    },
-  },
-  {
-    id: 'rep-4',
-    code: 'REP-1021',
-    reportedByKey: 'adminReports.people.albert',
-    reportedItemKey: 'adminReports.items.morningLight',
-    type: REPORT_TYPE.SINGLE,
-    reason: REPORT_REASON.COPYRIGHT,
-    reportedUserKey: 'adminReports.people.victor.name',
-    reportedUserReportCount: 5,
-    reportedDate: '04/01/2026',
-    status: REPORT_STATUS.PENDING,
-    reasonCommentKey: 'adminReports.detail.reasonComment',
-    reporter: {
-      nameKey: 'adminReports.people.albert',
-      roleKey: 'adminReports.people.albertRole',
-      locationKey: 'adminReports.people.albertLocation',
-      avatar: '/assets/competition-details/avatar-5.webp',
-    },
-    reportedUser: {
-      nameKey: 'adminReports.people.victor.name',
-      roleKey: 'adminReports.people.victor.role',
-      locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.webp',
-      reportCount: 1,
-      warnings: 0,
-    },
-    media: {
-      ...SHARED_MEDIA,
-      slides: SIX_STORY_SLIDES,
-      albumLabelKey: 'adminReports.detail.singlePhoto',
-    },
-  },
-  {
-    id: 'rep-5',
-    code: 'REP-1020',
-    reportedByKey: 'adminReports.people.marvin',
-    reportedItemKey: 'adminReports.items.neonStream',
-    type: REPORT_TYPE.ALBUM6,
-    reason: REPORT_REASON.HARMFUL,
-    reportedUserKey: 'adminReports.people.victor.name',
-    reportedUserReportCount: 5,
-    reportedDate: '03/01/2026',
-    status: REPORT_STATUS.UNDER_REVIEW,
-    reasonCommentKey: 'adminReports.detail.reasonCommentHarmful',
-    reporter: {
-      nameKey: 'adminReports.people.marvin',
-      roleKey: 'adminReports.people.marvinRole',
-      locationKey: 'adminReports.people.marvinLocation',
-      avatar: '/assets/competition-details/avatar-2.webp',
-    },
-    reportedUser: {
-      nameKey: 'adminReports.people.victor.name',
-      roleKey: 'adminReports.people.victor.role',
-      locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.webp',
-      reportCount: 1,
-      warnings: 0,
-    },
-    media: {
-      ...SHARED_MEDIA,
-      slides: SIX_STORY_SLIDES,
-      albumLabelKey: 'adminReports.detail.sixPhotos',
-    },
-  },
-  {
-    id: 'rep-6',
-    code: 'REP-1019',
-    reportedByKey: 'adminReports.people.ronald',
-    reportedItemKey: 'adminReports.items.morningLight',
-    type: REPORT_TYPE.SINGLE,
-    reason: REPORT_REASON.STOLEN,
-    reportedUserKey: 'adminReports.people.victor.name',
-    reportedUserReportCount: 5,
-    reportedDate: '02/01/2026',
-    status: REPORT_STATUS.PENDING,
-    reasonCommentKey: 'adminReports.detail.reasonCommentStolen',
-    reporter: {
-      nameKey: 'adminReports.people.ronald',
-      roleKey: 'adminReports.people.ronaldRole',
-      locationKey: 'adminReports.people.ronaldLocation',
-      avatar: '/assets/competition-details/avatar-4.webp',
-    },
-    reportedUser: {
-      nameKey: 'adminReports.people.victor.name',
-      roleKey: 'adminReports.people.victor.role',
-      locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.webp',
-      reportCount: 1,
-      warnings: 0,
-    },
-    media: {
-      ...SHARED_MEDIA,
-      slides: SIX_STORY_SLIDES,
-      albumLabelKey: 'adminReports.detail.singlePhoto',
-    },
-  },
-  {
-    id: 'rep-7',
-    code: 'REP-1018',
-    reportedByKey: 'adminReports.people.albert',
-    reportedItemKey: 'adminReports.items.neonStream',
-    type: REPORT_TYPE.ZODIAC,
-    reason: REPORT_REASON.COPYRIGHT,
-    reportedUserKey: 'adminReports.people.victor.name',
-    reportedUserReportCount: 5,
-    reportedDate: '01/01/2026',
-    status: REPORT_STATUS.PENDING,
-    reasonCommentKey: 'adminReports.detail.reasonComment',
-    reporter: {
-      nameKey: 'adminReports.people.albert',
-      roleKey: 'adminReports.people.albertRole',
-      locationKey: 'adminReports.people.albertLocation',
-      avatar: '/assets/competition-details/avatar-5.webp',
-    },
-    reportedUser: {
-      nameKey: 'adminReports.people.victor.name',
-      roleKey: 'adminReports.people.victor.role',
-      locationKey: 'adminReports.people.victor.location',
-      avatar: '/assets/competition-details/avatar-3.webp',
-      reportCount: 1,
-      warnings: 0,
-    },
-    media: {
-      ...SHARED_MEDIA,
-      slides: SIX_STORY_SLIDES,
-      albumLabelKey: 'adminReports.detail.zodiacStory',
-    },
-  },
-];
+export const ADMIN_REPORTS_ROWS = [];
+
+export const formatReportDate = (dateVal) => {
+  if (!dateVal) return '';
+  const d = new Date(dateVal);
+  if (isNaN(d.getTime())) return String(dateVal);
+  return d.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+};
 
 export const computeReportStats = (rows) => ({
   total: rows.length,

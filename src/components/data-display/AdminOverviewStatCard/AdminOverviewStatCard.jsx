@@ -5,8 +5,19 @@ import {
   CARD_SHADOW,
 } from '@/portals/admin/data/adminOverviewData';
 
-const AdminOverviewStatCard = memo(({ labelKey, valueKey }) => {
+const AdminOverviewStatCard = memo(({ labelKey, valueKey, value, isLoading }) => {
   const { t } = useTranslation();
+
+  let formattedValue;
+  if (isLoading) {
+    formattedValue = '—';
+  } else if (value !== undefined && value !== null) {
+    formattedValue = typeof value === 'number' ? value.toLocaleString() : value;
+  } else if (valueKey) {
+    formattedValue = t(valueKey);
+  } else {
+    formattedValue = '0';
+  }
 
   return (
     <article
@@ -16,7 +27,7 @@ const AdminOverviewStatCard = memo(({ labelKey, valueKey }) => {
         {t(labelKey)}
       </p>
       <p className="mt-3 text-[26px] font-bold leading-tight tracking-[-1.2px] text-[#172033] sm:mt-4 sm:text-[30px]">
-        {t(valueKey)}
+        {formattedValue}
       </p>
     </article>
   );

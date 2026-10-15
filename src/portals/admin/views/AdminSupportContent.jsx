@@ -25,6 +25,13 @@ const SupportTicketRow = memo(({ ticket, onAnswer, onView, variant }) => {
   const { t } = useTranslation();
   const isPending = variant === 'pending';
 
+  const title = ticket.title || (ticket.titleKey ? t(ticket.titleKey) : '');
+  const preview =
+    ticket.preview ||
+    ticket.message ||
+    (ticket.previewKey ? t(ticket.previewKey) : '');
+  const time = ticket.timeDisplay || (ticket.timeKey ? t(ticket.timeKey) : '');
+
   return (
     <article className="flex gap-4 p-4 sm:gap-6 sm:p-6">
       <div
@@ -42,13 +49,13 @@ const SupportTicketRow = memo(({ ticket, onAnswer, onView, variant }) => {
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <h3 className="font-manrope text-[15px] font-semibold leading-[22.5px] text-[#111827]">
-          {t(ticket.titleKey)}
+          {title}
         </h3>
-        <p className="text-[15px] italic leading-6 text-[#4a454f] sm:text-[16px]">
-          &ldquo;{t(ticket.previewKey)}&rdquo;
+        <p className="line-clamp-2 text-[15px] italic leading-6 text-[#4a454f] sm:text-[16px]">
+          &ldquo;{preview}&rdquo;
         </p>
         <p className="text-[12px] font-bold leading-4 tracking-[0.6px] text-[#4a454f]">
-          {t(ticket.timeKey)}
+          {time}
         </p>
 
         <div className="flex flex-wrap items-center gap-3 pt-5">
@@ -111,12 +118,13 @@ SupportTicketRow.displayName = 'SupportTicketRow';
  *   tickets: object[],
  *   emptyLabel: string,
  *   variant: 'pending' | 'answered',
+ *   isLoading?: boolean,
  *   onAnswer?: (ticketId: string) => void,
  *   onView?: (ticketId: string) => void,
  * }} props
  */
 const SupportQueueCard = memo(
-  ({ title, tickets, emptyLabel, variant, onAnswer, onView }) => (
+  ({ title, tickets, emptyLabel, variant, isLoading = false, onAnswer, onView }) => (
     <section className="overflow-hidden rounded-[12px] border border-[#eeeef0] bg-white shadow-[0px_4px_10px_rgba(123,94,167,0.08)]">
       <div className="border-b border-[#eeeef0] px-4 pb-[25px] pt-6 sm:px-6">
         <h2 className="font-manrope text-[20px] font-semibold leading-8 text-[#1a1c1d] sm:text-[24px]">
@@ -124,7 +132,12 @@ const SupportQueueCard = memo(
         </h2>
       </div>
 
-      {tickets.length > 0 ? (
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center text-[#687186]">
+          <div className="size-6 animate-spin rounded-full border-2 border-[#ee1c25] border-t-transparent" />
+          <span className="text-sm">Loading questions...</span>
+        </div>
+      ) : tickets.length > 0 ? (
         <ul className="flex flex-col">
           {tickets.map((ticket) => (
             <li
@@ -162,6 +175,9 @@ const AdminSupportContent = memo(() => {
     activeTicket,
     modalMode,
     isModalOpen,
+    isPendingLoading,
+    isAnsweredLoading,
+    isSubmitting,
     handleOpenCompose,
     handleOpenPublished,
     handleCloseModal,
@@ -182,6 +198,7 @@ const AdminSupportContent = memo(() => {
           tickets={pendingTickets}
           emptyLabel={t('adminSupport.emptyPending')}
           variant="pending"
+          isLoading={isPendingLoading}
           onAnswer={handleOpenCompose}
         />
         <SupportQueueCard
@@ -189,6 +206,7 @@ const AdminSupportContent = memo(() => {
           tickets={answeredTickets}
           emptyLabel={t('adminSupport.emptyAnswered')}
           variant="answered"
+          isLoading={isAnsweredLoading}
           onView={handleOpenPublished}
         />
       </div>
@@ -197,6 +215,7 @@ const AdminSupportContent = memo(() => {
         open={isModalOpen}
         mode={modalMode}
         ticket={activeTicket}
+        isSubmitting={isSubmitting}
         onClose={handleCloseModal}
         onPublish={handlePublish}
       />

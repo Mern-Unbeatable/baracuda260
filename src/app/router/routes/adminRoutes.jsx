@@ -105,6 +105,10 @@ export const adminRoutes = (
     <Route path={seg(ROUTES.ADMIN_CATEGORIES)} element={<Categories />} />
     <Route path={seg(ROUTES.ADMIN_ALBUM_TYPES)} element={<AlbumTypes />} />
     <Route path={seg(ROUTES.ADMIN_WINNERS)} element={<AdminWinners />} />
+    <Route
+      path={seg(ROUTES.ADMIN_WINNERS_DETAIL)}
+      element={<MyCompetitionDetails />}
+    />
     <Route path={seg(ROUTES.ADMIN_PAYOUTS)} element={<AdminPayouts />} />
     <Route path={seg(ROUTES.ADMIN_SUPPORT)} element={<AdminSupport />} />
     <Route

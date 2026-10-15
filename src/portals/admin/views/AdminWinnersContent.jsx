@@ -43,15 +43,20 @@ import { ROUTES } from '@/shared/config';
  */
 const PhotographerAvatar = memo(({ winner, size }) => {
   const { t } = useTranslation();
-  const avatarSrc = winner.avatarKey
-    ? ADMIN_WINNERS_ASSETS[winner.avatarKey]
-    : null;
+  if (!winner) return null;
+
+  const avatarSrc =
+    winner.avatar ||
+    (winner.avatarKey ? ADMIN_WINNERS_ASSETS[winner.avatarKey] : null);
+  const displayName =
+    winner.name ||
+    (winner.nameKey ? t(winner.nameKey) : 'Photographer');
 
   if (avatarSrc) {
     return (
       <Image
         src={avatarSrc}
-        alt={t(winner.nameKey)}
+        alt={displayName}
         width={size}
         height={size}
         className="size-full object-cover"
@@ -59,9 +64,13 @@ const PhotographerAvatar = memo(({ winner, size }) => {
     );
   }
 
+  const initial =
+    winner.initial ||
+    (displayName ? displayName.charAt(0).toUpperCase() : '?');
+
   return (
     <span className="flex size-full items-center justify-center bg-[rgba(227,24,55,0.1)] text-[12px] font-bold leading-4 text-[#e31837]">
-      {winner.initial || '?'}
+      {initial}
     </span>
   );
 });
@@ -153,21 +162,31 @@ const PodiumMeta = memo(({ winner, place, locale }) => {
   if (!winner) return null;
 
   const isFirst = place === 'first';
+  const displayName =
+    winner.firstName ||
+    winner.name ||
+    (winner.firstNameKey ? t(winner.firstNameKey) : '');
+  const displayCity =
+    winner.city ||
+    (winner.cityKey ? t(winner.cityKey) : '');
 
   return (
     <div className="flex w-full flex-col items-center pt-2 text-center">
       <p
-        className={`text-[#0d0d14] ${
+        className={`max-w-full truncate px-1 text-[#0d0d14] ${
           isFirst
             ? 'text-[16px] font-extrabold leading-6'
             : 'text-[14px] font-bold leading-5'
         }`}
+        title={displayName}
       >
-        {t(winner.firstNameKey)}
+        {displayName}
       </p>
-      <p className="text-[12px] leading-4 text-[#6b7280]">
-        {t(winner.cityKey)}
-      </p>
+      {displayCity ? (
+        <p className="max-w-full truncate px-1 text-[12px] leading-4 text-[#6b7280]">
+          {displayCity}
+        </p>
+      ) : null}
       <p className="pt-1 text-[14px] font-bold leading-5 text-[#e31837]">
         {t('adminWinners.votesLabel', {
           count: formatCount(winner.votes, locale),
@@ -364,6 +383,12 @@ MonthSelect.displayName = 'MonthSelect';
 const WinnerTableRow = memo(({ winner, locale, onView }) => {
   const { t } = useTranslation();
   const medal = isMedalRank(winner.rank);
+  const displayName =
+    winner.name ||
+    (winner.nameKey ? t(winner.nameKey) : 'Photographer');
+  const displayCity =
+    winner.city ||
+    (winner.cityKey ? t(winner.cityKey) : '—');
 
   return (
     <TableRow>
@@ -385,12 +410,12 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
             <PhotographerAvatar winner={winner} size={TABLE_AVATAR_SIZE} />
           </div>
           <span className="text-[14px] font-bold leading-5 text-[#0d0d14]">
-            {t(winner.nameKey)}
+            {displayName}
           </span>
         </div>
       </TableCell>
       <TableCell className="hidden text-[14px] leading-5 text-[#6b7280] sm:table-cell md:px-4">
-        {t(winner.cityKey)}
+        {displayCity}
       </TableCell>
       <TableCell
         align="right"
@@ -408,9 +433,9 @@ const WinnerTableRow = memo(({ winner, locale, onView }) => {
         <Button
           unstyled
           type="button"
-          aria-label={t('adminWinners.view', { name: t(winner.nameKey) })}
+          aria-label={t('adminWinners.view', { name: displayName })}
           onClick={() => onView(winner.id)}
-          className="inline-flex size-6 cursor-pointer items-center justify-center"
+          className="inline-flex size-6 cursor-pointer items-center justify-center transition hover:opacity-75"
         >
           <Image
             src={ADMIN_WINNERS_ASSETS.eye}
@@ -433,6 +458,12 @@ WinnerTableRow.displayName = 'WinnerTableRow';
 const WinnerMobileCard = memo(({ winner, locale, onView }) => {
   const { t } = useTranslation();
   const medal = isMedalRank(winner.rank);
+  const displayName =
+    winner.name ||
+    (winner.nameKey ? t(winner.nameKey) : 'Photographer');
+  const displayCity =
+    winner.city ||
+    (winner.cityKey ? t(winner.cityKey) : '');
 
   return (
     <article className="flex flex-col gap-3 border-b border-[rgba(0,0,0,0.2)] px-4 py-4 last:border-b-0">
@@ -453,19 +484,21 @@ const WinnerMobileCard = memo(({ winner, locale, onView }) => {
           </div>
           <div className="min-w-0">
             <p className="truncate text-[14px] font-bold leading-5 text-[#0d0d14]">
-              {t(winner.nameKey)}
+              {displayName}
             </p>
-            <p className="text-[12px] leading-4 text-[#6b7280]">
-              {t(winner.cityKey)}
-            </p>
+            {displayCity ? (
+              <p className="truncate text-[12px] leading-4 text-[#6b7280]">
+                {displayCity}
+              </p>
+            ) : null}
           </div>
         </div>
         <Button
           unstyled
           type="button"
-          aria-label={t('adminWinners.view', { name: t(winner.nameKey) })}
+          aria-label={t('adminWinners.view', { name: displayName })}
           onClick={() => onView(winner.id)}
-          className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center"
+          className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center transition hover:opacity-75"
         >
           <Image
             src={ADMIN_WINNERS_ASSETS.eye}
@@ -502,6 +535,7 @@ const AdminWinnersContent = memo(() => {
     selectedMonth,
     winners,
     podium,
+    isLoading,
     handleSelectFormat,
     handleToggleMonth,
     handleCloseMonth,
@@ -512,14 +546,17 @@ const AdminWinnersContent = memo(() => {
   const handleViewWinner = useCallback(
     (winnerId) => {
       const winner = winners.find((w) => w.id === winnerId);
-      if (winner?.photoId) {
+      const targetId = winner?.submissionId || winner?.photoId || winnerId;
+      if (targetId) {
         navigate(
-          ROUTES.ADMIN_MY_COMPETITION_DETAIL.replace(':id', winner.photoId),
+          ROUTES.ADMIN_WINNERS_DETAIL.replace(':id', targetId),
         );
       }
     },
     [winners, navigate],
   );
+
+  const hasPodium = Boolean(podium.first || podium.second || podium.third);
 
   return (
     <div className="flex w-full flex-col gap-8 py-4 sm:gap-11 sm:py-8">
@@ -545,12 +582,14 @@ const AdminWinnersContent = memo(() => {
         </div>
       </header>
 
-      <section
-        aria-label={t('adminWinners.podiumAria')}
-        className="flex justify-center pt-5"
-      >
-        <WinnersPodium podium={podium} locale={locale} />
-      </section>
+      {hasPodium ? (
+        <section
+          aria-label={t('adminWinners.podiumAria')}
+          className="flex justify-center pt-5"
+        >
+          <WinnersPodium podium={podium} locale={locale} />
+        </section>
+      ) : null}
 
       <section
         aria-label={t('adminWinners.tableAria')}
@@ -589,26 +628,70 @@ const AdminWinnersContent = memo(() => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {winners.map((winner) => (
-              <WinnerTableRow
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="py-12 text-center text-[#6b7280]"
+                >
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <div className="size-6 animate-spin rounded-full border-2 border-[#4048cd] border-t-transparent" />
+                    <span className="text-sm font-medium">
+                      {t('common.loading', 'Loading winners...')}
+                    </span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : winners.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="py-12 text-center text-sm font-medium text-[#6b7280]"
+                >
+                  {t(
+                    'adminWinners.empty',
+                    'No finalized winners found for this competition period.',
+                  )}
+                </TableCell>
+              </TableRow>
+            ) : (
+              winners.map((winner) => (
+                <WinnerTableRow
+                  key={winner.id}
+                  winner={winner}
+                  locale={locale}
+                  onView={handleViewWinner}
+                />
+              ))
+            )}
+          </TableBody>
+        </Table>
+
+        <div className="md:hidden">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center gap-2 py-12 text-center text-[#6b7280]">
+              <div className="size-6 animate-spin rounded-full border-2 border-[#4048cd] border-t-transparent" />
+              <span className="text-sm font-medium">
+                {t('common.loading', 'Loading winners...')}
+              </span>
+            </div>
+          ) : winners.length === 0 ? (
+            <div className="py-12 text-center text-sm font-medium text-[#6b7280]">
+              {t(
+                'adminWinners.empty',
+                'No finalized winners found for this competition period.',
+              )}
+            </div>
+          ) : (
+            winners.map((winner) => (
+              <WinnerMobileCard
                 key={winner.id}
                 winner={winner}
                 locale={locale}
                 onView={handleViewWinner}
               />
-            ))}
-          </TableBody>
-        </Table>
-
-        <div className="md:hidden">
-          {winners.map((winner) => (
-            <WinnerMobileCard
-              key={winner.id}
-              winner={winner}
-              locale={locale}
-              onView={handleViewWinner}
-            />
-          ))}
+            ))
+          )}
         </div>
       </section>
     </div>

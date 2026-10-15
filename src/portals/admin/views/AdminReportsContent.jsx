@@ -27,6 +27,7 @@ import {
 } from '@/portals/admin/data/adminDemoProfilesData';
 import {
   ACTION_MENU_OPTIONS,
+  formatReportDate,
   MORE_ICON_SIZE,
   REASON_LABEL_KEYS,
   REPORT_STAT_CARDS,
@@ -325,6 +326,30 @@ const ReportActionMenu = memo(
 
 ReportActionMenu.displayName = 'ReportActionMenu';
 
+const getReportedBy = (row, t) =>
+  row.reportedBy || (row.reportedByKey ? t(row.reportedByKey) : '');
+
+const getReportedItem = (row, t) =>
+  row.reportedItem || (row.reportedItemKey ? t(row.reportedItemKey) : '');
+
+const getReportType = (row, t) =>
+  row.type && TYPE_LABEL_KEYS[row.type]
+    ? t(TYPE_LABEL_KEYS[row.type])
+    : row.type || '';
+
+const getReportReason = (row, t) =>
+  row.reason && REASON_LABEL_KEYS[row.reason]
+    ? t(REASON_LABEL_KEYS[row.reason])
+    : row.reason || '';
+
+const getReportedUserName = (row, t) =>
+  row.reportedUser?.name ||
+  row.reportedUser?.username ||
+  (row.reportedUserKey ? t(row.reportedUserKey) : '');
+
+const getReportedUserCount = (row) =>
+  row.reportedUser?.reportsCount ?? row.reportedUserReportCount ?? 0;
+
 const TABLE_COLUMNS = [
   'reportedBy',
   'reportedItem',
@@ -349,30 +374,30 @@ const ReportTableRow = memo(
 
     return (
       <TableRow>
-        <TableCell className="min-w-[140px]">{t(row.reportedByKey)}</TableCell>
+        <TableCell className="min-w-[140px]">{getReportedBy(row, t)}</TableCell>
         <TableCell className="min-w-[180px]">
-          {t(row.reportedItemKey)}
+          {getReportedItem(row, t)}
         </TableCell>
         <TableCell className="min-w-[140px]">
-          {t(TYPE_LABEL_KEYS[row.type])}
+          {getReportType(row, t)}
         </TableCell>
         <TableCell className="min-w-[180px]">
-          {t(REASON_LABEL_KEYS[row.reason])}
+          {getReportReason(row, t)}
         </TableCell>
         <TableCell className="min-w-[180px]">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[16px] leading-6 text-[#0c0c0c]">
-              {t(row.reportedUserKey)}
+              {getReportedUserName(row, t)}
             </span>
             <span className="rounded-full bg-[#fee2e2] px-2 py-0.5 text-[11px] font-bold text-[#991b1b]">
               {t('adminReports.reportCount', {
-                count: row.reportedUserReportCount,
+                count: getReportedUserCount(row),
               })}
             </span>
           </div>
         </TableCell>
         <TableCell className="min-w-[120px] whitespace-nowrap">
-          {row.reportedDate}
+          {formatReportDate(row.reportedDate)}
         </TableCell>
         <TableCell className="min-w-[140px]">
           <StatusBadge status={row.status} />
@@ -410,10 +435,10 @@ const ReportMobileCard = memo(
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
-              {t(row.reportedByKey)}
+              {getReportedBy(row, t)}
             </p>
             <p className="mt-1 text-[14px] leading-5 text-[#687186]">
-              {t(row.reportedItemKey)}
+              {getReportedItem(row, t)}
             </p>
           </div>
           <ReportActionMenu
@@ -431,7 +456,7 @@ const ReportMobileCard = memo(
               {t('adminReports.columns.type')}
             </span>
             <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {t(TYPE_LABEL_KEYS[row.type])}
+              {getReportType(row, t)}
             </span>
           </div>
           <div className="flex items-center justify-between gap-3">
@@ -439,7 +464,7 @@ const ReportMobileCard = memo(
               {t('adminReports.columns.reason')}
             </span>
             <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {t(REASON_LABEL_KEYS[row.reason])}
+              {getReportReason(row, t)}
             </span>
           </div>
           <div className="flex items-center justify-between gap-3">
@@ -447,7 +472,7 @@ const ReportMobileCard = memo(
               {t('adminReports.columns.reportedUser')}
             </span>
             <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {t(row.reportedUserKey)}
+              {getReportedUserName(row, t)}
             </span>
           </div>
           <div className="flex items-center justify-between gap-3">
@@ -455,7 +480,7 @@ const ReportMobileCard = memo(
               {t('adminReports.columns.reportedDate')}
             </span>
             <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {row.reportedDate}
+              {formatReportDate(row.reportedDate)}
             </span>
           </div>
           <div className="flex items-center justify-between gap-3">
@@ -480,11 +505,13 @@ const AdminReportsContent = memo(() => {
     statusFilter,
     sortOpen,
     openActionId,
+    updatingRowId,
     stats,
     visibleRows,
     from,
     to,
     resultsTotal,
+    isLoading,
     isFirstPage,
     isLastPage,
     handleStatusFilterChange,
@@ -524,7 +551,14 @@ const AdminReportsContent = memo(() => {
         aria-label={t('adminReports.tableAria')}
         className="overflow-hidden rounded-[12px] bg-white"
       >
-        {visibleRows.length > 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
+            <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+            <span className="text-[14px] font-medium">
+              {t('adminReports.loading', 'Loading reports...')}
+            </span>
+          </div>
+        ) : visibleRows.length > 0 ? (
           isMdUp ? (
             <Table className="min-w-[1280px]">
               <TableHeader>
@@ -569,9 +603,11 @@ const AdminReportsContent = memo(() => {
             </div>
           )
         ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
-            {t('adminReports.empty')}
-          </p>
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
+            <p className="text-[16px] text-[#687186]">
+              {t('adminReports.empty')}
+            </p>
+          </div>
         )}
 
         <AdminPagination

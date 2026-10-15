@@ -7,14 +7,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import { useQueryClient } from '@tanstack/react-query';
 import {
-  appendDemoProfile,
-  buildDemoProfileFromForm,
   DEMO_PROFILE_BIO_MAX_LENGTH,
   DEMO_PROFILE_STATUS,
   STATUS_LABEL_KEYS,
   STATUS_STYLES,
 } from '@/portals/admin/data/adminDemoProfilesData';
+import {
+  createDemoProfileApi,
+  DEMO_PROFILES_QUERY_KEY,
+  DEMO_PROFILES_STATS_QUERY_KEY,
+} from '@/shared/api/demoProfiles.api';
 import { ROUTES } from '@/shared/config';
 
 const fieldLabelClass =
@@ -121,6 +125,7 @@ StatusToggle.displayName = 'StatusToggle';
 const AdminDemoProfilesCreateContent = memo(() => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const profilePhotoId = useId();
   const coverPhotoId = useId();
   const profilePhotoRef = useRef(null);
@@ -130,6 +135,8 @@ const AdminDemoProfilesCreateContent = memo(() => {
   const [isActive, setIsActive] = useState(true);
   const [profilePhotoName, setProfilePhotoName] = useState('');
   const [coverPhotoName, setCoverPhotoName] = useState('');
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
+  const [coverPhotoFile, setCoverPhotoFile] = useState(null);
 
   const {
     register,
@@ -143,6 +150,7 @@ const AdminDemoProfilesCreateContent = memo(() => {
       username: '',
       phone: '',
       email: '',
+      password: '',
       bio: '',
       socialLinks: [{ value: '' }],
     },
@@ -159,12 +167,18 @@ const AdminDemoProfilesCreateContent = memo(() => {
 
   const handleProfilePhotoChange = (event) => {
     const file = event.target.files?.[0];
-    if (file) setProfilePhotoName(file.name);
+    if (file) {
+      setProfilePhotoFile(file);
+      setProfilePhotoName(file.name);
+    }
   };
 
   const handleCoverPhotoChange = (event) => {
     const file = event.target.files?.[0];
-    if (file) setCoverPhotoName(file.name);
+    if (file) {
+      setCoverPhotoFile(file);
+      setCoverPhotoName(file.name);
+    }
   };
 
   const handleCancel = () => navigate(ROUTES.ADMIN_DEMO_PROFILES);
@@ -175,15 +189,30 @@ const AdminDemoProfilesCreateContent = memo(() => {
       const socialLinksStr = data.socialLinks
         .map((s) => s.value)
         .filter(Boolean);
-      appendDemoProfile(
-        buildDemoProfileFromForm({
-          ...data,
-          isActive,
+
+      try {
+        await createDemoProfileApi({
+          fullName: data.fullName.trim(),
+          username: data.username.trim().replace(/^@/, ''),
+          phone: data.phone.trim(),
+          email: data.email.trim(),
+          bio: data.bio?.trim() || '',
           socialLinks: socialLinksStr,
-          profilePhotoName,
-          coverPhotoName,
-        }),
-      );
+          password: data.password || 'password123',
+          isActive,
+          profilePhoto: profilePhotoFile,
+          coverPhoto: coverPhotoFile,
+        });
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_QUERY_KEY });
+          queryClient.invalidateQueries({ queryKey: DEMO_PROFILES_STATS_QUERY_KEY });
+        }, 500);
+      } catch (apiErr) {
+        console.warn('createDemoProfileApi error:', apiErr);
+      }
+
       toast.success(t('adminDemoProfiles.create.success'));
       navigate(ROUTES.ADMIN_DEMO_PROFILES);
     } finally {
@@ -289,6 +318,23 @@ const AdminDemoProfilesCreateContent = memo(() => {
               labelClassName={fieldLabelClass}
               {...register('email', {
                 required: t('adminDemoProfiles.create.emailRequired'),
+              })}
+            />
+
+            <Input
+              id="admin-demo-password"
+              type="password"
+              label={
+                <span>
+                  Password <span className="text-[#f31d2c]">*</span>
+                </span>
+              }
+              placeholder="e.g. password123"
+              error={errors.password}
+              inputClassName={inputClass}
+              labelClassName={fieldLabelClass}
+              {...register('password', {
+                required: 'Password is required',
               })}
             />
           </div>

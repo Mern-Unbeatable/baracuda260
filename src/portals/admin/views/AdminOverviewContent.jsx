@@ -1,5 +1,5 @@
 import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
@@ -17,6 +17,7 @@ import { selectUser } from '@/app/store/slices/authSlice';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import useAdminDashboard from '@/portals/admin/hooks/useAdminDashboard';
 import {
   CARD_BORDER,
   CARD_SHADOW,
@@ -145,8 +146,12 @@ const PendingBadge = memo(() => {
 
 PendingBadge.displayName = 'PendingBadge';
 
-const PendingReviewCard = memo(() => {
+const PendingReviewCard = memo(({ data, isLoading }) => {
   const { t } = useTranslation();
+
+  const submissions =
+    data?.submissions?.length > 0 ? data.submissions : PENDING_SUBMISSIONS;
+  const pendingCount = data?.pendingDecisions;
 
   return (
     <article
@@ -158,7 +163,9 @@ const PendingReviewCard = memo(() => {
             {t('adminOverview.pending.title')}
           </h2>
           <p className="mt-1.5 text-[13px] leading-5 text-[#8993a5] sm:text-[14px]">
-            {t('adminOverview.pending.subtitle')}
+            {pendingCount !== undefined
+              ? `${pendingCount} ${t('adminOverview.pending.badge').toLowerCase()}`
+              : t('adminOverview.pending.subtitle')}
           </p>
         </div>
         <Button
@@ -172,31 +179,53 @@ const PendingReviewCard = memo(() => {
       </header>
 
       <ul className="mt-5 flex flex-1 flex-col" role="list">
-        {PENDING_SUBMISSIONS.map((item) => (
-          <li
-            key={item.id}
-            className="flex items-center gap-3 border-b border-[#f0f1f4] py-2.5 last:border-b-0 sm:gap-3"
-          >
-            <div className="relative size-11 shrink-0 overflow-hidden rounded-[9px] bg-[#dce4ed]">
-              <Image
-                src={item.image}
-                alt=""
-                width={44}
-                height={44}
-                className="absolute inset-0 size-full object-cover"
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[15px] font-bold leading-5 text-[#172033] sm:text-[16px]">
-                {t(item.titleKey)}
-              </p>
-              <p className="truncate text-[13px] leading-5 text-[#8590a1] sm:text-[14px]">
-                {t(item.metaKey)}
-              </p>
-            </div>
-            <PendingBadge />
-          </li>
-        ))}
+        {submissions.map((item) => {
+          const title = item.title || (item.titleKey ? t(item.titleKey) : '');
+          const meta =
+            item.author || item.country
+              ? [item.author, item.country].filter(Boolean).join(' • ')
+              : item.metaKey
+                ? t(item.metaKey)
+                : '';
+          const isVideo =
+            typeof item.image === 'string' &&
+            item.image.toLowerCase().endsWith('.mp4');
+
+          return (
+            <li
+              key={item.id}
+              className="flex items-center gap-3 border-b border-[#f0f1f4] py-2.5 last:border-b-0 sm:gap-3"
+            >
+              <div className="relative size-11 shrink-0 overflow-hidden rounded-[9px] bg-[#dce4ed]">
+                {isVideo ? (
+                  <video
+                    src={item.image}
+                    className="absolute inset-0 size-full object-cover"
+                    muted
+                    playsInline
+                  />
+                ) : (
+                  <Image
+                    src={item.image}
+                    alt=""
+                    width={44}
+                    height={44}
+                    className="absolute inset-0 size-full object-cover"
+                  />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[15px] font-bold leading-5 text-[#172033] sm:text-[16px]">
+                  {title}
+                </p>
+                <p className="truncate text-[13px] leading-5 text-[#8590a1] sm:text-[14px]">
+                  {meta}
+                </p>
+              </div>
+              <PendingBadge />
+            </li>
+          );
+        })}
       </ul>
 
       <Button
@@ -212,8 +241,24 @@ const PendingReviewCard = memo(() => {
 
 PendingReviewCard.displayName = 'PendingReviewCard';
 
-const CommunityReachCard = memo(() => {
+const CommunityReachCard = memo(({ reachData }) => {
   const { t } = useTranslation();
+
+  const countries = useMemo(() => {
+    if (!reachData || !reachData.length) return null;
+    const totalCount =
+      reachData.reduce((acc, curr) => acc + (curr.count || 0), 0) || 1;
+
+    return reachData.map((item, idx) => {
+      const percent = Math.round(((item.count || 0) / totalCount) * 100);
+      return {
+        id: item.country || `country-${idx}`,
+        name: item.country,
+        percent,
+        valueText: `${item.count} (${percent}%)`,
+      };
+    });
+  }, [reachData]);
 
   return (
     <article
@@ -229,33 +274,63 @@ const CommunityReachCard = memo(() => {
       </header>
 
       <ul className="mt-4 flex flex-col gap-4 sm:mt-5 sm:gap-4" role="list">
-        {COMMUNITY_COUNTRIES.map((country) => (
-          <li
-            key={country.id}
-            className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4"
-          >
-            <div className="flex w-full shrink-0 items-center gap-3 sm:w-40">
-              <span
-                className={`size-4.5 shrink-0 rounded-[9px] ${country.flagClass}`}
-                aria-hidden="true"
-              />
-              <span className="text-[14px] font-bold leading-5 text-[#172033]">
-                {t(country.nameKey)}
-              </span>
-            </div>
-            <div className="flex min-w-0 flex-1 items-center gap-3">
-              <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[#edf0f5]">
-                <div
-                  className="h-full rounded-full bg-[#4e7ee0]"
-                  style={{ width: `${country.percent}%` }}
-                />
-              </div>
-              <span className="w-14 shrink-0 text-right text-[12px] font-bold leading-5 text-[#6f7a8f] sm:w-25 sm:text-[13px]">
-                {t(country.valueKey)}
-              </span>
-            </div>
-          </li>
-        ))}
+        {countries
+          ? countries.map((country) => (
+              <li
+                key={country.id}
+                className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4"
+              >
+                <div className="flex w-full shrink-0 items-center gap-3 sm:w-48">
+                  <span
+                    className="flex size-4.5 shrink-0 items-center justify-center rounded-[6px] bg-[#3374e6]/10 text-[11px]"
+                    aria-hidden="true"
+                  >
+                    🌐
+                  </span>
+                  <span className="truncate text-[14px] font-bold leading-5 text-[#172033]">
+                    {country.name}
+                  </span>
+                </div>
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[#edf0f5]">
+                    <div
+                      className="h-full rounded-full bg-[#4e7ee0]"
+                      style={{ width: `${country.percent}%` }}
+                    />
+                  </div>
+                  <span className="w-20 shrink-0 text-right text-[12px] font-bold leading-5 text-[#6f7a8f] sm:w-28 sm:text-[13px]">
+                    {country.valueText}
+                  </span>
+                </div>
+              </li>
+            ))
+          : COMMUNITY_COUNTRIES.map((country) => (
+              <li
+                key={country.id}
+                className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4"
+              >
+                <div className="flex w-full shrink-0 items-center gap-3 sm:w-40">
+                  <span
+                    className={`size-4.5 shrink-0 rounded-[9px] ${country.flagClass}`}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[14px] font-bold leading-5 text-[#172033]">
+                    {t(country.nameKey)}
+                  </span>
+                </div>
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[#edf0f5]">
+                    <div
+                      className="h-full rounded-full bg-[#4e7ee0]"
+                      style={{ width: `${country.percent}%` }}
+                    />
+                  </div>
+                  <span className="w-14 shrink-0 text-right text-[12px] font-bold leading-5 text-[#6f7a8f] sm:w-25 sm:text-[13px]">
+                    {t(country.valueKey)}
+                  </span>
+                </div>
+              </li>
+            ))}
       </ul>
     </article>
   );
@@ -379,13 +454,27 @@ const RevenuePeriodDropdown = memo(() => {
 
 RevenuePeriodDropdown.displayName = 'RevenuePeriodDropdown';
 
-const RevenueTrendCard = memo(() => {
+const RevenueTrendCard = memo(({ trendData }) => {
   const { t } = useTranslation();
+
+  const chartData = useMemo(() => {
+    if (!trendData?.labels?.length) return REVENUE_DATA;
+    const donations = trendData.commissionDonation || [];
+    const stores = trendData.commissionStore || [];
+    const promoted = trendData.promoted || [];
+
+    return trendData.labels.map((label, idx) => ({
+      month: label.toLowerCase().slice(0, 3),
+      commission: (donations[idx] || 0) + (stores[idx] || 0),
+      promoted: promoted[idx] || 0,
+    }));
+  }, [trendData]);
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length === 2) {
       return (
         <div className="rounded-xl border border-[#eef0f4] bg-white px-3.5 py-2.5 shadow-[0px_8px_24px_rgba(23,32,51,0.12)]">
-          <p className="text-[11px] font-medium leading-4 text-[#8993a5] uppercase mb-1">
+          <p className="mb-1 text-[11px] font-medium leading-4 text-[#8993a5] uppercase">
             {t(`adminOverview.analytics.months.${label}`)}
           </p>
           <p className="text-[11px] font-medium leading-4 text-[#8993a5]">
@@ -438,7 +527,7 @@ const RevenueTrendCard = memo(() => {
       <div className="mt-6 h-56 sm:mt-7 sm:h-64 w-full text-[11px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={REVENUE_DATA}
+            data={chartData}
             margin={{ top: 20, right: 10, left: 10, bottom: 0 }}
           >
             <CartesianGrid
@@ -523,6 +612,41 @@ const AdminOverviewContent = memo(() => {
     t('adminOverview.defaultName')
   ).toUpperCase();
 
+  const { dashboardData, isLoading } = useAdminDashboard();
+
+  const primaryStatValues = {
+    users: dashboardData?.registeredUsers,
+    photos: dashboardData?.photosSubmitted,
+    votes: dashboardData?.votesCast,
+    totalCommission:
+      dashboardData?.totalCommission !== undefined
+        ? `$${dashboardData.totalCommission.toLocaleString()}`
+        : undefined,
+    thisMonthCommission:
+      dashboardData?.thisMonthCommission !== undefined
+        ? `$${dashboardData.thisMonthCommission.toLocaleString()}`
+        : undefined,
+  };
+
+  const secondaryStatValues = {
+    totalPromoted:
+      dashboardData?.totalPromoted !== undefined
+        ? `$${dashboardData.totalPromoted.toLocaleString()}`
+        : undefined,
+    thisMonthPromoted:
+      dashboardData?.thisMonthPromoted !== undefined
+        ? `$${dashboardData.thisMonthPromoted.toLocaleString()}`
+        : undefined,
+    totalRevenue:
+      dashboardData?.totalRevenue !== undefined
+        ? `$${dashboardData.totalRevenue.toLocaleString()}`
+        : undefined,
+    totalPayouts:
+      dashboardData?.totalPayouts !== undefined
+        ? `$${dashboardData.totalPayouts.toLocaleString()}`
+        : undefined,
+  };
+
   return (
     <div className="flex w-full flex-col gap-8 sm:gap-10">
       <AdminPageHeader
@@ -541,6 +665,8 @@ const AdminOverviewContent = memo(() => {
               key={stat.id}
               labelKey={stat.labelKey}
               valueKey={stat.valueKey}
+              value={primaryStatValues[stat.id]}
+              isLoading={isLoading}
             />
           ))}
         </div>
@@ -550,6 +676,8 @@ const AdminOverviewContent = memo(() => {
               key={stat.id}
               labelKey={stat.labelKey}
               valueKey={stat.valueKey}
+              value={secondaryStatValues[stat.id]}
+              isLoading={isLoading}
             />
           ))}
         </div>
@@ -557,12 +685,15 @@ const AdminOverviewContent = memo(() => {
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-5">
         <VisitorChart />
-        <PendingReviewCard />
+        <PendingReviewCard
+          data={dashboardData?.recentCompetition}
+          isLoading={isLoading}
+        />
       </section>
 
-      <RevenueTrendCard />
+      <RevenueTrendCard trendData={dashboardData?.revenueTrend} />
 
-      <CommunityReachCard />
+      <CommunityReachCard reachData={dashboardData?.communityReach} />
     </div>
   );
 });

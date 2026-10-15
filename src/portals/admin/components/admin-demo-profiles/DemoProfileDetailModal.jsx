@@ -6,6 +6,8 @@ import Image from '@/components/ui/Image';
 import {
   ADMIN_DEMO_PROFILES_ASSETS,
   CLOSE_ICON_SIZE,
+  DEMO_PROFILE_DEFAULT_AVATAR,
+  DEMO_PROFILE_DEFAULT_BANNER,
   DEMO_PROFILE_STATUS,
   getDemoProfileDisplayAbout,
   getDemoProfileDisplayName,
@@ -18,12 +20,13 @@ import {
  * @param {{
  *   open: boolean,
  *   profile: object | null,
+ *   isLoading?: boolean,
  *   onClose: () => void,
  *   onDeactivate: () => void,
  * }} props
  */
 const DemoProfileDetailModal = memo(
-  ({ open, profile, onClose, onDeactivate }) => {
+  ({ open, profile, isLoading = false, onClose, onDeactivate }) => {
     const { t } = useTranslation();
     const titleId = useId();
 
@@ -87,116 +90,151 @@ const DemoProfileDetailModal = memo(
           </header>
 
           <div className="overflow-y-auto">
-            <div className="relative h-36 bg-[#f3f4f6] sm:h-40">
-              <Image
-                src={profile.banner}
-                alt=""
-                className="size-full object-cover"
-              />
-              <div className="absolute -bottom-10 left-6">
-                <Image
-                  src={profile.avatar}
-                  alt={getDemoProfileDisplayName(profile, t)}
-                  className="size-20 rounded-2xl border-4 border-white object-cover shadow-md sm:size-24"
-                />
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center gap-2 py-20 text-center text-[#687186]">
+                <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+                <span className="text-[14px] font-medium">Loading profile details...</span>
               </div>
-            </div>
-
-            <div className="flex flex-col gap-6 px-6 pb-6 pt-14 sm:pt-16">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="font-manrope text-[22px] font-bold leading-8 text-[#202838]">
-                    {getDemoProfileDisplayName(profile, t)}
-                  </p>
-                  <p className="text-[16px] leading-6 text-[#687186]">
-                    {getDemoProfileDisplayUsername(profile, t)}
-                  </p>
-                </div>
-                <span
-                  className={`inline-flex h-[30px] shrink-0 items-center gap-[5px] rounded-[8px] px-[9px] py-[5px] ${statusStyle.bg}`}
-                >
-                  <span
-                    className={`size-[6px] rounded-[3px] ${statusStyle.dot}`}
-                    aria-hidden="true"
-                  />
-                  <span
-                    className={`text-[13px] font-bold leading-[19px] ${statusStyle.text}`}
-                  >
-                    {t(STATUS_LABEL_KEYS[profile.status])}
-                  </span>
-                </span>
-              </div>
-
-              <div>
-                <p className="text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]">
-                  {t('adminDemoProfiles.detail.contactTitle')}
-                </p>
-                <div className="mt-3 flex flex-col gap-4">
-                  <div className="flex items-start gap-3">
-                    <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f8fafc]">
-                      <Image
-                        src={ADMIN_DEMO_PROFILES_ASSETS.phone}
-                        alt=""
-                        className="size-5 opacity-70"
-                      />
-                    </span>
-                    <div>
-                      <p className="text-[14px] leading-5 text-[#64748b]">
-                        {t('adminDemoProfiles.detail.phoneLabel')}
-                      </p>
-                      <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
-                        {profile.phone}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f8fafc]">
-                      <Image
-                        src={ADMIN_DEMO_PROFILES_ASSETS.email}
-                        alt=""
-                        className="size-5 opacity-70"
-                      />
-                    </span>
-                    <div>
-                      <p className="text-[14px] leading-5 text-[#64748b]">
-                        {t('adminDemoProfiles.detail.emailLabel')}
-                      </p>
-                      <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
-                        {profile.email}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]">
-                  {t('adminDemoProfiles.detail.aboutTitle')}
-                </p>
-                <p className="mt-2 text-[16px] leading-6 text-[#455163]">
-                  {getDemoProfileDisplayAbout(profile, t)}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]">
-                  {t('adminDemoProfiles.detail.socialTitle')}
-                </p>
-                <a
-                  href={`https://${profile.socialUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-2 text-[16px] font-medium leading-6 text-[#4048cd] hover:underline"
-                >
+            ) : (
+              <>
+                <div className="relative h-36 bg-[#f3f4f6] sm:h-40">
                   <Image
-                    src={ADMIN_DEMO_PROFILES_ASSETS.external}
+                    src={profile.banner || DEMO_PROFILE_DEFAULT_BANNER}
                     alt=""
-                    className="size-4"
+                    className="size-full object-cover"
                   />
-                  {profile.socialUrl}
-                </a>
-              </div>
-            </div>
+                  <div className="absolute -bottom-10 left-6">
+                    <Image
+                      src={profile.avatar || DEMO_PROFILE_DEFAULT_AVATAR}
+                      alt={getDemoProfileDisplayName(profile, t)}
+                      className="size-20 rounded-2xl border-4 border-white object-cover shadow-md sm:size-24"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-6 px-6 pb-6 pt-14 sm:pt-16">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-manrope text-[22px] font-bold leading-8 text-[#202838]">
+                        {getDemoProfileDisplayName(profile, t)}
+                      </p>
+                      <p className="text-[16px] leading-6 text-[#687186]">
+                        {getDemoProfileDisplayUsername(profile, t)}
+                      </p>
+                    </div>
+                    <span
+                      className={`inline-flex h-[30px] shrink-0 items-center gap-[5px] rounded-[8px] px-[9px] py-[5px] ${statusStyle.bg}`}
+                    >
+                      <span
+                        className={`size-[6px] rounded-[3px] ${statusStyle.dot}`}
+                        aria-hidden="true"
+                      />
+                      <span
+                        className={`text-[13px] font-bold leading-[19px] ${statusStyle.text}`}
+                      >
+                        {t(STATUS_LABEL_KEYS[profile.status])}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div>
+                    <p className="text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]">
+                      {t('adminDemoProfiles.detail.contactTitle')}
+                    </p>
+                    <div className="mt-3 flex flex-col gap-4">
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f8fafc]">
+                          <Image
+                            src={ADMIN_DEMO_PROFILES_ASSETS.phone}
+                            alt=""
+                            className="size-5 opacity-70"
+                          />
+                        </span>
+                        <div>
+                          <p className="text-[14px] leading-5 text-[#64748b]">
+                            {t('adminDemoProfiles.detail.phoneLabel')}
+                          </p>
+                          <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
+                            {profile.phone}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f8fafc]">
+                          <Image
+                            src={ADMIN_DEMO_PROFILES_ASSETS.email}
+                            alt=""
+                            className="size-5 opacity-70"
+                          />
+                        </span>
+                        <div>
+                          <p className="text-[14px] leading-5 text-[#64748b]">
+                            {t('adminDemoProfiles.detail.emailLabel')}
+                          </p>
+                          <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
+                            {profile.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]">
+                      {t('adminDemoProfiles.detail.aboutTitle')}
+                    </p>
+                    <p className="mt-2 text-[16px] leading-6 text-[#455163]">
+                      {getDemoProfileDisplayAbout(profile, t)}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[12px] font-bold uppercase leading-4 tracking-[0.6px] text-[#64748b]">
+                      {t('adminDemoProfiles.detail.socialTitle')}
+                    </p>
+                    {Array.isArray(profile.socialMedia) && profile.socialMedia.length > 0 ? (
+                      <div className="mt-2 flex flex-col gap-2">
+                        {profile.socialMedia.map((link, idx) => {
+                          const href = link.startsWith('http') ? link : `https://${link}`;
+                          return (
+                            <a
+                              key={idx}
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-[15px] font-medium leading-6 text-[#4048cd] hover:underline"
+                            >
+                              <Image
+                                src={ADMIN_DEMO_PROFILES_ASSETS.external}
+                                alt=""
+                                className="size-4"
+                              />
+                              {link}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    ) : profile.socialUrl ? (
+                      <a
+                        href={profile.socialUrl.startsWith('http') ? profile.socialUrl : `https://${profile.socialUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-flex items-center gap-2 text-[16px] font-medium leading-6 text-[#4048cd] hover:underline"
+                      >
+                        <Image
+                          src={ADMIN_DEMO_PROFILES_ASSETS.external}
+                          alt=""
+                          className="size-4"
+                        />
+                        {profile.socialUrl}
+                      </a>
+                    ) : (
+                      <p className="mt-1 text-[14px] text-[#9aa3b2]">—</p>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           <footer className="flex items-center justify-end gap-3 border-t border-[#edf0f3] px-6 py-5">
