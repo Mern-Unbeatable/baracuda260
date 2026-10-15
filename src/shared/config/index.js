@@ -129,6 +129,7 @@ export const ROUTES = {
   ADMIN_CATEGORIES: '/admin/categories',
   ADMIN_ALBUM_TYPES: '/admin/album-types',
   ADMIN_WINNERS: '/admin/winners',
+  ADMIN_WINNERS_DETAIL: '/admin/winners/:id',
   ADMIN_PAYOUTS: '/admin/payouts',
   ADMIN_SUPPORT: '/admin/support',
   ADMIN_NEWSLETTER: '/admin/newsletter',

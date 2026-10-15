@@ -1,46 +1,120 @@
-import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import {
   ADMIN_COMMENT_ROWS,
-  COMMENTS_PAGE_CHROME,
   COMMENTS_PAGE_SIZE,
   filterCommentsByStatus,
   getCommentPageNumbers,
-  paginateComments,
-  updateCommentStatus,
 } from '@/portals/admin/data/adminCommentData';
+import {
+  ADMIN_COMMENTS_QUERY_KEY,
+  getAdminCommentDetailsApi,
+  getAdminCommentsApi,
+  updateAdminCommentsBulkStatusApi,
+} from '@/shared/api/comments.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 
 /**
- * Filters, selection, row actions, drawer, and pagination for Admin Comments.
+ * Server-backed state for Admin Comments: filters, queries, bulk actions, drawer, pagination.
  */
 export default function useAdminComment(
   initialRows = ADMIN_COMMENT_ROWS,
   pageSize = COMMENTS_PAGE_SIZE,
 ) {
-  const [rows, setRows] = useState(initialRows);
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [openActionId, setOpenActionId] = useState(null);
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [detailsId, setDetailsId] = useState(null);
 
-  const filteredRows = filterCommentsByStatus(rows, statusFilter);
-  const resultsTotal = filteredRows.length;
-  const computedPages = Math.max(1, Math.ceil(resultsTotal / pageSize));
-  const totalPages =
-    statusFilter === 'all'
-      ? Math.max(COMMENTS_PAGE_CHROME, computedPages)
-      : computedPages;
+  // 1. Fetch comments list
+  const commentsQuery = useQuery({
+    queryKey: [...ADMIN_COMMENTS_QUERY_KEY, statusFilter, page, pageSize],
+    queryFn: () =>
+      getAdminCommentsApi({
+        status: statusFilter,
+        page,
+        limit: pageSize,
+      }),
+    staleTime: 30 * 1000,
+  });
+
+  // 2. Fetch single comment detail when drawer is open
+  const detailQuery = useQuery({
+    queryKey: [...ADMIN_COMMENTS_QUERY_KEY, 'detail', detailsId],
+    queryFn: () => getAdminCommentDetailsApi(detailsId),
+    enabled: Boolean(detailsId),
+    staleTime: 30 * 1000,
+  });
+
+  // Fallback demo rows when query is in error or first loading without data
+  const fallbackFiltered = useMemo(
+    () => filterCommentsByStatus(initialRows, statusFilter),
+    [initialRows, statusFilter],
+  );
+
+  const visibleRows =
+    commentsQuery.data?.items !== undefined
+      ? commentsQuery.data.items
+      : commentsQuery.isLoading
+        ? []
+        : fallbackFiltered;
+
+  const resultsTotal =
+    commentsQuery.data?.meta?.totalRecords ??
+    (commentsQuery.data?.items?.length || fallbackFiltered.length);
+
+  const totalPages = Math.max(
+    1,
+    commentsQuery.data?.meta?.totalPages ??
+      Math.ceil(resultsTotal / pageSize) ??
+      1,
+  );
+
   const safePage = Math.min(page, totalPages);
-  const visibleRows = paginateComments(filteredRows, safePage, pageSize);
   const pageNumbers = getCommentPageNumbers(safePage, totalPages);
-  const detailsRow = detailsId
-    ? rows.find((row) => row.id === detailsId) || null
-    : null;
+
+  const detailsRow =
+    detailQuery.data ||
+    visibleRows.find((row) => row.id === detailsId || row.code === detailsId) ||
+    initialRows.find(
+      (row) => row.id === detailsId || row.code === detailsId,
+    ) ||
+    null;
+
+  // 3. Status update mutation (single or bulk)
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ commentIds, status }) =>
+      updateAdminCommentsBulkStatusApi({ commentIds, status }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_COMMENTS_QUERY_KEY,
+      });
+      setOpenActionId(null);
+      toast.success(
+        t('adminComment.statusUpdated', 'Comment status updated successfully!'),
+      );
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('adminComment.statusUpdateFailed', 'Failed to update status.'),
+        ),
+      );
+    },
+  });
 
   const handleStatusFilterChange = (nextFilter) => {
     setStatusFilter(nextFilter || 'all');
     setPage(1);
     setOpenActionId(null);
+    setSelectedIds(new Set());
   };
 
   const handleToggleAction = (rowId) => {
@@ -51,9 +125,28 @@ export default function useAdminComment(
     setOpenActionId(null);
   };
 
-  const handleRowStatusChange = (rowId, nextStatus) => {
-    setRows((current) => updateCommentStatus(current, rowId, nextStatus));
-    setOpenActionId(null);
+  const handleRowStatusChange = async (rowId, nextStatus) => {
+    try {
+      await updateStatusMutation.mutateAsync({
+        commentIds: [rowId],
+        status: nextStatus,
+      });
+    } catch {
+      // Handled in onError
+    }
+  };
+
+  const handleBulkStatusChange = async (nextStatus) => {
+    if (selectedIds.size === 0) return;
+    try {
+      await updateStatusMutation.mutateAsync({
+        commentIds: Array.from(selectedIds),
+        status: nextStatus,
+      });
+      setSelectedIds(new Set());
+    } catch {
+      // Handled in onError
+    }
   };
 
   const handleOpenDetails = (rowId) => {
@@ -105,6 +198,10 @@ export default function useAdminComment(
     setOpenActionId(null);
   };
 
+  const visibleIds = visibleRows.map((row) => row.id);
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+
   return {
     statusFilter,
     openActionId,
@@ -118,13 +215,16 @@ export default function useAdminComment(
     resultsTotal,
     isFirstPage: safePage <= 1,
     isLastPage: safePage >= totalPages,
-    allVisibleSelected:
-      visibleRows.length > 0 &&
-      visibleRows.every((row) => selectedIds.has(row.id)),
+    allVisibleSelected,
+    isLoading: commentsQuery.isLoading,
+    isFetching: commentsQuery.isFetching,
+    isDetailLoading: detailQuery.isLoading,
+    isUpdating: updateStatusMutation.isPending,
     handleStatusFilterChange,
     handleToggleAction,
     handleCloseAction,
     handleRowStatusChange,
+    handleBulkStatusChange,
     handleOpenDetails,
     handleCloseDetails,
     handleToggleRowSelected,
@@ -132,5 +232,6 @@ export default function useAdminComment(
     handlePreviousPage,
     handleNextPage,
     handleSelectPage,
+    refetchComments: commentsQuery.refetch,
   };
 }

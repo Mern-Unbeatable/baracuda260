@@ -1,6 +1,21 @@
 import { apiClient } from './client';
+export { getArtworkDetailsApi, ARTWORKS_QUERY_KEY } from './artworks.api';
 
 export const COMPETITIONS_QUERY_KEY = ['competitions'];
+
+const resolveMediaUrl = (url) => {
+  if (!url || typeof url !== 'string') return url;
+  if (
+    url.startsWith('http://') ||
+    url.startsWith('https://') ||
+    url.startsWith('blob:')
+  ) {
+    return url;
+  }
+  const baseUrl = import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || '';
+  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  return `${baseUrl}${cleanPath}`;
+};
 
 /**
  * Fetches finalized leaderboard / winners for a past competition.
@@ -32,7 +47,7 @@ export const getCompetitionWinnersApi = async ({
   return list.map((item, idx) => ({
     id: item.id || item.submissionId || `winner-${idx}`,
     competitionId: item.competitionId,
-    submissionId: item.submissionId || item.submission?.id,
+    submissionId: item.submissionId || item.submission?.id || item.id,
     userId: item.userId || item.user?.id,
     kind: item.kind,
     place: item.place,
@@ -41,11 +56,17 @@ export const getCompetitionWinnersApi = async ({
     name: item.user?.name || 'Photographer',
     firstName: item.user?.name ? item.user.name.split(' ')[0] : '',
     city: item.user?.country || '',
-    avatar: item.user?.avatar || null,
+    avatar: item.user?.avatar ? resolveMediaUrl(item.user.avatar) : null,
     initial: item.user?.name ? item.user.name.charAt(0).toUpperCase() : '?',
     votes: item.votes ?? 0,
     points: item.points ?? 0,
     photoId: item.submissionId || item.id,
-    submission: item.submission,
+    submission: item.submission
+      ? {
+          ...item.submission,
+          featuredImage: resolveMediaUrl(item.submission.featuredImage),
+        }
+      : null,
   }));
 };
+

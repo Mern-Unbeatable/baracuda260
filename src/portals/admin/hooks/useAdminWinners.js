@@ -12,6 +12,12 @@ import {
   getCompetitionWinnersApi,
 } from '@/shared/api/competitions.api';
 
+const FORMAT_TO_KIND = {
+  single: 'SINGLE',
+  six: 'SIX',
+  zodiac: 'TWELVE',
+};
+
 /**
  * Admin Winners filters + standings derived state connected to /v1/competitions.
  */
@@ -25,7 +31,7 @@ export default function useAdminWinners() {
   const year =
     selectedMonth?.year || parseInt(monthId.split('-')[0], 10) || 2026;
   const month = parseInt(monthId.split('-')[1], 10) || 9;
-  const kind = albumFormat.toUpperCase();
+  const kind = FORMAT_TO_KIND[albumFormat] || albumFormat.toUpperCase();
 
   const query = useQuery({
     queryKey: [...COMPETITIONS_QUERY_KEY, 'winners', kind, year, month],
@@ -40,9 +46,9 @@ export default function useAdminWinners() {
       ? query.data
       : query.isLoading
         ? []
-        : query.isError
-          ? fallbackWinners
-          : (query.data?.length === 0 ? [] : fallbackWinners);
+        : query.data
+          ? query.data
+          : fallbackWinners;
 
   const podium = getPodiumWinners(winners);
 

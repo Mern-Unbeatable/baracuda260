@@ -549,7 +549,7 @@ const AdminWinnersContent = memo(() => {
       const targetId = winner?.submissionId || winner?.photoId || winnerId;
       if (targetId) {
         navigate(
-          ROUTES.ADMIN_MY_COMPETITION_DETAIL.replace(':id', targetId),
+          ROUTES.ADMIN_WINNERS_DETAIL.replace(':id', targetId),
         );
       }
     },
