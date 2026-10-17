@@ -1,4 +1,4 @@
-/** Admin Premium Photos — Figma premium photos list. */
+/** Admin Premium Photos — Configuration & Type Filters. */
 
 const A = '/assets/admin-competitions';
 const H = '/assets/home';
@@ -21,149 +21,19 @@ export const PREMIUM_PHOTOS_TYPE_KEYS = {
   single: 'adminPremiumPhotos.types.single',
   six: 'adminPremiumPhotos.types.six',
   zodiac: 'adminPremiumPhotos.types.zodiac',
+  SINGLE: 'adminPremiumPhotos.types.single',
+  SIX: 'adminPremiumPhotos.types.six',
+  TWELVE: 'adminPremiumPhotos.types.zodiac',
 };
 
-const BASE_CARDS = [
-  {
-    id: 'autumn',
-    type: 'six',
-    titleKey: 'adminPremiumPhotos.cards.autumn.title',
-    descriptionKey: 'adminPremiumPhotos.cards.autumn.description',
-    image: `${H}/photo-autumn.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.autumn.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'wings',
-    type: 'single',
-    titleKey: 'adminPremiumPhotos.cards.wings.title',
-    descriptionKey: 'adminPremiumPhotos.cards.wings.description',
-    image: `${H}/photo-wings.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.wings.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'city',
-    type: 'six',
-    titleKey: 'adminPremiumPhotos.cards.city.title',
-    descriptionKey: 'adminPremiumPhotos.cards.city.description',
-    image: `${H}/photo-city.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.city.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'forest',
-    type: 'single',
-    titleKey: 'adminPremiumPhotos.cards.forest.title',
-    descriptionKey: 'adminPremiumPhotos.cards.forest.description',
-    image: `${H}/photo-forest.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.forest.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'morning',
-    type: 'single',
-    titleKey: 'adminPremiumPhotos.cards.morning.title',
-    descriptionKey: 'adminPremiumPhotos.cards.morning.description',
-    image: `${H}/photo-morning.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.morning.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'harbor',
-    type: 'single',
-    titleKey: 'adminPremiumPhotos.cards.harbor.title',
-    descriptionKey: 'adminPremiumPhotos.cards.harbor.description',
-    image: `${H}/photo-harbor.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.harbor.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'silent',
-    type: 'single',
-    titleKey: 'adminPremiumPhotos.cards.silent.title',
-    descriptionKey: 'adminPremiumPhotos.cards.silent.description',
-    image: `${H}/photo-silent.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.silent.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'zodiac',
-    type: 'zodiac',
-    titleKey: 'adminPremiumPhotos.cards.zodiac.title',
-    descriptionKey: 'adminPremiumPhotos.cards.zodiac.description',
-    image: `${H}/photo-zodiac.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.zodiac.date',
-    extraPhotos: 11,
-  },
-];
+/**
+ * Initial empty cards array — live data is fetched directly from backend API.
+ * Strict zero-mock rule.
+ */
+export const PREMIUM_PHOTOS_CARDS = [];
 
-export const PREMIUM_PHOTOS_CARDS = [
-  ...BASE_CARDS,
-  {
-    id: 'golden',
-    type: 'single',
-    titleKey: 'adminPremiumPhotos.cards.golden.title',
-    descriptionKey: 'adminPremiumPhotos.cards.golden.description',
-    image: `${H}/photo-golden.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.golden.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'tidal',
-    type: 'six',
-    titleKey: 'adminPremiumPhotos.cards.tidal.title',
-    descriptionKey: 'adminPremiumPhotos.cards.tidal.description',
-    image: `${H}/photo-tidal.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.tidal.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'autumn-2',
-    type: 'zodiac',
-    titleKey: 'adminPremiumPhotos.cards.autumn.title',
-    descriptionKey: 'adminPremiumPhotos.cards.autumn.description',
-    image: `${H}/photo-zodiac.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.autumn.date',
-    extraPhotos: 11,
-  },
-  {
-    id: 'wings-2',
-    type: 'single',
-    titleKey: 'adminPremiumPhotos.cards.wings.title',
-    descriptionKey: 'adminPremiumPhotos.cards.wings.description',
-    image: `${H}/photo-wings.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminPremiumPhotos.cards.wings.date',
-    extraPhotos: null,
-  },
-];
-
-export const PREMIUM_PHOTOS_PAGE_SIZE = 12;
-export const PREMIUM_PHOTOS_TOTAL_PAGES = 10;
+export const PREMIUM_PHOTOS_PAGE_SIZE = 10;
+export const PREMIUM_PHOTOS_TOTAL_PAGES = 1;
 export const PAGINATION_LEADING_PAGES = [1, 2, 3];
 export const PAGINATION_ICON_SIZE = 16;
 export const CARD_IMAGE_WIDTH = 370;
@@ -178,16 +48,33 @@ export const getPremiumPhotoDetailPath = (id, detailRoutePattern) =>
   detailRoutePattern.replace(':id', id);
 
 /**
- * @param {typeof PREMIUM_PHOTOS_CARDS} cards
+ * @param {Array<any>} cards
  * @param {string} filterId
  */
-export const filterPremiumPhotosCards = (cards, filterId) => {
+export const filterPremiumPhotosCards = (cards = [], filterId = 'all') => {
   if (!filterId || filterId === 'all') return cards;
-  return cards.filter((card) => card.type === filterId);
+  const normalizedFilter = filterId.toLowerCase();
+
+  return cards.filter((card) => {
+    const type = String(card.type || '').toLowerCase();
+    const kind = String(card.kind || '').toLowerCase();
+
+    if (normalizedFilter === 'single') {
+      return type === 'single' || kind === 'single';
+    }
+    if (normalizedFilter === 'six') {
+      return type === 'six' || kind === 'six';
+    }
+    if (normalizedFilter === 'zodiac') {
+      return type === 'zodiac' || kind === 'twelve';
+    }
+
+    return type === normalizedFilter || kind === normalizedFilter;
+  });
 };
 
 /**
- * @param {typeof PREMIUM_PHOTOS_CARDS} cards
+ * @param {Array<any>} cards
  * @param {number} page 1-based
  * @param {number} pageSize
  */

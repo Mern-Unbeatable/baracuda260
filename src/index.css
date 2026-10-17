@@ -159,11 +159,10 @@
   width: 0;
 }
 
-/* ── Admin shell scrollbar (clean contrast, smooth hardware scrolling) ───── */
+/* ── Admin shell scrollbar (clean contrast, responsive hardware scrolling) ───── */
 .scrollbar-white {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #ffffff;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 

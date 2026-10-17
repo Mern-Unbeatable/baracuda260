@@ -133,7 +133,17 @@
     "title": "Konkurs",
     "gridAria": "Galeria konkursowych zdjęć",
     "empty": "Brak zgłoszeń pasujących do tego filtra.",
+    "loading": "Ładowanie prac konkursowych...",
+    "error": "Nie udało się załadować prac konkursowych.",
     "delete": "Usuń",
+    "deleteSuccess": "Praca konkursowa została pomyślnie usunięta.",
+    "deleteError": "Nie udało się usunąć pracy konkursowej.",
+    "confirmDelete": {
+      "title": "Usunąć pracę konkursową?",
+      "text": "Czy na pewno chcesz usunąć to zgłoszenie? Tej operacji nie można cofnąć.",
+      "confirm": "Usuń",
+      "cancel": "Anuluj"
+    },
     "extraPhotos": "+{{count}} zdjęć",
     "filters": {
       "aria": "Filtruj według typu albumu",
@@ -274,7 +284,17 @@
     "title": "Galeria",
     "gridAria": "Galeria zdjęć",
     "empty": "Brak wpisów pasujących do tego filtra.",
+    "loading": "Ładowanie galerii prac...",
+    "error": "Nie udało się załadować galerii prac.",
     "delete": "Usuń",
+    "deleteSuccess": "Praca konkursowa została pomyślnie usunięta.",
+    "deleteError": "Nie udało się usunąć pracy konkursowej.",
+    "confirmDelete": {
+      "title": "Usunąć pracę z galerii?",
+      "text": "Czy na pewno chcesz usunąć tę pracę z galerii? Tej operacji nie można cofnąć.",
+      "confirm": "Usuń",
+      "cancel": "Anuluj"
+    },
     "extraPhotos": "+{{count}} zdjęć",
     "filters": {
       "aria": "Filtruj według typu albumu",
@@ -362,6 +382,19 @@
     "viewProfile": "Zobacz profil",
     "verified": "Zweryfikowany",
     "commentsTitle": "Komentarze",
+    "noComments": "Brak komentarzy do tej pracy.",
+    "loading": "Ładowanie szczegółów pracy...",
+    "error": "Nie udało się załadować szczegółów pracy.",
+    "notFound": "Nie znaleziono pracy.",
+    "delete": "Usuń grafikę",
+    "deleteSuccess": "Praca została pomyślnie usunięta.",
+    "deleteError": "Nie udało się usunąć pracy.",
+    "confirmDelete": {
+      "title": "Usunąć grafikę?",
+      "text": "Czy na pewno chcesz usunąć tę grafikę? Tej operacji nie można cofnąć.",
+      "confirm": "Usuń",
+      "cancel": "Anuluj"
+    },
     "comments": {
       "darrell": "Darrell Steward",
       "text1": "I really like the composition and the colors. Amazing work!",
@@ -372,7 +405,17 @@
     "title": "Zdjęcia premium",
     "gridAria": "Galeria zdjęć premium",
     "empty": "Brak wpisów pasujących do tego filtra.",
+    "loading": "Ładowanie zdjęć premium...",
+    "error": "Nie udało się załadować zdjęć premium.",
     "delete": "Usuń",
+    "deleteSuccess": "Zdjęcie premium zostało pomyślnie usunięte.",
+    "deleteError": "Nie udało się usunąć zdjęcia premium.",
+    "confirmDelete": {
+      "title": "Usunąć zdjęcie premium?",
+      "text": "Czy na pewno chcesz usunąć to zdjęcie premium? Tej operacji nie można cofnąć.",
+      "confirm": "Usuń",
+      "cancel": "Anuluj"
+    },
     "extraPhotos": "+{{count}} zdjęć",
     "filters": {
       "aria": "Filtruj według typu albumu",
@@ -460,6 +503,18 @@
     "totalSell": "ŁĄCZNA SPRZEDAŻ",
     "photographerLabel": "Fotograf",
     "viewProfile": "Zobacz profil",
+    "loading": "Ładowanie szczegółów zdjęcia premium...",
+    "error": "Nie udało się załadować szczegółów zdjęcia premium.",
+    "notFound": "Nie znaleziono zdjęcia premium.",
+    "delete": "Usuń zdjęcie",
+    "deleteSuccess": "Zdjęcie premium zostało pomyślnie usunięte.",
+    "deleteError": "Nie udało się usunąć zdjęcia premium.",
+    "confirmDelete": {
+      "title": "Usunąć zdjęcie premium?",
+      "text": "Czy na pewno chcesz usunąć to zdjęcie premium? Tej operacji nie można cofnąć.",
+      "confirm": "Usuń",
+      "cancel": "Anuluj"
+    },
     "specs": {
       "resolution": "Rozdzielczość",
       "format": "Format",

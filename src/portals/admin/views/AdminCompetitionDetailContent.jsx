@@ -1,47 +1,76 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
 import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
   ADMIN_DETAIL_ASSETS,
-  ADMIN_COMPETITION_VIDEO,
   ADMIN_COMPETITION_DETAILS,
   getAdminCompetitionDetailById,
 } from '@/portals/admin/data/adminCompetitionDetailData';
-import { ARTWORKS_QUERY_KEY, getArtworkDetailsApi } from '@/shared/api/artworks.api';
+import {
+  ADMIN_ARTWORKS_QUERY_KEY,
+  deleteAdminArtworkApi,
+  getAdminArtworkDetailsApi,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { ROUTES } from '@/shared/config';
 
 /** Auto-advance interval for multi-photo story strip (ms). */
 const ADMIN_DETAIL_SLIDE_MS = 6000;
+
+const ZODIAC_ICONS = {
+  ARIES: '/assets/home/icon-aries.svg',
+  TAURUS: '/assets/home/icon-taurus.svg',
+  GEMINI: '/assets/home/icon-gemini.svg',
+  CANCER: '/assets/home/icon-cancer.svg',
+  LEO: '/assets/home/icon-leo.svg',
+  VIRGO: '/assets/home/icon-virgo.svg',
+  LIBRA: '/assets/home/icon-libra.svg',
+  SCORPIO: '/assets/home/icon-scorpio.svg',
+  SAGITTARIUS: '/assets/home/icon-sagittarius.svg',
+  CAPRICORN: '/assets/home/icon-capricorn.svg',
+  AQUARIUS: '/assets/home/icon-aquarius.svg',
+  PISCES: '/assets/home/icon-pisces.svg',
+};
+
+const getZodiacIcon = (sign) => {
+  if (!sign) return null;
+  return ZODIAC_ICONS[String(sign).toUpperCase()] || null;
+};
+
+const formatZodiacName = (sign) => {
+  if (!sign) return '';
+  const s = String(sign);
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+};
 
 const SignBadge = memo(({ slide, name }) => {
   const isBlue = slide.theme === 'blue';
 
   return (
     <div
-      className={`absolute left-3 top-3 flex items-center gap-2 rounded-[20px] px-4 py-1 sm:left-6 sm:top-6 sm:px-5 sm:py-1.25 ${
-        isBlue ? 'bg-[#4048cd]' : 'bg-[#ee1c25]'
-      }`}
+      className={`absolute left-3 top-3 flex items-center gap-2 rounded-[20px] px-4 py-1 sm:left-6 sm:top-6 sm:px-5 sm:py-1.25 ${isBlue ? 'bg-[#4048cd]' : 'bg-[#ee1c25]'
+        }`}
     >
       {slide.icon ? (
         <span
-          className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden ${
-            isBlue ? 'size-7 sm:size-8.75' : 'h-4.5 w-5 sm:h-5.25 sm:w-6'
-          } ${slide.iconBoxed ? 'rounded-sm bg-[#4048cd]' : ''}`}
+          className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden ${isBlue ? 'size-7 sm:size-8.75' : 'h-4.5 w-5 sm:h-5.25 sm:w-6'
+            } ${slide.iconBoxed ? 'rounded-sm bg-[#4048cd]' : ''}`}
         >
           <Image
             src={slide.icon}
             alt=""
             width={isBlue ? 35 : 24}
             height={isBlue ? 35 : 21}
-            className={`object-contain ${
-              slide.iconBoxed ? 'h-4 w-4 sm:h-5 sm:w-5' : 'h-full w-full'
-            }`}
+            className={`object-contain ${slide.iconBoxed ? 'h-4 w-4 sm:h-5 sm:w-5' : 'h-full w-full'
+              }`}
           />
         </span>
       ) : null}
@@ -62,21 +91,19 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
     return (
       <div className="flex flex-col items-center gap-2">
         <span
-          className={`inline-flex size-7.5 items-center justify-center rounded-full bg-[#fde8e9] text-[16px] sm:text-[18px] ${
-            isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
-          }`}
+          className={`inline-flex size-7.5 items-center justify-center rounded-full bg-[#fde8e9] text-[16px] sm:text-[18px] ${isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
+            }`}
         >
           {slide.number}
         </span>
         {slide.icon ? (
           <span
-            className={`relative inline-flex size-8.75 items-center justify-center overflow-hidden ${
-              isBlue
+            className={`relative inline-flex size-8.75 items-center justify-center overflow-hidden ${isBlue
                 ? slide.iconBoxed
                   ? 'rounded-sm bg-[#4048cd]'
                   : ''
                 : 'rounded bg-[#ee1c25] px-1.5 py-1'
-            }`}
+              }`}
           >
             <Image
               src={slide.icon}
@@ -96,11 +123,10 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
           onClick={onSelect}
           aria-label={name}
           aria-pressed={active}
-          className={`relative h-22.5 w-full overflow-hidden rounded-lg ${
-            active
+          className={`relative h-22.5 w-full overflow-hidden rounded-lg ${active
               ? 'border-[3px] border-[#ee1c25]'
               : 'border border-transparent'
-          }`}
+            }`}
         >
           <Image
             src={slide.thumb}
@@ -127,9 +153,8 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
         <span className="flex min-w-0 items-center gap-2.5">
           {slide.icon ? (
             <span
-              className={`inline-flex shrink-0 items-end rounded px-2.5 py-1 ${
-                isBlue ? 'bg-[#4048cd]' : 'bg-[#ee1c25]'
-              } ${slide.iconBoxed ? 'items-center px-1.5' : ''}`}
+              className={`inline-flex shrink-0 items-end rounded px-2.5 py-1 ${isBlue ? 'bg-[#4048cd]' : 'bg-[#ee1c25]'
+                } ${slide.iconBoxed ? 'items-center px-1.5' : ''}`}
             >
               <Image
                 src={slide.icon}
@@ -145,17 +170,15 @@ const StoryThumb = memo(({ slide, active, onSelect, name, variant }) => {
           </span>
         </span>
         <span
-          className={`inline-flex size-7.5 shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[18px] sm:text-[20px] ${
-            isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
-          }`}
+          className={`inline-flex size-7.5 shrink-0 items-center justify-center rounded-full bg-[#fde8e9] text-[18px] sm:text-[20px] ${isBlue ? 'text-[#4048cd]' : 'text-[#ee1c25]'
+            }`}
         >
           {slide.number}
         </span>
       </span>
       <span
-        className={`relative block h-30 w-full overflow-hidden rounded-lg ${
-          active ? 'border-[3px] border-[#ee1c25]' : 'border border-transparent'
-        }`}
+        className={`relative block h-30 w-full overflow-hidden rounded-lg ${active ? 'border-[3px] border-[#ee1c25]' : 'border border-transparent'
+          }`}
       >
         <Image
           src={slide.thumb}
@@ -180,42 +203,50 @@ const DetailComments = memo(({ comments }) => {
         {t('adminCompetitionDetail.commentsTitle')}
       </h2>
 
-      <ul className="mt-5 flex flex-col sm:mt-6">
-        {comments.map((item) => (
-          <li
-            key={item.id}
-            className="border-b border-[#c8c8c8] pb-4 pt-0 not-first:pt-4 last:border-b-0"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <Image
-                  src={ADMIN_DETAIL_ASSETS.commentAvatar}
-                  alt=""
-                  width={48}
-                  height={48}
-                  className="size-12 rounded-full object-cover"
-                />
-                <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
-                  {t(item.nameKey)}
-                </p>
+      {comments && comments.length > 0 ? (
+        <ul className="mt-5 flex flex-col sm:mt-6">
+          {comments.map((item) => (
+            <li
+              key={item.id}
+              className="border-b border-[#c8c8c8] pb-4 pt-0 not-first:pt-4 last:border-b-0"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <Image
+                    src={item.avatar || ADMIN_DETAIL_ASSETS.commentAvatar}
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="size-12 rounded-full object-cover"
+                  />
+                  <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
+                    {item.name || (item.nameKey ? t(item.nameKey) : 'User')}
+                  </p>
+                </div>
+                {item.isVerified ? (
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-2 py-0.5 text-[13px] text-white sm:text-[14px]">
+                    <Image
+                      src={ADMIN_DETAIL_ASSETS.verified}
+                      alt=""
+                      width={16}
+                      height={16}
+                      className="size-4 object-contain"
+                    />
+                    {t('adminCompetitionDetail.verified')}
+                  </span>
+                ) : null}
               </div>
-              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-2 py-0.5 text-[13px] text-white sm:text-[14px]">
-                <Image
-                  src={ADMIN_DETAIL_ASSETS.verified}
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="size-4 object-contain"
-                />
-                {t('adminCompetitionDetail.verified')}
-              </span>
-            </div>
-            <p className="mt-2.5 text-[14px] leading-5 text-[#475156] sm:text-[15px]">
-              {t(item.textKey)}
-            </p>
-          </li>
-        ))}
-      </ul>
+              <p className="mt-2.5 text-[14px] leading-5 text-[#475156] sm:text-[15px]">
+                {item.text || (item.textKey ? t(item.textKey) : '')}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-4 text-[14px] text-[#6b7280]">
+          {t('adminCompetitionDetail.noComments', 'No comments on this artwork yet.')}
+        </p>
+      )}
     </section>
   );
 });
@@ -228,53 +259,139 @@ DetailComments.displayName = 'DetailComments';
 const AdminCompetitionDetailContent = memo(() => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { id } = useParams();
-  const mockDetail = getAdminCompetitionDetailById(id);
 
-  const isMockId = Boolean(id && ADMIN_COMPETITION_DETAILS[id]);
-  const { data: artwork, isLoading } = useQuery({
-    queryKey: [...ARTWORKS_QUERY_KEY, id],
-    queryFn: () => getArtworkDetailsApi(id),
-    enabled: Boolean(id && !isMockId),
+  const {
+    data: artwork,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: [...ADMIN_ARTWORKS_QUERY_KEY, 'detail', id],
+    queryFn: () => getAdminArtworkDetailsApi(id),
+    enabled: Boolean(id),
     staleTime: 60 * 1000,
   });
 
-  const detail = useMemo(() => {
-    if (!artwork) return mockDetail;
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteAdminArtworkApi(id),
+    onSuccess: () => {
+      toast.success(
+        t('adminCompetitions.deleteSuccess', 'Artwork deleted successfully.'),
+      );
+      queryClient.invalidateQueries({ queryKey: ADMIN_ARTWORKS_QUERY_KEY });
+      navigate(ROUTES.ADMIN_MY_COMPETITIONS, { replace: true });
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('adminCompetitions.deleteError', 'Failed to delete artwork.'),
+        ),
+      );
+    },
+  });
 
-    const kind = artwork.kind || 'SINGLE';
+  const handleDelete = async () => {
+    const confirmed = await confirmDestructiveAction({
+      title: t('adminCompetitions.confirmDelete.title', 'Delete Artwork?'),
+      text: t(
+        'adminCompetitions.confirmDelete.text',
+        'Are you sure you want to delete this artwork? This action cannot be undone.',
+      ),
+      confirmButtonText: t('adminCompetitions.confirmDelete.confirm', 'Delete'),
+      cancelButtonText: t('adminCompetitions.confirmDelete.cancel', 'Cancel'),
+    });
+
+    if (confirmed) {
+      await deleteMutation.mutateAsync();
+    }
+  };
+
+  const detail = useMemo(() => {
+    if (!artwork) return null;
+
+    const kind = String(artwork.kind || 'SINGLE').toUpperCase();
     const isTwelve = kind === 'TWELVE';
     const isSix = kind === 'SIX';
 
     let slides = [];
-    if (artwork.images && typeof artwork.images === 'object') {
-      slides = Object.entries(artwork.images).map(([key, img], idx) => ({
-        id: img.id || `${key}-${idx}`,
-        number: idx + 1,
-        nameKey: null,
-        name: img.zodiacSign || key || `Photo ${idx + 1}`,
-        thumb: img.thumbnailUrl || img.url,
-        hero: img.url,
-        theme: idx % 2 === 0 ? 'red' : 'blue',
-        icon: null,
-      }));
-    } else if (Array.isArray(artwork.media) && artwork.media.length > 0) {
-      slides = artwork.media.map((med, idx) => ({
-        id: med.id || `media-${idx}`,
-        number: idx + 1,
-        nameKey: null,
-        name: med.zodiacSign || `Photo ${idx + 1}`,
-        thumb: med.thumbnailUrl || med.url,
-        hero: med.url,
-        theme: idx % 2 === 0 ? 'red' : 'blue',
-        icon: null,
-      }));
+    if (Array.isArray(artwork.media) && artwork.media.length > 0) {
+      const imageMedia = artwork.media
+        .filter((m) => m.kind !== 'VIDEO')
+        .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0));
+
+      slides = imageMedia.map((med, idx) => {
+        const currentSign = med.zodiacSign || artwork.zodiacSign;
+        const num = (med.slotIndex != null ? med.slotIndex : idx) + 1;
+        return {
+          id: med.id || `media-${idx}`,
+          number: num,
+          nameKey: null,
+          name: currentSign ? formatZodiacName(currentSign) : `Photo ${num}`,
+          thumb: med.thumbnailUrl || med.url,
+          hero: med.url,
+          theme: idx % 2 === 0 ? 'red' : 'blue',
+          icon: getZodiacIcon(currentSign),
+        };
+      });
+    } else if (artwork.images && typeof artwork.images === 'object') {
+      slides = Object.entries(artwork.images).map(([key, img], idx) => {
+        const currentSign = img.zodiacSign || artwork.zodiacSign;
+        const num = idx + 1;
+        return {
+          id: img.id || `${key}-${idx}`,
+          number: num,
+          nameKey: null,
+          name: currentSign ? formatZodiacName(currentSign) : key || `Photo ${num}`,
+          thumb: img.thumbnailUrl || img.url,
+          hero: img.url,
+          theme: idx % 2 === 0 ? 'red' : 'blue',
+          icon: getZodiacIcon(currentSign),
+        };
+      });
     }
+
+    const videoMedia = Array.isArray(artwork.media)
+      ? artwork.media.find((m) => m.kind === 'VIDEO')
+      : null;
 
     const heroImage =
       artwork.featuredImage ||
       slides[0]?.hero ||
-      mockDetail.hero;
+      '';
+
+    const rankings =
+      Array.isArray(artwork.globalRankings) && artwork.globalRankings.length > 0
+        ? artwork.globalRankings.map((r, idx) => ({
+          id: r.id || `rank-${r.rank || idx}`,
+          rank: r.rank ?? idx + 1,
+          name: r.photographer || 'Photographer',
+          photographer: r.photographer || 'Photographer',
+          nameKey: null,
+          wins: r.wins ?? '—',
+          votes: Number(r.totalVotes ?? r.votes ?? 0).toLocaleString(),
+          totalVotes: r.totalVotes,
+          avatar: r.avatar || '/assets/home/avatar-photographer.webp',
+          highlighted: Boolean(r.isCurrentArtwork),
+        }))
+        : [];
+
+    const comments = Array.isArray(artwork.comments)
+      ? artwork.comments.map((c) => ({
+        id: c.id,
+        name: c.user?.name || 'User',
+        nameKey: null,
+        text: c.body || '',
+        textKey: null,
+        avatar: c.user?.avatar,
+        isVerified: Boolean(c.user?.isVerified),
+        createdAt: c.createdAt,
+      }))
+      : [];
 
     return {
       id: artwork.id,
@@ -286,49 +403,54 @@ const AdminCompetitionDetailContent = memo(() => {
             ? '6-Photo Story'
             : 'Single Photo',
       typeKey: null,
-      category: artwork.categoryName || artwork.category || 'Deep Sky',
+      category: artwork.categoryName || artwork.category || 'Nature',
       categoryKey: null,
       title: artwork.title || 'Competition Submission',
       titleKey: null,
       description: artwork.story || artwork.description || '',
       descriptionKey: null,
-      votes: String(artwork.votesCount ?? artwork.votes ?? 0),
-      views: String(artwork.viewsCount ?? artwork.views ?? 0),
+      votes: Number(artwork.votesCount ?? artwork.votes ?? 0).toLocaleString(),
+      views: Number(artwork.viewsCount ?? artwork.views ?? 0).toLocaleString(),
       points: artwork.points != null ? String(artwork.points) : null,
-      rank: artwork.rank ?? artwork.place ?? null,
-      prizeMoney: artwork.prizeMoney ?? artwork.prize ?? null,
+      rank: artwork.rank ?? artwork.artworkRankInCompetition ?? null,
+      prizeMoney: artwork.prizeMoney ?? null,
       camera: artwork.camera || null,
       resolution: artwork.resolution || null,
       format: artwork.format || null,
       quality: artwork.quality || null,
       zodiacSign: artwork.zodiacSign || null,
       hero: heroImage,
-      videoSrc: artwork.video?.url || null,
-      videoPoster: artwork.video?.thumbnailUrl || heroImage,
+      videoSrc: videoMedia?.url || artwork.video?.url || null,
+      videoPoster:
+        videoMedia?.thumbnailUrl || artwork.video?.thumbnailUrl || heroImage,
       photographerName: artwork.user?.name || 'Photographer',
-      photographerCountry: artwork.user?.country || null,
+      photographerCountry:
+        [artwork.user?.city, artwork.user?.country].filter(Boolean).join(', ') ||
+        artwork.user?.country ||
+        null,
       photographerKey: null,
-      photographerAvatar: artwork.user?.avatar || mockDetail.photographerAvatar,
+      photographerAvatar:
+        artwork.user?.avatar || '/assets/home/avatar-photographer.webp',
       slides,
       curve: isTwelve
         ? ADMIN_DETAIL_ASSETS.curves.twelve
         : isSix
           ? ADMIN_DETAIL_ASSETS.curves.red
           : null,
-      rankings: mockDetail.rankings,
-      showingCount: mockDetail.showingCount,
-      showingTotal: mockDetail.showingTotal,
-      comments: mockDetail.comments,
+      rankings,
+      showingCount: rankings.length,
+      showingTotal: rankings.length,
+      comments,
       sign: slides[0] || null,
     };
-  }, [artwork, mockDetail]);
+  }, [artwork]);
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const slideCount = detail.slides?.length || 0;
+  const slideCount = detail?.slides?.length || 0;
 
   useEffect(() => {
-    setActiveIndex(0);
-  }, [detail.id]);
+    if (detail?.id) setActiveIndex(0);
+  }, [detail?.id]);
 
   useEffect(() => {
     if (slideCount <= 1) return undefined;
@@ -338,14 +460,15 @@ const AdminCompetitionDetailContent = memo(() => {
     }, ADMIN_DETAIL_SLIDE_MS);
 
     return () => window.clearInterval(timerId);
-  }, [slideCount, detail.id]);
+  }, [slideCount, detail?.id]);
 
   const hasSlides = slideCount > 0;
+  const isMultiSlide = slideCount > 1 && detail?.variant !== 'single';
   const activeSlide = hasSlides
-    ? detail.slides[activeIndex] || detail.slides[0]
-    : detail.sign;
-  const heroSrc = hasSlides ? activeSlide.hero : detail.hero;
-  const isTwelve = detail.variant === 'twelve';
+    ? detail?.slides[activeIndex] || detail?.slides[0]
+    : detail?.sign;
+  const heroSrc = hasSlides ? activeSlide?.hero : detail?.hero;
+  const isTwelve = detail?.variant === 'twelve';
   const curveHeight = isTwelve
     ? 'h-10 sm:h-[72px] xl:h-[103px]'
     : 'h-8 sm:h-[52px]';
@@ -361,18 +484,53 @@ const AdminCompetitionDetailContent = memo(() => {
 
   return (
     <div className="mx-auto flex w-full max-w-[1580px] flex-col gap-8 sm:gap-10">
-      <Link
-        to={backLink}
-        className="inline-flex w-fit items-center gap-2 text-[15px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25] sm:text-[16px]"
-      >
-        <ArrowLeft size={22} aria-hidden="true" className="shrink-0" />
-        {t('adminCompetitionDetail.back')}
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <Link
+          to={backLink}
+          className="inline-flex w-fit items-center gap-2 text-[15px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25] sm:text-[16px]"
+        >
+          <ArrowLeft size={22} aria-hidden="true" className="shrink-0" />
+          {t('adminCompetitionDetail.back')}
+        </Link>
 
-      {isLoading && !artwork ? (
+        {artwork ? (
+          <Button
+            unstyled
+            type="button"
+            disabled={deleteMutation.isPending}
+            onClick={handleDelete}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#ee1c25] px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-[#d41921] disabled:opacity-50 sm:text-[15px]"
+          >
+            <Trash2 size={18} aria-hidden="true" />
+            {t('adminCompetitions.delete')}
+          </Button>
+        ) : null}
+      </div>
+
+      {isLoading ? (
         <div className="flex flex-col items-center justify-center gap-2 py-24 text-center text-[#6b7280]">
           <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
-          <span className="text-sm font-medium">Loading competition details...</span>
+          <span className="text-sm font-medium">
+            {t('adminCompetitionDetail.loading', 'Loading competition details...')}
+          </span>
+        </div>
+      ) : isError || !detail ? (
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center text-[#6b7280]">
+          <p className="text-[15px] font-medium text-[#ee1c25]">
+            {error?.message ||
+              t(
+                'adminCompetitionDetail.error',
+                'Artwork details not found or failed to load.',
+              )}
+          </p>
+          <Button
+            unstyled
+            type="button"
+            onClick={() => refetch()}
+            className="rounded-lg bg-[#ee1c25] px-4 py-2 text-[14px] font-semibold text-white hover:bg-[#d41921]"
+          >
+            {t('common.retry', 'Retry')}
+          </Button>
         </div>
       ) : (
         <>
@@ -394,7 +552,7 @@ const AdminCompetitionDetailContent = memo(() => {
               />
             ) : null}
 
-            {hasSlides ? (
+            {isMultiSlide ? (
               <>
                 <Button
                   unstyled
@@ -430,29 +588,26 @@ const AdminCompetitionDetailContent = memo(() => {
             ) : null}
           </section>
 
-          {hasSlides ? (
+          {isMultiSlide && detail.curve ? (
             <>
-              {detail.curve ? (
-                <div
-                  className={`relative w-full overflow-hidden ${curveHeight}`}
-                  aria-hidden="true"
-                >
-                  <Image
-                    src={detail.curve}
-                    alt=""
-                    className={`h-full w-full object-top ${
-                      isTwelve ? 'object-contain' : 'object-fill'
+              <div
+                className={`relative w-full overflow-hidden ${curveHeight}`}
+                aria-hidden="true"
+              >
+                <Image
+                  src={detail.curve}
+                  alt=""
+                  className={`h-full w-full object-top ${isTwelve ? 'object-contain' : 'object-fill'
                     }`}
-                  />
-                </div>
-              ) : null}
+                />
+              </div>
 
               <section
                 aria-label={t('adminCompetitionDetail.slidesAria')}
-                className="w-full overflow-x-auto pb-2"
+                className="w-full overflow-x-auto pb-2 overscroll-x-contain [touch-action:pan-y]"
               >
                 {isTwelve ? (
-                  <div className="grid min-w-[1100px] grid-cols-12 gap-2 xl:min-w-0 xl:gap-3">
+                  <div className="grid min-w-[1000px] grid-cols-12 gap-2 xl:min-w-0 xl:gap-3">
                     {detail.slides.map((slide, index) => (
                       <StoryThumb
                         key={slide.id}
@@ -465,7 +620,7 @@ const AdminCompetitionDetailContent = memo(() => {
                     ))}
                   </div>
                 ) : (
-                  <div className="grid min-w-[980px] grid-cols-6 gap-3 xl:min-w-0 xl:gap-5">
+                  <div className="grid min-w-[640px] grid-cols-6 gap-2 sm:min-w-0 sm:gap-3 xl:gap-5">
                     {detail.slides.map((slide, index) => (
                       <StoryThumb
                         key={slide.id}
@@ -617,11 +772,13 @@ const AdminCompetitionDetailContent = memo(() => {
             </div>
           </section>
 
-          <MemberArtworkGlobalRankings
-            rankings={detail.rankings}
-            showingCount={detail.showingCount}
-            showingTotal={detail.showingTotal}
-          />
+          {detail.rankings && detail.rankings.length > 0 ? (
+            <MemberArtworkGlobalRankings
+              rankings={detail.rankings}
+              showingCount={detail.showingCount}
+              showingTotal={detail.showingTotal}
+            />
+          ) : null}
 
           <DetailComments comments={detail.comments} />
         </>

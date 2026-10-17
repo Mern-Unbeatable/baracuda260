@@ -58,7 +58,7 @@ const RankingRow = memo(({ row }) => {
             row.highlighted ? 'text-[#532aa8]' : 'text-[#161c27]'
           }`}
         >
-          {t(row.nameKey)}
+          {row.photographer || row.name || (row.nameKey ? t(row.nameKey) : '')}
         </p>
       </div>
 
@@ -101,7 +101,7 @@ const MemberArtworkGlobalRankings = memo(
           </h2>
         </div>
 
-        <div className="w-full overflow-x-auto">
+        <div className="w-full overflow-x-auto overscroll-x-contain [touch-action:pan-y]">
           <div className="min-w-190">
             <div className={`${RANKINGS_GRID} bg-[rgba(241,243,255,0.5)]`}>
               {[

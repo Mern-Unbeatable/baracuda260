@@ -20,101 +20,15 @@ export const COMPETITION_TYPE_KEYS = {
   single: 'adminCompetitions.types.single',
   six: 'adminCompetitions.types.six',
   zodiac: 'adminCompetitions.types.zodiac',
+  SINGLE: 'adminCompetitions.types.single',
+  SIX: 'adminCompetitions.types.six',
+  TWELVE: 'adminCompetitions.types.zodiac',
 };
 
-export const COMPETITION_CARDS = [
-  {
-    id: 'autumn',
-    type: 'six',
-    titleKey: 'adminCompetitions.cards.autumn.title',
-    descriptionKey: 'adminCompetitions.cards.autumn.description',
-    image: `${H}/photo-autumn.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.autumn.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'wings',
-    type: 'single',
-    titleKey: 'adminCompetitions.cards.wings.title',
-    descriptionKey: 'adminCompetitions.cards.wings.description',
-    image: `${H}/photo-wings.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.wings.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'city',
-    type: 'six',
-    titleKey: 'adminCompetitions.cards.city.title',
-    descriptionKey: 'adminCompetitions.cards.city.description',
-    image: `${H}/photo-city.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.city.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'forest',
-    type: 'single',
-    titleKey: 'adminCompetitions.cards.forest.title',
-    descriptionKey: 'adminCompetitions.cards.forest.description',
-    image: `${H}/photo-forest.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.forest.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'morning',
-    type: 'single',
-    titleKey: 'adminCompetitions.cards.morning.title',
-    descriptionKey: 'adminCompetitions.cards.morning.description',
-    image: `${H}/photo-morning.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.morning.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'harbor',
-    type: 'single',
-    titleKey: 'adminCompetitions.cards.harbor.title',
-    descriptionKey: 'adminCompetitions.cards.harbor.description',
-    image: `${H}/photo-harbor.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.harbor.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'silent',
-    type: 'single',
-    titleKey: 'adminCompetitions.cards.silent.title',
-    descriptionKey: 'adminCompetitions.cards.silent.description',
-    image: `${H}/photo-silent.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.silent.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'zodiac',
-    type: 'zodiac',
-    titleKey: 'adminCompetitions.cards.zodiac.title',
-    descriptionKey: 'adminCompetitions.cards.zodiac.description',
-    image: `${H}/photo-zodiac.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminCompetitions.cards.zodiac.date',
-    extraPhotos: 11,
-  },
-];
+export const COMPETITION_CARDS = [];
 
-export const COMPETITIONS_PAGE_SIZE = 8;
-export const COMPETITIONS_TOTAL_PAGES = 10;
+export const COMPETITIONS_PAGE_SIZE = 10;
+export const COMPETITIONS_TOTAL_PAGES = 1;
 /** Leading page numbers shown before the ellipsis in Figma pagination. */
 export const PAGINATION_LEADING_PAGES = [1, 2, 3];
 export const PAGINATION_ICON_SIZE = 16;
@@ -134,8 +48,16 @@ export const getCompetitionDetailPath = (id, detailRoutePattern) =>
  * @param {string | null} filterId
  */
 export const filterCompetitionCards = (cards, filterId) => {
-  if (!filterId) return cards;
-  return cards.filter((card) => card.type === filterId);
+  if (!filterId || !Array.isArray(cards)) return cards || [];
+  const normalized = filterId.toLowerCase();
+  return cards.filter((card) => {
+    const type = (card.type || '').toLowerCase();
+    const kind = (card.kind || '').toLowerCase();
+    if (normalized === 'single') return type === 'single' || kind === 'single';
+    if (normalized === 'six') return type === 'six' || kind === 'six';
+    if (normalized === 'zodiac') return type === 'zodiac' || kind === 'twelve';
+    return type === normalized || kind === normalized;
+  });
 };
 
 /**

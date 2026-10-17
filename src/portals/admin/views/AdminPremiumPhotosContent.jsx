@@ -42,22 +42,45 @@ MetricStat.displayName = 'MetricStat';
  *   card: {
  *     id: string,
  *     type: string,
- *     titleKey: string,
- *     descriptionKey: string,
- *     image: string,
- *     views: string,
- *     likes: string,
- *     dateKey: string,
- *     extraPhotos: number | null,
+ *     kind?: string,
+ *     title?: string,
+ *     titleKey?: string,
+ *     story?: string,
+ *     description?: string,
+ *     descriptionKey?: string,
+ *     image?: string,
+ *     coverImage?: string,
+ *     views?: string,
+ *     likes?: string,
+ *     formattedDate?: string,
+ *     dateKey?: string,
+ *     price?: string | null,
+ *     extraPhotos?: number | null,
  *   },
+ *   onDelete?: (id: string) => void,
+ *   isDeleting?: boolean,
  * }} props
  */
-const ShowcaseCard = memo(({ card }) => {
+const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
   const { t } = useTranslation();
   const detailPath = getPremiumPhotoDetailPath(
     card.id,
     ROUTES.ADMIN_PREMIUM_PHOTOS_DETAIL,
   );
+
+  const typeKey =
+    PREMIUM_PHOTOS_TYPE_KEYS[card.type] ||
+    PREMIUM_PHOTOS_TYPE_KEYS[card.kind] ||
+    PREMIUM_PHOTOS_TYPE_KEYS.single;
+  const typeLabel = t(typeKey);
+
+  const titleText = card.title || (card.titleKey ? t(card.titleKey) : '');
+  const descriptionText =
+    card.story ||
+    card.description ||
+    (card.descriptionKey ? t(card.descriptionKey) : '');
+  const dateText = card.formattedDate || (card.dateKey ? t(card.dateKey) : '');
+  const imageSrc = card.image || card.coverImage || '';
 
   return (
     <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)]">
@@ -66,15 +89,22 @@ const ShowcaseCard = memo(({ card }) => {
         className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
       >
         <Image
-          src={card.image}
-          alt=""
+          src={imageSrc}
+          alt={titleText}
           width={CARD_IMAGE_WIDTH}
           height={CARD_IMAGE_HEIGHT}
           className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-[1.02]"
         />
-        <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
-          {t(PREMIUM_PHOTOS_TYPE_KEYS[card.type])}
-        </span>
+        <div className="absolute left-3 top-3 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-1.5">
+          <span className="rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
+            {typeLabel}
+          </span>
+          {card.price ? (
+            <span className="rounded-full bg-[#111827]/90 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
+              {card.price}
+            </span>
+          ) : null}
+        </div>
         {card.extraPhotos ? (
           <span className="absolute bottom-3 right-3 rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
             {t('adminPremiumPhotos.extraPhotos', { count: card.extraPhotos })}
@@ -85,35 +115,43 @@ const ShowcaseCard = memo(({ card }) => {
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <div className="flex flex-col gap-2">
           <Link to={detailPath} className="transition hover:text-[#ee1c25]">
-            <h3 className="font-manrope text-[18px] font-semibold leading-6 text-[#111827] sm:text-[20px]">
-              {t(card.titleKey)}
+            <h3 className="line-clamp-1 font-manrope text-[18px] font-semibold leading-6 text-[#111827] sm:text-[20px]">
+              {titleText}
             </h3>
           </Link>
           <p className="line-clamp-2 font-manrope text-[14px] leading-5 text-[#6b7280] sm:text-[15px]">
-            {t(card.descriptionKey)}
+            {descriptionText}
           </p>
         </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#f0f1f4] pt-3">
           <MetricStat
             icon={ADMIN_PREMIUM_PHOTOS_ASSETS.heart}
-            value={card.likes}
+            value={card.likes || '0'}
             tone="accent"
           />
           <MetricStat
             icon={ADMIN_PREMIUM_PHOTOS_ASSETS.eye}
-            value={card.views}
+            value={card.views || '0'}
           />
-          <MetricStat
-            icon={ADMIN_PREMIUM_PHOTOS_ASSETS.calendar}
-            value={t(card.dateKey)}
-          />
+          {dateText ? (
+            <MetricStat
+              icon={ADMIN_PREMIUM_PHOTOS_ASSETS.calendar}
+              value={dateText}
+            />
+          ) : null}
         </div>
 
         <Button
           unstyled
           type="button"
-          className="w-full rounded-xl bg-[#ee1c25] px-4 py-3 text-[14px] font-bold leading-5 text-white transition hover:bg-[#d41921] sm:text-[15px]"
+          disabled={isDeleting}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onDelete?.(card.id);
+          }}
+          className="w-full rounded-xl bg-[#ee1c25] px-4 py-3 text-[14px] font-bold leading-5 text-white transition hover:bg-[#d41921] disabled:opacity-50 sm:text-[15px]"
         >
           {t('adminPremiumPhotos.delete')}
         </Button>
@@ -171,9 +209,11 @@ PremiumPhotosTypeFilters.displayName = 'PremiumPhotosTypeFilters';
 /**
  * @param {{
  *   cards: Array<{ id: string }>,
+ *   onDelete?: (id: string) => void,
+ *   isDeleting?: boolean,
  * }} props
  */
-const ShowcaseGrid = memo(({ cards }) => {
+const ShowcaseGrid = memo(({ cards, onDelete, isDeleting }) => {
   const { t } = useTranslation();
 
   return (
@@ -182,7 +222,12 @@ const ShowcaseGrid = memo(({ cards }) => {
       className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 2xl:grid-cols-4"
     >
       {cards.map((card) => (
-        <ShowcaseCard key={card.id} card={card} />
+        <ShowcaseCard
+          key={card.id}
+          card={card}
+          onDelete={onDelete}
+          isDeleting={isDeleting}
+        />
       ))}
     </section>
   );
@@ -200,6 +245,12 @@ const AdminPremiumPhotosContent = memo(() => {
     page,
     totalPages,
     visibleCards,
+    isLoading,
+    isError,
+    error,
+    isDeleting,
+    refetch,
+    handleDeletePhoto,
     handleFilterClick,
     handlePageChange,
   } = useAdminPremiumPhotosShowcase();
@@ -214,30 +265,63 @@ const AdminPremiumPhotosContent = memo(() => {
         />
       </header>
 
-      <ShowcaseGrid cards={visibleCards} />
-
-      {visibleCards.length === 0 ? (
-        <p className="text-center text-[16px] text-[#6b7280]">
-          {t('adminPremiumPhotos.empty')}
-        </p>
-      ) : null}
-
-      <div className="flex justify-center pt-2 sm:pt-4">
-        <AdminPagination
-          variant="competitions"
-          page={page}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          navAriaLabel={t('adminPremiumPhotos.pagination.aria')}
-          firstLabel={t('adminPremiumPhotos.pagination.first')}
-          prevLabel={t('adminPremiumPhotos.pagination.prev')}
-          nextLabel={t('adminPremiumPhotos.pagination.next')}
-          lastLabel={t('adminPremiumPhotos.pagination.last')}
-          pageLabel={(pageNumber) =>
-            t('adminPremiumPhotos.pagination.page', { page: pageNumber })
-          }
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center gap-2 py-20 text-center text-[#687186]">
+          <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+          <span className="text-[14px] font-medium">
+            {t('adminPremiumPhotos.loading', 'Loading premium photos...')}
+          </span>
+        </div>
+      ) : isError ? (
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center text-[#6b7280]">
+          <p className="text-[15px] font-medium text-[#ee1c25]">
+            {error?.message ||
+              t(
+                'adminPremiumPhotos.error',
+                'Failed to load premium photos.',
+              )}
+          </p>
+          <Button
+            unstyled
+            type="button"
+            onClick={() => refetch()}
+            className="rounded-lg bg-[#ee1c25] px-4 py-2 text-[14px] font-semibold text-white hover:bg-[#d41921]"
+          >
+            {t('common.retry', 'Retry')}
+          </Button>
+        </div>
+      ) : visibleCards.length > 0 ? (
+        <ShowcaseGrid
+          cards={visibleCards}
+          onDelete={handleDeletePhoto}
+          isDeleting={isDeleting}
         />
-      </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
+          <p className="text-[16px] font-medium">
+            {t('adminPremiumPhotos.empty')}
+          </p>
+        </div>
+      )}
+
+      {!isLoading && !isError && totalPages > 1 ? (
+        <div className="flex justify-center pt-2 sm:pt-4">
+          <AdminPagination
+            variant="competitions"
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            navAriaLabel={t('adminPremiumPhotos.pagination.aria')}
+            firstLabel={t('adminPremiumPhotos.pagination.first')}
+            prevLabel={t('adminPremiumPhotos.pagination.prev')}
+            nextLabel={t('adminPremiumPhotos.pagination.next')}
+            lastLabel={t('adminPremiumPhotos.pagination.last')}
+            pageLabel={(pageNumber) =>
+              t('adminPremiumPhotos.pagination.page', { page: pageNumber })
+            }
+          />
+        </div>
+      ) : null}
     </div>
   );
 });
