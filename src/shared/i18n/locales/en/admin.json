@@ -133,7 +133,17 @@
     "title": "Competition",
     "gridAria": "Competition photo showcase",
     "empty": "No submissions match this filter.",
+    "loading": "Loading artworks...",
+    "error": "Failed to load artworks.",
     "delete": "Delete",
+    "deleteSuccess": "Artwork deleted successfully.",
+    "deleteError": "Failed to delete artwork.",
+    "confirmDelete": {
+      "title": "Delete Artwork?",
+      "text": "Are you sure you want to delete this artwork? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
     "extraPhotos": "+{{count}} photos",
     "filters": {
       "aria": "Filter by album type",
@@ -270,7 +280,17 @@
     "title": "Gallery",
     "gridAria": "Gallery photo showcase",
     "empty": "No entries match this filter.",
+    "loading": "Loading gallery artworks...",
+    "error": "Failed to load gallery artworks.",
     "delete": "Delete",
+    "deleteSuccess": "Artwork deleted successfully.",
+    "deleteError": "Failed to delete artwork.",
+    "confirmDelete": {
+      "title": "Delete Artwork?",
+      "text": "Are you sure you want to delete this artwork? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
     "extraPhotos": "+{{count}} photos",
     "filters": {
       "aria": "Filter by album type",
@@ -358,6 +378,19 @@
     "viewProfile": "View Profile",
     "verified": "Verified",
     "commentsTitle": "Comments",
+    "noComments": "No comments on this artwork yet.",
+    "loading": "Loading artwork details...",
+    "error": "Failed to load artwork details.",
+    "notFound": "Artwork not found.",
+    "delete": "Delete Artwork",
+    "deleteSuccess": "Artwork deleted successfully.",
+    "deleteError": "Failed to delete artwork.",
+    "confirmDelete": {
+      "title": "Delete Artwork?",
+      "text": "Are you sure you want to delete this artwork? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
     "comments": {
       "darrell": "Darrell Steward",
       "text1": "I really like the composition and the colors. Amazing work!",
@@ -368,7 +401,17 @@
     "title": "Premium Photos",
     "gridAria": "Premium photo showcase",
     "empty": "No entries match this filter.",
+    "loading": "Loading premium photos...",
+    "error": "Failed to load premium photos.",
     "delete": "Delete",
+    "deleteSuccess": "Premium photo deleted successfully.",
+    "deleteError": "Failed to delete premium photo.",
+    "confirmDelete": {
+      "title": "Delete Premium Photo?",
+      "text": "Are you sure you want to delete this premium photo? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
     "extraPhotos": "+{{count}} photos",
     "filters": {
       "aria": "Filter by album type",
@@ -456,6 +499,18 @@
     "totalSell": "TOTAL SELL",
     "photographerLabel": "Photographer",
     "viewProfile": "View Profile",
+    "loading": "Loading premium photo details...",
+    "error": "Failed to load premium photo details.",
+    "notFound": "Premium photo not found.",
+    "delete": "Delete Photo",
+    "deleteSuccess": "Premium photo deleted successfully.",
+    "deleteError": "Failed to delete premium photo.",
+    "confirmDelete": {
+      "title": "Delete Premium Photo?",
+      "text": "Are you sure you want to delete this premium photo? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
     "specs": {
       "resolution": "Resolution",
       "format": "Format",

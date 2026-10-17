@@ -1,0 +1,1 @@
+const s="/assets/admin-competition-detail",e="/assets/home",r={commentAvatar:`${e}/avatar-comment.webp`,verified:`${e}/icon-verified.svg`,arrow:`${e}/icon-arrow-nav.svg`,curves:{red:`${s}/curve-red.svg`,twelve:`${s}/curve-12.svg`}};export{r as A};

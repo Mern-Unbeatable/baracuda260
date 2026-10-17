@@ -21,149 +21,15 @@ export const GALLERY_TYPE_KEYS = {
   single: 'adminGallery.types.single',
   six: 'adminGallery.types.six',
   zodiac: 'adminGallery.types.zodiac',
+  SINGLE: 'adminGallery.types.single',
+  SIX: 'adminGallery.types.six',
+  TWELVE: 'adminGallery.types.zodiac',
 };
 
-const BASE_CARDS = [
-  {
-    id: 'autumn',
-    type: 'six',
-    titleKey: 'adminGallery.cards.autumn.title',
-    descriptionKey: 'adminGallery.cards.autumn.description',
-    image: `${H}/photo-autumn.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.autumn.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'wings',
-    type: 'single',
-    titleKey: 'adminGallery.cards.wings.title',
-    descriptionKey: 'adminGallery.cards.wings.description',
-    image: `${H}/photo-wings.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.wings.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'city',
-    type: 'six',
-    titleKey: 'adminGallery.cards.city.title',
-    descriptionKey: 'adminGallery.cards.city.description',
-    image: `${H}/photo-city.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.city.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'forest',
-    type: 'single',
-    titleKey: 'adminGallery.cards.forest.title',
-    descriptionKey: 'adminGallery.cards.forest.description',
-    image: `${H}/photo-forest.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.forest.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'morning',
-    type: 'single',
-    titleKey: 'adminGallery.cards.morning.title',
-    descriptionKey: 'adminGallery.cards.morning.description',
-    image: `${H}/photo-morning.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.morning.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'harbor',
-    type: 'single',
-    titleKey: 'adminGallery.cards.harbor.title',
-    descriptionKey: 'adminGallery.cards.harbor.description',
-    image: `${H}/photo-harbor.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.harbor.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'silent',
-    type: 'single',
-    titleKey: 'adminGallery.cards.silent.title',
-    descriptionKey: 'adminGallery.cards.silent.description',
-    image: `${H}/photo-silent.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.silent.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'zodiac',
-    type: 'zodiac',
-    titleKey: 'adminGallery.cards.zodiac.title',
-    descriptionKey: 'adminGallery.cards.zodiac.description',
-    image: `${H}/photo-zodiac.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.zodiac.date',
-    extraPhotos: 11,
-  },
-];
+export const GALLERY_CARDS = [];
 
-export const GALLERY_CARDS = [
-  ...BASE_CARDS,
-  {
-    id: 'golden',
-    type: 'single',
-    titleKey: 'adminGallery.cards.golden.title',
-    descriptionKey: 'adminGallery.cards.golden.description',
-    image: `${H}/photo-golden.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.golden.date',
-    extraPhotos: null,
-  },
-  {
-    id: 'tidal',
-    type: 'six',
-    titleKey: 'adminGallery.cards.tidal.title',
-    descriptionKey: 'adminGallery.cards.tidal.description',
-    image: `${H}/photo-tidal.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.tidal.date',
-    extraPhotos: 5,
-  },
-  {
-    id: 'autumn-2',
-    type: 'zodiac',
-    titleKey: 'adminGallery.cards.autumn.title',
-    descriptionKey: 'adminGallery.cards.autumn.description',
-    image: `${H}/photo-zodiac.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.autumn.date',
-    extraPhotos: 11,
-  },
-  {
-    id: 'wings-2',
-    type: 'single',
-    titleKey: 'adminGallery.cards.wings.title',
-    descriptionKey: 'adminGallery.cards.wings.description',
-    image: `${H}/photo-wings.webp`,
-    likes: '1,488',
-    views: '1,400',
-    dateKey: 'adminGallery.cards.wings.date',
-    extraPhotos: null,
-  },
-];
-
-export const GALLERY_PAGE_SIZE = 12;
-export const GALLERY_TOTAL_PAGES = 10;
+export const GALLERY_PAGE_SIZE = 10;
+export const GALLERY_TOTAL_PAGES = 1;
 export const PAGINATION_LEADING_PAGES = [1, 2, 3];
 export const PAGINATION_ICON_SIZE = 16;
 export const CARD_IMAGE_WIDTH = 370;
@@ -182,8 +48,16 @@ export const getGalleryDetailPath = (id, detailRoutePattern) =>
  * @param {string} filterId
  */
 export const filterGalleryCards = (cards, filterId) => {
-  if (!filterId || filterId === 'all') return cards;
-  return cards.filter((card) => card.type === filterId);
+  if (!filterId || filterId === 'all' || !Array.isArray(cards)) return cards || [];
+  const normalized = filterId.toLowerCase();
+  return cards.filter((card) => {
+    const type = (card.type || '').toLowerCase();
+    const kind = (card.kind || '').toLowerCase();
+    if (normalized === 'single') return type === 'single' || kind === 'single';
+    if (normalized === 'six') return type === 'six' || kind === 'six';
+    if (normalized === 'zodiac') return type === 'zodiac' || kind === 'twelve';
+    return type === normalized || kind === normalized;
+  });
 };
 
 /**
