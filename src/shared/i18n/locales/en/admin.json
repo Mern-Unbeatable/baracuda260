@@ -1841,6 +1841,12 @@
     "generateButton": "Generate new link",
     "tableAria": "Promo links table",
     "empty": "No promo links match these filters.",
+    "loading": "Loading promo links...",
+    "loadError": "Failed to load promo links.",
+    "generateSuccess": "Promo link generated successfully.",
+    "generateError": "Failed to generate promo link.",
+    "rewardUpdateSuccess": "Reward status updated successfully.",
+    "rewardUpdateError": "Failed to update reward status.",
     "copyAria": "Copy promotional URL",
     "copySuccess": "Promotional link copied.",
     "copyFailed": "Could not copy the link.",
@@ -1949,5 +1955,11 @@
       "close": "Close promo link details",
       "closeButton": "Close"
     }
+  },
+  "adminProfile": {
+    "notEditable": "Not changeable",
+    "emailUnchangeableHint": "Admin email address is fixed and cannot be modified.",
+    "updateSuccess": "Admin profile updated successfully",
+    "updateError": "Failed to update admin profile."
   }
 }

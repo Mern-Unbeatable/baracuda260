@@ -69,7 +69,17 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
             total: link.checklistTotal,
           });
 
-  const absoluteUrl = buildPromoJoinAbsoluteUrl(link.code);
+  const absoluteUrl =
+    link.promotionalUrl || buildPromoJoinAbsoluteUrl(link.code);
+
+  const displayValidity =
+    typeof link.validity === 'string' && link.validity ? link.validity : validityLabel;
+  const displayChecklist =
+    typeof link.checklist === 'string' && link.checklist ? link.checklist : checklistLabel;
+  const displayReward =
+    REWARD_LABEL_KEYS[link.reward]
+      ? t(REWARD_LABEL_KEYS[link.reward])
+      : link.reward || '------';
 
   const handleCopy = async () => {
     try {
@@ -81,16 +91,16 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
   };
 
   const rows = [
-    { label: t('adminPromoLinks.columns.linkId'), value: link.linkId },
+    { label: t('adminPromoLinks.columns.linkId'), value: link.linkId || link.code },
     {
       label: t('adminPromoLinks.columns.dateIssued'),
-      value: formatIssuedAt(link.issuedAt),
+      value: link.issuedAt ? formatIssuedAt(link.issuedAt) : '---',
     },
-    { label: t('adminPromoLinks.columns.validity'), value: validityLabel },
-    { label: t('adminPromoLinks.columns.checklist'), value: checklistLabel },
+    { label: t('adminPromoLinks.columns.validity'), value: displayValidity },
+    { label: t('adminPromoLinks.columns.checklist'), value: displayChecklist },
     {
       label: t('adminPromoLinks.columns.reward'),
-      value: t(REWARD_LABEL_KEYS[link.reward]),
+      value: displayReward,
     },
   ];
 

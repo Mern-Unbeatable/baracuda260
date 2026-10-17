@@ -100,16 +100,28 @@ export const STATUS_LABEL_KEYS = {
   [PROMO_LINK_STATUS.ACTIVE]: 'adminPromoLinks.status.active',
   [PROMO_LINK_STATUS.USED]: 'adminPromoLinks.status.used',
   [PROMO_LINK_STATUS.EXPIRED]: 'adminPromoLinks.status.expired',
+  ACTIVE: 'adminPromoLinks.status.active',
+  USED: 'adminPromoLinks.status.used',
+  EXPIRED: 'adminPromoLinks.status.expired',
 };
 
 export const REWARD_LABEL_KEYS = {
   [PROMO_LINK_REWARD.PAID]: 'adminPromoLinks.reward.paid',
   [PROMO_LINK_REWARD.UNDER_REVIEW]: 'adminPromoLinks.reward.underReview',
   [PROMO_LINK_REWARD.NOT_ELIGIBLE]: 'adminPromoLinks.reward.notEligible',
+  PAID: 'adminPromoLinks.reward.paid',
+  UNDER_REVIEW: 'adminPromoLinks.reward.underReview',
+  NOT_ELIGIBLE: 'adminPromoLinks.reward.notEligible',
+  '------': 'adminPromoLinks.checklist.none',
 };
 
 export const STATUS_STYLES = {
   [PROMO_LINK_STATUS.ACTIVE]: {
+    bg: 'bg-[#eef7f3]',
+    text: 'text-[#268262]',
+    dot: 'bg-[#268262]',
+  },
+  ACTIVE: {
     bg: 'bg-[#eef7f3]',
     text: 'text-[#268262]',
     dot: 'bg-[#268262]',
@@ -119,7 +131,17 @@ export const STATUS_STYLES = {
     text: 'text-white',
     dot: 'bg-white',
   },
+  USED: {
+    bg: 'bg-[#5850ec]',
+    text: 'text-white',
+    dot: 'bg-white',
+  },
   [PROMO_LINK_STATUS.EXPIRED]: {
+    bg: 'bg-[#f2f1f8]',
+    text: 'text-[#766f9a]',
+    dot: 'bg-[#766f9a]',
+  },
+  EXPIRED: {
     bg: 'bg-[#f2f1f8]',
     text: 'text-[#766f9a]',
     dot: 'bg-[#766f9a]',
@@ -139,8 +161,12 @@ export const CHECKLIST_STYLES = {
 
 export const REWARD_STYLES = {
   [PROMO_LINK_REWARD.PAID]: 'text-[#268262]',
+  PAID: 'text-[#268262]',
   [PROMO_LINK_REWARD.UNDER_REVIEW]: 'text-[#687186]',
+  UNDER_REVIEW: 'text-[#687186]',
   [PROMO_LINK_REWARD.NOT_ELIGIBLE]: 'text-[#9aa3b5]',
+  NOT_ELIGIBLE: 'text-[#9aa3b5]',
+  '------': 'text-[#9aa3b5]',
 };
 
 export const PROMO_LINKS_STAT_CARDS = [
@@ -177,9 +203,8 @@ export const PROMO_LINKS_STAT_CARDS = [
 ];
 
 export const REWARD_ACTIONS = [
-  PROMO_LINK_REWARD.NOT_ELIGIBLE,
-  PROMO_LINK_REWARD.PAID,
-  PROMO_LINK_REWARD.UNDER_REVIEW,
+  'PAID',
+  'NOT_ELIGIBLE',
 ];
 
 const daysAgoIso = (days, hour = 10, minute = 42) => {
@@ -355,6 +380,23 @@ export const setPromoLinksStore = (links) => {
 };
 
 export const getRequirementStage = (link) => {
+  if (!link) return PROMO_LINK_REQUIREMENT.NONE;
+
+  if (typeof link.checklist === 'string') {
+    const trimmed = link.checklist.trim();
+    if (trimmed === '------' || !trimmed) return PROMO_LINK_REQUIREMENT.NONE;
+    if (trimmed.includes('/')) {
+      const [doneStr, totalStr] = trimmed.split('/');
+      const done = Number(doneStr);
+      const total = Number(totalStr);
+      if (!Number.isNaN(done) && !Number.isNaN(total)) {
+        return done >= total
+          ? PROMO_LINK_REQUIREMENT.COMPLETED
+          : PROMO_LINK_REQUIREMENT.INCOMPLETE;
+      }
+    }
+  }
+
   if (link.checklistDone == null) return PROMO_LINK_REQUIREMENT.NONE;
   if (link.checklistDone >= link.checklistTotal)
     return PROMO_LINK_REQUIREMENT.COMPLETED;
@@ -363,33 +405,60 @@ export const getRequirementStage = (link) => {
 
 export const computePromoLinkStats = (links) => ({
   total: links.length,
-  active: links.filter((link) => link.status === PROMO_LINK_STATUS.ACTIVE)
-    .length,
-  used: links.filter((link) => link.status === PROMO_LINK_STATUS.USED).length,
-  expired: links.filter((link) => link.status === PROMO_LINK_STATUS.EXPIRED)
-    .length,
+  active: links.filter(
+    (link) =>
+      link.status === PROMO_LINK_STATUS.ACTIVE || link.status === 'ACTIVE',
+  ).length,
+  used: links.filter(
+    (link) => link.status === PROMO_LINK_STATUS.USED || link.status === 'USED',
+  ).length,
+  expired: links.filter(
+    (link) =>
+      link.status === PROMO_LINK_STATUS.EXPIRED || link.status === 'EXPIRED',
+  ).length,
   incomplete: links.filter(
     (link) => getRequirementStage(link) === PROMO_LINK_REQUIREMENT.INCOMPLETE,
   ).length,
 });
 
 const daysBetween = (fromIso, toDate = new Date()) => {
+  if (!fromIso) return 0;
   const from = new Date(fromIso).getTime();
   const to = toDate.getTime();
   return Math.ceil((from - to) / (1000 * 60 * 60 * 24));
 };
 
 export const getValidityMeta = (link) => {
-  if (link.status === PROMO_LINK_STATUS.USED) {
-    return { kind: 'used', daysLeft: 0 };
+  if (!link) return { kind: 'expired', daysLeft: 0, text: '' };
+
+  const normStatus = String(link.status || '').toUpperCase();
+  if (normStatus === 'USED') {
+    return { kind: 'used', daysLeft: 0, text: link.validity || 'used' };
+  }
+  if (normStatus === 'EXPIRED') {
+    return { kind: 'expired', daysLeft: 0, text: link.validity || '0 days' };
   }
 
-  const daysLeft = daysBetween(link.expiresAt);
-  if (link.status === PROMO_LINK_STATUS.EXPIRED || daysLeft <= 0) {
-    return { kind: 'expired', daysLeft: 0 };
+  if (typeof link.validity === 'string' && link.validity) {
+    const valStr = link.validity.toLowerCase();
+    if (valStr.includes('used')) return { kind: 'used', daysLeft: 0, text: link.validity };
+    if (valStr.includes('0 day') || valStr === 'expired')
+      return { kind: 'expired', daysLeft: 0, text: link.validity };
+
+    const match = link.validity.match(/\d+/);
+    const count = match ? Number(match[0]) : 0;
+    return { kind: 'active', daysLeft: count, text: link.validity };
   }
 
-  return { kind: 'active', daysLeft };
+  if (link.expiresAt) {
+    const daysLeft = daysBetween(link.expiresAt);
+    if (daysLeft <= 0) {
+      return { kind: 'expired', daysLeft: 0, text: '0 days' };
+    }
+    return { kind: 'active', daysLeft, text: `${daysLeft} days left` };
+  }
+
+  return { kind: 'active', daysLeft: 10, text: '10 days left' };
 };
 
 export const formatIssuedAt = (iso) => {

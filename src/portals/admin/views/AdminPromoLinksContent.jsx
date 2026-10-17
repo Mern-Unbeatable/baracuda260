@@ -133,27 +133,38 @@ StatusBadge.displayName = 'StatusBadge';
 
 const ChecklistBadge = memo(({ link }) => {
   const { t } = useTranslation();
-  const stage = getRequirementStage(link);
-
-  if (stage === 'none') {
+  if (typeof link.checklist === 'string' && link.checklist.trim() === '------') {
     return (
       <span className="text-[14px] text-[#9aa3b5]">
-        {t('adminPromoLinks.checklist.none')}
+        ------
       </span>
     );
   }
 
-  const style = CHECKLIST_STYLES[stage];
+  const stage = getRequirementStage(link);
+  if (stage === 'none') {
+    return (
+      <span className="text-[14px] text-[#9aa3b5]">
+        {link.checklist || t('adminPromoLinks.checklist.none')}
+      </span>
+    );
+  }
+
+  const style =
+    CHECKLIST_STYLES[stage] ||
+    CHECKLIST_STYLES[PROMO_LINK_REQUIREMENT.INCOMPLETE];
   const label =
-    stage === 'completed'
-      ? t('adminPromoLinks.checklist.completed', {
-          done: link.checklistDone,
-          total: link.checklistTotal,
-        })
-      : t('adminPromoLinks.checklist.incomplete', {
-          done: link.checklistDone,
-          total: link.checklistTotal,
-        });
+    typeof link.checklist === 'string' && link.checklist.includes('/')
+      ? link.checklist
+      : stage === 'completed'
+        ? t('adminPromoLinks.checklist.completed', {
+            done: link.checklistDone,
+            total: link.checklistTotal,
+          })
+        : t('adminPromoLinks.checklist.incomplete', {
+            done: link.checklistDone,
+            total: link.checklistTotal,
+          });
 
   return (
     <span
@@ -173,6 +184,14 @@ ChecklistBadge.displayName = 'ChecklistBadge';
 const ValidityText = memo(({ link }) => {
   const { t } = useTranslation();
   const validity = getValidityMeta(link);
+
+  if (typeof link.validity === 'string' && link.validity) {
+    return (
+      <span className="text-[14px] text-[#0c0c0c]">
+        {link.validity}
+      </span>
+    );
+  }
 
   if (validity.kind === 'used') {
     return (
@@ -198,9 +217,9 @@ const ValidityText = memo(({ link }) => {
 });
 ValidityText.displayName = 'ValidityText';
 
-const CopyUrlButton = memo(({ code }) => {
+const CopyUrlButton = memo(({ code, url }) => {
   const { t } = useTranslation();
-  const absoluteUrl = buildPromoJoinAbsoluteUrl(code);
+  const absoluteUrl = url || buildPromoJoinAbsoluteUrl(code);
 
   const handleCopy = async () => {
     try {
@@ -232,11 +251,16 @@ CopyUrlButton.displayName = 'CopyUrlButton';
 
 const RewardLabel = memo(({ reward }) => {
   const { t } = useTranslation();
+  if (reward === '------' || !reward) {
+    return <span className="text-[14px] text-[#9aa3b5]">------</span>;
+  }
+  const label =
+    REWARD_LABEL_KEYS[reward] ? t(REWARD_LABEL_KEYS[reward]) : reward;
   return (
     <span
       className={`text-[14px] font-medium ${REWARD_STYLES[reward] || 'text-[#0c0c0c]'}`}
     >
-      {t(REWARD_LABEL_KEYS[reward])}
+      {label}
     </span>
   );
 });
@@ -478,7 +502,7 @@ const PromoLinkTableRow = memo(
         {link.linkId}
       </TableCell>
       <TableCell className="min-w-[220px]">
-        <CopyUrlButton code={link.code} />
+        <CopyUrlButton code={link.code} url={link.promotionalUrl || link.url} />
       </TableCell>
       <TableCell className="min-w-[140px] text-[14px] leading-6 whitespace-nowrap text-[#0c0c0c]">
         {formatIssuedAt(link.issuedAt)}
@@ -529,7 +553,7 @@ const PromoLinkMobileCard = memo(
               {link.linkId}
             </p>
             <div className="mt-2">
-              <CopyUrlButton code={link.code} />
+              <CopyUrlButton code={link.code} url={link.promotionalUrl || link.url} />
             </div>
           </div>
           <PromoLinkActionMenu
@@ -594,8 +618,13 @@ const AdminPromoLinksContent = memo(() => {
     openActionId,
     detailLink,
     generateOpen,
+    isGenerating,
     createdLink,
     visibleLinks,
+    isLoading,
+    isError,
+    errorMessage,
+    refetch,
     resultsFrom,
     resultsTo,
     resultsTotal,
@@ -684,7 +713,28 @@ const AdminPromoLinksContent = memo(() => {
         aria-label={t('adminPromoLinks.tableAria')}
         className="overflow-hidden rounded-[12px] bg-white"
       >
-        {visibleLinks.length > 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
+            <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+            <span className="text-[14px] font-medium">
+              {t('adminPromoLinks.loading', 'Loading promo links...')}
+            </span>
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-14 text-center text-[#687186]">
+            <p className="text-[15px] font-medium text-[#ee1c25]">
+              {errorMessage}
+            </p>
+            <Button
+              unstyled
+              type="button"
+              onClick={() => refetch()}
+              className="rounded-lg bg-[#ee1c25] px-4 py-2 text-[14px] font-semibold text-white transition hover:bg-[#d41921]"
+            >
+              {t('common.retry', 'Retry')}
+            </Button>
+          </div>
+        ) : visibleLinks.length > 0 ? (
           isMdUp ? (
             <Table className="min-w-[1100px]">
               <TableHeader>
@@ -766,6 +816,7 @@ const AdminPromoLinksContent = memo(() => {
 
       <GeneratePromoLinkModal
         open={generateOpen}
+        isPending={isGenerating}
         onClose={handleCloseGenerate}
         onConfirm={handleConfirmGenerate}
       />
