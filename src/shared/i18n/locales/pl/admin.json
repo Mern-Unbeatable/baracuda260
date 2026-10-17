@@ -1846,6 +1846,12 @@
     "generateButton": "Wygeneruj nowy link",
     "tableAria": "Tabela linków promocyjnych",
     "empty": "Brak linków pasujących do tych filtrów.",
+    "loading": "Ładowanie linków promocyjnych...",
+    "loadError": "Nie udało się załadować linków promocyjnych.",
+    "generateSuccess": "Pomyślnie wygenerowano link promocyjny.",
+    "generateError": "Nie udało się wygenerować linku promocyjnego.",
+    "rewardUpdateSuccess": "Pomyślnie zaktualizowano status nagrody.",
+    "rewardUpdateError": "Nie udało się zaktualizować statusu nagrody.",
     "copyAria": "Kopiuj URL promocyjny",
     "copySuccess": "Skopiowano link promocyjny.",
     "copyFailed": "Nie udało się skopiować linku.",
@@ -1954,5 +1960,11 @@
       "close": "Zamknij szczegóły linku",
       "closeButton": "Zamknij"
     }
+  },
+  "adminProfile": {
+    "notEditable": "Niezmienne",
+    "emailUnchangeableHint": "Adres e-mail administratora jest stały i nie można go modyfikować.",
+    "updateSuccess": "Profil administratora został pomyślnie zaktualizowany",
+    "updateError": "Nie udało się zaktualizować profilu administratora."
   }
 }

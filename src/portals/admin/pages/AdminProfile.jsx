@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import ProfileContent from '@/portals/member/views/ProfileContent';
+import AdminProfileContent from '@/portals/admin/views/AdminProfileContent';
 import { useSEO } from '@/shared/hooks/useSEO';
 
 const AdminProfile = memo(() => {
@@ -10,7 +10,7 @@ const AdminProfile = memo(() => {
     keywords: ['profile', 'account', 'password', 'admin', 'My12Photos'],
   });
 
-  return <ProfileContent />;
+  return <AdminProfileContent />;
 });
 
 AdminProfile.displayName = 'AdminProfile';

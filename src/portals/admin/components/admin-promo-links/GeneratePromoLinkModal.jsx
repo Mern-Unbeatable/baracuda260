@@ -12,7 +12,7 @@ import { PROMO_LINK_VALIDITY_DAYS } from '@/portals/admin/data/adminPromoLinksDa
  *   onConfirm: () => void,
  * }} props
  */
-const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
+const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm, isPending }) => {
   const { t } = useTranslation();
   const titleId = useId();
 
@@ -23,7 +23,7 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
     document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape' && !isPending) onClose();
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -31,7 +31,7 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open, onClose]);
+  }, [open, onClose, isPending]);
 
   if (!open) return null;
 
@@ -39,7 +39,7 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(24,32,51,0.35)] p-4"
       role="presentation"
-      onClick={onClose}
+      onClick={isPending ? undefined : onClose}
     >
       <div
         role="dialog"
@@ -68,9 +68,10 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
           <Button
             unstyled
             type="button"
+            disabled={isPending}
             onClick={onClose}
             aria-label={t('adminPromoLinks.generate.close')}
-            className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#687186] transition hover:bg-black/5"
+            className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#687186] transition hover:bg-black/5 disabled:opacity-50"
           >
             <X size={20} aria-hidden="true" />
           </Button>
@@ -141,19 +142,27 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm }) => {
             <Button
               unstyled
               type="button"
+              disabled={isPending}
               onClick={onClose}
-              className="cursor-pointer rounded-[10px] px-4 py-2.5 text-[14px] font-semibold text-[#687186] transition hover:bg-[#f6f7f9]"
+              className="cursor-pointer rounded-[10px] px-4 py-2.5 text-[14px] font-semibold text-[#687186] transition hover:bg-[#f6f7f9] disabled:opacity-50"
             >
               {t('adminPromoLinks.generate.cancel')}
             </Button>
             <Button
               unstyled
               type="button"
+              disabled={isPending}
               onClick={onConfirm}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#4048cd] px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-[#353cb0]"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#4048cd] px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-[#353cb0] disabled:opacity-50"
             >
-              <Zap size={16} aria-hidden="true" />
-              {t('adminPromoLinks.generate.confirm')}
+              {isPending ? (
+                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : (
+                <Zap size={16} aria-hidden="true" />
+              )}
+              {isPending
+                ? t('common.loading', 'Generating...')
+                : t('adminPromoLinks.generate.confirm')}
             </Button>
           </div>
         </footer>

@@ -17,7 +17,8 @@ const PromoLinkCreatedModal = memo(({ open, link, onClose }) => {
   const { t } = useTranslation();
   const titleId = useId();
   const [copied, setCopied] = useState(false);
-  const absoluteUrl = link ? buildPromoJoinAbsoluteUrl(link.code) : '';
+  const absoluteUrl =
+    link?.promotionalUrl || (link?.code ? buildPromoJoinAbsoluteUrl(link.code) : '');
 
   useEffect(() => {
     if (!open) {
