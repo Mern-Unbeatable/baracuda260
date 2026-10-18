@@ -965,6 +965,8 @@
       "votes": "TOTAL Votes"
     },
     "showing": "Showing top {{count}} of {{total}} photographers",
+    "showingRange": "Showing {{from}}–{{to}} of {{total}} photographers",
+    "showingSingle": "Showing {{from}} of {{total}} photographers",
     "prevPage": "Previous rankings page",
     "nextPage": "Next rankings page",
     "signs": {

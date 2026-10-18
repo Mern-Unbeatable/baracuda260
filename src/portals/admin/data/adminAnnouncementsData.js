@@ -231,6 +231,7 @@ export const EMPTY_ANNOUNCEMENT_FORM = {
   icon: '🎉',
   type: ANNOUNCEMENT_TYPE.GENERAL_ANNOUNCEMENT,
   link: '',
+  buttonName: '',
   startDate: '',
   startTime: '',
   endDate: '',
@@ -298,14 +299,19 @@ export const getAnnouncementFormValues = (announcement) => {
     typeof rawLink === 'string'
       ? rawLink
       : typeof rawLink === 'object' && rawLink !== null
-        ? rawLink.url || rawLink.text || ''
+        ? rawLink.url || rawLink.buttonName || rawLink.text || ''
         : '';
+  const buttonName =
+    typeof rawLink === 'object' && rawLink !== null
+      ? rawLink.buttonName || rawLink.text || ''
+      : '';
 
   return {
     message: announcement.message ?? '',
     icon: announcement.icon || EMPTY_ANNOUNCEMENT_FORM.icon,
     type: announcement.type || EMPTY_ANNOUNCEMENT_FORM.type,
     link,
+    buttonName,
     startDate: toDateInputValue(announcement.startDate),
     startTime: announcement.startTime ?? '',
     endDate: toDateInputValue(announcement.endDate),
@@ -322,18 +328,22 @@ export const getAnnouncementFormValues = (announcement) => {
  */
 export const buildAnnouncementPayload = (values, { previousLink } = {}) => {
   const linkStr = String(values.link || '').trim();
+  const buttonNameStr = String(values.buttonName || '').trim();
   const noEndDate = Boolean(values.noEndDate);
 
   let linkPayload;
   if (!linkStr) {
     linkPayload = previousLink ? null : undefined;
-  } else if (typeof previousLink === 'object' && previousLink !== null) {
+  } else {
+    const fallbackButtonName =
+      (typeof previousLink === 'object' && previousLink !== null
+        ? previousLink.buttonName || previousLink.text
+        : '') || 'Learn More';
+
     linkPayload = {
       url: linkStr,
-      text: previousLink.text || linkStr,
+      buttonName: buttonNameStr || fallbackButtonName,
     };
-  } else {
-    linkPayload = linkStr;
   }
 
   return {

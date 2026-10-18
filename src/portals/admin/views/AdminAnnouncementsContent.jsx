@@ -206,13 +206,13 @@ const AnnouncementSummary = memo(({ row, wrap = false }) => {
     typeof link === 'string'
       ? link
       : typeof link === 'object' && link !== null
-        ? link.text || link.url || ''
+        ? link.buttonName || link.text || link.url || ''
         : '';
   const linkHref =
     typeof link === 'string'
       ? link
       : typeof link === 'object' && link !== null
-        ? link.url || link.text || ''
+        ? link.url || link.text || link.buttonName || ''
         : '';
 
   return (

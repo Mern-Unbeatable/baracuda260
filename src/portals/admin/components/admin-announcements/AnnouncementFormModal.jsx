@@ -172,14 +172,29 @@ const AnnouncementForm = ({
 
           <Input
             type="text"
-            inputMode="url"
-            label={t('adminAnnouncements.modal.linkLabel')}
-            placeholder={t('adminAnnouncements.modal.linkPlaceholder')}
+            label={t(
+              'adminAnnouncements.modal.buttonNameLabel',
+              'Button Label (optional)',
+            )}
+            placeholder={t(
+              'adminAnnouncements.modal.buttonNamePlaceholder',
+              'e.g. Learn More',
+            )}
             inputClassName={inputClass}
             labelClassName={labelClass}
-            {...register('link')}
+            {...register('buttonName')}
           />
         </div>
+
+        <Input
+          type="text"
+          inputMode="url"
+          label={t('adminAnnouncements.modal.linkLabel')}
+          placeholder={t('adminAnnouncements.modal.linkPlaceholder')}
+          inputClassName={inputClass}
+          labelClassName={labelClass}
+          {...register('link')}
+        />
 
         <div>
           <p className="text-[14px] font-semibold leading-5 text-[#202838]">

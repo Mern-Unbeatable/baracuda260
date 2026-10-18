@@ -85,10 +85,46 @@ const RankingRow = memo(({ row }) => {
 
 RankingRow.displayName = 'RankingRow';
 
+const PAGE_SIZE = 5;
+
 const MemberArtworkGlobalRankings = memo(
-  ({ rankings, showingCount, showingTotal }) => {
+  ({ rankings = [], showingTotal }) => {
     const { t } = useTranslation();
     const [rankPage, setRankPage] = useState(1);
+
+    const total = rankings.length;
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const hasMultiplePages = totalPages > 1;
+
+    const currentPage = Math.min(Math.max(1, rankPage), totalPages);
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const endIndex = Math.min(startIndex + PAGE_SIZE, total);
+
+    const paginatedRankings = hasMultiplePages
+      ? rankings.slice(startIndex, endIndex)
+      : rankings;
+
+    const from = total === 0 ? 0 : startIndex + 1;
+    const to = total === 0 ? 0 : endIndex;
+
+    const showingText = hasMultiplePages
+      ? from === to
+        ? t('competitionDetails.showingSingle', {
+            from,
+            total,
+            defaultValue: `Showing ${from} of ${total} photographers`,
+          })
+        : t('competitionDetails.showingRange', {
+            from,
+            to,
+            total,
+            defaultValue: `Showing ${from}–${to} of ${total} photographers`,
+          })
+      : t('competitionDetails.showing', {
+          count: total,
+          total: showingTotal || total,
+          defaultValue: `Showing top ${total} of ${showingTotal || total} photographers`,
+        });
 
     return (
       <section
@@ -121,7 +157,7 @@ const MemberArtworkGlobalRankings = memo(
               ))}
             </div>
 
-            {rankings.map((row) => (
+            {paginatedRankings.map((row) => (
               <RankingRow key={row.id} row={row} />
             ))}
           </div>
@@ -129,44 +165,46 @@ const MemberArtworkGlobalRankings = memo(
 
         <div className="flex flex-col items-center gap-4 bg-[#f1f3ff] px-4 py-5 text-center sm:flex-row sm:justify-between sm:px-8 sm:py-6 sm:text-left">
           <p className="text-[14px] font-medium tracking-[0.6px] text-[#494453] sm:text-[16px] sm:leading-4">
-            {t('competitionDetails.showing', {
-              count: showingCount,
-              total: showingTotal,
-            })}
+            {showingText}
           </p>
-          <div className="flex items-center gap-2">
-            <Button
-              unstyled
-              type="button"
-              aria-label={t('competitionDetails.prevPage')}
-              disabled={rankPage <= 1}
-              onClick={() => setRankPage((page) => Math.max(1, page - 1))}
-              className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full border border-[#cbc3d5] bg-white shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <Image
-                src={COMPETITION_DETAILS_ASSETS.chevronLeft}
-                alt=""
-                width={8}
-                height={12}
-                className="h-3 w-2 object-contain"
-              />
-            </Button>
-            <Button
-              unstyled
-              type="button"
-              aria-label={t('competitionDetails.nextPage')}
-              onClick={() => setRankPage((page) => page + 1)}
-              className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full border border-[#cbc3d5] bg-white shadow-sm transition hover:bg-white"
-            >
-              <Image
-                src={COMPETITION_DETAILS_ASSETS.chevronRight}
-                alt=""
-                width={8}
-                height={12}
-                className="h-3 w-2 object-contain"
-              />
-            </Button>
-          </div>
+          {hasMultiplePages ? (
+            <div className="flex items-center gap-2">
+              <Button
+                unstyled
+                type="button"
+                aria-label={t('competitionDetails.prevPage')}
+                disabled={currentPage <= 1}
+                onClick={() => setRankPage((page) => Math.max(1, page - 1))}
+                className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full border border-[#cbc3d5] bg-white shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Image
+                  src={COMPETITION_DETAILS_ASSETS.chevronLeft}
+                  alt=""
+                  width={8}
+                  height={12}
+                  className="h-3 w-2 object-contain"
+                />
+              </Button>
+              <Button
+                unstyled
+                type="button"
+                aria-label={t('competitionDetails.nextPage')}
+                disabled={currentPage >= totalPages}
+                onClick={() =>
+                  setRankPage((page) => Math.min(totalPages, page + 1))
+                }
+                className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full border border-[#cbc3d5] bg-white shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Image
+                  src={COMPETITION_DETAILS_ASSETS.chevronRight}
+                  alt=""
+                  width={8}
+                  height={12}
+                  className="h-3 w-2 object-contain"
+                />
+              </Button>
+            </div>
+          ) : null}
         </div>
       </section>
     );

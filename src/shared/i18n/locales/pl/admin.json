@@ -1613,6 +1613,8 @@
       "messageCount": "{{count}} / {{max}}",
       "emojiLabel": "Ikona / emoji (opcjonalnie)",
       "typeLabel": "Typ",
+      "buttonNameLabel": "Etykieta przycisku (opcjonalnie)",
+      "buttonNamePlaceholder": "np. Dowiedz się więcej",
       "linkLabel": "Link",
       "scheduleTitle": "Harmonogram wyświetlania",
       "startDate": "Data rozpoczęcia",
