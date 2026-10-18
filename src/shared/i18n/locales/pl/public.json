@@ -967,6 +967,8 @@
       "votes": "ŁĄCZNE GŁOSY"
     },
     "showing": "Wyświetlanie top {{count}} z {{total}} fotografów",
+    "showingRange": "Wyświetlanie {{from}}–{{to}} z {{total}} fotografów",
+    "showingSingle": "Wyświetlanie {{from}} z {{total}} fotografów",
     "prevPage": "Poprzednia strona rankingu",
     "nextPage": "Następna strona rankingu",
     "signs": {

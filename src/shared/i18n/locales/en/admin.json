@@ -1610,6 +1610,8 @@
       "messageCount": "{{count}} / {{max}}",
       "emojiLabel": "Icon / Emoji (optional)",
       "typeLabel": "Type",
+      "buttonNameLabel": "Button Label (optional)",
+      "buttonNamePlaceholder": "e.g. Learn More",
       "linkLabel": "Link",
       "scheduleTitle": "Display Schedule",
       "startDate": "Start Date",
