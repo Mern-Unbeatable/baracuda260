@@ -427,7 +427,17 @@
           "timing": "Zakończono 12 grudnia",
           "status": "1. miejsce"
         }
-      }
+      },
+      "participantsCount": "{{count}} uczestników",
+      "ended": "Zakończono",
+      "daysLeft": "pozostało {{count}} dni",
+      "hoursLeft": "pozostało {{count}} godz.",
+      "endingSoon": "Wkrótce koniec",
+      "empty": "Nie bierzesz jeszcze udziału w żadnym konkursie.",
+      "emptyTitle": "Brak aktywnych zgłoszeń konkursowych",
+      "emptySubtitle": "Prześlij swoje zdjęcia do naszych comiesięcznych konkursów tematycznych, aby wspinać się w rankingu i wygrywać nagrody.",
+      "browseCompetitions": "Przeglądaj konkursy",
+      "loadError": "Nie udało się załadować konkursów, w których bierzesz udział."
     }
   },
   "uploadPhotos": {

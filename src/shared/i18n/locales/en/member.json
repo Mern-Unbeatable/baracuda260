@@ -445,7 +445,17 @@
           "timing": "Completed Dec 12",
           "status": "1st Place"
         }
-      }
+      },
+      "participantsCount": "{{count}} participants",
+      "ended": "Ended",
+      "daysLeft": "{{count}} days left",
+      "hoursLeft": "{{count}} hours left",
+      "endingSoon": "Ending soon",
+      "empty": "You are not participating in any competitions yet.",
+      "emptyTitle": "No active competition entries",
+      "emptySubtitle": "Submit your photos to our monthly themed competitions to climb the leaderboard and win prizes.",
+      "browseCompetitions": "Explore Competitions",
+      "loadError": "Could not load your participating competitions."
     }
   },
   "uploadPhotos": {
