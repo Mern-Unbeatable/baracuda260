@@ -7,9 +7,10 @@ import {
   Copy,
   FileText,
   Package,
+  RefreshCw,
   Truck,
 } from 'lucide-react';
-import React, { memo, useMemo } from 'react';
+import React, { memo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -17,16 +18,13 @@ import Pagination from '@/components/common/Pagination/Pagination';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
-  computeOrderStats,
-  MY_ORDERS,
-  MY_ORDERS_PAGE_SIZE,
   MY_ORDERS_STAT_CARDS,
   ORDER_STATUS,
   ORDER_STATUS_LABEL_KEYS,
   ORDER_STATUS_STYLES,
 } from '@/portals/member/data/myOrdersData';
+import useBuyerOrders from '@/portals/member/hooks/useBuyerOrders';
 import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const STAT_ICONS = {
   Package,
@@ -37,8 +35,22 @@ const STAT_ICONS = {
 
 const StatusBadge = memo(({ status, deliveredOn }) => {
   const { t } = useTranslation();
-  const style = ORDER_STATUS_STYLES[status];
-  const isDelivered = status === ORDER_STATUS.DELIVERED;
+  const normalizedStatus = String(status || '').toLowerCase();
+  const style =
+    ORDER_STATUS_STYLES[normalizedStatus] ||
+    ORDER_STATUS_STYLES[ORDER_STATUS.PROCESSING] || {
+      badge: 'bg-[#eef7f3] text-[#268262]',
+      dot: 'bg-[#268262]',
+    };
+  const isDelivered =
+    normalizedStatus === 'delivered' || normalizedStatus === 'completed';
+
+  const labelKey = ORDER_STATUS_LABEL_KEYS[normalizedStatus];
+  const labelText = labelKey
+    ? t(labelKey)
+    : status
+      ? String(status).toUpperCase()
+      : t('myOrders.status.processing');
 
   return (
     <div className="flex flex-col items-end gap-1">
@@ -53,7 +65,7 @@ const StatusBadge = memo(({ status, deliveredOn }) => {
             aria-hidden="true"
           />
         )}
-        {t(ORDER_STATUS_LABEL_KEYS[status])}
+        {labelText}
       </span>
       {isDelivered && deliveredOn ? (
         <p className="text-[11px] font-medium text-[#9aa3b5]">
@@ -78,18 +90,18 @@ const OrderStatCards = memo(({ stats }) => {
       {MY_ORDERS_STAT_CARDS.map((card) => {
         let iconBg = card.iconBg;
         let iconColor = 'text-current';
-        
+
         if (iconBg && iconBg.includes('text-')) {
           const parts = iconBg.split(' ');
-          iconBg = parts.find(p => p.startsWith('bg-')) || iconBg;
-          iconColor = parts.find(p => p.startsWith('text-')) || iconColor;
+          iconBg = parts.find((p) => p.startsWith('bg-')) || iconBg;
+          iconColor = parts.find((p) => p.startsWith('text-')) || iconColor;
         }
 
         return (
           <DashboardStatCard
             key={card.id}
             labelKey={card.labelKey}
-            value={stats[card.id].value}
+            value={stats?.[card.id]?.value ?? stats?.[card.id] ?? 0}
             icon={card.icon}
             iconBg={iconBg}
             iconColor={iconColor}
@@ -104,13 +116,14 @@ OrderStatCards.displayName = 'OrderStatCards';
 const OrderCard = memo(({ order }) => {
   const { t } = useTranslation();
   const detailHref = ROUTES.USER_MY_ORDERS_DETAIL.replace(':id', order.id);
+  const displayOrderNumber = String(order.orderNumber || '').replace(/^#+/, '');
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(order.orderNumber);
-      toast.success(t('myOrders.copySuccess'));
+      toast.success(t('myOrders.copySuccess', 'Order number copied!'));
     } catch {
-      toast.error(t('myOrders.copyFailed'));
+      toast.error(t('myOrders.copyFailed', 'Failed to copy order number.'));
     }
   };
 
@@ -123,7 +136,7 @@ const OrderCard = memo(({ order }) => {
       <div className="flex flex-col gap-3 border-b border-[#f1f3f7] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-2.5">
           <p className="text-[14px] font-bold text-[#151e31]">
-            {t('myOrders.orderLabel', { number: order.orderNumber })}
+            {t('myOrders.orderLabel', { number: displayOrderNumber })}
           </p>
           <Button
             unstyled
@@ -241,23 +254,35 @@ const OrderCard = memo(({ order }) => {
 });
 OrderCard.displayName = 'OrderCard';
 
+const PAGE_SIZE = 10;
+
 const MyOrdersContent = memo(() => {
   const { t } = useTranslation();
-  const orders = useMemo(() => MY_ORDERS, []);
-  const stats = useMemo(() => computeOrderStats(orders), [orders]);
-  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
-    orders,
-    MY_ORDERS_PAGE_SIZE,
-  );
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const showingCount = pagedItems.length;
+  const { orders, meta, stats, isLoading, isError, error } = useBuyerOrders({
+    page: currentPage,
+    limit: PAGE_SIZE,
+  });
+
+  const totalRecords = meta.totalRecords;
+  const totalPages = meta.totalPages;
+  const showingCount = orders.length;
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-7">
       <header className="flex flex-col gap-2">
-        <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
-          {t('myOrders.title')}
-        </h1>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
+            {t('myOrders.title')}
+          </h1>
+          {isLoading ? (
+            <div className="flex items-center gap-2 text-[14px] text-[#7a7484]">
+              <RefreshCw size={16} className="animate-spin text-[#4048cd]" />
+              <span>{t('common.loading', 'Loading...')}</span>
+            </div>
+          ) : null}
+        </div>
         <p className="max-w-190 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
           {t('myOrders.subtitle')}
         </p>
@@ -270,37 +295,51 @@ const MyOrdersContent = memo(() => {
           <h2 className="text-[12px] font-bold tracking-[0.14em] text-[#8b93a7]">
             {t('myOrders.recentTitle', {
               showing: showingCount,
-              total: orders.length,
+              total: totalRecords,
+              defaultValue: `RECENT ORDERS (${showingCount} OF ${totalRecords})`,
             })}
           </h2>
           <p className="text-[12px] text-[#9aa3b5]">{t('myOrders.sortedBy')}</p>
         </div>
 
-        {pagedItems.length === 0 ? (
+        {isLoading && orders.length === 0 ? (
+          <div className="flex min-h-60 items-center justify-center rounded-[14px] border border-[#eceef3] bg-white p-8">
+            <RefreshCw size={24} className="animate-spin text-[#4048cd]" />
+          </div>
+        ) : isError && orders.length === 0 ? (
+          <div className="rounded-[14px] border border-red-200 bg-red-50 p-6 text-[15px] text-red-600">
+            {error?.message ||
+              t('common.errors.general', 'Failed to load buyer orders.')}
+          </div>
+        ) : orders.length === 0 ? (
           <p className="rounded-[14px] border border-dashed border-[#e4e4e4] bg-white px-6 py-12 text-center text-[16px] text-[#687186]">
-            {t('myOrders.empty')}
+            {t('myOrders.empty', 'You have not placed any orders yet.')}
           </p>
         ) : (
           <div className="flex flex-col gap-4">
-            {pagedItems.map((order) => (
+            {orders.map((order) => (
               <OrderCard key={order.id} order={order} />
             ))}
           </div>
         )}
       </section>
 
-      {orders.length > 0 ? (
+      {totalRecords > 0 ? (
         <footer className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] font-medium tracking-[0.4px] text-[#494453]">
             {t('myOrders.showing', {
-              showing: showingCount,
-              total: orders.length,
+              from: (currentPage - 1) * PAGE_SIZE + 1,
+              to: Math.min(currentPage * PAGE_SIZE, totalRecords),
+              total: totalRecords,
+              defaultValue: `Showing ${
+                (currentPage - 1) * PAGE_SIZE + 1
+              }–${Math.min(currentPage * PAGE_SIZE, totalRecords)} of ${totalRecords} orders`,
             })}
           </p>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={setPage}
+            onPageChange={setCurrentPage}
             ariaLabel={t('myOrders.paginationAria')}
           />
         </footer>

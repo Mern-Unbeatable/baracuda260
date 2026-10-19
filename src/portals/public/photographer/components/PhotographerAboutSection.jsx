@@ -55,7 +55,11 @@ const PhotographerAboutSection = memo(({ profile }) => {
             <p key={`${index}-${paragraph.slice(0, 24)}`}>{paragraph}</p>
           ))}
         </div>
-      ) : null}
+      ) : (
+        <p className="mt-3 text-[15px] italic text-[#9ca3af]">
+          {t('photographerProfile.noBio', 'No biography provided yet.')}
+        </p>
+      )}
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
         {typeof profile?.website === 'string' && profile.website.trim() ? (
           <a

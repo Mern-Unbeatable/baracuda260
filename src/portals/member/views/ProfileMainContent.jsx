@@ -1,13 +1,15 @@
+import { RefreshCw } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader';
 import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar';
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import {
   MEMBER_ARTWORK,
   MEMBER_FEATURED,
   MEMBER_MESSAGES,
   MEMBER_PREMIUM,
-  MEMBER_PROFILE,
 } from '@/portals/member/data/memberProfileData';
 import useUserProfileMe from '@/portals/member/hooks/useUserProfileMe';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
@@ -21,29 +23,35 @@ import PhotographerSlideshowsSection from '@/portals/public/photographer/compone
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
 import {
-  PHOTOGRAPHER_FEATURED_VIDEO,
   PHOTOGRAPHER_STORE_PRODUCTS,
-  PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
+import { resolveMediaUrl } from '@/shared/utils/media';
 
 const ProfileMainContent = memo(() => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(() =>
     searchParams.has(SLIDESHOW_SEARCH_PARAM) ? 'artwork' : 'profile',
   );
 
-  const { data: profileData } = useUserProfileMe();
+  const {
+    data: profileData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useUserProfileMe();
 
   const profile = useMemo(() => {
-    if (!profileData) return MEMBER_PROFILE;
+    if (!profileData) return null;
 
     const handle = profileData.username
       ? `@${profileData.username.replace(/^@/, '')}`
-      : MEMBER_PROFILE.handle;
-    const location =
-      [profileData.city, profileData.country].filter(Boolean).join(', ') ||
-      MEMBER_PROFILE.location;
+      : '';
+    const location = [profileData.city, profileData.country]
+      .filter(Boolean)
+      .join(', ');
 
     let socialObj = {};
     if (typeof profileData.socialLinks === 'string') {
@@ -72,46 +80,92 @@ const ProfileMainContent = memo(() => {
     }
 
     return {
-      ...MEMBER_PROFILE,
-      name: profileData.name || MEMBER_PROFILE.name,
-      avatar: profileData.avatar || MEMBER_PROFILE.avatar,
-      cover: profileData.coverPhoto || MEMBER_PROFILE.cover,
+      id: profileData.id,
+      username: profileData.username || '',
+      name: profileData.name || profileData.username || '',
+      avatar: resolveMediaUrl(profileData.avatar) || DASHBOARD_ASSETS.avatar,
+      cover: resolveMediaUrl(profileData.coverPhoto) || '',
       handle,
+      tagline: profileData.tagline || '',
       location,
-      bio: profileData.bio ?? MEMBER_PROFILE.bio,
-      website: socialObj.website ?? MEMBER_PROFILE.website,
-      instagram: socialObj.instagram ?? MEMBER_PROFILE.instagram,
-      twitter: socialObj.twitter ?? MEMBER_PROFILE.twitter,
-      youtube: socialObj.youtube ?? MEMBER_PROFILE.youtube,
-      tiktok: socialObj.tiktok ?? MEMBER_PROFILE.tiktok,
+      bio: profileData.bio || '',
+      website: socialObj.website || '',
+      instagram: socialObj.instagram || '',
+      twitter: socialObj.twitter || '',
+      youtube: socialObj.youtube || '',
+      tiktok: socialObj.tiktok || '',
       socials:
         Array.isArray(profileData.socialLinks) && profileData.socialLinks.length
           ? profileData.socialLinks.map((url) => ({
               label: url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0],
               href: url,
             }))
-          : MEMBER_PROFILE.socials,
+          : [],
       stats: {
-        ...MEMBER_PROFILE.stats,
-        ...(profileData.stats || {}),
-        profileViews:
-          profileData.profileViews ?? MEMBER_PROFILE.stats?.profileViews,
+        followers: Number(profileData.stats?.followers ?? 0),
+        following: Number(profileData.stats?.following ?? 0),
+        profileVisitors: Number(
+          profileData.profileViews ?? profileData.stats?.profileVisitors ?? 0,
+        ),
+        totalArtwork: Number(profileData.stats?.totalArtwork ?? 0),
+        competitionEntries: Number(profileData.stats?.competitionEntries ?? 0),
+        totalHearts: Number(profileData.stats?.totalHearts ?? 0),
+        premiumPhotos: Number(
+          profileData.stats?.premiumPhotos ?? profileData.stats?.totalVideos ?? 0,
+        ),
       },
     };
   }, [profileData]);
 
   const featuredVideo = useMemo(() => {
-    if (!profileData?.introVideo) return PHOTOGRAPHER_FEATURED_VIDEO;
+    if (!profileData?.introVideo) return null;
     return {
-      ...PHOTOGRAPHER_FEATURED_VIDEO,
-      url: profileData.introVideo,
+      image: resolveMediaUrl(
+        profileData.introVideoThumbnail || profileData.coverPhoto,
+      ),
+      url: resolveMediaUrl(profileData.introVideo),
+      title: profileData.name || '',
     };
-  }, [profileData?.introVideo]);
+  }, [
+    profileData?.introVideo,
+    profileData?.introVideoThumbnail,
+    profileData?.coverPhoto,
+    profileData?.name,
+  ]);
 
   const appreciation = useMemo(() => {
-    if (!profileData?.appreciation) return PHOTOGRAPHER_TALENT_APPRECIATION;
-    return profileData.appreciation;
+    return profileData?.appreciation || null;
   }, [profileData?.appreciation]);
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto flex min-h-[400px] w-full max-w-395 flex-col items-center justify-center gap-3 py-16">
+        <RefreshCw size={28} className="animate-spin text-[#4048cd]" />
+        <p className="text-[14px] text-[#6b7280]">
+          {t('common.loading', 'Loading profile...')}
+        </p>
+      </div>
+    );
+  }
+
+  if (isError && !profileData) {
+    return (
+      <div className="mx-auto flex min-h-[300px] w-full max-w-395 flex-col items-center justify-center gap-4 py-16 text-center">
+        <p className="text-[16px] font-semibold text-[#111827]">
+          {error?.message || t('common.error', 'Failed to load profile.')}
+        </p>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="inline-flex items-center justify-center rounded-lg bg-[#4048cd] px-4 py-2 text-[14px] font-medium text-white transition hover:bg-[#343bb0]"
+        >
+          {t('common.retry', 'Retry')}
+        </button>
+      </div>
+    );
+  }
+
+  if (!profile) return null;
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col pb-8 sm:pb-10">
@@ -122,7 +176,9 @@ const ProfileMainContent = memo(() => {
         <>
           <MemberProfileStatsBar stats={profile.stats} />
           <PhotographerAboutSection profile={profile} />
-          <PhotographerFeaturedVideo video={featuredVideo} />
+          {featuredVideo?.image ? (
+            <PhotographerFeaturedVideo video={featuredVideo} />
+          ) : null}
           <PhotographerTalentAppreciation
             appreciation={appreciation}
             photographerName={profile.name}
@@ -136,7 +192,7 @@ const ProfileMainContent = memo(() => {
           <PhotographerCompetitionBanner featured={MEMBER_FEATURED} />
           <PhotographerSlideshowsSection
             canManage
-            ownerName={MEMBER_PROFILE.name}
+            ownerName={profile.name}
           />
           <PhotographerArtworkGrid
             titleKey="photographerProfile.artwork.title"
@@ -164,7 +220,7 @@ const ProfileMainContent = memo(() => {
         <PhotographerMessagesSection messages={MEMBER_MESSAGES} />
       ) : null}
 
-      <PhotographerShareBanner />
+      <PhotographerShareBanner photographerName={profile.name} />
     </div>
   );
 });

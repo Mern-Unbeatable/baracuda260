@@ -41,6 +41,11 @@ const PhotographerAwardCounters = memo(
   ({ awards, size = 'sm', className = '' }) => {
     const { t } = useTranslation();
     const sizeConfig = SIZE_STYLES[size] ?? SIZE_STYLES.sm;
+    const defaultZeroTiers = [
+      { id: 'gold', count: 0 },
+      { id: 'silver', count: 0 },
+      { id: 'bronze', count: 0 },
+    ];
     const tierList = Array.isArray(awards)
       ? awards
       : awards &&
@@ -51,7 +56,7 @@ const PhotographerAwardCounters = memo(
             { id: 'silver', count: Number(awards.silver) || 0 },
             { id: 'bronze', count: Number(awards.bronze) || 0 },
           ]
-        : PHOTOGRAPHER_TALENT_APPRECIATION.tiers;
+        : defaultZeroTiers;
 
     return (
       <div

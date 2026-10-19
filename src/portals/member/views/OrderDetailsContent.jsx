@@ -4,24 +4,24 @@ import {
   Check,
   CheckCircle2,
   CreditCard,
-  FileText,
   MapPin,
   MessageSquare,
+  RefreshCw,
   ShieldCheck,
   X,
 } from 'lucide-react';
 import React, { memo } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
-  getOrderById,
   ORDER_STATUS,
   ORDER_STATUS_LABEL_KEYS,
   ORDER_STATUS_STYLES,
 } from '@/portals/member/data/myOrdersData';
+import useBuyerOrderDetails from '@/portals/member/hooks/useBuyerOrderDetails';
 import { ROUTES } from '@/shared/config';
 
 const SectionLabel = memo(({ children }) => (
@@ -102,21 +102,58 @@ const OrderDetailsContent = memo(() => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const order = getOrderById(id);
-
-  if (!order) {
-    return <Navigate to={ROUTES.USER_MY_ORDERS} replace />;
-  }
-
-  const statusStyle = ORDER_STATUS_STYLES[order.status];
-
-  const handleInvoice = () => {
-    toast.success(t('myOrders.invoiceStarted', { order: order.orderNumber }));
-  };
+  const { order, isLoading, isError, error } = useBuyerOrderDetails(id);
 
   const handleClose = () => {
     navigate(ROUTES.USER_MY_ORDERS);
   };
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto flex min-h-96 w-full max-w-395 flex-col items-center justify-center gap-3">
+        <RefreshCw size={28} className="animate-spin text-[#4048cd]" />
+        <p className="text-[14px] text-[#6b7280]">
+          {t('common.loading', 'Loading order details...')}
+        </p>
+      </div>
+    );
+  }
+
+  if (isError || !order) {
+    return (
+      <div className="mx-auto flex min-h-96 w-full max-w-395 flex-col items-center justify-center gap-4 text-center">
+        <p className="text-[16px] font-semibold text-[#111827]">
+          {error?.message ||
+            t('myOrders.detail.notFound', 'Order details not found.')}
+        </p>
+        <Link
+          to={ROUTES.USER_MY_ORDERS}
+          className="inline-flex items-center gap-2 rounded-lg bg-[#1a1f2e] px-4 py-2 text-[13px] font-bold text-white transition hover:bg-[#111522]"
+        >
+          <ArrowLeft size={14} aria-hidden="true" />
+          {t('myOrders.detail.back', 'Back to My Orders')}
+        </Link>
+      </div>
+    );
+  }
+
+  const normalizedStatus = String(order.status || '').toLowerCase();
+  const statusStyle =
+    ORDER_STATUS_STYLES[normalizedStatus] ||
+    ORDER_STATUS_STYLES[ORDER_STATUS.PROCESSING] || {
+      badge: 'bg-[#eef7f3] text-[#268262]',
+      dot: 'bg-[#268262]',
+    };
+
+  const statusLabel =
+    t(ORDER_STATUS_LABEL_KEYS[normalizedStatus], {
+      defaultValue: String(order.status).toUpperCase(),
+    });
+
+  const displayOrderNumber = String(order.orderNumber || id || '').replace(
+    /^#+/,
+    '',
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-4 sm:gap-5">
@@ -129,17 +166,6 @@ const OrderDetailsContent = memo(() => {
           {t('myOrders.detail.back')}
         </Link>
         <div className="flex items-center gap-0.5">
-          <Button
-            unstyled
-            type="button"
-            onClick={handleInvoice}
-            aria-label={t('myOrders.invoiceAria', {
-              number: order.orderNumber,
-            })}
-            className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#111827]"
-          >
-            <FileText size={18} aria-hidden="true" />
-          </Button>
           <Button
             unstyled
             type="button"
@@ -159,7 +185,7 @@ const OrderDetailsContent = memo(() => {
               {t('myOrders.detail.titlePrefix')}
             </span>{' '}
             <span>
-              {t('myOrders.detail.titleOrder', { number: order.orderNumber })}
+              {t('myOrders.detail.titleOrder', { number: displayOrderNumber })}
             </span>
           </h1>
           <p className="mt-1.5 text-[13px] text-[#6b7280]">
@@ -173,7 +199,7 @@ const OrderDetailsContent = memo(() => {
             className={`size-1.5 rounded-full ${statusStyle.dot}`}
             aria-hidden="true"
           />
-          {t(ORDER_STATUS_LABEL_KEYS[order.status])}
+          {statusLabel}
         </span>
       </header>
 
@@ -235,40 +261,71 @@ const OrderDetailsContent = memo(() => {
 
       <section className={cardClass}>
         <SectionLabel>{t('myOrders.detail.purchasedProduct')}</SectionLabel>
-        <div className="mt-4 flex items-start justify-between gap-4">
-          <div className="flex min-w-0 items-start gap-3.5">
-            <Image
-              src={order.image}
-              alt={order.productTitle}
-              className="size-16 shrink-0 rounded-[10px] object-cover sm:size-18"
-            />
-            <div className="min-w-0">
-              <p className="text-[15px] font-bold leading-5 text-[#111827]">
-                {order.productTitle}
-              </p>
-              <p className="mt-1 text-[13px] text-[#6b7280]">
-                {t('myOrders.soldBy', { store: order.storeName })}
-              </p>
-              <p className="mt-1 text-[12px] text-[#9ca3af]">
-                {t('myOrders.detail.unitMeta', {
-                  qty: order.quantity,
-                  price: order.unitPrice,
-                })}
+        <div className="divide-y divide-[#f1f3f7]">
+          {(order.items && order.items.length > 0
+            ? order.items
+            : [
+                {
+                  id: order.id,
+                  image: order.image,
+                  title: order.productTitle,
+                  sellerName: order.storeName,
+                  quantity: order.quantity,
+                  price: order.productSubtotal,
+                  unitPrice: order.unitPrice,
+                },
+              ]
+          ).map((item) => (
+            <div
+              key={item.id}
+              className="flex items-start justify-between gap-4 py-4 first:pt-4 last:pb-0"
+            >
+              <div className="flex min-w-0 items-start gap-3.5">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  className="size-16 shrink-0 rounded-[10px] object-cover sm:size-18"
+                />
+                <div className="min-w-0">
+                  <p className="text-[15px] font-bold leading-5 text-[#111827]">
+                    {item.title}
+                  </p>
+                  <p className="mt-1 text-[13px] text-[#6b7280]">
+                    {t('myOrders.soldBy', {
+                      store: item.sellerName || order.storeName,
+                    })}
+                  </p>
+                  <p className="mt-1 text-[12px] text-[#9ca3af]">
+                    {t('myOrders.detail.unitMeta', {
+                      qty: item.quantity,
+                      price: item.price || item.unitPrice,
+                    })}
+                    {item.size ? ` • ${item.size}` : ''}
+                  </p>
+                </div>
+              </div>
+              <p className="shrink-0 pt-0.5 text-[16px] font-bold text-[#111827]">
+                {item.price}
               </p>
             </div>
-          </div>
-          <p className="shrink-0 pt-0.5 text-[16px] font-bold text-[#111827]">
-            {order.productSubtotal}
-          </p>
+          ))}
         </div>
       </section>
 
       <section className={cardClass}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-3.5">
-            <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-[#fff4e5] text-[14px] font-bold text-[#d97706]">
-              {order.sellerInitials}
-            </span>
+            {order.sellerAvatar ? (
+              <Image
+                src={order.sellerAvatar}
+                alt={order.sellerName}
+                className="size-12 shrink-0 rounded-full object-cover"
+              />
+            ) : (
+              <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-[#fff4e5] text-[14px] font-bold text-[#d97706]">
+                {order.sellerInitials}
+              </span>
+            )}
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="text-[11px] font-bold tracking-[0.12em] text-[#98a0b3]">

@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { RefreshCw } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
 import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
 import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
 import PhotographerCompetitionBanner from '@/portals/public/photographer/components/PhotographerCompetitionBanner';
@@ -16,12 +19,9 @@ import PhotographerTalentAppreciation from '@/portals/public/photographer/compon
 import {
   PHOTOGRAPHER_ARTWORK,
   PHOTOGRAPHER_FEATURED,
-  PHOTOGRAPHER_FEATURED_VIDEO,
   PHOTOGRAPHER_MESSAGES,
   PHOTOGRAPHER_PREMIUM,
-  PHOTOGRAPHER_PROFILE,
   PHOTOGRAPHER_STORE_PRODUCTS,
-  PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import {
   getUserProfileByUsernameApi,
@@ -29,18 +29,28 @@ import {
 } from '@/shared/api/userProfile.api';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
+import { resolveMediaUrl } from '@/shared/utils/media';
 
 const PhotographerProfileMain = memo(() => {
+  const { t } = useTranslation();
   const location = useLocation();
-  const { username } = useParams();
+  const { username: paramUsername } = useParams();
   const [searchParams] = useSearchParams();
+  const username = paramUsername || searchParams.get('username');
+
   const [activeTab, setActiveTab] = useState(
     () =>
       location.state?.tab ||
       (searchParams.has(SLIDESHOW_SEARCH_PARAM) ? 'artwork' : 'profile'),
   );
 
-  const { data: profileResponse } = useQuery({
+  const {
+    data: profileResponse,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: USER_PROFILE_USERNAME_QUERY_KEY(username),
     queryFn: () => getUserProfileByUsernameApi(username),
     enabled: Boolean(username),
@@ -49,14 +59,12 @@ const PhotographerProfileMain = memo(() => {
 
   const profile = useMemo(() => {
     const raw = profileResponse?.data;
-    if (!raw) return PHOTOGRAPHER_PROFILE;
+    if (!raw) return null;
 
     const handle = raw.username
       ? `@${raw.username.replace(/^@/, '')}`
-      : PHOTOGRAPHER_PROFILE.handle;
-    const location =
-      [raw.city, raw.country].filter(Boolean).join(', ') ||
-      PHOTOGRAPHER_PROFILE.location;
+      : '';
+    const location = [raw.city, raw.country].filter(Boolean).join(', ');
 
     let socialObj = {};
     if (typeof raw.socialLinks === 'string') {
@@ -85,42 +93,46 @@ const PhotographerProfileMain = memo(() => {
     }
 
     return {
-      ...PHOTOGRAPHER_PROFILE,
       id: raw.id,
       username: raw.username,
-      name: raw.name || PHOTOGRAPHER_PROFILE.name,
-      avatar: raw.avatar || PHOTOGRAPHER_PROFILE.avatar,
-      coverImage: raw.coverPhoto || PHOTOGRAPHER_PROFILE.coverImage,
+      name: raw.name || raw.username || '',
+      avatar: resolveMediaUrl(raw.avatar) || DASHBOARD_ASSETS.avatar,
+      coverImage: resolveMediaUrl(raw.coverPhoto) || '',
       handle,
+      tagline: raw.tagline || '',
       location,
-      bio: raw.bio ?? PHOTOGRAPHER_PROFILE.bio,
-      isFollowing: raw.isFollowing ?? false,
-      website: socialObj.website ?? PHOTOGRAPHER_PROFILE.website,
-      instagram: socialObj.instagram ?? PHOTOGRAPHER_PROFILE.instagram,
-      twitter: socialObj.twitter ?? PHOTOGRAPHER_PROFILE.twitter,
-      youtube: socialObj.youtube ?? PHOTOGRAPHER_PROFILE.youtube,
-      tiktok: socialObj.tiktok ?? PHOTOGRAPHER_PROFILE.tiktok,
+      bio: raw.bio || '',
+      isFollowing: Boolean(raw.isFollowing),
+      website: socialObj.website || '',
+      instagram: socialObj.instagram || '',
+      twitter: socialObj.twitter || '',
+      youtube: socialObj.youtube || '',
+      tiktok: socialObj.tiktok || '',
       stats: {
-        ...PHOTOGRAPHER_PROFILE.stats,
-        ...(raw.stats || {}),
-        profileVisitors:
-          raw.profileViews ??
-          raw.stats?.profileVisitors ??
-          PHOTOGRAPHER_PROFILE.stats.profileVisitors,
+        followers: Number(raw.stats?.followers ?? 0),
+        following: Number(raw.stats?.following ?? 0),
+        profileVisitors: Number(
+          raw.profileViews ?? raw.stats?.profileVisitors ?? 0,
+        ),
+        totalArtwork: Number(raw.stats?.totalArtwork ?? 0),
+        competitionEntries: Number(raw.stats?.competitionEntries ?? 0),
+        totalHearts: Number(raw.stats?.totalHearts ?? 0),
       },
-      appreciation: raw.appreciation || PHOTOGRAPHER_TALENT_APPRECIATION,
+      appreciation: raw.appreciation || null,
     };
   }, [profileResponse]);
 
   const featuredVideo = useMemo(() => {
-    if (profileResponse?.data?.introVideo) {
-      return {
-        ...PHOTOGRAPHER_FEATURED_VIDEO,
-        url: profileResponse.data.introVideo,
-      };
-    }
-    return PHOTOGRAPHER_FEATURED_VIDEO;
-  }, [profileResponse?.data?.introVideo]);
+    if (!profileResponse?.data?.introVideo) return null;
+    return {
+      image: resolveMediaUrl(
+        profileResponse.data.introVideoThumbnail ||
+          profileResponse.data.coverPhoto,
+      ),
+      url: resolveMediaUrl(profileResponse.data.introVideo),
+      title: profileResponse.data.name || '',
+    };
+  }, [profileResponse?.data]);
 
   return (
     <SitePageLayout
@@ -131,58 +143,88 @@ const PhotographerProfileMain = memo(() => {
     >
       <section className="bg-white section-py-top pb-10 sm:pb-12">
         <Shell>
-          <PhotographerProfileHeader profile={profile} />
-          <PhotographerProfileTabs
-            activeTab={activeTab}
-            onChange={setActiveTab}
-          />
-
-          {activeTab === 'profile' ? (
+          {isLoading ? (
+            <div className="flex min-h-[400px] flex-col items-center justify-center gap-3 py-16">
+              <RefreshCw size={28} className="animate-spin text-[#4048cd]" />
+              <p className="text-[14px] text-[#6b7280]">
+                {t('common.loading', 'Loading profile...')}
+              </p>
+            </div>
+          ) : isError && !profile ? (
+            <div className="flex min-h-[300px] flex-col items-center justify-center gap-4 py-16 text-center">
+              <p className="text-[16px] font-semibold text-[#111827]">
+                {error?.message || t('common.error', 'Failed to load profile.')}
+              </p>
+              <button
+                type="button"
+                onClick={() => refetch()}
+                className="inline-flex items-center justify-center rounded-lg bg-[#4048cd] px-4 py-2 text-[14px] font-medium text-white transition hover:bg-[#343bb0]"
+              >
+                {t('common.retry', 'Retry')}
+              </button>
+            </div>
+          ) : profile ? (
             <>
-              <PhotographerStatsBar stats={profile.stats} />
-              <PhotographerAboutSection profile={profile} />
-              <PhotographerFeaturedVideo video={featuredVideo} />
-              <PhotographerTalentAppreciation
-                appreciation={profile.appreciation}
-                photographerName={profile.name}
-                userId={profile.id}
+              <PhotographerProfileHeader profile={profile} />
+              <PhotographerProfileTabs
+                activeTab={activeTab}
+                onChange={setActiveTab}
               />
+
+              {activeTab === 'profile' ? (
+                <>
+                  <PhotographerStatsBar stats={profile.stats} />
+                  <PhotographerAboutSection profile={profile} />
+                  {featuredVideo?.image ? (
+                    <PhotographerFeaturedVideo video={featuredVideo} />
+                  ) : null}
+                  <PhotographerTalentAppreciation
+                    appreciation={profile.appreciation}
+                    photographerName={profile.name}
+                    userId={profile.id}
+                  />
+                </>
+              ) : null}
+
+              {activeTab === 'artwork' ? (
+                <>
+                  <PhotographerCompetitionBanner
+                    featured={PHOTOGRAPHER_FEATURED}
+                  />
+                  <PhotographerSlideshowsSection
+                    ownerName={profile.name}
+                  />
+                  <PhotographerArtworkGrid
+                    titleKey="photographerProfile.artwork.title"
+                    subtitleKey="photographerProfile.artwork.subtitle"
+                    photos={PHOTOGRAPHER_ARTWORK}
+                    showCompetitionTag
+                  />
+                </>
+              ) : null}
+
+              {activeTab === 'store' ? (
+                <PhotographerStoreSection
+                  products={PHOTOGRAPHER_STORE_PRODUCTS}
+                />
+              ) : null}
+
+              {activeTab === 'premium' ? (
+                <PhotographerArtworkGrid
+                  titleKey="photographerProfile.premium.title"
+                  subtitleKey="photographerProfile.premium.subtitle"
+                  photos={PHOTOGRAPHER_PREMIUM}
+                  showPrice
+                />
+              ) : null}
+
+              {activeTab === 'posts' ? (
+                <PhotographerMessagesSection messages={PHOTOGRAPHER_MESSAGES} />
+              ) : null}
+
+              <PhotographerShareBanner photographerName={profile.name} />
             </>
           ) : null}
-
-          {activeTab === 'artwork' ? (
-            <>
-              <PhotographerCompetitionBanner featured={PHOTOGRAPHER_FEATURED} />
-              <PhotographerSlideshowsSection
-                ownerName={PHOTOGRAPHER_PROFILE.name}
-              />
-              <PhotographerArtworkGrid
-                titleKey="photographerProfile.artwork.title"
-                subtitleKey="photographerProfile.artwork.subtitle"
-                photos={PHOTOGRAPHER_ARTWORK}
-                showCompetitionTag
-              />
-            </>
-          ) : null}
-
-          {activeTab === 'store' ? (
-            <PhotographerStoreSection products={PHOTOGRAPHER_STORE_PRODUCTS} />
-          ) : null}
-
-          {activeTab === 'premium' ? (
-            <PhotographerArtworkGrid
-              titleKey="photographerProfile.premium.title"
-              subtitleKey="photographerProfile.premium.subtitle"
-              photos={PHOTOGRAPHER_PREMIUM}
-              showPrice
-            />
-          ) : null}
-
-          {activeTab === 'posts' ? (
-            <PhotographerMessagesSection messages={PHOTOGRAPHER_MESSAGES} />
-          ) : null}
-
-          <PhotographerShareBanner photographerName={profile.name} />
         </Shell>
       </section>
     </SitePageLayout>
