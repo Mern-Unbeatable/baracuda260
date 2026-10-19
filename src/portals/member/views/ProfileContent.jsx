@@ -1,7 +1,11 @@
-import React, { forwardRef, memo, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Lock } from 'lucide-react';
+import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { updateUser } from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
@@ -13,6 +17,13 @@ import {
   EYE_ICON_WIDTH,
   USER_ICON_SIZE,
 } from '@/portals/member/data/profileData';
+import useUserProfileMe from '@/portals/member/hooks/useUserProfileMe';
+import { changePasswordApi } from '@/shared/api/auth.api';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  updateUserProfileApi,
+  USER_PROFILE_ME_QUERY_KEY,
+} from '@/shared/api/userProfile.api';
 
 const labelClass = 'text-[14px] font-normal leading-[1.5] text-[#464646]';
 const inputClass =
@@ -21,29 +32,52 @@ const passwordInputClass = `${inputClass} pr-12`;
 const sectionTitleClass =
   'font-crimson text-[20px] font-medium leading-normal text-[#4c515b]';
 const primaryButtonClass =
-  'inline-flex cursor-pointer items-center justify-center rounded-[4px] bg-[#4048cd] px-6 py-3 font-crimson text-[16px] font-normal leading-normal text-white transition hover:bg-[#353cb0]';
+  'inline-flex cursor-pointer items-center justify-center rounded-[4px] bg-[#4048cd] px-6 py-3 font-crimson text-[16px] font-normal leading-normal text-white transition hover:bg-[#353cb0] disabled:opacity-60';
+
+const readOnlyInputClass =
+  'w-full cursor-not-allowed rounded-[8px] border border-[#d6d8dd] bg-[#f4f5f7] px-4 py-[14px] text-[14px] font-medium leading-[1.5] text-[#6b7280] outline-none select-none';
 
 const ProfileInput = memo(
   forwardRef(
     (
-      { id, label, type = 'text', autoComplete, placeholder, error, ...props },
+      {
+        id,
+        label,
+        type = 'text',
+        autoComplete,
+        placeholder,
+        error,
+        readOnly = false,
+        disabled = false,
+        badge,
+        helperText,
+        ...props
+      },
       ref,
     ) => (
-      <div className="flex w-full min-w-0 flex-col gap-3">
-        <label htmlFor={id} className={labelClass}>
-          {label}
-        </label>
+      <div className="flex w-full min-w-0 flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <label htmlFor={id} className={labelClass}>
+            {label}
+          </label>
+          {badge}
+        </div>
         <Input
           id={id}
           ref={ref}
           type={type}
+          readOnly={readOnly}
+          disabled={disabled}
           autoComplete={autoComplete}
           placeholder={placeholder}
           error={error}
-          inputClassName={inputClass}
+          inputClassName={readOnly ? readOnlyInputClass : inputClass}
           labelClassName="hidden"
           {...props}
         />
+        {helperText ? (
+          <p className="text-[12px] leading-4 text-[#8c93a0]">{helperText}</p>
+        ) : null}
       </div>
     ),
   ),
@@ -119,24 +153,40 @@ PasswordInput.displayName = 'PasswordInput';
  */
 const ProfileContent = memo(() => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  const { data: userProfile } = useUserProfileMe();
 
   const [displayName, setDisplayName] = useState(
-    DEFAULT_ADMIN_PROFILE.displayName,
+    userProfile?.name || DEFAULT_ADMIN_PROFILE.displayName,
   );
   const [displayEmail, setDisplayEmail] = useState(
-    DEFAULT_ADMIN_PROFILE.displayEmail,
+    userProfile?.email || DEFAULT_ADMIN_PROFILE.displayEmail,
   );
 
   const {
     register: registerProfile,
     handleSubmit: handleProfileSubmit,
+    reset: resetProfile,
     formState: { errors: profileErrors },
   } = useForm({
     defaultValues: {
-      name: DEFAULT_ADMIN_PROFILE.name,
-      email: DEFAULT_ADMIN_PROFILE.email,
+      name: userProfile?.name || DEFAULT_ADMIN_PROFILE.name,
+      email: userProfile?.email || DEFAULT_ADMIN_PROFILE.email,
     },
   });
+
+  useEffect(() => {
+    if (userProfile) {
+      if (userProfile.name) setDisplayName(userProfile.name);
+      if (userProfile.email) setDisplayEmail(userProfile.email);
+      resetProfile({
+        name: userProfile.name || '',
+        email: userProfile.email || '',
+      });
+    }
+  }, [userProfile, resetProfile]);
 
   const {
     register: registerPassword,
@@ -150,15 +200,81 @@ const ProfileContent = memo(() => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const updateProfileMutation = useMutation({
+    mutationFn: (formData) => updateUserProfileApi(formData),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: USER_PROFILE_ME_QUERY_KEY });
+      const updatedUser = response?.data || response;
+      if (updatedUser) {
+        try {
+          const stored = JSON.parse(localStorage.getItem('user') || '{}');
+          localStorage.setItem(
+            'user',
+            JSON.stringify({ ...stored, ...updatedUser }),
+          );
+        } catch {
+          // ignore
+        }
+        dispatch(updateUser(updatedUser));
+      }
+      toast.success(
+        response?.message || t('userProfile.account.updateSuccess'),
+      );
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('common.error', 'Failed to update profile. Please try again.'),
+        ),
+      );
+    },
+  });
+
   const onSubmitProfile = (data) => {
     setDisplayName(data.name.trim());
     setDisplayEmail(data.email.trim());
-    toast.success(t('userProfile.account.updateSuccess'));
+
+    const formData = new FormData();
+    formData.append('name', data.name.trim());
+    formData.append('email', data.email.trim());
+    if (userProfile?.username) {
+      formData.append('username', userProfile.username);
+    }
+    if (userProfile?.phone) {
+      formData.append('phone', userProfile.phone);
+    }
+
+    updateProfileMutation.mutate(formData);
   };
 
-  const onSubmitPassword = (_data) => {
-    resetPassword();
-    toast.success(t('userProfile.security.success'));
+  const changePasswordMutation = useMutation({
+    mutationFn: ({ currentPassword, newPassword }) =>
+      changePasswordApi({ currentPassword, newPassword }),
+    onSuccess: (response) => {
+      resetPassword();
+      toast.success(
+        response?.message || t('userProfile.security.success'),
+      );
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t(
+            'userProfile.errors.passwordChangeFailed',
+            'Failed to change password. Please check your current password.',
+          ),
+        ),
+      );
+    },
+  });
+
+  const onSubmitPassword = (data) => {
+    changePasswordMutation.mutate({
+      currentPassword: data.currentPassword,
+      newPassword: data.newPassword,
+    });
   };
 
   return (
@@ -222,24 +338,33 @@ const ProfileContent = memo(() => {
                 id="admin-profile-email"
                 label={t('userProfile.account.email')}
                 type="email"
+                readOnly={true}
+                disabled={true}
                 autoComplete="email"
+                badge={
+                  <span className="inline-flex items-center gap-1 rounded bg-[#f3f4f6] px-2 py-0.5 text-[11px] font-semibold text-[#6b7280]">
+                    <Lock size={11} aria-hidden="true" />
+                    {t('common.readOnly', 'Not changeable')}
+                  </span>
+                }
+                helperText={t(
+                  'memberSettings.profile.emailNotChangeable',
+                  'Email address cannot be changed.',
+                )}
                 error={profileErrors.email}
-                {...registerProfile('email', {
-                  required: t('userProfile.errors.emailRequired'),
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: t('userProfile.errors.emailInvalid'),
-                  },
-                })}
+                {...registerProfile('email')}
               />
             </div>
             <div className="flex justify-end">
               <Button
                 type="submit"
                 unstyled={true}
+                disabled={updateProfileMutation.isPending}
                 className={primaryButtonClass}
               >
-                {t('userProfile.account.update')}
+                {updateProfileMutation.isPending
+                  ? t('common.saving', 'Saving...')
+                  : t('userProfile.account.update')}
               </Button>
             </div>
           </form>
@@ -302,9 +427,12 @@ const ProfileContent = memo(() => {
             <Button
               type="submit"
               unstyled={true}
+              disabled={changePasswordMutation.isPending}
               className={primaryButtonClass}
             >
-              {t('userProfile.security.changePassword')}
+              {changePasswordMutation.isPending
+                ? t('common.saving', 'Saving...')
+                : t('userProfile.security.changePassword')}
             </Button>
           </div>
         </form>

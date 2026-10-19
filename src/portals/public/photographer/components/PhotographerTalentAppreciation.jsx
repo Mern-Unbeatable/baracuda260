@@ -1,6 +1,8 @@
 import { CalendarDays, Camera, Check, Info } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
 import { getDaysUntilNextSundayMidnight } from '@/shared/utils/weekReset';
 
@@ -26,19 +28,89 @@ const TIER_STYLES = {
   },
 };
 
-import { useSelector } from 'react-redux';
-import { selectUser } from '@/app/store/slices/authSlice';
+const normalizeAppreciation = (raw) => {
+  const defaultWeekly = { gold: 1, silver: 0, bronze: 1 };
+  const defaultTiers = [
+    { id: 'gold', count: 0, awardedThisWeek: false },
+    { id: 'silver', count: 0, awardedThisWeek: false },
+    { id: 'bronze', count: 0, awardedThisWeek: false },
+  ];
+
+  if (!raw) {
+    return {
+      tiers: defaultTiers,
+      weekly: defaultWeekly,
+      resetDays: getDaysUntilNextSundayMidnight(),
+    };
+  }
+
+  if (Array.isArray(raw.tiers)) {
+    return {
+      tiers: raw.tiers,
+      weekly: raw.weekly || defaultWeekly,
+      resetDays:
+        typeof raw.resetInDays === 'number'
+          ? raw.resetInDays
+          : getDaysUntilNextSundayMidnight(),
+    };
+  }
+
+  const myAward = raw.myAward;
+  const hasAwardedThisWeek = Boolean(raw.hasAwardedThisWeek);
+  const canAward = raw.canAward !== false;
+
+  const tiers = [
+    {
+      id: 'gold',
+      count: Number(raw.gold) || 0,
+      awardedThisWeek: myAward === 'gold' || (hasAwardedThisWeek && myAward === 'gold'),
+    },
+    {
+      id: 'silver',
+      count: Number(raw.silver) || 0,
+      awardedThisWeek: myAward === 'silver' || (hasAwardedThisWeek && myAward === 'silver'),
+    },
+    {
+      id: 'bronze',
+      count: Number(raw.bronze) || 0,
+      awardedThisWeek: myAward === 'bronze' || (hasAwardedThisWeek && myAward === 'bronze'),
+    },
+  ];
+
+  const weekly = raw.weekly || {
+    gold: canAward && (!hasAwardedThisWeek || myAward !== 'gold') ? 1 : 0,
+    silver: canAward && (!hasAwardedThisWeek || myAward !== 'silver') ? 1 : 0,
+    bronze: canAward && (!hasAwardedThisWeek || myAward !== 'bronze') ? 1 : 0,
+  };
+
+  const resetDays =
+    typeof raw.resetInDays === 'number'
+      ? raw.resetInDays
+      : getDaysUntilNextSundayMidnight();
+
+  return { tiers, weekly, resetDays };
+};
 
 const PhotographerTalentAppreciation = memo(
   ({ appreciation, photographerName, userId }) => {
     const { t } = useTranslation();
     const user = useSelector(selectUser);
 
-    const [awards, setAwards] = useState(appreciation.tiers);
-    const [weekly, setWeekly] = useState(appreciation.weekly);
-    const [resetDays] = useState(() =>
-      getDaysUntilNextSundayMidnight(),
+    const initial = useMemo(
+      () => normalizeAppreciation(appreciation),
+      [appreciation],
     );
+
+    const [awards, setAwards] = useState(initial.tiers);
+    const [weekly, setWeekly] = useState(initial.weekly);
+    const [resetDays, setResetDays] = useState(initial.resetDays);
+
+    useEffect(() => {
+      const normalized = normalizeAppreciation(appreciation);
+      setAwards(normalized.tiers);
+      setWeekly(normalized.weekly);
+      setResetDays(normalized.resetDays);
+    }, [appreciation]);
 
     const isOwnProfile = Boolean(
       user &&
@@ -54,15 +126,15 @@ const PhotographerTalentAppreciation = memo(
     );
 
     const giveAward = (tierId) => {
-      if (weekly[tierId] === 0) return;
+      if ((weekly?.[tierId] ?? 0) === 0) return;
       setAwards((prev) =>
-        prev.map((tier) =>
+        (prev || []).map((tier) =>
           tier.id === tierId
-            ? { ...tier, count: tier.count + 1, awardedThisWeek: true }
+            ? { ...tier, count: (tier.count || 0) + 1, awardedThisWeek: true }
             : tier,
         ),
       );
-      setWeekly((prev) => ({ ...prev, [tierId]: 0 }));
+      setWeekly((prev) => ({ ...(prev || {}), [tierId]: 0 }));
     };
 
     return (
@@ -85,10 +157,10 @@ const PhotographerTalentAppreciation = memo(
           </p>
 
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {awards.map((tier) => {
-              const style = TIER_STYLES[tier.id];
+            {(awards || []).map((tier) => {
+              const style = TIER_STYLES[tier.id] ?? TIER_STYLES.gold;
               const disabled =
-                isOwnProfile || weekly[tier.id] === 0 || tier.awardedThisWeek;
+                isOwnProfile || (weekly?.[tier.id] ?? 0) === 0 || tier.awardedThisWeek;
               return (
                 <article
                   key={tier.id}
@@ -164,7 +236,7 @@ const PhotographerTalentAppreciation = memo(
                   aria-hidden="true"
                 />
                 {t(`photographerProfile.appreciation.tiers.${id}`)}{' '}
-                <span className="text-[#9ca3af]">{weekly[id]}/1</span>
+                <span className="text-[#9ca3af]">{(weekly?.[id] ?? 0)}/1</span>
               </span>
             ))}
           </div>

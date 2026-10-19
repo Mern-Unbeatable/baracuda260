@@ -59,9 +59,13 @@ const PhotoShowcaseCard = memo(
     isAiGenerated = false,
     className = '',
     onMenuClick,
+    topRightType = 'menu',
+    initialSaved = false,
+    onSaveToggle,
   }) => {
     const { t } = useTranslation();
-    const [saved, setSaved] = useState(false);
+    const [saved, setSaved] = useState(initialSaved);
+    const [favorited, setFavorited] = useState(false);
     const [reportOpen, setReportOpen] = useState(false);
     const displayLikes = formatCount(likes);
     const showPrice = price != null && price !== '';
@@ -75,7 +79,17 @@ const PhotoShowcaseCard = memo(
     const handleSave = (event) => {
       event.preventDefault();
       event.stopPropagation();
-      setSaved((current) => !current);
+      setSaved((current) => {
+        const next = !current;
+        if (onSaveToggle) onSaveToggle(next);
+        return next;
+      });
+    };
+
+    const handleFavorite = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setFavorited((current) => !current);
     };
 
     const handleMenu = (event) => {
@@ -118,17 +132,42 @@ const PhotoShowcaseCard = memo(
                 size="sm"
               />
 
-              <Button
-                unstyled
-                type="button"
-                onClick={handleMenu}
-                aria-label={t('gallery.moreActions', {
-                  defaultValue: 'More actions',
-                })}
-                className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60"
-              >
-                <MoreVertical size={16} strokeWidth={2.5} aria-hidden="true" />
-              </Button>
+              {topRightType === 'favorite' ? (
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handleFavorite}
+                  aria-label={t('gallery.favoriteAction', {
+                    title,
+                    defaultValue: `Favorite ${title}`,
+                  })}
+                  aria-pressed={favorited}
+                  className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
+                >
+                  <Heart
+                    size={16}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className={
+                      favorited
+                        ? 'fill-[#ee1c25] text-[#ee1c25]'
+                        : 'fill-transparent text-[#161c27]'
+                    }
+                  />
+                </Button>
+              ) : topRightType === 'menu' ? (
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handleMenu}
+                  aria-label={t('gallery.moreActions', {
+                    defaultValue: 'More actions',
+                  })}
+                  className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60"
+                >
+                  <MoreVertical size={16} strokeWidth={2.5} aria-hidden="true" />
+                </Button>
+              ) : null}
 
               {winnerRank ? (
                 <DarkOverlayBadge
@@ -165,10 +204,10 @@ const PhotoShowcaseCard = memo(
                         defaultValue: `Save ${title}`,
                       })
                 }
-                className={`absolute bottom-4 left-4 inline-flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-semibold leading-none transition ${
+                className={`absolute bottom-4 left-4 inline-flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-semibold leading-none shadow-sm transition ${
                   saved
-                    ? 'bg-[#e53935] text-white'
-                    : 'bg-[#fff1f2] text-[#e53935]'
+                    ? 'bg-[#ee1c25] text-white'
+                    : 'bg-[#fff1f2] text-[#ee1c25]'
                 }`}
               >
                 <Bookmark
@@ -177,8 +216,8 @@ const PhotoShowcaseCard = memo(
                   aria-hidden="true"
                   className={
                     saved
-                      ? 'fill-transparent text-white'
-                      : 'fill-transparent text-[#e53935]'
+                      ? 'fill-white text-white'
+                      : 'fill-transparent text-[#ee1c25]'
                   }
                 />
                 {saved

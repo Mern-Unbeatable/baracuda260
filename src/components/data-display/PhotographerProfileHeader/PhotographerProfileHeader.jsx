@@ -1,13 +1,60 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MapPin, MessageCircle, UserCheck, UserPlus } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  toggleFollowUserApi,
+  USER_FOLLOWING_QUERY_KEY,
+  USER_PROFILE_ME_QUERY_KEY,
+} from '@/shared/api/userProfile.api';
 
 const PhotographerProfileHeader = memo(({ profile }) => {
   const { t } = useTranslation();
-  const [following, setFollowing] = useState(false);
+  const queryClient = useQueryClient();
+  const [following, setFollowing] = useState(Boolean(profile.isFollowing));
+
+  useEffect(() => {
+    if (typeof profile.isFollowing === 'boolean') {
+      setFollowing(profile.isFollowing);
+    }
+  }, [profile.isFollowing]);
+
+  const toggleMutation = useMutation({
+    mutationFn: () => toggleFollowUserApi(profile.username || profile.handle),
+    onSuccess: (res) => {
+      setFollowing((curr) => !curr);
+      queryClient.invalidateQueries({ queryKey: USER_FOLLOWING_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: USER_PROFILE_ME_QUERY_KEY });
+      if (profile.username) {
+        queryClient.invalidateQueries({
+          queryKey: ['user-profile', profile.username.replace(/^@/, '')],
+        });
+      }
+      if (res?.message) toast.success(res.message);
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('common.errors.general', 'Failed to update follow status.'),
+        ),
+      );
+    },
+  });
+
+  const handleFollowClick = () => {
+    const rawUsername = profile.username || profile.handle;
+    if (rawUsername) {
+      toggleMutation.mutate();
+    } else {
+      setFollowing((current) => !current);
+    }
+  };
 
   return (
     <div>
@@ -60,8 +107,9 @@ const PhotographerProfileHeader = memo(({ profile }) => {
             <Button
               unstyled
               type="button"
-              onClick={() => setFollowing((current) => !current)}
-              className={`inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] px-4 text-[14px] font-semibold text-white transition ${
+              disabled={toggleMutation.isPending}
+              onClick={handleFollowClick}
+              className={`inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] px-4 text-[14px] font-semibold text-white transition disabled:opacity-60 ${
                 following
                   ? 'bg-[#312e81] hover:bg-[#1e1b4b]'
                   : 'bg-[#4048cd] hover:bg-[#343bb0]'

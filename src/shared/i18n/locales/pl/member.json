@@ -375,6 +375,7 @@
       "newsMessages": "Aktualności i wiadomości",
       "sellPhotos": "Sprzedaj zdjęcia",
       "favouritePhotographers": "Ulubieni fotografowie",
+      "favouritePhotos": "Ulubione zdjęcia",
       "uploadPhotos": "Prześlij zdjęcia",
       "myCompetitions": "Moje konkursy",
       "businessPhotos": "Zdjęcia biznesowe",
@@ -999,6 +1000,15 @@
       }
     }
   },
+  "favouritePhotos": {
+    "title": "Ulubione zdjęcia",
+    "subtitle": "Przeglądaj i zarządzaj swoją kolekcją zapisanych i ulubionych zdjęć.",
+    "empty": "Nie masz jeszcze żadnych ulubionych zdjęć.",
+    "emptyHint": "Przeglądaj galerię i kliknij ikonę zakładki, aby zapisać zdjęcia tutaj.",
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} zdjęć",
+    "paginationAria": "Paginacja ulubionych zdjęć",
+    "gridAria": "Siatka ulubionych zdjęć"
+  },
   "favouritePhotographers": {
     "title": "Ulubieni fotografowie",
     "subtitle": "Fotografowie, którzy Cię obserwują i których prace masz na oku.",
@@ -1108,6 +1118,11 @@
       "username": "Nazwa użytkownika",
       "phone": "Numer telefonu",
       "email": "Adres e-mail",
+      "emailNotChangeable": "Adres e-mail nie może zostać zmieniony.",
+      "city": "Miasto",
+      "country": "Kraj",
+      "bio": "Bio",
+      "bioPlaceholder": "Opowiedz o sobie i swojej fotograficznej drodze...",
       "saved": "Szczegóły profilu zostały zapisane!"
     },
     "portfolio": {

@@ -30,3 +30,19 @@ export const resetPasswordApi = async (payload) => {
   const response = await apiClient.post('/v1/auth/reset-password', payload);
   return response;
 };
+
+/**
+ * Change member user password.
+ * POST /api/v1/auth/change-password
+ * Body: { currentPassword: string, newPassword: string }
+ *
+ * @param {{ currentPassword: string, newPassword: string }} payload
+ */
+export const changePasswordApi = async ({ currentPassword, newPassword }) => {
+  const response = await apiClient.post('/v1/auth/change-password', {
+    currentPassword,
+    newPassword,
+  });
+  return response?.data ?? response;
+};
+

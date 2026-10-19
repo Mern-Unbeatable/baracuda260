@@ -99,6 +99,10 @@ export const publicRoutes = (
         element={<PhotographerProfile />}
       />
       <Route
+        path={ROUTES.PHOTOGRAPHER_PROFILE_USERNAME}
+        element={<PhotographerProfile />}
+      />
+      <Route
         path={ROUTES.PHOTOGRAPHER_STORE_CHECKOUT}
         element={<StoreCheckout />}
       />

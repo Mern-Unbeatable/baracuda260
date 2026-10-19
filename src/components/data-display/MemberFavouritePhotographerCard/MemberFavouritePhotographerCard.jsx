@@ -1,22 +1,90 @@
 import { Calendar, MapPin, Star, UserCheck } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { ROUTES } from '@/shared/config';
+import { resolveMediaUrl } from '@/shared/utils/media';
+
+const formatDate = (val) => {
+  if (!val) return '';
+  try {
+    const d = new Date(val);
+    if (!Number.isNaN(d.getTime())) {
+      return d.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    }
+  } catch {
+    // fallback
+  }
+  return String(val);
+};
 
 const MemberFavouritePhotographerCard = memo(
-  ({ photographer, defaultFollowing = true }) => {
+  ({
+    photographer,
+    defaultFollowing = true,
+    onToggleFollow,
+    isToggling = false,
+  }) => {
     const { t } = useTranslation();
-    const [following, setFollowing] = useState(defaultFollowing);
+    const [following, setFollowing] = useState(
+      photographer.isFollowing !== undefined
+        ? photographer.isFollowing
+        : defaultFollowing,
+    );
+
+    useEffect(() => {
+      if (photographer.isFollowing !== undefined) {
+        setFollowing(photographer.isFollowing);
+      }
+    }, [photographer.isFollowing]);
+
+    const handle = photographer.username
+      ? `@${photographer.username.replace(/^@/, '')}`
+      : photographer.handle;
+
+    const locationText =
+      photographer.country ||
+      (photographer.locationKey ? t(photographer.locationKey) : '');
+
+    const bioText =
+      photographer.bio ||
+      (photographer.quoteKey ? t(photographer.quoteKey) : '');
+
+    const followedDate =
+      formatDate(photographer.followedAt) || photographer.followedDate;
+
+    const followers =
+      photographer.followersCount ?? photographer.followers ?? 0;
+    const artworks =
+      photographer.artworksCount ?? photographer.artworks ?? 0;
+
+    const profileHref = photographer.username
+      ? `/photographer/${photographer.username}`
+      : ROUTES.PHOTOGRAPHER_PROFILE;
+
+    const handleFollowClick = () => {
+      setFollowing((current) => !current);
+      if (onToggleFollow && photographer.username) {
+        onToggleFollow(photographer.username);
+      }
+    };
 
     return (
       <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white p-5 shadow-sm">
         <div className="flex items-start gap-3">
           <div className="relative shrink-0">
             <Image
-              src={photographer.avatar}
+              src={
+                photographer.avatar
+                  ? resolveMediaUrl(photographer.avatar)
+                  : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+              }
               alt={photographer.name}
               width={56}
               height={56}
@@ -35,38 +103,47 @@ const MemberFavouritePhotographerCard = memo(
               {photographer.name}
             </h2>
             <p className="truncate text-[14px] font-medium text-[#4048cd]">
-              {photographer.handle}
+              {handle}
             </p>
-            <p className="mt-1 text-[13px] text-[#6b7280]">
-              {t(photographer.specialtyKey)}
-            </p>
-            <p className="mt-0.5 inline-flex items-center gap-1 text-[13px] text-[#6b7280]">
-              <MapPin
-                size={13}
-                strokeWidth={2}
-                aria-hidden="true"
-                className="shrink-0"
-              />
-              {t(photographer.locationKey)}
-            </p>
+            {photographer.specialtyKey ? (
+              <p className="mt-1 text-[13px] text-[#6b7280]">
+                {t(photographer.specialtyKey)}
+              </p>
+            ) : null}
+            {locationText ? (
+              <p className="mt-0.5 inline-flex items-center gap-1 text-[13px] text-[#6b7280]">
+                <MapPin
+                  size={13}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                  className="shrink-0"
+                />
+                {locationText}
+              </p>
+            ) : null}
           </div>
         </div>
 
-        <blockquote className="mt-4 text-[14px] italic leading-[1.6] text-[#494453]">
-          &ldquo;{t(photographer.quoteKey)}&rdquo;
-        </blockquote>
+        {bioText ? (
+          <blockquote className="mt-4 line-clamp-3 text-[14px] italic leading-[1.6] text-[#494453]">
+            &ldquo;{bioText}&rdquo;
+          </blockquote>
+        ) : null}
 
-        <div className="mt-4 inline-flex w-full items-center gap-2 rounded-lg bg-[#e8f0fe] px-3 py-2 text-[13px] font-medium text-[#4048cd]">
-          <Calendar
-            size={14}
-            strokeWidth={2}
-            aria-hidden="true"
-            className="shrink-0"
-          />
-          {t('favouritePhotographers.card.followedYou', {
-            date: photographer.followedDate,
-          })}
-        </div>
+        {followedDate ? (
+          <div className="mt-4 inline-flex w-full items-center gap-2 rounded-lg bg-[#e8f0fe] px-3 py-2 text-[13px] font-medium text-[#4048cd]">
+            <Calendar
+              size={14}
+              strokeWidth={2}
+              aria-hidden="true"
+              className="shrink-0"
+            />
+            {t('favouritePhotographers.card.followedYou', {
+              date: followedDate,
+              defaultValue: `Followed on ${followedDate}`,
+            })}
+          </div>
+        ) : null}
 
         <div className="mt-4 grid grid-cols-2 divide-x divide-[#e5e7eb] rounded-lg border border-[#e5e7eb] bg-[#fafafa] py-3 text-center">
           <div className="px-2">
@@ -74,7 +151,7 @@ const MemberFavouritePhotographerCard = memo(
               {t('favouritePhotographers.card.followers')}
             </p>
             <p className="mt-1 text-[20px] font-bold text-[#0d0d14]">
-              {photographer.followers}
+              {followers}
             </p>
           </div>
           <div className="px-2">
@@ -82,7 +159,7 @@ const MemberFavouritePhotographerCard = memo(
               {t('favouritePhotographers.card.artworks')}
             </p>
             <p className="mt-1 text-[20px] font-bold text-[#0d0d14]">
-              {photographer.artworks}
+              {artworks}
             </p>
           </div>
         </div>
@@ -91,9 +168,10 @@ const MemberFavouritePhotographerCard = memo(
           <Button
             unstyled
             type="button"
+            disabled={isToggling}
             aria-pressed={following}
-            onClick={() => setFollowing((current) => !current)}
-            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-[13px] font-semibold transition ${
+            onClick={handleFollowClick}
+            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-[13px] font-semibold transition disabled:opacity-60 ${
               following
                 ? 'border-[#4048cd] bg-[#ecedfa] text-[#4048cd]'
                 : 'border-[#4048cd] bg-[#4048cd] text-white hover:bg-[#363eb8]'
@@ -105,7 +183,7 @@ const MemberFavouritePhotographerCard = memo(
               : t('favouritePhotographers.card.follow')}
           </Button>
           <Link
-            to={ROUTES.PHOTOGRAPHER_PROFILE}
+            to={profileHref}
             className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#d1d5db] bg-white px-3 py-2.5 text-[13px] font-semibold text-[#494453] transition hover:border-[#4048cd] hover:text-[#4048cd]"
           >
             {t('favouritePhotographers.card.viewProfile')}

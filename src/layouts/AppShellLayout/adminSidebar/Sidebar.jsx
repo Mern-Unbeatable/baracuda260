@@ -1,6 +1,7 @@
 import {
   Bell,
   BookImage,
+  Bookmark,
   ChartColumnStacked,
   ChevronRight,
   ChevronsLeft,
@@ -8,6 +9,7 @@ import {
   ClipboardList,
   CreditCard,
   Crown,
+  Heart,
   Image as ImageIcon,
   Images,
   LayoutDashboard,
@@ -86,7 +88,12 @@ const USER_NAV_ITEMS = [
   {
     labelKey: 'dashboard.nav.favouritePhotographers',
     path: ROUTES.USER_FAVOURITE_PHOTOGRAPHERS,
-    icon: Star,
+    icon: Bookmark,
+  },
+  {
+    labelKey: 'dashboard.nav.favouritePhotos',
+    path: ROUTES.USER_FAVOURITE_PHOTOS,
+    icon: Heart,
   },
   // { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.USER_MY_COMPETITIONS, icon: Trophy },
   {
