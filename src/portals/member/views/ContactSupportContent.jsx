@@ -1,24 +1,35 @@
-import React, { memo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { RefreshCw } from 'lucide-react';
+import React, { memo, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
 import ConversationMessageModal from '@/portals/member/components/member-support/contactSupport/ConversationMessageModal';
 import {
   CONTACT_SUPPORT_ASSETS,
-  CONVERSATIONS,
   FILTERS,
   SUBJECT_OPTIONS,
 } from '@/portals/member/data/contactSupportData';
+import useUserProfileMe from '@/portals/member/hooks/useUserProfileMe';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  createSupportTicketApi,
+  getMySupportTicketsApi,
+  USER_SUPPORT_QUERY_KEY,
+} from '@/shared/api/support.api';
 
 const inputClassName =
   'w-full rounded-[12px] border border-black/10 bg-white p-[15px] text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none transition focus:ring-2 focus:ring-[#2563eb]/25';
 
 const StatusBadge = memo(({ status }) => {
   const { t } = useTranslation();
-  const isPending = status === 'pending';
+  const raw = String(status || '').toUpperCase();
+  const isPending = raw === 'PENDING';
 
   return (
     <span
@@ -32,7 +43,11 @@ const StatusBadge = memo(({ status }) => {
         className={`size-1.5 shrink-0 rounded-full ${isPending ? 'bg-[#f97316]' : 'bg-[#22c55e]'}`}
         aria-hidden="true"
       />
-      {t(`contactSupport.status.${status}`)}
+      {isPending
+        ? t('contactSupport.status.pending', 'Pending')
+        : t('contactSupport.status.answered', {
+            defaultValue: t('contactSupport.status.replied', 'Answered'),
+          })}
     </span>
   );
 });
@@ -40,8 +55,6 @@ const StatusBadge = memo(({ status }) => {
 StatusBadge.displayName = 'StatusBadge';
 
 const ConversationItem = memo(({ thread, onOpen }) => {
-  const { t } = useTranslation();
-
   return (
     <Button
       unstyled
@@ -60,16 +73,18 @@ const ConversationItem = memo(({ thread, onOpen }) => {
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="text-[15px] font-semibold leading-[22.5px] text-[#111827]">
-          {t(thread.titleKey)}
+          {thread.title}
         </span>
-        <span className="text-[14px] font-normal leading-5 text-[#6b7280]">
-          {t(thread.previewKey)}
+        <span className="line-clamp-2 text-[14px] font-normal leading-5 text-[#6b7280]">
+          {thread.message || thread.preview}
         </span>
         <span className="flex flex-wrap items-center gap-2 pt-2">
           <StatusBadge status={thread.status} />
-          <span className="text-[14px] leading-5 text-[#9ca3af]">
-            {t(thread.timeKey)}
-          </span>
+          {thread.timeDisplay ? (
+            <span className="text-[14px] leading-5 text-[#9ca3af]">
+              · {thread.timeDisplay}
+            </span>
+          ) : null}
         </span>
       </span>
       <span className="flex self-stretch items-center">
@@ -92,33 +107,100 @@ ConversationItem.displayName = 'ConversationItem';
  */
 const ContactSupportContent = memo(() => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const user = useSelector(selectUser);
+  const { data: profileData } = useUserProfileMe();
+
+  const [filter, setFilter] = useState('all');
+  const [page, setPage] = useState(1);
+  const [activeThread, setActiveThread] = useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm({
     defaultValues: {
-      fullName: '',
-      email: '',
+      fullName: user?.name || profileData?.name || '',
+      email: user?.email || profileData?.email || '',
       subject: '',
+      customSubject: '',
       message: '',
     },
   });
 
-  const [filter, setFilter] = useState('all');
-  const [activeThread, setActiveThread] = useState(null);
+  const watchedSubject = watch('subject');
 
-  const onSubmit = (_data) => {
-    reset();
-    toast.success(t('contactSupport.success'));
+  useEffect(() => {
+    if (profileData?.name || user?.name || profileData?.email || user?.email) {
+      reset((prev) => ({
+        ...prev,
+        fullName: prev.fullName || profileData?.name || user?.name || '',
+        email: prev.email || profileData?.email || user?.email || '',
+      }));
+    }
+  }, [profileData?.name, profileData?.email, user?.name, user?.email, reset]);
+
+  const {
+    data: ticketsData,
+    isLoading: isLoadingTickets,
+    isError: isErrorTickets,
+    error: ticketsError,
+    refetch: refetchTickets,
+  } = useQuery({
+    queryKey: USER_SUPPORT_QUERY_KEY({ status: filter, page, limit: 10 }),
+    queryFn: () => getMySupportTicketsApi({ status: filter, page, limit: 10 }),
+    staleTime: 30 * 1000,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createSupportTicketApi,
+    onSuccess: (res) => {
+      toast.success(res?.message || t('contactSupport.success'));
+      reset({
+        fullName: user?.name || profileData?.name || '',
+        email: user?.email || profileData?.email || '',
+        subject: '',
+        customSubject: '',
+        message: '',
+      });
+      queryClient.invalidateQueries({ queryKey: ['user-support-tickets'] });
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t(
+            'contactSupport.errors.sendFailed',
+            'Failed to send message. Please try again.',
+          ),
+        ),
+      );
+    },
+  });
+
+  const onSubmit = (formData) => {
+    const finalSubject =
+      formData.subject === 'other' && formData.customSubject?.trim()
+        ? formData.customSubject.trim()
+        : formData.subject;
+
+    createMutation.mutate({
+      name: formData.fullName.trim(),
+      email: formData.email.trim(),
+      subject: finalSubject,
+      message: formData.message.trim(),
+    });
   };
 
-  const visibleThreads =
-    filter === 'all'
-      ? CONVERSATIONS
-      : CONVERSATIONS.filter((thread) => thread.status === filter);
+  const tickets = ticketsData?.items || [];
+  const meta = ticketsData?.meta || {};
+  const currentPage = meta.currentPage || 1;
+  const totalPages = meta.totalPages || 1;
+  const hasNext = Boolean(meta.hasNext);
+  const hasPrevious = Boolean(meta.hasPrevious);
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col items-stretch gap-8 lg:flex-row lg:gap-15">
@@ -209,7 +291,7 @@ const ContactSupportContent = memo(() => {
                     value={option.value}
                     disabled={!option.value}
                   >
-                    {t(option.labelKey)}
+                    {t(option.labelKey, { defaultValue: option.defaultLabel })}
                   </option>
                 ))}
               </select>
@@ -217,6 +299,28 @@ const ContactSupportContent = memo(() => {
                 <p className="text-sm text-red-600" role="alert">
                   {errors.subject.message}
                 </p>
+              ) : null}
+
+              {watchedSubject === 'other' ? (
+                <div className="mt-2 flex flex-col gap-2">
+                  <Input
+                    id="contact-support-custom-subject"
+                    type="text"
+                    placeholder={t(
+                      'contactSupport.customSubjectPlaceholder',
+                      'Specify your subject...',
+                    )}
+                    error={errors.customSubject}
+                    inputClassName={inputClassName}
+                    labelClassName="hidden"
+                    {...register('customSubject', {
+                      required: t(
+                        'contactSupport.errors.subjectRequired',
+                        'Please specify a subject.',
+                      ),
+                    })}
+                  />
+                </div>
               ) : null}
             </div>
 
@@ -248,16 +352,23 @@ const ContactSupportContent = memo(() => {
           <Button
             type="submit"
             unstyled={true}
-            className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921]"
+            disabled={createMutation.isPending}
+            className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921] disabled:opacity-60"
           >
-            <Image
-              src={CONTACT_SUPPORT_ASSETS.send}
-              alt=""
-              width={24}
-              height={24}
-              className="size-6 shrink-0 -rotate-52"
-            />
-            {t('contactSupport.send')}
+            {createMutation.isPending ? (
+              <RefreshCw size={20} className="animate-spin text-white" />
+            ) : (
+              <Image
+                src={CONTACT_SUPPORT_ASSETS.send}
+                alt=""
+                width={24}
+                height={24}
+                className="size-6 shrink-0 -rotate-52"
+              />
+            )}
+            {createMutation.isPending
+              ? t('common.sending', 'Sending...')
+              : t('contactSupport.send')}
           </Button>
         </form>
       </section>
@@ -287,7 +398,10 @@ const ContactSupportContent = memo(() => {
                   type="button"
                   role="tab"
                   aria-selected={active}
-                  onClick={() => setFilter(item)}
+                  onClick={() => {
+                    setFilter(item);
+                    setPage(1);
+                  }}
                   className={`cursor-pointer rounded-full px-5 py-2 text-[14px] font-medium leading-5 transition ${
                     active
                       ? 'bg-[#2563eb] text-white'
@@ -302,21 +416,70 @@ const ContactSupportContent = memo(() => {
 
           <div className="h-px w-full bg-[#f3f4f6]" aria-hidden="true" />
 
-          <div className="flex flex-col divide-y divide-[#f3f4f6]">
-            {visibleThreads.length > 0 ? (
-              visibleThreads.map((thread) => (
-                <ConversationItem
-                  key={thread.id}
-                  thread={thread}
-                  onOpen={setActiveThread}
-                />
-              ))
-            ) : (
-              <p className="p-6 text-[14px] text-[#6b7280]">
-                {t('contactSupport.empty')}
+          {isLoadingTickets ? (
+            <div className="flex min-h-[250px] items-center justify-center">
+              <RefreshCw size={24} className="animate-spin text-[#2563eb]" />
+            </div>
+          ) : isErrorTickets ? (
+            <div className="flex min-h-[200px] flex-col items-center justify-center gap-3 p-6 text-center">
+              <p className="text-[14px] text-red-500">
+                {ticketsError?.message ||
+                  t('common.error', 'Failed to load support tickets')}
               </p>
-            )}
-          </div>
+              <button
+                type="button"
+                onClick={() => refetchTickets()}
+                className="rounded-lg bg-[#2563eb] px-4 py-2 text-[13px] font-medium text-white transition hover:bg-[#1d4ed8]"
+              >
+                {t('common.retry', 'Retry')}
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col divide-y divide-[#f3f4f6]">
+              {tickets.length > 0 ? (
+                tickets.map((thread) => (
+                  <ConversationItem
+                    key={thread.id}
+                    thread={thread}
+                    onOpen={setActiveThread}
+                  />
+                ))
+              ) : (
+                <p className="p-6 text-[14px] text-[#6b7280]">
+                  {t('contactSupport.empty')}
+                </p>
+              )}
+            </div>
+          )}
+
+          {totalPages > 1 ? (
+            <div className="flex items-center justify-between border-t border-[#f3f4f6] px-6 py-4">
+              <span className="text-[13px] text-[#6b7280]">
+                {t('common.pageOf', 'Page {{current}} of {{total}}', {
+                  current: currentPage,
+                  total: totalPages,
+                })}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={!hasPrevious}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="cursor-pointer rounded-lg border border-[#e5e7eb] px-3 py-1.5 text-[13px] font-medium text-[#374151] transition hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {t('common.previous', 'Previous')}
+                </button>
+                <button
+                  type="button"
+                  disabled={!hasNext}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="cursor-pointer rounded-lg border border-[#e5e7eb] px-3 py-1.5 text-[13px] font-medium text-[#374151] transition hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {t('common.next', 'Next')}
+                </button>
+              </div>
+            </div>
+          ) : null}
         </div>
       </section>
 

@@ -54,6 +54,9 @@ export const formatSupportTicketTime = (dateStr) => {
   });
 };
 
+export const USER_SUPPORT_QUERY_KEY = (params) => ['user-support-tickets', params];
+export const USER_SUPPORT_DETAIL_QUERY_KEY = (id) => ['user-support-ticket', id];
+
 /**
  * Normalizes ticket object from API response.
  * @param {object} item
@@ -62,7 +65,7 @@ export const normalizeSupportTicket = (item) => {
   if (!item) return null;
   const title = normalizeTicketField(item.title);
   const message = normalizeTicketField(item.message);
-  const statusStr = String(item.status || 'PENDING').toLowerCase();
+  const rawStatus = String(item.status || 'PENDING').toUpperCase();
 
   return {
     id: item.id,
@@ -75,13 +78,77 @@ export const normalizeSupportTicket = (item) => {
     message,
     preview: message,
     answer: item.answer || '',
-    status: statusStr,
+    status: rawStatus,
+    statusLower: rawStatus.toLowerCase(),
     attachments: Array.isArray(item.attachments) ? item.attachments : [],
     createdAt: item.createdAt,
     answeredAt: item.answeredAt,
+    updatedAt: item.updatedAt,
     timeDisplay: formatSupportTicketTime(item.createdAt),
     user: item.user,
   };
+};
+
+/**
+ * Creates a support ticket from member dashboard.
+ * POST /api/v1/support
+ * Payload: { name, email, subject, message }
+ *
+ * @param {{ name: string, email: string, subject: string, message: string }} payload
+ */
+export const createSupportTicketApi = async ({ name, email, subject, message }) => {
+  const response = await apiClient.post('/v1/support', {
+    name,
+    email,
+    subject,
+    message,
+  });
+  return response?.data || response;
+};
+
+/**
+ * Fetches member's own support tickets.
+ * GET /api/v1/support/my-tickets?status=PENDING&page=1&limit=10
+ *
+ * @param {{ status?: string, page?: number, limit?: number }} [params]
+ */
+export const getMySupportTicketsApi = async ({ status, page = 1, limit = 10 } = {}) => {
+  const params = { page, limit };
+  if (status && status !== 'all') {
+    params.status = status === 'replied' ? 'ANSWERED' : String(status).toUpperCase();
+  }
+
+  const response = await apiClient.get('/v1/support/my-tickets', { params });
+  const rawList = Array.isArray(response?.data)
+    ? response.data
+    : Array.isArray(response)
+      ? response
+      : [];
+
+  return {
+    items: rawList.map(normalizeSupportTicket).filter(Boolean),
+    meta: response?.meta || {
+      currentPage: page,
+      totalPages: 1,
+      totalRecords: rawList.length,
+      hasNext: false,
+      hasPrevious: false,
+    },
+    message: response?.message || '',
+  };
+};
+
+/**
+ * Fetches member's single support ticket details.
+ * GET /api/v1/support/my-tickets/{{ticket_id}}
+ *
+ * @param {string} ticketId
+ */
+export const getMySupportTicketDetailsApi = async (ticketId) => {
+  if (!ticketId) return null;
+  const response = await apiClient.get(`/v1/support/my-tickets/${ticketId}`);
+  const data = response?.data || response;
+  return normalizeSupportTicket(data);
 };
 
 /**

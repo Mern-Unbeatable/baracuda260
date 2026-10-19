@@ -19,11 +19,13 @@
     "filters": {
       "all": "Wszystkie",
       "pending": "Oczekujące",
-      "replied": "Odpowiedziane"
+      "replied": "Odpowiedziane",
+      "answered": "Odpowiedziane"
     },
     "status": {
       "pending": "Oczekujące",
-      "replied": "Odpowiedziane"
+      "replied": "Odpowiedziane",
+      "answered": "Odpowiedziane"
     },
     "subjects": {
       "technical": "Problem techniczny",
@@ -576,11 +578,23 @@
     "storyPlaceholder": "Podziel się narracją twórczą stojącą za tą kosmologiczną serią...",
     "copyrightConfirm": "Potwierdzam, że posiadam pełne prawa autorskie do wszystkich przesłanych zdjęć oraz że nie zawierają one treści nielegalnych ani ich nie promują.",
     "submit": "Prześlij swoje zdjęcia",
+    "kinds": {
+      "label": "Format portfolio",
+      "hint": "Wybierz format albumu: 12 zdjęć zodiaku, historia z 6 zdjęć lub pojedyncze zdjęcie.",
+      "TWELVE": "12 Zodiak",
+      "SIX": "6 Zdjęć",
+      "SINGLE": "Pojedyncze zdjęcie"
+    },
+    "aiGenerated": "Oświadcz, jeśli ta praca została stworzona z pomocą AI",
+    "submitting": "Przesyłanie zdjęć...",
+    "submitSuccess": "Zdjęcia dla linku biznesowego zostały przesłane pomyślnie!",
     "errors": {
       "titleRequired": "Tytuł kolekcji jest wymagany.",
       "storyRequired": "Historia / koncepcja jest wymagana.",
       "photosRequired": "Dodaj zdjęcie do każdego slotu zodiaku.",
-      "copyrightRequired": "Potwierdź posiadanie praw autorskich."
+      "photosRequiredCount": "Dodaj zdjęcie do każdego slotu (wymagane: {{count}}).",
+      "copyrightRequired": "Potwierdź posiadanie praw autorskich.",
+      "submitFailed": "Nie udało się przesłać zdjęć dla linku biznesowego."
     },
     "categories": {
       "astrophotography": "Astrofotografia",
@@ -919,7 +933,31 @@
     "card": {
       "badge": "Notatka fotografa",
       "likes": "{{count}} polubień",
-      "share": "Udostępnij"
+      "share": "Udostępnij",
+      "edit": "Edytuj wpis",
+      "delete": "Usuń wpis",
+      "shared": "Link skopiowany do schowka!"
+    },
+    "deleteSuccess": "Wpis został pomyślnie usunięty.",
+    "deleteError": "Nie udało się usunąć wpisu.",
+    "errorTitle": "Nie można załadować wpisów",
+    "errorMessage": "Wystąpił błąd podczas pobierania wpisów.",
+    "emptyTitle": "Brak opublikowanych wpisów",
+    "emptySubtitle": "Podziel się ze społecznością swoimi najnowszymi projektami, historiami zza kulis lub relacjami z wypraw.",
+    "editModal": {
+      "title": "Edytuj wpis",
+      "mediaLabel": "Multimedia",
+      "replaceMedia": "Zmień",
+      "keepMedia": "Zachowaj obecne multimedia",
+      "save": "Zapisz zmiany",
+      "saving": "Zapisywanie...",
+      "success": "Wpis został pomyślnie zaktualizowany!",
+      "error": "Nie udało się zaktualizować wpisu."
+    },
+    "deleteModal": {
+      "title": "Usuń wpis",
+      "message": "Czy na pewno chcesz usunąć ten wpis? Tej operacji nie można cofnąć.",
+      "confirm": "Usuń"
     },
     "items": {
       "summerCollection": {
@@ -940,7 +978,8 @@
       "errors": {
         "messageRequired": "Wprowadź treść wiadomości.",
         "mediaRequired": "Prześlij co najmniej jedno zdjęcie lub wideo.",
-        "copyrightRequired": "Potwierdź oświadczenie o prawach autorskich."
+        "copyrightRequired": "Potwierdź oświadczenie o prawach autorskich.",
+        "failed": "Nie udało się opublikować wpisu. Spróbuj ponownie."
       }
     }
   },

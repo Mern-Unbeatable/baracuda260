@@ -1,6 +1,8 @@
-import { ArrowLeft, ChevronDown } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ArrowLeft, ChevronDown, Loader2 } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Button from '@/components/ui/Button';
@@ -15,6 +17,8 @@ import {
   DEFAULT_CATEGORY,
   RED_SLOTS,
 } from '@/portals/member/data/businessLinkAssets';
+import { getApiErrorMessage } from '@/shared/api/client';
+import { createBusinessLinkApi } from '@/shared/api/businessLinks.api';
 import { ROUTES } from '@/shared/config';
 
 const SlotIcon = memo(({ slot }) => {
@@ -131,12 +135,18 @@ BusinessSlotCard.displayName = 'BusinessSlotCard';
 
 /**
  * Business Link Photos — Figma node 195:271.
- * Back → info gateway card → dual wave → red (1–6) + blue (7–12) grids → form.
+ * 12-Zodiac Visual Frame: Back → info card → dual wave → red (1–6) + blue (7–12) grids → form.
  */
 const BusinessLinkContent = memo(() => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const fileInputRef = useRef(null);
   const activeSlotRef = useRef(null);
+
+  const [files, setFiles] = useState({});
+  const [previews, setPreviews] = useState({});
+  const [photosError, setPhotosError] = useState('');
+  const [successOpen, setSuccessOpen] = useState(false);
 
   const {
     register,
@@ -147,13 +157,10 @@ const BusinessLinkContent = memo(() => {
       title: '',
       category: DEFAULT_CATEGORY,
       story: '',
+      isAiGenerated: false,
       copyrightOk: false,
     },
   });
-
-  const [previews, setPreviews] = useState({});
-  const [photosError, setPhotosError] = useState('');
-  const [successOpen, setSuccessOpen] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -174,6 +181,7 @@ const BusinessLinkContent = memo(() => {
     event.target.value = '';
     if (!file || !slotId) return;
 
+    setFiles((prev) => ({ ...prev, [slotId]: file }));
     setPreviews((previous) => {
       const nextUrl = URL.createObjectURL(file);
       if (previous[slotId]) URL.revokeObjectURL(previous[slotId]);
@@ -182,16 +190,48 @@ const BusinessLinkContent = memo(() => {
     setPhotosError('');
   };
 
-  const onSubmit = (_data) => {
-    const missingPhotos = ALL_SLOTS.some((slot) => !previews[slot.id]);
+  const createMutation = useMutation({
+    mutationFn: createBusinessLinkApi,
+    onSuccess: () => {
+      setSuccessOpen(true);
+      toast.success(
+        t('businessLink.submitSuccess', 'Business link photos submitted successfully!'),
+      );
+      queryClient.invalidateQueries({ queryKey: ['admin-business-links'] });
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('businessLink.errors.submitFailed', 'Failed to submit business link photos.'),
+        ),
+      );
+    },
+  });
+
+  const onSubmit = (data) => {
+    const missingPhotos = ALL_SLOTS.some((slot) => !files[slot.id]);
     if (missingPhotos) {
       setPhotosError(t('businessLink.errors.photosRequired'));
-      setSuccessOpen(false);
       return;
     }
     setPhotosError('');
-    setSuccessOpen(true);
+
+    const imageFiles = ALL_SLOTS
+      .map((slot) => files[slot.id])
+      .filter(Boolean);
+
+    createMutation.mutate({
+      kind: 'TWELVE',
+      title: data.title,
+      story: data.story,
+      isAiGenerated: Boolean(data.isAiGenerated),
+      copyrightConfirmed: 'true',
+      images: imageFiles,
+    });
   };
+
+  const isSubmitting = createMutation.isPending;
 
   const renderSlotGrid = (slots) => (
     <div className="grid w-full grid-cols-1 items-stretch gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
@@ -218,6 +258,7 @@ const BusinessLinkContent = memo(() => {
         {t('businessLink.backToSelection')}
       </Link>
 
+      {/* Info card */}
       <section className="flex w-full flex-col items-start gap-4 rounded-[20px] border border-black/20 bg-white p-5 sm:flex-row sm:gap-4">
         <div className="flex h-7.5 w-7.75 shrink-0 items-center justify-center rounded border border-[#ee1c25] bg-[#fde8e9] px-0.75 py-0.75 pl-1">
           <Image
@@ -238,6 +279,7 @@ const BusinessLinkContent = memo(() => {
         </div>
       </section>
 
+      {/* Dual wave divider */}
       <div
         className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75"
         aria-hidden="true"
@@ -249,6 +291,7 @@ const BusinessLinkContent = memo(() => {
         />
       </div>
 
+      {/* 12 Zodiac Visual Frame */}
       <section className="flex w-full flex-col gap-5">
         <h2 className="text-[20px] font-semibold leading-6 text-[#1c1c1c]">
           {t('businessLink.gridTitle')}
@@ -258,17 +301,19 @@ const BusinessLinkContent = memo(() => {
           <div className="min-w-0 flex-1">{renderSlotGrid(RED_SLOTS)}</div>
           <div className="min-w-0 flex-1">{renderSlotGrid(BLUE_SLOTS)}</div>
         </div>
+
         {photosError ? (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-sm font-medium text-red-600" role="alert">
             {photosError}
           </p>
         ) : null}
       </section>
 
+      {/* Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5"
+        className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5 sm:p-7"
       >
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-2.5">
@@ -281,9 +326,10 @@ const BusinessLinkContent = memo(() => {
             <Input
               id="business-link-title"
               type="text"
+              disabled={isSubmitting}
               placeholder={t('businessLink.collectionTitlePlaceholder')}
               error={errors.title}
-              inputClassName="w-full rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              inputClassName="w-full rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30 disabled:opacity-60"
               labelClassName="hidden"
               {...register('title', {
                 required: t('businessLink.errors.titleRequired'),
@@ -301,7 +347,8 @@ const BusinessLinkContent = memo(() => {
             <div className="relative">
               <select
                 id="business-link-category"
-                className="w-full appearance-none rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30 cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full appearance-none rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30 cursor-pointer disabled:opacity-60"
                 {...register('category')}
               >
                 {ARTISTIC_CATEGORIES.map((item) => (
@@ -327,10 +374,11 @@ const BusinessLinkContent = memo(() => {
             </label>
             <textarea
               id="business-link-story"
+              disabled={isSubmitting}
               placeholder={t('businessLink.storyPlaceholder')}
               rows={5}
               aria-invalid={Boolean(errors.story)}
-              className="min-h-36.75 w-full resize-y rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30"
+              className="min-h-36.75 w-full resize-y rounded-lg bg-[#fafaff] px-4.25 py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30 disabled:opacity-60"
               {...register('story', {
                 required: t('businessLink.errors.storyRequired'),
               })}
@@ -343,11 +391,31 @@ const BusinessLinkContent = memo(() => {
           </div>
         </div>
 
+        {/* AI-Generated Artwork Checkbox */}
         <div>
           <label className="flex cursor-pointer items-start gap-3">
             <input
               type="checkbox"
-              className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
+              disabled={isSubmitting}
+              className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25] disabled:opacity-60"
+              {...register('isAiGenerated')}
+            />
+            <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+              {t(
+                'businessLink.aiGenerated',
+                'Artwork created with AI assistance (Declare if applicable)',
+              )}
+            </span>
+          </label>
+        </div>
+
+        {/* Copyright ownership */}
+        <div>
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              disabled={isSubmitting}
+              className="mt-1 size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25] disabled:opacity-60"
               {...register('copyrightOk', {
                 required: t('businessLink.errors.copyrightRequired'),
               })}
@@ -366,16 +434,28 @@ const BusinessLinkContent = memo(() => {
         <Button
           type="submit"
           unstyled={true}
-          className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
+          disabled={isSubmitting}
+          className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3.5 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <Image
-            src={BUSINESS_LINK_ASSETS.submit}
-            alt=""
-            width={24}
-            height={24}
-            className="size-6 shrink-0"
-          />
-          {t('businessLink.submit')}
+          {isSubmitting ? (
+            <>
+              <Loader2 size={22} className="animate-spin" />
+              <span>
+                {t('businessLink.submitting', 'Submitting your photos...')}
+              </span>
+            </>
+          ) : (
+            <>
+              <Image
+                src={BUSINESS_LINK_ASSETS.submit}
+                alt=""
+                width={24}
+                height={24}
+                className="size-6 shrink-0"
+              />
+              <span>{t('businessLink.submit')}</span>
+            </>
+          )}
         </Button>
       </form>
 
@@ -384,12 +464,14 @@ const BusinessLinkContent = memo(() => {
         type="file"
         accept="image/*"
         className="sr-only"
+        disabled={isSubmitting}
         onChange={handleFileChange}
       />
 
       <PhotoSubmitSuccessModal
         open={successOpen}
         onClose={() => setSuccessOpen(false)}
+        uploadAnotherHref={ROUTES.USER_BUSINESS_PHOTOS}
       />
     </div>
   );

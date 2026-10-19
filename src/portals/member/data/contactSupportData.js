@@ -11,15 +11,16 @@ export const CONTACT_SUPPORT_ASSETS = {
   lock: `${A}/lock.svg`,
 };
 
-export const FILTERS = ['all', 'pending', 'replied'];
+export const FILTERS = ['all', 'pending', 'answered'];
 
 export const SUBJECT_OPTIONS = [
-  { value: '', labelKey: 'contactSupport.subjectPlaceholder' },
-  { value: 'technical', labelKey: 'contactSupport.subjects.technical' },
-  { value: 'billing', labelKey: 'contactSupport.subjects.billing' },
-  { value: 'competition', labelKey: 'contactSupport.subjects.competition' },
-  { value: 'account', labelKey: 'contactSupport.subjects.account' },
-  { value: 'other', labelKey: 'contactSupport.subjects.other' },
+  { value: '', labelKey: 'contactSupport.subjectPlaceholder', defaultLabel: 'Choose a subject' },
+  { value: 'Technical issue', labelKey: 'contactSupport.subjects.technical', defaultLabel: 'Technical issue' },
+  { value: 'App is crashing', labelKey: 'contactSupport.subjects.appCrashing', defaultLabel: 'App is crashing' },
+  { value: 'Billing & payments', labelKey: 'contactSupport.subjects.billing', defaultLabel: 'Billing & payments' },
+  { value: 'Competition help', labelKey: 'contactSupport.subjects.competition', defaultLabel: 'Competition help' },
+  { value: 'Account & profile', labelKey: 'contactSupport.subjects.account', defaultLabel: 'Account & profile' },
+  { value: 'other', labelKey: 'contactSupport.subjects.other', defaultLabel: 'Other' },
 ];
 
 export const CONVERSATIONS = [
