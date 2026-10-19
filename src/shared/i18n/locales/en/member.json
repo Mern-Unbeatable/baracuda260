@@ -393,6 +393,7 @@
       "newsMessages": "News & Message",
       "sellPhotos": "Sell Photos",
       "favouritePhotographers": "Favourite Photographers",
+      "favouritePhotos": "Favourite Photos",
       "uploadPhotos": "Upload Photos",
       "myCompetitions": "My Competitions",
       "businessPhotos": "Business Link Photos",
@@ -445,7 +446,17 @@
           "timing": "Completed Dec 12",
           "status": "1st Place"
         }
-      }
+      },
+      "participantsCount": "{{count}} participants",
+      "ended": "Ended",
+      "daysLeft": "{{count}} days left",
+      "hoursLeft": "{{count}} hours left",
+      "endingSoon": "Ending soon",
+      "empty": "You are not participating in any competitions yet.",
+      "emptyTitle": "No active competition entries",
+      "emptySubtitle": "Submit your photos to our monthly themed competitions to climb the leaderboard and win prizes.",
+      "browseCompetitions": "Explore Competitions",
+      "loadError": "Could not load your participating competitions."
     }
   },
   "uploadPhotos": {
@@ -1007,6 +1018,15 @@
       }
     }
   },
+  "favouritePhotos": {
+    "title": "Favourite Photos",
+    "subtitle": "Explore and manage your collection of saved and favourite photos.",
+    "empty": "You have no favourite photos yet.",
+    "emptyHint": "Browse the gallery and click the bookmark icon to save photos here.",
+    "showing": "Showing {{from}}–{{to}} of {{total}} photos",
+    "paginationAria": "Favourite photos pagination",
+    "gridAria": "Favourite photos showcase"
+  },
   "favouritePhotographers": {
     "title": "Favourite Photographers",
     "subtitle": "Photographers who follow you and whose work you keep close.",
@@ -1116,6 +1136,11 @@
       "username": "Username",
       "phone": "Phone Number",
       "email": "Email ID",
+      "emailNotChangeable": "Email address cannot be changed.",
+      "city": "City",
+      "country": "Country",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell your story, artistic background, or inspirations...",
       "saved": "Profile details saved successfully!"
     },
     "portfolio": {

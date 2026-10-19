@@ -41,9 +41,22 @@ const PhotographerAwardCounters = memo(
   ({ awards, size = 'sm', className = '' }) => {
     const { t } = useTranslation();
     const sizeConfig = SIZE_STYLES[size] ?? SIZE_STYLES.sm;
+    const defaultZeroTiers = [
+      { id: 'gold', count: 0 },
+      { id: 'silver', count: 0 },
+      { id: 'bronze', count: 0 },
+    ];
     const tierList = Array.isArray(awards)
       ? awards
-      : PHOTOGRAPHER_TALENT_APPRECIATION.tiers;
+      : awards &&
+          typeof awards === 'object' &&
+          ('gold' in awards || 'silver' in awards || 'bronze' in awards)
+        ? [
+            { id: 'gold', count: Number(awards.gold) || 0 },
+            { id: 'silver', count: Number(awards.silver) || 0 },
+            { id: 'bronze', count: Number(awards.bronze) || 0 },
+          ]
+        : defaultZeroTiers;
 
     return (
       <div

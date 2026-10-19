@@ -57,6 +57,9 @@ const MyStoreUpload = lazy(
 const FavouritePhotographers = lazy(
   () => import('@/portals/member/pages/FavouritePhotographers'),
 );
+const FavouritePhotos = lazy(
+  () => import('@/portals/member/pages/FavouritePhotos'),
+);
 const PurchasePhotos = lazy(
   () => import('@/portals/member/pages/PurchasePhotos'),
 );
@@ -150,6 +153,10 @@ export const memberRoutes = (
     <Route
       path={seg(ROUTES.USER_FAVOURITE_PHOTOGRAPHERS)}
       element={<FavouritePhotographers />}
+    />
+    <Route
+      path={seg(ROUTES.USER_FAVOURITE_PHOTOS)}
+      element={<FavouritePhotos />}
     />
     <Route
       path={seg(ROUTES.USER_PURCHASE_PHOTOS)}

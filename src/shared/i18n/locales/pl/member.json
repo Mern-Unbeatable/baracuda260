@@ -375,6 +375,7 @@
       "newsMessages": "Aktualności i wiadomości",
       "sellPhotos": "Sprzedaj zdjęcia",
       "favouritePhotographers": "Ulubieni fotografowie",
+      "favouritePhotos": "Ulubione zdjęcia",
       "uploadPhotos": "Prześlij zdjęcia",
       "myCompetitions": "Moje konkursy",
       "businessPhotos": "Zdjęcia biznesowe",
@@ -427,7 +428,17 @@
           "timing": "Zakończono 12 grudnia",
           "status": "1. miejsce"
         }
-      }
+      },
+      "participantsCount": "{{count}} uczestników",
+      "ended": "Zakończono",
+      "daysLeft": "pozostało {{count}} dni",
+      "hoursLeft": "pozostało {{count}} godz.",
+      "endingSoon": "Wkrótce koniec",
+      "empty": "Nie bierzesz jeszcze udziału w żadnym konkursie.",
+      "emptyTitle": "Brak aktywnych zgłoszeń konkursowych",
+      "emptySubtitle": "Prześlij swoje zdjęcia do naszych comiesięcznych konkursów tematycznych, aby wspinać się w rankingu i wygrywać nagrody.",
+      "browseCompetitions": "Przeglądaj konkursy",
+      "loadError": "Nie udało się załadować konkursów, w których bierzesz udział."
     }
   },
   "uploadPhotos": {
@@ -989,6 +1000,15 @@
       }
     }
   },
+  "favouritePhotos": {
+    "title": "Ulubione zdjęcia",
+    "subtitle": "Przeglądaj i zarządzaj swoją kolekcją zapisanych i ulubionych zdjęć.",
+    "empty": "Nie masz jeszcze żadnych ulubionych zdjęć.",
+    "emptyHint": "Przeglądaj galerię i kliknij ikonę zakładki, aby zapisać zdjęcia tutaj.",
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} zdjęć",
+    "paginationAria": "Paginacja ulubionych zdjęć",
+    "gridAria": "Siatka ulubionych zdjęć"
+  },
   "favouritePhotographers": {
     "title": "Ulubieni fotografowie",
     "subtitle": "Fotografowie, którzy Cię obserwują i których prace masz na oku.",
@@ -1098,6 +1118,11 @@
       "username": "Nazwa użytkownika",
       "phone": "Numer telefonu",
       "email": "Adres e-mail",
+      "emailNotChangeable": "Adres e-mail nie może zostać zmieniony.",
+      "city": "Miasto",
+      "country": "Kraj",
+      "bio": "Bio",
+      "bioPlaceholder": "Opowiedz o sobie i swojej fotograficznej drodze...",
       "saved": "Szczegóły profilu zostały zapisane!"
     },
     "portfolio": {

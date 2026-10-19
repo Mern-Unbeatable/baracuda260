@@ -3,6 +3,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Image from '@/components/ui/Image';
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import { ROUTES } from '@/shared/config';
 
 const MemberProfileCoverHeader = memo(({ profile }) => {
@@ -10,12 +11,16 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="relative h-45 w-full overflow-hidden rounded-2xl sm:h-55 lg:h-65">
-        <Image
-          src={profile.cover}
-          alt=""
-          className="h-full w-full object-cover"
-        />
+      <div className="relative h-45 w-full overflow-hidden rounded-2xl bg-[#e5e7eb] sm:h-55 lg:h-65">
+        {profile?.cover ? (
+          <Image
+            src={profile.cover}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="h-full w-full bg-linear-to-r from-[#4048cd]/20 via-[#4048cd]/10 to-[#ee1c25]/15" />
+        )}
         <div
           className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#111827]/40 to-transparent"
           aria-hidden="true"
@@ -24,8 +29,8 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
 
       <div className="flex items-center gap-4 px-1 pt-3 sm:gap-5 sm:px-2">
         <Image
-          src={profile.avatar}
-          alt={profile.name}
+          src={profile?.avatar || DASHBOARD_ASSETS.avatar}
+          alt={profile?.name || ''}
           width={112}
           height={112}
           className="relative z-10 -mt-14 size-24 shrink-0 rounded-full border-4 border-white bg-white object-cover shadow-md sm:-mt-16 sm:size-28 lg:size-32"
@@ -33,7 +38,7 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-[22px] font-bold leading-tight text-[#111827] sm:text-[26px] lg:text-[28px]">
-              {profile.name}
+              {profile?.name || profile?.handle || ''}
             </h1>
             <Link
               to={ROUTES.USER_SETTINGS}
@@ -44,13 +49,19 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
             </Link>
           </div>
           <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-[#6b7280] sm:text-[15px]">
-            <span>
-              {profile.handle} · {profile.tagline}
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <MapPin size={15} strokeWidth={2} aria-hidden="true" />
-              {profile.location}
-            </span>
+            {profile?.handle ? <span>{profile.handle}</span> : null}
+            {profile?.tagline ? (
+              <span>
+                {profile?.handle ? '· ' : ''}
+                {profile.tagline}
+              </span>
+            ) : null}
+            {profile?.location ? (
+              <span className="inline-flex items-center gap-1">
+                <MapPin size={15} strokeWidth={2} aria-hidden="true" />
+                {profile.location}
+              </span>
+            ) : null}
           </p>
         </div>
       </div>

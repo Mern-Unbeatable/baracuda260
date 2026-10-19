@@ -1,5 +1,5 @@
 import { Globe, Instagram, Youtube } from 'lucide-react';
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const TwitterIcon = ({ size = 16 }) => (
@@ -32,18 +32,36 @@ const linkClass =
 const PhotographerAboutSection = memo(({ profile }) => {
   const { t } = useTranslation();
 
+  const bioParagraphs = useMemo(() => {
+    if (!profile?.bio) return [];
+    if (Array.isArray(profile.bio)) return profile.bio;
+    if (typeof profile.bio === 'string') {
+      return profile.bio
+        .split('\n')
+        .map((p) => p.trim())
+        .filter(Boolean);
+    }
+    return [String(profile.bio)];
+  }, [profile?.bio]);
+
   return (
     <section className="mt-8 sm:mt-10">
       <h2 className="text-[18px] font-bold text-[#111827]">
         {t('photographerProfile.aboutTitle')}
       </h2>
-      <div className="mt-3 space-y-3 text-[15px] leading-7 text-[#6b7280]">
-        {profile.bio.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-        ))}
-      </div>
+      {bioParagraphs.length > 0 ? (
+        <div className="mt-3 space-y-3 text-[15px] leading-7 text-[#6b7280]">
+          {bioParagraphs.map((paragraph, index) => (
+            <p key={`${index}-${paragraph.slice(0, 24)}`}>{paragraph}</p>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-3 text-[15px] italic text-[#9ca3af]">
+          {t('photographerProfile.noBio', 'No biography provided yet.')}
+        </p>
+      )}
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
-        {profile.website ? (
+        {typeof profile?.website === 'string' && profile.website.trim() ? (
           <a
             href={profile.website}
             target="_blank"
@@ -54,7 +72,7 @@ const PhotographerAboutSection = memo(({ profile }) => {
             {profile.websiteLabel || profile.website}
           </a>
         ) : null}
-        {profile.instagram ? (
+        {typeof profile?.instagram === 'string' && profile.instagram.trim() ? (
           <a
             href={
               profile.instagram.startsWith('http')
@@ -69,7 +87,7 @@ const PhotographerAboutSection = memo(({ profile }) => {
             {profile.instagram}
           </a>
         ) : null}
-        {profile.twitter ? (
+        {typeof profile?.twitter === 'string' && profile.twitter.trim() ? (
           <a
             href={
               profile.twitter.startsWith('http')
@@ -84,7 +102,7 @@ const PhotographerAboutSection = memo(({ profile }) => {
             {profile.twitter}
           </a>
         ) : null}
-        {profile.youtube ? (
+        {typeof profile?.youtube === 'string' && profile.youtube.trim() ? (
           <a
             href={
               profile.youtube.startsWith('http')
@@ -99,7 +117,7 @@ const PhotographerAboutSection = memo(({ profile }) => {
             {profile.youtube}
           </a>
         ) : null}
-        {profile.tiktok ? (
+        {typeof profile?.tiktok === 'string' && profile.tiktok.trim() ? (
           <a
             href={
               profile.tiktok.startsWith('http')

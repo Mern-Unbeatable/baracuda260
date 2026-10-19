@@ -1,0 +1,1 @@
+import{r as s}from"./vendor-i18n-CXZm_PFG.js";function m(a,t,o=[]){const[u,n]=s.useState(1);s.useEffect(()=>{n(1)},o);const r=Math.max(1,Math.ceil(a.length/t)),e=Math.min(Math.max(1,u),r),h=s.useMemo(()=>{const c=(e-1)*t;return a.slice(c,c+t)},[a,e,t]);return{currentPage:e,setPage:n,totalPages:r,pagedItems:h}}export{m as u};

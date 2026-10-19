@@ -10,6 +10,9 @@ export const DEFAULT_MEMBER_SETTINGS = {
   linkedin: '@ismail1256',
   youtube: '@sarajenkins',
   tiktok: '@sarajenkins',
+  city: '',
+  country: '',
+  bio: '',
 };
 
 export const validateMemberProfile = (values, t) => {
