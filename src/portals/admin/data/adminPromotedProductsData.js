@@ -11,200 +11,57 @@ export const ADMIN_PROMOTED_ASSETS = {
 
 export const PROMOTED_FILTERS = [
   { id: 'all', labelKey: 'adminPromoted.filters.all' },
+  { id: 'artwork', labelKey: 'adminPromoted.filters.artwork' },
+  { id: 'product', labelKey: 'adminPromoted.filters.product' },
+  { id: 'sell_photo', labelKey: 'adminPromoted.filters.sellPhoto' },
   { id: 'single', labelKey: 'adminPromoted.filters.single' },
   { id: 'six', labelKey: 'adminPromoted.filters.six' },
   { id: 'zodiac', labelKey: 'adminPromoted.filters.zodiac' },
+];
+
+export const PROMOTED_STATUS_FILTERS = [
+  { id: 'ALL', labelKey: 'adminPromoted.status.all' },
+  { id: 'ACTIVE', labelKey: 'adminPromoted.status.active' },
+  { id: 'EXPIRED', labelKey: 'adminPromoted.status.expired' },
 ];
 
 export const PROMOTED_TYPE_KEYS = {
   single: 'adminPromoted.types.single',
   six: 'adminPromoted.types.six',
   zodiac: 'adminPromoted.types.zodiac',
+  product: 'adminPromoted.types.product',
+  sell_photo: 'adminPromoted.types.sell_photo',
 };
 
-/**
- * Card variant "promoted" — landscape + upload date/time, views, heart, expiry.
- * Card variant "simple" — heart, views, date, price, expiry (same as gallery/premium).
- */
-export const PROMOTED_CARDS = [
+export const PROMOTED_STAT_CARDS = [
   {
-    id: 'zodiac-1',
-    type: 'zodiac',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-zodiac.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 11,
+    id: 'totalPromotions',
+    labelKey: 'adminPromoted.stats.totalPromotions',
+    icon: 'Megaphone',
+    iconBg: 'bg-[#eef2ff] text-[#4048cd]',
   },
   {
-    id: 'city-1',
-    type: 'six',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-city.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 5,
+    id: 'activePromotions',
+    labelKey: 'adminPromoted.stats.activePromotions',
+    icon: 'CheckCircle2',
+    iconBg: 'bg-[#eaf8f1] text-[#059669]',
   },
   {
-    id: 'harbor-1',
-    type: 'six',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-harbor.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 5,
+    id: 'expiredPromotions',
+    labelKey: 'adminPromoted.stats.expiredPromotions',
+    icon: 'Clock',
+    iconBg: 'bg-[#fff7ed] text-[#d97706]',
   },
   {
-    id: 'autumn-1',
-    type: 'single',
-    variant: 'simple',
-    titleKey: 'adminPromoted.cards.autumn.title',
-    image: `${H}/photo-autumn.webp`,
-    likes: '1,488',
-    viewsSimple: '1,400',
-    dateKey: 'adminPromoted.cards.autumn.date',
-    price: '$2.00',
-    expiryKey: 'adminPromoted.cards.autumn.expiry',
-    extraPhotos: null,
-  },
-  {
-    id: 'zodiac-2',
-    type: 'zodiac',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-tidal.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 11,
-  },
-  {
-    id: 'city-2',
-    type: 'six',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-golden.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 5,
-  },
-  {
-    id: 'harbor-2',
-    type: 'six',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-morning.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 5,
-  },
-  {
-    id: 'autumn-2',
-    type: 'single',
-    variant: 'simple',
-    titleKey: 'adminPromoted.cards.autumn.title',
-    image: `${H}/photo-wings.webp`,
-    likes: '1,488',
-    viewsSimple: '1,400',
-    dateKey: 'adminPromoted.cards.autumn.date',
-    price: '$2.00',
-    expiryKey: 'adminPromoted.cards.autumn.expiry',
-    extraPhotos: null,
-  },
-  {
-    id: 'zodiac-3',
-    type: 'zodiac',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-forest.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 11,
-  },
-  {
-    id: 'city-3',
-    type: 'six',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-silent.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 5,
-  },
-  {
-    id: 'harbor-3',
-    type: 'six',
-    variant: 'promoted',
-    titleKey: 'adminPromoted.cards.nordic.title',
-    descriptionKey: 'adminPromoted.cards.nordic.description',
-    image: `${H}/photo-city.webp`,
-    categoryKey: 'adminPromoted.cards.nordic.category',
-    uploadDateKey: 'adminPromoted.cards.nordic.uploadDate',
-    uploadTimeKey: 'adminPromoted.cards.nordic.uploadTime',
-    views: '1240',
-    hearts: '1000',
-    expiryKey: 'adminPromoted.cards.nordic.expiry',
-    extraPhotos: 5,
-  },
-  {
-    id: 'autumn-3',
-    type: 'single',
-    variant: 'simple',
-    titleKey: 'adminPromoted.cards.autumn.title',
-    image: `${H}/photo-autumn.webp`,
-    likes: '1,488',
-    viewsSimple: '1,400',
-    dateKey: 'adminPromoted.cards.autumn.date',
-    price: '$2.00',
-    expiryKey: 'adminPromoted.cards.autumn.expiry',
-    extraPhotos: null,
+    id: 'totalRevenue',
+    labelKey: 'adminPromoted.stats.totalRevenue',
+    icon: 'DollarSign',
+    iconBg: 'bg-[#fdf4ff] text-[#a855f7]',
+    isCurrency: true,
   },
 ];
 
 export const PROMOTED_PAGE_SIZE = 12;
-export const PROMOTED_TOTAL_PAGES = 10;
 export const CARD_IMAGE_WIDTH = 370;
 export const CARD_IMAGE_HEIGHT = 252;
 export const METRIC_ICON_SIZE = 24;
@@ -212,7 +69,22 @@ export const METRIC_ICON_SIZE = 24;
 export const getPromotedDetailPath = (id, detailRoutePattern) =>
   detailRoutePattern.replace(':id', id);
 
+/**
+ * Filter promoted items on the client as a secondary layer if needed.
+ * @param {Array} cards
+ * @param {string} filterId
+ */
 export const filterPromotedCards = (cards, filterId) => {
-  if (!filterId || filterId === 'all') return cards;
-  return cards.filter((card) => card.type === filterId);
+  if (!filterId || filterId.toLowerCase() === 'all') return cards;
+
+  const normalized = filterId.toLowerCase();
+  return cards.filter((card) => {
+    if (card.type && card.type.toLowerCase() === normalized) return true;
+    if (card.kind) {
+      if (normalized === 'single' && card.kind.toUpperCase() === 'SINGLE') return true;
+      if (normalized === 'six' && card.kind.toUpperCase() === 'SIX') return true;
+      if (normalized === 'zodiac' && card.kind.toUpperCase() === 'TWELVE') return true;
+    }
+    return false;
+  });
 };

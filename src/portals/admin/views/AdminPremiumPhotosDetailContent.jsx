@@ -425,6 +425,7 @@ const AdminPremiumPhotosDetailContent = memo(() => {
       views: Number(photo.viewsCount ?? photo.views ?? 0).toLocaleString(),
       totalSell: Number(photo.totalSales ?? 0).toLocaleString(),
       photographerName: photo.user?.name || 'Photographer',
+      photographerUsername: photo.user?.username || photo.user?.id || '',
       photographerAvatar: resolveMediaUrl(
         photo.user?.avatar || '/assets/home/avatar-photographer.webp',
       ),
@@ -731,7 +732,14 @@ const AdminPremiumPhotosDetailContent = memo(() => {
                 </div>
               </div>
               <Link
-                to={ROUTES.PHOTOGRAPHER_PROFILE}
+                to={
+                  detail.photographerUsername
+                    ? ROUTES.PHOTOGRAPHER_PROFILE_USERNAME.replace(
+                        ':username',
+                        encodeURIComponent(detail.photographerUsername),
+                      )
+                    : ROUTES.PHOTOGRAPHER_PROFILE
+                }
                 className="inline-flex items-center justify-center rounded-xl bg-[#4048cd] px-5 py-3 text-[14px] font-semibold text-white transition hover:bg-[#333bb0] sm:text-[15px]"
               >
                 {t('adminPremiumPhotosDetail.viewProfile')}

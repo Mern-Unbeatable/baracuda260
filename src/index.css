@@ -164,6 +164,10 @@
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #ffffff;
   -webkit-overflow-scrolling: touch;
+  overflow-anchor: none;
+  scroll-behavior: auto !important;
+  will-change: scroll-position;
+  transform: translateZ(0);
 }
 
 .scrollbar-white::-webkit-scrollbar {

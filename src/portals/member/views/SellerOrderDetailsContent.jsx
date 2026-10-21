@@ -1,33 +1,44 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  AlertCircle,
+  ArrowLeft,
   Banknote,
   Check,
   ChevronDown,
   Clock,
   Copy,
   CreditCard,
+  Loader2,
   Mail,
   MapPin,
   Package,
   Phone,
+  RefreshCw,
   Save,
   UserRound,
   X,
   Zap,
 } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
   getMarkActionLabelKey,
-  getStoreOrderById,
   STORE_ORDER_ACTION_STATUSES,
   STORE_ORDER_STATUS,
   STORE_ORDER_STATUS_LABEL_KEYS,
   STORE_ORDER_STATUS_STYLES,
 } from '@/portals/member/data/storeOrdersData';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  getSellerOrderDetailsApi,
+  SELLER_ORDER_DETAILS_QUERY_KEY,
+  SELLER_ORDER_STATUS_CARD_QUERY_KEY,
+  updateSellerOrderStatusApi,
+} from '@/shared/api/orders.api';
 import { ROUTES } from '@/shared/config';
 
 const cardClass = 'rounded-[14px] border border-[#e5e7eb] bg-white p-5 sm:p-6';
@@ -50,7 +61,10 @@ SectionLabel.displayName = 'SectionLabel';
 
 const StatusBadge = memo(({ status }) => {
   const { t } = useTranslation();
-  const style = STORE_ORDER_STATUS_STYLES[status];
+  const safeStatus = status || STORE_ORDER_STATUS.PROCESSING;
+  const style =
+    STORE_ORDER_STATUS_STYLES[safeStatus] ||
+    STORE_ORDER_STATUS_STYLES[STORE_ORDER_STATUS.PROCESSING];
 
   return (
     <span
@@ -60,7 +74,7 @@ const StatusBadge = memo(({ status }) => {
         className={`size-1.5 rounded-full ${style.dot}`}
         aria-hidden="true"
       />
-      {t(STORE_ORDER_STATUS_LABEL_KEYS[status])}
+      {t(STORE_ORDER_STATUS_LABEL_KEYS[safeStatus] || safeStatus)}
     </span>
   );
 });
@@ -77,7 +91,9 @@ const ContactRow = memo(({ icon: Icon, label, value }) => (
       <p className="text-[10px] font-bold tracking-[0.14em] text-[#9ca3af]">
         {label}
       </p>
-      <p className="mt-0.5 text-[14px] leading-5 text-[#374151]">{value}</p>
+      <p className="mt-0.5 text-[14px] leading-5 text-[#374151]">
+        {value || '—'}
+      </p>
     </div>
   </div>
 ));
@@ -152,27 +168,61 @@ const SellerOrderDetailsContent = memo(() => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const baseOrder = getStoreOrderById(id);
+  const queryClient = useQueryClient();
 
-  const [status, setStatus] = useState(
-    () => baseOrder?.status || STORE_ORDER_STATUS.SHIPPED,
-  );
-  const [draftStatus, setDraftStatus] = useState(() => {
-    if (!baseOrder) return STORE_ORDER_STATUS.DELIVERED;
-    return baseOrder.status === STORE_ORDER_STATUS.SHIPPED
-      ? STORE_ORDER_STATUS.DELIVERED
-      : baseOrder.status;
+  const {
+    data: order,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+  } = useQuery({
+    queryKey: SELLER_ORDER_DETAILS_QUERY_KEY(id),
+    queryFn: () => getSellerOrderDetailsApi(id),
+    enabled: Boolean(id),
   });
 
-  if (!baseOrder) {
-    return <Navigate to={ROUTES.USER_ORDERS} replace />;
-  }
+  const [draftStatus, setDraftStatus] = useState(STORE_ORDER_STATUS.DELIVERED);
 
-  const order = { ...baseOrder, status };
+  // Sync draftStatus with the loaded order status
+  useEffect(() => {
+    if (order?.status) {
+      setDraftStatus(
+        order.status === STORE_ORDER_STATUS.SHIPPED
+          ? STORE_ORDER_STATUS.DELIVERED
+          : order.status,
+      );
+    }
+  }, [order?.status]);
+
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ status }) => updateSellerOrderStatusApi(id, status),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: SELLER_ORDER_DETAILS_QUERY_KEY(id),
+      });
+      queryClient.invalidateQueries({ queryKey: ['seller-orders'] });
+      queryClient.invalidateQueries({
+        queryKey: SELLER_ORDER_STATUS_CARD_QUERY_KEY,
+      });
+      toast.success(
+        t('storeOrders.statusUpdated', {
+          status: t(
+            STORE_ORDER_STATUS_LABEL_KEYS[variables.status] || variables.status,
+          ),
+        }),
+      );
+    },
+    onError: (err) => {
+      toast.error(getApiErrorMessage(err, 'Failed to update order status'));
+    },
+  });
 
   const handleCopy = async () => {
+    if (!order) return;
     try {
-      await navigator.clipboard.writeText(order.orderNumber);
+      await navigator.clipboard.writeText(order.orderNumber || order.id);
       toast.success(t('storeOrders.copySuccess'));
     } catch {
       toast.error(t('storeOrders.copyFailed'));
@@ -184,12 +234,8 @@ const SellerOrderDetailsContent = memo(() => {
   };
 
   const handleMarkStatus = () => {
-    setStatus(draftStatus);
-    toast.success(
-      t('storeOrders.statusUpdated', {
-        status: t(STORE_ORDER_STATUS_LABEL_KEYS[draftStatus]),
-      }),
-    );
+    if (!draftStatus || updateStatusMutation.isPending) return;
+    updateStatusMutation.mutate({ status: draftStatus });
   };
 
   const timelineTitles = {
@@ -198,6 +244,64 @@ const SellerOrderDetailsContent = memo(() => {
     shipped: t('storeOrders.detail.timeline.shipped'),
     delivered: t('storeOrders.detail.timeline.delivered'),
   };
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto flex w-full max-w-395 flex-col gap-6 py-12">
+        <div className="flex items-center gap-3">
+          <Loader2 className="size-6 animate-spin text-[#4048cd]" />
+          <p className="text-[15px] font-medium text-[#6b7280]">
+            Loading order details...
+          </p>
+        </div>
+        <div className="space-y-4">
+          <div className="h-10 w-64 animate-pulse rounded-lg bg-gray-200" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="h-28 animate-pulse rounded-[14px] bg-gray-100" />
+            <div className="h-28 animate-pulse rounded-[14px] bg-gray-100" />
+          </div>
+          <div className="h-44 animate-pulse rounded-[14px] bg-gray-100" />
+          <div className="h-40 animate-pulse rounded-[14px] bg-gray-100" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !order) {
+    return (
+      <div className="mx-auto flex w-full max-w-395 flex-col items-center justify-center rounded-[14px] border border-[#e5e7eb] bg-white p-12 text-center">
+        <AlertCircle className="size-12 text-red-500" />
+        <h2 className="mt-4 text-[18px] font-bold text-[#111827]">
+          Unable to load order
+        </h2>
+        <p className="mt-1 text-[14px] text-[#6b7280]">
+          {getApiErrorMessage(error, 'Order not found or an error occurred.')}
+        </p>
+        <div className="mt-6 flex items-center gap-3">
+          <Button
+            type="button"
+            onClick={() => refetch()}
+            className="flex items-center gap-2 rounded-lg bg-[#4048cd] px-4 py-2 text-[14px] font-medium text-white hover:bg-[#343bb5]"
+          >
+            <RefreshCw size={15} />
+            Try again
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleClose}
+            className="flex items-center gap-2 rounded-lg border border-[#e5e7eb] px-4 py-2 text-[14px] font-medium text-[#374151] hover:bg-gray-50"
+          >
+            <ArrowLeft size={15} />
+            Back to Orders
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const itemsList =
+    Array.isArray(order.items) && order.items.length > 0 ? order.items : null;
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-5">
@@ -222,7 +326,14 @@ const SellerOrderDetailsContent = memo(() => {
           <p className="mt-1.5 text-[13px] text-[#6b7280]">{order.placedAt}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2.5">
-          <StatusBadge status={status} />
+          {isFetching ? (
+            <RefreshCw
+              size={16}
+              className="animate-spin text-[#9ca3af]"
+              aria-label="Updating"
+            />
+          ) : null}
+          <StatusBadge status={order.status} />
           <Button
             unstyled
             type="button"
@@ -245,7 +356,7 @@ const SellerOrderDetailsContent = memo(() => {
               className="size-2.5 shrink-0 rounded-full bg-[#10b981]"
               aria-hidden="true"
             />
-            {t('storeOrders.detail.paid')}
+            {order.paymentStatus || t('storeOrders.detail.paid')}
           </p>
         </section>
         <section className={`${cardClass} flex flex-col`}>
@@ -253,7 +364,11 @@ const SellerOrderDetailsContent = memo(() => {
             {t('storeOrders.detail.fulfillment')}
           </SectionLabel>
           <p className="mt-5 text-[16px] font-bold text-[#111827]">
-            {t(STORE_ORDER_STATUS_LABEL_KEYS[status])}
+            {t(
+              STORE_ORDER_STATUS_LABEL_KEYS[order.status] ||
+                order.rawStatus ||
+                order.status,
+            )}
           </p>
         </section>
       </div>
@@ -263,11 +378,19 @@ const SellerOrderDetailsContent = memo(() => {
           {t('storeOrders.detail.customerInfo')}
         </SectionLabel>
         <div className="mt-5 flex items-center gap-3">
-          <span
-            className={`inline-flex size-11 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${order.avatarClass}`}
-          >
-            {order.customerInitials}
-          </span>
+          {order.customerAvatar ? (
+            <Image
+              src={order.customerAvatar}
+              alt={order.customerName}
+              className="size-11 shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <span
+              className={`inline-flex size-11 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${order.avatarClass}`}
+            >
+              {order.customerInitials}
+            </span>
+          )}
           <p className="text-[16px] font-bold text-[#111827]">
             {order.customerName}
           </p>
@@ -291,43 +414,90 @@ const SellerOrderDetailsContent = memo(() => {
         </div>
       </section>
 
+      {/* Product Items */}
       <section className={cardClass}>
         <SectionLabel icon={Package}>
           {t('storeOrders.detail.productInfo')}
         </SectionLabel>
-        <div className="mt-5 flex items-start justify-between gap-4">
-          <div className="flex min-w-0 items-start gap-3.5">
-            <Image
-              src={order.image}
-              alt={order.productTitle}
-              className="size-16 shrink-0 rounded-[10px] object-cover"
-            />
-            <div className="min-w-0">
-              <p className="text-[15px] font-bold leading-5 text-[#111827]">
-                {order.productTitle}
-              </p>
-              <p className="mt-1 text-[13px] text-[#6b7280]">
-                {order.productMeta}
-              </p>
-              <p className="mt-1 text-[13px] text-[#6b7280]">
-                {t('storeOrders.detail.unitLine', {
-                  price: order.unitPrice,
-                  qty: order.quantity,
-                })}
-              </p>
+        <div className="mt-5 divide-y divide-[#f3f4f6]">
+          {itemsList ? (
+            itemsList.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-start justify-between gap-4 py-4 first:pt-0 last:pb-0"
+              >
+                <div className="flex min-w-0 items-start gap-3.5">
+                  <Image
+                    src={item.productImage}
+                    alt={item.productTitle}
+                    className="size-16 shrink-0 rounded-[10px] object-cover"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-[15px] font-bold leading-5 text-[#111827]">
+                      {item.productTitle}
+                    </p>
+                    {item.size || item.category ? (
+                      <p className="mt-1 text-[13px] text-[#6b7280]">
+                        {[item.size, item.category].filter(Boolean).join(' • ')}
+                      </p>
+                    ) : null}
+                    <p className="mt-1 text-[13px] text-[#6b7280]">
+                      {t('storeOrders.detail.unitLine', {
+                        price: item.price,
+                        qty: item.quantity,
+                      })}
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0 text-right">
+                  <p className="text-[10px] font-bold tracking-[0.14em] text-[#9ca3af]">
+                    {t('storeOrders.detail.subtotal')}
+                  </p>
+                  <p className="mt-1 text-[18px] font-bold text-[#111827]">
+                    {item.subtotal}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="flex items-start justify-between gap-4 pt-0">
+              <div className="flex min-w-0 items-start gap-3.5">
+                <Image
+                  src={order.image}
+                  alt={order.productTitle}
+                  className="size-16 shrink-0 rounded-[10px] object-cover"
+                />
+                <div className="min-w-0">
+                  <p className="text-[15px] font-bold leading-5 text-[#111827]">
+                    {order.productTitle}
+                  </p>
+                  {order.productMeta ? (
+                    <p className="mt-1 text-[13px] text-[#6b7280]">
+                      {order.productMeta}
+                    </p>
+                  ) : null}
+                  <p className="mt-1 text-[13px] text-[#6b7280]">
+                    {t('storeOrders.detail.unitLine', {
+                      price: order.unitPrice,
+                      qty: order.quantity,
+                    })}
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 text-right">
+                <p className="text-[10px] font-bold tracking-[0.14em] text-[#9ca3af]">
+                  {t('storeOrders.detail.subtotal')}
+                </p>
+                <p className="mt-1 text-[18px] font-bold text-[#111827]">
+                  {order.total}
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="shrink-0 text-right">
-            <p className="text-[10px] font-bold tracking-[0.14em] text-[#9ca3af]">
-              {t('storeOrders.detail.subtotal')}
-            </p>
-            <p className="mt-1 text-[18px] font-bold text-[#111827]">
-              {order.total}
-            </p>
-          </div>
+          )}
         </div>
       </section>
 
+      {/* Payment breakdown */}
       <section className="rounded-[14px] border border-[#a7f3d0] bg-white p-5 sm:p-6">
         <SectionLabel icon={Banknote} tone="green">
           {t('storeOrders.detail.paymentBreakdown')}
@@ -361,6 +531,7 @@ const SellerOrderDetailsContent = memo(() => {
         </p>
       </section>
 
+      {/* Seller Actions: Update Status */}
       <section className="rounded-[14px] bg-[#18181b] p-5 sm:p-6">
         <SectionLabel icon={Zap} tone="light">
           {t('storeOrders.detail.sellerActions')}
@@ -373,7 +544,8 @@ const SellerOrderDetailsContent = memo(() => {
             <select
               value={draftStatus}
               onChange={(event) => setDraftStatus(event.target.value)}
-              className="h-11 w-full cursor-pointer appearance-none rounded-[10px] border border-white/12 bg-[#27272a] py-2 pl-10 pr-10 text-[14px] font-semibold text-white outline-none focus:border-[#ffc107]"
+              disabled={updateStatusMutation.isPending}
+              className="h-11 w-full cursor-pointer appearance-none rounded-[10px] border border-white/12 bg-[#27272a] py-2 pl-10 pr-10 text-[14px] font-semibold text-white outline-none focus:border-[#ffc107] disabled:opacity-60"
             >
               {STORE_ORDER_ACTION_STATUSES.map((value) => (
                 <option key={value} value={value}>
@@ -382,7 +554,9 @@ const SellerOrderDetailsContent = memo(() => {
               ))}
             </select>
             <span
-              className={`pointer-events-none absolute left-3.5 top-1/2 size-2 -translate-y-1/2 rounded-full ${STORE_ORDER_STATUS_STYLES[draftStatus].dot}`}
+              className={`pointer-events-none absolute left-3.5 top-1/2 size-2 -translate-y-1/2 rounded-full ${
+                STORE_ORDER_STATUS_STYLES[draftStatus]?.dot || 'bg-[#f59e0b]'
+              }`}
               aria-hidden="true"
             />
             <ChevronDown
@@ -396,35 +570,45 @@ const SellerOrderDetailsContent = memo(() => {
           unstyled
           type="button"
           onClick={handleMarkStatus}
-          className="mt-4 inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ffc107] text-[15px] font-bold text-[#111827] transition hover:bg-[#f5b800]"
+          disabled={updateStatusMutation.isPending}
+          className="mt-4 inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ffc107] text-[15px] font-bold text-[#111827] transition hover:bg-[#f5b800] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          <Save size={17} aria-hidden="true" />
-          {t(getMarkActionLabelKey(draftStatus))}
+          {updateStatusMutation.isPending ? (
+            <Loader2 size={17} className="animate-spin" aria-hidden="true" />
+          ) : (
+            <Save size={17} aria-hidden="true" />
+          )}
+          {updateStatusMutation.isPending
+            ? 'Updating...'
+            : t(getMarkActionLabelKey(draftStatus))}
         </Button>
       </section>
 
-      <section className={cardClass}>
-        <SectionLabel icon={Clock}>
-          {t('storeOrders.detail.orderTimeline')}
-        </SectionLabel>
-        <div className="mt-5">
-          {order.timeline.map((step, index) => (
-            <TimelineStep
-              key={step.id}
-              step={step}
-              title={timelineTitles[step.id]}
-              pendingTitle={timelineTitles.delivered}
-              pendingMeta={t('storeOrders.detail.timeline.pending')}
-              transitNote={
-                step.id === 'delivered' && step.state === 'pending'
-                  ? order.transitNote
-                  : null
-              }
-              isLast={index === order.timeline.length - 1}
-            />
-          ))}
-        </div>
-      </section>
+      {/* Order timeline */}
+      {order.timeline && order.timeline.length > 0 ? (
+        <section className={cardClass}>
+          <SectionLabel icon={Clock}>
+            {t('storeOrders.detail.orderTimeline')}
+          </SectionLabel>
+          <div className="mt-5">
+            {order.timeline.map((step, index) => (
+              <TimelineStep
+                key={step.id}
+                step={step}
+                title={timelineTitles[step.id] || step.title || step.id}
+                pendingTitle={timelineTitles.delivered}
+                pendingMeta={t('storeOrders.detail.timeline.pending')}
+                transitNote={
+                  step.id === 'delivered' && step.state === 'pending'
+                    ? order.transitNote
+                    : null
+                }
+                isLast={index === order.timeline.length - 1}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 });
