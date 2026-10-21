@@ -428,6 +428,7 @@ const AdminGalleryDetailContent = memo(() => {
       videoPoster:
         videoMedia?.thumbnailUrl || artwork.video?.thumbnailUrl || heroImage,
       photographerName: artwork.user?.name || 'Photographer',
+      photographerUsername: artwork.user?.username || artwork.user?.id || '',
       photographerAvatar:
         artwork.user?.avatar || '/assets/home/avatar-photographer.webp',
       slides,
@@ -705,7 +706,14 @@ const AdminGalleryDetailContent = memo(() => {
                 </div>
               </div>
               <Link
-                to={ROUTES.PHOTOGRAPHER_PROFILE}
+                to={
+                  detail.photographerUsername
+                    ? ROUTES.PHOTOGRAPHER_PROFILE_USERNAME.replace(
+                        ':username',
+                        encodeURIComponent(detail.photographerUsername),
+                      )
+                    : ROUTES.PHOTOGRAPHER_PROFILE
+                }
                 className="inline-flex items-center justify-center rounded-xl bg-[#4048cd] px-5 py-3 text-[14px] font-semibold text-white transition hover:bg-[#333bb0] sm:text-[15px]"
               >
                 {t('adminGalleryDetail.viewProfile')}
