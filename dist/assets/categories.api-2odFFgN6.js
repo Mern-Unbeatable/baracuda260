@@ -1,1 +1,0 @@
-import{a as e}from"./client-NwT3XrCj.js";const o=["categories"],s=async()=>{const t=await e.get("/v1/categories");return(t==null?void 0:t.data)??[]},i=async t=>{const a=await e.post("/v1/categories",t);return a==null?void 0:a.data},r=async t=>{const a=await e.delete(`/v1/categories/${t}`);return a==null?void 0:a.data};export{o as C,i as c,r as d,s as g};
