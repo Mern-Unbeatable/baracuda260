@@ -13,6 +13,9 @@ const ZodiacStoryFormPanel = memo(
     i18nPrefix,
     onSubmit,
     categoryOptions,
+    categoryList = null,
+    subCategoryList = null,
+    onCategoryChange = null,
     register,
     errors = {},
     isSell = false,
@@ -21,6 +24,8 @@ const ZodiacStoryFormPanel = memo(
     setPublishTarget,
     aiCreated,
     setAiCreated,
+    submitLabel = null,
+    isSubmitting = false,
   }) => (
     <form
       onSubmit={onSubmit}
@@ -53,12 +58,29 @@ const ZodiacStoryFormPanel = memo(
             {t(`${i18nPrefix}.artisticCategory`)}
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <select className={fieldClass} {...register('category')}>
-              {categoryOptions.map((item) => (
-                <option key={item} value={item}>
-                  {t(`${i18nPrefix}.categories.${item}`)}
-                </option>
-              ))}
+            <select
+              className={fieldClass}
+              {...register('category')}
+              onChange={(e) => {
+                register('category').onChange(e);
+                if (onCategoryChange) {
+                  onCategoryChange(e.target.value);
+                }
+              }}
+            >
+              {categoryList && categoryList.length > 0 ? (
+                categoryList.map((item) => (
+                  <option key={item.id || item.slug} value={item.id || item.slug}>
+                    {item.name}
+                  </option>
+                ))
+              ) : (
+                categoryOptions?.map((item) => (
+                  <option key={item} value={item}>
+                    {t(`${i18nPrefix}.categories.${item}`, { defaultValue: item })}
+                  </option>
+                ))
+              )}
             </select>
 
             <select className={fieldClass} {...register('subCategory')}>
@@ -67,9 +89,19 @@ const ZodiacStoryFormPanel = memo(
                   defaultValue: 'Select subcategory',
                 })}
               </option>
-              <option value="night-sky">Night Sky</option>
-              <option value="constellation">Constellation</option>
-              <option value="deep-space">Deep Space</option>
+              {subCategoryList && subCategoryList.length > 0 ? (
+                subCategoryList.map((sub) => (
+                  <option key={sub.id || sub.slug} value={sub.id || sub.slug}>
+                    {sub.name}
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option value="night-sky">Night Sky</option>
+                  <option value="constellation">Constellation</option>
+                  <option value="deep-space">Deep Space</option>
+                </>
+              )}
             </select>
           </div>
         </div>
@@ -251,11 +283,12 @@ const ZodiacStoryFormPanel = memo(
 
       <Button
         type="submit"
+        disabled={isSubmitting}
         unstyled={true}
-        className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921]"
+        className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921] disabled:opacity-60"
       >
         <Sparkles size={24} aria-hidden="true" />
-        {t(`${i18nPrefix}.submit`)}
+        {submitLabel || t(`${i18nPrefix}.submit`)}
       </Button>
     </form>
   ),

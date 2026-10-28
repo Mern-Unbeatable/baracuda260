@@ -1,4 +1,4 @@
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import {
   UPLOAD_ROUTE_SETS,
   UPLOAD_TIERS,
 } from '@/portals/member/data/uploadPhotosAssets';
+import { ROUTES } from '@/shared/config';
 
 const UploadTierCard = memo(({ tier, routeSet }) => {
   const { t } = useTranslation();
@@ -106,11 +107,39 @@ UploadTierCard.displayName = 'UploadTierCard';
  * Upload Photos page content — Figma node 111:1692 (Creative Upload Hub).
  */
 const UploadPhotosContent = memo(
-  ({ routeSet = UPLOAD_ROUTE_SETS.standalone }) => {
+  ({
+    routeSet = UPLOAD_ROUTE_SETS.standalone,
+    backHref,
+    backLabel,
+  }) => {
     const { t } = useTranslation();
+
+    const resolvedBackHref =
+      backHref ??
+      (routeSet === UPLOAD_ROUTE_SETS.artwork
+        ? ROUTES.USER_MY_ARTWORK
+        : routeSet === UPLOAD_ROUTE_SETS.sell
+          ? ROUTES.USER_SELL_PHOTOS
+          : null);
+
+    const resolvedBackLabel =
+      backLabel ||
+      (routeSet === UPLOAD_ROUTE_SETS.sell
+        ? t('sellPhotos.backToSell', 'Back to Sell Photos')
+        : t('myArtwork.backToArtwork', 'Back to My Artwork'));
 
     return (
       <div className="flex w-full flex-col gap-6 sm:gap-8">
+        {resolvedBackHref ? (
+          <Link
+            to={resolvedBackHref}
+            className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#202020] transition hover:text-[#ee1c25]"
+          >
+            <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
+            {resolvedBackLabel}
+          </Link>
+        ) : null}
+
         <header className="flex flex-col gap-3 sm:gap-4">
           <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.75px] text-[#161c27] sm:text-[36px] lg:text-[40px] lg:leading-9.5">
             {t('uploadPhotos.title')}

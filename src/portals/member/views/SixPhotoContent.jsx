@@ -1,8 +1,10 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Sparkles as SparklesLucide, Upload } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
 import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
 import Button from '@/components/ui/Button';
@@ -18,6 +20,13 @@ import {
   THEMES,
 } from '@/portals/member/data/sixPhotoAssets';
 import { ROUTES } from '@/shared/config';
+import {
+  createArtworkApi,
+  getArtworkDetailsApi,
+  updateArtworkApi,
+  USER_ARTWORKS_QUERY_KEY,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 
 const SlotIcon = memo(({ slot }) => {
   if (slot.iconBg && slot.iconOverlay) {
@@ -156,6 +165,14 @@ const SixPhotoContent = memo(
     defaultPrice = '$5.00',
   }) => {
     const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+    const editId = searchParams.get('edit') || location.state?.editId;
+    const isEdit = Boolean(editId);
+
     const fileInputRef = useRef(null);
     const activeSlotRef = useRef(null);
     const isSell = purpose === 'sell';
@@ -165,6 +182,7 @@ const SixPhotoContent = memo(
     const {
       register,
       handleSubmit,
+      setValue,
       formState: { errors },
     } = useForm({
       defaultValues: {
@@ -183,16 +201,118 @@ const SixPhotoContent = memo(
     const [publishTarget, setPublishTarget] = useState('competition');
     const [aiCreated, setAiCreated] = useState('');
     const [previews, setPreviews] = useState({});
+    const [files, setFiles] = useState({});
     const [photosError, setPhotosError] = useState('');
     const [successOpen, setSuccessOpen] = useState(false);
 
     const theme = getThemeById(themeId);
     const slots = getSlotsForTheme(themeId);
 
+    // Fetch existing artwork in edit mode
+    const { data: existingArtwork } = useQuery({
+      queryKey: ['artwork-detail', editId],
+      queryFn: () => getArtworkDetailsApi(editId),
+      enabled: isEdit,
+      initialData: location.state?.editArtwork || location.state?.artwork,
+    });
+
+    useEffect(() => {
+      if (!existingArtwork) return;
+      setValue('title', existingArtwork.title || '');
+      setValue(
+        'story',
+        existingArtwork.story || existingArtwork.description || '',
+      );
+      if (existingArtwork.categoryId || existingArtwork.category?.id) {
+        setValue(
+          'category',
+          existingArtwork.categoryId || existingArtwork.category?.id,
+        );
+      }
+      if (existingArtwork.subcategoryId || existingArtwork.subCategoryId) {
+        setValue(
+          'subCategory',
+          existingArtwork.subcategoryId || existingArtwork.subCategoryId,
+        );
+      }
+      if (existingArtwork.isAiGenerated !== undefined) {
+        setAiCreated(existingArtwork.isAiGenerated ? 'yes' : 'no');
+      }
+      if (existingArtwork.competitionState) {
+        setPublishTarget(
+          existingArtwork.competitionState === 'PROFILE_ONLY'
+            ? 'profile'
+            : 'competition',
+        );
+      }
+      const rawImages = existingArtwork.images;
+      if (rawImages && typeof rawImages === 'object') {
+        const initialPreviews = {};
+        slots.forEach((slot, idx) => {
+          const found =
+            rawImages[slot.id] ||
+            rawImages[idx] ||
+            (idx === 0 ? existingArtwork.featuredImage : null);
+          if (found) {
+            initialPreviews[slot.id] =
+              typeof found === 'string'
+                ? found
+                : found.url || found.thumbnailUrl;
+          }
+        });
+        setPreviews((prev) => ({ ...initialPreviews, ...prev }));
+      } else if (existingArtwork.featuredImage) {
+        setPreviews((prev) => ({
+          [slots[0]?.id || 'slot-1']: existingArtwork.featuredImage,
+          ...prev,
+        }));
+      }
+    }, [existingArtwork, setValue, slots]);
+
+    const updateArtworkMutation = useMutation({
+      mutationFn: (payload) => updateArtworkApi(editId, payload),
+      onSuccess: () => {
+        toast.success(
+          t('sixPhoto.updateSuccess', 'Artwork updated successfully!'),
+        );
+        queryClient.invalidateQueries({ queryKey: USER_ARTWORKS_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: ['artwork-detail', editId] });
+        navigate(ROUTES.USER_MY_ARTWORK);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sixPhoto.updateError', 'Failed to update artwork. Please try again.'),
+          ),
+        );
+      },
+    });
+
+    const createArtworkMutation = useMutation({
+      mutationFn: createArtworkApi,
+      onSuccess: () => {
+        toast.success(
+          t('sixPhoto.uploadSuccess', 'Artwork published successfully!'),
+        );
+        setSuccessOpen(true);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sixPhoto.uploadError', 'Failed to publish artwork. Please try again.'),
+          ),
+        );
+      },
+    });
+
     useEffect(() => {
       return () => {
         Object.values(previews).forEach((url) => {
-          if (url) URL.revokeObjectURL(url);
+          if (url && typeof url === 'string' && url.startsWith('blob:')) {
+            URL.revokeObjectURL(url);
+          }
         });
       };
     }, [previews]);
@@ -201,10 +321,13 @@ const SixPhotoContent = memo(
       setThemeId(nextThemeId);
       setPreviews((previous) => {
         Object.values(previous).forEach((url) => {
-          if (url) URL.revokeObjectURL(url);
+          if (url && typeof url === 'string' && url.startsWith('blob:')) {
+            URL.revokeObjectURL(url);
+          }
         });
         return {};
       });
+      setFiles({});
       setPhotosError('');
     };
 
@@ -219,33 +342,81 @@ const SixPhotoContent = memo(
       event.target.value = '';
       if (!file || !slotId) return;
 
+      setFiles((prev) => ({ ...prev, [slotId]: file }));
       setPreviews((previous) => {
         const nextUrl = URL.createObjectURL(file);
-        if (previous[slotId]) URL.revokeObjectURL(previous[slotId]);
+        if (
+          previous[slotId] &&
+          typeof previous[slotId] === 'string' &&
+          previous[slotId].startsWith('blob:')
+        ) {
+          URL.revokeObjectURL(previous[slotId]);
+        }
         return { ...previous, [slotId]: nextUrl };
       });
       setPhotosError('');
     };
 
-    const onSubmit = (_data) => {
+    const onSubmit = (data) => {
       const missingPhotos = slots.some((slot) => !previews[slot.id]);
-      if (missingPhotos) {
+      if (missingPhotos && !isEdit) {
         setPhotosError(t('sixPhoto.errors.photosRequired'));
         setSuccessOpen(false);
         return;
       }
       setPhotosError('');
-      setSuccessOpen(true);
+
+      if (isEdit) {
+        const formData = new FormData();
+        formData.append('kind', 'SIX');
+        formData.append('title', data.title || 'Untitled Artwork');
+        formData.append('story', data.story || '');
+        formData.append(
+          'competitionState',
+          publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+        );
+        formData.append('isAiGenerated', String(aiCreated === 'yes'));
+        formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
+        formData.append('resolution', data.resolution || '60000x60000');
+        formData.append('quality', data.quality || '4K');
+        if (data.category) formData.append('categoryId', data.category);
+        if (data.subCategory) formData.append('subcategoryId', data.subCategory);
+
+        Object.entries(files).forEach(([, file]) => {
+          if (file) {
+            formData.append('images', file);
+          }
+        });
+
+        updateArtworkMutation.mutate(formData);
+        return;
+      }
+
+      createArtworkMutation.mutate({
+        kind: 'SIX',
+        title: data.title || 'Untitled Artwork',
+        story: data.story || '',
+        competitionState: publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+        isAiGenerated: aiCreated === 'yes',
+        copyrightConfirmed: Boolean(data.copyrightOk),
+        resolution: data.resolution || '60000x60000',
+        quality: data.quality || '4K',
+        categoryId: data.category || '',
+        subcategoryId: data.subCategory || '',
+        images: Object.values(files),
+      });
     };
 
     return (
       <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
         <Link
-          to={backHref}
+          to={isEdit ? ROUTES.USER_MY_ARTWORK : backHref}
           className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#202020] transition hover:text-[#ee1c25]"
         >
           <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
-          {t('sixPhoto.backToSelection')}
+          {isEdit
+            ? t('myArtwork.backToArtwork', 'Back to My Artwork')
+            : t('sixPhoto.backToSelection')}
         </Link>
 
         <div className="flex flex-col gap-8">
@@ -400,6 +571,16 @@ const SixPhotoContent = memo(
           register={register}
           errors={errors}
           isSell={isSell}
+          submitLabel={
+            isEdit
+              ? t('common.saveChanges', 'Save Changes')
+              : undefined
+          }
+          isSubmitting={
+            isEdit
+              ? updateArtworkMutation.isPending
+              : createArtworkMutation.isPending
+          }
           sellFields={
             <MemberSellPhotoFields
               idPrefix="six-photo"

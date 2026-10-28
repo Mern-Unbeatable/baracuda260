@@ -70,3 +70,24 @@ export const getCompetitionWinnersApi = async ({
   }));
 };
 
+/**
+ * Fetches list of active/open competitions for artwork submission or switching.
+ * Endpoint: GET /v1/competitions
+ */
+export const getActiveCompetitionsApi = async (params = {}) => {
+  try {
+    const response = await apiClient.get('/v1/competitions', {
+      params: { status: 'OPEN', ...params },
+    });
+    const payload = response?.data !== undefined ? response.data : response;
+    const list = Array.isArray(payload?.data)
+      ? payload.data
+      : Array.isArray(payload)
+        ? payload
+        : [];
+    return list;
+  } catch {
+    return [];
+  }
+};
+

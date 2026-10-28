@@ -5,7 +5,7 @@ import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
 import Button from '@/components/ui/Button';
 
 const MemberArtworkActionsMenu = memo(
-  ({ item, onEdit, onDelete, onPromote }) => {
+  ({ item, onEdit, onDelete, onPromote, onSwitchCompetition }) => {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const buttonWrapRef = useRef(null);
@@ -35,27 +35,39 @@ const MemberArtworkActionsMenu = memo(
           onClose={() => setOpen(false)}
           buttonRef={buttonRef}
           buttonWrapRef={buttonWrapRef}
-          width={144}
+          width={154}
           aria-label={t('myArtwork.actions.menuAria')}
           className="overflow-hidden rounded-[10px] border border-black/10 bg-white py-1 shadow-lg"
         >
           {[
             {
               key: 'edit',
-              labelKey: 'myArtwork.actions.edit',
+              label: t('myArtwork.actions.edit', 'Edit'),
               action: () => onEdit?.(item),
             },
+            ...(item?.footerState !== 'active'
+              ? [
+                  {
+                    key: 'switchCompetition',
+                    label: t(
+                      'myArtwork.actions.switchCompetition',
+                      'Enter Competition',
+                    ),
+                    action: () => onSwitchCompetition?.(item),
+                  },
+                ]
+              : []),
             {
               key: 'delete',
-              labelKey: 'myArtwork.actions.delete',
+              label: t('myArtwork.actions.delete', 'Delete'),
               action: () => onDelete?.(item),
             },
             {
               key: 'promote',
-              labelKey: 'myArtwork.actions.promote',
+              label: t('myArtwork.actions.promote', 'Promote'),
               action: () => onPromote?.(item),
             },
-          ].map(({ key, labelKey, action }) => (
+          ].map(({ key, label, action }) => (
             <Button
               unstyled
               key={key}
@@ -64,7 +76,7 @@ const MemberArtworkActionsMenu = memo(
               onClick={() => handleAction(action)}
               className="w-full cursor-pointer px-4 py-2.5 text-left text-[14px] font-medium text-[#1c1c1c] transition hover:bg-[#fde8e9] hover:text-[#ee1c25]"
             >
-              {t(labelKey)}
+              {label}
             </Button>
           ))}
         </PortalDropdown>

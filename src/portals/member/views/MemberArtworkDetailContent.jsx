@@ -1,7 +1,8 @@
-import { ArrowLeft } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
@@ -13,7 +14,11 @@ import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
-import { getMyArtworkDetailById } from '@/portals/member/data/myArtworkDetailData';
+import {
+  getMyArtworkDetailById,
+  normalizeArtworkDetail,
+} from '@/portals/member/data/myArtworkDetailData';
+import { getArtworkDetailsApi } from '@/shared/api/artworks.api';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
@@ -40,8 +45,27 @@ const SHOWCASE_BADGE_KEYS = {
 const MemberArtworkDetailContent = memo(() => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const detail = getMyArtworkDetailById(id);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const {
+    data: detail,
+    isLoading,
+  } = useQuery({
+    queryKey: ['artwork-detail', id],
+    queryFn: async () => {
+      if (!id) return null;
+      try {
+        const live = await getArtworkDetailsApi(id);
+        if (live) {
+          return normalizeArtworkDetail(live);
+        }
+      } catch (err) {
+        console.warn('API artwork details fetch failed:', err);
+      }
+      return getMyArtworkDetailById(id);
+    },
+    enabled: Boolean(id),
+  });
 
   const config = detail
     ? GALLERY_DETAIL_VARIANTS[detail.variant] || GALLERY_DETAIL_VARIANTS.single
@@ -62,8 +86,32 @@ const MemberArtworkDetailContent = memo(() => {
     return () => window.clearInterval(timerId);
   }, [detail, showStoryChrome, slideCount]);
 
+  if (isLoading) {
+    return (
+      <div className="mx-auto flex min-h-[50vh] w-full max-w-395 flex-col items-center justify-center gap-4">
+        <Loader2 className="size-10 animate-spin text-[#ee1c25]" />
+        <p className="text-[16px] font-medium text-[#494453]">
+          {t('common.loading', 'Loading artwork details...')}
+        </p>
+      </div>
+    );
+  }
+
   if (!detail) {
-    return <Navigate to={ROUTES.USER_MY_ARTWORK} replace />;
+    return (
+      <div className="mx-auto flex min-h-[50vh] w-full max-w-395 flex-col items-center justify-center gap-4">
+        <p className="text-[18px] font-semibold text-[#161c27]">
+          {t('myArtwork.detail.notFound', 'Artwork not found')}
+        </p>
+        <Link
+          to={ROUTES.USER_MY_ARTWORK}
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#ee1c25] px-6 py-2.5 text-[15px] font-semibold text-white transition hover:bg-[#d41921]"
+        >
+          <ArrowLeft size={18} aria-hidden="true" />
+          {t('myArtwork.backToArtwork', 'Back to My Artwork')}
+        </Link>
+      </div>
+    );
   }
 
   const activeSlide = slides[activeIndex] || slides[0];
@@ -231,7 +279,8 @@ const MemberArtworkDetailContent = memo(() => {
           <AiGeneratedDetailNotice className="mt-4" />
         ) : null}
         <p className="mt-3 max-w-4xl text-[16px] leading-6 text-[#494453] sm:mt-4 sm:text-[17px] sm:leading-7">
-          {t(detail.descriptionKey)}
+          {detail.description ||
+            (detail.descriptionKey ? t(detail.descriptionKey) : detail.story)}
         </p>
       </div>
 

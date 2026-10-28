@@ -1,8 +1,10 @@
-import { ArrowLeft, ArrowUpFromLine, ChevronDown, Upload } from 'lucide-react';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ArrowLeft, ArrowUpFromLine, CheckCircle2, ChevronDown, Loader2, Upload, Video, X } from 'lucide-react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import UploadedPhotoPreview from '@/components/data-display/UploadedPhotoPreview/UploadedPhotoPreview';
 import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/ZodiacStoryFormPanel';
 import Button from '@/components/ui/Button';
@@ -16,6 +18,18 @@ import {
   SINGLE_PHOTO_ASSETS,
   ZODIAC_SIGNS,
 } from '@/portals/member/data/singlePhotoAssets';
+import {
+  CATEGORIES_QUERY_KEY,
+  getCategoriesApi,
+} from '@/shared/api/categories.api';
+import {
+  createArtworkApi,
+  createArtworkVideoCommentApi,
+  getArtworkDetailsApi,
+  updateArtworkApi,
+  USER_ARTWORKS_QUERY_KEY,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
 
 const findSign = (id) =>
@@ -62,15 +76,48 @@ const SinglePhotoContent = memo(
     defaultPrice = '$2.00',
   }) => {
     const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+    const editId = searchParams.get('edit') || location.state?.editId;
+    const isEdit = Boolean(editId);
+
     const fileInputRef = useRef(null);
+    const videoInputRef = useRef(null);
     const isSell = purpose === 'sell';
 
     const [signId, setSignId] = useState(DEFAULT_SIGN_ID);
     const [signOpen, setSignOpen] = useState(false);
 
+    // Categories query
+    const { data: categoriesData } = useQuery({
+      queryKey: CATEGORIES_QUERY_KEY,
+      queryFn: getCategoriesApi,
+      staleTime: 5 * 60 * 1000,
+    });
+
+    const categoriesList = useMemo(() => {
+      if (Array.isArray(categoriesData)) return categoriesData;
+      if (Array.isArray(categoriesData?.data)) return categoriesData.data;
+      return [];
+    }, [categoriesData]);
+
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const subCategoriesList = useMemo(() => {
+      if (!selectedCategory) return categoriesList[0]?.subcategories || [];
+      const match = categoriesList.find(
+        (c) => c.id === selectedCategory || c.slug === selectedCategory,
+      );
+      return match?.subcategories || [];
+    }, [categoriesList, selectedCategory]);
+
     const {
       register,
       handleSubmit,
+      setValue,
+      getValues,
       formState: { errors },
     } = useForm({
       defaultValues: {
@@ -86,11 +133,146 @@ const SinglePhotoContent = memo(
       },
     });
 
+    // Auto set initial category from API if available
+    useEffect(() => {
+      if (categoriesList.length > 0 && !selectedCategory) {
+        const first = categoriesList[0];
+        const val = first.id || first.slug;
+        setSelectedCategory(val);
+        setValue('category', val);
+      }
+    }, [categoriesList, selectedCategory, setValue]);
+
     const [publishTarget, setPublishTarget] = useState('competition');
     const [aiCreated, setAiCreated] = useState('');
+    const [photoFile, setPhotoFile] = useState(null);
     const [photoPreview, setPhotoPreview] = useState(null);
     const [photoError, setPhotoError] = useState('');
     const [successOpen, setSuccessOpen] = useState(false);
+
+    // Fetch existing artwork in edit mode
+    const { data: existingArtwork } = useQuery({
+      queryKey: ['artwork-detail', editId],
+      queryFn: () => getArtworkDetailsApi(editId),
+      enabled: isEdit,
+      initialData: location.state?.editArtwork || location.state?.artwork,
+    });
+
+    useEffect(() => {
+      if (!existingArtwork) return;
+      setValue('title', existingArtwork.title || '');
+      setValue(
+        'story',
+        existingArtwork.story || existingArtwork.description || '',
+      );
+      if (existingArtwork.categoryId || existingArtwork.category?.id) {
+        const catId = existingArtwork.categoryId || existingArtwork.category?.id;
+        setSelectedCategory(catId);
+        setValue('category', catId);
+      }
+      if (existingArtwork.subcategoryId || existingArtwork.subCategoryId) {
+        setValue(
+          'subCategory',
+          existingArtwork.subcategoryId || existingArtwork.subCategoryId,
+        );
+      }
+      if (existingArtwork.zodiacSign) {
+        const sign = ZODIAC_SIGNS.find(
+          (s) =>
+            s.id?.toUpperCase() === existingArtwork.zodiacSign?.toUpperCase() ||
+            s.name?.toUpperCase() === existingArtwork.zodiacSign?.toUpperCase(),
+        );
+        if (sign) setSignId(sign.id);
+      }
+      if (existingArtwork.isAiGenerated !== undefined) {
+        setAiCreated(existingArtwork.isAiGenerated ? 'yes' : 'no');
+      }
+      if (existingArtwork.competitionState) {
+        setPublishTarget(
+          existingArtwork.competitionState === 'PROFILE_ONLY'
+            ? 'profile'
+            : 'competition',
+        );
+      }
+      const previewImg =
+        existingArtwork.featuredImage ||
+        existingArtwork.image ||
+        existingArtwork.coverImage;
+      if (previewImg && !photoFile) {
+        setPhotoPreview(previewImg);
+      }
+    }, [existingArtwork, setValue, photoFile]);
+
+    // Update Artwork Mutation
+    const updateArtworkMutation = useMutation({
+      mutationFn: (payload) => updateArtworkApi(editId, payload),
+      onSuccess: () => {
+        toast.success(
+          t('singlePhoto.updateSuccess', 'Artwork updated successfully!'),
+        );
+        queryClient.invalidateQueries({ queryKey: USER_ARTWORKS_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: ['artwork-detail', editId] });
+        navigate(ROUTES.USER_MY_ARTWORK);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('singlePhoto.updateError', 'Failed to update artwork. Please try again.'),
+          ),
+        );
+      },
+    });
+
+    // Create Artwork Mutation
+    const createArtworkMutation = useMutation({
+      mutationFn: createArtworkApi,
+      onSuccess: () => {
+        toast.success(t('singlePhoto.uploadSuccess', 'Artwork published successfully!'));
+        setSuccessOpen(true);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('singlePhoto.uploadError', 'Failed to publish artwork. Please try again.'),
+          ),
+        );
+      },
+    });
+
+    // Video comment state
+    const [selectedVideo, setSelectedVideo] = useState(null);
+    const [videoPreview, setVideoPreview] = useState('');
+
+    useEffect(() => {
+      if (!selectedVideo) {
+        setVideoPreview('');
+        return undefined;
+      }
+      const url = URL.createObjectURL(selectedVideo);
+      setVideoPreview(url);
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }, [selectedVideo]);
+
+    const videoCommentMutation = useMutation({
+      mutationFn: createArtworkVideoCommentApi,
+      onSuccess: () => {
+        toast.success(
+          t('artwork.videoUploaded', 'Video comment uploaded successfully!'),
+        );
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('artwork.videoUploadError', 'Failed to upload video comment.'),
+          ),
+        );
+      },
+    });
 
     const selectedSign = findSign(signId);
 
@@ -108,6 +290,7 @@ const SinglePhotoContent = memo(
       const file = event.target.files?.[0];
       if (!file) return;
 
+      setPhotoFile(file);
       setPhotoPreview((previous) => {
         if (previous) URL.revokeObjectURL(previous);
         return URL.createObjectURL(file);
@@ -115,14 +298,94 @@ const SinglePhotoContent = memo(
       setPhotoError('');
     };
 
-    const onSubmit = (_data) => {
-      if (!photoPreview) {
+    const handlePickVideo = () => {
+      videoInputRef.current?.click();
+    };
+
+    const handleVideoChange = (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error(t('artwork.videoTooLarge', 'Video file must be under 25MB.'));
+        return;
+      }
+      setSelectedVideo(file);
+    };
+
+    const handleRemoveVideo = (e) => {
+      e.stopPropagation();
+      setSelectedVideo(null);
+      if (videoInputRef.current) {
+        videoInputRef.current.value = '';
+      }
+    };
+
+    const onSubmit = async (data) => {
+      if (!photoFile && !photoPreview) {
         setPhotoError(t('singlePhoto.errors.photoRequired'));
         setSuccessOpen(false);
         return;
       }
       setPhotoError('');
-      setSuccessOpen(true);
+
+      const signName = selectedSign?.name || selectedSign?.id || 'ARIES';
+
+      if (isEdit) {
+        const formData = new FormData();
+        formData.append('kind', 'SINGLE');
+        formData.append('title', data.title || 'Untitled Artwork');
+        formData.append('story', data.story || '');
+        formData.append('zodiacSign', signName.toUpperCase());
+        formData.append(
+          'competitionState',
+          publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+        );
+        formData.append('isAiGenerated', String(aiCreated === 'yes'));
+        formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
+        formData.append('resolution', data.resolution || '60000x60000');
+        formData.append('quality', data.quality || '4K');
+        if (data.category || selectedCategory) {
+          formData.append('categoryId', data.category || selectedCategory);
+        }
+        if (data.subCategory) {
+          formData.append('subcategoryId', data.subCategory);
+        }
+        if (photoFile) {
+          formData.append('images', photoFile);
+        }
+        if (selectedVideo) {
+          formData.append('video', selectedVideo);
+        }
+        updateArtworkMutation.mutate(formData);
+        return;
+      }
+
+      // 1. Submit main artwork (POST /api/v1/artworks)
+      createArtworkMutation.mutate({
+        kind: 'SINGLE',
+        zodiacSign: signName.toUpperCase(),
+        title: data.title || 'Untitled Artwork',
+        story: data.story || '',
+        competitionState: publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+        isAiGenerated: aiCreated === 'yes',
+        copyrightConfirmed: Boolean(data.copyrightOk),
+        resolution: data.resolution || '60000x60000',
+        quality: data.quality || '4K',
+        categoryId: data.category || selectedCategory || '',
+        subcategoryId: data.subCategory || '',
+        images: photoFile,
+        video: selectedVideo || undefined,
+      });
+
+      // 2. If separate video comment is desired:
+      if (selectedVideo) {
+        videoCommentMutation.mutate({
+          title: data.title || 'My Studio & Artwork Update',
+          story: data.story || '',
+          isAiGenerated: aiCreated === 'yes',
+          video: selectedVideo,
+        });
+      }
     };
 
     const handleCloseSuccess = () => {
@@ -138,7 +401,7 @@ const SinglePhotoContent = memo(
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-8.5">
                 <Link
-                  to={backHref}
+                  to={isEdit ? ROUTES.USER_MY_ARTWORK : backHref}
                   className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
                 >
                   <ArrowLeft
@@ -146,7 +409,9 @@ const SinglePhotoContent = memo(
                     aria-hidden="true"
                     className="shrink-0"
                   />
-                  {t('singlePhoto.backToSelection')}
+                  {isEdit
+                    ? t('myArtwork.backToArtwork', 'Back to My Artwork')
+                    : t('singlePhoto.backToSelection')}
                 </Link>
 
                 <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-6.5">
@@ -310,22 +575,54 @@ const SinglePhotoContent = memo(
                 Upload Videos
               </h3>
               <p className="mt-1 text-[13px] leading-5 text-[#717784]">
-                Help your pro prepare by showing them the work area. Optional
-                but highly recommended.
+                1-minute video comment / update for your artwork. Optional but highly recommended.
               </p>
-              <Button
-                unstyled
-                type="button"
-                className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
-              >
-                <Upload size={24} className="mb-2 text-[#b1b6c5]" />
-                <span className="text-[16px] leading-6">
-                  Click to upload Videos or drag &amp; drop
-                </span>
-                <span className="text-[12px] text-[#9ca3af]">
-                  MP4 — max 10MB each
-                </span>
-              </Button>
+
+              {videoPreview ? (
+                <div className="relative mt-4 overflow-hidden rounded-xl border border-[#c4c6f0] bg-black">
+                  <video
+                    src={videoPreview}
+                    controls
+                    className="max-h-56 w-full object-contain"
+                  />
+                  <div className="flex items-center justify-between bg-[#111827] px-4 py-2.5 text-white">
+                    <span className="flex items-center gap-1.5 text-[13px] font-medium text-emerald-400">
+                      <CheckCircle2 size={16} />
+                      {selectedVideo?.name || 'video.mp4'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleRemoveVideo}
+                      className="cursor-pointer text-[12px] font-semibold text-red-400 hover:text-red-300"
+                    >
+                      {t('common.remove', 'Remove')}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handlePickVideo}
+                  className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
+                >
+                  <Upload size={24} className="mb-2 text-[#b1b6c5]" />
+                  <span className="text-[16px] leading-6">
+                    Click to upload Video or drag &amp; drop
+                  </span>
+                  <span className="text-[12px] text-[#9ca3af]">
+                    MP4 — max 1 minute (up to 25MB)
+                  </span>
+                </Button>
+              )}
+
+              <input
+                ref={videoInputRef}
+                type="file"
+                accept="video/mp4,video/*"
+                className="sr-only"
+                onChange={handleVideoChange}
+              />
             </article>
           </div>
 
@@ -336,6 +633,12 @@ const SinglePhotoContent = memo(
               i18nPrefix="singlePhoto"
               onSubmit={handleSubmit(onSubmit)}
               categoryOptions={ARTISTIC_CATEGORIES}
+              categoryList={categoriesList}
+              subCategoryList={subCategoriesList}
+              onCategoryChange={(val) => {
+                setSelectedCategory(val);
+                setValue('category', val);
+              }}
               publishTarget={publishTarget}
               setPublishTarget={setPublishTarget}
               aiCreated={aiCreated}
@@ -343,6 +646,16 @@ const SinglePhotoContent = memo(
               register={register}
               errors={errors}
               isSell={isSell}
+              submitLabel={
+                isEdit
+                  ? t('common.saveChanges', 'Save Changes')
+                  : undefined
+              }
+              isSubmitting={
+                isEdit
+                  ? updateArtworkMutation.isPending
+                  : createArtworkMutation.isPending
+              }
               sellFields={
                 <MemberSellPhotoFields
                   idPrefix="single-photo"

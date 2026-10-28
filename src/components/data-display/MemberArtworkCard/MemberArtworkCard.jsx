@@ -15,7 +15,14 @@ const BADGE_STYLES = {
 };
 
 const MemberArtworkCard = memo(
-  ({ item, badgeLabel, onEdit, onDelete, onPromote }) => {
+  ({
+    item,
+    badgeLabel,
+    onEdit,
+    onDelete,
+    onPromote,
+    onSwitchCompetition,
+  }) => {
     const { t } = useTranslation();
     const badgeClass =
       BADGE_STYLES[item.albumBadge] ?? BADGE_STYLES['Single Photo'];
@@ -51,6 +58,7 @@ const MemberArtworkCard = memo(
             onEdit={onEdit}
             onDelete={onDelete}
             onPromote={onPromote}
+            onSwitchCompetition={onSwitchCompetition}
           />
           {item.promoted ? (
             <span className="absolute bottom-3 left-3 rounded-md bg-[#22c55e] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
@@ -117,7 +125,10 @@ const MemberArtworkCard = memo(
           </div>
 
           <div className="mt-4 min-h-42.5">
-            <MemberArtworkCardFooter item={item} />
+            <MemberArtworkCardFooter
+              item={item}
+              onSwitchCompetition={onSwitchCompetition}
+            />
           </div>
         </div>
       </article>
