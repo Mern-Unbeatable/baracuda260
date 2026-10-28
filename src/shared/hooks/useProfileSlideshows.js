@@ -7,6 +7,8 @@ import { getApiErrorMessage } from '@/shared/api/client';
 import {
   createSlideshowApi,
   deleteSlideshowApi,
+  getPhotographerSlideshowsApi,
+  getSlideshowApi,
   getSlideshowSourcePhotosApi,
   getSlideshowsApi,
   SLIDESHOWS_QUERY_KEY,
@@ -23,10 +25,14 @@ const CLOSED_BUILDER = { open: false, slideshow: null };
 
 /**
  * Slideshows shown on a profile's Artwork tab.
- * @param {{ canManage?: boolean, onCreated?: (slideshow: object) => void }} options
+ * @param {{ canManage?: boolean, username?: string, onCreated?: (slideshow: object) => void }} options
  *   `canManage` is true only on the owner's own profile.
  */
-export function useProfileSlideshows({ canManage = false, onCreated } = {}) {
+export function useProfileSlideshows({
+  canManage = false,
+  username,
+  onCreated,
+} = {}) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -34,14 +40,19 @@ export function useProfileSlideshows({ canManage = false, onCreated } = {}) {
   const openedInAppRef = useRef(false);
   const [builder, setBuilder] = useState(CLOSED_BUILDER);
 
+  const queryScope = canManage ? 'me' : username || 'me';
+
   const slideshowsQuery = useQuery({
-    queryKey: [...SLIDESHOWS_QUERY_KEY, 'list'],
-    queryFn: () => getSlideshowsApi(),
+    queryKey: [...SLIDESHOWS_QUERY_KEY, 'list', queryScope],
+    queryFn: () =>
+      username && !canManage
+        ? getPhotographerSlideshowsApi(username, { page: 1, limit: 50 })
+        : getSlideshowsApi({ page: 1, limit: 50 }),
   });
 
   const sourcePhotosQuery = useQuery({
     queryKey: [...SLIDESHOWS_QUERY_KEY, 'source-photos'],
-    queryFn: getSlideshowSourcePhotosApi,
+    queryFn: () => getSlideshowSourcePhotosApi({ page: 1, limit: 15 }),
     enabled: canManage,
   });
 
@@ -109,10 +120,22 @@ export function useProfileSlideshows({ canManage = false, onCreated } = {}) {
   const sourcePhotos = sourcePhotosQuery.data?.items ?? [];
 
   const activeId = searchParams.get(SLIDESHOW_SEARCH_PARAM);
+  const activeSlideshowQuery = useQuery({
+    queryKey: [...SLIDESHOWS_QUERY_KEY, 'detail', activeId],
+    queryFn: () => getSlideshowApi(activeId),
+    enabled: Boolean(
+      activeId && !slideshows.some((item) => item.id === activeId),
+    ),
+  });
+
   const activeSlideshow = activeId
     ? (slideshows.find(
         (item) => item.id === activeId && isSlideshowPlayable(item),
-      ) ?? null)
+      ) ??
+      (activeSlideshowQuery.data &&
+      isSlideshowPlayable(activeSlideshowQuery.data)
+        ? activeSlideshowQuery.data
+        : null))
     : null;
 
   const openPlayer = useCallback(
@@ -197,6 +220,7 @@ export function useProfileSlideshows({ canManage = false, onCreated } = {}) {
     refetch: slideshowsQuery.refetch,
 
     sourcePhotos,
+    sourcePhotosMeta: sourcePhotosQuery.data?.meta ?? null,
     sourcePhotosLoading: sourcePhotosQuery.isPending,
     sourcePhotosError: sourcePhotosQuery.isError,
     refetchSourcePhotos: sourcePhotosQuery.refetch,

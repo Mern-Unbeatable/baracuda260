@@ -192,6 +192,7 @@ const PhotographerProfileMain = memo(() => {
                     featured={PHOTOGRAPHER_FEATURED}
                   />
                   <PhotographerSlideshowsSection
+                    username={username || profile.username}
                     ownerName={profile.name}
                   />
                   <PhotographerArtworkGrid
