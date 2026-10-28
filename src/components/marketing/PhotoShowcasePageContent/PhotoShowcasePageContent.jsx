@@ -259,6 +259,7 @@ const PhotoShowcasePageContent = memo(
                     {pagedPhotos.map((photo) => (
                       <PhotoShowcaseCard
                         key={photo.id}
+                        id={photo.id}
                         href={getDetailPath(photo)}
                         image={photo.image}
                         imageAlt={photo.title}

@@ -29,6 +29,11 @@ import {
   updateArtworkApi,
   USER_ARTWORKS_QUERY_KEY,
 } from '@/shared/api/artworks.api';
+import {
+  createMarketplacePremiumPhotoApi,
+  formatPriceForMarketplace,
+  updateMarketplacePremiumPhotoApi,
+} from '@/shared/api/premiumPhotos.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
 
@@ -224,6 +229,50 @@ const SinglePhotoContent = memo(
       },
     });
 
+    // Create Sell Photo Mutation (Marketplace)
+    const createSellPhotoMutation = useMutation({
+      mutationFn: createMarketplacePremiumPhotoApi,
+      onSuccess: () => {
+        toast.success(
+          t('sellPhotos.uploadSuccess', 'Photo submitted for sale successfully!'),
+        );
+        setSuccessOpen(true);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sellPhotos.uploadError', 'Failed to submit photo for sale. Please try again.'),
+          ),
+        );
+      },
+    });
+
+    // Update Sell Photo Mutation (Marketplace)
+    const updateSellPhotoMutation = useMutation({
+      mutationFn: (payload) => updateMarketplacePremiumPhotoApi(editId, payload),
+      onSuccess: () => {
+        toast.success(
+          t('sellPhotos.updateSuccess', 'Photo listing updated successfully!'),
+        );
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photos'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photo-detail', editId],
+        });
+        navigate(ROUTES.USER_SELL_PHOTOS);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sellPhotos.updateError', 'Failed to update photo listing. Please try again.'),
+          ),
+        );
+      },
+    });
+
     // Create Artwork Mutation
     const createArtworkMutation = useMutation({
       mutationFn: createArtworkApi,
@@ -331,6 +380,33 @@ const SinglePhotoContent = memo(
       const signName = selectedSign?.name || selectedSign?.id || 'ARIES';
 
       if (isEdit) {
+        if (isSell) {
+          const formData = new FormData();
+          formData.append('kind', 'SINGLE');
+          formData.append('title', data.title || 'Untitled Photo');
+          formData.append('story', data.story || '');
+          formData.append('price', formatPriceForMarketplace(data.price));
+          formData.append('zodiacSign', signName.toUpperCase());
+          formData.append('isAiGenerated', String(aiCreated === 'yes'));
+          formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
+          formData.append('resolution', data.resolution || '60000x60000');
+          formData.append('quality', data.quality || '4K');
+          if (data.category || selectedCategory) {
+            formData.append('categoryId', data.category || selectedCategory);
+          }
+          if (data.subCategory) {
+            formData.append('subcategoryId', data.subCategory);
+          }
+          if (photoFile) {
+            formData.append('images', photoFile);
+          }
+          if (selectedVideo) {
+            formData.append('video', selectedVideo);
+          }
+          updateSellPhotoMutation.mutate(formData);
+          return;
+        }
+
         const formData = new FormData();
         formData.append('kind', 'SINGLE');
         formData.append('title', data.title || 'Untitled Artwork');
@@ -360,6 +436,41 @@ const SinglePhotoContent = memo(
         return;
       }
 
+      const catMatch = categoriesList.find(
+        (c) =>
+          c.id === data.category ||
+          c.slug === data.category ||
+          c.id === selectedCategory,
+      );
+      const categoryId =
+        catMatch?.id || data.category || selectedCategory || '';
+
+      const subMatch = subCategoriesList.find(
+        (s) =>
+          s.id === data.subCategory ||
+          s.slug === data.subCategory ||
+          s.name === data.subCategory,
+      );
+      const subcategoryId = subMatch?.id || data.subCategory || '';
+
+      if (isSell) {
+        createSellPhotoMutation.mutate({
+          kind: 'SINGLE',
+          zodiacSign: signName.toUpperCase(),
+          title: data.title || 'Untitled Photo',
+          price: data.price,
+          isAiGenerated: aiCreated === 'yes',
+          copyrightConfirmed: Boolean(data.copyrightOk),
+          resolution: data.resolution || '60000x60000',
+          quality: data.quality || '4K',
+          categoryId,
+          subcategoryId,
+          images: photoFile,
+          video: selectedVideo || undefined,
+        });
+        return;
+      }
+
       // 1. Submit main artwork (POST /api/v1/artworks)
       createArtworkMutation.mutate({
         kind: 'SINGLE',
@@ -371,8 +482,8 @@ const SinglePhotoContent = memo(
         copyrightConfirmed: Boolean(data.copyrightOk),
         resolution: data.resolution || '60000x60000',
         quality: data.quality || '4K',
-        categoryId: data.category || selectedCategory || '',
-        subcategoryId: data.subCategory || '',
+        categoryId,
+        subcategoryId,
         images: photoFile,
         video: selectedVideo || undefined,
       });
@@ -653,8 +764,12 @@ const SinglePhotoContent = memo(
               }
               isSubmitting={
                 isEdit
-                  ? updateArtworkMutation.isPending
-                  : createArtworkMutation.isPending
+                  ? isSell
+                    ? updateSellPhotoMutation.isPending
+                    : updateArtworkMutation.isPending
+                  : isSell
+                    ? createSellPhotoMutation.isPending
+                    : createArtworkMutation.isPending
               }
               sellFields={
                 <MemberSellPhotoFields

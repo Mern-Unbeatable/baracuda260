@@ -1,6 +1,14 @@
-import { Share2 } from 'lucide-react';
+import { Bookmark, Heart, Share2 } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import {
+  toggleLikeArtworkApi,
+  toggleSaveArtworkApi,
+  voteArtworkApi,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation';
@@ -41,6 +49,7 @@ const GalleryDetailView = memo(
     rootClassName: rootClassNameProp,
   }) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const user = useSelector(selectUser);
 
     const config =
@@ -68,6 +77,131 @@ const GalleryDetailView = memo(
     const [activeIndex, setActiveIndex] = useState(0);
     const [comment, setComment] = useState('');
     const [donationOpen, setDonationOpen] = useState(true);
+
+    const [voting, setVoting] = useState(false);
+    const [hasVoted, setHasVoted] = useState(false);
+    const [isSaved, setIsSaved] = useState(
+      Boolean(story.isSaved || story.saved),
+    );
+    const [saving, setSaving] = useState(false);
+    const [isLiked, setIsLiked] = useState(
+      Boolean(story.isLiked || story.liked),
+    );
+    const [liking, setLiking] = useState(false);
+    const [likesCount, setLikesCount] = useState(
+      () => Number(String(story.likes ?? '0').replace(/,/g, '')) || 0,
+    );
+
+    useEffect(() => {
+      setIsLiked(Boolean(story.isLiked || story.liked));
+      setLikesCount(Number(String(story.likes ?? '0').replace(/,/g, '')) || 0);
+      setIsSaved(Boolean(story.isSaved || story.saved));
+    }, [
+      story.id,
+      story.isLiked,
+      story.liked,
+      story.likes,
+      story.isSaved,
+      story.saved,
+    ]);
+
+    const artworkId = story?.id || entry?.id;
+
+    const handleVote = async () => {
+      if (!artworkId || isOwnSubmission || voting || hasVoted) return;
+      try {
+        setVoting(true);
+        const res = await voteArtworkApi(artworkId);
+        setHasVoted(true);
+        toast.success(
+          res?.message ||
+            t('galleryDetail.voteSuccess', 'Your vote has been cast!'),
+        );
+      } catch (err) {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('galleryDetail.voteFailed', 'Failed to cast vote.'),
+          ),
+        );
+      } finally {
+        setVoting(false);
+      }
+    };
+
+    const handleSaveToggle = async () => {
+      if (!artworkId || saving) return;
+      const next = !isSaved;
+      setIsSaved(next);
+      try {
+        setSaving(true);
+        const res = await toggleSaveArtworkApi(artworkId);
+        queryClient.invalidateQueries({
+          queryKey: ['artwork-detail', artworkId],
+        });
+        queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+        toast.success(
+          res?.message ||
+            (next
+              ? t('gallery.savedSuccess', 'Saved to favourites')
+              : t('gallery.unsavedSuccess', 'Removed from favourites')),
+        );
+      } catch (err) {
+        setIsSaved(!next);
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('common.errors.general', 'Failed to update saved status.'),
+          ),
+        );
+      } finally {
+        setSaving(false);
+      }
+    };
+
+    const handleLikeToggle = async () => {
+      if (!artworkId || liking) return;
+      const next = !isLiked;
+      setIsLiked(next);
+      setLikesCount((prev) => (next ? prev + 1 : Math.max(0, prev - 1)));
+      try {
+        setLiking(true);
+        const res = await toggleLikeArtworkApi(artworkId);
+        const count =
+          res?.data?.likesCount ??
+          res?.likesCount ??
+          res?.data?.likes ??
+          res?.likes;
+        if (count != null) {
+          setLikesCount(Number(count));
+        }
+        const isLikedRes =
+          res?.data?.isLiked ??
+          res?.isLiked ??
+          res?.data?.liked ??
+          res?.liked;
+        if (isLikedRes != null) {
+          setIsLiked(Boolean(isLikedRes));
+        }
+        queryClient.invalidateQueries({
+          queryKey: ['artwork-detail', artworkId],
+        });
+        queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+        queryClient.invalidateQueries({ queryKey: ['user-artworks'] });
+        if (res?.message) toast.success(res.message);
+      } catch (err) {
+        setIsLiked(!next);
+        setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('common.errors.general', 'Failed to update like status.'),
+          ),
+        );
+      } finally {
+        setLiking(false);
+      }
+    };
 
     const activeSlide = slides[activeIndex] || slides[0];
     const blueBadge = isBlueSlide(activeSlide, config.stripAccent);
@@ -270,16 +404,68 @@ const GalleryDetailView = memo(
               <div className="flex flex-wrap gap-3">
                 <MarketingButton
                   type="button"
-                  disabled={isOwnSubmission}
+                  disabled={isOwnSubmission || voting || hasVoted}
+                  onClick={handleVote}
                   title={
                     isOwnSubmission
                       ? t('galleryDetail.cannotVoteOwn')
-                      : undefined
+                      : hasVoted
+                        ? t('galleryDetail.alreadyVoted', 'Already voted')
+                        : undefined
                   }
+                  className={hasVoted ? 'bg-[#16a34a] hover:bg-[#15803d]' : ''}
                 >
                   <ImgIcon src={ASSETS.voteHeart} size={20} />
-                  {t('galleryDetail.castVote')}
+                  {voting
+                    ? t('common.voting', 'Voting...')
+                    : hasVoted
+                      ? t('galleryDetail.voted', 'Voted!')
+                      : t('galleryDetail.castVote')}
                 </MarketingButton>
+
+                <MarketingButton
+                  type="button"
+                  variant="outline"
+                  disabled={liking}
+                  onClick={handleLikeToggle}
+                  className={isLiked ? 'text-[#e53935] border-[#e53935]' : ''}
+                >
+                  <Heart
+                    size={18}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className={
+                      isLiked
+                        ? 'fill-[#e53935] text-[#e53935]'
+                        : 'text-[#494453]'
+                    }
+                  />
+                  <span>
+                    {likesCount > 0 ? likesCount.toLocaleString('en-US') : ''}{' '}
+                    {isLiked ? t('common.liked', 'Liked') : t('common.like', 'Like')}
+                  </span>
+                </MarketingButton>
+
+                <MarketingButton
+                  type="button"
+                  variant="outline"
+                  disabled={saving}
+                  onClick={handleSaveToggle}
+                  className={isSaved ? 'text-[#ee1c25] border-[#ee1c25]' : ''}
+                >
+                  <Bookmark
+                    size={18}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className={
+                      isSaved
+                        ? 'fill-[#ee1c25] text-[#ee1c25]'
+                        : 'text-[#494453]'
+                    }
+                  />
+                  {isSaved ? t('gallery.saved', 'Saved') : t('gallery.save', 'Save')}
+                </MarketingButton>
+
                 <MarketingButton
                   type="button"
                   className="bg-[#4048CD]! !hover:bg-[#333BB0] active:scale-[0.98]"

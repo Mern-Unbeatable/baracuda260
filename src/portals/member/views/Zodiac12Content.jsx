@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -22,11 +22,20 @@ import {
 import { ROUTES } from '@/shared/config';
 import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import {
+  CATEGORIES_QUERY_KEY,
+  getCategoriesApi,
+} from '@/shared/api/categories.api';
+import {
   createArtworkApi,
   getArtworkDetailsApi,
   updateArtworkApi,
   USER_ARTWORKS_QUERY_KEY,
 } from '@/shared/api/artworks.api';
+import {
+  createMarketplacePremiumPhotoApi,
+  formatPriceForMarketplace,
+  updateMarketplacePremiumPhotoApi,
+} from '@/shared/api/premiumPhotos.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 
 const SlotIcon = memo(({ slot }) => {
@@ -200,6 +209,82 @@ const Zodiac12Content = memo(
     const [photosError, setPhotosError] = useState('');
     const [successOpen, setSuccessOpen] = useState(false);
 
+    // Categories query
+    const { data: categoriesData } = useQuery({
+      queryKey: CATEGORIES_QUERY_KEY,
+      queryFn: getCategoriesApi,
+      staleTime: 5 * 60 * 1000,
+    });
+
+    const categoriesList = useMemo(() => {
+      if (Array.isArray(categoriesData)) return categoriesData;
+      if (Array.isArray(categoriesData?.data)) return categoriesData.data;
+      return [];
+    }, [categoriesData]);
+
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const subCategoriesList = useMemo(() => {
+      if (!selectedCategory) return categoriesList[0]?.subcategories || [];
+      const match = categoriesList.find(
+        (c) => c.id === selectedCategory || c.slug === selectedCategory,
+      );
+      return match?.subcategories || [];
+    }, [categoriesList, selectedCategory]);
+
+    // Auto set initial category from API if available
+    useEffect(() => {
+      if (categoriesList.length > 0 && !selectedCategory) {
+        const first = categoriesList[0];
+        const val = first.id || first.slug;
+        setSelectedCategory(val);
+        setValue('category', val);
+      }
+    }, [categoriesList, selectedCategory, setValue]);
+
+    // Create Sell Photo Mutation (Marketplace)
+    const createSellPhotoMutation = useMutation({
+      mutationFn: createMarketplacePremiumPhotoApi,
+      onSuccess: () => {
+        toast.success(
+          t('sellPhotos.uploadSuccess', 'Photo story submitted for sale successfully!'),
+        );
+        setSuccessOpen(true);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sellPhotos.uploadError', 'Failed to submit photo story for sale. Please try again.'),
+          ),
+        );
+      },
+    });
+
+    // Update Sell Photo Mutation (Marketplace)
+    const updateSellPhotoMutation = useMutation({
+      mutationFn: (payload) => updateMarketplacePremiumPhotoApi(editId, payload),
+      onSuccess: () => {
+        toast.success(
+          t('sellPhotos.updateSuccess', 'Photo story updated successfully!'),
+        );
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photos'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photo-detail', editId],
+        });
+        navigate(ROUTES.USER_SELL_PHOTOS);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sellPhotos.updateError', 'Failed to update photo story. Please try again.'),
+          ),
+        );
+      },
+    });
+
     // Fetch existing artwork in edit mode
     const { data: existingArtwork } = useQuery({
       queryKey: ['artwork-detail', editId],
@@ -345,6 +430,49 @@ const Zodiac12Content = memo(
       setPhotosError('');
 
       if (isEdit) {
+        if (isSell) {
+          const formData = new FormData();
+          formData.append('kind', 'TWELVE');
+          formData.append('title', data.title || 'Untitled Photo');
+          formData.append('story', data.story || '');
+          formData.append('price', formatPriceForMarketplace(data.price));
+          formData.append('theme', 'FULL');
+          formData.append(
+            'zodiacSigns',
+            JSON.stringify([
+              'ARIES',
+              'TAURUS',
+              'GEMINI',
+              'CANCER',
+              'LEO',
+              'VIRGO',
+              'LIBRA',
+              'SCORPIO',
+              'SAGITTARIUS',
+              'CAPRICORN',
+              'AQUARIUS',
+              'PISCES',
+            ]),
+          );
+          formData.append('isAiGenerated', String(aiCreated === 'yes'));
+          formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
+          formData.append('resolution', data.resolution || '60000x60000');
+          formData.append('quality', data.quality || '4K');
+          if (data.category || selectedCategory) {
+            formData.append('categoryId', data.category || selectedCategory);
+          }
+          if (data.subCategory) {
+            formData.append('subcategoryId', data.subCategory);
+          }
+          ALL_SLOTS.forEach((s) => {
+            if (files[s.id]) {
+              formData.append('images', files[s.id]);
+            }
+          });
+          updateSellPhotoMutation.mutate(formData);
+          return;
+        }
+
         const formData = new FormData();
         formData.append('kind', 'TWELVE');
         formData.append('title', data.title || 'Untitled Artwork');
@@ -370,6 +498,56 @@ const Zodiac12Content = memo(
         return;
       }
 
+      const catMatch = categoriesList.find(
+        (c) =>
+          c.id === data.category ||
+          c.slug === data.category ||
+          c.id === selectedCategory,
+      );
+      const categoryId =
+        catMatch?.id || data.category || selectedCategory || '';
+
+      const subMatch = subCategoriesList.find(
+        (s) =>
+          s.id === data.subCategory ||
+          s.slug === data.subCategory ||
+          s.name === data.subCategory,
+      );
+      const subcategoryId = subMatch?.id || data.subCategory || '';
+
+      const orderedImages = ALL_SLOTS.map((s) => files[s.id]).filter(Boolean);
+
+      if (isSell) {
+        createSellPhotoMutation.mutate({
+          kind: 'TWELVE',
+          theme: 'FULL',
+          zodiacSigns: [
+            'ARIES',
+            'TAURUS',
+            'GEMINI',
+            'CANCER',
+            'LEO',
+            'VIRGO',
+            'LIBRA',
+            'SCORPIO',
+            'SAGITTARIUS',
+            'CAPRICORN',
+            'AQUARIUS',
+            'PISCES',
+          ],
+          title: data.title || 'Untitled Photo',
+          price: data.price,
+          isAiGenerated: aiCreated === 'yes',
+          copyrightConfirmed: Boolean(data.copyrightOk),
+          resolution: data.resolution || '60000x60000',
+          quality: data.quality || '4K',
+          categoryId,
+          subcategoryId,
+          images: orderedImages,
+        });
+        return;
+      }
+
       createArtworkMutation.mutate({
         kind: 'TWELVE',
         title: data.title || 'Untitled Artwork',
@@ -379,9 +557,9 @@ const Zodiac12Content = memo(
         copyrightConfirmed: Boolean(data.copyrightOk),
         resolution: data.resolution || '60000x60000',
         quality: data.quality || '4K',
-        categoryId: data.category || '',
-        subcategoryId: data.subCategory || '',
-        images: Object.values(files),
+        categoryId,
+        subcategoryId,
+        images: orderedImages,
       });
     };
 
@@ -476,6 +654,12 @@ const Zodiac12Content = memo(
           i18nPrefix="zodiac12"
           onSubmit={handleSubmit(onSubmit)}
           categoryOptions={ARTISTIC_CATEGORIES}
+          categoryList={categoriesList}
+          subCategoryList={subCategoriesList}
+          onCategoryChange={(val) => {
+            setSelectedCategory(val);
+            setValue('category', val);
+          }}
           publishTarget={publishTarget}
           setPublishTarget={setPublishTarget}
           aiCreated={aiCreated}
@@ -490,8 +674,12 @@ const Zodiac12Content = memo(
           }
           isSubmitting={
             isEdit
-              ? updateArtworkMutation.isPending
-              : createArtworkMutation.isPending
+              ? isSell
+                ? updateSellPhotoMutation.isPending
+                : updateArtworkMutation.isPending
+              : isSell
+                ? createSellPhotoMutation.isPending
+                : createArtworkMutation.isPending
           }
           sellFields={
             <MemberSellPhotoFields

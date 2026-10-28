@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ArrowLeft, Bookmark, Heart, Loader2 } from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
@@ -18,7 +19,12 @@ import {
   getMyArtworkDetailById,
   normalizeArtworkDetail,
 } from '@/portals/member/data/myArtworkDetailData';
-import { getArtworkDetailsApi } from '@/shared/api/artworks.api';
+import {
+  getArtworkDetailsApi,
+  toggleLikeArtworkApi,
+  toggleSaveArtworkApi,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
@@ -45,7 +51,63 @@ const SHOWCASE_BADGE_KEYS = {
 const MemberArtworkDetailContent = memo(() => {
   const { t } = useTranslation();
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    if (detail) {
+      setIsLiked(Boolean(detail.isLiked || detail.liked));
+      setIsSaved(Boolean(detail.isSaved || detail.saved));
+    }
+  }, [detail]);
+
+  const handleLikeToggle = async () => {
+    if (!id) return;
+    const next = !isLiked;
+    setIsLiked(next);
+    try {
+      const res = await toggleLikeArtworkApi(id);
+      queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
+      queryClient.invalidateQueries({ queryKey: ['user-artworks'] });
+      queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+      if (res?.message) toast.success(res.message);
+    } catch (err) {
+      setIsLiked(!next);
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('common.errors.general', 'Failed to update like status.'),
+        ),
+      );
+    }
+  };
+
+  const handleSaveToggle = async () => {
+    if (!id) return;
+    const next = !isSaved;
+    setIsSaved(next);
+    try {
+      const res = await toggleSaveArtworkApi(id);
+      queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
+      queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+      toast.success(
+        res?.message ||
+          (next
+            ? t('gallery.savedSuccess', 'Saved to favourites')
+            : t('gallery.unsavedSuccess', 'Removed from favourites')),
+      );
+    } catch (err) {
+      setIsSaved(!next);
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('common.errors.general', 'Failed to update saved status.'),
+        ),
+      );
+    }
+  };
 
   const {
     data: detail,
@@ -257,18 +319,64 @@ const MemberArtworkDetailContent = memo(() => {
         title={detail.title}
       />
 
-      <div className="flex flex-wrap gap-2 sm:gap-3">
-        {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full bg-[#ecedfa] px-3 py-1 text-[12px] font-semibold uppercase tracking-[1.2px] text-[#4048cd] sm:px-4 sm:text-[13px]"
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
+          {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-[#ecedfa] px-3 py-1 text-[12px] font-semibold uppercase tracking-[1.2px] text-[#4048cd] sm:px-4 sm:text-[13px]"
+            >
+              {tag}
+            </span>
+          ))}
+          {detail.isAiGenerated ? (
+            <AiGeneratedPhotoBadge variant="inline" size="md" />
+          ) : null}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            unstyled
+            type="button"
+            onClick={handleLikeToggle}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition ${
+              isLiked
+                ? 'border-[#e53935] bg-[#fef2f2] text-[#e53935]'
+                : 'border-[#e5e7eb] bg-white text-[#494453] hover:border-[#d1d5db]'
+            }`}
           >
-            {tag}
-          </span>
-        ))}
-        {detail.isAiGenerated ? (
-          <AiGeneratedPhotoBadge variant="inline" size="md" />
-        ) : null}
+            <Heart
+              size={16}
+              className={
+                isLiked ? 'fill-[#e53935] text-[#e53935]' : 'text-[#494453]'
+              }
+            />
+            <span>
+              {isLiked ? t('common.liked', 'Liked') : t('common.like', 'Like')}
+            </span>
+          </Button>
+
+          <Button
+            unstyled
+            type="button"
+            onClick={handleSaveToggle}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition ${
+              isSaved
+                ? 'border-[#ee1c25] bg-[#fef2f2] text-[#ee1c25]'
+                : 'border-[#e5e7eb] bg-white text-[#494453] hover:border-[#d1d5db]'
+            }`}
+          >
+            <Bookmark
+              size={16}
+              className={
+                isSaved ? 'fill-[#ee1c25] text-[#ee1c25]' : 'text-[#494453]'
+              }
+            />
+            <span>
+              {isSaved ? t('gallery.saved', 'Saved') : t('gallery.save', 'Save')}
+            </span>
+          </Button>
+        </div>
       </div>
 
       <div>

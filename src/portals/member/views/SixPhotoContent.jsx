@@ -21,11 +21,20 @@ import {
 } from '@/portals/member/data/sixPhotoAssets';
 import { ROUTES } from '@/shared/config';
 import {
+  CATEGORIES_QUERY_KEY,
+  getCategoriesApi,
+} from '@/shared/api/categories.api';
+import {
   createArtworkApi,
   getArtworkDetailsApi,
   updateArtworkApi,
   USER_ARTWORKS_QUERY_KEY,
 } from '@/shared/api/artworks.api';
+import {
+  createMarketplacePremiumPhotoApi,
+  formatPriceForMarketplace,
+  updateMarketplacePremiumPhotoApi,
+} from '@/shared/api/premiumPhotos.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 
 const SlotIcon = memo(({ slot }) => {
@@ -205,8 +214,84 @@ const SixPhotoContent = memo(
     const [photosError, setPhotosError] = useState('');
     const [successOpen, setSuccessOpen] = useState(false);
 
+    // Categories query
+    const { data: categoriesData } = useQuery({
+      queryKey: CATEGORIES_QUERY_KEY,
+      queryFn: getCategoriesApi,
+      staleTime: 5 * 60 * 1000,
+    });
+
+    const categoriesList = useMemo(() => {
+      if (Array.isArray(categoriesData)) return categoriesData;
+      if (Array.isArray(categoriesData?.data)) return categoriesData.data;
+      return [];
+    }, [categoriesData]);
+
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const subCategoriesList = useMemo(() => {
+      if (!selectedCategory) return categoriesList[0]?.subcategories || [];
+      const match = categoriesList.find(
+        (c) => c.id === selectedCategory || c.slug === selectedCategory,
+      );
+      return match?.subcategories || [];
+    }, [categoriesList, selectedCategory]);
+
+    // Auto set initial category from API if available
+    useEffect(() => {
+      if (categoriesList.length > 0 && !selectedCategory) {
+        const first = categoriesList[0];
+        const val = first.id || first.slug;
+        setSelectedCategory(val);
+        setValue('category', val);
+      }
+    }, [categoriesList, selectedCategory, setValue]);
+
     const theme = getThemeById(themeId);
     const slots = getSlotsForTheme(themeId);
+
+    // Create Sell Photo Mutation (Marketplace)
+    const createSellPhotoMutation = useMutation({
+      mutationFn: createMarketplacePremiumPhotoApi,
+      onSuccess: () => {
+        toast.success(
+          t('sellPhotos.uploadSuccess', 'Photo story submitted for sale successfully!'),
+        );
+        setSuccessOpen(true);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sellPhotos.uploadError', 'Failed to submit photo story for sale. Please try again.'),
+          ),
+        );
+      },
+    });
+
+    // Update Sell Photo Mutation (Marketplace)
+    const updateSellPhotoMutation = useMutation({
+      mutationFn: (payload) => updateMarketplacePremiumPhotoApi(editId, payload),
+      onSuccess: () => {
+        toast.success(
+          t('sellPhotos.updateSuccess', 'Photo story updated successfully!'),
+        );
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photos'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photo-detail', editId],
+        });
+        navigate(ROUTES.USER_SELL_PHOTOS);
+      },
+      onError: (err) => {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('sellPhotos.updateError', 'Failed to update photo story. Please try again.'),
+          ),
+        );
+      },
+    });
 
     // Fetch existing artwork in edit mode
     const { data: existingArtwork } = useQuery({
@@ -367,6 +452,32 @@ const SixPhotoContent = memo(
       setPhotosError('');
 
       if (isEdit) {
+        if (isSell) {
+          const formData = new FormData();
+          formData.append('kind', 'SIX');
+          formData.append('title', data.title || 'Untitled Photo');
+          formData.append('story', data.story || '');
+          formData.append('price', formatPriceForMarketplace(data.price));
+          formData.append('theme', (themeId || 'red').toUpperCase());
+          formData.append('isAiGenerated', String(aiCreated === 'yes'));
+          formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
+          formData.append('resolution', data.resolution || '60000x60000');
+          formData.append('quality', data.quality || '4K');
+          if (data.category || selectedCategory) {
+            formData.append('categoryId', data.category || selectedCategory);
+          }
+          if (data.subCategory) {
+            formData.append('subcategoryId', data.subCategory);
+          }
+          slots.forEach((s) => {
+            if (files[s.id]) {
+              formData.append('images', files[s.id]);
+            }
+          });
+          updateSellPhotoMutation.mutate(formData);
+          return;
+        }
+
         const formData = new FormData();
         formData.append('kind', 'SIX');
         formData.append('title', data.title || 'Untitled Artwork');
@@ -392,6 +503,42 @@ const SixPhotoContent = memo(
         return;
       }
 
+      const catMatch = categoriesList.find(
+        (c) =>
+          c.id === data.category ||
+          c.slug === data.category ||
+          c.id === selectedCategory,
+      );
+      const categoryId =
+        catMatch?.id || data.category || selectedCategory || '';
+
+      const subMatch = subCategoriesList.find(
+        (s) =>
+          s.id === data.subCategory ||
+          s.slug === data.subCategory ||
+          s.name === data.subCategory,
+      );
+      const subcategoryId = subMatch?.id || data.subCategory || '';
+
+      const orderedImages = slots.map((s) => files[s.id]).filter(Boolean);
+
+      if (isSell) {
+        createSellPhotoMutation.mutate({
+          kind: 'SIX',
+          theme: (themeId || 'red').toUpperCase(),
+          title: data.title || 'Untitled Photo',
+          price: data.price,
+          isAiGenerated: aiCreated === 'yes',
+          copyrightConfirmed: Boolean(data.copyrightOk),
+          resolution: data.resolution || '60000x60000',
+          quality: data.quality || '4K',
+          categoryId,
+          subcategoryId,
+          images: orderedImages,
+        });
+        return;
+      }
+
       createArtworkMutation.mutate({
         kind: 'SIX',
         title: data.title || 'Untitled Artwork',
@@ -401,9 +548,9 @@ const SixPhotoContent = memo(
         copyrightConfirmed: Boolean(data.copyrightOk),
         resolution: data.resolution || '60000x60000',
         quality: data.quality || '4K',
-        categoryId: data.category || '',
-        subcategoryId: data.subCategory || '',
-        images: Object.values(files),
+        categoryId,
+        subcategoryId,
+        images: orderedImages,
       });
     };
 
@@ -564,6 +711,12 @@ const SixPhotoContent = memo(
           i18nPrefix="sixPhoto"
           onSubmit={handleSubmit(onSubmit)}
           categoryOptions={ARTISTIC_CATEGORIES}
+          categoryList={categoriesList}
+          subCategoryList={subCategoriesList}
+          onCategoryChange={(val) => {
+            setSelectedCategory(val);
+            setValue('category', val);
+          }}
           publishTarget={publishTarget}
           setPublishTarget={setPublishTarget}
           aiCreated={aiCreated}
@@ -578,8 +731,12 @@ const SixPhotoContent = memo(
           }
           isSubmitting={
             isEdit
-              ? updateArtworkMutation.isPending
-              : createArtworkMutation.isPending
+              ? isSell
+                ? updateSellPhotoMutation.isPending
+                : updateArtworkMutation.isPending
+              : isSell
+                ? createSellPhotoMutation.isPending
+                : createArtworkMutation.isPending
           }
           sellFields={
             <MemberSellPhotoFields

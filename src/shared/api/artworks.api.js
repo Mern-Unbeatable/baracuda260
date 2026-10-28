@@ -244,6 +244,49 @@ export const deleteArtworkApi = async (artworkId) => {
 };
 
 /**
+ * Like / unlike an artwork (toggle).
+ * POST /api/v1/artworks/:artworkId/like
+ * @param {string} artworkId
+ */
+export const toggleLikeArtworkApi = async (artworkId) => {
+  if (!artworkId) throw new Error('Artwork ID is required');
+  const response = await apiClient.post(
+    `/v1/artworks/${encodeURIComponent(artworkId)}/like`,
+    {},
+  );
+  return response;
+};
+
+/**
+ * Vote for an artwork in competition.
+ * POST /api/v1/artworks/:artworkId/vote
+ * @param {string} artworkId
+ */
+export const voteArtworkApi = async (artworkId) => {
+  if (!artworkId) throw new Error('Artwork ID is required');
+  const response = await apiClient.post(
+    `/v1/artworks/${encodeURIComponent(artworkId)}/vote`,
+    {},
+  );
+  return response;
+};
+
+/**
+ * Save / unsave an artwork (toggle bookmark).
+ * POST /api/v1/artworks/:artworkId/save
+ * @param {string} artworkId
+ */
+export const toggleSaveArtworkApi = async (artworkId) => {
+  if (!artworkId) throw new Error('Artwork ID is required');
+  const response = await apiClient.post(
+    `/v1/artworks/${encodeURIComponent(artworkId)}/save`,
+    {},
+  );
+  return response;
+};
+
+
+/**
  * Update an artwork by ID (User/Member).
  * Endpoint: PUT /v1/artworks/:id
  * Supports both JSON payload or FormData (if media is updated).

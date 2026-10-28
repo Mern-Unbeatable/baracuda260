@@ -93,13 +93,7 @@ const PhotoSubmitSuccessModal = memo(
             {t('singlePhoto.successModal.body')}
           </p>
 
-          <div className="flex w-full flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-start sm:justify-center">
-            <Link
-              to={ROUTES.HOME}
-              className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-[#ee1c25] px-8 py-[17px] text-center text-[16px] font-normal leading-6 text-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] transition hover:bg-[#d41921]"
-            >
-              {t('singlePhoto.successModal.goHome')}
-            </Link>
+          <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               to={uploadAnotherHref}
               className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#e5e7eb] bg-[#4048cd] px-8 py-[17px] text-center text-[16px] font-normal leading-6 text-white transition hover:bg-[#363db5]"

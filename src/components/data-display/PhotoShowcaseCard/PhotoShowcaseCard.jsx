@@ -6,13 +6,19 @@ import {
   Images,
   MoreVertical,
 } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
 import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import {
+  toggleLikeArtworkApi,
+  toggleSaveArtworkApi,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { AppLink, ImgIcon } from '@/shared/site-chrome';
 
 const TROPHY_ICON = '/assets/home/icon-trophy-cup.svg';
@@ -42,11 +48,13 @@ const DarkOverlayBadge = ({ children, className = '' }) => (
 
 const PhotoShowcaseCard = memo(
   ({
+    id,
     href,
     image,
     imageAlt,
     title,
     titleAs: TitleTag = 'h3',
+    titleClassName = '',
     badge,
     description,
     likes,
@@ -62,13 +70,28 @@ const PhotoShowcaseCard = memo(
     topRightType = 'menu',
     initialSaved = false,
     onSaveToggle,
+    initialLiked = false,
+    onLikeToggle,
   }) => {
     const { t } = useTranslation();
     const [saved, setSaved] = useState(initialSaved);
-    const [favorited, setFavorited] = useState(false);
+    const [liked, setLiked] = useState(initialLiked);
+    const [likesCount, setLikesCount] = useState(() => parseCount(likes));
     const [reportOpen, setReportOpen] = useState(false);
-    const displayLikes = formatCount(likes);
     const showPrice = price != null && price !== '';
+
+    useEffect(() => {
+      setSaved(initialSaved);
+    }, [initialSaved]);
+
+    useEffect(() => {
+      setLiked(initialLiked);
+    }, [initialLiked]);
+
+    useEffect(() => {
+      setLikesCount(parseCount(likes));
+    }, [likes]);
+
     const bottomMetaClass = (layer) => {
       if (layer === 0 && winnerRank) return 'bottom-14';
       if (layer === 1 && competitionLabel)
@@ -76,20 +99,77 @@ const PhotoShowcaseCard = memo(
       return 'bottom-3';
     };
 
-    const handleSave = (event) => {
+    const handleSave = async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      setSaved((current) => {
-        const next = !current;
-        if (onSaveToggle) onSaveToggle(next);
-        return next;
-      });
+      const next = !saved;
+      setSaved(next);
+      if (onSaveToggle) {
+        onSaveToggle(next, id);
+        return;
+      }
+      if (id) {
+        try {
+          const res = await toggleSaveArtworkApi(id);
+          toast.success(
+            res?.message ||
+              (next
+                ? t('gallery.savedSuccess', 'Saved to favourites')
+                : t('gallery.unsavedSuccess', 'Removed from favourites')),
+          );
+        } catch (err) {
+          setSaved(!next);
+          toast.error(
+            getApiErrorMessage(
+              err,
+              t('common.errors.general', 'Failed to update saved status.'),
+            ),
+          );
+        }
+      }
     };
 
-    const handleFavorite = (event) => {
+    const handleLike = async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      setFavorited((current) => !current);
+      const next = !liked;
+      setLiked(next);
+      setLikesCount((prev) => (next ? prev + 1 : Math.max(0, prev - 1)));
+      if (onLikeToggle) {
+        onLikeToggle(next, id);
+        return;
+      }
+      if (id) {
+        try {
+          const res = await toggleLikeArtworkApi(id);
+          const count =
+            res?.data?.likesCount ??
+            res?.likesCount ??
+            res?.data?.likes ??
+            res?.likes;
+          if (count != null) {
+            setLikesCount(parseCount(count));
+          }
+          const isLikedRes =
+            res?.data?.isLiked ??
+            res?.isLiked ??
+            res?.data?.liked ??
+            res?.liked;
+          if (isLikedRes != null) {
+            setLiked(Boolean(isLikedRes));
+          }
+          if (res?.message) toast.success(res.message);
+        } catch (err) {
+          setLiked(!next);
+          setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
+          toast.error(
+            getApiErrorMessage(
+              err,
+              t('common.errors.general', 'Failed to update like status.'),
+            ),
+          );
+        }
+      }
     };
 
     const handleMenu = (event) => {
@@ -136,12 +216,12 @@ const PhotoShowcaseCard = memo(
                 <Button
                   unstyled
                   type="button"
-                  onClick={handleFavorite}
+                  onClick={handleLike}
                   aria-label={t('gallery.favoriteAction', {
                     title,
                     defaultValue: `Favorite ${title}`,
                   })}
-                  aria-pressed={favorited}
+                  aria-pressed={liked}
                   className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
                 >
                   <Heart
@@ -149,7 +229,7 @@ const PhotoShowcaseCard = memo(
                     strokeWidth={2}
                     aria-hidden="true"
                     className={
-                      favorited
+                      liked
                         ? 'fill-[#ee1c25] text-[#ee1c25]'
                         : 'fill-transparent text-[#161c27]'
                     }
@@ -234,7 +314,10 @@ const PhotoShowcaseCard = memo(
             </div>
 
             <div className="p-4">
-              <TitleTag className="text-[18px] font-bold leading-[1.3] text-[#0d0d14] transition group-hover:text-[#4048cd]">
+              <TitleTag
+                title={typeof title === 'string' ? title : undefined}
+                className={`text-[18px] font-bold leading-[1.3] text-[#0d0d14] transition group-hover:text-[#4048cd] line-clamp-2 lg:line-clamp-1 ${titleClassName}`.trim()}
+              >
                 {title}
               </TitleTag>
 
@@ -245,15 +328,30 @@ const PhotoShowcaseCard = memo(
               ) : null}
 
               <div className="mt-3 flex w-full items-center justify-between gap-2 text-[12px] font-medium">
-                <span className="inline-flex items-center gap-1 text-[#e53935]">
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handleLike}
+                  aria-pressed={liked}
+                  aria-label={
+                    liked
+                      ? t('gallery.unlike', { defaultValue: 'Unlike photo' })
+                      : t('gallery.like', { defaultValue: 'Like photo' })
+                  }
+                  className="inline-flex cursor-pointer items-center gap-1 text-[#e53935] transition hover:opacity-80"
+                >
                   <Heart
                     size={14}
                     strokeWidth={2}
                     aria-hidden="true"
-                    className="fill-[#e53935] text-[#e53935]"
+                    className={
+                      liked
+                        ? 'fill-[#e53935] text-[#e53935]'
+                        : 'fill-transparent text-[#e53935]'
+                    }
                   />
-                  {displayLikes}
-                </span>
+                  <span>{likesCount.toLocaleString('en-US')}</span>
+                </Button>
                 {views ? (
                   <span className="inline-flex items-center gap-1 text-[#9ca3af]">
                     <Eye size={14} strokeWidth={2} aria-hidden="true" />

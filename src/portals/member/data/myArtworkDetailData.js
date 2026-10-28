@@ -174,6 +174,20 @@ export const normalizeArtworkDetail = (item) => {
     ),
     viewsMetric: parseMetric(item.viewsCount ?? item.views, '0'),
     reactMetric: parseMetric(item.likesCount ?? item.hearts, '0'),
+    isLiked: Boolean(
+      item.isLiked ??
+        item.liked ??
+        item.isLikedByUser ??
+        item.hasLiked ??
+        false,
+    ),
+    isSaved: Boolean(
+      item.isSaved ??
+        item.saved ??
+        item.isSavedByUser ??
+        item.hasSaved ??
+        false,
+    ),
     inCompetition,
     footerState: inCompetition ? 'active' : item.footerState || 'profileOnly',
     usesVotesViews: inCompetition,

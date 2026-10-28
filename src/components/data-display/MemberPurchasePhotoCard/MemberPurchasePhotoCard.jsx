@@ -1,15 +1,20 @@
-import { Download, FileText } from 'lucide-react';
-import React, { memo } from 'react';
+import { Download, FileText, Loader2 } from 'lucide-react';
+import React, { memo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import {
+  downloadMarketplacePremiumPhotoApi,
+  triggerFileDownload,
+} from '@/shared/api/premiumPhotos.api';
 import { PURCHASE_BADGE_KEYS } from '@/portals/member/data/purchasePhotosData';
 
 /**
  * @param {{
  *   purchase: {
  *     id: string,
+ *     premiumPhotoId?: string,
  *     title: string,
  *     photographer: string,
  *     initials: string,
@@ -17,24 +22,66 @@ import { PURCHASE_BADGE_KEYS } from '@/portals/member/data/purchasePhotosData';
  *     purchasedLabel: string,
  *     badge: string,
  *     image: string,
+ *     downloadUrl?: string,
  *     downloadAvailable: boolean,
  *   },
  * }} props
  */
 const MemberPurchasePhotoCard = memo(({ purchase }) => {
   const { t } = useTranslation();
+  const [isDownloading, setIsDownloading] = useState(false);
+
   const badgeLabel = t(PURCHASE_BADGE_KEYS[purchase.badge] || purchase.badge, {
     defaultValue: purchase.badge,
   });
 
-  const handleDownload = () => {
-    if (!purchase.downloadAvailable) {
-      toast.error(t('purchasePhotos.downloadUnavailable'));
+  const handleDownload = async () => {
+    const photoId = purchase.premiumPhotoId || purchase.id;
+    if (!photoId && !purchase.downloadUrl) {
+      toast.error(
+        t('purchasePhotos.downloadUnavailable', 'Download is not available for this item'),
+      );
       return;
     }
-    toast.success(
+
+    const safeTitle = (purchase.title || 'photo').replace(/[^a-zA-Z0-9_-]/g, '_');
+    setIsDownloading(true);
+    const toastId = toast.loading(
       t('purchasePhotos.downloadStarted', { title: purchase.title }),
     );
+
+    try {
+      if (photoId) {
+        await downloadMarketplacePremiumPhotoApi(photoId, safeTitle);
+      } else if (purchase.downloadUrl) {
+        await triggerFileDownload(purchase.downloadUrl, safeTitle);
+      }
+      toast.success(
+        t('purchasePhotos.downloadComplete', 'Download completed successfully!'),
+        { id: toastId },
+      );
+    } catch (err) {
+      // If endpoint call fails, attempt fallback with downloadUrl if available
+      if (purchase.downloadUrl) {
+        try {
+          await triggerFileDownload(purchase.downloadUrl, safeTitle);
+          toast.success(
+            t('purchasePhotos.downloadComplete', 'Download completed successfully!'),
+            { id: toastId },
+          );
+          return;
+        } catch {
+          // fallback also failed
+        }
+      }
+      toast.error(
+        err?.message ||
+          t('purchasePhotos.downloadFailed', 'Failed to download photo'),
+        { id: toastId },
+      );
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleInvoiceDownload = () => {
@@ -88,11 +135,19 @@ const MemberPurchasePhotoCard = memo(({ purchase }) => {
           <Button
             unstyled
             type="button"
+            disabled={isDownloading}
             onClick={handleDownload}
-            className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-4 text-[14px] font-bold text-white transition hover:bg-[#d41921]"
+            aria-busy={isDownloading}
+            className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-4 text-[14px] font-bold text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <Download size={16} aria-hidden="true" />
-            {t('purchasePhotos.download')}
+            {isDownloading ? (
+              <Loader2 size={16} className="animate-spin" aria-hidden="true" />
+            ) : (
+              <Download size={16} aria-hidden="true" />
+            )}
+            {isDownloading
+              ? t('common.downloading', 'Downloading...')
+              : t('purchasePhotos.download')}
           </Button>
           <Button
             unstyled

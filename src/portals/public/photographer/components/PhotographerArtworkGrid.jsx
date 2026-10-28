@@ -171,6 +171,7 @@ const PhotographerArtworkGrid = memo(
           {pagedPhotos.map((photo) => (
             <PhotoShowcaseCard
               key={photo.id}
+              id={photo.id}
               href={galleryDetailPath(photo.id)}
               image={photo.image}
               imageAlt={photo.title}
