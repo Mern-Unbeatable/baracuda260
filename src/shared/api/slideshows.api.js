@@ -1,75 +1,80 @@
-import {
-  MOCK_SINGLE_PHOTOS,
-  MOCK_SLIDESHOWS_SEED,
-} from '@/shared/data/slideshowMockData';
+import { apiClient } from '@/shared/api/client';
 import {
   SLIDESHOW_MAX_PHOTOS,
   SLIDESHOW_MIN_PHOTOS,
   SLIDESHOW_TITLE_MAX,
 } from '@/shared/data/slideshows';
+import { resolveMediaUrl } from '@/shared/utils/media';
 
 /**
- * Profile slideshows — MOCK implementation.
- *
- * The backend doesn't exist yet, so every function below resolves against an
- * in-browser store (persisted to localStorage so created slideshows survive a
- * reload). Each function documents the endpoint it should call; when the API
- * is ready, replace the body with the `apiClient` call and keep the return
- * shape, and nothing else in the app has to change.
+ * Profile slideshows API integration.
  *
  * Slideshow shape returned to the UI:
- * `{ id, title, photoIds: string[], photos: Photo[], createdAt, updatedAt }`
- * where `photos` is in play order and `Photo` is `{ id, title, image, isAiGenerated? }`.
+ * `{ id, title, name, photoIds: string[], photos: Photo[], coverImage, itemsCount, createdAt, updatedAt }`
+ * where `photos` is in play order and `Photo` is `{ id, mediaId, title, image, url, sourceType?, sortOrder? }`.
  */
 
 export const SLIDESHOWS_QUERY_KEY = ['slideshows'];
 
-const STORAGE_KEY = 'my12photos.mock.slideshows';
-const MOCK_LATENCY_MS = 350;
+const photoById = new Map();
 
-const photoById = new Map(MOCK_SINGLE_PHOTOS.map((photo) => [photo.id, photo]));
+/**
+ * Normalizes a raw slideshow object from the backend.
+ * @param {object} raw
+ * @returns {object}
+ */
+export const normalizeSlideshow = (raw = {}) => {
+  if (!raw) return null;
 
-const respond = (value) =>
-  new Promise((resolve) => {
-    setTimeout(() => resolve(structuredClone(value)), MOCK_LATENCY_MS);
+  const sortedItems = [...(raw.items || [])].sort(
+    (a, b) => (a.sortOrder ?? a.order ?? 0) - (b.sortOrder ?? b.order ?? 0),
+  );
+
+  const photos = sortedItems.map((item) => {
+    const id = String(item.mediaId || item.id || '');
+    const resolvedUrl = resolveMediaUrl(item.url);
+    const photo = {
+      id,
+      mediaId: item.mediaId || item.id,
+      title: item.title || 'Untitled Image',
+      image: resolvedUrl,
+      url: resolvedUrl,
+      sourceType: item.sourceType,
+      sortOrder: item.sortOrder ?? item.order,
+    };
+    if (id) {
+      photoById.set(id, photo);
+    }
+    return photo;
   });
 
-/** Rejects with the same shape axios gives us, so `getApiErrorMessage` works unchanged. */
-const reject = (status, error, details = []) =>
-  new Promise((_, rejectPromise) => {
-    setTimeout(() => {
-      rejectPromise({
-        message: error,
-        response: { status, data: { success: false, error, details } },
-      });
-    }, MOCK_LATENCY_MS);
-  });
+  const photoIds = photos.map((p) => p.id);
+  const title = raw.name || raw.title || 'Untitled Slideshow';
+  const user = raw.user
+    ? {
+        ...raw.user,
+        avatar: resolveMediaUrl(raw.user.avatar),
+      }
+    : null;
 
-const readStore = () => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (Array.isArray(saved)) return saved;
-  } catch {
-    // Corrupt or unavailable storage: fall back to the seed data.
-  }
-  return structuredClone(MOCK_SLIDESHOWS_SEED);
+  return {
+    ...raw,
+    id: String(raw.id || ''),
+    title,
+    name: title,
+    photoIds,
+    photos,
+    user,
+    coverImage: resolveMediaUrl(raw.coverImage) || photos[0]?.image || '',
+    itemsCount: raw.itemsCount ?? photos.length,
+    createdAt: raw.createdAt || new Date().toISOString(),
+    updatedAt: raw.updatedAt || new Date().toISOString(),
+  };
 };
 
-const writeStore = (records) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-  } catch {
-    // Storage full or blocked: changes last until the page reloads.
-  }
-};
-
-let store = readStore();
-
-const toSlideshow = (record) => ({
-  ...record,
-  photos: record.photoIds.map((id) => photoById.get(id)).filter(Boolean),
-});
-
+/**
+ * Validates local payload before submitting.
+ */
 const validatePayload = ({ title, photoIds }) => {
   const details = [];
   const trimmedTitle = typeof title === 'string' ? title.trim() : '';
@@ -89,96 +94,223 @@ const validatePayload = ({ title, photoIds }) => {
   if (new Set(ids).size !== ids.length) {
     details.push('"photoIds" must not contain duplicates');
   }
-  if (ids.some((id) => !photoById.has(id))) {
-    details.push('"photoIds" may only contain your own single photos');
-  }
 
   return { details, title: trimmedTitle, photoIds: ids };
 };
 
 /**
- * Backend: `GET /v1/users/:userId/slideshows` (or `GET /v1/slideshows?userId=`).
- * @param {{ userId?: string }} [_params]
- * @returns {Promise<{ items: object[] }>}
+ * Fetch member's own slideshows.
+ * Backend: `GET /v1/slideshow/me?page=1&limit=50`
+ * @param {{ page?: number, limit?: number, username?: string }} [params]
+ * @returns {Promise<{ items: object[], meta?: object, user?: object }>}
  */
-export const getSlideshowsApi = (_params = {}) =>
-  respond({
-    items: [...store]
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-      .map(toSlideshow),
+export const getSlideshowsApi = async (params = {}) => {
+  if (params?.username) {
+    return getPhotographerSlideshowsApi(params.username, params);
+  }
+
+  const page = typeof params?.page === 'number' ? params.page : 1;
+  const limit = typeof params?.limit === 'number' ? params.limit : 50;
+
+  const response = await apiClient.get('/v1/slideshow/me', {
+    params: { page, limit },
   });
 
-/**
- * Backend: `GET /v1/slideshows/:id`
- * @param {string} id
- */
-export const getSlideshowApi = (id) => {
-  const record = store.find((item) => item.id === id);
-  return record
-    ? respond(toSlideshow(record))
-    : reject(404, 'Slideshow not found');
+  const rawList =
+    response?.data?.slideshows ||
+    response?.slideshows ||
+    (Array.isArray(response?.data) ? response.data : []) ||
+    [];
+
+  const items = rawList.map(normalizeSlideshow);
+
+  return {
+    items,
+    meta: response?.data?.meta || response?.meta || {},
+  };
 };
 
 /**
- * Photos the user may add to a slideshow: their own approved single photos.
- * Backend: `GET /v1/users/me/photos?albumType=SINGLE&status=approved`
- * @returns {Promise<{ items: object[] }>}
+ * Fetch public slideshows for a photographer by username.
+ * Backend: `GET /v1/slideshow/user/:username?page=1&limit=50`
+ * @param {string} username
+ * @param {{ page?: number, limit?: number }} [params]
+ * @returns {Promise<{ items: object[], user?: object, meta?: object }>}
  */
-export const getSlideshowSourcePhotosApi = () =>
-  respond({ items: MOCK_SINGLE_PHOTOS });
+export const getPhotographerSlideshowsApi = async (username, params = {}) => {
+  const page = typeof params?.page === 'number' ? params.page : 1;
+  const limit = typeof params?.limit === 'number' ? params.limit : 50;
+
+  const response = await apiClient.get(
+    `/v1/slideshow/user/${encodeURIComponent(username)}`,
+    {
+      params: { page, limit },
+    },
+  );
+
+  const rawList =
+    response?.data?.slideshows ||
+    response?.slideshows ||
+    (Array.isArray(response?.data) ? response.data : []) ||
+    [];
+
+  const items = rawList.map(normalizeSlideshow);
+  const rawUser = response?.data?.user || response?.user || null;
+  const user = rawUser
+    ? {
+        ...rawUser,
+        avatar: resolveMediaUrl(rawUser.avatar),
+      }
+    : null;
+
+  return {
+    items,
+    user,
+    meta: response?.data?.meta || response?.meta || {},
+  };
+};
 
 /**
- * Backend: `POST /v1/slideshows` with `{ title, photoIds }` (array order = play order).
+ * Fetch a single slideshow by ID.
+ * Backend: `GET /v1/slideshow/:id`
+ * @param {string} id
+ * @returns {Promise<object>}
+ */
+export const getSlideshowApi = async (id) => {
+  try {
+    const response = await apiClient.get(`/v1/slideshow/${id}`);
+    const raw =
+      response?.data?.slideshow ||
+      response?.data ||
+      response?.slideshow ||
+      response;
+    return normalizeSlideshow(raw);
+  } catch (error) {
+    const list = await getSlideshowsApi();
+    const match = list.items.find((item) => item.id === id);
+    if (match) return match;
+    throw error;
+  }
+};
+
+/**
+ * Photos the user may add to a slideshow: their own uploaded images.
+ * Backend: `GET /api/v1/slideshow/my-images?page=1&limit=15`
+ * @param {{ page?: number, limit?: number }} [params]
+ * @returns {Promise<{ items: object[], meta?: object }>}
+ */
+export const getSlideshowSourcePhotosApi = async (params = {}) => {
+  const page = typeof params?.page === 'number' ? params.page : 1;
+  const limit = typeof params?.limit === 'number' ? params.limit : 15;
+
+  const response = await apiClient.get('/v1/slideshow/my-images', {
+    params: { page, limit },
+  });
+
+  const rawList =
+    response?.data?.images ||
+    response?.images ||
+    (Array.isArray(response?.data) ? response.data : []) ||
+    [];
+
+  const items = rawList.map((img) => {
+    const id = String(img.mediaId || img.id || '');
+    const resolvedUrl = resolveMediaUrl(img.url);
+    const photo = {
+      id,
+      mediaId: id,
+      title: img.title || 'Untitled Image',
+      image: resolvedUrl,
+      url: resolvedUrl,
+      source: img.source,
+    };
+    if (id) {
+      photoById.set(id, photo);
+    }
+    return photo;
+  });
+
+  return {
+    items,
+    meta: response?.data?.meta || response?.meta || {},
+  };
+};
+
+/**
+ * Create a new slideshow.
+ * Backend: `POST /v1/slideshow`
+ * Body: `{ name: string, items: [{ mediaId: string, order: number }] }`
  * @param {{ title: string, photoIds: string[] }} payload
  */
-export const createSlideshowApi = (payload) => {
+export const createSlideshowApi = async (payload) => {
   const { details, title, photoIds } = validatePayload(payload);
-  if (details.length) return reject(400, 'Validation error', details);
+  if (details.length) {
+    const error = new Error('Validation error');
+    error.response = { status: 400, data: { details } };
+    throw error;
+  }
 
-  const now = new Date().toISOString();
-  const record = {
-    id: `slideshow-${Date.now().toString(36)}`,
-    title,
-    photoIds,
-    createdAt: now,
-    updatedAt: now,
+  const body = {
+    name: title,
+    items: photoIds.map((mediaId, index) => ({
+      mediaId,
+      order: index + 1,
+    })),
   };
-  store = [record, ...store];
-  writeStore(store);
-  return respond(toSlideshow(record));
+
+  const response = await apiClient.post('/v1/slideshow', body);
+  const raw =
+    response?.data?.slideshow ||
+    response?.data ||
+    response?.slideshow ||
+    response;
+
+  return normalizeSlideshow(raw);
 };
 
 /**
- * Backend: `PATCH /v1/slideshows/:id` with `{ title, photoIds }`.
+ * Update an existing slideshow.
+ * Backend: `PUT /v1/slideshow/:id` (with fallback to PATCH)
  * @param {{ id: string, payload: { title: string, photoIds: string[] } }} args
  */
-export const updateSlideshowApi = ({ id, payload }) => {
-  const index = store.findIndex((item) => item.id === id);
-  if (index === -1) return reject(404, 'Slideshow not found');
-
+export const updateSlideshowApi = async ({ id, payload }) => {
   const { details, title, photoIds } = validatePayload(payload);
-  if (details.length) return reject(400, 'Validation error', details);
+  if (details.length) {
+    const error = new Error('Validation error');
+    error.response = { status: 400, data: { details } };
+    throw error;
+  }
 
-  const record = {
-    ...store[index],
-    title,
-    photoIds,
-    updatedAt: new Date().toISOString(),
+  const body = {
+    name: title,
+    items: photoIds.map((mediaId, index) => ({
+      mediaId,
+      order: index + 1,
+    })),
   };
-  store = store.map((item, i) => (i === index ? record : item));
-  writeStore(store);
-  return respond(toSlideshow(record));
+
+  let response;
+  try {
+    response = await apiClient.put(`/v1/slideshow/${id}`, body);
+  } catch {
+    response = await apiClient.patch(`/v1/slideshow/${id}`, body);
+  }
+
+  const raw =
+    response?.data?.slideshow ||
+    response?.data ||
+    response?.slideshow ||
+    response;
+
+  return normalizeSlideshow(raw);
 };
 
 /**
- * Backend: `DELETE /v1/slideshows/:id` (deletes the album only, never the photos).
+ * Delete a slideshow.
+ * Backend: `DELETE /v1/slideshow/:id`
  * @param {string} id
  */
-export const deleteSlideshowApi = (id) => {
-  if (!store.some((item) => item.id === id)) {
-    return reject(404, 'Slideshow not found');
-  }
-  store = store.filter((item) => item.id !== id);
-  writeStore(store);
-  return respond({ id });
+export const deleteSlideshowApi = async (id) => {
+  const response = await apiClient.delete(`/v1/slideshow/${id}`);
+  return response?.data || { id };
 };

@@ -27,6 +27,10 @@ import {
   getUserProfileByUsernameApi,
   USER_PROFILE_USERNAME_QUERY_KEY,
 } from '@/shared/api/userProfile.api';
+import {
+  getMarketplacePremiumPhotosApi,
+  MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY,
+} from '@/shared/api/premiumPhotos.api';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { resolveMediaUrl } from '@/shared/utils/media';
@@ -53,6 +57,22 @@ const PhotographerProfileMain = memo(() => {
   } = useQuery({
     queryKey: USER_PROFILE_USERNAME_QUERY_KEY(username),
     queryFn: () => getUserProfileByUsernameApi(username),
+    enabled: Boolean(username),
+    staleTime: 60 * 1000,
+  });
+
+  const { data: premiumPhotosResponse } = useQuery({
+    queryKey: MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY({
+      kind: 'ALL',
+      username,
+    }),
+    queryFn: () =>
+      getMarketplacePremiumPhotosApi({
+        kind: 'ALL',
+        page: 1,
+        limit: 20,
+        username,
+      }),
     enabled: Boolean(username),
     staleTime: 60 * 1000,
   });
@@ -192,6 +212,7 @@ const PhotographerProfileMain = memo(() => {
                     featured={PHOTOGRAPHER_FEATURED}
                   />
                   <PhotographerSlideshowsSection
+                    username={username || profile.username}
                     ownerName={profile.name}
                   />
                   <PhotographerArtworkGrid
@@ -213,7 +234,11 @@ const PhotographerProfileMain = memo(() => {
                 <PhotographerArtworkGrid
                   titleKey="photographerProfile.premium.title"
                   subtitleKey="photographerProfile.premium.subtitle"
-                  photos={PHOTOGRAPHER_PREMIUM}
+                  photos={
+                    premiumPhotosResponse?.data?.length
+                      ? premiumPhotosResponse.data
+                      : PHOTOGRAPHER_PREMIUM
+                  }
                   showPrice
                 />
               ) : null}

@@ -851,6 +851,7 @@
     "title": "Moje prace",
     "subtitle": "Zarządzaj zdjęciami i albumami, kontroluj zgłoszenia konkursowe i prezentuj prace na profilu.",
     "uploadCta": "Prześlij pracę",
+    "backToArtwork": "Powrót do moich prac",
     "empty": "Brak prac pasujących do filtrów.",
     "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} pozycji",
     "paginationAria": "Paginacja prac",
@@ -893,7 +894,11 @@
       "days": "{{count}} dni",
       "confirm": "Promuj pracę",
       "cancel": "Anuluj",
-      "close": "Zamknij panel promocji"
+      "close": "Zamknij panel promocji",
+      "redirecting": "Przekierowywanie do systemu PayPal...",
+      "success": "Praca została pomyślnie promowana!",
+      "error": "Nie udało się rozpocząć promocji. Spróbuj ponownie.",
+      "cancelled": "Promocja została anulowana."
     },
     "detail": {
       "back": "Wróć do wyboru",

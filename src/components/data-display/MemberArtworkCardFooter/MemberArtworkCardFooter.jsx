@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import Button from '@/components/ui/Button';
 
-const MemberArtworkCardFooter = memo(({ item }) => {
+const MemberArtworkCardFooter = memo(({ item, onSwitchCompetition }) => {
   const { t } = useTranslation();
 
   if (item.footerState === 'active') {
@@ -73,6 +73,7 @@ const MemberArtworkCardFooter = memo(({ item }) => {
 
         <MarketingButton
           type="button"
+          onClick={() => onSwitchCompetition?.(item)}
           className="w-full rounded-lg bg-[#4048cd] px-4 py-1.5 text-[12px] font-semibold hover:bg-[#363eb8]"
         >
           <Plus size={14} strokeWidth={2} aria-hidden="true" />
@@ -116,6 +117,7 @@ const MemberArtworkCardFooter = memo(({ item }) => {
           <Button
             unstyled
             type="button"
+            onClick={() => onSwitchCompetition?.(item)}
             className="flex-1 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-[#7c3aed] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[#6d28d9]"
           >
             <RefreshCw size={14} strokeWidth={2} aria-hidden="true" />

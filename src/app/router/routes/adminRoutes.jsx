@@ -15,6 +15,9 @@ const PremiumPhotosDetail = lazy(
 const PromotedProducts = lazy(
   () => import('@/portals/admin/pages/PromotedProducts'),
 );
+const PromotedProductDetail = lazy(
+  () => import('@/portals/admin/pages/PromotedProductDetail'),
+);
 const Users = lazy(() => import('@/portals/admin/pages/Users'));
 const Categories = lazy(() => import('@/portals/admin/pages/Categories'));
 const AlbumTypes = lazy(() => import('@/portals/admin/pages/AlbumTypes'));
@@ -99,7 +102,7 @@ export const adminRoutes = (
     />
     <Route
       path={seg(ROUTES.ADMIN_PROMOTED_PRODUCTS_DETAIL)}
-      element={<PromotedProducts />}
+      element={<PromotedProductDetail />}
     />
     <Route path={seg(ROUTES.ADMIN_USERS)} element={<Users />} />
     <Route path={seg(ROUTES.ADMIN_CATEGORIES)} element={<Categories />} />

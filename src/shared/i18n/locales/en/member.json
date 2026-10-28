@@ -869,6 +869,7 @@
     "title": "My Artwork",
     "subtitle": "Manage your photos and albums, control your competition entries, and showcase your work on your profile.",
     "uploadCta": "Upload Artwork",
+    "backToArtwork": "Back to My Artwork",
     "empty": "No artwork matches these filters.",
     "showing": "Showing {{from}}–{{to}} of {{total}} items",
     "paginationAria": "Artwork pagination",
@@ -909,9 +910,13 @@
       "title": "Sponsored Photo",
       "priceLabel": "Price",
       "days": "{{count}} days",
-      "confirm": "Promote Artwork",
+      "confirm": "Promote via PayPal",
       "cancel": "Cancel",
-      "close": "Close promote panel"
+      "close": "Close promote panel",
+      "redirecting": "Redirecting to PayPal...",
+      "success": "Artwork promoted successfully!",
+      "error": "Failed to initiate promotion. Please try again.",
+      "cancelled": "Promotion was cancelled."
     },
     "detail": {
       "back": "Back to Selection",

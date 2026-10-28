@@ -529,9 +529,28 @@
     "title": "Promowane produkty",
     "gridAria": "Prezentacja promowanych produktów",
     "empty": "Brak wyników pasujących do tego filtra.",
+    "loading": "Ładowanie promowanych produktów...",
+    "error": "Nie udało się załadować promowanych produktów.",
+    "retry": "Spróbuj ponownie",
     "extraPhotos": "+{{count}} zdjęć",
+    "daysRemaining": "pozostało {{count}} dni",
+    "expired": "Wygasło",
+    "promotedBy": "Promowane przez",
     "badge": {
-      "promoted": "Promowane"
+      "promoted": "Promowane",
+      "expired": "Wygasło"
+    },
+    "stats": {
+      "totalPromotions": "Wszystkie promocje",
+      "activePromotions": "Aktywne promocje",
+      "expiredPromotions": "Wygasłe promocje",
+      "totalRevenue": "Całkowity przychód"
+    },
+    "status": {
+      "aria": "Filtruj według statusu",
+      "all": "Wszystkie statusy",
+      "active": "Aktywne",
+      "expired": "Wygasłe"
     },
     "uploadedLabel": "Przesłano",
     "viewsLabel": "Wyświetlenia",
@@ -540,6 +559,9 @@
     "filters": {
       "aria": "Filtruj według typu albumu",
       "all": "Wszystkie",
+      "artwork": "Dzieła sztuki",
+      "product": "Produkty",
+      "sellPhoto": "Zdjęcia na sprzedaż",
       "single": "Pojedyncze zdjęcie",
       "six": "Historia 6 zdjęć",
       "zodiac": "12 zdjęć - pełna historia Zodiaku"
@@ -547,8 +569,35 @@
     "types": {
       "single": "POJEDYNCZE ZDJĘCIE",
       "six": "HISTORIA 6 ZDJĘĆ",
-      "zodiac": "12 zdjęć - pełna historia Zodiaku"
+      "zodiac": "12 zdjęć - pełna historia Zodiaku",
+      "product": "PRODUKT",
+      "sell_photo": "ZDJĘCIE NA SPRZEDAŻ"
     },
+    "detail": {
+      "back": "Wróć do promowanych produktów",
+      "amountPaid": "Zapłacona kwota",
+      "promoInfo": "Szczegóły promocji",
+      "status": "Status",
+      "duration": "Czas trwania",
+      "daysLeft": "Pozostało dni",
+      "startsAt": "Data rozpoczęcia",
+      "endsAt": "Data zakończenia",
+      "paid": "Zapłacona kwota",
+      "promoterInfo": "Promujący",
+      "email": "E-mail",
+      "location": "Lokalizacja",
+      "itemStats": "Wyniki i statystyki",
+      "category": "Kategoria",
+      "votes": "Głosy",
+      "mediaCount": "Liczba mediów",
+      "compState": "Stan konkursu",
+      "story": "Opis / Historia",
+      "mediaGallery": "Galeria mediów",
+      "noMedia": "Brak dostępnych elementów mediów."
+    },
+    "loadingDetails": "Ładowanie szczegółów promocji...",
+    "errorDetails": "Nie udało się załadować szczegółów promocji.",
+    "backToList": "Wróć do promowanych produktów",
     "pagination": {
       "aria": "Paginacja promowanych produktów",
       "first": "Pierwsza strona",

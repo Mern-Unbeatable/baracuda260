@@ -525,9 +525,28 @@
     "title": "Promoted Products",
     "gridAria": "Promoted products showcase",
     "empty": "No entries match this filter.",
+    "loading": "Loading promoted items...",
+    "error": "Failed to load promoted items.",
+    "retry": "Retry",
     "extraPhotos": "+{{count}} photos",
+    "daysRemaining": "{{count}}d left",
+    "expired": "Expired",
+    "promotedBy": "Promoted by",
     "badge": {
-      "promoted": "Promoted"
+      "promoted": "Promoted",
+      "expired": "Expired"
+    },
+    "stats": {
+      "totalPromotions": "Total Promotions",
+      "activePromotions": "Active Promotions",
+      "expiredPromotions": "Expired Promotions",
+      "totalRevenue": "Total Revenue"
+    },
+    "status": {
+      "aria": "Filter by status",
+      "all": "All Status",
+      "active": "Active",
+      "expired": "Expired"
     },
     "uploadedLabel": "Uploaded",
     "viewsLabel": "Views",
@@ -536,6 +555,9 @@
     "filters": {
       "aria": "Filter by album type",
       "all": "All",
+      "artwork": "Artworks",
+      "product": "Products",
+      "sellPhoto": "Sell Photos",
       "single": "Single Photo",
       "six": "6 Photo story",
       "zodiac": "12 photos - full Zodiac Story"
@@ -543,8 +565,35 @@
     "types": {
       "single": "SINGLE PHOTO",
       "six": "6 PHOTOS STORY",
-      "zodiac": "12 Photos-Full Zodiac Story"
+      "zodiac": "12 Photos-Full Zodiac Story",
+      "product": "PRODUCT",
+      "sell_photo": "SELL PHOTO"
     },
+    "detail": {
+      "back": "Back to Promoted Products",
+      "amountPaid": "Amount Paid",
+      "promoInfo": "Promotion Details",
+      "status": "Status",
+      "duration": "Duration",
+      "daysLeft": "Days Remaining",
+      "startsAt": "Starts At",
+      "endsAt": "Ends At",
+      "paid": "Amount Paid",
+      "promoterInfo": "Promoter",
+      "email": "Email",
+      "location": "Location",
+      "itemStats": "Performance & Stats",
+      "category": "Category",
+      "votes": "Votes",
+      "mediaCount": "Media Count",
+      "compState": "Competition State",
+      "story": "Description / Story",
+      "mediaGallery": "Media Gallery",
+      "noMedia": "No media items available."
+    },
+    "loadingDetails": "Loading promotion details...",
+    "errorDetails": "Failed to load promotion details.",
+    "backToList": "Back to Promoted Products",
     "pagination": {
       "aria": "Promoted products pagination",
       "first": "First page",

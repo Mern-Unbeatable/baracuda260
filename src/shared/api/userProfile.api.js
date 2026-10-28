@@ -136,4 +136,36 @@ export const getUserProfileByUsernameApi = async (username) => {
   return response;
 };
 
+export const SAVED_ARTWORKS_QUERY_KEY = (params = {}) => [
+  'saved-artworks',
+  params,
+];
+
+/**
+ * Fetch saved / favourite artworks for the current user.
+ * GET /api/v1/users/saved-artworks?page=1&limit=10
+ *
+ * @param {{ page?: number, limit?: number }} [params]
+ */
+export const getSavedArtworksApi = async ({ page = 1, limit = 10 } = {}) => {
+  const response = await apiClient.get('/v1/users/saved-artworks', {
+    params: { page, limit },
+  });
+  return response;
+};
+
+/**
+ * Toggle save / unsave artwork bookmark.
+ * POST /api/v1/artworks/:artworkId/save
+ *
+ * @param {string} artworkId
+ */
+export const toggleSaveArtworkApi = async (artworkId) => {
+  const response = await apiClient.post(
+    `/v1/artworks/${encodeURIComponent(artworkId)}/save`,
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+
 

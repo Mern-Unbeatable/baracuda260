@@ -20,7 +20,7 @@ const EMPTY_DECK_TILT = ['-rotate-8', 'rotate-0', 'rotate-8'];
  *   `canManage` is true only when the signed-in user is viewing their own profile.
  */
 const PhotographerSlideshowsSection = memo(
-  ({ canManage = false, ownerName }) => {
+  ({ canManage = false, username, ownerName }) => {
     const { t } = useTranslation();
     const headingId = useId();
     const hintId = useId();
@@ -45,7 +45,7 @@ const PhotographerSlideshowsSection = memo(
       activeSlideshow,
       openPlayer,
       closePlayer,
-    } = useProfileSlideshows({ canManage });
+    } = useProfileSlideshows({ canManage, username });
 
     if (!canManage && !isLoading && !isError && slideshows.length === 0) {
       return null;

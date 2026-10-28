@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,10 @@ import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveS
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { getSellPhotoDetailById } from '@/portals/member/data/sellPhotosDetailData';
+import {
+  getMarketplacePremiumPhotoDetailsApi,
+  MARKETPLACE_PREMIUM_PHOTO_DETAIL_QUERY_KEY,
+} from '@/shared/api/premiumPhotos.api';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
@@ -42,7 +47,15 @@ DetailPanel.displayName = 'DetailPanel';
 const MemberSellPhotoDetailContent = memo(() => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const detail = getSellPhotoDetailById(id);
+
+  const { data: apiDetail, isLoading } = useQuery({
+    queryKey: MARKETPLACE_PREMIUM_PHOTO_DETAIL_QUERY_KEY(id),
+    queryFn: () => getMarketplacePremiumPhotoDetailsApi(id),
+    enabled: Boolean(id),
+    staleTime: 60 * 1000,
+  });
+
+  const detail = apiDetail || getSellPhotoDetailById(id);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const config = detail
@@ -63,6 +76,17 @@ const MemberSellPhotoDetailContent = memo(() => {
     }, GALLERY_DETAIL_SLIDE_MS);
     return () => window.clearInterval(timerId);
   }, [detail, showStoryChrome, slideCount]);
+
+  if (isLoading && !detail) {
+    return (
+      <div className="mx-auto flex w-full max-w-395 flex-col items-center justify-center py-24 text-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#4048cd] border-t-transparent" />
+        <p className="mt-4 text-[16px] text-[#494453]">
+          {t('common.loading', 'Loading details...')}
+        </p>
+      </div>
+    );
+  }
 
   if (!detail) {
     return <Navigate to={ROUTES.USER_SELL_PHOTOS} replace />;

@@ -179,6 +179,7 @@ const WinnersContent = memo(() => {
                 {pagedWinners.map((item) => (
                   <PhotoShowcaseCard
                     key={item.id}
+                    id={item.id}
                     href={winnerDetailPath(item.id)}
                     image={item.image}
                     imageAlt={item.title}

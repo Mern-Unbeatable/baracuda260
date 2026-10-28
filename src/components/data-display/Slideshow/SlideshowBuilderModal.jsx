@@ -61,9 +61,23 @@ const BuilderDialog = ({
   const [attempted, setAttempted] = useState(false);
   const [dragIndex, setDragIndex] = useState(null);
 
+  const displayPhotos = useMemo(() => {
+    const list = [...(photos || [])];
+    const known = new Set(list.map((p) => p.id));
+    if (slideshow?.photos) {
+      slideshow.photos.forEach((p) => {
+        if (p?.id && !known.has(p.id)) {
+          known.add(p.id);
+          list.push(p);
+        }
+      });
+    }
+    return list;
+  }, [photos, slideshow?.photos]);
+
   const photoById = useMemo(
-    () => new Map(photos.map((photo) => [photo.id, photo])),
-    [photos],
+    () => new Map(displayPhotos.map((photo) => [photo.id, photo])),
+    [displayPhotos],
   );
   // Ignore ids that are no longer selectable (e.g. a photo deleted since the slideshow was made).
   const selected = selectedIds.map((id) => photoById.get(id)).filter(Boolean);
@@ -162,7 +176,7 @@ const BuilderDialog = ({
       );
     }
 
-    if (!photos.length) {
+    if (!displayPhotos.length) {
       return (
         <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-[#d1d5db] px-4 py-10 text-center">
           <ImageOff size={28} className="text-[#9ca3af]" aria-hidden="true" />
@@ -175,7 +189,7 @@ const BuilderDialog = ({
 
     return (
       <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3 lg:grid-cols-5">
-        {photos.map((photo) => {
+        {displayPhotos.map((photo) => {
           const order = orderById.get(photo.id);
           const isSelected = Boolean(order);
           return (
