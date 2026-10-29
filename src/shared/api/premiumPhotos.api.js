@@ -1,10 +1,10 @@
-import { apiClient } from './client';
 import { API_CONFIG } from '@/shared/config';
+import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import { GALLERY_DETAIL_ASSETS } from '@/shared/data/galleryDetail';
 import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
 import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
 import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
-import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
+import { apiClient } from './client';
 
 export const ADMIN_PREMIUM_PHOTOS_QUERY_KEY = ['admin-premium-photos'];
 export const MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY = (params = {}) => [
@@ -16,9 +16,11 @@ export const MARKETPLACE_PREMIUM_PHOTO_DETAIL_QUERY_KEY = (id) => [
   id,
 ];
 export const MY_PURCHASES_STATS_QUERY_KEY = ['my-purchases-stats'];
-export const MY_PURCHASES_QUERY_KEY = (params = {}) => [
-  'my-purchases',
-  params,
+export const MY_PURCHASES_QUERY_KEY = (params = {}) => ['my-purchases', params];
+export const PUBLIC_PREMIUM_PHOTOS_QUERY_KEY = ['public-premium-photos'];
+export const PUBLIC_PREMIUM_PHOTO_DETAIL_QUERY_KEY = (id) => [
+  'public-premium-photo-detail',
+  id,
 ];
 
 export const resolveMediaUrl = (url) => {
@@ -233,9 +235,7 @@ export const createMarketplacePremiumPhotoApi = async (payload) => {
         formData.append('zodiacSign', String(payload.zodiacSign).toUpperCase());
       }
     } else if (kind === 'SIX') {
-      const theme = payload.theme
-        ? String(payload.theme).toUpperCase()
-        : 'RED';
+      const theme = payload.theme ? String(payload.theme).toUpperCase() : 'RED';
       formData.append('theme', theme);
     } else if (kind === 'TWELVE') {
       formData.append(
@@ -587,6 +587,157 @@ export const getMarketplacePremiumPhotoDetailsApi = async (id) => {
 };
 
 /**
+ * Normalizes an item from GET /api/v1/marketplace/public/premium-photos
+ */
+export const normalizePublicPremiumPhoto = (item, idx = 0) => {
+  if (!item) return null;
+  const rawKind = String(item.kind || 'SINGLE').toUpperCase();
+  const badge = mapKindToBadge(rawKind);
+  const imagesList = extractImagesList(item.images);
+  const coverUrl =
+    imagesList[0]?.url || resolveMediaUrl(item.coverImage || item.image || '');
+  const videoUrl = item.video?.url ? resolveMediaUrl(item.video.url) : null;
+  const priceNum = Number(item.price ?? 0);
+  const priceLabel = `$${priceNum.toFixed(2)}`;
+
+  let extraPhotosLabel;
+  if (rawKind === 'SIX') {
+    extraPhotosLabel = '+5 Photos';
+  } else if (rawKind === 'TWELVE') {
+    extraPhotosLabel = '+11 Photos';
+  }
+
+  const createdDate = item.createdAt ? new Date(item.createdAt) : null;
+  const formattedDate = createdDate
+    ? createdDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : '';
+
+  return {
+    id: item.id || `public-premium-photo-${idx}`,
+    href: `/buy-photos/${item.id}`,
+    title: item.title || 'Untitled Photo',
+    description: item.story || item.description || '',
+    story: item.story || item.description || '',
+    image: coverUrl,
+    coverImage: coverUrl,
+    videoUrl,
+    images: imagesList,
+    video: videoUrl ? { ...item.video, url: videoUrl } : null,
+    kind: rawKind,
+    badge,
+    price: priceLabel,
+    priceAmount: priceNum,
+    extraPhotosLabel,
+    likes: Number(item.likesCount ?? 0),
+    views: Number(item.viewsCount ?? 0),
+    date: formattedDate,
+    category: item.category?.name || 'Nature',
+    author: item.user
+      ? {
+          id: item.user.id,
+          name: item.user.name || 'Photographer',
+          avatar: resolveMediaUrl(item.user.avatar),
+        }
+      : null,
+    photographer: item.user?.name || 'Photographer',
+    isAiGenerated: Boolean(item.isAiGenerated),
+    raw: item,
+  };
+};
+
+/**
+ * Fetches public premium photos list with filtering for /buy-photos page.
+ * Endpoint: GET /v1/marketplace/public/premium-photos
+ *
+ * @param {{
+ *   kind?: string,
+ *   page?: number,
+ *   limit?: number,
+ *   search?: string,
+ *   categoryId?: string,
+ *   subcategoryId?: string,
+ * }} [params]
+ */
+export const getPublicPremiumPhotosApi = async ({
+  kind,
+  page = 1,
+  limit = 10,
+  search,
+  categoryId,
+  subcategoryId,
+} = {}) => {
+  const queryParams = {
+    page,
+    limit,
+  };
+  if (kind && kind !== 'ALL') {
+    queryParams.kind = String(kind).toUpperCase();
+  }
+  if (search && String(search).trim()) {
+    queryParams.search = String(search).trim();
+  }
+  if (categoryId) {
+    queryParams.categoryId = categoryId;
+  }
+  if (subcategoryId) {
+    queryParams.subcategoryId = subcategoryId;
+  }
+
+  const response = await apiClient.get(
+    '/v1/marketplace/public/premium-photos',
+    {
+      params: queryParams,
+    },
+  );
+
+  const payload = response?.data !== undefined ? response.data : response;
+  const innerData = payload?.data !== undefined ? payload.data : payload;
+
+  const rawList = Array.isArray(innerData?.data)
+    ? innerData.data
+    : Array.isArray(innerData)
+      ? innerData
+      : Array.isArray(payload)
+        ? payload
+        : [];
+
+  const rawMeta = innerData?.meta || payload?.meta || response?.meta;
+  const meta = {
+    currentPage: rawMeta?.currentPage ?? page,
+    totalPages: rawMeta?.totalPages ?? 1,
+    totalRecords: rawMeta?.totalRecords ?? rawList.length,
+    hasNext: Boolean(rawMeta?.hasNext),
+    hasPrevious: Boolean(rawMeta?.hasPrevious),
+  };
+
+  const data = rawList.map(normalizePublicPremiumPhoto);
+
+  return {
+    data,
+    meta,
+  };
+};
+
+/**
+ * Fetches public premium photo details by ID.
+ * Endpoint: GET /v1/marketplace/public/premium-photos/:id
+ *
+ * @param {string} id
+ */
+export const getPublicPremiumPhotoDetailsApi = async (id) => {
+  const response = await apiClient.get(
+    `/v1/marketplace/public/premium-photos/${id}`,
+  );
+  const payload = response?.data !== undefined ? response.data : response;
+  const item = payload?.data || payload;
+  return normalizeMarketplaceDetail(item);
+};
+
+/**
  * Updates a marketplace premium photo listing.
  * Endpoint: PUT /v1/marketplace/premium-photos/:id
  *
@@ -676,7 +827,9 @@ export const updateMarketplacePremiumPhotoApi = async (id, payload) => {
  * @param {string} id
  */
 export const deleteMarketplacePremiumPhotoApi = async (id) => {
-  const response = await apiClient.delete(`/v1/marketplace/premium-photos/${id}`);
+  const response = await apiClient.delete(
+    `/v1/marketplace/premium-photos/${id}`,
+  );
   return response?.data ?? response;
 };
 
@@ -751,7 +904,10 @@ export const parsePurchasePrice = (priceObj, fallbackPrice) => {
   }
   if (priceObj && typeof priceObj === 'object') {
     if (typeof fallbackPrice === 'number') return fallbackPrice;
-    if (typeof fallbackPrice === 'string' && !isNaN(parseFloat(fallbackPrice))) {
+    if (
+      typeof fallbackPrice === 'string' &&
+      !isNaN(parseFloat(fallbackPrice))
+    ) {
       return parseFloat(fallbackPrice);
     }
     if (Array.isArray(priceObj.d) && typeof priceObj.e === 'number') {
@@ -831,7 +987,10 @@ export const getMyPurchasesApi = async ({ page = 1, limit = 8 } = {}) => {
  * @param {string} fileUrl
  * @param {string} defaultFilename
  */
-export const triggerFileDownload = async (fileUrl, defaultFilename = 'photo') => {
+export const triggerFileDownload = async (
+  fileUrl,
+  defaultFilename = 'photo',
+) => {
   try {
     const resolvedUrl = resolveMediaUrl(fileUrl);
     const res = await fetch(resolvedUrl);
@@ -941,5 +1100,3 @@ export const downloadMarketplacePremiumPhotoApi = async (
 
   return { success: true };
 };
-
-
