@@ -301,13 +301,37 @@ const GalleryDetailView = memo(
       try {
         if (navigator.share) {
           await navigator.share({ title: story.title, url });
+          toast.success(
+            t('galleryDetail.shareSuccess', 'Shared successfully!'),
+          );
           return;
         }
-        await navigator.clipboard.writeText(url);
-      } catch {
-        // User cancelled share or clipboard unavailable — no-op.
+      } catch (err) {
+        if (err?.name === 'AbortError') return;
       }
-    }, [story.title]);
+
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          const textArea = document.createElement('textarea');
+          textArea.value = url;
+          textArea.style.position = 'fixed';
+          textArea.style.opacity = '0';
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+        }
+        toast.success(
+          t('galleryDetail.linkCopied', 'Link copied to clipboard!'),
+        );
+      } catch {
+        toast.error(
+          t('galleryDetail.shareFailed', 'Failed to copy link to clipboard.'),
+        );
+      }
+    }, [story.title, t]);
 
     return (
       <SitePageLayout
