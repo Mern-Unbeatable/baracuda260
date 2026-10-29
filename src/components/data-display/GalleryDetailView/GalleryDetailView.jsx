@@ -1,6 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Bookmark, Heart, Share2 } from 'lucide-react';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -20,6 +27,7 @@ import MarketingButton from '@/components/marketing/MarketingButton/MarketingBut
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
+  createArtworkCommentApi,
   toggleLikeArtworkApi,
   toggleSaveArtworkApi,
   triggerArtworkDownload,
@@ -78,7 +86,8 @@ const GalleryDetailView = memo(
     );
 
     const [activeIndex, setActiveIndex] = useState(0);
-    const [comment, setComment] = useState('');
+    const [commentBody, setCommentBody] = useState('');
+    const [submittingComment, setSubmittingComment] = useState(false);
     const [donationOpen, setDonationOpen] = useState(true);
 
     const [voting, setVoting] = useState(false);
@@ -164,6 +173,49 @@ const GalleryDetailView = memo(
           });
       }
     }, [searchParams, location.pathname, navigate, t]);
+
+    const commentsList = useMemo(() => {
+      if (Array.isArray(story.comments) && story.comments.length > 0) {
+        return story.comments;
+      }
+      if (Array.isArray(entry?.comments) && entry.comments.length > 0) {
+        return entry.comments;
+      }
+      return [];
+    }, [story.comments, entry?.comments]);
+
+    const handleCommentSubmit = async (e) => {
+      e.preventDefault();
+      if (!artworkId) return;
+      if (!commentBody || !commentBody.trim()) {
+        toast.error(t('galleryDetail.commentEmpty', 'Please enter a comment.'));
+        return;
+      }
+
+      try {
+        setSubmittingComment(true);
+        const res = await createArtworkCommentApi(artworkId, {
+          body: commentBody.trim(),
+        });
+        toast.success(
+          res?.message ||
+            t('galleryDetail.commentSuccess', 'Comment posted successfully!'),
+        );
+        setCommentBody('');
+        queryClient.invalidateQueries({
+          queryKey: ['artwork-detail', artworkId],
+        });
+      } catch (err) {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('galleryDetail.commentFailed', 'Failed to post comment.'),
+          ),
+        );
+      } finally {
+        setSubmittingComment(false);
+      }
+    };
 
     const isInCompetition =
       isCompetitionProp !== undefined
@@ -662,44 +714,94 @@ const GalleryDetailView = memo(
               )}
 
               <div className="overflow-hidden rounded-lg bg-[#f8fafc] p-4 sm:p-6">
-                <h2 className="text-[20px] font-semibold text-(--primary-text-heading-color) sm:text-[22px]">
-                  {t('galleryDetail.comments')}
-                </h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[20px] font-semibold text-(--primary-text-heading-color) sm:text-[22px]">
+                    {t('galleryDetail.comments')} ({commentsList.length})
+                  </h2>
+                </div>
 
-                <ul className="mt-5 flex flex-col sm:mt-6">
-                  {COMMENTS.map((item, index) => (
-                    <li
-                      key={`${item.name}-${index}`}
-                      className="border-b border-[#c8c8c8] pb-4 pt-0 first:pt-0 not-first:pt-4"
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <Image
-                            src={ASSETS.commentAvatar}
-                            alt=""
-                            width={48}
-                            height={48}
-                            className="size-12 rounded-full object-cover"
-                          />
-                          <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
-                            {item.name}
+                {commentsList.length > 0 ? (
+                  <ul className="mt-5 flex flex-col sm:mt-6">
+                    {commentsList.map((item, index) => {
+                      const commenterName =
+                        item.user?.name ||
+                        item.user?.username ||
+                        item.name ||
+                        'User';
+                      const commenterAvatar =
+                        item.user?.avatar ||
+                        item.avatar ||
+                        ASSETS.commentAvatar;
+                      const commentText =
+                        item.body || item.text || item.comment || '';
+                      const commentDate =
+                        item.formattedDate ||
+                        (item.createdAt
+                          ? new Date(item.createdAt).toLocaleDateString(
+                              'en-US',
+                              {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              },
+                            )
+                          : '');
+
+                      return (
+                        <li
+                          key={item.id || `${commenterName}-${index}`}
+                          className="border-b border-[#c8c8c8] pb-4 pt-0 first:pt-0 not-first:pt-4"
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <Image
+                                src={commenterAvatar}
+                                alt={commenterName}
+                                width={48}
+                                height={48}
+                                className="size-12 rounded-full object-cover"
+                              />
+                              <div>
+                                <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
+                                  {commenterName}
+                                </p>
+                                {commentDate ? (
+                                  <p className="text-[12px] text-[#9ca3af]">
+                                    {commentDate}
+                                  </p>
+                                ) : null}
+                              </div>
+                            </div>
+                            {item.isPinned ? (
+                              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#f59e0b] px-2 py-0.5 text-[12px] font-medium text-white">
+                                Pinned
+                              </span>
+                            ) : item.status === 'APPROVED' ? (
+                              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
+                                <ImgIcon src={ASSETS.verified} size={16} />
+                                {t('galleryDetail.verified')}
+                              </span>
+                            ) : null}
+                          </div>
+                          <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
+                            {commentText}
                           </p>
-                        </div>
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
-                          <ImgIcon src={ASSETS.verified} size={16} />
-                          {t('galleryDetail.verified')}
-                        </span>
-                      </div>
-                      <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
-                        {item.text}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="mt-4 text-[14px] text-[#6b7280]">
+                    {t(
+                      'galleryDetail.noComments',
+                      'No comments on this photo yet. Be the first to comment!',
+                    )}
+                  </p>
+                )}
 
                 <form
                   className="mt-5 flex flex-col gap-3 rounded-lg bg-[#e6f0f8] p-4 sm:mt-6"
-                  onSubmit={(e) => e.preventDefault()}
+                  onSubmit={handleCommentSubmit}
                 >
                   <div className="flex flex-col gap-2">
                     <label
@@ -710,15 +812,22 @@ const GalleryDetailView = memo(
                     </label>
                     <textarea
                       id={config.commentFieldId}
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
+                      value={commentBody}
+                      onChange={(e) => setCommentBody(e.target.value)}
                       placeholder={t('galleryDetail.commentPlaceholder')}
                       rows={5}
-                      className="w-full resize-y rounded-lg bg-white p-2.5 text-[13px] leading-5 text-[#373737] outline-none placeholder:text-[#373737]"
+                      disabled={submittingComment}
+                      className="w-full resize-y rounded-lg bg-white p-2.5 text-[13px] leading-5 text-[#373737] outline-none placeholder:text-[#373737] disabled:opacity-60"
                     />
                   </div>
-                  <MarketingButton type="submit" className="w-full rounded-lg">
-                    {t(config.submitLabelKey)}
+                  <MarketingButton
+                    type="submit"
+                    disabled={submittingComment || !commentBody.trim()}
+                    className="w-full cursor-pointer rounded-lg disabled:opacity-50"
+                  >
+                    {submittingComment
+                      ? t('common.submitting', 'Posting comment...')
+                      : t(config.submitLabelKey)}
                   </MarketingButton>
                 </form>
               </div>
