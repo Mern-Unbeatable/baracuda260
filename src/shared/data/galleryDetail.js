@@ -33,10 +33,17 @@ export const GALLERY_DETAIL_DEMO_VIDEO =
   'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
 
 export const resolveGalleryDetailMedia = (story, heroSrc) => ({
-  videoPoster: story.videoPoster || heroSrc,
-  videoSrc: story.videoSrc ?? GALLERY_DETAIL_DEMO_VIDEO,
-  donationAvatar: story.donationAvatar || GALLERY_DETAIL_ASSETS.photographer,
-  donationBio: story.donationBio || null,
+  videoPoster:
+    story.videoPoster ||
+    story.video?.thumbnailUrl ||
+    story.video?.poster ||
+    heroSrc,
+  videoSrc: story.videoSrc ?? story.video?.url ?? GALLERY_DETAIL_DEMO_VIDEO,
+  donationAvatar:
+    story.donationAvatar ||
+    story.user?.avatar ||
+    GALLERY_DETAIL_ASSETS.photographer,
+  donationBio: story.donationBio || story.story || null,
 });
 
 export const DEFAULT_GALLERY_IMAGE_DETAILS = {
@@ -52,35 +59,72 @@ export const DEFAULT_GALLERY_IMAGE_DETAILS = {
 
 export const resolveGalleryImageDetails = (story) => {
   const fromStory = story.imageDetails ?? {};
-  const categories = [story.category, story.badge].filter(Boolean).join(' ');
+  const categories = [
+    story.categoryName || story.category,
+    story.subcategoryName || story.subcategory,
+    story.badge,
+  ]
+    .filter(Boolean)
+    .join(', ');
+
+  let formattedDate = fromStory.uploadDate || story.uploadDate || story.date;
+  if (!formattedDate && story.createdAt) {
+    try {
+      const d = new Date(story.createdAt);
+      if (!Number.isNaN(d.getTime())) {
+        formattedDate = d.toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        });
+      }
+    } catch {
+      formattedDate = String(story.createdAt);
+    }
+  }
 
   return {
     credit:
       fromStory.credit ??
       story.photographer ??
+      story.user?.name ??
+      story.user?.username ??
       DEFAULT_GALLERY_IMAGE_DETAILS.credit,
+    creditHref: story.user?.username
+      ? `/photographer/${story.user.username}`
+      : story.user?.id
+        ? `/photographer/${story.user.id}`
+        : null,
     creativeNumber:
       fromStory.creativeNumber ??
       story.creativeNumber ??
+      (story.id ? String(story.id).slice(0, 8).toUpperCase() : null) ??
       DEFAULT_GALLERY_IMAGE_DETAILS.creativeNumber,
+    camera: fromStory.camera ?? story.camera ?? null,
     resolution:
       fromStory.resolution ??
       story.resolution ??
       DEFAULT_GALLERY_IMAGE_DETAILS.resolution,
-    quality: fromStory.quality ?? DEFAULT_GALLERY_IMAGE_DETAILS.quality,
+    quality:
+      fromStory.quality ??
+      story.quality ??
+      DEFAULT_GALLERY_IMAGE_DETAILS.quality,
     fileType:
       fromStory.fileType ??
       story.format ??
       DEFAULT_GALLERY_IMAGE_DETAILS.fileType,
-    fileSize: fromStory.fileSize ?? DEFAULT_GALLERY_IMAGE_DETAILS.fileSize,
-    uploadDate:
-      fromStory.uploadDate ??
-      story.date ??
-      DEFAULT_GALLERY_IMAGE_DETAILS.uploadDate,
+    fileSize:
+      fromStory.fileSize ??
+      (story.bytes
+        ? `${(story.bytes / (1024 * 1024)).toFixed(1)} MB`
+        : DEFAULT_GALLERY_IMAGE_DETAILS.fileSize),
+    uploadDate: formattedDate || DEFAULT_GALLERY_IMAGE_DETAILS.uploadDate,
     categories:
       fromStory.categories ??
       (categories || DEFAULT_GALLERY_IMAGE_DETAILS.categories),
-    isAiGenerated: Boolean(fromStory.isAiGenerated ?? story.isAiGenerated),
+    isAiGenerated: Boolean(
+      fromStory.isAiGenerated ?? story.isAiGenerated ?? story.aiBadge,
+    ),
   };
 };
 

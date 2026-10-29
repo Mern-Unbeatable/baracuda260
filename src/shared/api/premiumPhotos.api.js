@@ -1,10 +1,10 @@
-import { apiClient } from './client';
 import { API_CONFIG } from '@/shared/config';
+import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import { GALLERY_DETAIL_ASSETS } from '@/shared/data/galleryDetail';
 import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
 import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
 import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
-import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
+import { apiClient } from './client';
 
 export const ADMIN_PREMIUM_PHOTOS_QUERY_KEY = ['admin-premium-photos'];
 export const MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY = (params = {}) => [
@@ -16,9 +16,11 @@ export const MARKETPLACE_PREMIUM_PHOTO_DETAIL_QUERY_KEY = (id) => [
   id,
 ];
 export const MY_PURCHASES_STATS_QUERY_KEY = ['my-purchases-stats'];
-export const MY_PURCHASES_QUERY_KEY = (params = {}) => [
-  'my-purchases',
-  params,
+export const MY_PURCHASES_QUERY_KEY = (params = {}) => ['my-purchases', params];
+export const PUBLIC_PREMIUM_PHOTOS_QUERY_KEY = ['public-premium-photos'];
+export const PUBLIC_PREMIUM_PHOTO_DETAIL_QUERY_KEY = (id) => [
+  'public-premium-photo-detail',
+  id,
 ];
 
 export const resolveMediaUrl = (url) => {
@@ -173,7 +175,7 @@ export const formatPriceForMarketplace = (rawPrice) => {
   if (!rawPrice) return '5.00';
   const cleaned = String(rawPrice).replace(/[^0-9.]/g, '');
   const num = parseFloat(cleaned);
-  return isNaN(num) ? '5.00' : num.toFixed(2);
+  return Number.isNaN(num) ? '5.00' : num.toFixed(2);
 };
 
 /**
@@ -233,9 +235,7 @@ export const createMarketplacePremiumPhotoApi = async (payload) => {
         formData.append('zodiacSign', String(payload.zodiacSign).toUpperCase());
       }
     } else if (kind === 'SIX') {
-      const theme = payload.theme
-        ? String(payload.theme).toUpperCase()
-        : 'RED';
+      const theme = payload.theme ? String(payload.theme).toUpperCase() : 'RED';
       formData.append('theme', theme);
     } else if (kind === 'TWELVE') {
       formData.append(
@@ -291,7 +291,7 @@ export const createMarketplacePremiumPhotoApi = async (payload) => {
 export const formatMarketplacePrice = (rawPrice) => {
   if (rawPrice == null || rawPrice === '') return '£0.00';
   const num = Number(rawPrice);
-  if (isNaN(num)) return String(rawPrice);
+  if (Number.isNaN(num)) return String(rawPrice);
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
 };
 
@@ -428,23 +428,31 @@ export const normalizeMarketplaceDetail = (item) => {
     albumBadge: badge,
     slides,
     category: categoryName,
-    price: formattedPrice,
+    price: `$${priceNum.toFixed(2)}`,
+    priceAmount: priceNum,
     rawPrice: priceNum,
     resolution: item.resolution || BUY_PHOTO_DEFAULT_SPECS.resolution,
     format:
       item.format || imagesList[0]?.format || BUY_PHOTO_DEFAULT_SPECS.format,
     camera: item.camera || BUY_PHOTO_DEFAULT_SPECS.camera,
     quality: item.quality || '4K',
+    license: item.license || BUY_PHOTO_LICENSE,
+    zodiacSign: item.zodiacSign || null,
     isAiGenerated: Boolean(item.isAiGenerated),
     copyrightConfirmed: Boolean(item.copyrightConfirmed),
+    bytes: imagesList[0]?.bytes || item.bytes || null,
     likesCount: Number(item.likesCount ?? 0),
     likesMetric: Number(item.likesCount ?? 0).toLocaleString(),
     hearts: Number(item.likesCount ?? 0).toLocaleString(),
+    likes: Number(item.likesCount ?? 0),
+    votes: Number(item.likesCount ?? 0),
     viewsCount: Number(item.viewsCount ?? 0),
     viewsMetric: Number(item.viewsCount ?? 0).toLocaleString(),
-    views: Number(item.viewsCount ?? 0).toLocaleString(),
+    views: Number(item.viewsCount ?? 0),
     totalSellMetric: Number(item.totalSales ?? 0).toLocaleString(),
     totalSales: Number(item.totalSales ?? 0),
+    isLiked: Boolean(item.isLiked),
+    isSaved: Boolean(item.isSaved),
     expiryDate: item.expiryDate || null,
     uploadedDate: formattedDate,
     createdAt: item.createdAt,
@@ -452,10 +460,14 @@ export const normalizeMarketplaceDetail = (item) => {
     user: item.user,
     author: item.user
       ? {
+          id: item.user.id,
           name: item.user.name || 'Photographer',
           avatar: resolveMediaUrl(item.user.avatar),
+          followers: item.user._count?.followers ?? 0,
+          following: item.user._count?.following ?? 0,
         }
       : null,
+    avatar: item.user?.avatar ? resolveMediaUrl(item.user.avatar) : null,
     photographer: item.user?.name || 'Photographer',
     promoted: Array.isArray(item.promotions) && item.promotions.length > 0,
     raw: item,
@@ -587,6 +599,248 @@ export const getMarketplacePremiumPhotoDetailsApi = async (id) => {
 };
 
 /**
+ * Normalizes an item from GET /api/v1/marketplace/public/premium-photos
+ */
+export const normalizePublicPremiumPhoto = (item, idx = 0) => {
+  if (!item) return null;
+  const rawKind = String(item.kind || 'SINGLE').toUpperCase();
+  const badge = mapKindToBadge(rawKind);
+  const imagesList = extractImagesList(item.images);
+  const coverUrl =
+    imagesList[0]?.url || resolveMediaUrl(item.coverImage || item.image || '');
+  const videoUrl = item.video?.url ? resolveMediaUrl(item.video.url) : null;
+  const priceNum = Number(item.price ?? 0);
+  const priceLabel = `$${priceNum.toFixed(2)}`;
+
+  let extraPhotosLabel;
+  if (rawKind === 'SIX') {
+    extraPhotosLabel = '+5 Photos';
+  } else if (rawKind === 'TWELVE') {
+    extraPhotosLabel = '+11 Photos';
+  }
+
+  const createdDate = item.createdAt ? new Date(item.createdAt) : null;
+  const formattedDate = createdDate
+    ? createdDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : '';
+
+  return {
+    id: item.id || `public-premium-photo-${idx}`,
+    href: `/buy-photos/${item.id}`,
+    title: item.title || 'Untitled Photo',
+    description: item.story || item.description || '',
+    story: item.story || item.description || '',
+    image: coverUrl,
+    coverImage: coverUrl,
+    videoUrl,
+    images: imagesList,
+    video: videoUrl ? { ...item.video, url: videoUrl } : null,
+    kind: rawKind,
+    badge,
+    price: priceLabel,
+    priceAmount: priceNum,
+    extraPhotosLabel,
+    likes: Number(item.likesCount ?? 0),
+    views: Number(item.viewsCount ?? 0),
+    date: formattedDate,
+    category: item.category?.name || 'Nature',
+    author: item.user
+      ? {
+          id: item.user.id,
+          name: item.user.name || 'Photographer',
+          avatar: resolveMediaUrl(item.user.avatar),
+        }
+      : null,
+    photographer: item.user?.name || 'Photographer',
+    isAiGenerated: Boolean(item.isAiGenerated),
+    raw: item,
+  };
+};
+
+/**
+ * Fetches public premium photos list with filtering for /buy-photos page.
+ * Endpoint: GET /v1/marketplace/public/premium-photos
+ *
+ * @param {{
+ *   kind?: string,
+ *   page?: number,
+ *   limit?: number,
+ *   search?: string,
+ *   categoryId?: string,
+ *   subcategoryId?: string,
+ * }} [params]
+ */
+export const getPublicPremiumPhotosApi = async ({
+  kind,
+  page = 1,
+  limit = 10,
+  search,
+  categoryId,
+  subcategoryId,
+} = {}) => {
+  const queryParams = {
+    page,
+    limit,
+  };
+  if (kind && kind !== 'ALL') {
+    queryParams.kind = String(kind).toUpperCase();
+  }
+  if (search && String(search).trim()) {
+    queryParams.search = String(search).trim();
+  }
+  if (categoryId) {
+    queryParams.categoryId = categoryId;
+  }
+  if (subcategoryId) {
+    queryParams.subcategoryId = subcategoryId;
+  }
+
+  const response = await apiClient.get(
+    '/v1/marketplace/public/premium-photos',
+    {
+      params: queryParams,
+    },
+  );
+
+  const payload = response?.data !== undefined ? response.data : response;
+  const innerData = payload?.data !== undefined ? payload.data : payload;
+
+  const rawList = Array.isArray(innerData?.data)
+    ? innerData.data
+    : Array.isArray(innerData)
+      ? innerData
+      : Array.isArray(payload)
+        ? payload
+        : [];
+
+  const rawMeta = innerData?.meta || payload?.meta || response?.meta;
+  const meta = {
+    currentPage: rawMeta?.currentPage ?? page,
+    totalPages: rawMeta?.totalPages ?? 1,
+    totalRecords: rawMeta?.totalRecords ?? rawList.length,
+    hasNext: Boolean(rawMeta?.hasNext),
+    hasPrevious: Boolean(rawMeta?.hasPrevious),
+  };
+
+  const data = rawList.map(normalizePublicPremiumPhoto);
+
+  return {
+    data,
+    meta,
+  };
+};
+
+/**
+ * Fetches public premium photo details by ID.
+ * Endpoint: GET /v1/marketplace/public/premium-photos/:id
+ *
+ * @param {string} id
+ */
+export const getPublicPremiumPhotoDetailsApi = async (id) => {
+  const response = await apiClient.get(
+    `/v1/marketplace/public/premium-photos/${id}`,
+  );
+  const payload = response?.data !== undefined ? response.data : response;
+  const item = payload?.data || payload;
+  return normalizeMarketplaceDetail(item);
+};
+
+/**
+ * Like / unlike a marketplace premium photo (toggle).
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/like
+ *
+ * @param {string} photoId
+ */
+export const toggleLikePremiumPhotoApi = async (photoId) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/like`,
+    {},
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Save / unsave a marketplace premium photo (toggle).
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/save
+ *
+ * @param {string} photoId
+ */
+export const toggleSavePremiumPhotoApi = async (photoId) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/save`,
+    {},
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Report a marketplace premium photo.
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/report
+ *
+ * @param {string} photoId
+ * @param {{ reason: string, details?: string }} payload
+ */
+export const reportPremiumPhotoApi = async (
+  photoId,
+  { reason, details = '' } = {},
+) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  if (!reason) throw new Error('Report reason is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/report`,
+    {
+      reason,
+      details: details || '',
+    },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Creates a PayPal purchase checkout for a marketplace premium photo.
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/buy
+ *
+ * @param {string} photoId
+ * @param {{ email: string, fullName: string }} payload
+ * @returns {Promise<{ orderId: string, paymentId: string, approvalUrl: string }>}
+ */
+export const createBuyPremiumPhotoCheckoutApi = async (
+  photoId,
+  { email, fullName } = {},
+) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/buy`,
+    {
+      email,
+      fullName,
+    },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Captures PayPal payment for a marketplace premium photo purchase.
+ * Endpoint: POST /v1/marketplace/premium-photos/buy/capture
+ *
+ * @param {{ paymentId: string }} payload
+ */
+export const captureBuyPremiumPhotoPaymentApi = async ({ paymentId }) => {
+  if (!paymentId) throw new Error('Payment ID is required');
+  const response = await apiClient.post(
+    '/v1/marketplace/premium-photos/buy/capture',
+    { paymentId },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
  * Updates a marketplace premium photo listing.
  * Endpoint: PUT /v1/marketplace/premium-photos/:id
  *
@@ -676,7 +930,9 @@ export const updateMarketplacePremiumPhotoApi = async (id, payload) => {
  * @param {string} id
  */
 export const deleteMarketplacePremiumPhotoApi = async (id) => {
-  const response = await apiClient.delete(`/v1/marketplace/premium-photos/${id}`);
+  const response = await apiClient.delete(
+    `/v1/marketplace/premium-photos/${id}`,
+  );
   return response?.data ?? response;
 };
 
@@ -747,11 +1003,14 @@ export const parsePurchasePrice = (priceObj, fallbackPrice) => {
   if (typeof priceObj === 'number') return priceObj;
   if (typeof priceObj === 'string') {
     const num = parseFloat(priceObj);
-    if (!isNaN(num)) return num;
+    if (!Number.isNaN(num)) return num;
   }
   if (priceObj && typeof priceObj === 'object') {
     if (typeof fallbackPrice === 'number') return fallbackPrice;
-    if (typeof fallbackPrice === 'string' && !isNaN(parseFloat(fallbackPrice))) {
+    if (
+      typeof fallbackPrice === 'string' &&
+      !Number.isNaN(parseFloat(fallbackPrice))
+    ) {
       return parseFloat(fallbackPrice);
     }
     if (Array.isArray(priceObj.d) && typeof priceObj.e === 'number') {
@@ -763,19 +1022,22 @@ export const parsePurchasePrice = (priceObj, fallbackPrice) => {
         if (exp >= joined.length) {
           str = joined + '0'.repeat(exp - joined.length);
         } else if (exp <= 0) {
-          str = '0.' + '0'.repeat(-exp) + joined;
+          str = `0.${'0'.repeat(-exp)}${joined}`;
         } else {
-          str = joined.slice(0, exp) + '.' + joined.slice(exp);
+          str = `${joined.slice(0, exp)}.${joined.slice(exp)}`;
         }
         const val = parseFloat(str) * sign;
-        if (!isNaN(val)) return val;
+        if (!Number.isNaN(val)) return val;
       } catch {
         // fallback
       }
     }
   }
   if (typeof fallbackPrice === 'number') return fallbackPrice;
-  if (typeof fallbackPrice === 'string' && !isNaN(parseFloat(fallbackPrice))) {
+  if (
+    typeof fallbackPrice === 'string' &&
+    !Number.isNaN(parseFloat(fallbackPrice))
+  ) {
     return parseFloat(fallbackPrice);
   }
   return 0;
@@ -831,7 +1093,10 @@ export const getMyPurchasesApi = async ({ page = 1, limit = 8 } = {}) => {
  * @param {string} fileUrl
  * @param {string} defaultFilename
  */
-export const triggerFileDownload = async (fileUrl, defaultFilename = 'photo') => {
+export const triggerFileDownload = async (
+  fileUrl,
+  defaultFilename = 'photo',
+) => {
   try {
     const resolvedUrl = resolveMediaUrl(fileUrl);
     const res = await fetch(resolvedUrl);
@@ -913,11 +1178,11 @@ export const downloadMarketplacePremiumPhotoApi = async (
   const blob = await response.blob();
   const contentDisposition = response.headers.get('content-disposition');
   let resolvedFilename = filename;
-  if (contentDisposition && contentDisposition.includes('filename=')) {
+  if (contentDisposition?.includes('filename=')) {
     const match = contentDisposition.match(
       /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/,
     );
-    if (match && match[1]) {
+    if (match?.[1]) {
       resolvedFilename = match[1].replace(/['"]/g, '').trim();
     }
   } else {
@@ -941,5 +1206,3 @@ export const downloadMarketplacePremiumPhotoApi = async (
 
   return { success: true };
 };
-
-

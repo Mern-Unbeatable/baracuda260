@@ -16,6 +16,9 @@ const Services = lazy(() => import('@/portals/public/services/Services'));
 const Competitions = lazy(
   () => import('@/portals/public/competitions/Competitions'),
 );
+const CompetitionDetail = lazy(
+  () => import('@/portals/public/competitions/detail/CompetitionDetail'),
+);
 const Gallery = lazy(() => import('@/portals/public/gallery/Gallery'));
 const BuyPhotos = lazy(() => import('@/portals/public/buy-photos/BuyPhotos'));
 const Marketplace = lazy(
@@ -73,6 +76,18 @@ export const publicRoutes = (
       <Route path={ROUTES.ABOUT} element={<About />} />
       <Route path={ROUTES.SERVICES} element={<Services />} />
       <Route path={ROUTES.COMPETITIONS} element={<Competitions />} />
+      <Route
+        path={ROUTES.COMPETITIONS_DETAIL}
+        element={<CompetitionDetail />}
+      />
+      <Route
+        path={ROUTES.COMPETITIONS_SIX_DETAIL}
+        element={<CompetitionDetail variant="six" />}
+      />
+      <Route
+        path={ROUTES.COMPETITIONS_TWELVE_DETAIL}
+        element={<CompetitionDetail variant="twelve" />}
+      />
       <Route path={ROUTES.GALLERY} element={<Gallery />} />
       <Route path={ROUTES.ALBUM_TYPES} element={<PublicAlbumTypes />} />
       <Route path={ROUTES.ADVERTISE_WITH_US} element={<AdvertiseWithUs />} />

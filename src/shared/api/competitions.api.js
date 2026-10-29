@@ -1,19 +1,36 @@
 import { apiClient } from './client';
-export { getArtworkDetailsApi, ARTWORKS_QUERY_KEY } from './artworks.api';
+
+export {
+  ARTWORKS_QUERY_KEY,
+  awardArtworkAppreciationApi,
+  createArtworkCommentApi,
+  downloadPublicArtworkApi,
+  getArtworkDetailsApi,
+  getPublicArtworksApi,
+  PUBLIC_ARTWORKS_QUERY_KEY,
+  reportArtworkApi,
+  toggleSaveArtworkApi,
+  triggerArtworkDownload,
+  voteArtworkApi,
+} from './artworks.api';
 
 export const COMPETITIONS_QUERY_KEY = ['competitions'];
 
 const resolveMediaUrl = (url) => {
   if (!url || typeof url !== 'string') return url;
-  if (
-    url.startsWith('http://') ||
-    url.startsWith('https://') ||
-    url.startsWith('blob:')
-  ) {
-    return url;
-  }
-  const baseUrl = import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || '';
-  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  if (/^(https?:|data:|blob:)/i.test(url)) return url;
+  const baseUrl = (
+    import.meta.env.VITE_API_BASE_URL ||
+    import.meta.env.VITE_API_URL ||
+    ''
+  ).replace(/\/+$/, '');
+  const uploadIndex = url.indexOf('uploads');
+  const cleanPath =
+    uploadIndex !== -1
+      ? `/${url.slice(uploadIndex).replace(/\\/g, '/')}`
+      : url.startsWith('/')
+        ? url
+        : `/${url}`;
   return `${baseUrl}${cleanPath}`;
 };
 
@@ -90,4 +107,3 @@ export const getActiveCompetitionsApi = async (params = {}) => {
     return [];
   }
 };
-

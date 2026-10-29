@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Bookmark,
   Calendar,
@@ -5,6 +6,7 @@ import {
   Heart,
   Images,
   MoreVertical,
+  Play,
 } from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -15,10 +17,19 @@ import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
+  PUBLIC_ARTWORKS_QUERY_KEY,
+  reportArtworkApi,
   toggleLikeArtworkApi,
   toggleSaveArtworkApi,
+  voteArtworkApi,
 } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+  reportPremiumPhotoApi,
+  toggleLikePremiumPhotoApi,
+  toggleSavePremiumPhotoApi,
+} from '@/shared/api/premiumPhotos.api';
 import { AppLink, ImgIcon } from '@/shared/site-chrome';
 
 const TROPHY_ICON = '/assets/home/icon-trophy-cup.svg';
@@ -52,6 +63,7 @@ const PhotoShowcaseCard = memo(
     href,
     image,
     imageAlt,
+    videoUrl,
     title,
     titleAs: TitleTag = 'h3',
     titleClassName = '',
@@ -72,13 +84,20 @@ const PhotoShowcaseCard = memo(
     onSaveToggle,
     initialLiked = false,
     onLikeToggle,
+    engagementType = 'like',
+    itemType,
   }) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const [saved, setSaved] = useState(initialSaved);
     const [liked, setLiked] = useState(initialLiked);
     const [likesCount, setLikesCount] = useState(() => parseCount(likes));
     const [reportOpen, setReportOpen] = useState(false);
     const showPrice = price != null && price !== '';
+
+    const isPremiumPhoto =
+      itemType === 'premium-photo' ||
+      (typeof href === 'string' && href.includes('/buy-photos/'));
 
     useEffect(() => {
       setSaved(initialSaved);
@@ -110,7 +129,22 @@ const PhotoShowcaseCard = memo(
       }
       if (id) {
         try {
-          const res = await toggleSaveArtworkApi(id);
+          const res = isPremiumPhoto
+            ? await toggleSavePremiumPhotoApi(id)
+            : await toggleSaveArtworkApi(id);
+
+          if (isPremiumPhoto) {
+            queryClient.invalidateQueries({
+              queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['public-premium-photo-detail', id],
+            });
+          } else {
+            queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+            queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
+          }
+
           toast.success(
             res?.message ||
               (next
@@ -129,6 +163,8 @@ const PhotoShowcaseCard = memo(
       }
     };
 
+    const isVoteMode = engagementType === 'vote';
+
     const handleLike = async (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -140,8 +176,43 @@ const PhotoShowcaseCard = memo(
         return;
       }
       if (id) {
+        if (isVoteMode) {
+          try {
+            const res = await voteArtworkApi(id);
+            queryClient.invalidateQueries({
+              queryKey: PUBLIC_ARTWORKS_QUERY_KEY,
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['artwork-detail', id],
+            });
+            toast.success(
+              res?.message ||
+                t(
+                  'competitionsPage.voteSuccess',
+                  'Vote recorded successfully!',
+                ),
+            );
+          } catch (err) {
+            setLiked(!next);
+            setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
+            toast.error(
+              getApiErrorMessage(
+                err,
+                t(
+                  'competitionsPage.voteError',
+                  'Failed to record vote. You may need to log in.',
+                ),
+              ),
+            );
+          }
+          return;
+        }
+
         try {
-          const res = await toggleLikeArtworkApi(id);
+          const res = isPremiumPhoto
+            ? await toggleLikePremiumPhotoApi(id)
+            : await toggleLikeArtworkApi(id);
+
           const count =
             res?.data?.likesCount ??
             res?.likesCount ??
@@ -158,6 +229,16 @@ const PhotoShowcaseCard = memo(
           if (isLikedRes != null) {
             setLiked(Boolean(isLikedRes));
           }
+
+          if (isPremiumPhoto) {
+            queryClient.invalidateQueries({
+              queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['public-premium-photo-detail', id],
+            });
+          }
+
           if (res?.message) toast.success(res.message);
         } catch (err) {
           setLiked(!next);
@@ -182,6 +263,26 @@ const PhotoShowcaseCard = memo(
       setReportOpen(true);
     };
 
+    const handleReport = async ({ reason, details }) => {
+      if (!id) return;
+      try {
+        const res = isPremiumPhoto
+          ? await reportPremiumPhotoApi(id, { reason, details })
+          : await reportArtworkApi(id, { reason, details });
+        toast.success(
+          res?.message ||
+            t('gallery.reportModal.success', 'Report submitted successfully.'),
+        );
+      } catch (err) {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('common.errors.general', 'Failed to submit report.'),
+          ),
+        );
+      }
+    };
+
     return (
       <>
         <MarketingCard
@@ -190,15 +291,47 @@ const PhotoShowcaseCard = memo(
         >
           <AppLink href={href} className="block focus-visible:outline-none">
             <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
-              <Image
-                src={image}
-                alt={imageAlt ?? title}
-                width={368}
-                height={252}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-              />
+              {videoUrl && !image ? (
+                <div className="relative h-full w-full bg-[#0d0d14]">
+                  <video
+                    src={videoUrl}
+                    preload="metadata"
+                    muted
+                    playsInline
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25">
+                    <div className="flex size-11 items-center justify-center rounded-full bg-white/90 text-[#0d0d14] shadow-md backdrop-blur-xs transition group-hover:scale-110">
+                      <Play
+                        size={18}
+                        className="translate-x-0.5 fill-[#0d0d14]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative h-full w-full">
+                  <Image
+                    src={image}
+                    alt={imageAlt ?? title}
+                    width={368}
+                    height={252}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                  />
+                  {videoUrl && (
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/15">
+                      <div className="flex size-11 items-center justify-center rounded-full bg-white/90 text-[#0d0d14] shadow-md backdrop-blur-xs transition group-hover:scale-110">
+                        <Play
+                          size={18}
+                          className="translate-x-0.5 fill-[#0d0d14]"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {badge ? (
                 <ImageOverlayBadge className="absolute left-3 top-3 max-w-[calc(100%-3.5rem)]">
@@ -245,7 +378,11 @@ const PhotoShowcaseCard = memo(
                   })}
                   className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60"
                 >
-                  <MoreVertical size={16} strokeWidth={2.5} aria-hidden="true" />
+                  <MoreVertical
+                    size={16}
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  />
                 </Button>
               ) : null}
 
@@ -379,6 +516,7 @@ const PhotoShowcaseCard = memo(
           open={reportOpen}
           onClose={() => setReportOpen(false)}
           photoTitle={title}
+          onSubmit={handleReport}
         />
       </>
     );

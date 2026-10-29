@@ -1366,6 +1366,14 @@
       "deleted": "{{title}} removed from your store.",
       "promoted": "{{title}} is now promoted in the Marketplace."
     },
+    "promote": {
+      "redirecting": "Redirecting to PayPal checkout...",
+      "started": "Promotion checkout initiated.",
+      "success": "Product promoted successfully!",
+      "cancelled": "Promotion was cancelled.",
+      "error": "Failed to initiate promotion. Please try again.",
+      "captureError": "Failed to capture promotion payment."
+    },
     "upload": {
       "title": "Upload Store",
       "back": "Back to My Store",
@@ -1400,8 +1408,10 @@
       "errors": {
         "title": "Collection title is required.",
         "price": "Price is required.",
-        "banner": "Please upload a product banner image."
+        "banner": "Please upload a product banner image.",
+        "copyrightRequired": "Please confirm that you own the rights to this work."
       },
+      "copyrightConfirm": "I confirm that I own the full copyright for all uploaded photos and that they do not contain or promote anything illegal.",
       "editTitle": "Edit Store Product",
       "currentBanner": "Current banner image",
       "updateSubmit": "Update product",

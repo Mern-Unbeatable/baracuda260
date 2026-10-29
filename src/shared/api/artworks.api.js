@@ -70,7 +70,7 @@ export const getAdminArtworksApi = async ({
     if (item.createdAt) {
       try {
         const d = new Date(item.createdAt);
-        if (!isNaN(d.getTime())) {
+        if (!Number.isNaN(d.getTime())) {
           formattedDate = d.toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
@@ -99,7 +99,9 @@ export const getAdminArtworksApi = async ({
       likesCount: Number(item.likesCount ?? item.votesCount ?? 0),
       votesCount: Number(item.votesCount ?? item.likesCount ?? 0),
       extraPhotos:
-        Number(item.additionalPhotos) > 0 ? Number(item.additionalPhotos) : null,
+        Number(item.additionalPhotos) > 0
+          ? Number(item.additionalPhotos)
+          : null,
       additionalPhotos: Number(item.additionalPhotos ?? 0),
       competitionState: item.competitionState || competitionState,
       createdAt: item.createdAt,
@@ -119,12 +121,26 @@ export const getAdminArtworksApi = async ({
  */
 export const getArtworkDetailsApi = async (submissionId) => {
   if (!submissionId) return null;
-  const response = await apiClient.get(`/v1/artworks/${submissionId}`);
-  const data = response?.data || response;
+  let response;
+  try {
+    response = await apiClient.get(`/v1/artworks/public/${submissionId}`);
+  } catch (_publicErr) {
+    // Fallback to member/general endpoint if public fails or is draft
+    response = await apiClient.get(`/v1/artworks/${submissionId}`);
+  }
+  let data = response?.data !== undefined ? response.data : response;
+  if (
+    data &&
+    data.data !== undefined &&
+    typeof data.data === 'object' &&
+    !Array.isArray(data.data)
+  ) {
+    data = data.data;
+  }
   if (!data) return null;
 
   const rawImages = data.images;
-  let normalizedImages = {};
+  const normalizedImages = {};
   if (rawImages && typeof rawImages === 'object') {
     Object.entries(rawImages).forEach(([key, img]) => {
       if (img && typeof img === 'object') {
@@ -137,8 +153,65 @@ export const getArtworkDetailsApi = async (submissionId) => {
     });
   }
 
+  const rawComments = Array.isArray(data.comments) ? data.comments : [];
+  const normalizedComments = rawComments.map((c) => {
+    let formattedDate = '';
+    if (c.createdAt) {
+      try {
+        const d = new Date(c.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+          formattedDate = d.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          });
+        }
+      } catch {
+        formattedDate = String(c.createdAt);
+      }
+    }
+
+    return {
+      id: c.id,
+      publicCode: c.publicCode,
+      body: c.body || c.comment || c.text || '',
+      body_pl: c.body_pl || null,
+      status: c.status || 'APPROVED',
+      isPinned: Boolean(c.isPinned),
+      parentId: c.parentId || null,
+      createdAt: c.createdAt,
+      formattedDate,
+      user: c.user
+        ? {
+            id: c.user.id,
+            name: c.user.name || c.user.username || 'User',
+            username: c.user.username || '',
+            avatar: resolveMediaUrl(c.user.avatar),
+          }
+        : null,
+    };
+  });
+
+  const rawKind = String(data.kind || 'SINGLE').toUpperCase();
+  let badge = 'Single Photo';
+  if (rawKind === 'TWELVE') {
+    badge = '12 photos - full Zodiac Story';
+  } else if (rawKind === 'SIX') {
+    badge = '6 Photos Story';
+  } else if (rawKind === 'VIDEO') {
+    badge = 'Video';
+  }
+
+  const resolvedCategory =
+    data.categoryName || data.category?.name || data.category || '';
+
   return {
     ...data,
+    badge,
+    kind: rawKind,
+    categoryName: resolvedCategory,
+    category: resolvedCategory,
+    photographer: data.user?.name || data.user?.username || 'Photographer',
     featuredImage: resolveMediaUrl(data.featuredImage),
     images: normalizedImages,
     user: data.user
@@ -154,7 +227,34 @@ export const getArtworkDetailsApi = async (submissionId) => {
           thumbnailUrl: resolveMediaUrl(data.video.thumbnailUrl),
         }
       : null,
+    comments: normalizedComments,
+    isAiGenerated: Boolean(data.isAiGenerated || data.aiBadge),
   };
+};
+
+export const getPublicArtworkDetailsApi = getArtworkDetailsApi;
+
+/**
+ * Post a comment on an artwork.
+ * Endpoint: POST /v1/artworks/:id/comment
+ *
+ * @param {string} artworkId
+ * @param {{ body: string, parentId?: string }} payload
+ */
+export const createArtworkCommentApi = async (
+  artworkId,
+  { body, parentId } = {},
+) => {
+  if (!artworkId) throw new Error('Artwork ID is required');
+  const payload = {
+    body,
+    ...(parentId !== undefined ? { parentId } : {}),
+  };
+  const response = await apiClient.post(
+    `/v1/artworks/${encodeURIComponent(artworkId)}/comment`,
+    payload,
+  );
+  return response?.data !== undefined ? response.data : response;
 };
 
 /**
@@ -285,6 +385,149 @@ export const toggleSaveArtworkApi = async (artworkId) => {
   return response;
 };
 
+/**
+ * Download public artwork file.
+ * Endpoint: GET /v1/artworks/public/:id/download
+ * @param {string} artworkId
+ */
+export const downloadPublicArtworkApi = async (artworkId) => {
+  if (!artworkId) throw new Error('Artwork ID is required');
+  const response = await apiClient.get(
+    `/v1/artworks/public/${encodeURIComponent(artworkId)}/download`,
+    {
+      responseType: 'blob',
+    },
+  );
+  return response;
+};
+
+/**
+ * Trigger browser download for a public artwork.
+ * Uses GET /v1/artworks/public/:id/download
+ *
+ * @param {string} artworkId
+ * @param {string} [defaultFilename]
+ */
+export const triggerArtworkDownload = async (
+  artworkId,
+  defaultFilename = 'artwork',
+) => {
+  const result = await downloadPublicArtworkApi(artworkId);
+
+  // Case 1: Backend returned parsed JSON directly (e.g. { data: { url: "..." } })
+  if (result && typeof result === 'object' && !(result instanceof Blob)) {
+    const targetUrl =
+      result?.data?.url ||
+      result?.data?.downloadUrl ||
+      result?.url ||
+      result?.downloadUrl;
+    if (targetUrl) {
+      const link = document.createElement('a');
+      link.href = targetUrl;
+      link.download = defaultFilename;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    }
+  }
+
+  // Case 2: Backend returned Blob
+  if (result instanceof Blob) {
+    // If the Blob is application/json
+    if (result.type.includes('application/json')) {
+      try {
+        const text = await result.text();
+        const json = JSON.parse(text);
+        const targetUrl =
+          json?.data?.url ||
+          json?.data?.downloadUrl ||
+          json?.url ||
+          json?.downloadUrl;
+        if (targetUrl) {
+          const link = document.createElement('a');
+          link.href = targetUrl;
+          link.download = defaultFilename;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          return;
+        }
+      } catch {
+        // Not valid JSON, continue with direct blob download
+      }
+    }
+
+    // Direct binary blob (image, video, or stream)
+    const blobUrl = window.URL.createObjectURL(result);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    const ext = defaultFilename.includes('.') ? '' : '.jpg';
+    link.download = `${defaultFilename}${ext}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+    return;
+  }
+
+  // Case 3: Result is a URL string
+  if (typeof result === 'string' && result.startsWith('http')) {
+    const link = document.createElement('a');
+    link.href = result;
+    link.download = defaultFilename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+};
+
+/**
+ * Report an artwork.
+ * Endpoint: POST /v1/artworks/:id/report
+ *
+ * @param {string} artworkId
+ * @param {{ reason: string, details?: string }} payload
+ */
+export const reportArtworkApi = async (
+  artworkId,
+  { reason, details = '' } = {},
+) => {
+  if (!artworkId) throw new Error('Artwork ID is required');
+  if (!reason) throw new Error('Report reason is required');
+
+  const response = await apiClient.post(
+    `/v1/artworks/${encodeURIComponent(artworkId)}/report`,
+    {
+      reason,
+      details: details || '',
+    },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Award appreciation to an artwork.
+ * Endpoint: POST /v1/appreciation/award
+ *
+ * @param {{ submissionId: string, tier: 'GOLD' | 'SILVER' | 'BRONZE' }} payload
+ */
+export const awardArtworkAppreciationApi = async ({
+  submissionId,
+  tier = 'GOLD',
+} = {}) => {
+  if (!submissionId) throw new Error('Submission ID is required');
+  if (!tier) throw new Error('Appreciation tier is required');
+
+  const response = await apiClient.post('/v1/appreciation/award', {
+    submissionId,
+    tier: String(tier).toUpperCase(),
+  });
+  return response?.data !== undefined ? response.data : response;
+};
 
 /**
  * Update an artwork by ID (User/Member).
@@ -297,7 +540,8 @@ export const toggleSaveArtworkApi = async (artworkId) => {
 export const updateArtworkApi = async (artworkId, payload) => {
   if (!artworkId) throw new Error('Artwork ID is required');
 
-  const isFormData = typeof FormData !== 'undefined' && payload instanceof FormData;
+  const isFormData =
+    typeof FormData !== 'undefined' && payload instanceof FormData;
   const config = isFormData
     ? { headers: { 'Content-Type': 'multipart/form-data' } }
     : undefined;
@@ -407,7 +651,6 @@ export const captureArtworkPromotionPaymentApi = async (payload) => {
   return response?.data !== undefined ? response.data : response;
 };
 
-
 /**
  * Create a new artwork (SINGLE, SIX, or TWELVE).
  * Endpoint: POST /v1/artworks
@@ -440,17 +683,29 @@ export const createArtworkApi = async (payload) => {
   formData.append('competitionState', payload.competitionState || 'all');
   formData.append(
     'isAiGenerated',
-    String(Boolean(payload.isAiGenerated === true || payload.isAiGenerated === 'true' || payload.isAiGenerated === 'yes')),
+    String(
+      Boolean(
+        payload.isAiGenerated === true ||
+          payload.isAiGenerated === 'true' ||
+          payload.isAiGenerated === 'yes',
+      ),
+    ),
   );
   formData.append(
     'copyrightConfirmed',
-    String(Boolean(payload.copyrightConfirmed !== false && payload.copyrightConfirmed !== 'false')),
+    String(
+      Boolean(
+        payload.copyrightConfirmed !== false &&
+          payload.copyrightConfirmed !== 'false',
+      ),
+    ),
   );
 
   if (payload.resolution) formData.append('resolution', payload.resolution);
   if (payload.quality) formData.append('quality', payload.quality);
   if (payload.categoryId) formData.append('categoryId', payload.categoryId);
-  if (payload.subcategoryId) formData.append('subcategoryId', payload.subcategoryId);
+  if (payload.subcategoryId)
+    formData.append('subcategoryId', payload.subcategoryId);
 
   // SINGLE: zodiacSign
   if (payload.zodiacSign) {
@@ -495,7 +750,6 @@ export const createArtworkApi = async (payload) => {
   return response?.data ?? response;
 };
 
-
 /**
  * Upload an artwork video comment / update.
  * Endpoint: POST /v1/artworks/video-comment
@@ -521,11 +775,15 @@ export const createArtworkVideoCommentApi = async ({
     formData.append('video', video);
   }
 
-  const response = await apiClient.post('/v1/artworks/video-comment', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
+  const response = await apiClient.post(
+    '/v1/artworks/video-comment',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     },
-  });
+  );
 
   return response?.data ?? response;
 };
@@ -608,7 +866,11 @@ export const getArtworkPrimaryImage = (item) => {
   if (item.featuredImage) return resolveMediaUrl(item.featuredImage);
 
   // If item.images is an object (e.g. { LEO: { url, ... } })
-  if (item.images && typeof item.images === 'object' && !Array.isArray(item.images)) {
+  if (
+    item.images &&
+    typeof item.images === 'object' &&
+    !Array.isArray(item.images)
+  ) {
     const firstKey = Object.keys(item.images)[0];
     if (firstKey && item.images[firstKey]?.url) {
       return resolveMediaUrl(item.images[firstKey].url);
@@ -651,11 +913,18 @@ export const normalizeUserArtwork = (item) => {
 
   const primaryImage = getArtworkPrimaryImage(item);
   const createdDate = item.createdAt ? new Date(item.createdAt) : new Date();
-  const uploadedDate = !isNaN(createdDate.getTime())
-    ? createdDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const uploadedDate = !Number.isNaN(createdDate.getTime())
+    ? createdDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
     : '';
-  const uploadedTime = !isNaN(createdDate.getTime())
-    ? createdDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+  const uploadedTime = !Number.isNaN(createdDate.getTime())
+    ? createdDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     : '';
 
   // Competition & status mapping
@@ -667,7 +936,9 @@ export const normalizeUserArtwork = (item) => {
     footerState = 'ended';
   }
 
-  const isPromoted = Boolean(item.promotion && item.promotion.isActive !== false);
+  const isPromoted = Boolean(
+    item.promotion && item.promotion.isActive !== false,
+  );
 
   return {
     id: item.id,
@@ -759,6 +1030,172 @@ export const getUserArtworksApi = async ({
   return {
     items: normalized,
     data: normalized,
+    meta,
+  };
+};
+
+export const PUBLIC_ARTWORKS_QUERY_KEY = ['public-artworks'];
+
+/**
+ * Fetches public artworks (e.g. status=IN_COMPETITION).
+ * Endpoint: GET /v1/artworks/public/all
+ *
+ * @param {{
+ *   status?: string,
+ *   page?: number,
+ *   limit?: number,
+ *   categoryId?: string,
+ *   subcategoryId?: string,
+ *   kind?: string,
+ *   search?: string,
+ * }} [params]
+ */
+export const getPublicArtworksApi = async ({
+  status = 'IN_COMPETITION',
+  page = 1,
+  limit = 10,
+  categoryId,
+  subcategoryId,
+  kind,
+  search,
+} = {}) => {
+  const params = {
+    status,
+    page,
+    limit,
+  };
+
+  if (categoryId) params.categoryId = categoryId;
+  if (subcategoryId) params.subcategoryId = subcategoryId;
+  if (kind && kind !== 'ALL') params.kind = String(kind).toUpperCase();
+  if (search?.trim()) params.search = search.trim();
+
+  const response = await apiClient.get('/v1/artworks/public/all', { params });
+  const payload = response?.data !== undefined ? response.data : response;
+
+  const rawList = Array.isArray(payload?.data)
+    ? payload.data
+    : Array.isArray(payload)
+      ? payload
+      : [];
+
+  const rawMeta = payload?.meta || response?.meta || {};
+  const meta = {
+    currentPage: Number(rawMeta.currentPage ?? page),
+    totalPages: Math.max(1, Number(rawMeta.totalPages ?? 1)),
+    totalRecords: Number(rawMeta.totalRecords ?? rawList.length),
+    hasNext: Boolean(rawMeta.hasNext),
+    hasPrevious: Boolean(rawMeta.hasPrevious),
+  };
+
+  const normalizedData = rawList.map((item) => {
+    const rawKind = String(item.kind || 'SINGLE').toUpperCase();
+    let badge = 'Single Photo';
+    const isComp =
+      params.status === 'IN_COMPETITION' ||
+      item.competitionState === 'IN_COMPETITION' ||
+      item.status === 'IN_COMPETITION' ||
+      Boolean(item.competitionId);
+
+    let detailPath = isComp
+      ? `/competitions/${item.id}`
+      : `/gallery/${item.id}`;
+    if (rawKind === 'TWELVE') {
+      badge = '12 photos - full Zodiac Story';
+      detailPath = isComp
+        ? `/competitions/zodiac/${item.id}`
+        : `/gallery/zodiac/${item.id}`;
+    } else if (rawKind === 'SIX') {
+      badge = '6 Photos Story';
+      detailPath = isComp
+        ? `/competitions/story/${item.id}`
+        : `/gallery/story/${item.id}`;
+    } else if (rawKind === 'VIDEO') {
+      badge = 'Video';
+      detailPath = isComp ? `/competitions/${item.id}` : `/gallery/${item.id}`;
+    }
+
+    // Extract first valid image URL
+    let imageUrl = '';
+    if (item.images && typeof item.images === 'object') {
+      if (item.images.IMAGE_0?.url) {
+        imageUrl = item.images.IMAGE_0.url;
+      } else {
+        const first = Object.values(item.images).find((img) => img?.url);
+        if (first) imageUrl = first.url;
+      }
+    }
+    if (!imageUrl) {
+      imageUrl =
+        item.coverImage ||
+        item.featuredImage ||
+        item.video?.thumbnailUrl ||
+        item.video?.poster ||
+        '';
+    }
+    const image = resolveMediaUrl(imageUrl);
+
+    let formattedDate = '';
+    if (item.createdAt) {
+      try {
+        const d = new Date(item.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+          formattedDate = d.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          });
+        }
+      } catch {
+        formattedDate = String(item.createdAt);
+      }
+    }
+
+    const viewsNum = Number(item.viewsCount ?? 0);
+    const votesNum = Number(item.votesCount ?? 0);
+    const likesNum = Number(item.likesCount ?? item.likes ?? 0);
+    const resolvedCategory =
+      item.categoryName || item.category?.name || item.category || '';
+
+    return {
+      id: item.id,
+      kind: rawKind,
+      title: item.title || 'Untitled',
+      description: item.story || '',
+      story: item.story || '',
+      badge,
+      category: resolvedCategory,
+      categoryName: resolvedCategory,
+      image,
+      author: item.user?.name || 'Photographer',
+      photographer: item.user?.name || 'Photographer',
+      user: item.user
+        ? {
+            ...item.user,
+            avatar: resolveMediaUrl(item.user.avatar),
+          }
+        : null,
+      views: viewsNum.toLocaleString('en-US'),
+      viewsCount: viewsNum,
+      votes: votesNum.toLocaleString('en-US'),
+      votesCount: votesNum,
+      likes: likesNum.toLocaleString('en-US'),
+      likesCount: likesNum,
+      isLiked: Boolean(item.isLiked || item.liked),
+      isSaved: Boolean(item.isSaved || item.saved),
+      isAiGenerated: Boolean(item.isAiGenerated || item.aiBadge),
+      date: formattedDate,
+      createdAt: item.createdAt,
+      competitionState: item.competitionState || status,
+      status: item.status,
+      detailPath,
+      images: item.images,
+      video: item.video,
+    };
+  });
+
+  return {
+    data: normalizedData,
     meta,
   };
 };

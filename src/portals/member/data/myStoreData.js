@@ -8,35 +8,43 @@ export const MY_STORE_CATEGORIES = [
   { id: 'all', value: 'all', labelKey: 'myStore.filters.all' },
   {
     id: 'art-prints',
-    value: 'art-prints',
+    value: 'ART_PRINTS',
     labelKey: 'myStore.filters.artPrints',
   },
-  { id: 'handmade', value: 'handmade', labelKey: 'myStore.filters.handmade' },
-  { id: 'apparel', value: 'apparel', labelKey: 'myStore.filters.apparel' },
+  {
+    id: 'handmade',
+    value: 'HANDMADE_CRAFTS',
+    labelKey: 'myStore.filters.handmade',
+  },
+  {
+    id: 'apparel',
+    value: 'APPAREL',
+    labelKey: 'myStore.filters.apparel',
+  },
   {
     id: 'photobooks',
-    value: 'photobooks',
+    value: 'PHOTOBOOKS',
     labelKey: 'myStore.filters.photobooks',
   },
   {
     id: 'digital-preset',
-    value: 'digital-preset',
+    value: 'DIGITAL_PRESET',
     labelKey: 'myStore.filters.digitalPreset',
   },
-  { id: 'other', value: 'other', labelKey: 'myStore.filters.other' },
+  {
+    id: 'other',
+    value: 'OTHERS',
+    labelKey: 'myStore.filters.other',
+  },
 ];
 
 export const MY_STORE_CATEGORY_OPTIONS = [
-  {
-    id: 'astrophotography',
-    labelKey: 'myStore.upload.categories.astrophotography',
-  },
-  { id: 'art-prints', labelKey: 'myStore.upload.categories.artPrints' },
-  { id: 'handmade', labelKey: 'myStore.upload.categories.handmade' },
-  { id: 'apparel', labelKey: 'myStore.upload.categories.apparel' },
-  { id: 'photobooks', labelKey: 'myStore.upload.categories.photobooks' },
-  { id: 'digital-preset', labelKey: 'myStore.upload.categories.digitalPreset' },
-  { id: 'other', labelKey: 'myStore.upload.categories.other' },
+  { id: 'ART_PRINTS', labelKey: 'myStore.upload.categories.artPrints' },
+  { id: 'HANDMADE_CRAFTS', labelKey: 'myStore.upload.categories.handmade' },
+  { id: 'APPAREL', labelKey: 'myStore.upload.categories.apparel' },
+  { id: 'PHOTOBOOKS', labelKey: 'myStore.upload.categories.photobooks' },
+  { id: 'DIGITAL_PRESET', labelKey: 'myStore.upload.categories.digitalPreset' },
+  { id: 'OTHERS', labelKey: 'myStore.upload.categories.other' },
 ];
 
 export const MY_STORE_PRODUCTS = [
@@ -176,28 +184,39 @@ export const MY_STORE_PRODUCTS = [
 
 export const filterStoreProducts = (products, category) => {
   if (!category || category === 'all') return products;
-  return products.filter((product) => product.category === category);
+  const target = String(category).toUpperCase();
+  return products.filter(
+    (product) => String(product.category).toUpperCase() === target,
+  );
 };
 
 export const EMPTY_STORE_UPLOAD_FORM = {
   title: '',
-  category: 'astrophotography',
+  category: 'ART_PRINTS',
   price: '',
   edition: '',
   description: '',
 };
 
 export const getStoreProductById = (productId) =>
-  MY_STORE_PRODUCTS.find((product) => product.id === productId) || null;
+  MY_STORE_PRODUCTS.find((product) => String(product.id) === String(productId)) ||
+  null;
 
 export const buildStoreFormFromProduct = (product) => {
   if (!product) return { ...EMPTY_STORE_UPLOAD_FORM };
 
+  const rawPrice =
+    product.rawPrice ??
+    (typeof product.price === 'string'
+      ? product.price.replace(/[^0-9.]/g, '')
+      : product.price) ??
+    '';
+
   return {
     title: product.title || '',
-    category: product.category || 'astrophotography',
-    price: product.price || '',
-    edition: product.edition || '',
+    category: product.category || 'ART_PRINTS',
+    price: rawPrice,
+    edition: product.setEditionSize || product.edition || '',
     description: product.description || '',
   };
 };

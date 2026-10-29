@@ -1,14 +1,18 @@
-import { Bookmark, Heart, Share2 } from 'lucide-react';
-import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { Bookmark, Heart, Share2 } from 'lucide-react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import {
-  toggleLikeArtworkApi,
-  toggleSaveArtworkApi,
-  voteArtworkApi,
-} from '@/shared/api/artworks.api';
-import { getApiErrorMessage } from '@/shared/api/client';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { selectUser } from '@/app/store/slices/authSlice';
 import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation';
@@ -22,6 +26,15 @@ import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveS
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import {
+  createArtworkCommentApi,
+  toggleLikeArtworkApi,
+  toggleSaveArtworkApi,
+  triggerArtworkDownload,
+  voteArtworkApi,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
+import { captureDonationPaymentApi } from '@/shared/api/payments.api';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS as ASSETS,
@@ -37,9 +50,6 @@ import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import GalleryDetailBreadcrumb from './GalleryDetailBreadcrumb';
 
-import { useSelector } from 'react-redux';
-import { selectUser } from '@/app/store/slices/authSlice';
-
 const GalleryDetailView = memo(
   ({
     entry,
@@ -47,6 +57,7 @@ const GalleryDetailView = memo(
     activeHref = ROUTES.GALLERY,
     Breadcrumb = GalleryDetailBreadcrumb,
     rootClassName: rootClassNameProp,
+    isCompetition: isCompetitionProp,
   }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
@@ -75,7 +86,8 @@ const GalleryDetailView = memo(
     );
 
     const [activeIndex, setActiveIndex] = useState(0);
-    const [comment, setComment] = useState('');
+    const [commentBody, setCommentBody] = useState('');
+    const [submittingComment, setSubmittingComment] = useState(false);
     const [donationOpen, setDonationOpen] = useState(true);
 
     const [voting, setVoting] = useState(false);
@@ -106,6 +118,114 @@ const GalleryDetailView = memo(
     ]);
 
     const artworkId = story?.id || entry?.id;
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const capturedDonationRef = useRef(null);
+
+    useEffect(() => {
+      const paymentId =
+        searchParams.get('paymentId') ||
+        searchParams.get('token') ||
+        sessionStorage.getItem('pendingDonationPaymentId');
+
+      if (searchParams.get('cancel') || searchParams.get('cancelled')) {
+        sessionStorage.removeItem('pendingDonationPaymentId');
+        navigate(location.pathname, { replace: true });
+        toast.info(
+          t('galleryDetail.donation.cancelled', 'Donation was cancelled.'),
+        );
+        return;
+      }
+
+      if (
+        paymentId &&
+        (searchParams.get('token') ||
+          searchParams.get('PayerID') ||
+          searchParams.get('paymentId')) &&
+        capturedDonationRef.current !== paymentId
+      ) {
+        capturedDonationRef.current = paymentId;
+        sessionStorage.removeItem('pendingDonationPaymentId');
+
+        captureDonationPaymentApi({ paymentId })
+          .then((res) => {
+            navigate(location.pathname, { replace: true });
+            toast.success(
+              res?.message ||
+                t(
+                  'galleryDetail.donation.success',
+                  'Thank you for your generous donation!',
+                ),
+            );
+          })
+          .catch((err) => {
+            navigate(location.pathname, { replace: true });
+            toast.error(
+              getApiErrorMessage(
+                err,
+                t(
+                  'galleryDetail.donation.captureFailed',
+                  'Failed to complete donation payment.',
+                ),
+              ),
+            );
+          });
+      }
+    }, [searchParams, location.pathname, navigate, t]);
+
+    const commentsList = useMemo(() => {
+      if (Array.isArray(story.comments) && story.comments.length > 0) {
+        return story.comments;
+      }
+      if (Array.isArray(entry?.comments) && entry.comments.length > 0) {
+        return entry.comments;
+      }
+      return [];
+    }, [story.comments, entry?.comments]);
+
+    const handleCommentSubmit = async (e) => {
+      e.preventDefault();
+      if (!artworkId) return;
+      if (!commentBody || !commentBody.trim()) {
+        toast.error(t('galleryDetail.commentEmpty', 'Please enter a comment.'));
+        return;
+      }
+
+      try {
+        setSubmittingComment(true);
+        const res = await createArtworkCommentApi(artworkId, {
+          body: commentBody.trim(),
+        });
+        toast.success(
+          res?.message ||
+            t('galleryDetail.commentSuccess', 'Comment posted successfully!'),
+        );
+        setCommentBody('');
+        queryClient.invalidateQueries({
+          queryKey: ['artwork-detail', artworkId],
+        });
+      } catch (err) {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('galleryDetail.commentFailed', 'Failed to post comment.'),
+          ),
+        );
+      } finally {
+        setSubmittingComment(false);
+      }
+    };
+
+    const isInCompetition =
+      isCompetitionProp !== undefined
+        ? Boolean(isCompetitionProp)
+        : (story?.competitionState === 'IN_COMPETITION' ||
+            entry?.competitionState === 'IN_COMPETITION' ||
+            Boolean(story?.isCompetition) ||
+            Boolean(entry?.isCompetition)) &&
+          story?.competitionState !== 'PROFILE_ONLY' &&
+          entry?.competitionState !== 'PROFILE_ONLY';
 
     const handleVote = async () => {
       if (!artworkId || isOwnSubmission || voting || hasVoted) return;
@@ -176,10 +296,7 @@ const GalleryDetailView = memo(
           setLikesCount(Number(count));
         }
         const isLikedRes =
-          res?.data?.isLiked ??
-          res?.isLiked ??
-          res?.data?.liked ??
-          res?.liked;
+          res?.data?.isLiked ?? res?.isLiked ?? res?.data?.liked ?? res?.liked;
         if (isLikedRes != null) {
           setIsLiked(Boolean(isLikedRes));
         }
@@ -236,13 +353,37 @@ const GalleryDetailView = memo(
       try {
         if (navigator.share) {
           await navigator.share({ title: story.title, url });
+          toast.success(
+            t('galleryDetail.shareSuccess', 'Shared successfully!'),
+          );
           return;
         }
-        await navigator.clipboard.writeText(url);
-      } catch {
-        // User cancelled share or clipboard unavailable — no-op.
+      } catch (err) {
+        if (err?.name === 'AbortError') return;
       }
-    }, [story.title]);
+
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          const textArea = document.createElement('textarea');
+          textArea.value = url;
+          textArea.style.position = 'fixed';
+          textArea.style.opacity = '0';
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+        }
+        toast.success(
+          t('galleryDetail.linkCopied', 'Link copied to clipboard!'),
+        );
+      } catch {
+        toast.error(
+          t('galleryDetail.shareFailed', 'Failed to copy link to clipboard.'),
+        );
+      }
+    }, [story.title, t]);
 
     return (
       <SitePageLayout
@@ -379,8 +520,16 @@ const GalleryDetailView = memo(
               <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
                 {[
                   {
-                    label: t('galleryDetail.votesReceived'),
-                    value: String(story.votes ?? '').replace(/,/g, ''),
+                    label: isInCompetition
+                      ? t('galleryDetail.votesReceived')
+                      : t('galleryDetail.likesCounted', 'Likes Counted'),
+                    value: String(
+                      isInCompetition
+                        ? (story.votes ?? '0')
+                        : likesCount > 0
+                          ? likesCount
+                          : (story.likes ?? '0'),
+                    ).replace(/,/g, ''),
                   },
                   {
                     label: t('galleryDetail.viewsCounted'),
@@ -402,49 +551,55 @@ const GalleryDetailView = memo(
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <MarketingButton
-                  type="button"
-                  disabled={isOwnSubmission || voting || hasVoted}
-                  onClick={handleVote}
-                  title={
-                    isOwnSubmission
-                      ? t('galleryDetail.cannotVoteOwn')
-                      : hasVoted
-                        ? t('galleryDetail.alreadyVoted', 'Already voted')
-                        : undefined
-                  }
-                  className={hasVoted ? 'bg-[#16a34a] hover:bg-[#15803d]' : ''}
-                >
-                  <ImgIcon src={ASSETS.voteHeart} size={20} />
-                  {voting
-                    ? t('common.voting', 'Voting...')
-                    : hasVoted
-                      ? t('galleryDetail.voted', 'Voted!')
-                      : t('galleryDetail.castVote')}
-                </MarketingButton>
-
-                <MarketingButton
-                  type="button"
-                  variant="outline"
-                  disabled={liking}
-                  onClick={handleLikeToggle}
-                  className={isLiked ? 'text-[#e53935] border-[#e53935]' : ''}
-                >
-                  <Heart
-                    size={18}
-                    strokeWidth={2}
-                    aria-hidden="true"
-                    className={
-                      isLiked
-                        ? 'fill-[#e53935] text-[#e53935]'
-                        : 'text-[#494453]'
+                {isInCompetition ? (
+                  <MarketingButton
+                    type="button"
+                    disabled={isOwnSubmission || voting || hasVoted}
+                    onClick={handleVote}
+                    title={
+                      isOwnSubmission
+                        ? t('galleryDetail.cannotVoteOwn')
+                        : hasVoted
+                          ? t('galleryDetail.alreadyVoted', 'Already voted')
+                          : undefined
                     }
-                  />
-                  <span>
-                    {likesCount > 0 ? likesCount.toLocaleString('en-US') : ''}{' '}
-                    {isLiked ? t('common.liked', 'Liked') : t('common.like', 'Like')}
-                  </span>
-                </MarketingButton>
+                    className={
+                      hasVoted ? 'bg-[#16a34a] hover:bg-[#15803d]' : ''
+                    }
+                  >
+                    <ImgIcon src={ASSETS.voteHeart} size={20} />
+                    {voting
+                      ? t('common.voting', 'Voting...')
+                      : hasVoted
+                        ? t('galleryDetail.voted', 'Voted!')
+                        : t('galleryDetail.castVote')}
+                  </MarketingButton>
+                ) : (
+                  <MarketingButton
+                    type="button"
+                    variant="outline"
+                    disabled={liking}
+                    onClick={handleLikeToggle}
+                    className={isLiked ? 'text-[#e53935] border-[#e53935]' : ''}
+                  >
+                    <Heart
+                      size={18}
+                      strokeWidth={2}
+                      aria-hidden="true"
+                      className={
+                        isLiked
+                          ? 'fill-[#e53935] text-[#e53935]'
+                          : 'text-[#494453]'
+                      }
+                    />
+                    <span>
+                      {likesCount > 0 ? likesCount.toLocaleString('en-US') : ''}{' '}
+                      {isLiked
+                        ? t('common.liked', 'Liked')
+                        : t('common.like', 'Like')}
+                    </span>
+                  </MarketingButton>
+                )}
 
                 <MarketingButton
                   type="button"
@@ -463,11 +618,32 @@ const GalleryDetailView = memo(
                         : 'text-[#494453]'
                     }
                   />
-                  {isSaved ? t('gallery.saved', 'Saved') : t('gallery.save', 'Save')}
+                  {isSaved
+                    ? t('gallery.saved', 'Saved')
+                    : t('gallery.save', 'Save')}
                 </MarketingButton>
 
                 <MarketingButton
                   type="button"
+                  onClick={async () => {
+                    if (!artworkId) return;
+                    try {
+                      await triggerArtworkDownload(
+                        artworkId,
+                        story.title || 'photo',
+                      );
+                      toast.success(
+                        t('galleryDetail.downloadStarted', 'Download started!'),
+                      );
+                    } catch (err) {
+                      toast.error(
+                        getApiErrorMessage(
+                          err,
+                          t('common.errors.general', 'Download failed.'),
+                        ),
+                      );
+                    }
+                  }}
                   className="bg-[#4048CD]! !hover:bg-[#333BB0] active:scale-[0.98]"
                 >
                   {t('galleryDetail.downloadPhoto')}
@@ -519,6 +695,7 @@ const GalleryDetailView = memo(
 
               {donationOpen ? (
                 <GalleryDetailDonation
+                  submissionId={artworkId}
                   photographer={story.photographer}
                   avatar={donationAvatar}
                   bio={donationBio}
@@ -537,44 +714,94 @@ const GalleryDetailView = memo(
               )}
 
               <div className="overflow-hidden rounded-lg bg-[#f8fafc] p-4 sm:p-6">
-                <h2 className="text-[20px] font-semibold text-(--primary-text-heading-color) sm:text-[22px]">
-                  {t('galleryDetail.comments')}
-                </h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[20px] font-semibold text-(--primary-text-heading-color) sm:text-[22px]">
+                    {t('galleryDetail.comments')} ({commentsList.length})
+                  </h2>
+                </div>
 
-                <ul className="mt-5 flex flex-col sm:mt-6">
-                  {COMMENTS.map((item, index) => (
-                    <li
-                      key={`${item.name}-${index}`}
-                      className="border-b border-[#c8c8c8] pb-4 pt-0 first:pt-0 not-first:pt-4"
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <Image
-                            src={ASSETS.commentAvatar}
-                            alt=""
-                            width={48}
-                            height={48}
-                            className="size-12 rounded-full object-cover"
-                          />
-                          <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
-                            {item.name}
+                {commentsList.length > 0 ? (
+                  <ul className="mt-5 flex flex-col sm:mt-6">
+                    {commentsList.map((item, index) => {
+                      const commenterName =
+                        item.user?.name ||
+                        item.user?.username ||
+                        item.name ||
+                        'User';
+                      const commenterAvatar =
+                        item.user?.avatar ||
+                        item.avatar ||
+                        ASSETS.commentAvatar;
+                      const commentText =
+                        item.body || item.text || item.comment || '';
+                      const commentDate =
+                        item.formattedDate ||
+                        (item.createdAt
+                          ? new Date(item.createdAt).toLocaleDateString(
+                              'en-US',
+                              {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              },
+                            )
+                          : '');
+
+                      return (
+                        <li
+                          key={item.id || `${commenterName}-${index}`}
+                          className="border-b border-[#c8c8c8] pb-4 pt-0 first:pt-0 not-first:pt-4"
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <Image
+                                src={commenterAvatar}
+                                alt={commenterName}
+                                width={48}
+                                height={48}
+                                className="size-12 rounded-full object-cover"
+                              />
+                              <div>
+                                <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
+                                  {commenterName}
+                                </p>
+                                {commentDate ? (
+                                  <p className="text-[12px] text-[#9ca3af]">
+                                    {commentDate}
+                                  </p>
+                                ) : null}
+                              </div>
+                            </div>
+                            {item.isPinned ? (
+                              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#f59e0b] px-2 py-0.5 text-[12px] font-medium text-white">
+                                Pinned
+                              </span>
+                            ) : item.status === 'APPROVED' ? (
+                              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
+                                <ImgIcon src={ASSETS.verified} size={16} />
+                                {t('galleryDetail.verified')}
+                              </span>
+                            ) : null}
+                          </div>
+                          <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
+                            {commentText}
                           </p>
-                        </div>
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
-                          <ImgIcon src={ASSETS.verified} size={16} />
-                          {t('galleryDetail.verified')}
-                        </span>
-                      </div>
-                      <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
-                        {item.text}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="mt-4 text-[14px] text-[#6b7280]">
+                    {t(
+                      'galleryDetail.noComments',
+                      'No comments on this photo yet. Be the first to comment!',
+                    )}
+                  </p>
+                )}
 
                 <form
                   className="mt-5 flex flex-col gap-3 rounded-lg bg-[#e6f0f8] p-4 sm:mt-6"
-                  onSubmit={(e) => e.preventDefault()}
+                  onSubmit={handleCommentSubmit}
                 >
                   <div className="flex flex-col gap-2">
                     <label
@@ -585,15 +812,22 @@ const GalleryDetailView = memo(
                     </label>
                     <textarea
                       id={config.commentFieldId}
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
+                      value={commentBody}
+                      onChange={(e) => setCommentBody(e.target.value)}
                       placeholder={t('galleryDetail.commentPlaceholder')}
                       rows={5}
-                      className="w-full resize-y rounded-lg bg-white p-2.5 text-[13px] leading-5 text-[#373737] outline-none placeholder:text-[#373737]"
+                      disabled={submittingComment}
+                      className="w-full resize-y rounded-lg bg-white p-2.5 text-[13px] leading-5 text-[#373737] outline-none placeholder:text-[#373737] disabled:opacity-60"
                     />
                   </div>
-                  <MarketingButton type="submit" className="w-full rounded-lg">
-                    {t(config.submitLabelKey)}
+                  <MarketingButton
+                    type="submit"
+                    disabled={submittingComment || !commentBody.trim()}
+                    className="w-full cursor-pointer rounded-lg disabled:opacity-50"
+                  >
+                    {submittingComment
+                      ? t('common.submitting', 'Posting comment...')
+                      : t(config.submitLabelKey)}
                   </MarketingButton>
                 </form>
               </div>

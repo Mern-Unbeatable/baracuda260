@@ -1,19 +1,32 @@
+import { useQueryClient } from '@tanstack/react-query';
 import {
+  Bookmark,
   Camera,
+  Flag,
   Heart,
   Image as ImageIcon,
   Maximize2,
   Share2,
   ShoppingCart,
 } from 'lucide-react';
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Image from '@/components/ui/Image';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  PUBLIC_PREMIUM_PHOTO_DETAIL_QUERY_KEY,
+  PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+  reportPremiumPhotoApi,
+  toggleLikePremiumPhotoApi,
+  toggleSavePremiumPhotoApi,
+} from '@/shared/api/premiumPhotos.api';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
@@ -55,9 +68,27 @@ DetailInfoCard.displayName = 'DetailInfoCard';
 const BuyPhotoDetailView = memo(({ photo }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const baseLikes = parseCount(photo.votes);
-  const [favorited, setFavorited] = useState(false);
-  const displayLikes = formatCount(favorited ? baseLikes + 1 : baseLikes);
+  const queryClient = useQueryClient();
+
+  const [isLiked, setIsLiked] = useState(() => Boolean(photo.isLiked));
+  const [likesCount, setLikesCount] = useState(() =>
+    parseCount(photo.likesCount ?? photo.votes ?? photo.likes),
+  );
+  const [isSaved, setIsSaved] = useState(() => Boolean(photo.isSaved));
+  const [reportOpen, setReportOpen] = useState(false);
+
+  useEffect(() => {
+    setIsLiked(Boolean(photo.isLiked));
+    setLikesCount(parseCount(photo.likesCount ?? photo.votes ?? photo.likes));
+    setIsSaved(Boolean(photo.isSaved));
+  }, [
+    photo.id,
+    photo.isLiked,
+    photo.likesCount,
+    photo.votes,
+    photo.likes,
+    photo.isSaved,
+  ]);
 
   const badgeLabel = t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
     defaultValue: photo.badge,
@@ -76,6 +107,93 @@ const BuyPhotoDetailView = memo(({ photo }) => {
     navigate(ROUTES.BUY_PHOTOS_CHECKOUT, { state: { photo } });
   }, [navigate, photo]);
 
+  const handleLikeToggle = async () => {
+    if (!photo.id) return;
+    const next = !isLiked;
+    setIsLiked(next);
+    setLikesCount((prev) => (next ? prev + 1 : Math.max(0, prev - 1)));
+    try {
+      const res = await toggleLikePremiumPhotoApi(photo.id);
+      const count =
+        res?.data?.likesCount ??
+        res?.likesCount ??
+        res?.data?.likes ??
+        res?.likes;
+      if (count != null) {
+        setLikesCount(parseCount(count));
+      }
+      const isLikedRes =
+        res?.data?.isLiked ?? res?.isLiked ?? res?.data?.liked ?? res?.liked;
+      if (isLikedRes != null) {
+        setIsLiked(Boolean(isLikedRes));
+      }
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_PREMIUM_PHOTO_DETAIL_QUERY_KEY(photo.id),
+      });
+      if (res?.message) toast.success(res.message);
+    } catch (err) {
+      setIsLiked(!next);
+      setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('common.errors.general', 'Failed to update like status.'),
+        ),
+      );
+    }
+  };
+
+  const handleSaveToggle = async () => {
+    if (!photo.id) return;
+    const next = !isSaved;
+    setIsSaved(next);
+    try {
+      const res = await toggleSavePremiumPhotoApi(photo.id);
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_PREMIUM_PHOTO_DETAIL_QUERY_KEY(photo.id),
+      });
+      queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+      toast.success(
+        res?.message ||
+          (next
+            ? t('gallery.savedSuccess', 'Saved to favourites')
+            : t('gallery.unsavedSuccess', 'Removed from favourites')),
+      );
+    } catch (err) {
+      setIsSaved(!next);
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('common.errors.general', 'Failed to update saved status.'),
+        ),
+      );
+    }
+  };
+
+  const handleReportSubmit = async ({ reason, details }) => {
+    if (!photo.id) return;
+    try {
+      const res = await reportPremiumPhotoApi(photo.id, { reason, details });
+      toast.success(
+        res?.message ||
+          t('gallery.reportModal.success', 'Report submitted successfully.'),
+      );
+    } catch (err) {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t('common.errors.general', 'Failed to submit report.'),
+        ),
+      );
+    }
+  };
+
   const handleShare = useCallback(async () => {
     const url = window.location.href;
     try {
@@ -84,10 +202,11 @@ const BuyPhotoDetailView = memo(({ photo }) => {
         return;
       }
       await navigator.clipboard.writeText(url);
+      toast.success(t('common.linkCopied', 'Link copied to clipboard!'));
     } catch {
       // User cancelled share or clipboard unavailable.
     }
-  }, [photo.title]);
+  }, [photo.title, t]);
 
   const detailRows = [
     {
@@ -98,7 +217,7 @@ const BuyPhotoDetailView = memo(({ photo }) => {
     },
     {
       key: 'format',
-      icon: Image,
+      icon: ImageIcon,
       label: t('buyPhotos.detail.specs.format'),
       value: photo.format,
     },
@@ -136,11 +255,13 @@ const BuyPhotoDetailView = memo(({ photo }) => {
       <section className="bg-white section-py-bottom pt-0">
         <Shell>
           <div className={PAGE_STACK}>
-            <GalleryDetailVideo
-              poster={videoPoster}
-              src={videoSrc}
-              title={photo.title}
-            />
+            {videoSrc ? (
+              <GalleryDetailVideo
+                poster={videoPoster}
+                src={videoSrc}
+                title={photo.title}
+              />
+            ) : null}
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
               {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
@@ -178,7 +299,11 @@ const BuyPhotoDetailView = memo(({ photo }) => {
                 <div className="flex flex-1 flex-col">
                   <div className="flex items-center gap-3">
                     <Image
-                      src={GALLERY_DETAIL_ASSETS.photographer}
+                      src={
+                        photo.author?.avatar ||
+                        photo.avatar ||
+                        GALLERY_DETAIL_ASSETS.photographer
+                      }
                       alt={photo.photographer}
                       width={57}
                       height={57}
@@ -195,7 +320,11 @@ const BuyPhotoDetailView = memo(({ photo }) => {
                   </div>
                   <MarketingButton
                     as={AppLink}
-                    href={ROUTES.PHOTOGRAPHER_PROFILE}
+                    href={
+                      photo.author?.id || photo.userId || photo.user?.id
+                        ? `/photographer/${photo.author?.id || photo.userId || photo.user?.id}`
+                        : ROUTES.PHOTOGRAPHER_PROFILE
+                    }
                     variant="outline"
                     className="mt-auto w-full rounded-lg"
                   >
@@ -231,7 +360,7 @@ const BuyPhotoDetailView = memo(({ photo }) => {
               {[
                 {
                   label: t('buyPhotos.detail.likesReceived'),
-                  value: displayLikes,
+                  value: formatCount(likesCount),
                 },
                 {
                   label: t('buyPhotos.detail.viewsCounted'),
@@ -252,32 +381,81 @@ const BuyPhotoDetailView = memo(({ photo }) => {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <MarketingButton
                 type="button"
-                aria-pressed={favorited}
-                onClick={() => setFavorited((current) => !current)}
+                variant={isLiked ? 'primary' : 'outline'}
+                aria-pressed={isLiked}
+                onClick={handleLikeToggle}
+                className={isLiked ? '!bg-[#ee1c25] !text-white' : ''}
               >
                 <Heart
                   size={18}
                   strokeWidth={2}
                   aria-hidden="true"
-                  className={favorited ? 'fill-white' : 'fill-transparent'}
+                  className={
+                    isLiked ? 'fill-white text-white' : 'text-[#494453]'
+                  }
                 />
-                {t('buyPhotos.detail.like')}
+                <span>
+                  {likesCount > 0 ? likesCount.toLocaleString('en-US') : ''}{' '}
+                  {isLiked
+                    ? t('common.liked', 'Liked')
+                    : t('buyPhotos.detail.like', 'Like')}
+                </span>
               </MarketingButton>
+
+              <MarketingButton
+                type="button"
+                variant="outline"
+                aria-pressed={isSaved}
+                onClick={handleSaveToggle}
+                className={isSaved ? 'text-[#ee1c25] border-[#ee1c25]' : ''}
+              >
+                <Bookmark
+                  size={18}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                  className={
+                    isSaved ? 'fill-[#ee1c25] text-[#ee1c25]' : 'text-[#494453]'
+                  }
+                />
+                <span>
+                  {isSaved
+                    ? t('gallery.saved', 'Saved')
+                    : t('gallery.save', 'Save')}
+                </span>
+              </MarketingButton>
+
               <MarketingButton
                 type="button"
                 variant="secondary"
                 onClick={handleShare}
               >
                 <Share2 size={18} strokeWidth={2} aria-hidden="true" />
-                {t('buyPhotos.detail.share')}
+                <span>{t('buyPhotos.detail.share', 'Share')}</span>
               </MarketingButton>
+
+              <button
+                type="button"
+                onClick={() => setReportOpen(true)}
+                className="inline-flex cursor-pointer items-center gap-1.5 px-3 py-2 text-[14px] font-medium text-[#6b7280] transition hover:text-[#ee1c25]"
+                aria-label={t('gallery.report', 'Report')}
+              >
+                <Flag size={16} />
+                <span>{t('gallery.report', 'Report')}</span>
+              </button>
             </div>
           </div>
         </Shell>
       </section>
+
+      <ReportPhotoModal
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        photoTitle={photo.title}
+        onSubmit={handleReportSubmit}
+      />
     </SitePageLayout>
   );
 });

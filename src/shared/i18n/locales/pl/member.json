@@ -1348,6 +1348,14 @@
       "deleted": "Usunięto {{title}} ze sklepu.",
       "promoted": "{{title}} jest teraz promowany na Marketplace."
     },
+    "promote": {
+      "redirecting": "Przekierowywanie do płatności PayPal...",
+      "started": "Rozpoczęto proces promowania.",
+      "success": "Produkt pomyślnie promowany!",
+      "cancelled": "Promowanie zostało anulowane.",
+      "error": "Nie udało się rozpocząć promowania. Spróbuj ponownie.",
+      "captureError": "Nie udało się zrealizować płatności za promowanie."
+    },
     "upload": {
       "title": "Dodaj do sklepu",
       "back": "Powrót do sklepu",
@@ -1382,8 +1390,10 @@
       "errors": {
         "title": "Tytuł kolekcji jest wymagany.",
         "price": "Cena jest wymagana.",
-        "banner": "Dodaj zdjęcie banerowe produktu."
+        "banner": "Dodaj zdjęcie banerowe produktu.",
+        "copyrightRequired": "Potwierdź, że posiadasz prawa autorskie do tej pracy."
       },
+      "copyrightConfirm": "Potwierdzam, że posiadam pełne prawa autorskie do wszystkich przesłanych zdjęć oraz że nie zawierają one treści nielegalnych ani ich nie promują.",
       "editTitle": "Edytuj produkt sklepu",
       "currentBanner": "Aktualne zdjęcie banerowe",
       "updateSubmit": "Zaktualizuj produkt",
