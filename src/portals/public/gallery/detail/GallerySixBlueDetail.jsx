@@ -1,22 +1,7 @@
 import React, { memo } from 'react';
-import { useParams } from 'react-router-dom';
-import GalleryDetailView from '@/components/data-display/GalleryDetailView/GalleryDetailView';
-import { mergeGalleryPhotoMeta } from '@/shared/data/galleryDetail';
-import { getGallerySixBlueStoryById } from '@/shared/data/gallerySixStoryBlue';
-import { useSEO } from '@/shared/hooks/useSEO';
+import GalleryDetail from './GalleryDetail';
 
-const GallerySixBlueDetail = memo(() => {
-  const { id } = useParams();
-  const story = mergeGalleryPhotoMeta(id, getGallerySixBlueStoryById(id));
-
-  useSEO({
-    title: `${story.title} — 6 Photo Story (Libra)`,
-    description: story.description,
-    keywords: ['gallery', '6 photo story', 'libra', story.title, 'my12photos'],
-  });
-
-  return <GalleryDetailView entry={story} variant="sixBlue" />;
-});
+const GallerySixBlueDetail = memo(() => <GalleryDetail variant="sixBlue" />);
 
 GallerySixBlueDetail.displayName = 'GallerySixBlueDetail';
 

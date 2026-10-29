@@ -220,12 +220,12 @@ const GalleryDetailView = memo(
     const isInCompetition =
       isCompetitionProp !== undefined
         ? Boolean(isCompetitionProp)
-        : story?.competitionState === 'IN_COMPETITION' ||
-          entry?.competitionState === 'IN_COMPETITION' ||
-          Boolean(story?.competitionId) ||
-          Boolean(entry?.competitionId) ||
-          Boolean(story?.isCompetition) ||
-          Boolean(entry?.isCompetition);
+        : (story?.competitionState === 'IN_COMPETITION' ||
+            entry?.competitionState === 'IN_COMPETITION' ||
+            Boolean(story?.isCompetition) ||
+            Boolean(entry?.isCompetition)) &&
+          story?.competitionState !== 'PROFILE_ONLY' &&
+          entry?.competitionState !== 'PROFILE_ONLY';
 
     const handleVote = async () => {
       if (!artworkId || isOwnSubmission || voting || hasVoted) return;

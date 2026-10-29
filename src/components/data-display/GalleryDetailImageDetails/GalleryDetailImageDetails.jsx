@@ -22,7 +22,7 @@ const GalleryDetailImageDetails = memo(({ details }) => {
       label: t('galleryDetail.imageDetails.credit'),
       value: (
         <AppLink
-          href={ROUTES.PHOTOGRAPHER_PROFILE}
+          href={details.creditHref || ROUTES.PHOTOGRAPHER_PROFILE}
           className="font-medium text-[#4048cd] transition hover:underline"
         >
           {details.credit}
@@ -34,6 +34,15 @@ const GalleryDetailImageDetails = memo(({ details }) => {
       label: t('galleryDetail.imageDetails.creativeNumber'),
       value: details.creativeNumber,
     },
+    ...(details.camera
+      ? [
+          {
+            key: 'camera',
+            label: t('galleryDetail.imageDetails.camera', 'Camera'),
+            value: details.camera,
+          },
+        ]
+      : []),
     {
       key: 'resolution',
       label: t('galleryDetail.imageDetails.resolution'),

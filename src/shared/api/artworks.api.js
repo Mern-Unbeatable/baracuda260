@@ -128,7 +128,15 @@ export const getArtworkDetailsApi = async (submissionId) => {
     // Fallback to member/general endpoint if public fails or is draft
     response = await apiClient.get(`/v1/artworks/${submissionId}`);
   }
-  const data = response?.data !== undefined ? response.data : response;
+  let data = response?.data !== undefined ? response.data : response;
+  if (
+    data &&
+    data.data !== undefined &&
+    typeof data.data === 'object' &&
+    !Array.isArray(data.data)
+  ) {
+    data = data.data;
+  }
   if (!data) return null;
 
   const rawImages = data.images;
@@ -184,8 +192,26 @@ export const getArtworkDetailsApi = async (submissionId) => {
     };
   });
 
+  const rawKind = String(data.kind || 'SINGLE').toUpperCase();
+  let badge = 'Single Photo';
+  if (rawKind === 'TWELVE') {
+    badge = '12 photos - full Zodiac Story';
+  } else if (rawKind === 'SIX') {
+    badge = '6 Photos Story';
+  } else if (rawKind === 'VIDEO') {
+    badge = 'Video';
+  }
+
+  const resolvedCategory =
+    data.categoryName || data.category?.name || data.category || '';
+
   return {
     ...data,
+    badge,
+    kind: rawKind,
+    categoryName: resolvedCategory,
+    category: resolvedCategory,
+    photographer: data.user?.name || data.user?.username || 'Photographer',
     featuredImage: resolveMediaUrl(data.featuredImage),
     images: normalizedImages,
     user: data.user
@@ -202,6 +228,7 @@ export const getArtworkDetailsApi = async (submissionId) => {
         }
       : null,
     comments: normalizedComments,
+    isAiGenerated: Boolean(data.isAiGenerated || data.aiBadge),
   };
 };
 
@@ -385,32 +412,77 @@ export const triggerArtworkDownload = async (
   artworkId,
   defaultFilename = 'artwork',
 ) => {
-  const blob = await downloadPublicArtworkApi(artworkId);
-  if (blob instanceof Blob && blob.type.includes('application/json')) {
-    const text = await blob.text();
-    try {
-      const json = JSON.parse(text);
-      const targetUrl = json?.data?.url || json?.url || json?.downloadUrl;
-      if (targetUrl) {
-        window.open(targetUrl, '_blank');
-        return;
-      }
-    } catch {
-      // not json
+  const result = await downloadPublicArtworkApi(artworkId);
+
+  // Case 1: Backend returned parsed JSON directly (e.g. { data: { url: "..." } })
+  if (result && typeof result === 'object' && !(result instanceof Blob)) {
+    const targetUrl =
+      result?.data?.url ||
+      result?.data?.downloadUrl ||
+      result?.url ||
+      result?.downloadUrl;
+    if (targetUrl) {
+      const link = document.createElement('a');
+      link.href = targetUrl;
+      link.download = defaultFilename;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
     }
   }
 
-  const blobUrl = window.URL.createObjectURL(
-    blob instanceof Blob ? blob : new Blob([blob]),
-  );
-  const link = document.createElement('a');
-  link.href = blobUrl;
-  const ext = defaultFilename.includes('.') ? '' : '.jpg';
-  link.download = `${defaultFilename}${ext}`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(blobUrl);
+  // Case 2: Backend returned Blob
+  if (result instanceof Blob) {
+    // If the Blob is application/json
+    if (result.type.includes('application/json')) {
+      try {
+        const text = await result.text();
+        const json = JSON.parse(text);
+        const targetUrl =
+          json?.data?.url ||
+          json?.data?.downloadUrl ||
+          json?.url ||
+          json?.downloadUrl;
+        if (targetUrl) {
+          const link = document.createElement('a');
+          link.href = targetUrl;
+          link.download = defaultFilename;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          return;
+        }
+      } catch {
+        // Not valid JSON, continue with direct blob download
+      }
+    }
+
+    // Direct binary blob (image, video, or stream)
+    const blobUrl = window.URL.createObjectURL(result);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    const ext = defaultFilename.includes('.') ? '' : '.jpg';
+    link.download = `${defaultFilename}${ext}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+    return;
+  }
+
+  // Case 3: Result is a URL string
+  if (typeof result === 'string' && result.startsWith('http')) {
+    const link = document.createElement('a');
+    link.href = result;
+    link.download = defaultFilename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 };
 
 /**
