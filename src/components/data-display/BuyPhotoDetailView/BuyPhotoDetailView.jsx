@@ -178,7 +178,11 @@ const BuyPhotoDetailView = memo(({ photo }) => {
                 <div className="flex flex-1 flex-col">
                   <div className="flex items-center gap-3">
                     <Image
-                      src={GALLERY_DETAIL_ASSETS.photographer}
+                      src={
+                        photo.author?.avatar ||
+                        photo.avatar ||
+                        GALLERY_DETAIL_ASSETS.photographer
+                      }
                       alt={photo.photographer}
                       width={57}
                       height={57}
@@ -195,7 +199,11 @@ const BuyPhotoDetailView = memo(({ photo }) => {
                   </div>
                   <MarketingButton
                     as={AppLink}
-                    href={ROUTES.PHOTOGRAPHER_PROFILE}
+                    href={
+                      photo.author?.id || photo.userId || photo.user?.id
+                        ? `/photographer/${photo.author?.id || photo.userId || photo.user?.id}`
+                        : ROUTES.PHOTOGRAPHER_PROFILE
+                    }
                     variant="outline"
                     className="mt-auto w-full rounded-lg"
                   >
