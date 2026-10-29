@@ -1,9 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Bookmark, Heart, Share2 } from 'lucide-react';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
 import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
@@ -25,6 +26,7 @@ import {
   voteArtworkApi,
 } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
+import { captureDonationPaymentApi } from '@/shared/api/payments.api';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS as ASSETS,
@@ -107,6 +109,62 @@ const GalleryDetailView = memo(
     ]);
 
     const artworkId = story?.id || entry?.id;
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const capturedDonationRef = useRef(null);
+
+    useEffect(() => {
+      const paymentId =
+        searchParams.get('paymentId') ||
+        searchParams.get('token') ||
+        sessionStorage.getItem('pendingDonationPaymentId');
+
+      if (searchParams.get('cancel') || searchParams.get('cancelled')) {
+        sessionStorage.removeItem('pendingDonationPaymentId');
+        navigate(location.pathname, { replace: true });
+        toast.info(
+          t('galleryDetail.donation.cancelled', 'Donation was cancelled.'),
+        );
+        return;
+      }
+
+      if (
+        paymentId &&
+        (searchParams.get('token') ||
+          searchParams.get('PayerID') ||
+          searchParams.get('paymentId')) &&
+        capturedDonationRef.current !== paymentId
+      ) {
+        capturedDonationRef.current = paymentId;
+        sessionStorage.removeItem('pendingDonationPaymentId');
+
+        captureDonationPaymentApi({ paymentId })
+          .then((res) => {
+            navigate(location.pathname, { replace: true });
+            toast.success(
+              res?.message ||
+                t(
+                  'galleryDetail.donation.success',
+                  'Thank you for your generous donation!',
+                ),
+            );
+          })
+          .catch((err) => {
+            navigate(location.pathname, { replace: true });
+            toast.error(
+              getApiErrorMessage(
+                err,
+                t(
+                  'galleryDetail.donation.captureFailed',
+                  'Failed to complete donation payment.',
+                ),
+              ),
+            );
+          });
+      }
+    }, [searchParams, location.pathname, navigate, t]);
+
     const isInCompetition =
       isCompetitionProp !== undefined
         ? Boolean(isCompetitionProp)
@@ -561,6 +619,7 @@ const GalleryDetailView = memo(
 
               {donationOpen ? (
                 <GalleryDetailDonation
+                  submissionId={artworkId}
                   photographer={story.photographer}
                   avatar={donationAvatar}
                   bio={donationBio}
