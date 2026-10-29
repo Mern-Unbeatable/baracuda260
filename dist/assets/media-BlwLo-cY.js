@@ -1,1 +1,0 @@
-import{A as s}from"./index-BEtbjG_Y.js";const i=r=>r?/^(https?:|data:|blob:)/i.test(r)?r:`${s.ORIGIN}/${r.replace(/^\/+/,"")}`:"",n=(r,t=800)=>{if(!r||typeof r!="string")return"";const e=i(r);if(e.includes("images.unsplash.com")){if(!e.includes("?"))return`${e}?auto=format&fit=crop&w=${t}&q=80`;if(!e.includes("w="))return`${e}&w=${t}&q=80`}return e};export{n as o,i as r};

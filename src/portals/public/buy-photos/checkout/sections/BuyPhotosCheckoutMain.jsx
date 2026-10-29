@@ -1,6 +1,11 @@
-import { ArrowRight, CreditCard, Lock } from 'lucide-react';
-import React, { memo } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { ArrowRight, CreditCard, Loader2, Lock } from 'lucide-react';
+import React, { memo, useEffect } from 'react';
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
@@ -16,9 +21,21 @@ const INPUT_CLASS =
 
 const BuyPhotosCheckoutMain = memo(() => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const photo = location.state?.photo;
 
-  const { register, handleSubmit, errors, t, EMAIL_REGEX } =
+  useEffect(() => {
+    const paymentId =
+      searchParams.get('paymentId') || searchParams.get('token');
+    if (paymentId) {
+      navigate(`${ROUTES.BUY_PHOTOS_SUCCESS}?${searchParams.toString()}`, {
+        replace: true,
+      });
+    }
+  }, [searchParams, navigate]);
+
+  const { register, handleSubmit, errors, submitting, t, EMAIL_REGEX } =
     useBuyPhotosCheckout(photo);
 
   if (!photo) {
@@ -187,10 +204,29 @@ const BuyPhotosCheckoutMain = memo(() => {
                 <Button
                   type="submit"
                   unstyled
-                  className="mt-5 w-full rounded-lg py-3.5 inline-flex items-center justify-center font-bold transition uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed bg-[#ee1c25] hover:bg-[#d01820] text-white gap-2"
+                  disabled={submitting}
+                  className="mt-5 w-full rounded-lg py-3.5 inline-flex items-center justify-center font-bold transition uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed bg-[#ee1c25] hover:bg-[#d01820] text-white gap-2 cursor-pointer"
                 >
-                  {t('buyPhotos.checkout.payment.continuePaypal')}
-                  <ArrowRight size={18} strokeWidth={2} aria-hidden="true" />
+                  {submitting ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      <span>
+                        {t(
+                          'buyPhotos.checkout.payment.processing',
+                          'Creating checkout...',
+                        )}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {t('buyPhotos.checkout.payment.continuePaypal')}
+                      <ArrowRight
+                        size={18}
+                        strokeWidth={2}
+                        aria-hidden="true"
+                      />
+                    </>
+                  )}
                 </Button>
 
                 <p className="mt-4 text-center text-[12px] leading-5 text-[#9ca3af]">

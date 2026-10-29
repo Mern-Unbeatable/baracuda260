@@ -1,10 +1,21 @@
-import { Check, Download } from 'lucide-react';
-import React, { memo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Check, Download, Loader2 } from 'lucide-react';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useLocation } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Image from '@/components/ui/Image';
+import {
+  captureBuyPremiumPhotoPaymentApi,
+  PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+} from '@/shared/api/premiumPhotos.api';
 import { ROUTES } from '@/shared/config';
 import { loadLastBuyPurchase } from '@/shared/data/buyPhotos';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
@@ -12,16 +23,72 @@ import { Shell, SitePageLayout } from '@/shared/site-chrome';
 const BuyPhotosSuccessMain = memo(() => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
+
+  const [capturing, setCapturing] = useState(false);
+  const capturedRef = useRef(null);
+
   const purchase = location.state?.purchase ?? loadLastBuyPurchase();
 
-  if (!purchase) {
+  const paymentIdFromUrl =
+    searchParams.get('paymentId') || searchParams.get('token');
+  const paymentIdFromSession = sessionStorage.getItem(
+    'pendingBuyPhotoPaymentId',
+  );
+  const paymentId = paymentIdFromUrl || paymentIdFromSession;
+
+  useEffect(() => {
+    if (searchParams.get('cancel') || searchParams.get('cancelled')) {
+      sessionStorage.removeItem('pendingBuyPhotoPaymentId');
+      toast.info(
+        t('buyPhotos.checkout.cancelled', 'PayPal checkout was cancelled.'),
+      );
+      navigate(ROUTES.BUY_PHOTOS, { replace: true });
+      return;
+    }
+
+    if (paymentId && capturedRef.current !== paymentId) {
+      capturedRef.current = paymentId;
+      sessionStorage.removeItem('pendingBuyPhotoPaymentId');
+      setCapturing(true);
+
+      captureBuyPremiumPhotoPaymentApi({ paymentId })
+        .then((res) => {
+          toast.success(
+            res?.message ||
+              t(
+                'buyPhotos.success.captureSuccess',
+                'Payment captured successfully!',
+              ),
+          );
+          queryClient.invalidateQueries({
+            queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['my-purchases'],
+          });
+        })
+        .catch((err) => {
+          console.warn('Capture note:', err);
+        })
+        .finally(() => {
+          setCapturing(false);
+        });
+    }
+  }, [paymentId, searchParams, navigate, queryClient, t]);
+
+  if (!purchase && !capturing) {
     return <Navigate to={ROUTES.BUY_PHOTOS} replace />;
   }
 
   const handleDownload = () => {
+    if (!purchase?.image) return;
     const link = document.createElement('a');
     link.href = purchase.image;
-    link.download = `${purchase.title.replace(/\s+/g, '-').toLowerCase()}.webp`;
+    link.download = `${(purchase.title || 'photo').replace(/\s+/g, '-').toLowerCase()}.webp`;
+    link.target = '_blank';
     link.click();
   };
 
@@ -39,86 +106,116 @@ const BuyPhotosSuccessMain = memo(() => {
               variant="filled"
               className="overflow-hidden p-6 sm:p-8"
             >
-              <div className="flex flex-col items-center text-center">
-                <span className="inline-flex size-16 items-center justify-center rounded-full bg-[#0d0d14] text-white">
-                  <Check size={32} strokeWidth={2.5} aria-hidden="true" />
-                </span>
-                <h1 className="mt-5 text-[28px] font-bold leading-tight text-[#0d0d14] sm:text-[32px]">
-                  {t('buyPhotos.success.title')}
-                </h1>
-                <p className="mt-3 max-w-md text-[15px] leading-6 text-[#6b7280]">
-                  {t('buyPhotos.success.subtitle')}
-                </p>
-              </div>
-
-              <div className="mt-8 rounded-xl bg-[#f5f5f5] p-4 sm:p-5">
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={purchase.image}
-                    alt={purchase.title}
-                    width={72}
-                    height={72}
-                    className="size-18 shrink-0 rounded-lg object-cover"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[16px] font-bold text-[#0d0d14]">
-                      {purchase.title}
-                    </p>
-                    <p className="mt-1 text-[14px] text-[#6b7280]">
-                      {t('buyPhotos.success.by', {
-                        name: purchase.photographer,
-                      })}
-                    </p>
-                  </div>
-                  <p className="shrink-0 text-[22px] font-bold text-[#4048cd]">
-                    {purchase.price}
+              {capturing ? (
+                <div className="flex flex-col items-center py-10 text-center">
+                  <Loader2 size={40} className="animate-spin text-[#4048cd]" />
+                  <h2 className="mt-4 text-[20px] font-bold text-[#0d0d14]">
+                    {t(
+                      'buyPhotos.success.capturingTitle',
+                      'Finalizing purchase with PayPal...',
+                    )}
+                  </h2>
+                  <p className="mt-1 text-[14px] text-[#6b7280]">
+                    {t(
+                      'buyPhotos.success.capturingSubtitle',
+                      'Please wait a moment while we verify your transaction.',
+                    )}
                   </p>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="flex flex-col items-center text-center">
+                    <span className="inline-flex size-16 items-center justify-center rounded-full bg-[#0d0d14] text-white">
+                      <Check size={32} strokeWidth={2.5} aria-hidden="true" />
+                    </span>
+                    <h1 className="mt-5 text-[28px] font-bold leading-tight text-[#0d0d14] sm:text-[32px]">
+                      {t('buyPhotos.success.title')}
+                    </h1>
+                    <p className="mt-3 max-w-md text-[15px] leading-6 text-[#6b7280]">
+                      {t('buyPhotos.success.subtitle')}
+                    </p>
+                  </div>
 
-              <div className="mt-8 border-t border-black/10 pt-6">
-                <h2 className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#9ca3af]">
-                  {t('buyPhotos.success.transaction.title')}
-                </h2>
-                <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {[
-                    {
-                      label: t('buyPhotos.success.transaction.id'),
-                      value: purchase.id,
-                    },
-                    {
-                      label: t('buyPhotos.success.transaction.date'),
-                      value: purchase.date,
-                    },
-                    {
-                      label: t('buyPhotos.success.transaction.paymentMethod'),
-                      value: purchase.paymentMethod,
-                    },
-                    {
-                      label: t('buyPhotos.success.transaction.license'),
-                      value: purchase.license,
-                    },
-                  ].map((row) => (
-                    <div key={row.label}>
-                      <dt className="text-[12px] font-semibold uppercase tracking-[1px] text-[#9ca3af]">
-                        {row.label}
-                      </dt>
-                      <dd className="mt-1 text-[15px] font-medium text-[#0d0d14]">
-                        {row.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
+                  {purchase && (
+                    <>
+                      <div className="mt-8 rounded-xl bg-[#f5f5f5] p-4 sm:p-5">
+                        <div className="flex items-center gap-4">
+                          <Image
+                            src={purchase.image}
+                            alt={purchase.title}
+                            width={72}
+                            height={72}
+                            className="size-18 shrink-0 rounded-lg object-cover"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-[16px] font-bold text-[#0d0d14]">
+                              {purchase.title}
+                            </p>
+                            <p className="mt-1 text-[14px] text-[#6b7280]">
+                              {t('buyPhotos.success.by', {
+                                name: purchase.photographer,
+                              })}
+                            </p>
+                          </div>
+                          <p className="shrink-0 text-[22px] font-bold text-[#4048cd]">
+                            {purchase.price}
+                          </p>
+                        </div>
+                      </div>
 
-              <MarketingButton
-                type="button"
-                className="mt-8 w-full rounded-lg py-3.5"
-                onClick={handleDownload}
-              >
-                <Download size={18} strokeWidth={2} aria-hidden="true" />
-                {t('buyPhotos.success.downloadPhoto')}
-              </MarketingButton>
+                      <div className="mt-8 border-t border-black/10 pt-6">
+                        <h2 className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#9ca3af]">
+                          {t('buyPhotos.success.transaction.title')}
+                        </h2>
+                        <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+                          {[
+                            {
+                              label: t('buyPhotos.success.transaction.id'),
+                              value: purchase.id,
+                            },
+                            {
+                              label: t('buyPhotos.success.transaction.date'),
+                              value: purchase.date,
+                            },
+                            {
+                              label: t(
+                                'buyPhotos.success.transaction.paymentMethod',
+                              ),
+                              value: purchase.paymentMethod,
+                            },
+                            {
+                              label: t('buyPhotos.success.transaction.license'),
+                              value: purchase.license,
+                            },
+                          ].map((row) => (
+                            <div key={row.label}>
+                              <dt className="text-[12px] font-semibold uppercase tracking-[1px] text-[#9ca3af]">
+                                {row.label}
+                              </dt>
+                              <dd className="mt-1 text-[15px] font-medium text-[#0d0d14]">
+                                {row.value}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
+                      </div>
+
+                      <MarketingButton
+                        type="button"
+                        className="mt-8 w-full rounded-lg py-3.5"
+                        onClick={handleDownload}
+                      >
+                        <Download
+                          size={18}
+                          strokeWidth={2}
+                          aria-hidden="true"
+                        />
+                        {t('buyPhotos.success.downloadPhoto')}
+                      </MarketingButton>
+                    </>
+                  )}
+                </>
+              )}
             </MarketingCard>
           </div>
         </Shell>

@@ -175,7 +175,7 @@ export const formatPriceForMarketplace = (rawPrice) => {
   if (!rawPrice) return '5.00';
   const cleaned = String(rawPrice).replace(/[^0-9.]/g, '');
   const num = parseFloat(cleaned);
-  return isNaN(num) ? '5.00' : num.toFixed(2);
+  return Number.isNaN(num) ? '5.00' : num.toFixed(2);
 };
 
 /**
@@ -291,7 +291,7 @@ export const createMarketplacePremiumPhotoApi = async (payload) => {
 export const formatMarketplacePrice = (rawPrice) => {
   if (rawPrice == null || rawPrice === '') return '£0.00';
   const num = Number(rawPrice);
-  if (isNaN(num)) return String(rawPrice);
+  if (Number.isNaN(num)) return String(rawPrice);
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
 };
 
@@ -803,6 +803,44 @@ export const reportPremiumPhotoApi = async (
 };
 
 /**
+ * Creates a PayPal purchase checkout for a marketplace premium photo.
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/buy
+ *
+ * @param {string} photoId
+ * @param {{ email: string, fullName: string }} payload
+ * @returns {Promise<{ orderId: string, paymentId: string, approvalUrl: string }>}
+ */
+export const createBuyPremiumPhotoCheckoutApi = async (
+  photoId,
+  { email, fullName } = {},
+) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/buy`,
+    {
+      email,
+      fullName,
+    },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Captures PayPal payment for a marketplace premium photo purchase.
+ * Endpoint: POST /v1/marketplace/premium-photos/buy/capture
+ *
+ * @param {{ paymentId: string }} payload
+ */
+export const captureBuyPremiumPhotoPaymentApi = async ({ paymentId }) => {
+  if (!paymentId) throw new Error('Payment ID is required');
+  const response = await apiClient.post(
+    '/v1/marketplace/premium-photos/buy/capture',
+    { paymentId },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
  * Updates a marketplace premium photo listing.
  * Endpoint: PUT /v1/marketplace/premium-photos/:id
  *
@@ -965,13 +1003,13 @@ export const parsePurchasePrice = (priceObj, fallbackPrice) => {
   if (typeof priceObj === 'number') return priceObj;
   if (typeof priceObj === 'string') {
     const num = parseFloat(priceObj);
-    if (!isNaN(num)) return num;
+    if (!Number.isNaN(num)) return num;
   }
   if (priceObj && typeof priceObj === 'object') {
     if (typeof fallbackPrice === 'number') return fallbackPrice;
     if (
       typeof fallbackPrice === 'string' &&
-      !isNaN(parseFloat(fallbackPrice))
+      !Number.isNaN(parseFloat(fallbackPrice))
     ) {
       return parseFloat(fallbackPrice);
     }
@@ -984,19 +1022,22 @@ export const parsePurchasePrice = (priceObj, fallbackPrice) => {
         if (exp >= joined.length) {
           str = joined + '0'.repeat(exp - joined.length);
         } else if (exp <= 0) {
-          str = '0.' + '0'.repeat(-exp) + joined;
+          str = `0.${'0'.repeat(-exp)}${joined}`;
         } else {
-          str = joined.slice(0, exp) + '.' + joined.slice(exp);
+          str = `${joined.slice(0, exp)}.${joined.slice(exp)}`;
         }
         const val = parseFloat(str) * sign;
-        if (!isNaN(val)) return val;
+        if (!Number.isNaN(val)) return val;
       } catch {
         // fallback
       }
     }
   }
   if (typeof fallbackPrice === 'number') return fallbackPrice;
-  if (typeof fallbackPrice === 'string' && !isNaN(parseFloat(fallbackPrice))) {
+  if (
+    typeof fallbackPrice === 'string' &&
+    !Number.isNaN(parseFloat(fallbackPrice))
+  ) {
     return parseFloat(fallbackPrice);
   }
   return 0;
@@ -1137,11 +1178,11 @@ export const downloadMarketplacePremiumPhotoApi = async (
   const blob = await response.blob();
   const contentDisposition = response.headers.get('content-disposition');
   let resolvedFilename = filename;
-  if (contentDisposition && contentDisposition.includes('filename=')) {
+  if (contentDisposition?.includes('filename=')) {
     const match = contentDisposition.match(
       /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/,
     );
-    if (match && match[1]) {
+    if (match?.[1]) {
       resolvedFilename = match[1].replace(/['"]/g, '').trim();
     }
   } else {
