@@ -507,7 +507,10 @@ const BuyPhotosMain = memo(({ activeHref = ROUTES.BUY_PHOTOS }) => {
                       href={`/buy-photos/${photo.id}`}
                       image={photo.image}
                       imageAlt={photo.title}
-                      videoUrl={photo.video?.url}
+                      kind={photo.kind}
+                      videoUrl={
+                        photo.kind === 'VIDEO' ? photo.video?.url : undefined
+                      }
                       title={photo.title}
                       badge={photo.badge}
                       description={photo.description}
