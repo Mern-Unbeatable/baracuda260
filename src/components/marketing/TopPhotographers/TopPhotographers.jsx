@@ -41,10 +41,11 @@ const ASSETS = {
   arrowRed: homeAsset('icon-arrow-red.svg'),
 };
 
-const ALBUM_TAB_TO_KIND = {
-  'Single Photo': 'SINGLE',
-  '6 Photos': 'SIX',
-  '12 photos - full Zodiac Story': 'TWELVE',
+const getKindFromTab = (tab) => {
+  const s = String(tab || '').toUpperCase();
+  if (s.includes('12') || s.includes('ZODIAC')) return 'TWELVE';
+  if (s.includes('6') || s.includes('SIX')) return 'SIX';
+  return 'SINGLE';
 };
 
 const LeaderboardPodium = memo(({ winners = [] }) => {
@@ -326,7 +327,7 @@ const LeaderboardStandings = memo(({ rows = [] }) => {
 LeaderboardStandings.displayName = 'LeaderboardStandings';
 
 const LeaderboardPageFilters = memo(
-  ({ albumTab, onAlbumTabChange, monthMenu }) => {
+  ({ albumTab, onAlbumTabChange, monthMenu, isFetching = false }) => {
     const { t } = useTranslation();
     const {
       month,
@@ -351,50 +352,65 @@ const LeaderboardPageFilters = memo(
         />
 
         <div className="relative self-start sm:self-auto" ref={monthRef}>
-          <Button
-            unstyled
+          <button
             type="button"
             aria-haspopup="listbox"
             aria-expanded={monthOpen}
             onClick={() => setMonthOpen((open) => !open)}
-            className="inline-flex cursor-pointer items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222]"
+            className="inline-flex cursor-pointer items-center gap-2.5 rounded bg-[#f0f0f0] px-3 py-2 text-[16px] font-medium text-[#222] transition hover:bg-[#e6e6e6]"
           >
-            <ImgIcon src={ASSETS.calendar} size={13} />
+            {isFetching ? (
+              <RefreshCw size={13} className="animate-spin text-[#ee1c25]" />
+            ) : (
+              <ImgIcon src={ASSETS.calendar} size={13} />
+            )}
             <span>{t(`common.months.${month}`, month)}</span>
             <span
-              className={`inline-flex transition ${monthOpen ? 'rotate-180' : ''}`}
+              className={`inline-flex transition-transform duration-200 ${
+                monthOpen ? 'rotate-180' : ''
+              }`}
               aria-hidden="true"
             >
               <ImgIcon src={ASSETS.chevron} size={24} />
             </span>
-          </Button>
+          </button>
 
           {monthOpen ? (
             <ul
               role="listbox"
               aria-label={t('common.selectMonth')}
-              className="absolute right-0 z-30 mt-2 max-h-64 w-45 overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
+              onMouseDown={(e) => e.stopPropagation()}
+              className="absolute right-0 z-50 mt-2 max-h-64 w-48 overflow-y-auto rounded-lg border border-black/10 bg-white py-1 shadow-[0_12px_30px_rgba(13,13,20,0.12)]"
             >
               {LEADERBOARD_MONTHS.map((name) => {
-                const selected = name === month;
+                const selected =
+                  String(name).toLowerCase() === String(month).toLowerCase();
                 return (
                   <li key={name} role="option" aria-selected={selected}>
-                    <Button
-                      unstyled
+                    <button
                       type="button"
-                      onClick={() => {
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setMonth(name);
                         setMonthOpen(false);
                       }}
-                      className={`flex w-full cursor-pointer items-center gap-2 px-3 py-2.5 text-left text-[14px] font-medium transition ${
+                      className={`flex w-full cursor-pointer items-center justify-between px-3.5 py-2.5 text-left text-[14px] font-medium transition ${
                         selected
-                          ? 'bg-[#4048cd]/10 text-[#4048cd]'
+                          ? 'bg-[#4048cd]/10 font-bold text-[#4048cd]'
                           : 'text-[#222] hover:bg-[#f7f8fa]'
                       }`}
                     >
-                      <ImgIcon src={ASSETS.calendar} size={12} />
-                      {t(`common.months.${name}`, name)}
-                    </Button>
+                      <span className="flex items-center gap-2">
+                        <ImgIcon src={ASSETS.calendar} size={12} />
+                        {t(`common.months.${name}`, name)}
+                      </span>
+                      {selected ? (
+                        <span className="text-[12px] text-[#4048cd] font-bold">
+                          ✓
+                        </span>
+                      ) : null}
+                    </button>
                   </li>
                 );
               })}
@@ -420,15 +436,19 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
   const monthMenu = useMonthMenu('September');
 
   const monthIndex = useMemo(() => {
-    const idx = LEADERBOARD_MONTHS.indexOf(monthMenu.month);
+    const target = String(monthMenu.month || '')
+      .trim()
+      .toLowerCase();
+    const idx = LEADERBOARD_MONTHS.findIndex((m) => m.toLowerCase() === target);
     return idx !== -1 ? idx + 1 : 9;
   }, [monthMenu.month]);
 
-  const kind = ALBUM_TAB_TO_KIND[albumTab] || 'SINGLE';
+  const kind = getKindFromTab(albumTab);
 
   const {
     data: winners = [],
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,
@@ -481,6 +501,7 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
                 albumTab={albumTab}
                 onAlbumTabChange={setAlbumTab}
                 monthMenu={monthMenu}
+                isFetching={isFetching}
               />
             ) : (
               <MarketingButton
@@ -551,10 +572,16 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
             </p>
           </div>
         ) : (
-          <>
+          <div
+            className={`transition-opacity duration-200 ${
+              isFetching && !isLoading
+                ? 'opacity-50 pointer-events-none'
+                : 'opacity-100'
+            }`}
+          >
             <LeaderboardPodium winners={winners} />
             <LeaderboardStandings rows={winners} />
-          </>
+          </div>
         )}
       </Shell>
     </section>
