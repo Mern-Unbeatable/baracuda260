@@ -1,0 +1,1 @@
+import{u as t}from"./useQuery-BX4sg2-1.js";import{f as u,b as a}from"./userProfile.api-DLBZ_zzu.js";function E(){const{data:r,isLoading:e,isError:o,error:s,refetch:i}=t({queryKey:a,queryFn:u,staleTime:6e4});return{data:r,isLoading:e,isError:o,error:s,refetch:i}}export{E as u};

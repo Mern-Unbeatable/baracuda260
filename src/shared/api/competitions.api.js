@@ -18,15 +18,19 @@ export const COMPETITIONS_QUERY_KEY = ['competitions'];
 
 const resolveMediaUrl = (url) => {
   if (!url || typeof url !== 'string') return url;
-  if (
-    url.startsWith('http://') ||
-    url.startsWith('https://') ||
-    url.startsWith('blob:')
-  ) {
-    return url;
-  }
-  const baseUrl = import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || '';
-  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  if (/^(https?:|data:|blob:)/i.test(url)) return url;
+  const baseUrl = (
+    import.meta.env.VITE_API_BASE_URL ||
+    import.meta.env.VITE_API_URL ||
+    ''
+  ).replace(/\/+$/, '');
+  const uploadIndex = url.indexOf('uploads');
+  const cleanPath =
+    uploadIndex !== -1
+      ? `/${url.slice(uploadIndex).replace(/\\/g, '/')}`
+      : url.startsWith('/')
+        ? url
+        : `/${url}`;
   return `${baseUrl}${cleanPath}`;
 };
 
