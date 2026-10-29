@@ -47,6 +47,7 @@ const GalleryDetailView = memo(
     activeHref = ROUTES.GALLERY,
     Breadcrumb = GalleryDetailBreadcrumb,
     rootClassName: rootClassNameProp,
+    isCompetition: isCompetitionProp,
   }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
@@ -107,12 +108,14 @@ const GalleryDetailView = memo(
 
     const artworkId = story?.id || entry?.id;
     const isInCompetition =
-      story?.competitionState === 'IN_COMPETITION' ||
-      entry?.competitionState === 'IN_COMPETITION' ||
-      Boolean(story?.competitionId) ||
-      Boolean(entry?.competitionId) ||
-      Boolean(story?.isCompetition) ||
-      Boolean(entry?.isCompetition);
+      isCompetitionProp !== undefined
+        ? Boolean(isCompetitionProp)
+        : story?.competitionState === 'IN_COMPETITION' ||
+          entry?.competitionState === 'IN_COMPETITION' ||
+          Boolean(story?.competitionId) ||
+          Boolean(entry?.competitionId) ||
+          Boolean(story?.isCompetition) ||
+          Boolean(entry?.isCompetition);
 
     const handleVote = async () => {
       if (!artworkId || isOwnSubmission || voting || hasVoted) return;

@@ -508,7 +508,7 @@ const CompetitionsMain = memo(({ activeHref = ROUTES.COMPETITIONS }) => {
                     <PhotoShowcaseCard
                       key={photo.id}
                       id={photo.id}
-                      href={photo.detailPath}
+                      href={photo.detailPath || `/competitions/${photo.id}`}
                       image={photo.image}
                       imageAlt={photo.title}
                       title={photo.title}

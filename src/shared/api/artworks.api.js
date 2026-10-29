@@ -1019,13 +1019,23 @@ export const getPublicArtworksApi = async ({
   const normalizedData = rawList.map((item) => {
     const rawKind = String(item.kind || 'SINGLE').toUpperCase();
     let badge = 'Single Photo';
-    let detailPath = `/gallery/${item.id}`;
+    const isComp =
+      params.status === 'IN_COMPETITION' ||
+      item.competitionState === 'IN_COMPETITION' ||
+      item.status === 'IN_COMPETITION' ||
+      Boolean(item.competitionId);
+
+    let detailPath = isComp ? `/competitions/${item.id}` : `/gallery/${item.id}`;
     if (rawKind === 'TWELVE') {
       badge = '12 photos - full Zodiac Story';
-      detailPath = `/gallery/zodiac/${item.id}`;
+      detailPath = isComp
+        ? `/competitions/zodiac/${item.id}`
+        : `/gallery/zodiac/${item.id}`;
     } else if (rawKind === 'SIX') {
       badge = '6 Photos Story';
-      detailPath = `/gallery/story/${item.id}`;
+      detailPath = isComp
+        ? `/competitions/story/${item.id}`
+        : `/gallery/story/${item.id}`;
     }
 
     // Extract first valid image URL
