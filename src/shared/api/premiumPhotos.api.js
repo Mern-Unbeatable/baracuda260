@@ -750,6 +750,59 @@ export const getPublicPremiumPhotoDetailsApi = async (id) => {
 };
 
 /**
+ * Like / unlike a marketplace premium photo (toggle).
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/like
+ *
+ * @param {string} photoId
+ */
+export const toggleLikePremiumPhotoApi = async (photoId) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/like`,
+    {},
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Save / unsave a marketplace premium photo (toggle).
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/save
+ *
+ * @param {string} photoId
+ */
+export const toggleSavePremiumPhotoApi = async (photoId) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/save`,
+    {},
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Report a marketplace premium photo.
+ * Endpoint: POST /v1/marketplace/premium-photos/:id/report
+ *
+ * @param {string} photoId
+ * @param {{ reason: string, details?: string }} payload
+ */
+export const reportPremiumPhotoApi = async (
+  photoId,
+  { reason, details = '' } = {},
+) => {
+  if (!photoId) throw new Error('Photo ID is required');
+  if (!reason) throw new Error('Report reason is required');
+  const response = await apiClient.post(
+    `/v1/marketplace/premium-photos/${encodeURIComponent(photoId)}/report`,
+    {
+      reason,
+      details: details || '',
+    },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
  * Updates a marketplace premium photo listing.
  * Endpoint: PUT /v1/marketplace/premium-photos/:id
  *

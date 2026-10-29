@@ -24,6 +24,12 @@ import {
   voteArtworkApi,
 } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+  reportPremiumPhotoApi,
+  toggleLikePremiumPhotoApi,
+  toggleSavePremiumPhotoApi,
+} from '@/shared/api/premiumPhotos.api';
 import { AppLink, ImgIcon } from '@/shared/site-chrome';
 
 const TROPHY_ICON = '/assets/home/icon-trophy-cup.svg';
@@ -79,6 +85,7 @@ const PhotoShowcaseCard = memo(
     initialLiked = false,
     onLikeToggle,
     engagementType = 'like',
+    itemType,
   }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
@@ -87,6 +94,10 @@ const PhotoShowcaseCard = memo(
     const [likesCount, setLikesCount] = useState(() => parseCount(likes));
     const [reportOpen, setReportOpen] = useState(false);
     const showPrice = price != null && price !== '';
+
+    const isPremiumPhoto =
+      itemType === 'premium-photo' ||
+      (typeof href === 'string' && href.includes('/buy-photos/'));
 
     useEffect(() => {
       setSaved(initialSaved);
@@ -118,9 +129,22 @@ const PhotoShowcaseCard = memo(
       }
       if (id) {
         try {
-          const res = await toggleSaveArtworkApi(id);
-          queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
-          queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
+          const res = isPremiumPhoto
+            ? await toggleSavePremiumPhotoApi(id)
+            : await toggleSaveArtworkApi(id);
+
+          if (isPremiumPhoto) {
+            queryClient.invalidateQueries({
+              queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['public-premium-photo-detail', id],
+            });
+          } else {
+            queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+            queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
+          }
+
           toast.success(
             res?.message ||
               (next
@@ -185,7 +209,10 @@ const PhotoShowcaseCard = memo(
         }
 
         try {
-          const res = await toggleLikeArtworkApi(id);
+          const res = isPremiumPhoto
+            ? await toggleLikePremiumPhotoApi(id)
+            : await toggleLikeArtworkApi(id);
+
           const count =
             res?.data?.likesCount ??
             res?.likesCount ??
@@ -202,6 +229,16 @@ const PhotoShowcaseCard = memo(
           if (isLikedRes != null) {
             setLiked(Boolean(isLikedRes));
           }
+
+          if (isPremiumPhoto) {
+            queryClient.invalidateQueries({
+              queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['public-premium-photo-detail', id],
+            });
+          }
+
           if (res?.message) toast.success(res.message);
         } catch (err) {
           setLiked(!next);
@@ -229,7 +266,9 @@ const PhotoShowcaseCard = memo(
     const handleReport = async ({ reason, details }) => {
       if (!id) return;
       try {
-        const res = await reportArtworkApi(id, { reason, details });
+        const res = isPremiumPhoto
+          ? await reportPremiumPhotoApi(id, { reason, details })
+          : await reportArtworkApi(id, { reason, details });
         toast.success(
           res?.message ||
             t('gallery.reportModal.success', 'Report submitted successfully.'),
