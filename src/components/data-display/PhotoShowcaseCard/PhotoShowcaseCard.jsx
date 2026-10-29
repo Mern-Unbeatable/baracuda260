@@ -15,8 +15,10 @@ import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
+  reportArtworkApi,
   toggleLikeArtworkApi,
   toggleSaveArtworkApi,
+  voteArtworkApi,
 } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 import { AppLink, ImgIcon } from '@/shared/site-chrome';
@@ -72,6 +74,7 @@ const PhotoShowcaseCard = memo(
     onSaveToggle,
     initialLiked = false,
     onLikeToggle,
+    engagementType = 'like',
   }) => {
     const { t } = useTranslation();
     const [saved, setSaved] = useState(initialSaved);
@@ -129,6 +132,8 @@ const PhotoShowcaseCard = memo(
       }
     };
 
+    const isVoteMode = engagementType === 'vote';
+
     const handleLike = async (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -140,6 +145,32 @@ const PhotoShowcaseCard = memo(
         return;
       }
       if (id) {
+        if (isVoteMode) {
+          try {
+            const res = await voteArtworkApi(id);
+            toast.success(
+              res?.message ||
+                t(
+                  'competitionsPage.voteSuccess',
+                  'Vote recorded successfully!',
+                ),
+            );
+          } catch (err) {
+            setLiked(!next);
+            setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
+            toast.error(
+              getApiErrorMessage(
+                err,
+                t(
+                  'competitionsPage.voteError',
+                  'Failed to record vote. You may need to log in.',
+                ),
+              ),
+            );
+          }
+          return;
+        }
+
         try {
           const res = await toggleLikeArtworkApi(id);
           const count =
@@ -180,6 +211,24 @@ const PhotoShowcaseCard = memo(
         return;
       }
       setReportOpen(true);
+    };
+
+    const handleReport = async ({ reason, details }) => {
+      if (!id) return;
+      try {
+        const res = await reportArtworkApi(id, { reason, details });
+        toast.success(
+          res?.message ||
+            t('gallery.reportModal.success', 'Report submitted successfully.'),
+        );
+      } catch (err) {
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('common.errors.general', 'Failed to submit report.'),
+          ),
+        );
+      }
     };
 
     return (
@@ -245,7 +294,11 @@ const PhotoShowcaseCard = memo(
                   })}
                   className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60"
                 >
-                  <MoreVertical size={16} strokeWidth={2.5} aria-hidden="true" />
+                  <MoreVertical
+                    size={16}
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  />
                 </Button>
               ) : null}
 
@@ -379,6 +432,7 @@ const PhotoShowcaseCard = memo(
           open={reportOpen}
           onClose={() => setReportOpen(false)}
           photoTitle={title}
+          onSubmit={handleReport}
         />
       </>
     );

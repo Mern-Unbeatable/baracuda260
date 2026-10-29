@@ -66,8 +66,14 @@ const ReportPhotoModal = memo(
       setAttempted(true);
       if (!selectedReason) return;
 
+      const reasonLabel =
+        t(`gallery.reportModal.reasons.${selectedReason}.title`, {
+          defaultValue: selectedReason,
+        }) || selectedReason;
+
       onSubmit?.({
-        reason: selectedReason,
+        reason: reasonLabel,
+        reasonId: selectedReason,
         details: details.trim(),
         photoTitle,
       });

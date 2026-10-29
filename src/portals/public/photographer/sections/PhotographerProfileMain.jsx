@@ -19,9 +19,12 @@ import PhotographerTalentAppreciation from '@/portals/public/photographer/compon
 import {
   PHOTOGRAPHER_ARTWORK,
   PHOTOGRAPHER_FEATURED,
+  PHOTOGRAPHER_FEATURED_VIDEO,
   PHOTOGRAPHER_MESSAGES,
   PHOTOGRAPHER_PREMIUM,
+  PHOTOGRAPHER_PROFILE,
   PHOTOGRAPHER_STORE_PRODUCTS,
+  PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import {
   getUserProfileByUsernameApi,
@@ -79,11 +82,19 @@ const PhotographerProfileMain = memo(() => {
 
   const profile = useMemo(() => {
     const raw = profileResponse?.data;
-    if (!raw) return null;
+    if (!raw) {
+      if (!username) {
+        return {
+          id: 'demo-elena-vance',
+          username: 'elenavance',
+          ...PHOTOGRAPHER_PROFILE,
+          appreciation: PHOTOGRAPHER_TALENT_APPRECIATION,
+        };
+      }
+      return null;
+    }
 
-    const handle = raw.username
-      ? `@${raw.username.replace(/^@/, '')}`
-      : '';
+    const handle = raw.username ? `@${raw.username.replace(/^@/, '')}` : '';
     const location = [raw.city, raw.country].filter(Boolean).join(', ');
 
     let socialObj = {};
@@ -138,21 +149,26 @@ const PhotographerProfileMain = memo(() => {
         competitionEntries: Number(raw.stats?.competitionEntries ?? 0),
         totalHearts: Number(raw.stats?.totalHearts ?? 0),
       },
-      appreciation: raw.appreciation || null,
+      appreciation: raw.appreciation || PHOTOGRAPHER_TALENT_APPRECIATION,
     };
-  }, [profileResponse]);
+  }, [profileResponse, username]);
 
   const featuredVideo = useMemo(() => {
-    if (!profileResponse?.data?.introVideo) return null;
-    return {
-      image: resolveMediaUrl(
-        profileResponse.data.introVideoThumbnail ||
-          profileResponse.data.coverPhoto,
-      ),
-      url: resolveMediaUrl(profileResponse.data.introVideo),
-      title: profileResponse.data.name || '',
-    };
-  }, [profileResponse?.data]);
+    if (profileResponse?.data?.introVideo) {
+      return {
+        image: resolveMediaUrl(
+          profileResponse.data.introVideoThumbnail ||
+            profileResponse.data.coverPhoto,
+        ),
+        url: resolveMediaUrl(profileResponse.data.introVideo),
+        title: profileResponse.data.name || '',
+      };
+    }
+    if (!username) {
+      return PHOTOGRAPHER_FEATURED_VIDEO;
+    }
+    return null;
+  }, [profileResponse?.data, username]);
 
   return (
     <SitePageLayout

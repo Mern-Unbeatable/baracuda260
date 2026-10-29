@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import GalleryMain from '@/portals/public/gallery/sections/GalleryMain';
+import CompetitionsMain from '@/portals/public/competitions/sections/CompetitionsMain';
 import { ROUTES } from '@/shared/config';
 import { useSEO } from '@/shared/hooks/useSEO';
 
@@ -7,17 +7,17 @@ const Competitions = memo(() => {
   useSEO({
     title: 'Competitions',
     description:
-      'Browse the My12Photos community photo showcase — filter by album type and category.',
+      'Browse live community photo competition entries — vote for your favorites and see real-time standings.',
     keywords: [
       'competitions',
-      'gallery',
-      'photo showcase',
+      'in competition',
+      'photo contest',
       'my12photos',
       'photography',
     ],
   });
 
-  return <GalleryMain activeHref={ROUTES.COMPETITIONS} />;
+  return <CompetitionsMain activeHref={ROUTES.COMPETITIONS} />;
 });
 
 Competitions.displayName = 'Competitions';

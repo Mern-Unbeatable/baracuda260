@@ -1,14 +1,10 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Bookmark, Heart, Share2 } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import {
-  toggleLikeArtworkApi,
-  toggleSaveArtworkApi,
-  voteArtworkApi,
-} from '@/shared/api/artworks.api';
-import { getApiErrorMessage } from '@/shared/api/client';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/app/store/slices/authSlice';
 import AiGeneratedDetailNotice from '@/components/data-display/AiGeneratedDetailNotice/AiGeneratedDetailNotice';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import GalleryDetailDonation from '@/components/data-display/GalleryDetailDonation/GalleryDetailDonation';
@@ -22,6 +18,13 @@ import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveS
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import {
+  toggleLikeArtworkApi,
+  toggleSaveArtworkApi,
+  triggerArtworkDownload,
+  voteArtworkApi,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS as ASSETS,
@@ -36,9 +39,6 @@ import {
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import GalleryDetailBreadcrumb from './GalleryDetailBreadcrumb';
-
-import { useSelector } from 'react-redux';
-import { selectUser } from '@/app/store/slices/authSlice';
 
 const GalleryDetailView = memo(
   ({
@@ -106,6 +106,13 @@ const GalleryDetailView = memo(
     ]);
 
     const artworkId = story?.id || entry?.id;
+    const isInCompetition =
+      story?.competitionState === 'IN_COMPETITION' ||
+      entry?.competitionState === 'IN_COMPETITION' ||
+      Boolean(story?.competitionId) ||
+      Boolean(entry?.competitionId) ||
+      Boolean(story?.isCompetition) ||
+      Boolean(entry?.isCompetition);
 
     const handleVote = async () => {
       if (!artworkId || isOwnSubmission || voting || hasVoted) return;
@@ -176,10 +183,7 @@ const GalleryDetailView = memo(
           setLikesCount(Number(count));
         }
         const isLikedRes =
-          res?.data?.isLiked ??
-          res?.isLiked ??
-          res?.data?.liked ??
-          res?.liked;
+          res?.data?.isLiked ?? res?.isLiked ?? res?.data?.liked ?? res?.liked;
         if (isLikedRes != null) {
           setIsLiked(Boolean(isLikedRes));
         }
@@ -379,8 +383,16 @@ const GalleryDetailView = memo(
               <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
                 {[
                   {
-                    label: t('galleryDetail.votesReceived'),
-                    value: String(story.votes ?? '').replace(/,/g, ''),
+                    label: isInCompetition
+                      ? t('galleryDetail.votesReceived')
+                      : t('galleryDetail.likesCounted', 'Likes Counted'),
+                    value: String(
+                      isInCompetition
+                        ? (story.votes ?? '0')
+                        : likesCount > 0
+                          ? likesCount
+                          : (story.likes ?? '0'),
+                    ).replace(/,/g, ''),
                   },
                   {
                     label: t('galleryDetail.viewsCounted'),
@@ -402,49 +414,55 @@ const GalleryDetailView = memo(
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <MarketingButton
-                  type="button"
-                  disabled={isOwnSubmission || voting || hasVoted}
-                  onClick={handleVote}
-                  title={
-                    isOwnSubmission
-                      ? t('galleryDetail.cannotVoteOwn')
-                      : hasVoted
-                        ? t('galleryDetail.alreadyVoted', 'Already voted')
-                        : undefined
-                  }
-                  className={hasVoted ? 'bg-[#16a34a] hover:bg-[#15803d]' : ''}
-                >
-                  <ImgIcon src={ASSETS.voteHeart} size={20} />
-                  {voting
-                    ? t('common.voting', 'Voting...')
-                    : hasVoted
-                      ? t('galleryDetail.voted', 'Voted!')
-                      : t('galleryDetail.castVote')}
-                </MarketingButton>
-
-                <MarketingButton
-                  type="button"
-                  variant="outline"
-                  disabled={liking}
-                  onClick={handleLikeToggle}
-                  className={isLiked ? 'text-[#e53935] border-[#e53935]' : ''}
-                >
-                  <Heart
-                    size={18}
-                    strokeWidth={2}
-                    aria-hidden="true"
-                    className={
-                      isLiked
-                        ? 'fill-[#e53935] text-[#e53935]'
-                        : 'text-[#494453]'
+                {isInCompetition ? (
+                  <MarketingButton
+                    type="button"
+                    disabled={isOwnSubmission || voting || hasVoted}
+                    onClick={handleVote}
+                    title={
+                      isOwnSubmission
+                        ? t('galleryDetail.cannotVoteOwn')
+                        : hasVoted
+                          ? t('galleryDetail.alreadyVoted', 'Already voted')
+                          : undefined
                     }
-                  />
-                  <span>
-                    {likesCount > 0 ? likesCount.toLocaleString('en-US') : ''}{' '}
-                    {isLiked ? t('common.liked', 'Liked') : t('common.like', 'Like')}
-                  </span>
-                </MarketingButton>
+                    className={
+                      hasVoted ? 'bg-[#16a34a] hover:bg-[#15803d]' : ''
+                    }
+                  >
+                    <ImgIcon src={ASSETS.voteHeart} size={20} />
+                    {voting
+                      ? t('common.voting', 'Voting...')
+                      : hasVoted
+                        ? t('galleryDetail.voted', 'Voted!')
+                        : t('galleryDetail.castVote')}
+                  </MarketingButton>
+                ) : (
+                  <MarketingButton
+                    type="button"
+                    variant="outline"
+                    disabled={liking}
+                    onClick={handleLikeToggle}
+                    className={isLiked ? 'text-[#e53935] border-[#e53935]' : ''}
+                  >
+                    <Heart
+                      size={18}
+                      strokeWidth={2}
+                      aria-hidden="true"
+                      className={
+                        isLiked
+                          ? 'fill-[#e53935] text-[#e53935]'
+                          : 'text-[#494453]'
+                      }
+                    />
+                    <span>
+                      {likesCount > 0 ? likesCount.toLocaleString('en-US') : ''}{' '}
+                      {isLiked
+                        ? t('common.liked', 'Liked')
+                        : t('common.like', 'Like')}
+                    </span>
+                  </MarketingButton>
+                )}
 
                 <MarketingButton
                   type="button"
@@ -463,11 +481,32 @@ const GalleryDetailView = memo(
                         : 'text-[#494453]'
                     }
                   />
-                  {isSaved ? t('gallery.saved', 'Saved') : t('gallery.save', 'Save')}
+                  {isSaved
+                    ? t('gallery.saved', 'Saved')
+                    : t('gallery.save', 'Save')}
                 </MarketingButton>
 
                 <MarketingButton
                   type="button"
+                  onClick={async () => {
+                    if (!artworkId) return;
+                    try {
+                      await triggerArtworkDownload(
+                        artworkId,
+                        story.title || 'photo',
+                      );
+                      toast.success(
+                        t('galleryDetail.downloadStarted', 'Download started!'),
+                      );
+                    } catch (err) {
+                      toast.error(
+                        getApiErrorMessage(
+                          err,
+                          t('common.errors.general', 'Download failed.'),
+                        ),
+                      );
+                    }
+                  }}
                   className="bg-[#4048CD]! !hover:bg-[#333BB0] active:scale-[0.98]"
                 >
                   {t('galleryDetail.downloadPhoto')}

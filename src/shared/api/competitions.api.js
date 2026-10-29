@@ -1,5 +1,18 @@
 import { apiClient } from './client';
-export { getArtworkDetailsApi, ARTWORKS_QUERY_KEY } from './artworks.api';
+
+export {
+  ARTWORKS_QUERY_KEY,
+  awardArtworkAppreciationApi,
+  createArtworkCommentApi,
+  downloadPublicArtworkApi,
+  getArtworkDetailsApi,
+  getPublicArtworksApi,
+  PUBLIC_ARTWORKS_QUERY_KEY,
+  reportArtworkApi,
+  toggleSaveArtworkApi,
+  triggerArtworkDownload,
+  voteArtworkApi,
+} from './artworks.api';
 
 export const COMPETITIONS_QUERY_KEY = ['competitions'];
 
@@ -90,4 +103,3 @@ export const getActiveCompetitionsApi = async (params = {}) => {
     return [];
   }
 };
-

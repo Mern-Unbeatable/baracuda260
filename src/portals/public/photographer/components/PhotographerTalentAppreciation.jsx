@@ -1,15 +1,19 @@
 import { CalendarDays, Camera, Check, Info } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
+import { awardArtworkAppreciationApi } from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { getDaysUntilNextSundayMidnight } from '@/shared/utils/weekReset';
 
 const TIER_STYLES = {
   gold: {
     icon: 'text-[#854d0e]',
-    iconBg: 'bg-gradient-to-r from-[#fef08a] via-[#fde047] to-[#facc15] border border-[#eab308]',
+    iconBg:
+      'bg-gradient-to-r from-[#fef08a] via-[#fde047] to-[#facc15] border border-[#eab308]',
     btn: 'bg-gradient-to-r from-[#fde047] to-[#eab308] text-[#713f12] font-semibold hover:from-[#eab308] hover:to-[#ca8a04] hover:text-white',
     dot: 'bg-[#eab308]',
   },
@@ -63,17 +67,20 @@ const normalizeAppreciation = (raw) => {
     {
       id: 'gold',
       count: Number(raw.gold) || 0,
-      awardedThisWeek: myAward === 'gold' || (hasAwardedThisWeek && myAward === 'gold'),
+      awardedThisWeek:
+        myAward === 'gold' || (hasAwardedThisWeek && myAward === 'gold'),
     },
     {
       id: 'silver',
       count: Number(raw.silver) || 0,
-      awardedThisWeek: myAward === 'silver' || (hasAwardedThisWeek && myAward === 'silver'),
+      awardedThisWeek:
+        myAward === 'silver' || (hasAwardedThisWeek && myAward === 'silver'),
     },
     {
       id: 'bronze',
       count: Number(raw.bronze) || 0,
-      awardedThisWeek: myAward === 'bronze' || (hasAwardedThisWeek && myAward === 'bronze'),
+      awardedThisWeek:
+        myAward === 'bronze' || (hasAwardedThisWeek && myAward === 'bronze'),
     },
   ];
 
@@ -92,7 +99,7 @@ const normalizeAppreciation = (raw) => {
 };
 
 const PhotographerTalentAppreciation = memo(
-  ({ appreciation, photographerName, userId }) => {
+  ({ appreciation, photographerName, userId, submissionId }) => {
     const { t } = useTranslation();
     const user = useSelector(selectUser);
 
@@ -125,7 +132,7 @@ const PhotographerTalentAppreciation = memo(
               .includes(user.username.toLowerCase()))),
     );
 
-    const giveAward = (tierId) => {
+    const giveAward = async (tierId) => {
       if ((weekly?.[tierId] ?? 0) === 0) return;
       setAwards((prev) =>
         (prev || []).map((tier) =>
@@ -135,6 +142,29 @@ const PhotographerTalentAppreciation = memo(
         ),
       );
       setWeekly((prev) => ({ ...(prev || {}), [tierId]: 0 }));
+
+      if (submissionId) {
+        try {
+          const res = await awardArtworkAppreciationApi({
+            submissionId,
+            tier: tierId.toUpperCase(),
+          });
+          toast.success(
+            res?.message ||
+              t(
+                'photographerProfile.appreciation.awardSuccess',
+                'Award sent successfully!',
+              ),
+          );
+        } catch (err) {
+          toast.error(
+            getApiErrorMessage(
+              err,
+              t('common.errors.general', 'Failed to award appreciation.'),
+            ),
+          );
+        }
+      }
     };
 
     return (
@@ -160,7 +190,9 @@ const PhotographerTalentAppreciation = memo(
             {(awards || []).map((tier) => {
               const style = TIER_STYLES[tier.id] ?? TIER_STYLES.gold;
               const disabled =
-                isOwnProfile || (weekly?.[tier.id] ?? 0) === 0 || tier.awardedThisWeek;
+                isOwnProfile ||
+                (weekly?.[tier.id] ?? 0) === 0 ||
+                tier.awardedThisWeek;
               return (
                 <article
                   key={tier.id}
@@ -236,7 +268,7 @@ const PhotographerTalentAppreciation = memo(
                   aria-hidden="true"
                 />
                 {t(`photographerProfile.appreciation.tiers.${id}`)}{' '}
-                <span className="text-[#9ca3af]">{(weekly?.[id] ?? 0)}/1</span>
+                <span className="text-[#9ca3af]">{weekly?.[id] ?? 0}/1</span>
               </span>
             ))}
           </div>

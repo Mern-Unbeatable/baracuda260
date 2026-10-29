@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
@@ -13,6 +14,14 @@ import {
   getStoreProductById,
   MY_STORE_CATEGORY_OPTIONS,
 } from '@/portals/member/data/myStoreData';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  createStoreProductApi,
+  getStoreProductDetailsApi,
+  STORE_PRODUCT_DETAILS_QUERY_KEY,
+  STORE_PRODUCTS_QUERY_KEY,
+  updateStoreProductApi,
+} from '@/shared/api/store.api';
 import { ROUTES } from '@/shared/config';
 
 const FieldLabel = memo(({ htmlFor, children }) => (
@@ -83,7 +92,7 @@ const DropzoneField = memo(
           id={id}
           ref={inputRef}
           type="file"
-          accept="image/jpeg,image/png"
+          accept="image/jpeg,image/png,image/webp,image/avif"
           multiple={multiple}
           className="sr-only"
           onChange={onChange}
@@ -97,12 +106,13 @@ DropzoneField.displayName = 'DropzoneField';
 const MyStoreUploadContent = memo(() => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { id } = useParams();
+  const isEditing = Boolean(id);
   const editingProduct = useMemo(
     () => (id ? getStoreProductById(id) : null),
     [id],
   );
-  const isEditing = Boolean(editingProduct);
 
   const bannerRef = useRef(null);
   const othersRef = useRef(null);
@@ -114,34 +124,65 @@ const MyStoreUploadContent = memo(() => {
     reset,
   } = useForm({
     defaultValues: editingProduct
-      ? buildStoreFormFromProduct(editingProduct)
-      : { ...EMPTY_STORE_UPLOAD_FORM },
+      ? { ...buildStoreFormFromProduct(editingProduct), copyrightOk: true }
+      : { ...EMPTY_STORE_UPLOAD_FORM, copyrightOk: false },
   });
 
   const [bannerPreview, setBannerPreview] = useState(
     () => editingProduct?.image || '',
   );
+  const [bannerFile, setBannerFile] = useState(null);
   const [bannerName, setBannerName] = useState('');
+  const [otherFiles, setOtherFiles] = useState([]);
   const [othersName, setOthersName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [bannerError, setBannerError] = useState('');
 
   useEffect(() => {
+    let isCancelled = false;
+
     if (!id) {
-      reset({ ...EMPTY_STORE_UPLOAD_FORM });
+      reset({ ...EMPTY_STORE_UPLOAD_FORM, copyrightOk: false });
       setBannerPreview('');
+      setBannerFile(null);
       setBannerName('');
+      setOtherFiles([]);
       setOthersName('');
-      return;
+      return undefined;
     }
 
-    const product = getStoreProductById(id);
-    if (!product) return;
+    const loadProduct = async () => {
+      try {
+        const liveProduct = await getStoreProductDetailsApi(id);
+        if (isCancelled) return;
+        if (liveProduct) {
+          reset({ ...buildStoreFormFromProduct(liveProduct), copyrightOk: true });
+          setBannerPreview(liveProduct.image || liveProduct.bannerImage || '');
+          setBannerFile(null);
+          setBannerName(t('myStore.upload.currentBanner'));
+          setOtherFiles([]);
+          setOthersName('');
+          return;
+        }
+      } catch {
+        // Fallback to local mock data if API fails or item is in mock
+      }
 
-    reset(buildStoreFormFromProduct(product));
-    setBannerPreview(product.image || '');
-    setBannerName(t('myStore.upload.currentBanner'));
-    setOthersName('');
+      const product = getStoreProductById(id);
+      if (isCancelled || !product) return;
+      reset({ ...buildStoreFormFromProduct(product), copyrightOk: true });
+      setBannerPreview(product.image || '');
+      setBannerFile(null);
+      setBannerName(t('myStore.upload.currentBanner'));
+      setOtherFiles([]);
+      setOthersName('');
+    };
+
+    loadProduct();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [id, t, reset]);
 
   useEffect(
@@ -160,6 +201,7 @@ const MyStoreUploadContent = memo(() => {
       if (prev?.startsWith?.('blob:')) URL.revokeObjectURL(prev);
       return url;
     });
+    setBannerFile(file);
     setBannerName(file.name);
     setBannerError('');
     event.target.value = '';
@@ -168,6 +210,7 @@ const MyStoreUploadContent = memo(() => {
   const handleOthersChange = (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
+    setOtherFiles(files);
     setOthersName(
       files.length === 1
         ? files[0].name
@@ -177,21 +220,62 @@ const MyStoreUploadContent = memo(() => {
   };
 
   const onSubmit = async (_data) => {
-    if (!bannerName && !bannerPreview) {
+    if (!isEditing && !bannerFile) {
+      setBannerError(t('myStore.upload.errors.banner'));
+      toast.error(t('myStore.upload.errors.banner'));
+      return;
+    }
+    if (isEditing && !bannerFile && !bannerPreview) {
       setBannerError(t('myStore.upload.errors.banner'));
       toast.error(t('myStore.upload.errors.banner'));
       return;
     }
 
     setSubmitting(true);
-    await new Promise((resolve) => window.setTimeout(resolve, 700));
-    setSubmitting(false);
-    toast.success(
-      isEditing
-        ? t('myStore.upload.updateSuccess')
-        : t('myStore.upload.success'),
-    );
-    navigate(ROUTES.USER_MY_STORE);
+    try {
+      const formData = new FormData();
+      formData.append('title', _data.title.trim());
+      formData.append('category', _data.category);
+      formData.append('price', String(_data.price).replace(/[^0-9.]/g, ''));
+      formData.append('setEditionSize', _data.edition?.trim?.() || '');
+      formData.append('description', _data.description?.trim?.() || '');
+      formData.append('copyrightConfirmed', 'true');
+
+      if (bannerFile) {
+        formData.append('bannerImage', bannerFile);
+      }
+
+      if (otherFiles.length > 0) {
+        otherFiles.forEach((file) => {
+          formData.append('images', file);
+        });
+      }
+
+      if (isEditing) {
+        await updateStoreProductApi(id, formData);
+        queryClient.invalidateQueries({ queryKey: [STORE_PRODUCTS_QUERY_KEY] });
+        queryClient.invalidateQueries({
+          queryKey: [STORE_PRODUCT_DETAILS_QUERY_KEY, id],
+        });
+        toast.success(t('myStore.upload.updateSuccess'));
+      } else {
+        await createStoreProductApi(formData);
+        queryClient.invalidateQueries({ queryKey: [STORE_PRODUCTS_QUERY_KEY] });
+        toast.success(t('myStore.upload.success'));
+      }
+      navigate(ROUTES.USER_MY_STORE);
+    } catch (err) {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          isEditing
+            ? t('myStore.upload.errors.updateFailed', 'Failed to update store product.')
+            : t('myStore.upload.errors.createFailed', 'Failed to create store product.'),
+        ),
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -314,6 +398,27 @@ const MyStoreUploadContent = memo(() => {
             onChange={handleOthersChange}
             multiple
           />
+
+          <div className="flex flex-col gap-1.5 pt-1">
+            <label className="flex cursor-pointer select-none items-start gap-2.5">
+              <input
+                type="checkbox"
+                id="store-copyright"
+                className="mt-1 size-4 rounded border-[#e4e8f8] text-[#ee1c25] focus:ring-[#ee1c25]"
+                {...register('copyrightOk', {
+                  required: t('myStore.upload.errors.copyrightRequired'),
+                })}
+              />
+              <span className="text-[13px] leading-5 text-[#4b5563]">
+                {t('myStore.upload.copyrightConfirm')}
+              </span>
+            </label>
+            {errors.copyrightOk ? (
+              <p className="text-[12px] text-red-500">
+                {errors.copyrightOk.message}
+              </p>
+            ) : null}
+          </div>
 
           <Button
             type="submit"
