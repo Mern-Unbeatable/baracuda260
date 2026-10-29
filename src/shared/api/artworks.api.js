@@ -70,7 +70,7 @@ export const getAdminArtworksApi = async ({
     if (item.createdAt) {
       try {
         const d = new Date(item.createdAt);
-        if (!isNaN(d.getTime())) {
+        if (!Number.isNaN(d.getTime())) {
           formattedDate = d.toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
@@ -151,7 +151,7 @@ export const getArtworkDetailsApi = async (submissionId) => {
     if (c.createdAt) {
       try {
         const d = new Date(c.createdAt);
-        if (!isNaN(d.getTime())) {
+        if (!Number.isNaN(d.getTime())) {
           formattedDate = d.toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
@@ -841,14 +841,14 @@ export const normalizeUserArtwork = (item) => {
 
   const primaryImage = getArtworkPrimaryImage(item);
   const createdDate = item.createdAt ? new Date(item.createdAt) : new Date();
-  const uploadedDate = !isNaN(createdDate.getTime())
+  const uploadedDate = !Number.isNaN(createdDate.getTime())
     ? createdDate.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
       })
     : '';
-  const uploadedTime = !isNaN(createdDate.getTime())
+  const uploadedTime = !Number.isNaN(createdDate.getTime())
     ? createdDate.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
@@ -996,7 +996,7 @@ export const getPublicArtworksApi = async ({
   if (categoryId) params.categoryId = categoryId;
   if (subcategoryId) params.subcategoryId = subcategoryId;
   if (kind && kind !== 'ALL') params.kind = String(kind).toUpperCase();
-  if (search && search.trim()) params.search = search.trim();
+  if (search?.trim()) params.search = search.trim();
 
   const response = await apiClient.get('/v1/artworks/public/all', { params });
   const payload = response?.data !== undefined ? response.data : response;
@@ -1025,7 +1025,9 @@ export const getPublicArtworksApi = async ({
       item.status === 'IN_COMPETITION' ||
       Boolean(item.competitionId);
 
-    let detailPath = isComp ? `/competitions/${item.id}` : `/gallery/${item.id}`;
+    let detailPath = isComp
+      ? `/competitions/${item.id}`
+      : `/gallery/${item.id}`;
     if (rawKind === 'TWELVE') {
       badge = '12 photos - full Zodiac Story';
       detailPath = isComp
@@ -1036,6 +1038,9 @@ export const getPublicArtworksApi = async ({
       detailPath = isComp
         ? `/competitions/story/${item.id}`
         : `/gallery/story/${item.id}`;
+    } else if (rawKind === 'VIDEO') {
+      badge = 'Video';
+      detailPath = isComp ? `/competitions/${item.id}` : `/gallery/${item.id}`;
     }
 
     // Extract first valid image URL
@@ -1049,7 +1054,12 @@ export const getPublicArtworksApi = async ({
       }
     }
     if (!imageUrl) {
-      imageUrl = item.coverImage || item.featuredImage || '';
+      imageUrl =
+        item.coverImage ||
+        item.featuredImage ||
+        item.video?.thumbnailUrl ||
+        item.video?.poster ||
+        '';
     }
     const image = resolveMediaUrl(imageUrl);
 
@@ -1057,7 +1067,7 @@ export const getPublicArtworksApi = async ({
     if (item.createdAt) {
       try {
         const d = new Date(item.createdAt);
-        if (!isNaN(d.getTime())) {
+        if (!Number.isNaN(d.getTime())) {
           formattedDate = d.toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
@@ -1072,6 +1082,8 @@ export const getPublicArtworksApi = async ({
     const viewsNum = Number(item.viewsCount ?? 0);
     const votesNum = Number(item.votesCount ?? 0);
     const likesNum = Number(item.likesCount ?? item.likes ?? 0);
+    const resolvedCategory =
+      item.categoryName || item.category?.name || item.category || '';
 
     return {
       id: item.id,
@@ -1080,8 +1092,8 @@ export const getPublicArtworksApi = async ({
       description: item.story || '',
       story: item.story || '',
       badge,
-      category: item.categoryName || '',
-      categoryName: item.categoryName || '',
+      category: resolvedCategory,
+      categoryName: resolvedCategory,
       image,
       author: item.user?.name || 'Photographer',
       photographer: item.user?.name || 'Photographer',
@@ -1099,6 +1111,7 @@ export const getPublicArtworksApi = async ({
       likesCount: likesNum,
       isLiked: Boolean(item.isLiked || item.liked),
       isSaved: Boolean(item.isSaved || item.saved),
+      isAiGenerated: Boolean(item.isAiGenerated || item.aiBadge),
       date: formattedDate,
       createdAt: item.createdAt,
       competitionState: item.competitionState || status,

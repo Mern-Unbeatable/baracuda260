@@ -1,0 +1,1 @@
+import{u as t}from"./useQuery-BS5ReicY.js";import{f as u,b as a}from"./userProfile.api-Do9Vxh8E.js";function E(){const{data:r,isLoading:e,isError:o,error:s,refetch:i}=t({queryKey:a,queryFn:u,staleTime:6e4});return{data:r,isLoading:e,isError:o,error:s,refetch:i}}export{E as u};
