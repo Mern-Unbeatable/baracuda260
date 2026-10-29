@@ -86,6 +86,8 @@ const PhotoShowcaseCard = memo(
     onLikeToggle,
     engagementType = 'like',
     itemType,
+    kind,
+    isVideo,
   }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
@@ -98,6 +100,12 @@ const PhotoShowcaseCard = memo(
     const isPremiumPhoto =
       itemType === 'premium-photo' ||
       (typeof href === 'string' && href.includes('/buy-photos/'));
+
+    const isVideoCard =
+      isVideo !== undefined
+        ? Boolean(isVideo)
+        : String(kind || itemType || '').toUpperCase() === 'VIDEO' ||
+          (!image && Boolean(videoUrl));
 
     useEffect(() => {
       setSaved(initialSaved);
@@ -291,7 +299,7 @@ const PhotoShowcaseCard = memo(
         >
           <AppLink href={href} className="block focus-visible:outline-none">
             <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
-              {videoUrl && !image ? (
+              {isVideoCard && videoUrl && !image ? (
                 <div className="relative h-full w-full bg-[#0d0d14]">
                   <video
                     src={videoUrl}
@@ -320,7 +328,7 @@ const PhotoShowcaseCard = memo(
                     decoding="async"
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
                   />
-                  {videoUrl && (
+                  {isVideoCard && videoUrl && (
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/15">
                       <div className="flex size-11 items-center justify-center rounded-full bg-white/90 text-[#0d0d14] shadow-md backdrop-blur-xs transition group-hover:scale-110">
                         <Play
