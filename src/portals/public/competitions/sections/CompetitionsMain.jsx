@@ -511,6 +511,7 @@ const CompetitionsMain = memo(({ activeHref = ROUTES.COMPETITIONS }) => {
                       href={photo.detailPath || `/competitions/${photo.id}`}
                       image={photo.image}
                       imageAlt={photo.title}
+                      videoUrl={photo.video?.url}
                       title={photo.title}
                       titleAs="h2"
                       badge={t(

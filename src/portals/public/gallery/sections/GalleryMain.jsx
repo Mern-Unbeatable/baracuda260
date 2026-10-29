@@ -516,6 +516,7 @@ const GalleryMain = memo(({ activeHref = ROUTES.GALLERY }) => {
                       href={photo.detailPath || `/gallery/${photo.id}`}
                       image={photo.image}
                       imageAlt={photo.title}
+                      videoUrl={photo.video?.url}
                       title={photo.title}
                       titleAs="h2"
                       badge={t(

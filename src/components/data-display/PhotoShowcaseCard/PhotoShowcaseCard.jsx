@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Bookmark,
   Calendar,
@@ -5,9 +6,9 @@ import {
   Heart,
   Images,
   MoreVertical,
+  Play,
 } from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
@@ -56,6 +57,7 @@ const PhotoShowcaseCard = memo(
     href,
     image,
     imageAlt,
+    videoUrl,
     title,
     titleAs: TitleTag = 'h3',
     titleClassName = '',
@@ -250,15 +252,47 @@ const PhotoShowcaseCard = memo(
         >
           <AppLink href={href} className="block focus-visible:outline-none">
             <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
-              <Image
-                src={image}
-                alt={imageAlt ?? title}
-                width={368}
-                height={252}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-              />
+              {videoUrl && !image ? (
+                <div className="relative h-full w-full bg-[#0d0d14]">
+                  <video
+                    src={videoUrl}
+                    preload="metadata"
+                    muted
+                    playsInline
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25">
+                    <div className="flex size-11 items-center justify-center rounded-full bg-white/90 text-[#0d0d14] shadow-md backdrop-blur-xs transition group-hover:scale-110">
+                      <Play
+                        size={18}
+                        className="translate-x-0.5 fill-[#0d0d14]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative h-full w-full">
+                  <Image
+                    src={image}
+                    alt={imageAlt ?? title}
+                    width={368}
+                    height={252}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                  />
+                  {videoUrl && (
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/15">
+                      <div className="flex size-11 items-center justify-center rounded-full bg-white/90 text-[#0d0d14] shadow-md backdrop-blur-xs transition group-hover:scale-110">
+                        <Play
+                          size={18}
+                          className="translate-x-0.5 fill-[#0d0d14]"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {badge ? (
                 <ImageOverlayBadge className="absolute left-3 top-3 max-w-[calc(100%-3.5rem)]">
