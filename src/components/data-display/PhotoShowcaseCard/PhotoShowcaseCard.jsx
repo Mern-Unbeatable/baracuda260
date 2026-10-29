@@ -7,6 +7,7 @@ import {
   MoreVertical,
 } from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
@@ -15,6 +16,7 @@ import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
+  PUBLIC_ARTWORKS_QUERY_KEY,
   reportArtworkApi,
   toggleLikeArtworkApi,
   toggleSaveArtworkApi,
@@ -77,6 +79,7 @@ const PhotoShowcaseCard = memo(
     engagementType = 'like',
   }) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const [saved, setSaved] = useState(initialSaved);
     const [liked, setLiked] = useState(initialLiked);
     const [likesCount, setLikesCount] = useState(() => parseCount(likes));
@@ -114,6 +117,8 @@ const PhotoShowcaseCard = memo(
       if (id) {
         try {
           const res = await toggleSaveArtworkApi(id);
+          queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+          queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
           toast.success(
             res?.message ||
               (next
@@ -148,6 +153,12 @@ const PhotoShowcaseCard = memo(
         if (isVoteMode) {
           try {
             const res = await voteArtworkApi(id);
+            queryClient.invalidateQueries({
+              queryKey: PUBLIC_ARTWORKS_QUERY_KEY,
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['artwork-detail', id],
+            });
             toast.success(
               res?.message ||
                 t(
