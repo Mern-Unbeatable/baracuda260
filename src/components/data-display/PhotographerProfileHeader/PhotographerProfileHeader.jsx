@@ -152,7 +152,7 @@ const PhotographerProfileHeader = memo(({ profile }) => {
                   {profile.name}
                 </h1>
                 <PhotographerAwardCounters
-                  awards={profile.appreciation?.tiers}
+                  awards={profile.appreciation?.tiers || profile.appreciation}
                   size="md"
                 />
               </div>

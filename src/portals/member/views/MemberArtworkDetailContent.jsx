@@ -10,6 +10,7 @@ import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailIm
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
 import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import SignBadge from '@/components/data-display/SignBadge/SignBadge';
 import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
@@ -126,7 +127,6 @@ const MemberArtworkDetailContent = memo(
         );
       }
     };
-
 
     const config = detail
       ? GALLERY_DETAIL_VARIANTS[detail.variant] ||
@@ -393,9 +393,17 @@ const MemberArtworkDetailContent = memo(
         </div>
 
         <div>
-          <h1 className="text-[28px] font-semibold leading-tight text-[#161c27] sm:text-[32px]">
-            {detail.title}
-          </h1>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-[28px] font-semibold leading-tight text-[#161c27] sm:text-[32px]">
+              {detail.title}
+            </h1>
+            {detail.awards || detail.appreciation ? (
+              <PhotographerAwardCounters
+                awards={detail.awards || detail.appreciation}
+                size="md"
+              />
+            ) : null}
+          </div>
           {detail.isAiGenerated ? (
             <AiGeneratedDetailNotice className="mt-4" />
           ) : null}

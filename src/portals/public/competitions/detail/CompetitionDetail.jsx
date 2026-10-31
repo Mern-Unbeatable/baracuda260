@@ -151,6 +151,11 @@ const CompetitionDetail = memo(({ variant: variantProp }) => {
         null,
       user: liveData.user || base.user || null,
       userId: liveData.user?.id || liveData.userId || base.userId || null,
+      awards: liveData.appreciation || liveData.awards || base.awards,
+      appreciation:
+        liveData.appreciation ||
+        liveData.user?.appreciation ||
+        base.appreciation,
       competitionState: 'IN_COMPETITION',
       isCompetition: true,
     };

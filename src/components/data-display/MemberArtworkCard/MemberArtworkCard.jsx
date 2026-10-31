@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu';
 import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCardFooter/MemberArtworkCardFooter';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import Image from '@/components/ui/Image';
 import { myArtworkDetailPath } from '@/portals/member/data/myArtworkDetailData';
 
@@ -15,14 +16,7 @@ const BADGE_STYLES = {
 };
 
 const MemberArtworkCard = memo(
-  ({
-    item,
-    badgeLabel,
-    onEdit,
-    onDelete,
-    onPromote,
-    onSwitchCompetition,
-  }) => {
+  ({ item, badgeLabel, onEdit, onDelete, onPromote, onSwitchCompetition }) => {
     const { t } = useTranslation();
     const badgeClass =
       BADGE_STYLES[item.albumBadge] ?? BADGE_STYLES['Single Photo'];
@@ -121,6 +115,12 @@ const MemberArtworkCard = memo(
                 <Calendar size={14} strokeWidth={2} aria-hidden="true" />
                 {t('myArtwork.card.expiry', { date: item.expiryDate })}
               </span>
+            ) : null}
+            {item.awards || item.appreciation ? (
+              <PhotographerAwardCounters
+                awards={item.awards || item.appreciation}
+                size="sm"
+              />
             ) : null}
           </div>
 

@@ -26,6 +26,7 @@ import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveS
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
 import {
   createArtworkCommentApi,
   toggleLikeArtworkApi,
@@ -700,7 +701,16 @@ const GalleryDetailView = memo(
                       <p className="text-[14px] leading-5 text-[#6b7280]">
                         {t('galleryDetail.photographerLabel')}
                       </p>
-                      <PhotographerAwardCounters awards={story.awards} />
+                      <PhotographerAwardCounters
+                        awards={story.awards || story.appreciation}
+                        submissionId={artworkId}
+                        artworkTitle={story.title}
+                        photographerName={story.photographer}
+                        artworkImage={story.image}
+                        userId={story.userId || story.user?.id}
+                        interactive
+                        showAwardButton
+                      />
                     </div>
                     <p className="text-[16px] font-semibold leading-6 text-(--primary-text-heading-color) transition group-hover:text-[#4048cd] sm:text-[18px]">
                       {story.photographer}
@@ -735,6 +745,14 @@ const GalleryDetailView = memo(
                   })}
                 </MarketingButton>
               )}
+
+              <PhotographerTalentAppreciation
+                submissionId={artworkId}
+                photographerName={story.photographer}
+                userId={story.userId || story.user?.id}
+                username={story.photographerUsername || story.user?.username}
+                appreciation={story.appreciation || story.awards}
+              />
 
               <div className="overflow-hidden rounded-lg bg-[#f8fafc] p-4 sm:p-6">
                 <div className="flex items-center justify-between">

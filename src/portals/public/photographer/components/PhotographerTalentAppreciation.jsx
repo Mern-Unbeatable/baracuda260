@@ -1,12 +1,18 @@
-import { CalendarDays, Camera, Check, Info } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { CalendarDays, Camera, Check, Info, Loader2 } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { selectUser } from '@/app/store/slices/authSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
 import { awardArtworkAppreciationApi } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
+import { ROUTES } from '@/shared/config';
 import { getDaysUntilNextSundayMidnight } from '@/shared/utils/weekReset';
 
 const TIER_STYLES = {
@@ -21,7 +27,6 @@ const TIER_STYLES = {
     icon: 'text-[#64748b]',
     iconBg: 'bg-[#f1f5f9]',
     btn: 'bg-[#e2e8f0] text-[#64748b] hover:bg-[#64748b] hover:text-white',
-    btnDisabled: true,
     dot: 'bg-[#94a3b8]',
   },
   bronze: {
@@ -33,7 +38,7 @@ const TIER_STYLES = {
 };
 
 const normalizeAppreciation = (raw) => {
-  const defaultWeekly = { gold: 1, silver: 0, bronze: 1 };
+  const defaultWeekly = { gold: 1, silver: 1, bronze: 1 };
   const defaultTiers = [
     { id: 'gold', count: 0, awardedThisWeek: false },
     { id: 'silver', count: 0, awardedThisWeek: false },
@@ -99,8 +104,12 @@ const normalizeAppreciation = (raw) => {
 };
 
 const PhotographerTalentAppreciation = memo(
-  ({ appreciation, photographerName, userId, submissionId }) => {
+  ({ appreciation, photographerName, userId, submissionId, username }) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isAuthenticated = useSelector(selectIsAuthenticated);
     const user = useSelector(selectUser);
 
     const initial = useMemo(
@@ -111,6 +120,7 @@ const PhotographerTalentAppreciation = memo(
     const [awards, setAwards] = useState(initial.tiers);
     const [weekly, setWeekly] = useState(initial.weekly);
     const [resetDays, setResetDays] = useState(initial.resetDays);
+    const [loadingTier, setLoadingTier] = useState(null);
 
     useEffect(() => {
       const normalized = normalizeAppreciation(appreciation);
@@ -133,7 +143,55 @@ const PhotographerTalentAppreciation = memo(
     );
 
     const giveAward = async (tierId) => {
-      if ((weekly?.[tierId] ?? 0) === 0) return;
+      // 1. Auth check
+      if (!isAuthenticated) {
+        toast.error(
+          t(
+            'photographerProfile.appreciation.loginPrompt',
+            'Please sign in to give appreciation awards.',
+          ),
+        );
+        navigate(ROUTES.LOGIN, { state: { from: location } });
+        return;
+      }
+
+      // 2. Own profile check
+      if (isOwnProfile) {
+        toast.error(
+          t(
+            'photographerProfile.appreciation.cannotAwardOwn',
+            'You cannot award your own work.',
+          ),
+        );
+        return;
+      }
+
+      // 3. Weekly quota check
+      if ((weekly?.[tierId] ?? 0) === 0) {
+        toast.error(
+          t(
+            'photographerProfile.appreciation.alreadyAwarded',
+            'Already awarded this week.',
+          ),
+        );
+        return;
+      }
+
+      // 4. Submission ID check
+      if (!submissionId) {
+        toast.error(
+          t(
+            'photographerProfile.appreciation.noSubmission',
+            'No artwork submission available to award for this photographer yet.',
+          ),
+        );
+        return;
+      }
+
+      const prevAwards = [...awards];
+      const prevWeekly = { ...weekly };
+
+      // Optimistic update
       setAwards((prev) =>
         (prev || []).map((tier) =>
           tier.id === tierId
@@ -142,34 +200,51 @@ const PhotographerTalentAppreciation = memo(
         ),
       );
       setWeekly((prev) => ({ ...(prev || {}), [tierId]: 0 }));
+      setLoadingTier(tierId);
 
-      if (submissionId) {
-        try {
-          const res = await awardArtworkAppreciationApi({
-            submissionId,
-            tier: tierId.toUpperCase(),
+      try {
+        const res = await awardArtworkAppreciationApi({
+          submissionId,
+          tier: tierId.toUpperCase(),
+        });
+
+        // Invalidate caches
+        if (username) {
+          queryClient.invalidateQueries({
+            queryKey: ['user-profile', String(username).replace(/^@/, '')],
           });
-          toast.success(
-            res?.message ||
-              t(
-                'photographerProfile.appreciation.awardSuccess',
-                'Award sent successfully!',
-              ),
-          );
-        } catch (err) {
-          toast.error(
-            getApiErrorMessage(
-              err,
-              t('common.errors.general', 'Failed to award appreciation.'),
-            ),
-          );
         }
+        queryClient.invalidateQueries({
+          queryKey: ['artwork-detail', submissionId],
+        });
+        queryClient.invalidateQueries({ queryKey: ['artworks'] });
+        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+
+        toast.success(
+          res?.message ||
+            t(
+              'photographerProfile.appreciation.awardSuccess',
+              'Award sent successfully!',
+            ),
+        );
+      } catch (err) {
+        // Revert on error
+        setAwards(prevAwards);
+        setWeekly(prevWeekly);
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('common.errors.general', 'Failed to award appreciation.'),
+          ),
+        );
+      } finally {
+        setLoadingTier(null);
       }
     };
 
     return (
       <section className="mt-8 sm:mt-10">
-        <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 sm:p-6">
+        <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 sm:p-6 shadow-xs">
           <div className="flex items-start gap-2">
             <h2 className="text-[18px] font-bold text-[#111827] sm:text-[20px]">
               {t('photographerProfile.appreciation.title', {
@@ -189,14 +264,25 @@ const PhotographerTalentAppreciation = memo(
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {(awards || []).map((tier) => {
               const style = TIER_STYLES[tier.id] ?? TIER_STYLES.gold;
+              const hasAwardedThisWeek = tier.awardedThisWeek;
+              const hasQuota = (weekly?.[tier.id] ?? 0) > 0;
+              const isSubmitting = loadingTier === tier.id;
+
+              // Disabled if own profile, or already awarded this week, or no quota left
               const disabled =
                 isOwnProfile ||
-                (weekly?.[tier.id] ?? 0) === 0 ||
-                tier.awardedThisWeek;
+                hasAwardedThisWeek ||
+                (!hasQuota && isAuthenticated) ||
+                Boolean(loadingTier);
+
               return (
                 <article
                   key={tier.id}
-                  className="relative flex flex-col items-center rounded-[14px] border border-[#eef0f4] bg-[#fafafa] px-4 py-5 text-center"
+                  className={`relative flex flex-col items-center rounded-[14px] border px-4 py-5 text-center transition ${
+                    hasAwardedThisWeek
+                      ? 'border-emerald-300 bg-emerald-50/40 ring-1 ring-emerald-400'
+                      : 'border-[#eef0f4] bg-[#fafafa]'
+                  }`}
                 >
                   <span
                     className={`relative inline-flex size-14 items-center justify-center rounded-full ${style.iconBg}`}
@@ -206,8 +292,8 @@ const PhotographerTalentAppreciation = memo(
                       className={style.icon}
                       aria-hidden="true"
                     />
-                    {tier.id === 'bronze' && !disabled ? (
-                      <span className="absolute -bottom-0.5 -right-0.5 inline-flex size-5 items-center justify-center rounded-full bg-[#10b981] text-white">
+                    {hasAwardedThisWeek ? (
+                      <span className="absolute -bottom-0.5 -right-0.5 inline-flex size-5 items-center justify-center rounded-full bg-[#10b981] text-white shadow-xs">
                         <Check size={11} strokeWidth={3} aria-hidden="true" />
                       </span>
                     ) : null}
@@ -231,17 +317,24 @@ const PhotographerTalentAppreciation = memo(
                         : undefined
                     }
                     onClick={() => giveAward(tier.id)}
-                    className={`mt-4 inline-flex h-9 w-full items-center justify-center rounded-lg text-[13px] font-semibold transition ${
+                    className={`mt-4 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg text-[13px] font-semibold transition ${
                       disabled
                         ? 'cursor-not-allowed bg-[#e5e7eb] text-[#9ca3af]'
                         : `cursor-pointer ${style.btn}`
                     }`}
                   >
-                    {isOwnProfile
-                      ? t('photographerProfile.appreciation.disabled')
-                      : disabled
-                        ? t('photographerProfile.appreciation.alreadyAwarded')
-                        : t(`photographerProfile.appreciation.give.${tier.id}`)}
+                    {isSubmitting ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : isOwnProfile ? (
+                      t(
+                        'photographerProfile.appreciation.disabled',
+                        'Your Profile',
+                      )
+                    ) : hasAwardedThisWeek ? (
+                      t('photographerProfile.appreciation.alreadyAwarded')
+                    ) : (
+                      t(`photographerProfile.appreciation.give.${tier.id}`)
+                    )}
                   </Button>
                 </article>
               );

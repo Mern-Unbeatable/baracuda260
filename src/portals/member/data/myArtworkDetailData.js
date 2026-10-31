@@ -18,8 +18,17 @@ export const myArtworkDetailPath = (id) =>
 const resolveVariant = (item) => {
   const albumBadge = item.albumBadge ?? '';
   const kind = String(item.kind || '').toUpperCase();
-  if (kind.includes('TWELVE') || kind.includes('12') || /12\s*photos?/i.test(albumBadge)) return 'twelve';
-  if (kind.includes('SIX') || kind.includes('6') || /6\s*photos?/i.test(albumBadge)) {
+  if (
+    kind.includes('TWELVE') ||
+    kind.includes('12') ||
+    /12\s*photos?/i.test(albumBadge)
+  )
+    return 'twelve';
+  if (
+    kind.includes('SIX') ||
+    kind.includes('6') ||
+    /6\s*photos?/i.test(albumBadge)
+  ) {
     return item.storyTheme === 'blue' ? 'sixBlue' : 'six';
   }
   return 'single';
@@ -168,10 +177,7 @@ export const normalizeArtworkDetail = (item) => {
     isAiGenerated: Boolean(item.isAiGenerated),
     uploadedDate,
     uploadedTime,
-    votesMetric: parseMetric(
-      item.votesCount ?? item.votes ?? item.hearts,
-      '0',
-    ),
+    votesMetric: parseMetric(item.votesCount ?? item.votes ?? item.hearts, '0'),
     viewsMetric: parseMetric(item.viewsCount ?? item.views, '0'),
     reactMetric: parseMetric(item.likesCount ?? item.hearts, '0'),
     isLiked: Boolean(
@@ -198,6 +204,8 @@ export const normalizeArtworkDetail = (item) => {
     videoPoster: primaryImage,
     video: item.video,
     commentAvatar: GALLERY_DETAIL_ASSETS.commentAvatar,
+    awards: item.appreciation || item.awards || null,
+    appreciation: item.appreciation || null,
   };
 };
 
