@@ -385,6 +385,26 @@ const GalleryDetailView = memo(
       }
     }, [story.title, t]);
 
+    const photographerProfileHref = useMemo(() => {
+      const username =
+        story.user?.username ||
+        story.photographerUsername ||
+        story.username ||
+        (story.creditHref
+          ? story.creditHref.replace(/^\/photographer\//, '')
+          : null);
+
+      if (username) {
+        return `/photographer/${encodeURIComponent(String(username).replace(/^@/, ''))}`;
+      }
+
+      if (story.user?.id || story.userId) {
+        return `/photographer/${encodeURIComponent(story.user?.id || story.userId)}`;
+      }
+
+      return ROUTES.PHOTOGRAPHER_PROFILE;
+    }, [story]);
+
     return (
       <SitePageLayout
         activeHref={activeHref}
@@ -664,13 +684,16 @@ const GalleryDetailView = memo(
               </div>
 
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-3">
+                <AppLink
+                  href={photographerProfileHref}
+                  className="group flex items-center gap-3 transition"
+                >
                   <Image
-                    src={ASSETS.photographer}
+                    src={donationAvatar || ASSETS.photographer}
                     alt={story.photographer}
                     width={57}
                     height={57}
-                    className="size-12 rounded-full object-cover sm:size-14.25"
+                    className="size-12 rounded-full object-cover transition group-hover:ring-2 group-hover:ring-[#4048cd] sm:size-14.25"
                   />
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -679,14 +702,14 @@ const GalleryDetailView = memo(
                       </p>
                       <PhotographerAwardCounters awards={story.awards} />
                     </div>
-                    <p className="text-[16px] font-semibold leading-6 text-(--primary-text-heading-color) sm:text-[18px]">
+                    <p className="text-[16px] font-semibold leading-6 text-(--primary-text-heading-color) transition group-hover:text-[#4048cd] sm:text-[18px]">
                       {story.photographer}
                     </p>
                   </div>
-                </div>
+                </AppLink>
                 <MarketingButton
                   as={AppLink}
-                  href={ROUTES.PHOTOGRAPHER_PROFILE}
+                  href={photographerProfileHref}
                   className="shrink-0 bg-[#4048CD]! hover:bg-[#333BB0]!"
                 >
                   {t('galleryDetail.photographerProfile')}
