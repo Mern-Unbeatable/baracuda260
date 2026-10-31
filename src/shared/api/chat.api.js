@@ -144,3 +144,52 @@ export const sendChatMessageApi = async ({ roomId, content, file }) => {
   );
   return response?.data !== undefined ? response.data : response;
 };
+
+/**
+ * Edit a chat message.
+ * Endpoint: PUT /v1/chat/messages/:messageId
+ *
+ * @param {{ messageId: string, content: string }} payload
+ */
+export const editChatMessageApi = async ({ messageId, content }) => {
+  if (!messageId) throw new Error('Message ID is required');
+  if (!content?.trim()) throw new Error('Message content is required');
+
+  const response = await apiClient.put(
+    `/v1/chat/messages/${encodeURIComponent(messageId)}`,
+    {
+      content: content.trim(),
+    },
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Delete a chat message.
+ * Endpoint: DELETE /v1/chat/messages/:messageId
+ *
+ * @param {{ messageId: string }} payload
+ */
+export const deleteChatMessageApi = async ({ messageId }) => {
+  if (!messageId) throw new Error('Message ID is required');
+
+  const response = await apiClient.delete(
+    `/v1/chat/messages/${encodeURIComponent(messageId)}`,
+  );
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Mark messages in a chat room as read.
+ * Endpoint: PUT /v1/chat/:roomId/read
+ *
+ * @param {{ roomId: string }} payload
+ */
+export const markChatRoomAsReadApi = async ({ roomId }) => {
+  if (!roomId) throw new Error('Room ID is required');
+
+  const response = await apiClient.put(
+    `/v1/chat/${encodeURIComponent(roomId)}/read`,
+  );
+  return response?.data !== undefined ? response.data : response;
+};

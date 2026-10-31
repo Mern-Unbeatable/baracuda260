@@ -14,14 +14,18 @@ import {
   CHAT_LIST_QUERY_KEY,
   CHAT_MESSAGES_QUERY_KEY,
   createOrGetChatRoomApi,
+  deleteChatMessageApi,
+  editChatMessageApi,
   getChatListApi,
   getChatMessagesApi,
+  markChatRoomAsReadApi,
   sendChatMessageApi,
 } from '@/shared/api/chat.api';
 import {
   joinChatRoom,
   leaveChatRoom,
   subscribeToIncomingMessages,
+  subscribeToMessageUpdates,
 } from '@/shared/lib/chatSocket';
 
 const MemberChatContent = memo(() => {
@@ -41,6 +45,7 @@ const MemberChatContent = memo(() => {
   const [searchQuery, setSearchQuery] = useState('');
   const [draft, setDraft] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [editingMessage, setEditingMessage] = useState(null);
   const [showMobileThread, setShowMobileThread] = useState(
     Boolean(initialRoomId),
   );
@@ -153,13 +158,19 @@ const MemberChatContent = memo(() => {
     staleTime: 5 * 1000,
   });
 
+  // Mark room as read when activeId changes
+  useEffect(() => {
+    if (!activeId) return;
+    markChatRoomAsReadApi({ roomId: activeId }).catch(() => {});
+  }, [activeId]);
+
   // 3. Socket.io real-time listener for current room
   useEffect(() => {
     if (!activeId) return;
 
     joinChatRoom(activeId);
 
-    const unsubscribe = subscribeToIncomingMessages((incoming) => {
+    const unsubscribeMessages = subscribeToIncomingMessages((incoming) => {
       const incomingRoomId = incoming?.roomId || incoming?.room;
       // If message belongs to active room
       if (incomingRoomId === activeId) {
@@ -177,14 +188,69 @@ const MemberChatContent = memo(() => {
             total: (old.total || prevList.length) + 1,
           };
         });
+
+        // Mark as read in backend
+        markChatRoomAsReadApi({ roomId: activeId }).catch(() => {});
       }
 
       // Invalidate chat list so lastMessage and timestamp refresh
       queryClient.invalidateQueries({ queryKey: CHAT_LIST_QUERY_KEY });
     });
 
+    // Real-time edits, deletes, and read updates
+    const unsubscribeUpdates = subscribeToMessageUpdates({
+      onEdit: (updated) => {
+        if (!updated?.id) return;
+        queryClient.setQueryData(CHAT_MESSAGES_QUERY_KEY(activeId), (old) => {
+          if (!old) return old;
+          const list = Array.isArray(old.messages) ? old.messages : [];
+          return {
+            ...old,
+            messages: list.map((m) =>
+              m.id === updated.id
+                ? {
+                    ...m,
+                    content: updated.content ?? m.content,
+                    isEdited: true,
+                  }
+                : m,
+            ),
+          };
+        });
+        queryClient.invalidateQueries({ queryKey: CHAT_LIST_QUERY_KEY });
+      },
+      onDelete: (deleted) => {
+        const deletedId = deleted?.id || deleted?.messageId || deleted;
+        if (!deletedId) return;
+        queryClient.setQueryData(CHAT_MESSAGES_QUERY_KEY(activeId), (old) => {
+          if (!old) return old;
+          const list = Array.isArray(old.messages) ? old.messages : [];
+          return {
+            ...old,
+            messages: list.map((m) =>
+              m.id === deletedId
+                ? { ...m, isDeleted: true, content: 'This message was deleted' }
+                : m,
+            ),
+          };
+        });
+        queryClient.invalidateQueries({ queryKey: CHAT_LIST_QUERY_KEY });
+      },
+      onRead: () => {
+        queryClient.setQueryData(CHAT_MESSAGES_QUERY_KEY(activeId), (old) => {
+          if (!old) return old;
+          const list = Array.isArray(old.messages) ? old.messages : [];
+          return {
+            ...old,
+            messages: list.map((m) => ({ ...m, isRead: true })),
+          };
+        });
+      },
+    });
+
     return () => {
-      unsubscribe();
+      unsubscribeMessages();
+      unsubscribeUpdates();
       leaveChatRoom(activeId);
     };
   }, [activeId, queryClient]);
@@ -217,15 +283,102 @@ const MemberChatContent = memo(() => {
     },
   });
 
+  // 5. Edit Message Mutation
+  const editMutation = useMutation({
+    mutationFn: editChatMessageApi,
+    onSuccess: (response, variables) => {
+      const updated = response?.data || response;
+      queryClient.setQueryData(CHAT_MESSAGES_QUERY_KEY(activeId), (old) => {
+        if (!old) return old;
+        const list = Array.isArray(old.messages) ? old.messages : [];
+        return {
+          ...old,
+          messages: list.map((msg) =>
+            msg.id === variables.messageId
+              ? {
+                  ...msg,
+                  content: variables.content,
+                  isEdited: true,
+                  ...(typeof updated === 'object' ? updated : {}),
+                }
+              : msg,
+          ),
+        };
+      });
+      setEditingMessage(null);
+      setDraft('');
+      queryClient.invalidateQueries({ queryKey: CHAT_LIST_QUERY_KEY });
+      toast.success('Message updated');
+    },
+    onError: (error) => {
+      toast.error(error?.message || 'Failed to edit message');
+    },
+  });
+
+  // 6. Delete Message Mutation
+  const deleteMutation = useMutation({
+    mutationFn: deleteChatMessageApi,
+    onSuccess: (_response, variables) => {
+      queryClient.setQueryData(CHAT_MESSAGES_QUERY_KEY(activeId), (old) => {
+        if (!old) return old;
+        const list = Array.isArray(old.messages) ? old.messages : [];
+        return {
+          ...old,
+          messages: list.map((msg) =>
+            msg.id === variables.messageId
+              ? { ...msg, isDeleted: true, content: 'This message was deleted' }
+              : msg,
+          ),
+        };
+      });
+      if (editingMessage?.id === variables.messageId) {
+        setEditingMessage(null);
+        setDraft('');
+      }
+      queryClient.invalidateQueries({ queryKey: CHAT_LIST_QUERY_KEY });
+      toast.success('Message deleted');
+    },
+    onError: (error) => {
+      toast.error(error?.message || 'Failed to delete message');
+    },
+  });
+
   const handleSelect = (conversationId) => {
     setActiveId(conversationId);
     setSearchParams({ room: conversationId }, { replace: true });
     setShowMobileThread(true);
     setDraft('');
     setSelectedFile(null);
+    setEditingMessage(null);
+  };
+
+  const handleStartEdit = (message) => {
+    setEditingMessage(message);
+    setDraft(message.text || '');
+    setSelectedFile(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessage(null);
+    setDraft('');
+  };
+
+  const handleDeleteMessage = (messageId) => {
+    if (!messageId) return;
+    deleteMutation.mutate({ messageId });
   };
 
   const handleSend = () => {
+    if (editingMessage) {
+      const text = draft.trim();
+      if (!text) return;
+      editMutation.mutate({
+        messageId: editingMessage.id,
+        content: text,
+      });
+      return;
+    }
+
     const text = draft.trim();
     if ((!text && !selectedFile) || !activeId) return;
 
@@ -265,6 +418,8 @@ const MemberChatContent = memo(() => {
         fileType: msg.fileType,
         fileName: msg.fileName,
         read: Boolean(msg.isRead),
+        isEdited: Boolean(msg.isEdited),
+        isDeleted: Boolean(msg.isDeleted),
         sender: msg.sender,
       };
     });
@@ -319,8 +474,16 @@ const MemberChatContent = memo(() => {
                   selectedFile={selectedFile}
                   onFileSelect={setSelectedFile}
                   onFileRemove={() => setSelectedFile(null)}
-                  isSending={sendMutation.isPending}
+                  isSending={
+                    sendMutation.isPending ||
+                    editMutation.isPending ||
+                    deleteMutation.isPending
+                  }
                   isLoadingMessages={isLoadingMessages}
+                  editingMessage={editingMessage}
+                  onStartEdit={handleStartEdit}
+                  onCancelEdit={handleCancelEdit}
+                  onDeleteMessage={handleDeleteMessage}
                 />
               </div>
             </>

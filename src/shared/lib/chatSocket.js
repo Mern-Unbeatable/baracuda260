@@ -101,6 +101,41 @@ export const subscribeToIncomingMessages = (callback) => {
 };
 
 /**
+ * Subscribes to real-time message mutations: edits, deletes, and read receipts.
+ *
+ * @param {{
+ *   onEdit?: (payload: any) => void,
+ *   onDelete?: (payload: any) => void,
+ *   onRead?: (payload: any) => void,
+ * }} handlers
+ */
+export const subscribeToMessageUpdates = ({
+  onEdit,
+  onDelete,
+  onRead,
+} = {}) => {
+  const socket = getSocket();
+
+  const editEvents = ['message_edited', 'message_updated', 'edit_message'];
+  const deleteEvents = ['message_deleted', 'delete_message', 'message_removed'];
+  const readEvents = ['messages_read', 'message_read', 'room_read'];
+
+  const editHandler = (data) => onEdit?.(data);
+  const deleteHandler = (data) => onDelete?.(data);
+  const readHandler = (data) => onRead?.(data);
+
+  if (onEdit) editEvents.forEach((evt) => socket.on(evt, editHandler));
+  if (onDelete) deleteEvents.forEach((evt) => socket.on(evt, deleteHandler));
+  if (onRead) readEvents.forEach((evt) => socket.on(evt, readHandler));
+
+  return () => {
+    if (onEdit) editEvents.forEach((evt) => socket.off(evt, editHandler));
+    if (onDelete) deleteEvents.forEach((evt) => socket.off(evt, deleteHandler));
+    if (onRead) readEvents.forEach((evt) => socket.off(evt, readHandler));
+  };
+};
+
+/**
  * Disconnect socket and reset instance.
  */
 export const disconnectSocket = () => {

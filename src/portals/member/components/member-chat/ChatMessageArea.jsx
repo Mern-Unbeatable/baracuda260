@@ -1,4 +1,5 @@
 import {
+  Check,
   CheckCheck,
   Download,
   FileText,
@@ -8,9 +9,11 @@ import {
   MoreVertical,
   Paperclip,
   Pause,
+  Pencil,
   Play,
   Send,
   Smile,
+  Trash2,
   X,
 } from 'lucide-react';
 import React, { memo, useEffect, useRef } from 'react';
@@ -39,7 +42,34 @@ const VoiceWaveform = memo(({ active = false }) => (
 
 VoiceWaveform.displayName = 'VoiceWaveform';
 
-const ChatMessageBubble = memo(({ message, t }) => {
+const MessageActionMenu = memo(({ onEdit, onDelete, canEdit }) => (
+  <div className="absolute top-1/2 -left-16 -translate-y-1/2 hidden group-hover:flex items-center gap-1 rounded-lg border border-[#e5e7eb] bg-white px-1 py-0.5 shadow-md z-10 transition">
+    {canEdit ? (
+      <button
+        type="button"
+        onClick={onEdit}
+        title="Edit message"
+        className="p-1 text-[#6b7280] hover:text-[#4048cd] rounded transition cursor-pointer"
+        aria-label="Edit message"
+      >
+        <Pencil size={13} />
+      </button>
+    ) : null}
+    <button
+      type="button"
+      onClick={onDelete}
+      title="Delete message"
+      className="p-1 text-[#6b7280] hover:text-[#dc2626] rounded transition cursor-pointer"
+      aria-label="Delete message"
+    >
+      <Trash2 size={13} />
+    </button>
+  </div>
+));
+
+MessageActionMenu.displayName = 'MessageActionMenu';
+
+const ChatMessageBubble = memo(({ message, t, onStartEdit, onDelete }) => {
   if (message.type === 'date') {
     return (
       <div className="flex justify-center py-2">
@@ -63,6 +93,8 @@ const ChatMessageBubble = memo(({ message, t }) => {
   }
 
   const isSent = message.type === 'sent';
+  const isDeleted = Boolean(message.isDeleted);
+  const isEdited = Boolean(message.isEdited);
   const hasFile = Boolean(message.fileUrl || message.variant === 'file');
   const isImageFile =
     hasFile &&
@@ -74,9 +106,34 @@ const ChatMessageBubble = memo(({ message, t }) => {
       (message.fileType?.startsWith('video/') ||
         /\.(mp4|webm|mov)$/i.test(message.fileUrl || '')));
 
-  if (isImageFile) {
+  if (isDeleted) {
     return (
       <div className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}>
+        <div
+          className={`max-w-[min(100%,420px)] rounded-[20px] px-4 py-2.5 text-[13px] italic border ${
+            isSent
+              ? 'rounded-br-md bg-[#f1f3f9] text-[#6b7280] border-[#e2e8f0]'
+              : 'rounded-bl-md bg-[#f8fafc] text-[#9ca3af] border-[#ececf0]'
+          }`}
+        >
+          <p>This message was deleted</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isImageFile) {
+    return (
+      <div
+        className={`group relative flex ${isSent ? 'justify-end' : 'justify-start'}`}
+      >
+        {isSent ? (
+          <MessageActionMenu
+            onEdit={() => onStartEdit?.(message)}
+            onDelete={() => onDelete?.(message.id)}
+            canEdit={Boolean(message.text)}
+          />
+        ) : null}
         <div
           className={`max-w-[min(100%,360px)] overflow-hidden rounded-[20px] p-2 ${
             isSent
@@ -100,10 +157,13 @@ const ChatMessageBubble = memo(({ message, t }) => {
             <p className="px-2 pt-2 text-[14px] leading-6">{message.text}</p>
           ) : null}
           <div
-            className={`flex items-center gap-1 px-2 pt-1 text-[11px] ${
+            className={`flex items-center gap-1.5 px-2 pt-1 text-[11px] ${
               isSent ? 'justify-end text-white/75' : 'text-[#9ca3af]'
             }`}
           >
+            {isEdited ? (
+              <span className="italic opacity-80 text-[10px]">(edited)</span>
+            ) : null}
             {message.time ? <span>{message.time}</span> : null}
             {isSent && message.read ? (
               <CheckCheck size={14} strokeWidth={2} aria-hidden="true" />
@@ -116,7 +176,16 @@ const ChatMessageBubble = memo(({ message, t }) => {
 
   if (isVideoFile) {
     return (
-      <div className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}>
+      <div
+        className={`group relative flex ${isSent ? 'justify-end' : 'justify-start'}`}
+      >
+        {isSent ? (
+          <MessageActionMenu
+            onEdit={() => onStartEdit?.(message)}
+            onDelete={() => onDelete?.(message.id)}
+            canEdit={Boolean(message.text)}
+          />
+        ) : null}
         <div
           className={`max-w-[min(100vw-6rem,360px)] overflow-hidden rounded-[20px] ${
             isSent
@@ -155,13 +224,16 @@ const ChatMessageBubble = memo(({ message, t }) => {
           {message.text ? (
             <p className="px-4 pt-2 text-[14px]">{message.text}</p>
           ) : null}
-          {message.time ? (
-            <p
-              className={`px-4 py-2 text-[11px] ${isSent ? 'text-white/75' : 'text-[#9ca3af]'}`}
-            >
-              {message.time}
-            </p>
-          ) : null}
+          <div
+            className={`flex items-center gap-1.5 px-4 py-2 text-[11px] ${
+              isSent ? 'justify-end text-white/75' : 'text-[#9ca3af]'
+            }`}
+          >
+            {isEdited ? (
+              <span className="italic opacity-80 text-[10px]">(edited)</span>
+            ) : null}
+            {message.time ? <span>{message.time}</span> : null}
+          </div>
         </div>
       </div>
     );
@@ -169,7 +241,16 @@ const ChatMessageBubble = memo(({ message, t }) => {
 
   if (hasFile) {
     return (
-      <div className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}>
+      <div
+        className={`group relative flex ${isSent ? 'justify-end' : 'justify-start'}`}
+      >
+        {isSent ? (
+          <MessageActionMenu
+            onEdit={() => onStartEdit?.(message)}
+            onDelete={() => onDelete?.(message.id)}
+            canEdit={Boolean(message.text)}
+          />
+        ) : null}
         <div
           className={`max-w-[min(100%,360px)] rounded-[20px] px-4 py-3 ${
             isSent
@@ -218,10 +299,13 @@ const ChatMessageBubble = memo(({ message, t }) => {
             <p className="mt-2 text-[14px] leading-6">{message.text}</p>
           ) : null}
           <div
-            className={`mt-2 flex items-center gap-1 text-[11px] ${
+            className={`mt-2 flex items-center gap-1.5 text-[11px] ${
               isSent ? 'justify-end text-white/70' : 'text-[#9ca3af]'
             }`}
           >
+            {isEdited ? (
+              <span className="italic opacity-80 text-[10px]">(edited)</span>
+            ) : null}
             {message.time ? <span>{message.time}</span> : null}
             {isSent && message.read ? (
               <CheckCheck size={14} strokeWidth={2} aria-hidden="true" />
@@ -263,7 +347,16 @@ const ChatMessageBubble = memo(({ message, t }) => {
   }
 
   return (
-    <div className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}>
+    <div
+      className={`group relative flex ${isSent ? 'justify-end' : 'justify-start'}`}
+    >
+      {isSent ? (
+        <MessageActionMenu
+          onEdit={() => onStartEdit?.(message)}
+          onDelete={() => onDelete?.(message.id)}
+          canEdit={Boolean(message.text)}
+        />
+      ) : null}
       <div
         className={`max-w-[min(100%,420px)] rounded-[20px] px-4 py-3 text-[14px] leading-6 ${
           isSent
@@ -275,10 +368,13 @@ const ChatMessageBubble = memo(({ message, t }) => {
           {message.textKey ? t(message.textKey) : message.text}
         </p>
         <div
-          className={`mt-1 flex items-center gap-1 text-[11px] ${
+          className={`mt-1 flex items-center gap-1.5 text-[11px] ${
             isSent ? 'justify-end text-white/75' : 'text-[#9ca3af]'
           }`}
         >
+          {isEdited ? (
+            <span className="italic opacity-80 text-[10px]">(edited)</span>
+          ) : null}
           {message.time ? <span>{message.time}</span> : null}
           {isSent && message.read ? (
             <CheckCheck size={14} strokeWidth={2} aria-hidden="true" />
@@ -350,9 +446,13 @@ const ChatComposer = memo(
     onFileSelect,
     onFileRemove,
     isSending,
+    editingMessage,
+    onCancelEdit,
   }) => {
     const { t } = useTranslation();
     const fileInputRef = useRef(null);
+
+    const isEditing = Boolean(editingMessage);
 
     const handleKeyDown = (event) => {
       if (event.key === 'Enter' && !event.shiftKey) {
@@ -365,7 +465,30 @@ const ChatComposer = memo(
 
     return (
       <div className="shrink-0 border-t border-[#ececf0] bg-white px-5 py-4">
-        {selectedFile ? (
+        {/* Editing banner */}
+        {isEditing ? (
+          <div className="mb-2 flex items-center justify-between gap-2 rounded-xl border border-[#fed7aa] bg-[#fff7ed] px-3.5 py-2 text-[12px] text-[#c2410c]">
+            <div className="flex min-w-0 items-center gap-2">
+              <Pencil size={14} className="shrink-0 text-[#ea580c]" />
+              <span className="font-semibold text-[#9a3412]">
+                Editing message:
+              </span>
+              <span className="truncate italic text-[#7c2d12]">
+                "{editingMessage.text}"
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={onCancelEdit}
+              className="inline-flex items-center gap-1 font-semibold text-[#9a3412] hover:underline cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : null}
+
+        {/* Selected file preview */}
+        {selectedFile && !isEditing ? (
           <div className="mb-2 flex items-center justify-between gap-2 rounded-xl border border-[#c7d2fe] bg-[#f5f7ff] px-3.5 py-2 text-[12px] text-[#4048cd]">
             <div className="flex min-w-0 items-center gap-2">
               {selectedFile.type?.startsWith('image/') ? (
@@ -405,56 +528,74 @@ const ChatComposer = memo(
         />
 
         <div className="flex items-end gap-3 rounded-[24px] border border-[#ececf0] bg-white px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
-          <Button
-            unstyled
-            type="button"
-            aria-label={t('memberChat.attach')}
-            onClick={() => fileInputRef.current?.click()}
-            disabled={disabled || isSending}
-            className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd] disabled:opacity-40"
-          >
-            <Paperclip size={18} strokeWidth={2} aria-hidden="true" />
-          </Button>
+          {!isEditing ? (
+            <Button
+              unstyled
+              type="button"
+              aria-label={t('memberChat.attach')}
+              onClick={() => fileInputRef.current?.click()}
+              disabled={disabled || isSending}
+              className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd] disabled:opacity-40"
+            >
+              <Paperclip size={18} strokeWidth={2} aria-hidden="true" />
+            </Button>
+          ) : null}
 
           <textarea
             rows={1}
             value={value}
             onChange={(event) => onChange(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={t('memberChat.inputPlaceholder')}
+            placeholder={
+              isEditing
+                ? 'Edit your message...'
+                : t('memberChat.inputPlaceholder')
+            }
             disabled={disabled || isSending}
             className="max-h-28 min-h-[24px] flex-1 resize-none bg-transparent py-1 text-[14px] leading-6 text-[#161c27] placeholder:text-[#9ca3af] outline-none disabled:opacity-50"
           />
 
           <div className="flex shrink-0 items-center gap-1">
+            {!isEditing ? (
+              <>
+                <Button
+                  unstyled
+                  type="button"
+                  aria-label={t('memberChat.emoji')}
+                  className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd]"
+                >
+                  <Smile size={18} strokeWidth={2} aria-hidden="true" />
+                </Button>
+                <Button
+                  unstyled
+                  type="button"
+                  aria-label={t('memberChat.voice')}
+                  className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd]"
+                >
+                  <Mic size={18} strokeWidth={2} aria-hidden="true" />
+                </Button>
+              </>
+            ) : null}
             <Button
               unstyled
               type="button"
-              aria-label={t('memberChat.emoji')}
-              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd]"
-            >
-              <Smile size={18} strokeWidth={2} aria-hidden="true" />
-            </Button>
-            <Button
-              unstyled
-              type="button"
-              aria-label={t('memberChat.voice')}
-              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd]"
-            >
-              <Mic size={18} strokeWidth={2} aria-hidden="true" />
-            </Button>
-            <Button
-              unstyled
-              type="button"
-              aria-label={t('memberChat.send')}
+              aria-label={isEditing ? 'Save edit' : t('memberChat.send')}
               disabled={
-                disabled || isSending || (!value.trim() && !selectedFile)
+                disabled ||
+                isSending ||
+                (!value.trim() && !selectedFile && !isEditing)
               }
               onClick={onSend}
-              className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full bg-[#4048cd] text-white transition hover:bg-[#363eb8] disabled:cursor-not-allowed disabled:opacity-40"
+              className={`inline-flex size-10 cursor-pointer items-center justify-center rounded-full text-white transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                isEditing
+                  ? 'bg-[#16a34a] hover:bg-[#15803d]'
+                  : 'bg-[#4048cd] hover:bg-[#363eb8]'
+              }`}
             >
               {isSending ? (
                 <Loader2 size={18} className="animate-spin" />
+              ) : isEditing ? (
+                <Check size={18} strokeWidth={2} aria-hidden="true" />
               ) : (
                 <Send size={18} strokeWidth={2} aria-hidden="true" />
               )}
@@ -480,6 +621,10 @@ const ChatMessageArea = memo(
     onFileRemove,
     isSending,
     isLoadingMessages,
+    editingMessage,
+    onStartEdit,
+    onCancelEdit,
+    onDeleteMessage,
   }) => {
     const { t } = useTranslation();
     const messagesEndRef = useRef(null);
@@ -514,6 +659,8 @@ const ChatMessageArea = memo(
                   key={message.id || `${message.type}-${index}`}
                   message={message}
                   t={t}
+                  onStartEdit={onStartEdit}
+                  onDelete={onDeleteMessage}
                 />
               ))
             )}
@@ -530,6 +677,8 @@ const ChatMessageArea = memo(
           onFileSelect={onFileSelect}
           onFileRemove={onFileRemove}
           isSending={isSending}
+          editingMessage={editingMessage}
+          onCancelEdit={onCancelEdit}
         />
       </section>
     );
