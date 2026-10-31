@@ -60,6 +60,12 @@ const FavouritePhotographers = lazy(
 const FavouritePhotos = lazy(
   () => import('@/portals/member/pages/FavouritePhotos'),
 );
+const FavouritePhotosContent = lazy(
+  () => import('@/portals/member/views/FavouritePhotosContent'),
+);
+const FavouritePhotoDetail = lazy(
+  () => import('@/portals/member/pages/favourite-photos/FavouritePhotoDetail'),
+);
 const PurchasePhotos = lazy(
   () => import('@/portals/member/pages/PurchasePhotos'),
 );
@@ -157,7 +163,10 @@ export const memberRoutes = (
     <Route
       path={seg(ROUTES.USER_FAVOURITE_PHOTOS)}
       element={<FavouritePhotos />}
-    />
+    >
+      <Route index element={<FavouritePhotosContent />} />
+      <Route path=":id" element={<FavouritePhotoDetail />} />
+    </Route>
     <Route
       path={seg(ROUTES.USER_PURCHASE_PHOTOS)}
       element={<PurchasePhotos />}

@@ -1,14 +1,20 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { toggleLikeArtworkApi } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 import {
   getSavedArtworksApi,
   SAVED_ARTWORKS_QUERY_KEY,
   toggleSaveArtworkApi,
 } from '@/shared/api/userProfile.api';
-import { toggleLikeArtworkApi } from '@/shared/api/artworks.api';
+import { ROUTES } from '@/shared/config';
 import { galleryDetailPath } from '@/shared/data/galleryPhotos';
 import { resolveMediaUrl } from '@/shared/utils/media';
 
@@ -31,7 +37,10 @@ const extractMeta = (data, fallbackPage, fallbackLimit, itemsLength) => {
   const metaObj = data?.meta || data?.data?.meta || data?.pagination;
   if (metaObj) {
     const totalRecords =
-      metaObj.totalRecords ?? metaObj.total ?? metaObj.totalCount ?? itemsLength;
+      metaObj.totalRecords ??
+      metaObj.total ??
+      metaObj.totalCount ??
+      itemsLength;
     const totalPages =
       metaObj.totalPages ??
       metaObj.pageCount ??
@@ -131,9 +140,9 @@ export const normalizeSavedArtwork = (item) => {
     isLiked,
     views:
       (rawArtwork.viewsCount ?? item.viewsCount) != null
-        ? Number(
-            rawArtwork.viewsCount ?? item.viewsCount,
-          ).toLocaleString('en-US')
+        ? Number(rawArtwork.viewsCount ?? item.viewsCount).toLocaleString(
+            'en-US',
+          )
         : null,
     votes: rawArtwork.votesCount ?? item.votesCount ?? 0,
     date: dateFormatted,
@@ -147,12 +156,7 @@ export const normalizeSavedArtwork = (item) => {
     user: rawArtwork.user || item.user || null,
     saved: item.isSaved ?? rawArtwork.isSaved ?? true,
     extraPhotosLabel,
-    href:
-      kind === 'TWELVE'
-        ? `/gallery/zodiac/${artworkId}`
-        : kind === 'SIX'
-          ? `/gallery/story/${artworkId}`
-          : `/gallery/${artworkId}`,
+    href: `${ROUTES.USER_FAVOURITE_PHOTOS}/${artworkId}`,
     raw: item,
   };
 };
