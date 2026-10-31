@@ -147,7 +147,12 @@ export const normalizeSavedArtwork = (item) => {
     user: rawArtwork.user || item.user || null,
     saved: item.isSaved ?? rawArtwork.isSaved ?? true,
     extraPhotosLabel,
-    href: galleryDetailPath(artworkId),
+    href:
+      kind === 'TWELVE'
+        ? `/gallery/zodiac/${artworkId}`
+        : kind === 'SIX'
+          ? `/gallery/story/${artworkId}`
+          : `/gallery/${artworkId}`,
     raw: item,
   };
 };

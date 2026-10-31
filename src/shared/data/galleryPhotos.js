@@ -165,17 +165,21 @@ export const getGalleryPhotoById = (id) =>
   GALLERY_PHOTOS.find((photo) => photo.id === id) || GALLERY_PHOTOS[0];
 
 export const galleryDetailPath = (id) => {
-  const photo = getGalleryPhotoById(id);
-  if (/12\s*photos?/i.test(photo.badge || '')) {
-    return `/gallery/zodiac/${photo.id}`;
-  }
-  if (/6\s*photos?\s*story/i.test(photo.badge || '')) {
-    if (photo.sixStoryVariant === 'libra') {
-      return `/gallery/story-blue/${photo.id}`;
+  if (!id) return '/gallery';
+  const photo = GALLERY_PHOTOS.find((p) => p.id === id);
+  if (photo) {
+    if (/12\s*photos?/i.test(photo.badge || '')) {
+      return `/gallery/zodiac/${photo.id}`;
     }
-    return `/gallery/story/${photo.id}`;
+    if (/6\s*photos?\s*story/i.test(photo.badge || '')) {
+      if (photo.sixStoryVariant === 'libra') {
+        return `/gallery/story-blue/${photo.id}`;
+      }
+      return `/gallery/story/${photo.id}`;
+    }
+    return `/gallery/${photo.id}`;
   }
-  return `/gallery/${photo.id}`;
+  return `/gallery/${id}`;
 };
 
 export { DEFAULT_DESCRIPTION };
