@@ -4,6 +4,7 @@ export const PRIZE_PAYMENTS_TABS = [
   { value: 'prizeMoney', labelKey: 'prizePayments.tabs.prizeMoney' },
   { value: 'donations', labelKey: 'prizePayments.tabs.donations' },
   { value: 'photoSales', labelKey: 'prizePayments.tabs.photoSales' },
+  { value: 'storeSales', labelKey: 'prizePayments.tabs.storeSales' },
 ];
 
 export const PRIZE_MONEY_SUMMARY = [
@@ -116,6 +117,51 @@ export const PHOTO_SALES_SUMMARY = [
     labelKey: 'prizePayments.photoSales.summary.paidOut',
     valueKey: 'prizePayments.photoSales.summary.paidOutValue',
     hintKey: 'prizePayments.photoSales.summary.paidOutHint',
+    valueClass: 'text-[#161c27]',
+  },
+];
+
+export const STORE_SALES_SUMMARY = [
+  {
+    id: 'totalSales',
+    labelKey: 'prizePayments.storeSales.summary.totalSales',
+    valueKey: 'prizePayments.storeSales.summary.totalSalesValue',
+    hintKey: 'prizePayments.storeSales.summary.totalSalesHint',
+    valueClass: 'text-[#161c27]',
+  },
+  {
+    id: 'itemsSold',
+    labelKey: 'prizePayments.storeSales.summary.itemsSold',
+    valueKey: 'prizePayments.storeSales.summary.itemsSoldValue',
+    hintKey: 'prizePayments.storeSales.summary.itemsSoldHint',
+    valueClass: 'text-[#161c27]',
+  },
+  {
+    id: 'yourEarnings',
+    labelKey: 'prizePayments.storeSales.summary.yourEarnings',
+    valueKey: 'prizePayments.storeSales.summary.yourEarningsValue',
+    hintKey: 'prizePayments.storeSales.summary.yourEarningsHint',
+    valueClass: 'text-[#161c27]',
+  },
+  {
+    id: 'available',
+    labelKey: 'prizePayments.storeSales.summary.available',
+    valueKey: 'prizePayments.storeSales.summary.availableValue',
+    hintKey: 'prizePayments.storeSales.summary.availableHint',
+    valueClass: 'text-[#15803d]',
+  },
+  {
+    id: 'pending',
+    labelKey: 'prizePayments.storeSales.summary.pending',
+    valueKey: 'prizePayments.storeSales.summary.pendingValue',
+    hintKey: 'prizePayments.storeSales.summary.pendingHint',
+    valueClass: 'text-[#ea580c]',
+  },
+  {
+    id: 'paidOut',
+    labelKey: 'prizePayments.storeSales.summary.paidOut',
+    valueKey: 'prizePayments.storeSales.summary.paidOutValue',
+    hintKey: 'prizePayments.storeSales.summary.paidOutHint',
     valueClass: 'text-[#161c27]',
   },
 ];

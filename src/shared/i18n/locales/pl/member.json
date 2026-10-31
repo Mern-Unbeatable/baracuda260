@@ -129,7 +129,8 @@
       "aria": "Widoki nagród i płatności",
       "prizeMoney": "Nagrody pieniężne",
       "donations": "Darowizny",
-      "photoSales": "Sprzedaż zdjęć"
+      "photoSales": "Sprzedaż zdjęć",
+      "storeSales": "Sprzedaż w sklepie"
     },
     "status": {
       "approved": "Zatwierdzono",
@@ -315,6 +316,62 @@
         "jul5": "5 lip 2025",
         "jul3": "3 lip 2025"
       }
+    },
+    "storeSales": {
+      "summary": {
+        "totalSales": "Łączna sprzedaż",
+        "totalSalesValue": "$1,220.00",
+        "totalSalesHint": "Sprzedaż brutto w sklepie",
+        "itemsSold": "Sprzedane produkty",
+        "itemsSoldValue": "16",
+        "itemsSoldHint": "Łączna liczba sprzedanych produktów",
+        "yourEarnings": "Twoje zarobki",
+        "yourEarningsValue": "$1,220.00",
+        "yourEarningsHint": "Zarobki ze sprzedaży w sklepie",
+        "available": "Dostępne saldo",
+        "availableValue": "$840.00",
+        "availableHint": "Gotowe do wypłaty",
+        "pending": "Oczekujące",
+        "pendingValue": "$70.00",
+        "pendingHint": "Oczekuje na rozliczenie",
+        "paidOut": "Wypłacono",
+        "paidOutValue": "$310.00",
+        "paidOutHint": "Już wypłacone"
+      },
+      "title": "Sprzedaż w sklepie",
+      "export": "Eksportuj",
+      "details": "Szczegóły",
+      "showing": "Wyświetlanie od 1 do 10 wyników",
+      "columns": {
+        "date": "Data",
+        "buyer": "Kupujący",
+        "email": "E-mail",
+        "product": "Produkt",
+        "quantity": "Ilość",
+        "salePrice": "Cena sprzedaży",
+        "yourEarnings": "Twoje zarobki",
+        "action": "Akcja"
+      }
+    },
+    "payoutModal": {
+      "title": "Poproś o wypłatę",
+      "subtitle": "Wypłać dostępne saldo na preferowane konto płatności.",
+      "payoutType": "Kategoria wypłaty",
+      "types": {
+        "prizeMoney": "Nagrody pieniężne",
+        "donations": "Darowizny",
+        "photoSales": "Sprzedaż zdjęć",
+        "storeSales": "Sprzedaż w sklepie"
+      },
+      "amount": "Kwota wypłaty ($)",
+      "amountPlaceholder": "Wpisz kwotę do wypłaty",
+      "accountNumber": "Konto / Telefon / PayPal / IBAN",
+      "accountNumberPlaceholder": "np. (702) 555-0122 lub user@paypal.com",
+      "availableBalance": "Dostępne: {{amount}}",
+      "cancel": "Anuluj",
+      "submit": "Wyślij wniosek",
+      "submitting": "Wysyłanie...",
+      "success": "Wniosek o wypłatę został wysłany pomyślnie!"
     }
   },
   "userProfile": {
