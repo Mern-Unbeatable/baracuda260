@@ -177,6 +177,12 @@ export function toWinnerDetailEntry(winner, t) {
     description:
       winner.description ?? t('winnersDetail.summary', { title: winner.title }),
     photographer: winner.photographer ?? 'Kasia L.',
+    photographerUsername:
+      winner.photographerUsername || winner.user?.username || null,
+    userId: winner.userId || winner.user?.id || null,
+    submissionId: winner.submissionId || winner.id,
+    awards: winner.appreciation || winner.awards || null,
+    appreciation: winner.appreciation || null,
   };
 }
 

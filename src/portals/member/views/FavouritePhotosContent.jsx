@@ -103,14 +103,17 @@ const FavouritePhotosContent = memo(() => {
         </div>
       ) : (
         <section
-          aria-label={t('favouritePhotos.gridAria', 'Favourite photos showcase')}
+          aria-label={t(
+            'favouritePhotos.gridAria',
+            'Favourite photos showcase',
+          )}
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {items.map((photo) => (
             <PhotoShowcaseCard
               key={photo.id}
               id={photo.id}
-              href={photo.href ?? `/gallery/${photo.id}`}
+              href={photo.href ?? `/user/favourite-photos/${photo.id}`}
               image={photo.image}
               badge={photo.badge}
               title={photo.title}
@@ -125,7 +128,9 @@ const FavouritePhotosContent = memo(() => {
               topRightType="none"
               initialSaved={photo.saved ?? true}
               initialLiked={photo.liked ?? photo.isLiked ?? false}
-              onLikeToggle={(nextLiked) => handleLikeToggle(photo.id, nextLiked)}
+              onLikeToggle={(nextLiked) =>
+                handleLikeToggle(photo.id, nextLiked)
+              }
               onSaveToggle={(isSaved) => handleSaveToggle(photo.id, isSaved)}
             />
           ))}
@@ -160,4 +165,3 @@ const FavouritePhotosContent = memo(() => {
 FavouritePhotosContent.displayName = 'FavouritePhotosContent';
 
 export default FavouritePhotosContent;
-

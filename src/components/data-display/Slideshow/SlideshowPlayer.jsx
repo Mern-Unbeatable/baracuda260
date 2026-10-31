@@ -266,7 +266,22 @@ const SlideshowPlayer = memo(({ slideshow, ownerName, onClose }) => {
                   : ''}
                 {counter}
               </span>
-              <PhotographerAwardCounters size="sm" className="shrink-0" />
+              <PhotographerAwardCounters
+                awards={
+                  activePhoto?.awards ||
+                  slideshow.awards ||
+                  slideshow.appreciation
+                }
+                submissionId={
+                  activePhoto?.id || slideshow.submissionId || slideshow.id
+                }
+                photographerName={ownerName}
+                artworkTitle={activePhoto?.title || slideshow.title}
+                artworkImage={activePhoto?.url || activePhoto?.thumb}
+                size="sm"
+                interactive
+                className="shrink-0"
+              />
             </div>
           </div>
 

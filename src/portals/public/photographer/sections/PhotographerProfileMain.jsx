@@ -27,13 +27,13 @@ import {
   PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import {
-  getUserProfileByUsernameApi,
-  USER_PROFILE_USERNAME_QUERY_KEY,
-} from '@/shared/api/userProfile.api';
-import {
   getMarketplacePremiumPhotosApi,
   MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY,
 } from '@/shared/api/premiumPhotos.api';
+import {
+  getUserProfileByUsernameApi,
+  USER_PROFILE_USERNAME_QUERY_KEY,
+} from '@/shared/api/userProfile.api';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { resolveMediaUrl } from '@/shared/utils/media';
@@ -170,6 +170,20 @@ const PhotographerProfileMain = memo(() => {
     return null;
   }, [profileResponse?.data, username]);
 
+  const activeSubmissionId = useMemo(() => {
+    return (
+      profile?.featuredArtworkId ||
+      profile?.featuredSubmissionId ||
+      profile?.submissionId ||
+      profileResponse?.data?.standaloneVideos?.[0]?.id ||
+      profileResponse?.data?.artworks?.[0]?.id ||
+      profileResponse?.data?.submissions?.[0]?.id ||
+      premiumPhotosResponse?.data?.[0]?.submissionId ||
+      premiumPhotosResponse?.data?.[0]?.id ||
+      null
+    );
+  }, [profile, profileResponse?.data, premiumPhotosResponse?.data]);
+
   return (
     <SitePageLayout
       activeHref=""
@@ -218,6 +232,8 @@ const PhotographerProfileMain = memo(() => {
                     appreciation={profile.appreciation}
                     photographerName={profile.name}
                     userId={profile.id}
+                    username={username || profile.username}
+                    submissionId={activeSubmissionId}
                   />
                 </>
               ) : null}

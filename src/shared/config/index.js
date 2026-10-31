@@ -64,6 +64,7 @@ export const ROUTES = {
   USER_MY_STORE_EDIT: '/user/my-store/upload/:id',
   USER_FAVOURITE_PHOTOGRAPHERS: '/user/favourite-photographers',
   USER_FAVOURITE_PHOTOS: '/user/favourite-photos',
+  USER_FAVOURITE_PHOTOS_DETAIL: '/user/favourite-photos/:id',
   USER_PURCHASE_PHOTOS: '/user/purchase-photos',
   USER_MY_ORDERS: '/user/my-orders',
   USER_MY_ORDERS_DETAIL: '/user/my-orders/:id',
@@ -199,5 +200,5 @@ export const TOAST_CONFIG = {
 };
 
 export const SOCKET_CONFIG = {
-  URL: envVar('SOCKET_URL', API_CONFIG.BASE_URL),
+  URL: envVar('SOCKET_URL', API_ORIGIN),
 };

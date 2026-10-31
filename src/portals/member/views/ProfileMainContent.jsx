@@ -183,6 +183,7 @@ const ProfileMainContent = memo(() => {
             appreciation={appreciation}
             photographerName={profile.name}
             userId={profile.id}
+            username={profile.username}
           />
         </>
       ) : null}

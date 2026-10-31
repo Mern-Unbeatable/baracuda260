@@ -129,7 +129,8 @@
       "aria": "Prize and payments views",
       "prizeMoney": "Prize Money",
       "donations": "Donations",
-      "photoSales": "Photo Sales"
+      "photoSales": "Photo Sales",
+      "storeSales": "Store Sales"
     },
     "status": {
       "approved": "Approved",
@@ -333,6 +334,62 @@
         "jul5": "Jul 5, 2025",
         "jul3": "Jul 3, 2025"
       }
+    },
+    "storeSales": {
+      "summary": {
+        "totalSales": "Total Sales",
+        "totalSalesValue": "$1,220.00",
+        "totalSalesHint": "Gross store sales",
+        "itemsSold": "Items Sold",
+        "itemsSoldValue": "16",
+        "itemsSoldHint": "Total products sold",
+        "yourEarnings": "Your Earnings",
+        "yourEarningsValue": "$1,220.00",
+        "yourEarningsHint": "Earnings from store sales",
+        "available": "Available Balance",
+        "availableValue": "$840.00",
+        "availableHint": "Ready for payout",
+        "pending": "Pending",
+        "pendingValue": "$70.00",
+        "pendingHint": "Awaiting clearance",
+        "paidOut": "Paid Out",
+        "paidOutValue": "$310.00",
+        "paidOutHint": "Already paid"
+      },
+      "title": "Store Sales",
+      "export": "Export",
+      "details": "Details",
+      "showing": "Showing 1 to 10 of results",
+      "columns": {
+        "date": "Date",
+        "buyer": "Buyer",
+        "email": "Email",
+        "product": "Product",
+        "quantity": "Quantity",
+        "salePrice": "Sale Price",
+        "yourEarnings": "Your Earnings",
+        "action": "Action"
+      }
+    },
+    "payoutModal": {
+      "title": "Request Payout",
+      "subtitle": "Withdraw your available balance to your preferred payment account.",
+      "payoutType": "Payout Category",
+      "types": {
+        "prizeMoney": "Prize Money",
+        "donations": "Donations",
+        "photoSales": "Photo Sales",
+        "storeSales": "Store Sales"
+      },
+      "amount": "Payout Amount ($)",
+      "amountPlaceholder": "Enter amount to withdraw",
+      "accountNumber": "Account / Phone / PayPal / IBAN",
+      "accountNumberPlaceholder": "e.g. (702) 555-0122 or user@paypal.com",
+      "availableBalance": "Available: {{amount}}",
+      "cancel": "Cancel",
+      "submit": "Submit Request",
+      "submitting": "Submitting...",
+      "success": "Payout requested successfully!"
     }
   },
   "userProfile": {
@@ -372,7 +429,7 @@
     "logoutSuccess": "Signed out successfully",
     "placeholderBody": "This section is coming soon.",
     "welcome": "Welcome back, {{name}}",
-    "welcomeBody": "Your portfolio has grown by 12% in views this week. You have 3 active competitions ending soon.",
+    "welcomeBody": "Track your photography portfolio, monitor live competition rankings, and explore new opportunities to showcase your work.",
     "welcomeBodyAdmin": "Admin view — review competitions, members, and platform activity. Signed in as admin@gmail.com.",
     "tabs": {
       "aria": "Dashboard role view",

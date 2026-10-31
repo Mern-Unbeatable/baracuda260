@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import FavouritePhotosContent from '@/portals/member/views/FavouritePhotosContent';
+import { Outlet } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
 
 const FavouritePhotos = memo(() => {
@@ -14,7 +14,7 @@ const FavouritePhotos = memo(() => {
     ],
   });
 
-  return <FavouritePhotosContent />;
+  return <Outlet />;
 });
 
 FavouritePhotos.displayName = 'FavouritePhotos';

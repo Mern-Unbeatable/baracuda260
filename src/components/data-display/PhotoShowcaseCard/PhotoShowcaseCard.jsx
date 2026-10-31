@@ -2,7 +2,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
   Bookmark,
   Calendar,
+  Camera,
   Eye,
+  Flag,
   Heart,
   Images,
   MoreVertical,
@@ -11,7 +13,9 @@ import {
 import React, { memo, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import AwardArtworkModal from '@/components/data-display/AwardArtworkModal/AwardArtworkModal';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
@@ -88,6 +92,10 @@ const PhotoShowcaseCard = memo(
     itemType,
     kind,
     isVideo,
+    awards,
+    photographer,
+    photographerName,
+    userId,
   }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
@@ -95,6 +103,8 @@ const PhotoShowcaseCard = memo(
     const [liked, setLiked] = useState(initialLiked);
     const [likesCount, setLikesCount] = useState(() => parseCount(likes));
     const [reportOpen, setReportOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [awardOpen, setAwardOpen] = useState(false);
     const showPrice = price != null && price !== '';
 
     const isPremiumPhoto =
@@ -268,7 +278,7 @@ const PhotoShowcaseCard = memo(
         onMenuClick(event);
         return;
       }
-      setReportOpen(true);
+      setMenuOpen((prev) => !prev);
     };
 
     const handleReport = async ({ reason, details }) => {
@@ -377,21 +387,66 @@ const PhotoShowcaseCard = memo(
                   />
                 </Button>
               ) : topRightType === 'menu' ? (
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={handleMenu}
-                  aria-label={t('gallery.moreActions', {
-                    defaultValue: 'More actions',
-                  })}
-                  className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60"
-                >
-                  <MoreVertical
-                    size={16}
-                    strokeWidth={2.5}
-                    aria-hidden="true"
-                  />
-                </Button>
+                <div className="relative">
+                  <Button
+                    unstyled
+                    type="button"
+                    onClick={handleMenu}
+                    aria-label={t('gallery.moreActions', {
+                      defaultValue: 'More actions',
+                    })}
+                    className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60"
+                  >
+                    <MoreVertical
+                      size={16}
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                    />
+                  </Button>
+                  {menuOpen && (
+                    <div
+                      className="absolute right-3 top-12 z-30 min-w-40 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl transition animate-in fade-in"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setMenuOpen(false);
+                          setAwardOpen(true);
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] font-semibold text-gray-700 hover:bg-gray-50 transition"
+                      >
+                        <Camera size={14} className="text-amber-500" />
+                        <span>
+                          {t(
+                            'photographerProfile.appreciation.giveAward',
+                            'Give Award',
+                          )}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setMenuOpen(false);
+                          setReportOpen(true);
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] font-semibold text-red-600 hover:bg-red-50 transition"
+                      >
+                        <Flag size={14} className="text-red-500" />
+                        <span>
+                          {t('gallery.reportModal.title', 'Report Photo')}
+                        </span>
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : null}
 
               {winnerRank ? (
@@ -509,6 +564,18 @@ const PhotoShowcaseCard = memo(
                     {date}
                   </span>
                 ) : null}
+                {awards ? (
+                  <PhotographerAwardCounters
+                    awards={awards}
+                    submissionId={id}
+                    artworkTitle={title}
+                    photographerName={photographerName || photographer}
+                    artworkImage={image}
+                    userId={userId}
+                    size="sm"
+                    interactive
+                  />
+                ) : null}
               </div>
 
               {showPrice ? (
@@ -525,6 +592,17 @@ const PhotoShowcaseCard = memo(
           onClose={() => setReportOpen(false)}
           photoTitle={title}
           onSubmit={handleReport}
+        />
+
+        <AwardArtworkModal
+          open={awardOpen}
+          onClose={() => setAwardOpen(false)}
+          submissionId={id}
+          artworkTitle={title}
+          photographerName={photographerName || photographer}
+          artworkImage={image}
+          userId={userId}
+          appreciation={awards}
         />
       </>
     );

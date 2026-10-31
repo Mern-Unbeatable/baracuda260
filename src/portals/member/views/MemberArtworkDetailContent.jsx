@@ -10,6 +10,7 @@ import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailIm
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
 import MemberArtworkGlobalRankings from '@/components/data-display/MemberArtworkGlobalRankings/MemberArtworkGlobalRankings';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import SignBadge from '@/components/data-display/SignBadge/SignBadge';
 import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
@@ -48,415 +49,436 @@ const SHOWCASE_BADGE_KEYS = {
   '12 photos - full Zodiac Story': 'common.badges.twelveZodiacFull',
 };
 
-const MemberArtworkDetailContent = memo(() => {
-  const { t } = useTranslation();
-  const { id } = useParams();
-  const queryClient = useQueryClient();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+const MemberArtworkDetailContent = memo(
+  ({ backTo = ROUTES.USER_MY_ARTWORK, backLabel }) => {
+    const { t } = useTranslation();
+    const { id } = useParams();
+    const queryClient = useQueryClient();
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [isLiked, setIsLiked] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
 
-  useEffect(() => {
-    if (detail) {
-      setIsLiked(Boolean(detail.isLiked || detail.liked));
-      setIsSaved(Boolean(detail.isSaved || detail.saved));
-    }
-  }, [detail]);
-
-  const handleLikeToggle = async () => {
-    if (!id) return;
-    const next = !isLiked;
-    setIsLiked(next);
-    try {
-      const res = await toggleLikeArtworkApi(id);
-      queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
-      queryClient.invalidateQueries({ queryKey: ['user-artworks'] });
-      queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
-      if (res?.message) toast.success(res.message);
-    } catch (err) {
-      setIsLiked(!next);
-      toast.error(
-        getApiErrorMessage(
-          err,
-          t('common.errors.general', 'Failed to update like status.'),
-        ),
-      );
-    }
-  };
-
-  const handleSaveToggle = async () => {
-    if (!id) return;
-    const next = !isSaved;
-    setIsSaved(next);
-    try {
-      const res = await toggleSaveArtworkApi(id);
-      queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
-      queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
-      toast.success(
-        res?.message ||
-          (next
-            ? t('gallery.savedSuccess', 'Saved to favourites')
-            : t('gallery.unsavedSuccess', 'Removed from favourites')),
-      );
-    } catch (err) {
-      setIsSaved(!next);
-      toast.error(
-        getApiErrorMessage(
-          err,
-          t('common.errors.general', 'Failed to update saved status.'),
-        ),
-      );
-    }
-  };
-
-  const {
-    data: detail,
-    isLoading,
-  } = useQuery({
-    queryKey: ['artwork-detail', id],
-    queryFn: async () => {
-      if (!id) return null;
-      try {
-        const live = await getArtworkDetailsApi(id);
-        if (live) {
-          return normalizeArtworkDetail(live);
+    const { data: detail, isLoading } = useQuery({
+      queryKey: ['artwork-detail', id],
+      queryFn: async () => {
+        if (!id) return null;
+        try {
+          const live = await getArtworkDetailsApi(id);
+          if (live) {
+            return normalizeArtworkDetail(live);
+          }
+        } catch (err) {
+          console.warn('API artwork details fetch failed:', err);
         }
-      } catch (err) {
-        console.warn('API artwork details fetch failed:', err);
+        return getMyArtworkDetailById(id);
+      },
+      enabled: Boolean(id),
+    });
+
+    useEffect(() => {
+      if (detail) {
+        setIsLiked(Boolean(detail.isLiked || detail.liked));
+        setIsSaved(Boolean(detail.isSaved || detail.saved));
       }
-      return getMyArtworkDetailById(id);
-    },
-    enabled: Boolean(id),
-  });
+    }, [detail]);
 
-  const config = detail
-    ? GALLERY_DETAIL_VARIANTS[detail.variant] || GALLERY_DETAIL_VARIANTS.single
-    : null;
-  const slides = detail?.slides || [];
-  const slideCount = slides.length;
-  const showStoryChrome = Boolean(config?.stripLayout) && slideCount > 1;
+    const handleLikeToggle = async () => {
+      if (!id) return;
+      const next = !isLiked;
+      setIsLiked(next);
+      try {
+        const res = await toggleLikeArtworkApi(id);
+        queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
+        queryClient.invalidateQueries({ queryKey: ['user-artworks'] });
+        queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+        if (res?.message) toast.success(res.message);
+      } catch (err) {
+        setIsLiked(!next);
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('common.errors.general', 'Failed to update like status.'),
+          ),
+        );
+      }
+    };
 
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [detail?.id]);
+    const handleSaveToggle = async () => {
+      if (!id) return;
+      const next = !isSaved;
+      setIsSaved(next);
+      try {
+        const res = await toggleSaveArtworkApi(id);
+        queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
+        queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
+        toast.success(
+          res?.message ||
+            (next
+              ? t('gallery.savedSuccess', 'Saved to favourites')
+              : t('gallery.unsavedSuccess', 'Removed from favourites')),
+        );
+      } catch (err) {
+        setIsSaved(!next);
+        toast.error(
+          getApiErrorMessage(
+            err,
+            t('common.errors.general', 'Failed to update saved status.'),
+          ),
+        );
+      }
+    };
 
-  useEffect(() => {
-    if (!detail || !showStoryChrome || slideCount <= 1) return undefined;
-    const timerId = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % slideCount);
-    }, GALLERY_DETAIL_SLIDE_MS);
-    return () => window.clearInterval(timerId);
-  }, [detail, showStoryChrome, slideCount]);
+    const config = detail
+      ? GALLERY_DETAIL_VARIANTS[detail.variant] ||
+        GALLERY_DETAIL_VARIANTS.single
+      : null;
+    const slides = detail?.slides || [];
+    const slideCount = slides.length;
+    const showStoryChrome = Boolean(config?.stripLayout) && slideCount > 1;
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto flex min-h-[50vh] w-full max-w-395 flex-col items-center justify-center gap-4">
-        <Loader2 className="size-10 animate-spin text-[#ee1c25]" />
-        <p className="text-[16px] font-medium text-[#494453]">
-          {t('common.loading', 'Loading artwork details...')}
-        </p>
-      </div>
-    );
-  }
+    useEffect(() => {
+      setActiveIndex(0);
+    }, [detail?.id]);
 
-  if (!detail) {
-    return (
-      <div className="mx-auto flex min-h-[50vh] w-full max-w-395 flex-col items-center justify-center gap-4">
-        <p className="text-[18px] font-semibold text-[#161c27]">
-          {t('myArtwork.detail.notFound', 'Artwork not found')}
-        </p>
-        <Link
-          to={ROUTES.USER_MY_ARTWORK}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#ee1c25] px-6 py-2.5 text-[15px] font-semibold text-white transition hover:bg-[#d41921]"
-        >
-          <ArrowLeft size={18} aria-hidden="true" />
-          {t('myArtwork.backToArtwork', 'Back to My Artwork')}
-        </Link>
-      </div>
-    );
-  }
+    useEffect(() => {
+      if (!detail || !showStoryChrome || slideCount <= 1) return undefined;
+      const timerId = window.setInterval(() => {
+        setActiveIndex((current) => (current + 1) % slideCount);
+      }, GALLERY_DETAIL_SLIDE_MS);
+      return () => window.clearInterval(timerId);
+    }, [detail, showStoryChrome, slideCount]);
 
-  const activeSlide = slides[activeIndex] || slides[0];
-  const blueBadge = isBlueSlide(activeSlide, config.stripAccent);
-  const heroSrc = activeSlide?.hero || detail.image;
-  const heroAlt = activeSlide?.sign
-    ? `${detail.title} — ${activeSlide.sign}`
-    : detail.title;
-  const { videoPoster, videoSrc } = resolveGalleryDetailMedia(detail, heroSrc);
-  const imageDetails = resolveGalleryImageDetails({
-    ...detail,
-    photographer: detail.photographer ?? detail.author,
-    badge: detail.badge ?? detail.albumBadge,
-    date: detail.uploadedDate,
-    isAiGenerated: detail.isAiGenerated,
-  });
-
-  const badgeLabel =
-    detail.variant === 'twelve'
-      ? t('myArtwork.detail.badges.twelveZodiac')
-      : t(SHOWCASE_BADGE_KEYS[detail.badge] || detail.badge, {
-          defaultValue: detail.badge,
-        });
-  const categoryLabel = detail.category?.toUpperCase?.() || detail.category;
-
-  const goPrev = () =>
-    setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
-  const goNext = () =>
-    setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
-
-  const statItems =
-    detail.footerState === 'active'
-      ? [
-          {
-            label: t('galleryDetail.votesReceived'),
-            value: detail.votesMetric,
-          },
-          { label: t('galleryDetail.viewsCounted'), value: detail.viewsMetric },
-        ]
-      : [
-          {
-            label: t('myArtwork.detail.totalReact'),
-            value: detail.reactMetric,
-          },
-          { label: t('galleryDetail.viewsCounted'), value: detail.viewsMetric },
-        ];
-
-  return (
-    <div className="mx-auto flex w-full max-w-395 flex-col gap-6 sm:gap-8">
-      <Link
-        to={ROUTES.USER_MY_ARTWORK}
-        className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
-      >
-        <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
-        {t('myArtwork.detail.back')}
-      </Link>
-
-      <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]">
-        <Image
-          src={heroSrc}
-          alt={heroAlt}
-          width={1536}
-          height={653}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        {activeSlide ? (
-          <SignBadge slide={activeSlide} blue={blueBadge} />
-        ) : null}
-        <PhotoAiBadgeOverlay
-          show={detail.isAiGenerated}
-          placement="hero-end"
-          size="lg"
-        />
-
-        {showStoryChrome || slideCount > 1 ? (
-          <>
-            <Button
-              unstyled
-              type="button"
-              onClick={goPrev}
-              aria-label={t('galleryDetail.previousPhoto')}
-              className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-12.75 sm:size-12.75"
-            >
-              <Image
-                src={GALLERY_DETAIL_ASSETS.arrow}
-                alt=""
-                width={16}
-                height={32}
-                className="h-7 w-3.5 rotate-180 object-contain sm:h-8 sm:w-4"
-              />
-            </Button>
-            <Button
-              unstyled
-              type="button"
-              onClick={goNext}
-              aria-label={t('galleryDetail.nextPhoto')}
-              className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-12.75 sm:size-12.75"
-            >
-              <Image
-                src={GALLERY_DETAIL_ASSETS.arrow}
-                alt=""
-                width={16}
-                height={32}
-                className="h-7 w-3.5 object-contain sm:h-8 sm:w-4"
-              />
-            </Button>
-          </>
-        ) : null}
-      </div>
-
-      {config.curveSrc ? (
-        <div
-          className={`relative w-full overflow-hidden ${config.curveHeightClass}`}
-        >
-          <Image
-            src={config.curveSrc}
-            alt=""
-            className={`h-full w-full object-top ${config.curveObjectClass}`}
-          />
+    if (isLoading) {
+      return (
+        <div className="mx-auto flex min-h-[50vh] w-full max-w-395 flex-col items-center justify-center gap-4">
+          <Loader2 className="size-10 animate-spin text-[#ee1c25]" />
+          <p className="text-[16px] font-medium text-[#494453]">
+            {t('common.loading', 'Loading artwork details...')}
+          </p>
         </div>
-      ) : null}
+      );
+    }
 
-      {config.stripLayout === 'six' ? (
-        <SixStoryStrip
-          slides={slides}
-          activeIndex={activeIndex}
-          onSelect={setActiveIndex}
-          stripAccent={config.stripAccent}
-        />
-      ) : null}
+    if (!detail) {
+      return (
+        <div className="mx-auto flex min-h-[50vh] w-full max-w-395 flex-col items-center justify-center gap-4">
+          <p className="text-[18px] font-semibold text-[#161c27]">
+            {t('myArtwork.detail.notFound', 'Artwork not found')}
+          </p>
+          <Link
+            to={backTo}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#ee1c25] px-6 py-2.5 text-[15px] font-semibold text-white transition hover:bg-[#d41921]"
+          >
+            <ArrowLeft size={18} aria-hidden="true" />
+            {backLabel || t('myArtwork.backToArtwork', 'Back to My Artwork')}
+          </Link>
+        </div>
+      );
+    }
 
-      {config.stripLayout === 'twelve' ? (
-        <TwelveStoryStrip
-          slides={slides}
-          activeIndex={activeIndex}
-          onSelect={setActiveIndex}
-        />
-      ) : null}
+    const activeSlide = slides[activeIndex] || slides[0];
+    const blueBadge = isBlueSlide(activeSlide, config.stripAccent);
+    const heroSrc = activeSlide?.hero || detail.image;
+    const heroAlt = activeSlide?.sign
+      ? `${detail.title} — ${activeSlide.sign}`
+      : detail.title;
+    const { videoPoster, videoSrc } = resolveGalleryDetailMedia(
+      detail,
+      heroSrc,
+    );
+    const imageDetails = resolveGalleryImageDetails({
+      ...detail,
+      photographer: detail.photographer ?? detail.author,
+      badge: detail.badge ?? detail.albumBadge,
+      date: detail.uploadedDate,
+      isAiGenerated: detail.isAiGenerated,
+    });
 
-      <GalleryDetailVideo
-        poster={videoPoster}
-        src={videoSrc}
-        title={detail.title}
-      />
+    const badgeLabel =
+      detail.variant === 'twelve'
+        ? t('myArtwork.detail.badges.twelveZodiac')
+        : t(SHOWCASE_BADGE_KEYS[detail.badge] || detail.badge, {
+            defaultValue: detail.badge,
+          });
+    const categoryLabel = detail.category?.toUpperCase?.() || detail.category;
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-          {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-[#ecedfa] px-3 py-1 text-[12px] font-semibold uppercase tracking-[1.2px] text-[#4048cd] sm:px-4 sm:text-[13px]"
-            >
-              {tag}
-            </span>
-          ))}
-          {detail.isAiGenerated ? (
-            <AiGeneratedPhotoBadge variant="inline" size="md" />
+    const goPrev = () =>
+      setActiveIndex((index) => (index === 0 ? slideCount - 1 : index - 1));
+    const goNext = () =>
+      setActiveIndex((index) => (index === slideCount - 1 ? 0 : index + 1));
+
+    const statItems =
+      detail.footerState === 'active'
+        ? [
+            {
+              label: t('galleryDetail.votesReceived'),
+              value: detail.votesMetric,
+            },
+            {
+              label: t('galleryDetail.viewsCounted'),
+              value: detail.viewsMetric,
+            },
+          ]
+        : [
+            {
+              label: t('myArtwork.detail.totalReact'),
+              value: detail.reactMetric,
+            },
+            {
+              label: t('galleryDetail.viewsCounted'),
+              value: detail.viewsMetric,
+            },
+          ];
+
+    return (
+      <div className="mx-auto flex w-full max-w-395 flex-col gap-6 sm:gap-8">
+        <Link
+          to={backTo}
+          className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
+        >
+          <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
+          {backLabel || t('myArtwork.detail.back')}
+        </Link>
+
+        <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]">
+          <Image
+            src={heroSrc}
+            alt={heroAlt}
+            width={1536}
+            height={653}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {activeSlide ? (
+            <SignBadge slide={activeSlide} blue={blueBadge} />
+          ) : null}
+          <PhotoAiBadgeOverlay
+            show={detail.isAiGenerated}
+            placement="hero-end"
+            size="lg"
+          />
+
+          {showStoryChrome || slideCount > 1 ? (
+            <>
+              <Button
+                unstyled
+                type="button"
+                onClick={goPrev}
+                aria-label={t('galleryDetail.previousPhoto')}
+                className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-12.75 sm:size-12.75"
+              >
+                <Image
+                  src={GALLERY_DETAIL_ASSETS.arrow}
+                  alt=""
+                  width={16}
+                  height={32}
+                  className="h-7 w-3.5 rotate-180 object-contain sm:h-8 sm:w-4"
+                />
+              </Button>
+              <Button
+                unstyled
+                type="button"
+                onClick={goNext}
+                aria-label={t('galleryDetail.nextPhoto')}
+                className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-12.75 sm:size-12.75"
+              >
+                <Image
+                  src={GALLERY_DETAIL_ASSETS.arrow}
+                  alt=""
+                  width={16}
+                  height={32}
+                  className="h-7 w-3.5 object-contain sm:h-8 sm:w-4"
+                />
+              </Button>
+            </>
           ) : null}
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            unstyled
-            type="button"
-            onClick={handleLikeToggle}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition ${
-              isLiked
-                ? 'border-[#e53935] bg-[#fef2f2] text-[#e53935]'
-                : 'border-[#e5e7eb] bg-white text-[#494453] hover:border-[#d1d5db]'
-            }`}
-          >
-            <Heart
-              size={16}
-              className={
-                isLiked ? 'fill-[#e53935] text-[#e53935]' : 'text-[#494453]'
-              }
-            />
-            <span>
-              {isLiked ? t('common.liked', 'Liked') : t('common.like', 'Like')}
-            </span>
-          </Button>
-
-          <Button
-            unstyled
-            type="button"
-            onClick={handleSaveToggle}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition ${
-              isSaved
-                ? 'border-[#ee1c25] bg-[#fef2f2] text-[#ee1c25]'
-                : 'border-[#e5e7eb] bg-white text-[#494453] hover:border-[#d1d5db]'
-            }`}
-          >
-            <Bookmark
-              size={16}
-              className={
-                isSaved ? 'fill-[#ee1c25] text-[#ee1c25]' : 'text-[#494453]'
-              }
-            />
-            <span>
-              {isSaved ? t('gallery.saved', 'Saved') : t('gallery.save', 'Save')}
-            </span>
-          </Button>
-        </div>
-      </div>
-
-      <div>
-        <h1 className="text-[28px] font-semibold leading-tight text-[#161c27] sm:text-[32px]">
-          {detail.title}
-        </h1>
-        {detail.isAiGenerated ? (
-          <AiGeneratedDetailNotice className="mt-4" />
-        ) : null}
-        <p className="mt-3 max-w-4xl text-[16px] leading-6 text-[#494453] sm:mt-4 sm:text-[17px] sm:leading-7">
-          {detail.description ||
-            (detail.descriptionKey ? t(detail.descriptionKey) : detail.story)}
-        </p>
-      </div>
-
-      <GalleryDetailImageDetails details={imageDetails} />
-
-      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-        {statItems.map((stat) => (
+        {config.curveSrc ? (
           <div
-            key={stat.label}
-            className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-black/8 bg-[#f5f5f5] px-4 py-4 text-center"
+            className={`relative w-full overflow-hidden ${config.curveHeightClass}`}
           >
-            <p className="w-full text-[11px] font-semibold uppercase tracking-wider text-[#6b7280] sm:text-[12px]">
-              {stat.label}
-            </p>
-            <p className="w-full text-[28px] font-semibold leading-none text-[#161c27] sm:text-[32px]">
-              {stat.value}
-            </p>
+            <Image
+              src={config.curveSrc}
+              alt=""
+              className={`h-full w-full object-top ${config.curveObjectClass}`}
+            />
           </div>
-        ))}
-      </div>
+        ) : null}
 
-      {detail.footerState === 'active' ? (
-        <MemberArtworkGlobalRankings
-          rankings={detail.rankings}
-          showingCount={detail.showingCount}
-          showingTotal={detail.showingTotal}
+        {config.stripLayout === 'six' ? (
+          <SixStoryStrip
+            slides={slides}
+            activeIndex={activeIndex}
+            onSelect={setActiveIndex}
+            stripAccent={config.stripAccent}
+          />
+        ) : null}
+
+        {config.stripLayout === 'twelve' ? (
+          <TwelveStoryStrip
+            slides={slides}
+            activeIndex={activeIndex}
+            onSelect={setActiveIndex}
+          />
+        ) : null}
+
+        <GalleryDetailVideo
+          poster={videoPoster}
+          src={videoSrc}
+          title={detail.title}
         />
-      ) : null}
 
-      <section className="overflow-hidden rounded-lg bg-[#f8fafc] p-4 sm:p-6">
-        <h2 className="font-serif text-[20px] font-semibold text-[#161c27] sm:text-[22px]">
-          {t('galleryDetail.comments')}
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-[#ecedfa] px-3 py-1 text-[12px] font-semibold uppercase tracking-[1.2px] text-[#4048cd] sm:px-4 sm:text-[13px]"
+              >
+                {tag}
+              </span>
+            ))}
+            {detail.isAiGenerated ? (
+              <AiGeneratedPhotoBadge variant="inline" size="md" />
+            ) : null}
+          </div>
 
-        <ul className="mt-5 flex flex-col sm:mt-6">
-          {DETAIL_COMMENTS.map((item, index) => (
-            <li
-              key={`${item.name}-${index}`}
-              className="border-b border-[#c8c8c8] pb-4 pt-0 first:pt-0 not-first:pt-4"
+          <div className="flex items-center gap-2">
+            <Button
+              unstyled
+              type="button"
+              onClick={handleLikeToggle}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition ${
+                isLiked
+                  ? 'border-[#e53935] bg-[#fef2f2] text-[#e53935]'
+                  : 'border-[#e5e7eb] bg-white text-[#494453] hover:border-[#d1d5db]'
+              }`}
             >
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={GALLERY_DETAIL_ASSETS.commentAvatar}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className="size-12 rounded-full object-cover"
-                  />
-                  <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
-                    {item.name}
-                  </p>
-                </div>
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
-                  <ImgIcon src={GALLERY_DETAIL_ASSETS.verified} size={16} />
-                  {t('galleryDetail.verified')}
-                </span>
-              </div>
-              <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
-                {item.text}
+              <Heart
+                size={16}
+                className={
+                  isLiked ? 'fill-[#e53935] text-[#e53935]' : 'text-[#494453]'
+                }
+              />
+              <span>
+                {isLiked
+                  ? t('common.liked', 'Liked')
+                  : t('common.like', 'Like')}
+              </span>
+            </Button>
+
+            <Button
+              unstyled
+              type="button"
+              onClick={handleSaveToggle}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-medium transition ${
+                isSaved
+                  ? 'border-[#ee1c25] bg-[#fef2f2] text-[#ee1c25]'
+                  : 'border-[#e5e7eb] bg-white text-[#494453] hover:border-[#d1d5db]'
+              }`}
+            >
+              <Bookmark
+                size={16}
+                className={
+                  isSaved ? 'fill-[#ee1c25] text-[#ee1c25]' : 'text-[#494453]'
+                }
+              />
+              <span>
+                {isSaved
+                  ? t('gallery.saved', 'Saved')
+                  : t('gallery.save', 'Save')}
+              </span>
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-[28px] font-semibold leading-tight text-[#161c27] sm:text-[32px]">
+              {detail.title}
+            </h1>
+            {detail.awards || detail.appreciation ? (
+              <PhotographerAwardCounters
+                awards={detail.awards || detail.appreciation}
+                size="md"
+              />
+            ) : null}
+          </div>
+          {detail.isAiGenerated ? (
+            <AiGeneratedDetailNotice className="mt-4" />
+          ) : null}
+          <p className="mt-3 max-w-4xl text-[16px] leading-6 text-[#494453] sm:mt-4 sm:text-[17px] sm:leading-7">
+            {detail.description ||
+              (detail.descriptionKey ? t(detail.descriptionKey) : detail.story)}
+          </p>
+        </div>
+
+        <GalleryDetailImageDetails details={imageDetails} />
+
+        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+          {statItems.map((stat) => (
+            <div
+              key={stat.label}
+              className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-black/8 bg-[#f5f5f5] px-4 py-4 text-center"
+            >
+              <p className="w-full text-[11px] font-semibold uppercase tracking-wider text-[#6b7280] sm:text-[12px]">
+                {stat.label}
               </p>
-            </li>
+              <p className="w-full text-[28px] font-semibold leading-none text-[#161c27] sm:text-[32px]">
+                {stat.value}
+              </p>
+            </div>
           ))}
-        </ul>
-      </section>
-    </div>
-  );
-});
+        </div>
+
+        {detail.footerState === 'active' ? (
+          <MemberArtworkGlobalRankings
+            rankings={detail.rankings}
+            showingCount={detail.showingCount}
+            showingTotal={detail.showingTotal}
+          />
+        ) : null}
+
+        <section className="overflow-hidden rounded-lg bg-[#f8fafc] p-4 sm:p-6">
+          <h2 className="font-serif text-[20px] font-semibold text-[#161c27] sm:text-[22px]">
+            {t('galleryDetail.comments')}
+          </h2>
+
+          <ul className="mt-5 flex flex-col sm:mt-6">
+            {DETAIL_COMMENTS.map((item, index) => (
+              <li
+                key={`${item.name}-${index}`}
+                className="border-b border-[#c8c8c8] pb-4 pt-0 first:pt-0 not-first:pt-4"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={GALLERY_DETAIL_ASSETS.commentAvatar}
+                      alt=""
+                      width={48}
+                      height={48}
+                      className="size-12 rounded-full object-cover"
+                    />
+                    <p className="text-[14px] font-medium leading-5 text-[#191c1f]">
+                      {item.name}
+                    </p>
+                  </div>
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[14px] text-white">
+                    <ImgIcon src={GALLERY_DETAIL_ASSETS.verified} size={16} />
+                    {t('galleryDetail.verified')}
+                  </span>
+                </div>
+                <p className="mt-2.5 text-[14px] leading-5 text-[#475156]">
+                  {item.text}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    );
+  },
+);
 
 MemberArtworkDetailContent.displayName = 'MemberArtworkDetailContent';
 

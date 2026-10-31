@@ -3,6 +3,12 @@ import { MapPin, MessageCircle, UserCheck, UserPlus } from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from '@/app/store/slices/authSlice';
 import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
@@ -13,11 +19,23 @@ import {
   USER_FOLLOWING_QUERY_KEY,
   USER_PROFILE_ME_QUERY_KEY,
 } from '@/shared/api/userProfile.api';
+import { ROUTES } from '@/shared/config';
 
 const PhotographerProfileHeader = memo(({ profile }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const currentUser = useSelector(selectUser);
+  const currentUserId = currentUser?.id || currentUser?._id;
+
   const [following, setFollowing] = useState(Boolean(profile.isFollowing));
+
+  const isDemoProfile =
+    !profile.id ||
+    String(profile.id).startsWith('demo-') ||
+    profile.username === 'elenavance';
 
   useEffect(() => {
     if (typeof profile.isFollowing === 'boolean') {
@@ -49,12 +67,55 @@ const PhotographerProfileHeader = memo(({ profile }) => {
   });
 
   const handleFollowClick = () => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to follow photographers');
+      navigate(ROUTES.LOGIN, { state: { from: location.pathname } });
+      return;
+    }
+
+    if (isDemoProfile) {
+      toast.error(
+        'This is a demo preview profile. Follow registered photographers from the Marketplace or Leaderboard!',
+      );
+      return;
+    }
+
     const rawUsername = profile.username || profile.handle;
     if (rawUsername) {
       toggleMutation.mutate();
     } else {
       setFollowing((current) => !current);
     }
+  };
+
+  const handleMessageClick = () => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to message this photographer');
+      navigate(ROUTES.LOGIN, { state: { from: location.pathname } });
+      return;
+    }
+
+    if (isDemoProfile) {
+      toast.error(
+        'This is a demo preview profile. View a registered photographer from the Marketplace or Leaderboard to message them.',
+      );
+      return;
+    }
+
+    const targetUserId = profile.id || profile.userId;
+    if (!targetUserId) {
+      toast.error('Photographer user details not found');
+      return;
+    }
+
+    if (targetUserId === currentUserId) {
+      toast.error('You cannot message yourself');
+      return;
+    }
+
+    navigate(ROUTES.USER_CHAT, {
+      state: { targetUserId },
+    });
   };
 
   return (
@@ -91,7 +152,7 @@ const PhotographerProfileHeader = memo(({ profile }) => {
                   {profile.name}
                 </h1>
                 <PhotographerAwardCounters
-                  awards={profile.appreciation?.tiers}
+                  awards={profile.appreciation?.tiers || profile.appreciation}
                   size="md"
                 />
               </div>
@@ -142,6 +203,7 @@ const PhotographerProfileHeader = memo(({ profile }) => {
             <Button
               unstyled
               type="button"
+              onClick={handleMessageClick}
               className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] bg-[#1e293b] px-4 text-[14px] font-semibold text-white transition hover:bg-[#0f172a]"
             >
               <MessageCircle size={16} strokeWidth={2} aria-hidden="true" />
