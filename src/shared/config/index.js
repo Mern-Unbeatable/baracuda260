@@ -200,5 +200,5 @@ export const TOAST_CONFIG = {
 };
 
 export const SOCKET_CONFIG = {
-  URL: envVar('SOCKET_URL', API_CONFIG.BASE_URL),
+  URL: envVar('SOCKET_URL', API_ORIGIN),
 };

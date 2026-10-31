@@ -1,4 +1,4 @@
-import { Search, SquarePen } from 'lucide-react';
+import { Loader2, MessageSquarePlus, Search, SquarePen } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
@@ -12,23 +12,23 @@ const formatUnread = (count) => {
 
 const ChatConversationList = memo(
   ({
-    conversations,
+    conversations = [],
     activeId,
-    totalUnread,
-    searchQuery,
+    totalUnread = 0,
+    searchQuery = '',
     onSearchChange,
     onSelect,
     onCompose,
+    isLoading = false,
   }) => {
     const { t } = useTranslation();
 
     const filtered = conversations.filter((conversation) => {
       const query = searchQuery.trim().toLowerCase();
       if (!query) return true;
-      return (
-        conversation.name.toLowerCase().includes(query) ||
-        conversation.handle.toLowerCase().includes(query)
-      );
+      const name = (conversation.name || '').toLowerCase();
+      const handle = (conversation.handle || '').toLowerCase();
+      return name.includes(query) || handle.includes(query);
     });
 
     return (
@@ -38,9 +38,11 @@ const ChatConversationList = memo(
             <h1 className="text-[22px] font-semibold leading-none text-[#161c27]">
               {t('memberChat.title')}
             </h1>
-            <span className="inline-flex min-w-[28px] items-center justify-center rounded-full bg-[#4048cd] px-2 py-0.5 text-[12px] font-bold leading-5 text-white">
-              {totalUnread}
-            </span>
+            {totalUnread > 0 ? (
+              <span className="inline-flex min-w-[28px] items-center justify-center rounded-full bg-[#4048cd] px-2 py-0.5 text-[12px] font-bold leading-5 text-white">
+                {totalUnread}
+              </span>
+            ) : null}
           </div>
           <Button
             unstyled
@@ -76,50 +78,80 @@ const ChatConversationList = memo(
           className="scrollbar-light flex-1 overflow-y-auto px-2"
           aria-label={t('memberChat.listAria')}
         >
-          {filtered.map((conversation) => {
-            const isActive = conversation.id === activeId;
-            return (
-              <li key={conversation.id}>
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={() => onSelect(conversation.id)}
-                  aria-pressed={isActive}
-                  className={`flex w-full cursor-pointer items-start gap-3 rounded-2xl px-3 py-3 text-left transition ${
-                    isActive ? 'bg-[#ecedfa]' : 'hover:bg-[#f8fafc]'
-                  }`}
-                >
-                  <Image
-                    src={conversation.avatar}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className="size-12 shrink-0 rounded-full object-cover"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="truncate text-[15px] font-semibold text-[#161c27]">
-                        {conversation.name}
-                      </span>
-                      <span className="shrink-0 text-[12px] font-medium text-[#9ca3af]">
-                        {conversation.time}
-                      </span>
-                    </div>
-                    <div className="mt-1 flex items-center justify-between gap-2">
-                      <p className="truncate text-[13px] leading-5 text-[#6b7280]">
-                        {t(conversation.previewKey)}
-                      </p>
-                      {conversation.unread > 0 ? (
-                        <span className="inline-flex min-w-[22px] shrink-0 items-center justify-center rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[11px] font-bold leading-4 text-white">
-                          {formatUnread(conversation.unread)}
-                        </span>
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-12 text-[#9ca3af]">
+              <Loader2 size={24} className="animate-spin mb-2" />
+              <span className="text-[13px]">Loading conversations...</span>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <div className="mb-3 flex size-12 items-center justify-center rounded-full bg-[#f1f2fe] text-[#4048cd]">
+                <MessageSquarePlus size={22} />
+              </div>
+              <p className="text-[14px] font-semibold text-[#161c27]">
+                No conversations found
+              </p>
+              <p className="mt-1 text-[12px] text-[#6b7280]">
+                {searchQuery
+                  ? 'No results matching your search.'
+                  : 'Start a chat by clicking Add New Chat.'}
+              </p>
+            </div>
+          ) : (
+            filtered.map((conversation) => {
+              const isActive = conversation.id === activeId;
+              return (
+                <li key={conversation.id}>
+                  <Button
+                    unstyled
+                    type="button"
+                    onClick={() => onSelect(conversation.id)}
+                    aria-pressed={isActive}
+                    className={`flex w-full cursor-pointer items-start gap-3 rounded-2xl px-3 py-3 text-left transition ${
+                      isActive ? 'bg-[#ecedfa]' : 'hover:bg-[#f8fafc]'
+                    }`}
+                  >
+                    <div className="relative shrink-0">
+                      <Image
+                        src={conversation.avatar}
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="size-12 rounded-full object-cover"
+                      />
+                      {conversation.online ? (
+                        <span className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-white bg-[#22c55e]" />
                       ) : null}
                     </div>
-                  </div>
-                </Button>
-              </li>
-            );
-          })}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="truncate text-[15px] font-semibold text-[#161c27]">
+                          {conversation.name}
+                        </span>
+                        {conversation.time ? (
+                          <span className="shrink-0 text-[12px] font-medium text-[#9ca3af]">
+                            {conversation.time}
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="mt-1 flex items-center justify-between gap-2">
+                        <p className="truncate text-[13px] leading-5 text-[#6b7280]">
+                          {conversation.previewKey
+                            ? t(conversation.previewKey)
+                            : conversation.preview}
+                        </p>
+                        {conversation.unread > 0 ? (
+                          <span className="inline-flex min-w-[22px] shrink-0 items-center justify-center rounded-full bg-[#4048cd] px-1.5 py-0.5 text-[11px] font-bold leading-4 text-white">
+                            {formatUnread(conversation.unread)}
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  </Button>
+                </li>
+              );
+            })
+          )}
         </ul>
 
         <div className="border-t border-[#ececf0] px-5 py-4">
