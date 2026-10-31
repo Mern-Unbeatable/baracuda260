@@ -411,7 +411,7 @@
     "logoutSuccess": "Wylogowano pomyślnie",
     "placeholderBody": "Ta sekcja wkrótce będzie dostępna.",
     "welcome": "Witaj ponownie, {{name}}",
-    "welcomeBody": "Twoje portfolio zyskało 12% wyświetleń w tym tygodniu. Masz 3 aktywne konkursy kończące się wkrótce.",
+    "welcomeBody": "Zarządzaj swoim portfolio fotograficznym, śledź pozycje w konkursach i odkrywaj nowe możliwości prezentacji swojej twórczości.",
     "welcomeBodyAdmin": "Widok administratora — przeglądaj konkursy, członków i aktywność platformy. Zalogowano jako admin@gmail.com.",
     "tabs": {
       "aria": "Widok roli panelu",

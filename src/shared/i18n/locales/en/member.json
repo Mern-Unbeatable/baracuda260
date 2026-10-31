@@ -429,7 +429,7 @@
     "logoutSuccess": "Signed out successfully",
     "placeholderBody": "This section is coming soon.",
     "welcome": "Welcome back, {{name}}",
-    "welcomeBody": "Your portfolio has grown by 12% in views this week. You have 3 active competitions ending soon.",
+    "welcomeBody": "Track your photography portfolio, monitor live competition rankings, and explore new opportunities to showcase your work.",
     "welcomeBodyAdmin": "Admin view — review competitions, members, and platform activity. Signed in as admin@gmail.com.",
     "tabs": {
       "aria": "Dashboard role view",
