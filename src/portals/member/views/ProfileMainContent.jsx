@@ -22,7 +22,10 @@ import PhotographerShareBanner from '@/portals/public/photographer/components/Ph
 import PhotographerSlideshowsSection from '@/portals/public/photographer/components/PhotographerSlideshowsSection';
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
+import PhotographerStandaloneVideosSection from '@/portals/public/photographer/components/PhotographerStandaloneVideosSection';
+import WeeklyAppreciationBanner from '@/components/data-display/WeeklyAppreciationBanner/WeeklyAppreciationBanner';
 import {
+  PHOTOGRAPHER_ASSETS,
   PHOTOGRAPHER_STORE_PRODUCTS,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
@@ -117,14 +120,27 @@ const ProfileMainContent = memo(() => {
     };
   }, [profileData]);
 
-  const featuredVideo = useMemo(() => {
-    if (!profileData?.introVideo) return null;
+  const introVideo = useMemo(() => {
+    if (profileData?.introVideo) {
+      return {
+        image:
+          resolveMediaUrl(
+            profileData.introVideoThumbnail || profileData.coverPhoto,
+          ) || PHOTOGRAPHER_ASSETS.featuredVideo,
+        url: resolveMediaUrl(profileData.introVideo),
+        title: `${profileData.name || 'Artist'} · Introduction Video`,
+        isDummy: false,
+      };
+    }
+    // High-quality introduction video demo fallback
     return {
-      image: resolveMediaUrl(
-        profileData.introVideoThumbnail || profileData.coverPhoto,
-      ),
-      url: resolveMediaUrl(profileData.introVideo),
-      title: profileData.name || '',
+      image:
+        resolveMediaUrl(profileData?.coverPhoto) ||
+        PHOTOGRAPHER_ASSETS.featuredVideo,
+      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      title: `${profileData?.name || 'Artist'} · Introduction Video`,
+      isDummy: true,
+      duration: '1:00',
     };
   }, [
     profileData?.introVideo,
@@ -174,11 +190,10 @@ const ProfileMainContent = memo(() => {
 
       {activeTab === 'profile' ? (
         <>
+          <WeeklyAppreciationBanner className="mt-5 sm:mt-6" />
           <MemberProfileStatsBar stats={profile.stats} />
           <PhotographerAboutSection profile={profile} />
-          {featuredVideo?.image ? (
-            <PhotographerFeaturedVideo video={featuredVideo} />
-          ) : null}
+          <PhotographerFeaturedVideo video={introVideo} />
           <PhotographerTalentAppreciation
             appreciation={appreciation}
             photographerName={profile.name}
@@ -191,6 +206,14 @@ const ProfileMainContent = memo(() => {
       {activeTab === 'artwork' ? (
         <>
           <PhotographerCompetitionBanner featured={MEMBER_FEATURED} />
+          <PhotographerStandaloneVideosSection
+            videos={
+              profileData?.standaloneVideos ||
+              profileData?.data?.standaloneVideos ||
+              []
+            }
+            artistName={profile.name}
+          />
           <PhotographerSlideshowsSection
             canManage
             ownerName={profile.name}

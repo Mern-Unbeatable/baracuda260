@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
 import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
-import CreateSlideshowButton from '@/components/data-display/Slideshow/CreateSlideshowButton';
+import UploadIntroVideoButton from '@/portals/member/components/member-artwork/UploadIntroVideoButton';
 import Image from '@/components/ui/Image';
 import AdminOverviewContent from '@/portals/admin/views/AdminOverviewContent';
 import useUserDashboard from '@/portals/member/hooks/useUserDashboard';
@@ -161,7 +161,7 @@ const UserDashboardView = memo(() => {
               <Camera size={18} aria-hidden="true" />
               {t('dashboard.uploadCta')}
             </Link>
-            <CreateSlideshowButton className="rounded-full border border-white/30 bg-white/10 px-6 py-3 text-[13px] font-semibold tracking-[0.28px] text-white backdrop-blur-sm hover:bg-white/20 sm:px-8 sm:text-[14px]" />
+            <UploadIntroVideoButton className="rounded-full border border-white/30 bg-white/10 px-6 py-3 text-[13px] font-semibold tracking-[0.28px] text-white backdrop-blur-sm hover:bg-white/20 sm:px-8 sm:text-[14px]" />
           </div>
         </div>
       </section>

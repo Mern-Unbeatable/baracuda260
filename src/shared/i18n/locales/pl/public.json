@@ -1108,5 +1108,41 @@
       "about": "Tekst O sobie może mieć maksymalnie 150 słów.",
       "copyright": "Potwierdź prawa autorskie przed wysłaniem."
     }
+  },
+  "introVideo": {
+    "buttonLabel": "Dodaj 1-minutowe wideo",
+    "btnAria": "Prześlij 1-minutowe wideo wprowadzające",
+    "modalTitle": "Prześlij 1-minutowe wideo wprowadzające",
+    "modalSubtitle": "Przedstaw siebie i swoją twórczość bezpośrednio na profilu",
+    "errorNotVideo": "Wybierz prawidłowy plik wideo (.mp4, .webm, .mov).",
+    "errorSize": "Rozmiar pliku wideo musi być mniejszy niż 100MB.",
+    "errorTooLong": "Długość wideo przekracza limit. Wideo wprowadzające może trwać maksymalnie 1 minutę (60s).",
+    "errorNoFile": "Wybierz plik wideo do przesłania.",
+    "uploadSuccess": "1-minutowe wideo wprowadzające zostało pomyślnie przesłane!",
+    "dragDropTitle": "Przeciągnij i upuść wideo tutaj",
+    "dragDropHint": "MP4, WebM lub MOV do 100MB • Maksymalnie 1 minuta (60s)",
+    "browseFiles": "Przeglądaj pliki",
+    "changeVideo": "Kliknij, aby wybrać inne wideo",
+    "videoTitleLabel": "Tytuł wideo (opcjonalnie)",
+    "videoTitlePlaceholder": "np. Wideo wprowadzające artysty",
+    "infoTitle": "Dlaczego warto dodać 1-minutowe wideo?",
+    "infoDesc": "Twoje wideo będzie wyróżnione w Twoim profilu, aby kolekcjonerzy, odwiedzający i głosujący mogli Cię lepiej poznać.",
+    "submitBtn": "Prześlij 1-minutowe wideo",
+    "uploading": "Przesyłanie...",
+    "badgeLabel": "1-MIN WIDEO INTRO",
+    "featuredDemo": "Wersja pokazowa",
+    "artistBioIntro": "Biografia i wstęp artysty",
+    "defaultTitle": "1-minutowe wideo wprowadzające",
+    "unsupportedBrowser": "Twoja przeglądarka nie obsługuje tagu wideo."
+  },
+  "appreciationBanner": {
+    "aria": "Powiadomienie o nagrodach uznania twórczości",
+    "badge": "Tygodniowe Uznanie Twórczości",
+    "frequency": "• Odnawia się co tydzień",
+    "headline": "Każdego tygodnia możesz przyznać swojemu ulubionemu artyście: 1 Złoty, 1 Srebrny i 1 Brązowy Aparat.",
+    "subtext": "Wspieraj wyjątkowych twórców i pomóż im awansować w rankingu. Przyznawaj aparaty bezpośrednio przy dziełach sztuki.",
+    "gold": "1 Złoty Aparat",
+    "silver": "1 Srebrny Aparat",
+    "bronze": "1 Brązowy Aparat"
   }
 }

@@ -1106,5 +1106,41 @@
       "about": "About text must be 150 words or fewer.",
       "copyright": "Please confirm copyright ownership before submitting."
     }
+  },
+  "introVideo": {
+    "buttonLabel": "Upload 1-minute video",
+    "btnAria": "Upload 1-minute introduction video",
+    "modalTitle": "Upload 1-Minute Introduction Video",
+    "modalSubtitle": "Introduce yourself and your work directly on your profile",
+    "errorNotVideo": "Please select a valid video file (.mp4, .webm, .mov).",
+    "errorSize": "Video file size must be less than 100MB.",
+    "errorTooLong": "Video duration exceeds limit. Introduction videos must be 1 minute or less (60s). Please trim your video.",
+    "errorNoFile": "Please select a video file to upload.",
+    "uploadSuccess": "1-minute introduction video uploaded successfully!",
+    "dragDropTitle": "Drag and drop your video here",
+    "dragDropHint": "MP4, WebM, or MOV up to 100MB • Maximum 1 minute (60s)",
+    "browseFiles": "Browse Files",
+    "changeVideo": "Click to choose another video",
+    "videoTitleLabel": "Video Title (optional)",
+    "videoTitlePlaceholder": "e.g. Artist Introduction Video",
+    "infoTitle": "Why upload a 1-minute video?",
+    "infoDesc": "Your video will be featured prominently on your public profile bio so collectors, visitors, and competition voters can get to know you.",
+    "submitBtn": "Upload 1-Min Video",
+    "uploading": "Uploading...",
+    "badgeLabel": "1-MIN INTRO VIDEO",
+    "featuredDemo": "Featured Demo",
+    "artistBioIntro": "Artist Bio & Introduction",
+    "defaultTitle": "1-Minute Artist Introduction Video",
+    "unsupportedBrowser": "Your browser does not support the video tag."
+  },
+  "appreciationBanner": {
+    "aria": "Artwork Appreciation Award notice",
+    "badge": "Weekly Artwork Appreciation",
+    "frequency": "• Resets Every Week",
+    "headline": "Each week you can award your favorite Artist: 1 Gold 1 Silver 1 Bronze Camera Artwork Appreciation Award.",
+    "subtext": "Support standout creators and help them rise on the weekly leaderboard. Award cameras directly on any artwork.",
+    "gold": "1 Gold Camera",
+    "silver": "1 Silver Camera",
+    "bronze": "1 Bronze Camera"
   }
 }

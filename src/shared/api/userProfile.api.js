@@ -59,7 +59,11 @@ export const USER_PROFILE_ME_QUERY_KEY = ['user-profile-me'];
  */
 export const getUserProfileMeApi = async () => {
   const response = await apiClient.get('/v1/users/profile/me');
-  return response?.data ?? response;
+  let result = response?.data !== undefined ? response.data : response;
+  if (result && result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+    result = result.data;
+  }
+  return result;
 };
 
 /**
@@ -133,7 +137,11 @@ export const getUserProfileByUsernameApi = async (username) => {
   const response = await apiClient.get(
     `/v1/users/profile/${encodeURIComponent(cleanUsername)}`,
   );
-  return response;
+  let result = response?.data !== undefined ? response.data : response;
+  if (result && result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+    result = result.data;
+  }
+  return result;
 };
 
 export const SAVED_ARTWORKS_QUERY_KEY = (params = {}) => [
