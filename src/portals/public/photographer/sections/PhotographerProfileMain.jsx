@@ -83,8 +83,8 @@ const PhotographerProfileMain = memo(() => {
   });
 
   const profile = useMemo(() => {
-    const raw = profileResponse?.data;
-    if (!raw) {
+    const raw = profileResponse?.data || profileResponse;
+    if (!raw || (!raw.id && !raw.username)) {
       if (!username) {
         return {
           id: 'demo-elena-vance',
@@ -151,19 +151,21 @@ const PhotographerProfileMain = memo(() => {
         competitionEntries: Number(raw.stats?.competitionEntries ?? 0),
         totalHearts: Number(raw.stats?.totalHearts ?? 0),
       },
+      standaloneVideos: raw.standaloneVideos || [],
       appreciation: raw.appreciation || PHOTOGRAPHER_TALENT_APPRECIATION,
     };
   }, [profileResponse, username]);
 
   const introVideo = useMemo(() => {
-    if (profileResponse?.data?.introVideo) {
+    const raw = profileResponse?.data || profileResponse;
+    if (raw?.introVideo) {
       return {
         image:
           resolveMediaUrl(
-            profileResponse.data.introVideoThumbnail ||
-              profileResponse.data.coverPhoto,
+            raw.introVideoThumbnail ||
+              raw.coverPhoto,
           ) || PHOTOGRAPHER_FEATURED_VIDEO.image,
-        url: resolveMediaUrl(profileResponse.data.introVideo),
+        url: resolveMediaUrl(raw.introVideo),
         title: `${profile?.name || 'Artist'} · Introduction Video`,
         isDummy: false,
       };
@@ -171,28 +173,29 @@ const PhotographerProfileMain = memo(() => {
     // High-quality dummy introduction video demo fallback
     return {
       image:
-        resolveMediaUrl(profileResponse?.data?.coverPhoto) ||
+        resolveMediaUrl(raw?.coverPhoto) ||
         PHOTOGRAPHER_FEATURED_VIDEO.image,
       url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
       title: `${profile?.name || 'Artist'} · Introduction Video`,
       isDummy: true,
       duration: '1:00',
     };
-  }, [profileResponse?.data, profile?.name]);
+  }, [profileResponse, profile?.name]);
 
   const activeSubmissionId = useMemo(() => {
+    const raw = profileResponse?.data || profileResponse;
     return (
       profile?.featuredArtworkId ||
       profile?.featuredSubmissionId ||
       profile?.submissionId ||
-      profileResponse?.data?.standaloneVideos?.[0]?.id ||
-      profileResponse?.data?.artworks?.[0]?.id ||
-      profileResponse?.data?.submissions?.[0]?.id ||
+      raw?.standaloneVideos?.[0]?.id ||
+      raw?.artworks?.[0]?.id ||
+      raw?.submissions?.[0]?.id ||
       premiumPhotosResponse?.data?.[0]?.submissionId ||
       premiumPhotosResponse?.data?.[0]?.id ||
       null
     );
-  }, [profile, profileResponse?.data, premiumPhotosResponse?.data]);
+  }, [profile, profileResponse, premiumPhotosResponse?.data]);
 
   return (
     <SitePageLayout
@@ -254,6 +257,7 @@ const PhotographerProfileMain = memo(() => {
                   />
                   <PhotographerStandaloneVideosSection
                     videos={
+                      profile?.standaloneVideos ||
                       profileResponse?.standaloneVideos ||
                       profileResponse?.data?.standaloneVideos ||
                       []
@@ -298,7 +302,16 @@ const PhotographerProfileMain = memo(() => {
 
               <PhotographerShareBanner photographerName={profile.name} />
             </>
-          ) : null}
+          ) : (
+            <div className="flex min-h-[300px] flex-col items-center justify-center gap-4 py-16 text-center">
+              <p className="text-[18px] font-semibold text-[#111827]">
+                {t('photographerProfile.notFound', 'Photographer profile not found')}
+              </p>
+              <p className="text-[14px] text-[#6b7280]">
+                {t('photographerProfile.notFoundDesc', 'The photographer profile you are looking for does not exist.')}
+              </p>
+            </div>
+          )}
         </Shell>
       </section>
     </SitePageLayout>

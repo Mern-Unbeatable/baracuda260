@@ -1,19 +1,25 @@
 import React, { memo } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSEO } from '@/shared/hooks/useSEO';
 import PhotographerProfileMain from './sections/PhotographerProfileMain';
 
 const PhotographerProfile = memo(() => {
+  const { username } = useParams();
+  const title = username
+    ? `@${username.replace(/^@/, '')} — Photographer Profile`
+    : 'Photographer Profile — My12Photos';
+
   useSEO({
-    title: 'Elena Vance — Photographer Profile',
+    title,
     description:
-      'View Elena Vance’s nature and landscape photography, premium albums, competition entries, and announcements on My12Photos.',
+      'View photography, premium albums, competition entries, and updates on My12Photos.',
     keywords: [
       'photographer',
       'profile',
       'my12photos',
       'gallery',
-      'Elena Vance',
-    ],
+      username,
+    ].filter(Boolean),
   });
 
   return <PhotographerProfileMain />;
