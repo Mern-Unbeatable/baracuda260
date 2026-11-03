@@ -11,7 +11,7 @@ const ENTER_ARROW = homeAsset('icon-arrow.svg');
  * Shared Active Competitions section (Home + Competitions pages).
  */
 const ActiveCompetitions = memo(() => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['public', 'common']);
 
   return (
     <section className="bg-[#f7f8fa] section-py">

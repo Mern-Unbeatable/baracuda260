@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import ActiveCompetitions from '@/components/marketing/ActiveCompetitions/ActiveCompetitions';
 import HowItWorks from '@/components/marketing/HowItWorks/HowItWorks';
 import { ROUTES } from '@/shared/config';
@@ -6,8 +7,9 @@ import { useSEO } from '@/shared/hooks/useSEO';
 import { SitePageLayout } from '@/shared/site-chrome';
 
 const AlbumTypes = memo(() => {
+  const { t } = useTranslation(['common', 'public']);
   useSEO({
-    title: 'Album Types',
+    title: t('nav.albumTypes', 'Album Types'),
     description:
       'Choose your album type and enter My12Photos competitions — Single Photo, 6 Photos Story, and Zodiac Story.',
     keywords: [
