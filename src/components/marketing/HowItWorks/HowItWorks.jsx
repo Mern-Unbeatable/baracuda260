@@ -8,7 +8,7 @@ import { Shell } from '@/shared/site-chrome';
  * Shared How It Works section (Home + Competitions pages).
  */
 const HowItWorks = memo(() => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['public', 'common']);
 
   return (
     <section className="bg-white section-py">

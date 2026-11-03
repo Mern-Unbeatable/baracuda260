@@ -1,92 +1,70 @@
-import { Award, Camera, Sparkles } from 'lucide-react';
+import { Award, Camera } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Highlighted Info Banner at the top of the User Profile.
- * Informs visitors and members about their weekly Gold, Silver, and Bronze
- * Camera Artwork Appreciation Awards.
+ * Clean Info Banner on top of the User Profile.
+ * Informs visitors about the weekly 1 Gold, 1 Silver, 1 Bronze Camera Artwork Appreciation Awards
+ * with the authentic colored camera badges used across the site.
  */
 const WeeklyAppreciationBanner = memo(({ className = '' }) => {
   const { t } = useTranslation();
 
   return (
-    <section
+    <div
+      role="status"
       aria-label={t('appreciationBanner.aria', 'Artwork Appreciation Award notice')}
-      className={`relative overflow-hidden rounded-2xl border border-amber-300/80 bg-linear-to-r from-amber-50 via-yellow-50/70 to-orange-50 p-4 sm:p-5 sm:px-6 shadow-xs ${className}`}
+      className={`flex items-start gap-3 rounded-xl border border-amber-200/70 bg-[#fffdf8] px-4 py-3 sm:px-5 sm:py-3.5 shadow-2xs ${className}`}
     >
-      {/* Decorative background glow */}
-      <div
-        className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-amber-200/40 blur-2xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -left-10 -bottom-10 size-32 rounded-full bg-yellow-200/40 blur-xl"
-        aria-hidden="true"
-      />
+      <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-amber-100/80 text-amber-700 mt-0.5">
+        <Award size={16} strokeWidth={2.2} />
+      </div>
 
-      <div className="relative z-10 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        {/* Main Text Content */}
-        <div className="flex items-start gap-3.5 sm:gap-4">
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-yellow-500 text-white shadow-sm ring-2 ring-amber-200">
-            <Camera size={22} strokeWidth={2.2} />
-          </div>
-
-          <div className="flex flex-col">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-200/70 px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase text-amber-900">
-                <Sparkles size={11} className="text-amber-700" />
-                {t('appreciationBanner.badge', 'Weekly Artwork Appreciation')}
-              </span>
-              <span className="text-[11px] font-semibold text-amber-800/80">
-                {t('appreciationBanner.frequency', '• Resets Every Week')}
-              </span>
-            </div>
-
-            <h2 className="mt-1 text-[15px] sm:text-[16px] font-bold leading-snug text-amber-950">
-              {t(
-                'appreciationBanner.headline',
-                'Each week you can award your favorite Artist: 1 Gold 1 Silver 1 Bronze Camera Artwork Appreciation Award.',
-              )}
-            </h2>
-
-            <p className="mt-0.5 text-[13px] text-amber-900/80">
-              {t(
-                'appreciationBanner.subtext',
-                'Support standout creators and help them rise on the weekly leaderboard. Award cameras directly on any artwork.',
-              )}
-            </p>
-          </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800">
+            {t('appreciationBanner.badge', 'Weekly Artwork Appreciation')}
+          </span>
+          <span className="text-[11px] text-[#9ca3af]">
+            {t('appreciationBanner.frequency', '• Resets Every Week')}
+          </span>
         </div>
 
-        {/* 3 Award Tiers Visual Chips */}
-        <div className="flex shrink-0 flex-wrap items-center gap-2 sm:gap-2.5 pt-1 lg:pt-0">
-          {/* Gold Camera */}
-          <div className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-white/90 px-3 py-1.5 text-xs font-bold text-amber-900 shadow-2xs backdrop-blur-xs">
-            <span className="flex size-5 items-center justify-center rounded-full bg-linear-to-br from-yellow-300 to-amber-500 text-[11px] text-white shadow-2xs">
-              🥇
-            </span>
-            <span>{t('appreciationBanner.gold', '1 Gold Camera')}</span>
-          </div>
+        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[14px] sm:text-[15px] font-medium text-[#1f2937]">
+          <span>
+            {t(
+              'appreciationBanner.prefix',
+              'Each week you can award your favorite Artist:',
+            )}
+          </span>
 
-          {/* Silver Camera */}
-          <div className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white/90 px-3 py-1.5 text-xs font-bold text-slate-800 shadow-2xs backdrop-blur-xs">
-            <span className="flex size-5 items-center justify-center rounded-full bg-linear-to-br from-slate-200 to-slate-400 text-[11px] text-white shadow-2xs">
-              🥈
-            </span>
-            <span>{t('appreciationBanner.silver', '1 Silver Camera')}</span>
-          </div>
+          {/* 1 Gold Camera */}
+          <span className="inline-flex items-center gap-1 rounded-md border border-[#eab308] bg-linear-to-r from-[#fef08a] via-[#fde047] to-[#facc15] px-2 py-0.5 text-xs font-bold text-[#713f12] shadow-2xs">
+            <Camera size={12} strokeWidth={2.4} className="text-[#854d0e]" />
+            1 Gold
+          </span>
 
-          {/* Bronze Camera */}
-          <div className="inline-flex items-center gap-1.5 rounded-xl border border-amber-600/30 bg-white/90 px-3 py-1.5 text-xs font-bold text-amber-950 shadow-2xs backdrop-blur-xs">
-            <span className="flex size-5 items-center justify-center rounded-full bg-linear-to-br from-amber-600 to-orange-700 text-[11px] text-white shadow-2xs">
-              🥉
-            </span>
-            <span>{t('appreciationBanner.bronze', '1 Bronze Camera')}</span>
-          </div>
+          {/* 1 Silver Camera */}
+          <span className="inline-flex items-center gap-1 rounded-md border border-[#cbd5e1] bg-[#f1f5f9] px-2 py-0.5 text-xs font-bold text-[#475569] shadow-2xs">
+            <Camera size={12} strokeWidth={2.4} className="text-[#64748b]" />
+            1 Silver
+          </span>
+
+          {/* 1 Bronze Camera */}
+          <span className="inline-flex items-center gap-1 rounded-md border border-[#fed7aa] bg-[#fff7ed] px-2 py-0.5 text-xs font-bold text-[#9a3412] shadow-2xs">
+            <Camera size={12} strokeWidth={2.4} className="text-[#b45309]" />
+            1 Bronze
+          </span>
+
+          <span>
+            {t(
+              'appreciationBanner.suffix',
+              'Camera Artwork Appreciation Award.',
+            )}
+          </span>
         </div>
       </div>
-    </section>
+    </div>
   );
 });
 

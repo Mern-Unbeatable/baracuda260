@@ -72,35 +72,6 @@
       "a3role": "Zodiac Album Winner"
     }
   },
-  "competitionsPage": {
-    "cards": {
-      "singleTitle": "Single Photo",
-      "singleDesc": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story judged by the community.",
-      "singleF0": "Monthly competition",
-      "singleF1": "Public community voting",
-      "singleF2": "Top 3 win cash prizes",
-      "sixTitle": "6 Photos Story",
-      "sixDesc": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
-      "sixF0": "Sequential storytelling",
-      "sixF1": "Community votes",
-      "sixF2": "Best story wins",
-      "twelveTitle": "12 photos - full Zodiac Story",
-      "twelveDesc": "Create a complete zodiac-themed visual journey across twelve stunning images our grandest format.",
-      "twelveF0": "12-sign visual arc",
-      "twelveF1": "Zodiac-order display",
-      "twelveF2": "Grand prize category"
-    },
-    "steps": {
-      "1title": "Create an Account",
-      "1text": "Sign up for free in seconds. No fees, no hidden costs ever.",
-      "2title": "Submit Your Photos",
-      "2text": "Choose a competition category and upload your best work before the deadline.",
-      "3title": "Earn Votes",
-      "3text": "The photography community votes for their favourites. The more votes, the higher your rank.",
-      "4title": "Claim Your Prize",
-      "4text": "Winners receive cash prizes via PayPal. Fast, transparent, and reliable."
-    }
-  },
   "about": {
     "hero": {
       "badge": "Empowering Creative Visuals",
@@ -267,7 +238,34 @@
     "paginationAria": "Competitions pagination",
     "loading": "Loading competition artworks...",
     "errorTitle": "Could not load competition entries",
-    "retry": "Try again"
+    "retry": "Try again",
+    "cards": {
+      "singleTitle": "Single Photo",
+      "singleDesc": "Submit one outstanding photograph that speaks for itself. Pure skill, pure story judged by the community.",
+      "singleF0": "Monthly competition",
+      "singleF1": "Public community voting",
+      "singleF2": "Top 3 win cash prizes",
+      "sixTitle": "6 Photos Story",
+      "sixDesc": "Craft a visual narrative using six carefully sequenced images that guide the viewer through an arc.",
+      "sixF0": "Sequential storytelling",
+      "sixF1": "Community votes",
+      "sixF2": "Best story wins",
+      "twelveTitle": "12 photos - full Zodiac Story",
+      "twelveDesc": "Create a complete zodiac-themed visual journey across twelve stunning images our grandest format.",
+      "twelveF0": "12-sign visual arc",
+      "twelveF1": "Zodiac-order display",
+      "twelveF2": "Grand prize category"
+    },
+    "steps": {
+      "1title": "Create an Account",
+      "1text": "Sign up for free in seconds. No fees, no hidden costs ever.",
+      "2title": "Submit Your Photos",
+      "2text": "Choose a competition category and upload your best work before the deadline.",
+      "3title": "Earn Votes",
+      "3text": "The photography community votes for their favourites. The more votes, the higher your rank.",
+      "4title": "Claim Your Prize",
+      "4text": "Winners receive cash prizes via PayPal. Fast, transparent, and reliable."
+    }
   },
   "buyPhotos": {
     "eyebrow": "Premium Marketplace",

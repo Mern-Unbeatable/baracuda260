@@ -72,35 +72,6 @@
       "a3role": "Zwycięzca albumu zodiakalnego"
     }
   },
-  "competitionsPage": {
-    "cards": {
-      "singleTitle": "Pojedyncze zdjęcie",
-      "singleDesc": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia oceniane przez społeczność.",
-      "singleF0": "Miesięczny konkurs",
-      "singleF1": "Publiczne głosowanie społeczności",
-      "singleF2": "Trójka najlepszych wygrywa nagrody pieniężne",
-      "sixTitle": "Historia 6 zdjęć",
-      "sixDesc": "Stwórz wizualną narrację z sześciu starannie ułożonych zdjęć, które prowadzą widza przez historię.",
-      "sixF0": "Opowiadanie sekwencyjne",
-      "sixF1": "Głosy społeczności",
-      "sixF2": "Najlepsza historia wygrywa",
-      "twelveTitle": "12 zdjęć — pełna historia zodiaku",
-      "twelveDesc": "Stwórz pełną zodiakalną podróż wizualną w dwunastu zdjęciach nasz największy format.",
-      "twelveF0": "Łuk wizualny 12 znaków",
-      "twelveF1": "Wyświetlanie w kolejności zodiaku",
-      "twelveF2": "Kategoria głównej nagrody"
-    },
-    "steps": {
-      "1title": "Utwórz konto",
-      "1text": "Zarejestruj się za darmo w kilka sekund. Bez opłat i ukrytych kosztów.",
-      "2title": "Prześlij zdjęcia",
-      "2text": "Wybierz kategorię konkursu i prześlij najlepsze prace przed terminem.",
-      "3title": "Zbieraj głosy",
-      "3text": "Społeczność głosuje na ulubione prace. Im więcej głosów, tym wyższa pozycja.",
-      "4title": "Odbierz nagrodę",
-      "4text": "Zwycięzcy otrzymują nagrody przez PayPal. Szybko, przejrzyście i niezawodnie."
-    }
-  },
   "about": {
     "hero": {
       "badge": "Wspieramy kreatywne wizje",
@@ -267,7 +238,34 @@
     "paginationAria": "Paginacja konkursów",
     "loading": "Ładowanie prac konkursowych...",
     "errorTitle": "Nie udało się załadować zgłoszeń",
-    "retry": "Spróbuj ponownie"
+    "retry": "Spróbuj ponownie",
+    "cards": {
+      "singleTitle": "Pojedyncze zdjęcie",
+      "singleDesc": "Prześlij jedno wyjątkowe zdjęcie, które mówi samo za siebie. Czyste umiejętności, czysta historia oceniane przez społeczność.",
+      "singleF0": "Miesięczny konkurs",
+      "singleF1": "Publiczne głosowanie społeczności",
+      "singleF2": "Trójka najlepszych wygrywa nagrody pieniężne",
+      "sixTitle": "Historia 6 zdjęć",
+      "sixDesc": "Stwórz wizualną narrację z sześciu starannie ułożonych zdjęć, które prowadzą widza przez historię.",
+      "sixF0": "Opowiadanie sekwencyjne",
+      "sixF1": "Głosy społeczności",
+      "sixF2": "Najlepsza historia wygrywa",
+      "twelveTitle": "12 zdjęć — pełna historia zodiaku",
+      "twelveDesc": "Stwórz pełną zodiakalną podróż wizualną w dwunastu zdjęciach nasz największy format.",
+      "twelveF0": "Łuk wizualny 12 znaków",
+      "twelveF1": "Wyświetlanie w kolejności zodiaku",
+      "twelveF2": "Kategoria głównej nagrody"
+    },
+    "steps": {
+      "1title": "Utwórz konto",
+      "1text": "Zarejestruj się za darmo w kilka sekund. Bez opłat i ukrytych kosztów.",
+      "2title": "Prześlij zdjęcia",
+      "2text": "Wybierz kategorię konkursu i prześlij najlepsze prace przed terminem.",
+      "3title": "Zbieraj głosy",
+      "3text": "Społeczność głosuje na ulubione prace. Im więcej głosów, tym wyższa pozycja.",
+      "4title": "Odbierz nagrodę",
+      "4text": "Zwycięzcy otrzymują nagrody przez PayPal. Szybko, przejrzyście i niezawodnie."
+    }
   },
   "buyPhotos": {
     "eyebrow": "Rynek premium",

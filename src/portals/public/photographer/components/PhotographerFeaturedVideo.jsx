@@ -1,4 +1,4 @@
-import { Play, Sparkles, Video } from 'lucide-react';
+import { Play } from 'lucide-react';
 import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
@@ -11,7 +11,7 @@ const PhotographerFeaturedVideo = memo(({ video }) => {
   if (!video?.image && !video?.url) return null;
 
   return (
-    <section className="mt-8 sm:mt-10" aria-label="1-Minute Introduction Video">
+    <section className="mt-8 sm:mt-10" aria-label="Introduction Video">
       <div className="relative aspect-[2.15/1] overflow-hidden rounded-2xl bg-[#111827] shadow-sm">
         {isPlaying && video.url ? (
           <video
@@ -41,26 +41,12 @@ const PhotographerFeaturedVideo = memo(({ video }) => {
               aria-hidden="true"
             />
 
-            {/* Top Badge: 1-Minute Intro Video */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold tracking-wide text-white backdrop-blur-md border border-white/20">
-                <Video size={13} className="text-[#ee1c25]" />
-                {t('introVideo.badgeLabel', '1-MIN INTRO VIDEO')}
-              </span>
-              {video.isDummy && (
-                <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-amber-500/80 px-2.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-xs">
-                  <Sparkles size={11} />
-                  {t('introVideo.featuredDemo', 'Featured Demo')}
-                </span>
-              )}
-            </div>
-
             {/* Play Button Trigger */}
             <Button
               unstyled
               type="button"
               onClick={() => setIsPlaying(true)}
-              aria-label={video.playLabel || 'Play 1-minute introduction video'}
+              aria-label={video.playLabel || 'Play introduction video'}
               className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center transition group"
             >
               <span className="inline-flex size-15 sm:size-18 items-center justify-center rounded-full bg-white/95 text-[#111827] shadow-xl transition transform duration-200 group-hover:scale-110 group-hover:bg-white">
@@ -74,7 +60,7 @@ const PhotographerFeaturedVideo = memo(({ video }) => {
                 {t('introVideo.artistBioIntro', 'Artist Bio & Introduction')}
               </p>
               <h3 className="text-base sm:text-xl font-bold text-white line-clamp-1">
-                {video.title || t('introVideo.defaultTitle', '1-Minute Artist Introduction Video')}
+                {video.title || t('introVideo.defaultTitle', 'Artist Introduction Video')}
               </h3>
             </div>
           </>
