@@ -498,6 +498,29 @@
         "gold": "+ Give Gold",
         "silver": "+ Give Silver",
         "bronze": "+ Give Bronze"
+      },
+      "archive": {
+        "title": "Award Archive & Statistics",
+        "subtitle": "Historical record of Gold, Silver, and Bronze cameras received each week and month.",
+        "weeklyTab": "Weekly Archive",
+        "monthlyTab": "Monthly Archive",
+        "totalWeekly": "Weekly Archive Total",
+        "totalMonthly": "Monthly Archive Total",
+        "cameras": "cameras",
+        "averagePeriod": "Average / Period",
+        "perWeek": "/ week",
+        "perMonth": "/ month",
+        "bestRecord": "Best Record",
+        "empty": "No historical awards recorded for this period yet.",
+        "emptyHint": "Cameras received this week will automatically be archived here every Sunday at midnight.",
+        "colPeriod": "Time Period",
+        "colTotal": "Total",
+        "colStatus": "Status",
+        "current": "Current",
+        "inProgress": "In Progress",
+        "archived": "Archived",
+        "resetNotice": "Camera counters reset every Sunday at midnight. Weekly & monthly totals are permanently preserved in this archive.",
+        "rankingEligible": "Eligible for weekly & monthly artist bonuses"
       }
     },
     "artwork": {
