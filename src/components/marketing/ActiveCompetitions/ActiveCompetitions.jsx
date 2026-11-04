@@ -34,10 +34,10 @@ const ActiveCompetitions = memo(() => {
               description={t(card.descriptionKey)}
               features={card.featureKeys.map((key) => t(key))}
               prize={card.prize}
-              prizeSuffix={t('common.prizeMoney')}
+              prizeSuffix={t('common.prizeMoney', '/prize money')}
               popular={card.popular}
-              popularLabel={card.popular ? t('common.mostPopular') : undefined}
-              ctaLabel={t('common.enterNow')}
+              popularLabel={card.popular ? t('common.mostPopular', 'MOST POPULAR') : undefined}
+              ctaLabel={t('common.enterNow', 'Enter Now')}
               ctaIcon={ENTER_ARROW}
             />
           ))}

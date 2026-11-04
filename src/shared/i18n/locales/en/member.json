@@ -29,6 +29,7 @@
     },
     "subjects": {
       "technical": "Technical issue",
+      "appCrashing": "App is crashing",
       "billing": "Billing & payments",
       "competition": "Competition help",
       "account": "Account & profile",
@@ -81,6 +82,7 @@
     "backToList": "Back to messages",
     "selectConversation": "Select a conversation to start chatting.",
     "online": "Online",
+    "offline": "Offline",
     "moreActions": "More actions",
     "attach": "Attach file",
     "emoji": "Insert emoji",
@@ -409,6 +411,8 @@
       "newPassword": "New Password",
       "confirmPassword": "Confirm New Password",
       "changePassword": "Change Password",
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
       "success": "Password changed successfully!"
     },
     "errors": {
@@ -416,10 +420,15 @@
       "emailRequired": "Email is required.",
       "emailInvalid": "Please enter a valid email address.",
       "currentRequired": "Current password is required.",
+      "currentPassword": "Current password is required.",
       "newRequired": "New password is required.",
+      "newPassword": "New password is required.",
       "newTooShort": "New password must be at least 8 characters.",
+      "passwordShort": "New password must be at least 8 characters.",
       "confirmRequired": "Please confirm your new password.",
-      "confirmMismatch": "Passwords do not match."
+      "confirmPassword": "Please confirm your new password.",
+      "confirmMismatch": "Passwords do not match.",
+      "passwordMismatch": "Passwords do not match."
     }
   },
   "dashboard": {
@@ -1276,7 +1285,9 @@
       "saved": "Password changed successfully!"
     },
     "errors": {
+      "fullName": "Full name is required.",
       "fullNameRequired": "Full name is required.",
+      "username": "Username is required.",
       "usernameRequired": "Username is required.",
       "phoneRequired": "Phone number is required.",
       "emailRequired": "Email address is required.",

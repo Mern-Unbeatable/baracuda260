@@ -29,6 +29,7 @@
     },
     "subjects": {
       "technical": "Problem techniczny",
+      "appCrashing": "Aplikacja się zawiesza",
       "billing": "Płatności i rozliczenia",
       "competition": "Pomoc w konkursie",
       "account": "Konto i profil",
@@ -81,6 +82,7 @@
     "backToList": "Wróć do wiadomości",
     "selectConversation": "Wybierz rozmowę, aby rozpocząć czat.",
     "online": "Online",
+    "offline": "Niedostępny",
     "moreActions": "Więcej akcji",
     "attach": "Dołącz plik",
     "emoji": "Wstaw emoji",
@@ -391,6 +393,8 @@
       "newPassword": "Nowe hasło",
       "confirmPassword": "Potwierdź nowe hasło",
       "changePassword": "Zmień hasło",
+      "hidePassword": "Ukryj hasło",
+      "showPassword": "Pokaż hasło",
       "success": "Hasło zostało zmienione pomyślnie!"
     },
     "errors": {
@@ -398,10 +402,15 @@
       "emailRequired": "E-mail jest wymagany.",
       "emailInvalid": "Podaj prawidłowy adres e-mail.",
       "currentRequired": "Aktualne hasło jest wymagane.",
+      "currentPassword": "Aktualne hasło jest wymagane.",
       "newRequired": "Nowe hasło jest wymagane.",
+      "newPassword": "Nowe hasło jest wymagane.",
       "newTooShort": "Nowe hasło musi mieć co najmniej 8 znaków.",
+      "passwordShort": "Nowe hasło musi mieć co najmniej 8 znaków.",
       "confirmRequired": "Potwierdź nowe hasło.",
-      "confirmMismatch": "Hasła nie są zgodne."
+      "confirmPassword": "Potwierdź nowe hasło.",
+      "confirmMismatch": "Hasła nie są zgodne.",
+      "passwordMismatch": "Hasła nie są zgodne."
     }
   },
   "dashboard": {
@@ -1258,7 +1267,9 @@
       "saved": "Hasło zostało zmienione!"
     },
     "errors": {
+      "fullName": "Imię i nazwisko jest wymagane.",
       "fullNameRequired": "Imię i nazwisko jest wymagane.",
+      "username": "Nazwa użytkownika jest wymagana.",
       "usernameRequired": "Nazwa użytkownika jest wymagana.",
       "phoneRequired": "Numer telefonu jest wymagany.",
       "emailRequired": "Adres e-mail jest wymagany.",

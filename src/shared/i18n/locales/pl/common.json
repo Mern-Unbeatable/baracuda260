@@ -141,6 +141,12 @@
     "aiCreatedConfirmed": "To dzieło będzie oznaczone jako wygenerowane przez AI w galerii i na Twoim profilu.",
     "resolution": "Rozdzielczość",
     "fileSize": "Rozmiar pliku",
-    "quality": "Jakość"
+    "quality": "Jakość",
+    "errors": {
+      "priceRequired": "Cena jest wymagana.",
+      "resolutionRequired": "Rozdzielczość jest wymagana.",
+      "fileSizeRequired": "Rozmiar pliku jest wymagany.",
+      "qualityRequired": "Jakość jest wymagana."
+    }
   }
 }

@@ -1,5 +1,5 @@
-/** Shared assets + variant config for gallery detail pages. */
-
+import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
+import { resolveMediaUrl } from '@/shared/utils/media';
 import { GALLERY_PHOTOS } from './galleryPhotos';
 
 const A = '/assets/home';
@@ -34,15 +34,19 @@ export const GALLERY_DETAIL_DEMO_VIDEO =
 
 export const resolveGalleryDetailMedia = (story, heroSrc) => ({
   videoPoster:
-    story.videoPoster ||
-    story.video?.thumbnailUrl ||
-    story.video?.poster ||
-    heroSrc,
+    resolveMediaUrl(
+      story.videoPoster ||
+      story.video?.thumbnailUrl ||
+      story.video?.poster
+    ) || heroSrc,
   videoSrc: story.videoSrc ?? story.video?.url ?? GALLERY_DETAIL_DEMO_VIDEO,
   donationAvatar:
-    story.donationAvatar ||
-    story.user?.avatar ||
-    GALLERY_DETAIL_ASSETS.photographer,
+    resolveMediaUrl(
+      story.donationAvatar ||
+      story.user?.avatar ||
+      story.photographerAvatar ||
+      story.avatar
+    ) || DASHBOARD_ASSETS.avatar,
   donationBio: story.donationBio || story.story || null,
 });
 

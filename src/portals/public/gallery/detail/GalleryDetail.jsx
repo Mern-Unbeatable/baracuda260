@@ -164,6 +164,13 @@ const GalleryDetail = memo(({ variant: variantProp }) => {
         liveData.user?.username || base.photographerUsername || null,
       user: liveData.user || base.user || null,
       userId: liveData.user?.id || liveData.userId || base.userId || null,
+      donationAvatar:
+        liveData.user?.avatar ||
+        liveData.photographerAvatar ||
+        liveData.avatar ||
+        base.donationAvatar ||
+        base.photographerAvatar ||
+        null,
       awards: liveData.appreciation || liveData.awards || base.awards,
       appreciation:
         liveData.appreciation ||

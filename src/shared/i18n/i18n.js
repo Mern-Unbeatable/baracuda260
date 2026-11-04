@@ -59,9 +59,9 @@ if (!i18n.isInitialized) {
     supportedLngs: SUPPORTED_LOCALES.map(({ code }) => code),
     ns: NAMESPACES,
     defaultNS: 'common',
-    fallbackNS: ['public', 'member', 'admin', 'auth'],
+    fallbackNS: ['common', 'public', 'member', 'admin', 'auth'],
     interpolation: { escapeValue: false },
-    react: { useSuspense: false },
+    react: { useSuspense: false, nsMode: 'fallback' },
   });
 
   document.documentElement.lang = i18n.language;

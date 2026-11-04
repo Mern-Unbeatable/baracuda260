@@ -324,7 +324,10 @@
         "fullNamePlaceholder": "Jan Kowalski",
         "email": "Adres e-mail",
         "emailPlaceholder": "jan.kowalski@example.com",
-        "emailHint": "Wyślemy link do pobrania w wysokiej rozdzielczości na ten adres."
+        "emailHint": "Wyślemy link do pobrania w wysokiej rozdzielczości na ten adres.",
+        "fullNameRequired": "Imię i nazwisko jest wymagane.",
+        "emailRequired": "Adres e-mail jest wymagany.",
+        "emailInvalid": "Wprowadź prawidłowy adres e-mail."
       },
       "payment": {
         "title": "Metoda płatności",
@@ -398,6 +401,7 @@
     "votesReceived": "OTRZYMANE GŁOSY",
     "viewsCounted": "WYŚWIETLENIA",
     "castVote": "Oddaj głos",
+    "cannotVoteOwn": "Nie możesz głosować na własne dzieło.",
     "photographerLabel": "Fotograf",
     "photographerProfile": "Profil fotografa",
     "comments": "Komentarze",
@@ -470,6 +474,7 @@
       "votingEnds": "Głosowanie do: {{date}}",
       "inspect": "Zobacz szczegóły zgłoszenia",
       "castVote": "Oddaj głos",
+      "cannotVoteOwn": "Nie możesz głosować na własne dzieło.",
       "previous": "Poprzednie wyróżnione zgłoszenie",
       "next": "Następne wyróżnione zgłoszenie"
     },
@@ -477,6 +482,9 @@
       "title": "Docenienie prac",
       "subtitle": "Nagradzaj fotografa złotym, srebrnym lub brązowym aparatem raz w tygodniu. Nagrody resetują się w każdą niedzielę o północy.",
       "awards": "NAGRODY",
+      "cannotAwardOwn": "Nie możesz nagradzać własnego dzieła.",
+      "cannotAwardOwnShort": "Własne dzieło",
+      "awarded": "Nagrodzono",
       "alreadyAwarded": "Już nagrodzono w tym tygodniu",
       "resetIn": "Reset nagród za {{days}} dni",
       "weeklyLabel": "TWOJE TYGODNIOWE DOCENIENIE",

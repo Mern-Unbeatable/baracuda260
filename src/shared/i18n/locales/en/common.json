@@ -141,6 +141,12 @@
     "aiCreatedConfirmed": "This artwork will be labeled as AI-generated in the gallery and on your profile.",
     "resolution": "Resolution",
     "fileSize": "File Size",
-    "quality": "Quality"
+    "quality": "Quality",
+    "errors": {
+      "priceRequired": "Price is required.",
+      "resolutionRequired": "Resolution is required.",
+      "fileSizeRequired": "File size is required.",
+      "qualityRequired": "Quality is required."
+    }
   }
 }
