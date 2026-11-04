@@ -324,7 +324,10 @@
         "fullNamePlaceholder": "Jane Doe",
         "email": "Email Address",
         "emailPlaceholder": "jane.doe@example.com",
-        "emailHint": "We'll send your high-resolution download link here."
+        "emailHint": "We'll send your high-resolution download link here.",
+        "fullNameRequired": "Full name is required.",
+        "emailRequired": "Email address is required.",
+        "emailInvalid": "Please enter a valid email address."
       },
       "payment": {
         "title": "Payment Method",
@@ -398,6 +401,7 @@
     "votesReceived": "VOTES RECEIVED",
     "viewsCounted": "VIEWS COUNTED",
     "castVote": "Cast Your Vote",
+    "cannotVoteOwn": "You cannot vote for your own artwork.",
     "photographerLabel": "Photographer",
     "photographerProfile": "Photographer Profile",
     "comments": "Comments",
@@ -470,6 +474,7 @@
       "votingEnds": "Voting ends: {{date}}",
       "inspect": "Inspect Entry Details",
       "castVote": "Cast Your Vote",
+      "cannotVoteOwn": "You cannot vote for your own artwork.",
       "previous": "Previous featured entry",
       "next": "Next featured entry"
     },
@@ -477,6 +482,9 @@
       "title": "Artwork Appreciation",
       "subtitle": "Award this photographer with Gold, Silver, or Bronze cameras once per week. Awards reset every Sunday at midnight.",
       "awards": "AWARDS",
+      "cannotAwardOwn": "You cannot award your own work.",
+      "cannotAwardOwnShort": "Own Artwork",
+      "awarded": "Awarded",
       "alreadyAwarded": "Already awarded this week",
       "resetIn": "Awards reset in {{days}} days",
       "weeklyLabel": "YOUR WEEKLY APPRECIATION",

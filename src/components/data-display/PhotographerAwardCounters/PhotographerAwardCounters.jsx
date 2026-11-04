@@ -74,10 +74,9 @@ const PhotographerAwardCounters = memo(
           ]
         : defaultZeroTiers;
 
-    const isClickable = interactive && Boolean(submissionId);
+    const canAward = Boolean(submissionId);
 
-    const handleClick = (e) => {
-      if (!isClickable) return;
+    const handleOpenAwardModal = (e) => {
       e.preventDefault();
       e.stopPropagation();
       setModalOpen(true);
@@ -96,28 +95,14 @@ const PhotographerAwardCounters = memo(
             const tierTitle = t(style.labelKey, {
               defaultValue: style.defaultLabel,
             });
-            const tooltip = isClickable
-              ? `${tierTitle}: ${tier.count} · ${t('photographerProfile.appreciation.clickToAward', 'Click to award')}`
-              : `${tierTitle}: ${tier.count}`;
+            const tooltip = `${tierTitle}: ${tier.count}`;
 
             return (
               <span
                 key={tier.id}
-                role={isClickable ? 'button' : undefined}
-                tabIndex={isClickable ? 0 : undefined}
-                onClick={handleClick}
-                onKeyDown={(e) => {
-                  if (isClickable && (e.key === 'Enter' || e.key === ' ')) {
-                    handleClick(e);
-                  }
-                }}
                 title={tooltip}
                 aria-label={tooltip}
-                className={`inline-flex items-center rounded-full border font-semibold leading-none tracking-tight shadow-2xs transition-transform select-none ${
-                  isClickable
-                    ? 'cursor-pointer hover:scale-110 active:scale-95'
-                    : 'cursor-default'
-                } ${style.badge} ${sizeConfig.badge}`}
+                className={`inline-flex items-center rounded-full border font-semibold leading-none tracking-tight shadow-2xs select-none cursor-default ${style.badge} ${sizeConfig.badge}`}
               >
                 <Camera
                   size={sizeConfig.iconSize}
@@ -130,11 +115,11 @@ const PhotographerAwardCounters = memo(
             );
           })}
 
-          {showAwardButton && isClickable && (
+          {showAwardButton && canAward && (
             <button
               type="button"
-              onClick={handleClick}
-              className={`inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 font-semibold text-amber-800 transition hover:bg-amber-100 ${sizeConfig.badge}`}
+              onClick={handleOpenAwardModal}
+              className={`inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 font-semibold text-amber-800 transition hover:bg-amber-100 cursor-pointer ${sizeConfig.badge}`}
               title={t(
                 'photographerProfile.appreciation.giveAward',
                 'Give Award',
@@ -148,7 +133,7 @@ const PhotographerAwardCounters = memo(
           )}
         </div>
 
-        {isClickable && (
+        {canAward && (
           <AwardArtworkModal
             open={modalOpen}
             onClose={() => setModalOpen(false)}
