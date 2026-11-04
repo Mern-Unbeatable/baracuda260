@@ -10,6 +10,7 @@ import {
   selectUser,
 } from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
+import PhotographerAppreciationArchive from './PhotographerAppreciationArchive';
 import { awardArtworkAppreciationApi } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
@@ -50,6 +51,8 @@ const normalizeAppreciation = (raw) => {
       tiers: defaultTiers,
       weekly: defaultWeekly,
       resetDays: getDaysUntilNextSundayMidnight(),
+      weeklyArchive: [],
+      monthlyArchive: [],
     };
   }
 
@@ -61,6 +64,8 @@ const normalizeAppreciation = (raw) => {
         typeof raw.resetInDays === 'number'
           ? raw.resetInDays
           : getDaysUntilNextSundayMidnight(),
+      weeklyArchive: raw.weeklyArchive || [],
+      monthlyArchive: raw.monthlyArchive || [],
     };
   }
 
@@ -100,7 +105,13 @@ const normalizeAppreciation = (raw) => {
       ? raw.resetInDays
       : getDaysUntilNextSundayMidnight();
 
-  return { tiers, weekly, resetDays };
+  return {
+    tiers,
+    weekly,
+    resetDays,
+    weeklyArchive: raw.weeklyArchive || [],
+    monthlyArchive: raw.monthlyArchive || [],
+  };
 };
 
 const PhotographerTalentAppreciation = memo(
@@ -120,6 +131,8 @@ const PhotographerTalentAppreciation = memo(
     const [awards, setAwards] = useState(initial.tiers);
     const [weekly, setWeekly] = useState(initial.weekly);
     const [resetDays, setResetDays] = useState(initial.resetDays);
+    const [weeklyArchive, setWeeklyArchive] = useState(initial.weeklyArchive);
+    const [monthlyArchive, setMonthlyArchive] = useState(initial.monthlyArchive);
     const [loadingTier, setLoadingTier] = useState(null);
 
     useEffect(() => {
@@ -127,6 +140,8 @@ const PhotographerTalentAppreciation = memo(
       setAwards(normalized.tiers);
       setWeekly(normalized.weekly);
       setResetDays(normalized.resetDays);
+      setWeeklyArchive(normalized.weeklyArchive);
+      setMonthlyArchive(normalized.monthlyArchive);
     }, [appreciation]);
 
     const isOwnProfile = Boolean(
@@ -366,6 +381,12 @@ const PhotographerTalentAppreciation = memo(
             ))}
           </div>
         </div>
+
+        {/* Weekly & Monthly Historical Archive */}
+        <PhotographerAppreciationArchive
+          weeklyArchive={weeklyArchive}
+          monthlyArchive={monthlyArchive}
+        />
       </section>
     );
   },
