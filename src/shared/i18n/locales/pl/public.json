@@ -498,6 +498,29 @@
         "gold": "+ Daj złoto",
         "silver": "+ Daj srebro",
         "bronze": "+ Daj brąz"
+      },
+      "archive": {
+        "title": "Archiwum i statystyki nagród",
+        "subtitle": "Historia złotych, srebrnych i brązowych aparatów otrzymanych w poszczególnych tygodniach i miesiącach.",
+        "weeklyTab": "Archiwum tygodniowe",
+        "monthlyTab": "Archiwum miesięczne",
+        "totalWeekly": "Suma tygodniowego archiwum",
+        "totalMonthly": "Suma miesięcznego archiwum",
+        "cameras": "aparatów",
+        "averagePeriod": "Średnia / okres",
+        "perWeek": "/ tydzień",
+        "perMonth": "/ miesiąc",
+        "bestRecord": "Najlepszy wynik",
+        "empty": "Brak zarejestrowanych nagród dla tego okresu.",
+        "emptyHint": "Aparaty otrzymane w tym tygodniu zostaną automatycznie zarchiwizowane w każdą niedzielę o północy.",
+        "colPeriod": "Okres czasu",
+        "colTotal": "Suma",
+        "colStatus": "Status",
+        "current": "Bieżący",
+        "inProgress": "W toku",
+        "archived": "Zarchiwizowane",
+        "resetNotice": "Liczniki aparatów resetują się w każdą niedzielę o północy. Tygodniowe i miesięczne sumy są trwale zachowywane w tym archiwum.",
+        "rankingEligible": "Kwalifikuje się do tygodniowych i miesięcznych bonusów dla artystów"
       }
     },
     "artwork": {
