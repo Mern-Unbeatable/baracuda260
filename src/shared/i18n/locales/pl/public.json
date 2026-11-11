@@ -544,22 +544,62 @@
       "filtersAria": "Filtruj produkty sklepu",
       "paginationAria": "Paginacja produktów sklepu",
       "filters": {
-        "all": "Wszystkie",
+        "all": "Wszystkie produkty",
         "artPrints": "Odbitki artystyczne",
         "handmade": "Rękodzieło",
         "apparel": "Odzież",
         "photobooks": "Fotoksiążki",
         "digitalPreset": "Presety cyfrowe",
-        "other": "Inne"
+        "other": "Inne",
+        "merchendise": "Gadżety / Merch",
+        "streetWallArt": "Sztuka uliczna",
+        "photoVideoServices": "Usługi foto i wideo",
+        "personalisedClothing": "Personalizowana odzież",
+        "womenMenJewelry": "Biżuteria damska i męska",
+        "handmadeCrafts": "Rękodzieło",
+        "wallDecoration": "Dekoracje ścienne",
+        "uniqueGifts": "Wyjątkowe prezenty",
+        "vintageArt": "Sztuka vintage",
+        "homeArtDecoration": "Dekoracje domowe",
+        "alternativeFashion": "Moda alternatywna",
+        "techGadgets": "Gadżety technologiczne",
+        "collectibles": "Kolekcje i antyki",
+        "accesories": "Akcesoria",
+        "kidsBaby": "Dla dzieci i niemowląt",
+        "bagsPurses": "Torebki i plecaki",
+        "bathBeauty": "Kąpiel i uroda",
+        "petSupplies": "Dla zwierząt",
+        "toysGames": "Zabawki i gry",
+        "booksMusicFilm": "Książki, muzyka i film"
       },
       "badges": {
         "artPrints": "ODBITKI",
         "digitalArtPrint": "CYFROWA ODBITKA",
-        "handmadeCrafts": "RĘKODZIEŁO",
+        "handmadeCrafts": "Rękodzieło",
         "apparel": "ODZIEŻ",
         "photobooks": "FOTOKSIĄŻKI",
         "digitalPreset": "PRESET CYFROWY",
-        "other": "INNE"
+        "other": "Inne",
+        "all": "Wszystkie produkty",
+        "merchendise": "Gadżety / Merch",
+        "streetWallArt": "Sztuka uliczna",
+        "photoVideoServices": "Usługi foto i wideo",
+        "personalisedClothing": "Personalizowana odzież",
+        "womenMenJewelry": "Biżuteria damska i męska",
+        "wallDecoration": "Dekoracje ścienne",
+        "uniqueGifts": "Wyjątkowe prezenty",
+        "vintageArt": "Sztuka vintage",
+        "homeArtDecoration": "Dekoracje domowe",
+        "alternativeFashion": "Moda alternatywna",
+        "techGadgets": "Gadżety technologiczne",
+        "collectibles": "Kolekcje i antyki",
+        "accesories": "Akcesoria",
+        "kidsBaby": "Dla dzieci i niemowląt",
+        "bagsPurses": "Torebki i plecaki",
+        "bathBeauty": "Kąpiel i uroda",
+        "petSupplies": "Dla zwierząt",
+        "toysGames": "Zabawki i gry",
+        "booksMusicFilm": "Książki, muzyka i film"
       }
     },
     "filters": {
@@ -782,7 +822,9 @@
           "PayPal",
           "Dostawcy usług e-mail"
         ],
-        "footnotes": ["Każda usługa ma własną politykę prywatności."]
+        "footnotes": [
+          "Każda usługa ma własną politykę prywatności."
+        ]
       },
       {
         "id": "rights",
@@ -795,7 +837,9 @@
           "Zrezygnować z subskrypcji newslettera",
           "Skontaktować się z nami w sprawach prywatności"
         ],
-        "footnotes": ["Każda usługa ma własną politykę prywatności."]
+        "footnotes": [
+          "Każda usługa ma własną politykę prywatności."
+        ]
       },
       {
         "id": "contact",
@@ -828,7 +872,9 @@
       {
         "id": "accounts",
         "title": "3. Konta użytkowników",
-        "leads": ["Użytkownicy są odpowiedzialni za:"],
+        "leads": [
+          "Użytkownicy są odpowiedzialni za:"
+        ],
         "bullets": [
           "Utrzymanie bezpieczeństwa konta",
           "Podawanie prawdziwych informacji",
@@ -875,7 +921,9 @@
       {
         "id": "prohibited",
         "title": "8. Zabronione działania",
-        "leads": ["Użytkownicy nie mogą:"],
+        "leads": [
+          "Użytkownicy nie mogą:"
+        ],
         "bullets": [
           "Przesyłać nielegalnych treści",
           "Podszywać się pod innych",
@@ -924,7 +972,9 @@
       {
         "id": "types",
         "title": "Rodzaje plików cookie, których używamy",
-        "leads": ["Wymagane do:"],
+        "leads": [
+          "Wymagane do:"
+        ],
         "bullets": [
           "Logowania",
           "Bezpieczeństwa konta",
@@ -945,7 +995,9 @@
       {
         "id": "analytics",
         "title": "Pliki cookie analityczne",
-        "leads": ["Używamy Google Analytics, aby zrozumieć:"],
+        "leads": [
+          "Używamy Google Analytics, aby zrozumieć:"
+        ],
         "bullets": [
           "Ruch odwiedzających",
           "Popularne strony",
@@ -963,7 +1015,9 @@
       {
         "id": "functional",
         "title": "Pliki cookie funkcjonalne",
-        "leads": ["Zapamiętują:"],
+        "leads": [
+          "Zapamiętują:"
+        ],
         "bullets": [
           "Wybrany język",
           "Preferencje użytkownika",
@@ -974,7 +1028,9 @@
       {
         "id": "managing",
         "title": "Zarządzanie plikami cookie",
-        "leads": ["Większość przeglądarek pozwala na:"],
+        "leads": [
+          "Większość przeglądarek pozwala na:"
+        ],
         "bullets": [
           "Akceptację wszystkich plików cookie",
           "Odrzucenie plików cookie",
@@ -988,7 +1044,11 @@
         "leads": [
           "Niektóre pliki cookie pochodzą z zaufanych usług zewnętrznych, w tym:"
         ],
-        "bullets": ["Google Analytics", "Google Ads", "PayPal"]
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal"
+        ]
       },
       {
         "id": "updates",
