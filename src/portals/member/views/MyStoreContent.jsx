@@ -1,5 +1,5 @@
 import { Loader2, Plus, RefreshCw, Store } from 'lucide-react';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -8,6 +8,7 @@ import Pagination from '@/components/common/Pagination/Pagination';
 import MemberStoreProductCard from '@/components/data-display/MemberStoreProductCard/MemberStoreProductCard';
 import MemberPromotePanel from '@/components/forms/MemberPromotePanel/MemberPromotePanel';
 import Button from '@/components/ui/Button';
+import CategoryFilterDropdown from '@/components/common/CategoryFilterDropdown/CategoryFilterDropdown';
 import {
   MY_STORE_CATEGORIES,
   MY_STORE_PAGE_SIZE,
@@ -153,6 +154,16 @@ const MyStoreContent = memo(() => {
     setPage(1);
   };
 
+  const categoryFilterItems = useMemo(
+    () =>
+      MY_STORE_CATEGORIES.map((item) => ({
+        id: item.id,
+        value: item.value,
+        label: t(item.labelKey, item.label || item.value || item.id),
+      })),
+    [t],
+  );
+
   const handleEdit = (product) => {
     navigate(ROUTES.USER_MY_STORE_EDIT.replace(':id', product.id));
   };
@@ -200,42 +211,24 @@ const MyStoreContent = memo(() => {
           </p>
         </div>
 
-        <Link
-          to={ROUTES.USER_MY_STORE_UPLOAD}
-          className="inline-flex w-fit cursor-pointer items-center justify-center gap-2 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[15px] font-bold text-white transition hover:bg-[#d41921] sm:text-[16px]"
-        >
-          <Plus size={18} aria-hidden="true" />
-          {t('myStore.uploadProduct')}
-        </Link>
+        <div className="flex shrink-0 flex-wrap items-center gap-3">
+          <CategoryFilterDropdown
+            items={categoryFilterItems}
+            value={category}
+            onChange={handleCategoryChange}
+            align="right"
+            labelPrefix={t('myStore.filters.categoryPrefix', 'Category:')}
+            ariaLabel={t('myStore.filters.aria')}
+          />
+          <Link
+            to={ROUTES.USER_MY_STORE_UPLOAD}
+            className="inline-flex w-fit cursor-pointer items-center justify-center gap-2 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[15px] font-bold text-white transition hover:bg-[#d41921] sm:text-[16px]"
+          >
+            <Plus size={18} aria-hidden="true" />
+            {t('myStore.uploadProduct')}
+          </Link>
+        </div>
       </header>
-
-      {/* Category Tabs */}
-      <div
-        role="tablist"
-        aria-label={t('myStore.filters.aria')}
-        className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible"
-      >
-        {MY_STORE_CATEGORIES.map((item) => {
-          const active = category === item.value;
-          return (
-            <Button
-              unstyled
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => handleCategoryChange(item.value)}
-              className={`shrink-0 cursor-pointer rounded-full px-4 py-2.5 text-[13px] font-semibold whitespace-nowrap transition sm:text-[14px] ${
-                active
-                  ? 'bg-[#4048cd] text-white shadow-sm'
-                  : 'border border-[#e4e4e4] bg-white text-[#5d687b] hover:border-[#d5d8e8] hover:text-[#161c27]'
-              }`}
-            >
-              {t(item.labelKey)}
-            </Button>
-          );
-        })}
-      </div>
 
       {/* Loading State */}
       {isLoading ? (
