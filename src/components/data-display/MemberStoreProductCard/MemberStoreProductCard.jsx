@@ -169,7 +169,7 @@ const MemberStoreProductCard = memo(
             className="size-full object-cover"
           />
           <span className="absolute left-3 top-3 inline-flex max-w-[calc(100%-3.5rem)] items-center rounded-md bg-[#3a3f4b]/88 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-[0.35px] text-white backdrop-blur-[2px]">
-            {t(product.badgeKey)}
+            {t(product.badgeKey, product.category || 'Product')}
           </span>
 
           {product.promoted ? (

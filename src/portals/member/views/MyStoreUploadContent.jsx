@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
+import CategoryMultiSelect from '@/components/forms/CategoryMultiSelect/CategoryMultiSelect';
 import {
   buildStoreFormFromProduct,
   EMPTY_STORE_UPLOAD_FORM,
@@ -137,12 +138,19 @@ const MyStoreUploadContent = memo(() => {
   const [othersName, setOthersName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [bannerError, setBannerError] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState(() => {
+    const fromEdit = editingProduct ? buildStoreFormFromProduct(editingProduct).categories : [];
+    return fromEdit.length > 0 ? fromEdit : ['Merchendise'];
+  });
+  const [categoryError, setCategoryError] = useState('');
 
   useEffect(() => {
     let isCancelled = false;
 
     if (!id) {
       reset({ ...EMPTY_STORE_UPLOAD_FORM, copyrightOk: false });
+      setSelectedCategories(['Merchendise']);
+      setCategoryError('');
       setBannerPreview('');
       setBannerFile(null);
       setBannerName('');
@@ -156,7 +164,9 @@ const MyStoreUploadContent = memo(() => {
         const liveProduct = await getStoreProductDetailsApi(id);
         if (isCancelled) return;
         if (liveProduct) {
-          reset({ ...buildStoreFormFromProduct(liveProduct), copyrightOk: true });
+          const formValues = buildStoreFormFromProduct(liveProduct);
+          reset({ ...formValues, copyrightOk: true });
+          setSelectedCategories(formValues.categories.length > 0 ? formValues.categories : ['Merchendise']);
           setBannerPreview(liveProduct.image || liveProduct.bannerImage || '');
           setBannerFile(null);
           setBannerName(t('myStore.upload.currentBanner'));
@@ -170,7 +180,9 @@ const MyStoreUploadContent = memo(() => {
 
       const product = getStoreProductById(id);
       if (isCancelled || !product) return;
-      reset({ ...buildStoreFormFromProduct(product), copyrightOk: true });
+      const formValues = buildStoreFormFromProduct(product);
+      reset({ ...formValues, copyrightOk: true });
+      setSelectedCategories(formValues.categories.length > 0 ? formValues.categories : ['Merchendise']);
       setBannerPreview(product.image || '');
       setBannerFile(null);
       setBannerName(t('myStore.upload.currentBanner'));
@@ -207,6 +219,16 @@ const MyStoreUploadContent = memo(() => {
     event.target.value = '';
   };
 
+  const toggleCategory = (catValue) => {
+    setSelectedCategories((prev) => {
+      if (prev.includes(catValue)) {
+        return prev.filter((c) => c !== catValue);
+      }
+      return [...prev, catValue];
+    });
+    setCategoryError('');
+  };
+
   const handleOthersChange = (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
@@ -220,6 +242,11 @@ const MyStoreUploadContent = memo(() => {
   };
 
   const onSubmit = async (_data) => {
+    if (!selectedCategories || selectedCategories.length === 0) {
+      setCategoryError(t('myStore.upload.errors.category', 'Please mark at least one category'));
+      toast.error(t('myStore.upload.errors.category', 'Please mark at least one category'));
+      return;
+    }
     if (!isEditing && !bannerFile) {
       setBannerError(t('myStore.upload.errors.banner'));
       toast.error(t('myStore.upload.errors.banner'));
@@ -235,7 +262,10 @@ const MyStoreUploadContent = memo(() => {
     try {
       const formData = new FormData();
       formData.append('title', _data.title.trim());
-      formData.append('category', _data.category);
+      selectedCategories.forEach((cat) => {
+        formData.append('categories', cat);
+      });
+      formData.append('category', selectedCategories[0]);
       formData.append('price', String(_data.price).replace(/[^0-9.]/g, ''));
       formData.append('setEditionSize', _data.edition?.trim?.() || '');
       formData.append('description', _data.description?.trim?.() || '');
@@ -317,22 +347,20 @@ const MyStoreUploadContent = memo(() => {
             />
           </div>
 
-          <div>
-            <FieldLabel htmlFor="store-category">
-              {t('myStore.upload.category')}
-            </FieldLabel>
-            <select
-              id="store-category"
-              className="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-3 text-[15px] text-[#151e31] outline-none focus:ring-2 focus:ring-[#4048cd]/25"
-              {...register('category')}
-            >
-              {MY_STORE_CATEGORY_OPTIONS.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {t(option.labelKey)}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CategoryMultiSelect
+            label={t('myStore.upload.category')}
+            required
+            options={MY_STORE_CATEGORY_OPTIONS}
+            selected={selectedCategories}
+            onChange={(newCats) => {
+              setSelectedCategories(newCats);
+              if (newCats.length > 0) setCategoryError('');
+            }}
+            placeholder={t('myStore.upload.categoryPlaceholder', 'Click to select categories (e.g. Street Wall Art, Decor)...')}
+            error={categoryError}
+            hint={t('myStore.upload.categoryHint', 'Mark all relevant categories so your item is displayed in all marked categories.')}
+            renderLabel={(opt) => t(opt.labelKey, opt.label)}
+          />
 
           <div>
             <FieldLabel htmlFor="store-price">

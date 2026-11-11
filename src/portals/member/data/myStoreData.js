@@ -4,48 +4,36 @@ const H = '/assets/home';
 
 export const MY_STORE_PAGE_SIZE = 8;
 
-export const MY_STORE_CATEGORIES = [
-  { id: 'all', value: 'all', labelKey: 'myStore.filters.all' },
-  {
-    id: 'art-prints',
-    value: 'ART_PRINTS',
-    labelKey: 'myStore.filters.artPrints',
-  },
-  {
-    id: 'handmade',
-    value: 'HANDMADE_CRAFTS',
-    labelKey: 'myStore.filters.handmade',
-  },
-  {
-    id: 'apparel',
-    value: 'APPAREL',
-    labelKey: 'myStore.filters.apparel',
-  },
-  {
-    id: 'photobooks',
-    value: 'PHOTOBOOKS',
-    labelKey: 'myStore.filters.photobooks',
-  },
-  {
-    id: 'digital-preset',
-    value: 'DIGITAL_PRESET',
-    labelKey: 'myStore.filters.digitalPreset',
-  },
-  {
-    id: 'other',
-    value: 'OTHERS',
-    labelKey: 'myStore.filters.other',
-  },
+export const STORE_CATEGORY_LIST = [
+  { id: 'merchendise', value: 'Merchendise', label: 'Merchendise', labelKey: 'myStore.categories.merchendise' },
+  { id: 'street-wall-art', value: 'Street Wall Art', label: 'Street Wall Art', labelKey: 'myStore.categories.streetWallArt' },
+  { id: 'photo-video-services', value: 'Photo & Video Services', label: 'Photo & Video Services', labelKey: 'myStore.categories.photoVideoServices' },
+  { id: 'personalised-clothing', value: 'Personalised Clothing', label: 'Personalised Clothing', labelKey: 'myStore.categories.personalisedClothing' },
+  { id: 'women-men-jewelry', value: 'Women & Men Jewelry', label: 'Women & Men Jewelry', labelKey: 'myStore.categories.womenMenJewelry' },
+  { id: 'handmade-crafts', value: 'Handmade Crafts', label: 'Handmade Crafts', labelKey: 'myStore.categories.handmadeCrafts' },
+  { id: 'wall-decoration', value: 'Wall Decoration', label: 'Wall Decoration', labelKey: 'myStore.categories.wallDecoration' },
+  { id: 'unique-gifts', value: 'Unique Gifts', label: 'Unique Gifts', labelKey: 'myStore.categories.uniqueGifts' },
+  { id: 'vintage-art', value: 'Vintage Art', label: 'Vintage Art', labelKey: 'myStore.categories.vintageArt' },
+  { id: 'home-art-decoration', value: 'Home Art Decoration', label: 'Home Art Decoration', labelKey: 'myStore.categories.homeArtDecoration' },
+  { id: 'alternative-fashion', value: 'Alternative Fashion', label: 'Alternative Fashion', labelKey: 'myStore.categories.alternativeFashion' },
+  { id: 'tech-gadgets', value: 'Tech Gadgets', label: 'Tech Gadgets', labelKey: 'myStore.categories.techGadgets' },
+  { id: 'collectibles', value: 'Collectibles', label: 'Collectibles', labelKey: 'myStore.categories.collectibles' },
+  { id: 'accesories', value: 'Accesories', label: 'Accesories', labelKey: 'myStore.categories.accesories' },
+  { id: 'kids-baby', value: 'Kids & Baby', label: 'Kids & Baby', labelKey: 'myStore.categories.kidsBaby' },
+  { id: 'bags-purses', value: 'Bags & Purses', label: 'Bags & Purses', labelKey: 'myStore.categories.bagsPurses' },
+  { id: 'bath-beauty', value: 'Bath & Beauty', label: 'Bath & Beauty', labelKey: 'myStore.categories.bathBeauty' },
+  { id: 'pet-supplies', value: 'Pet Supplies', label: 'Pet Supplies', labelKey: 'myStore.categories.petSupplies' },
+  { id: 'toys-games', value: 'Toys & Games', label: 'Toys & Games', labelKey: 'myStore.categories.toysGames' },
+  { id: 'books-music-film', value: 'Books, Music & Film', label: 'Books, Music & Film', labelKey: 'myStore.categories.booksMusicFilm' },
+  { id: 'other', value: 'Other', label: 'Other', labelKey: 'myStore.categories.other' },
 ];
 
-export const MY_STORE_CATEGORY_OPTIONS = [
-  { id: 'ART_PRINTS', labelKey: 'myStore.upload.categories.artPrints' },
-  { id: 'HANDMADE_CRAFTS', labelKey: 'myStore.upload.categories.handmade' },
-  { id: 'APPAREL', labelKey: 'myStore.upload.categories.apparel' },
-  { id: 'PHOTOBOOKS', labelKey: 'myStore.upload.categories.photobooks' },
-  { id: 'DIGITAL_PRESET', labelKey: 'myStore.upload.categories.digitalPreset' },
-  { id: 'OTHERS', labelKey: 'myStore.upload.categories.other' },
+export const MY_STORE_CATEGORIES = [
+  { id: 'all', value: 'all', label: 'All items', labelKey: 'myStore.filters.all' },
+  ...STORE_CATEGORY_LIST,
 ];
+
+export const MY_STORE_CATEGORY_OPTIONS = STORE_CATEGORY_LIST;
 
 export const MY_STORE_PRODUCTS = [
   {
@@ -54,8 +42,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Museum-grade archival print with rich alpine color and soft dawn light across the Dolomites ridgeline.',
     price: '$68.00',
-    category: 'art-prints',
-    badgeKey: 'myStore.badges.artPrints',
+    category: 'Street Wall Art',
+    categories: ['Street Wall Art', 'Wall Decoration', 'Vintage Art'],
+    badgeKey: 'myStore.categories.streetWallArt',
     image: `${H}/photo-golden.webp`,
     promoted: true,
   },
@@ -65,8 +54,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Limited canvas edition capturing quiet harbor reflections in cool evening tones.',
     price: '$54.00',
-    category: 'art-prints',
-    badgeKey: 'myStore.badges.digitalArtPrint',
+    category: 'Home Art Decoration',
+    categories: ['Home Art Decoration', 'Wall Decoration'],
+    badgeKey: 'myStore.categories.homeArtDecoration',
     image: `${H}/photo-harbor.webp`,
   },
   {
@@ -75,8 +65,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Handcrafted wood frame paired with a misty forest print for gallery-wall presence.',
     price: '$92.00',
-    category: 'handmade',
-    badgeKey: 'myStore.badges.handmadeCrafts',
+    category: 'Handmade Crafts',
+    categories: ['Handmade Crafts', 'Unique Gifts'],
+    badgeKey: 'myStore.categories.handmadeCrafts',
     image: `${H}/photo-forest.webp`,
     promoted: true,
   },
@@ -86,8 +77,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'A 12-sign visual journey bound as a premium photobook with matte archival pages.',
     price: '$78.00',
-    category: 'photobooks',
-    badgeKey: 'myStore.badges.photobooks',
+    category: 'Books, Music & Film',
+    categories: ['Books, Music & Film', 'Collectibles'],
+    badgeKey: 'myStore.categories.booksMusicFilm',
     image: `${H}/photo-zodiac.webp`,
   },
   {
@@ -96,8 +88,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Soft cotton tee featuring a shoreline motif from the Tidal Memory collection.',
     price: '$36.00',
-    category: 'apparel',
-    badgeKey: 'myStore.badges.apparel',
+    category: 'Personalised Clothing',
+    categories: ['Personalised Clothing', 'Merchendise'],
+    badgeKey: 'myStore.categories.personalisedClothing',
     image: `${H}/photo-tidal.webp`,
   },
   {
@@ -106,8 +99,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Warm countryside grading pack tuned for soft sunrise landscapes and golden haze.',
     price: '$18.00',
-    category: 'digital-preset',
-    badgeKey: 'myStore.badges.digitalPreset',
+    category: 'Photo & Video Services',
+    categories: ['Photo & Video Services', 'Tech Gadgets'],
+    badgeKey: 'myStore.categories.photoVideoServices',
     image: `${H}/photo-morning.webp`,
   },
   {
@@ -116,8 +110,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'High-contrast city skyline print with cool dusk blues and architectural detail.',
     price: '$62.00',
-    category: 'art-prints',
-    badgeKey: 'myStore.badges.artPrints',
+    category: 'Street Wall Art',
+    categories: ['Street Wall Art', 'Wall Decoration'],
+    badgeKey: 'myStore.categories.streetWallArt',
     image: `${H}/photo-city.webp`,
   },
   {
@@ -126,8 +121,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Compact seasonal storybook with six connected autumn frames and essay notes.',
     price: '$44.00',
-    category: 'photobooks',
-    badgeKey: 'myStore.badges.photobooks',
+    category: 'Books, Music & Film',
+    categories: ['Books, Music & Film', 'Unique Gifts'],
+    badgeKey: 'myStore.categories.booksMusicFilm',
     image: `${H}/photo-autumn.webp`,
   },
   {
@@ -136,8 +132,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Wildlife fine-art print with shallow depth and crisp feather detail.',
     price: '$58.00',
-    category: 'art-prints',
-    badgeKey: 'myStore.badges.digitalArtPrint',
+    category: 'Wall Decoration',
+    categories: ['Wall Decoration', 'Vintage Art'],
+    badgeKey: 'myStore.categories.wallDecoration',
     image: `${H}/photo-wings.webp`,
   },
   {
@@ -146,8 +143,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Premium fleece hoodie with a subtle night-street graphic from the Silent collection.',
     price: '$72.00',
-    category: 'apparel',
-    badgeKey: 'myStore.badges.apparel',
+    category: 'Alternative Fashion',
+    categories: ['Alternative Fashion', 'Personalised Clothing'],
+    badgeKey: 'myStore.categories.alternativeFashion',
     image: `${H}/photo-silent.webp`,
   },
   {
@@ -156,8 +154,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Handmade paper bookmarks with zodiac motifs and gold-foil accents.',
     price: '$24.00',
-    category: 'handmade',
-    badgeKey: 'myStore.badges.handmadeCrafts',
+    category: 'Handmade Crafts',
+    categories: ['Handmade Crafts', 'Unique Gifts', 'Collectibles'],
+    badgeKey: 'myStore.categories.handmadeCrafts',
     image: `${H}/photo-zodiac.webp`,
   },
   {
@@ -166,8 +165,9 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Digital preset pack for warm cinematic portraits and landscape glow.',
     price: '$22.00',
-    category: 'digital-preset',
-    badgeKey: 'myStore.badges.digitalPreset',
+    category: 'Photo & Video Services',
+    categories: ['Photo & Video Services', 'Tech Gadgets'],
+    badgeKey: 'myStore.categories.photoVideoServices',
     image: `${H}/photo-golden.webp`,
   },
   {
@@ -176,23 +176,32 @@ export const MY_STORE_PRODUCTS = [
     description:
       'Flexible gift card pack for prints, apparel, and custom studio commissions.',
     price: '$50.00',
-    category: 'other',
-    badgeKey: 'myStore.badges.other',
+    category: 'Unique Gifts',
+    categories: ['Unique Gifts', 'Other'],
+    badgeKey: 'myStore.categories.uniqueGifts',
     image: `${H}/photo-morning.webp`,
   },
 ];
 
 export const filterStoreProducts = (products, category) => {
   if (!category || category === 'all') return products;
-  const target = String(category).toUpperCase();
-  return products.filter(
-    (product) => String(product.category).toUpperCase() === target,
-  );
+  const target = String(category).toLowerCase().replace(/[^a-z0-9]/g, '');
+  return products.filter((product) => {
+    const cats = Array.isArray(product.categories) && product.categories.length > 0
+      ? product.categories
+      : (product.category ? [product.category] : []);
+    return cats.some((c) => {
+      if (!c) return false;
+      const clean = String(c).toLowerCase().replace(/[^a-z0-9]/g, '');
+      return clean === target;
+    });
+  });
 };
 
 export const EMPTY_STORE_UPLOAD_FORM = {
   title: '',
-  category: 'ART_PRINTS',
+  category: 'Merchendise',
+  categories: [],
   price: '',
   edition: '',
   description: '',
@@ -212,9 +221,14 @@ export const buildStoreFormFromProduct = (product) => {
       : product.price) ??
     '';
 
+  const categories = Array.isArray(product.categories) && product.categories.length > 0
+    ? product.categories
+    : (product.category ? [product.category] : []);
+
   return {
     title: product.title || '',
-    category: product.category || 'ART_PRINTS',
+    category: categories[0] || 'Merchendise',
+    categories: categories,
     price: rawPrice,
     edition: product.setEditionSize || product.edition || '',
     description: product.description || '',
