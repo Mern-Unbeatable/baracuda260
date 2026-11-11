@@ -19,12 +19,32 @@ export const STORE_CATEGORIES = {
 };
 
 export const STORE_CATEGORY_BADGE_MAP = {
-  ART_PRINTS: 'myStore.badges.artPrints',
-  HANDMADE_CRAFTS: 'myStore.badges.handmadeCrafts',
-  APPAREL: 'myStore.badges.apparel',
-  PHOTOBOOKS: 'myStore.badges.photobooks',
-  DIGITAL_PRESET: 'myStore.badges.digitalPreset',
-  OTHERS: 'myStore.badges.other',
+  ART_PRINTS: 'myStore.categories.streetWallArt',
+  HANDMADE_CRAFTS: 'myStore.categories.handmadeCrafts',
+  APPAREL: 'myStore.categories.personalisedClothing',
+  PHOTOBOOKS: 'myStore.categories.booksMusicFilm',
+  DIGITAL_PRESET: 'myStore.categories.photoVideoServices',
+  OTHERS: 'myStore.categories.other',
+  MERCHENDISE: 'myStore.categories.merchendise',
+  STREET_WALL_ART: 'myStore.categories.streetWallArt',
+  PHOTO_VIDEO_SERVICES: 'myStore.categories.photoVideoServices',
+  PERSONALISED_CLOTHING: 'myStore.categories.personalisedClothing',
+  WOMEN_MEN_JEWELRY: 'myStore.categories.womenMenJewelry',
+  WALL_DECORATION: 'myStore.categories.wallDecoration',
+  UNIQUE_GIFTS: 'myStore.categories.uniqueGifts',
+  VINTAGE_ART: 'myStore.categories.vintageArt',
+  HOME_ART_DECORATION: 'myStore.categories.homeArtDecoration',
+  ALTERNATIVE_FASHION: 'myStore.categories.alternativeFashion',
+  TECH_GADGETS: 'myStore.categories.techGadgets',
+  COLLECTIBLES: 'myStore.categories.collectibles',
+  ACCESORIES: 'myStore.categories.accesories',
+  KIDS_BABY: 'myStore.categories.kidsBaby',
+  BAGS_PURSES: 'myStore.categories.bagsPurses',
+  BATH_BEAUTY: 'myStore.categories.bathBeauty',
+  PET_SUPPLIES: 'myStore.categories.petSupplies',
+  TOYS_GAMES: 'myStore.categories.toysGames',
+  BOOKS_MUSIC_FILM: 'myStore.categories.booksMusicFilm',
+  OTHER: 'myStore.categories.other',
 };
 
 /**
@@ -65,9 +85,15 @@ export const formatProductPrice = (rawPrice) => {
  */
 export const normalizeStoreProduct = (item) => {
   if (!item) return null;
-  const categoryKey = String(item.category || '').toUpperCase();
+  const rawCategories = Array.isArray(item.categories) && item.categories.length > 0
+    ? item.categories
+    : (item.category ? [item.category] : ['Other']);
+  const primaryCategory = rawCategories[0] || 'Other';
+  const catUpper = primaryCategory.toUpperCase().replace(/[^A-Z0-9]/g, '_');
   const badgeKey =
-    STORE_CATEGORY_BADGE_MAP[categoryKey] || 'myStore.badges.artPrints';
+    STORE_CATEGORY_BADGE_MAP[catUpper] ||
+    STORE_CATEGORY_BADGE_MAP[primaryCategory.toUpperCase()] ||
+    primaryCategory;
 
   const image =
     resolveMediaUrl(
@@ -87,8 +113,10 @@ export const normalizeStoreProduct = (item) => {
   return {
     id: String(item.id),
     userId: item.userId || item.user?.id,
-    category: categoryKey,
+    category: primaryCategory,
+    categories: rawCategories,
     badgeKey,
+    badgeLabel: primaryCategory,
     title: item.title || 'Untitled Product',
     description: item.description || '',
     price: formatProductPrice(item.price),
@@ -128,7 +156,7 @@ export const getStoreProductsApi = async ({
   };
 
   if (category && category.toLowerCase() !== 'all') {
-    params.category = category.toUpperCase();
+    params.category = category;
   }
   if (search) {
     params.search = search;
@@ -197,7 +225,15 @@ export const buildStoreProductFormData = (input) => {
   const formData = new FormData();
 
   if (input.title != null) formData.append('title', String(input.title).trim());
-  if (input.category != null) formData.append('category', String(input.category).trim());
+  if (Array.isArray(input.categories) && input.categories.length > 0) {
+    input.categories.forEach((cat) => {
+      formData.append('categories', String(cat).trim());
+    });
+    formData.append('category', String(input.categories[0]).trim());
+  } else if (input.category != null) {
+    formData.append('category', String(input.category).trim());
+    formData.append('categories', String(input.category).trim());
+  }
   if (input.price != null) {
     const rawPrice = String(input.price).replace(/[^0-9.]/g, '');
     formData.append('price', rawPrice);
