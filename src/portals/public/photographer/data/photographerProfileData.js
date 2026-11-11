@@ -1,4 +1,5 @@
 import { GALLERY_PHOTOS, galleryDetailPath } from '@/shared/data/galleryPhotos';
+import { STORE_CATEGORY_LIST } from '@/portals/member/data/myStoreData';
 
 const A = '/assets/home';
 
@@ -252,19 +253,13 @@ export const PHOTOGRAPHER_MESSAGES = [
 export const PHOTOGRAPHER_STORE_PAGE_SIZE = 8;
 
 export const PHOTOGRAPHER_STORE_CATEGORIES = [
-  { id: 'all', labelKey: 'photographerProfile.store.filters.all' },
-  { id: 'art-prints', labelKey: 'photographerProfile.store.filters.artPrints' },
-  { id: 'handmade', labelKey: 'photographerProfile.store.filters.handmade' },
-  { id: 'apparel', labelKey: 'photographerProfile.store.filters.apparel' },
-  {
-    id: 'photobooks',
-    labelKey: 'photographerProfile.store.filters.photobooks',
-  },
-  {
-    id: 'digital-preset',
-    labelKey: 'photographerProfile.store.filters.digitalPreset',
-  },
-  { id: 'other', labelKey: 'photographerProfile.store.filters.other' },
+  { id: 'all', value: 'all', label: 'All items', labelKey: 'photographerProfile.store.filters.all' },
+  ...STORE_CATEGORY_LIST.map((c) => ({
+    id: c.id,
+    value: c.value,
+    label: c.label,
+    labelKey: `photographerProfile.store.filters.${c.id.replace(/-([a-z])/g, (_, l) => l.toUpperCase())}`,
+  })),
 ];
 
 export const PHOTOGRAPHER_STORE_PRODUCTS = [
@@ -278,8 +273,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Printed on 100% cotton acid-free paper with archival pigment inks for lasting color and exhibition-ready presentation.',
     ],
     price: '$68.00',
-    category: 'art-prints',
-    badgeKey: 'photographerProfile.store.badges.artPrints',
+    category: 'Street Wall Art',
+    categories: ['Street Wall Art', 'Wall Decoration', 'Vintage Art'],
+    badgeKey: 'photographerProfile.store.badges.streetWallArt',
     image: `${A}/photo-golden.webp`,
     gallery: [
       `${A}/photo-golden.webp`,
@@ -302,8 +298,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'A calm harbor scene printed on gallery-wrapped canvas with muted blues and soft night glow.',
     ],
     price: '$54.00',
-    category: 'art-prints',
-    badgeKey: 'photographerProfile.store.badges.digitalArtPrint',
+    category: 'Home Art Decoration',
+    categories: ['Home Art Decoration', 'Wall Decoration'],
+    badgeKey: 'photographerProfile.store.badges.homeArtDecoration',
     image: `${A}/photo-harbor.webp`,
     gallery: [
       `${A}/photo-harbor.webp`,
@@ -325,7 +322,8 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Handmade walnut frame with museum glass and archival backing.',
     ],
     price: '$92.00',
-    category: 'handmade',
+    category: 'Handmade Crafts',
+    categories: ['Handmade Crafts', 'Unique Gifts'],
     badgeKey: 'photographerProfile.store.badges.handmadeCrafts',
     image: `${A}/photo-forest.webp`,
     gallery: [
@@ -345,8 +343,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Hardcover photobook spanning a full zodiac narrative across twelve chapters.',
     ],
     price: '$78.00',
-    category: 'photobooks',
-    badgeKey: 'photographerProfile.store.badges.photobooks',
+    category: 'Books, Music & Film',
+    categories: ['Books, Music & Film', 'Collectibles'],
+    badgeKey: 'photographerProfile.store.badges.booksMusicFilm',
     image: `${A}/photo-zodiac.webp`,
     gallery: [
       `${A}/photo-zodiac.webp`,
@@ -363,8 +362,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Soft cotton tee featuring a shoreline motif from the Tidal Memory collection.',
     detailParagraphs: ['Soft unisex cotton tee with a tonal shoreline print.'],
     price: '$36.00',
-    category: 'apparel',
-    badgeKey: 'photographerProfile.store.badges.apparel',
+    category: 'Personalised Clothing',
+    categories: ['Personalised Clothing', 'Merchendise'],
+    badgeKey: 'photographerProfile.store.badges.personalisedClothing',
     image: `${A}/photo-tidal.webp`,
     gallery: [
       `${A}/photo-tidal.webp`,
@@ -388,8 +388,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Digital Lightroom preset pack for warm countryside sunrise grading.',
     ],
     price: '$18.00',
-    category: 'digital-preset',
-    badgeKey: 'photographerProfile.store.badges.digitalPreset',
+    category: 'Photo & Video Services',
+    categories: ['Photo & Video Services', 'Tech Gadgets'],
+    badgeKey: 'photographerProfile.store.badges.photoVideoServices',
     image: `${A}/photo-morning.webp`,
     gallery: [
       `${A}/photo-morning.webp`,
@@ -408,8 +409,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Metal print with high-gloss finish for urban night scenes.',
     ],
     price: '$72.00',
-    category: 'art-prints',
-    badgeKey: 'photographerProfile.store.badges.artPrints',
+    category: 'Street Wall Art',
+    categories: ['Street Wall Art', 'Wall Decoration'],
+    badgeKey: 'photographerProfile.store.badges.streetWallArt',
     image: `${A}/photo-city.webp`,
     gallery: [
       `${A}/photo-city.webp`,
@@ -431,8 +433,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Archival paper print celebrating movement across open water.',
     ],
     price: '$39.00',
-    category: 'art-prints',
-    badgeKey: 'photographerProfile.store.badges.artPrints',
+    category: 'Wall Decoration',
+    categories: ['Wall Decoration', 'Vintage Art'],
+    badgeKey: 'photographerProfile.store.badges.wallDecoration',
     image: `${A}/photo-wings.webp`,
     gallery: [
       `${A}/photo-wings.webp`,
@@ -454,8 +457,9 @@ export const PHOTOGRAPHER_STORE_PRODUCTS = [
       'Redeemable across studio prints, apparel drops, and selected commission slots.',
     ],
     price: '$50.00',
-    category: 'other',
-    badgeKey: 'photographerProfile.store.badges.other',
+    category: 'Unique Gifts',
+    categories: ['Unique Gifts', 'Other'],
+    badgeKey: 'photographerProfile.store.badges.uniqueGifts',
     image: `${A}/photo-morning.webp`,
     gallery: [
       `${A}/photo-morning.webp`,

@@ -9,7 +9,7 @@ import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
-import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGroup';
+import CategoryFilterDropdown from '@/components/common/CategoryFilterDropdown/CategoryFilterDropdown';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -17,6 +17,7 @@ import {
   PHOTOGRAPHER_STORE_CATEGORIES,
   PHOTOGRAPHER_STORE_PAGE_SIZE,
 } from '@/portals/public/photographer/data/photographerProfileData';
+import { filterStoreProducts } from '@/portals/member/data/myStoreData';
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
@@ -34,7 +35,7 @@ const StoreProductCard = memo(({ product, onView }) => {
           loading="lazy"
         />
         <span className="absolute left-2.5 top-2.5 rounded-full bg-[#111827]/85 px-2 py-1 text-[10px] font-bold tracking-[0.06em] text-white">
-          {t(product.badgeKey)}
+          {t(product.badgeKey, product.category || 'Product')}
         </span>
       </div>
       <div className="flex flex-col gap-3 p-3.5 sm:p-4">
@@ -230,15 +231,15 @@ const PhotographerStoreSection = memo(({ products }) => {
     () =>
       PHOTOGRAPHER_STORE_CATEGORIES.map((item) => ({
         id: item.id,
-        value: item.id,
-        label: t(item.labelKey),
+        value: item.value || item.id,
+        label: t(item.labelKey, item.label || item.value || item.id),
       })),
     [t],
   );
 
   const filtered = useMemo(() => {
     if (category === 'all') return products;
-    return products.filter((product) => product.category === category);
+    return filterStoreProducts(products, category);
   }, [category, products]);
 
   const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
@@ -258,29 +259,35 @@ const PhotographerStoreSection = memo(({ products }) => {
 
   return (
     <section className="mt-6 sm:mt-8">
-      <div className="flex items-center gap-2">
-        <ShoppingBag
-          size={22}
-          className="shrink-0 text-[#4048cd]"
-          aria-hidden="true"
-        />
-        <h2 className="text-[20px] font-bold text-[#111827] sm:text-[22px]">
-          {t('photographerProfile.store.title')}
-        </h2>
-      </div>
-      <p className="mt-1 max-w-2xl text-[14px] leading-6 text-[#6b7280] sm:text-[15px]">
-        {t('photographerProfile.store.subtitle')}
-      </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <ShoppingBag
+              size={22}
+              className="shrink-0 text-[#4048cd]"
+              aria-hidden="true"
+            />
+            <h2 className="text-[20px] font-bold text-[#111827] sm:text-[22px]">
+              {t('photographerProfile.store.title')}
+            </h2>
+          </div>
+          <p className="mt-1 max-w-2xl text-[14px] leading-6 text-[#6b7280] sm:text-[15px]">
+            {t('photographerProfile.store.subtitle')}
+          </p>
+        </div>
 
-      <FilterPillGroup
-        className="mt-4 lg:justify-start"
-        layout="scroll"
-        items={filterItems}
-        value={category}
-        onChange={setCategory}
-        ariaLabel={t('photographerProfile.store.filtersAria')}
-        renderLabel={(item) => item.label}
-      />
+        {/* Category Dropdown Filter */}
+        <div className="shrink-0">
+          <CategoryFilterDropdown
+            items={filterItems}
+            value={category}
+            onChange={setCategory}
+            align="right"
+            labelPrefix={t('photographerProfile.store.categoryPrefix', 'Category:')}
+            ariaLabel={t('photographerProfile.store.filtersAria')}
+          />
+        </div>
+      </div>
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {pagedItems.map((product) => (

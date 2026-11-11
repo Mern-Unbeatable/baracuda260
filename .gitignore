@@ -2,9 +2,10 @@ node_modules
 coverage
 
 # Environment files (contain secrets — never commit)
+temp_auto_push.bat
 
-.env
-.env.development
-.env.production
 
 luisfernandeslu_frontend
+config.bat
+.gitignore
+branch_structure.json

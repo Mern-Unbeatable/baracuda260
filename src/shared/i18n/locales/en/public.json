@@ -550,16 +550,56 @@
         "apparel": "Apparel",
         "photobooks": "Photobooks",
         "digitalPreset": "Digital Preset",
-        "other": "Other"
+        "other": "Other",
+        "merchendise": "Merchendise",
+        "streetWallArt": "Street Wall Art",
+        "photoVideoServices": "Photo & Video Services",
+        "personalisedClothing": "Personalised Clothing",
+        "womenMenJewelry": "Women & Men Jewelry",
+        "handmadeCrafts": "Handmade Crafts",
+        "wallDecoration": "Wall Decoration",
+        "uniqueGifts": "Unique Gifts",
+        "vintageArt": "Vintage Art",
+        "homeArtDecoration": "Home Art Decoration",
+        "alternativeFashion": "Alternative Fashion",
+        "techGadgets": "Tech Gadgets",
+        "collectibles": "Collectibles",
+        "accesories": "Accesories",
+        "kidsBaby": "Kids & Baby",
+        "bagsPurses": "Bags & Purses",
+        "bathBeauty": "Bath & Beauty",
+        "petSupplies": "Pet Supplies",
+        "toysGames": "Toys & Games",
+        "booksMusicFilm": "Books, Music & Film"
       },
       "badges": {
         "artPrints": "ART PRINTS",
         "digitalArtPrint": "DIGITAL ART PRINT",
-        "handmadeCrafts": "HANDMADE CRAFTS",
+        "handmadeCrafts": "Handmade Crafts",
         "apparel": "APPAREL",
         "photobooks": "PHOTOBOOKS",
         "digitalPreset": "DIGITAL PRESET",
-        "other": "OTHER"
+        "other": "Other",
+        "all": "All items",
+        "merchendise": "Merchendise",
+        "streetWallArt": "Street Wall Art",
+        "photoVideoServices": "Photo & Video Services",
+        "personalisedClothing": "Personalised Clothing",
+        "womenMenJewelry": "Women & Men Jewelry",
+        "wallDecoration": "Wall Decoration",
+        "uniqueGifts": "Unique Gifts",
+        "vintageArt": "Vintage Art",
+        "homeArtDecoration": "Home Art Decoration",
+        "alternativeFashion": "Alternative Fashion",
+        "techGadgets": "Tech Gadgets",
+        "collectibles": "Collectibles",
+        "accesories": "Accesories",
+        "kidsBaby": "Kids & Baby",
+        "bagsPurses": "Bags & Purses",
+        "bathBeauty": "Bath & Beauty",
+        "petSupplies": "Pet Supplies",
+        "toysGames": "Toys & Games",
+        "booksMusicFilm": "Books, Music & Film"
       }
     },
     "filters": {
@@ -780,7 +820,9 @@
           "PayPal",
           "Email Service Providers"
         ],
-        "footnotes": ["Each service has its own privacy policy."]
+        "footnotes": [
+          "Each service has its own privacy policy."
+        ]
       },
       {
         "id": "rights",
@@ -793,7 +835,9 @@
           "Withdraw newsletter subscriptions",
           "Contact us regarding privacy concerns"
         ],
-        "footnotes": ["Each service has its own privacy policy."]
+        "footnotes": [
+          "Each service has its own privacy policy."
+        ]
       },
       {
         "id": "contact",
@@ -826,7 +870,9 @@
       {
         "id": "accounts",
         "title": "3. User Accounts",
-        "leads": ["Users are responsible for:"],
+        "leads": [
+          "Users are responsible for:"
+        ],
         "bullets": [
           "Maintaining account security",
           "Providing accurate information",
@@ -873,7 +919,9 @@
       {
         "id": "prohibited",
         "title": "8. Prohibited Activities",
-        "leads": ["Users must not:"],
+        "leads": [
+          "Users must not:"
+        ],
         "bullets": [
           "Upload illegal content",
           "Impersonate others",
@@ -922,7 +970,9 @@
       {
         "id": "types",
         "title": "Types of Cookies We Use",
-        "leads": ["Required for:"],
+        "leads": [
+          "Required for:"
+        ],
         "bullets": [
           "Login",
           "Account Security",
@@ -943,7 +993,9 @@
       {
         "id": "analytics",
         "title": "Analytics Cookies",
-        "leads": ["We use Google Analytics to understand:"],
+        "leads": [
+          "We use Google Analytics to understand:"
+        ],
         "bullets": [
           "Visitor traffic",
           "Popular pages",
@@ -961,7 +1013,9 @@
       {
         "id": "functional",
         "title": "Functional Cookies",
-        "leads": ["Remember:"],
+        "leads": [
+          "Remember:"
+        ],
         "bullets": [
           "Selected language",
           "User preferences",
@@ -972,7 +1026,9 @@
       {
         "id": "managing",
         "title": "Managing Cookies",
-        "leads": ["Most browsers allow you to:"],
+        "leads": [
+          "Most browsers allow you to:"
+        ],
         "bullets": [
           "Accept all cookies",
           "Reject cookies",
@@ -986,7 +1042,11 @@
         "leads": [
           "Some cookies are provided by trusted third-party services including:"
         ],
-        "bullets": ["Google Analytics", "Google Ads", "PayPal"]
+        "bullets": [
+          "Google Analytics",
+          "Google Ads",
+          "PayPal"
+        ]
       },
       {
         "id": "updates",
