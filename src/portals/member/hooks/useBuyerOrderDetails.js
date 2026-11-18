@@ -104,6 +104,7 @@ export const mapBuyerOrderDetail = (raw) => {
     placedShort: formatShortDate(d.date),
     processingAt: formatShortDate(d.date),
     status,
+    trackingNumber: trackingNumber || (typeof d.tracking === 'string' ? d.tracking : null),
     tracking: {
       courierName,
       trackingNumber,
