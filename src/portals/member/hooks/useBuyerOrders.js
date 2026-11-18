@@ -51,6 +51,7 @@ const formatShortDate = (isoString) => {
 export const normalizeOrderStatus = (rawStatus) => {
   const s = String(rawStatus || '').toLowerCase().trim();
   if (s === 'delivered' || s === 'completed') return 'delivered';
+  if (s === 'dispatched') return 'dispatched';
   if (s === 'shipped' || s === 'in_transit') return 'shipped';
   if (s === 'processing' || s === 'pending') return 'processing';
   if (s === 'cancelled' || s === 'canceled') return 'cancelled';

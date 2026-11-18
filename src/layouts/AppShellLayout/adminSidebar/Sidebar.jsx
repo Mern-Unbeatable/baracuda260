@@ -95,6 +95,11 @@ const USER_NAV_ITEMS = [
     path: ROUTES.USER_FAVOURITE_PHOTOS,
     icon: Heart,
   },
+  {
+    labelKey: 'dashboard.nav.itemWatchlist',
+    path: ROUTES.USER_ITEM_WATCHLIST,
+    icon: ShoppingBag,
+  },
   // { labelKey: 'dashboard.nav.myCompetitions', path: ROUTES.USER_MY_COMPETITIONS, icon: Trophy },
   {
     labelKey: 'dashboard.nav.businessPhotos',

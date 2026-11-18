@@ -1,13 +1,17 @@
 import {
   ArrowLeft,
+  Heart,
+  MapPin,
   Minus,
   Plus,
   ShoppingBag,
   ShoppingCart,
 } from 'lucide-react';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import Pagination from '@/components/common/Pagination/Pagination';
 import CategoryFilterDropdown from '@/components/common/CategoryFilterDropdown/CategoryFilterDropdown';
 import Button from '@/components/ui/Button';
@@ -18,12 +22,41 @@ import {
   PHOTOGRAPHER_STORE_PAGE_SIZE,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import { filterStoreProducts } from '@/portals/member/data/myStoreData';
+import {
+  STORE_WATCHLIST_QUERY_KEY,
+  toggleWatchlistApi,
+} from '@/shared/api/store.api';
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const StoreProductCard = memo(({ product, onView }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [isSaved, setIsSaved] = useState(Boolean(product.isSaved));
+
+  useEffect(() => {
+    setIsSaved(Boolean(product.isSaved));
+  }, [product.isSaved]);
+
+  const handleWatchlistToggle = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const nextSaved = !isSaved;
+    setIsSaved(nextSaved);
+    try {
+      await toggleWatchlistApi(product.id);
+      queryClient.invalidateQueries({ queryKey: [STORE_WATCHLIST_QUERY_KEY] });
+      toast.success(
+        nextSaved
+          ? t('myStore.watchlist.added', 'Added to Item Watchlist')
+          : t('myStore.watchlist.removed', 'Removed from Item Watchlist'),
+      );
+    } catch {
+      setIsSaved(!nextSaved);
+      toast.error(t('myStore.watchlist.failed', 'Failed to update watchlist'));
+    }
+  };
 
   return (
     <article className="overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
@@ -37,6 +70,24 @@ const StoreProductCard = memo(({ product, onView }) => {
         <span className="absolute left-2.5 top-2.5 rounded-full bg-[#111827]/85 px-2 py-1 text-[10px] font-bold tracking-[0.06em] text-white">
           {t(product.badgeKey, product.category || 'Product')}
         </span>
+        <Button
+          unstyled
+          type="button"
+          onClick={handleWatchlistToggle}
+          aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
+          aria-pressed={isSaved}
+          className="absolute right-2.5 top-2.5 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
+        >
+          <Heart
+            size={16}
+            strokeWidth={2}
+            className={
+              isSaved
+                ? 'fill-[#e53935] text-[#e53935]'
+                : 'fill-transparent text-[#161c27] hover:text-[#e53935]'
+            }
+          />
+        </Button>
       </div>
       <div className="flex flex-col gap-3 p-3.5 sm:p-4">
         <div>
@@ -46,6 +97,27 @@ const StoreProductCard = memo(({ product, onView }) => {
           <p className="mt-1.5 line-clamp-2 text-[12px] leading-4 text-[#6b7280]">
             {product.description}
           </p>
+
+          {/* Location & Shipping Scope */}
+          {(product.city || product.country || product.shippingScope) ? (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-[#6b7280]">
+              {(product.city || product.country) ? (
+                <span className="inline-flex items-center gap-1 text-[#4b5563]">
+                  <MapPin size={12} className="text-[#9ca3af]" />
+                  {[product.city, product.country].filter(Boolean).join(', ')}
+                </span>
+              ) : null}
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                product.shippingScope === 'NATIONAL'
+                  ? 'bg-[#fff7ed] text-[#c2410c]'
+                  : 'bg-[#ecfdf5] text-[#047857]'
+              }`}>
+                {product.shippingScope === 'NATIONAL'
+                  ? t('myStore.shipping.nationalOnly', 'Domestic Only')
+                  : t('myStore.shipping.worldwide', 'Worldwide')}
+              </span>
+            </div>
+          ) : null}
         </div>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
           <p className="text-[16px] font-bold text-[#111827]">
