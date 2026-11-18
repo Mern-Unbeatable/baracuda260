@@ -456,6 +456,7 @@
       "logOut": "Wyloguj się",
       "purchasePhotos": "Kupione zdjęcia",
       "myStore": "Mój sklep",
+      "itemWatchlist": "Obserwowane produkty",
       "orders": "Zamówienia",
       "myOrders": "Moje zamówienia"
     },
@@ -1385,6 +1386,21 @@
     "gridAria": "Siatka produktów sklepu",
     "paginationAria": "Paginacja sklepu",
     "promoted": "Promowane",
+    "watchlist": {
+      "title": "Obserwowane produkty",
+      "subtitle": "Przeglądaj i zarządzaj zapisanymi produktami i artykułami ze sklepu.",
+      "emptyTitle": "Twoja lista obserwowanych jest pusta",
+      "emptySubtitle": "Kliknij ikonę serca na karcie dowolnego produktu, aby zapisać go na swojej liście.",
+      "browseStore": "Przeglądaj Mój sklep",
+      "toggle": "Przełącz listę obserwowanych",
+      "added": "Dodano do obserwowanych",
+      "removed": "Usunięto z obserwowanych",
+      "failed": "Nie udało się zaktualizować listy"
+    },
+    "shipping": {
+      "worldwide": "Wysyłka międzynarodowa",
+      "nationalOnly": "Tylko krajowa"
+    },
     "filters": {
       "all": "Wszystkie produkty",
       "merchendise": "Gadżety / Merch",
@@ -1562,7 +1578,8 @@
     "invoiceStarted": "Rozpoczęto pobieranie faktury: {{order}}.",
     "status": {
       "processing": "W realizacji",
-      "shipped": "Wysłane",
+      "dispatched": "Wysłane",
+      "shipped": "W drodze",
       "delivered": "Dostarczone"
     },
     "stats": {
@@ -1634,7 +1651,8 @@
     "statusUpdated": "Status zamówienia zmieniony na {{status}}.",
     "status": {
       "processing": "W realizacji",
-      "shipped": "Wysłane",
+      "dispatched": "Wysłane (Kurier)",
+      "shipped": "W drodze",
       "delivered": "Dostarczone",
       "cancelled": "Anulowane"
     },
@@ -1692,15 +1710,26 @@
       "productInfo": "INFORMACJE O PRODUKCIE",
       "unitLine": "{{price}} × {{qty}}",
       "subtotal": "SUMA CZĘŚCIOWA",
-      "paymentBreakdown": "ROZBICIE PŁATNOŚCI",
-      "orderTotal": "Suma zamówienia",
+      "paymentBreakdown": "ROZLICZENIE PŁATNOŚCI",
+      "orderTotal": "Wartość brutto zamówienia",
+      "vat": "VAT (20%)",
       "commission": "Prowizja platformy (10%)",
-      "sellerEarnings": "Zarobki sprzedawcy",
+      "sellerEarnings": "Wypłata netto sprzedawcy (70%)",
       "earningsNote": "Zarobki trafiają na saldo po potwierdzeniu dostawy.",
+      "shippingTracking": "Informacje o przesyłce i śledzeniu",
+      "courierLabel": "Kurier",
+      "trackingCopied": "Numer śledzenia skopiowany do schowka",
+      "trackPackage": "Śledź przesyłkę",
+      "dispatchDetails": "Szczegóły kuriera i śledzenia",
+      "courierName": "Nazwa kuriera",
+      "trackingNumber": "Numer śledzenia",
+      "customTrackingUrl": "Link do śledzenia (opcjonalnie)",
+      "dispatchedAt": "Wysłano dnia",
       "sellerActions": "AKCJE SPRZEDAWCY",
       "updateStatus": "Aktualizuj status",
       "markProcessing": "Oznacz jako w realizacji",
-      "markShipped": "Oznacz jako wysłane",
+      "markDispatched": "Oznacz jako wysłane",
+      "markShipped": "Oznacz jako w drodze",
       "markDelivered": "Oznacz jako dostarczone",
       "markCancelled": "Oznacz jako anulowane",
       "orderTimeline": "HISTORIA ZAMÓWIENIA",

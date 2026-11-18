@@ -6,6 +6,7 @@ export const STORE_ORDERS_PAGE_SIZE = 8;
 
 export const STORE_ORDER_STATUS = {
   PROCESSING: 'processing',
+  DISPATCHED: 'dispatched',
   SHIPPED: 'shipped',
   DELIVERED: 'delivered',
   CANCELLED: 'cancelled',
@@ -15,6 +16,10 @@ export const STORE_ORDER_STATUS_STYLES = {
   [STORE_ORDER_STATUS.PROCESSING]: {
     badge: 'bg-[#fff7ed] text-[#d97706]',
     dot: 'bg-[#f59e0b]',
+  },
+  [STORE_ORDER_STATUS.DISPATCHED]: {
+    badge: 'bg-[#ede9fe] text-[#6d28d9]',
+    dot: 'bg-[#7c3aed]',
   },
   [STORE_ORDER_STATUS.SHIPPED]: {
     badge: 'bg-[#f3eefc] text-[#7c3aed]',
@@ -32,6 +37,7 @@ export const STORE_ORDER_STATUS_STYLES = {
 
 export const STORE_ORDER_STATUS_LABEL_KEYS = {
   [STORE_ORDER_STATUS.PROCESSING]: 'storeOrders.status.processing',
+  [STORE_ORDER_STATUS.DISPATCHED]: 'storeOrders.status.dispatched',
   [STORE_ORDER_STATUS.SHIPPED]: 'storeOrders.status.shipped',
   [STORE_ORDER_STATUS.DELIVERED]: 'storeOrders.status.delivered',
   [STORE_ORDER_STATUS.CANCELLED]: 'storeOrders.status.cancelled',
@@ -110,6 +116,7 @@ export const STORE_ORDER_DATE_FILTERS = [
 
 export const STORE_ORDER_ACTION_STATUSES = [
   STORE_ORDER_STATUS.PROCESSING,
+  STORE_ORDER_STATUS.DISPATCHED,
   STORE_ORDER_STATUS.SHIPPED,
   STORE_ORDER_STATUS.DELIVERED,
   STORE_ORDER_STATUS.CANCELLED,
@@ -558,6 +565,8 @@ export const getMarkActionLabelKey = (status) => {
   switch (status) {
     case STORE_ORDER_STATUS.PROCESSING:
       return 'storeOrders.detail.markProcessing';
+    case STORE_ORDER_STATUS.DISPATCHED:
+      return 'storeOrders.detail.markDispatched';
     case STORE_ORDER_STATUS.SHIPPED:
       return 'storeOrders.detail.markShipped';
     case STORE_ORDER_STATUS.DELIVERED:

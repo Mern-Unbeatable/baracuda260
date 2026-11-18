@@ -474,6 +474,7 @@
       "logOut": "Log Out",
       "purchasePhotos": "Purchase Photo",
       "myStore": "My Store",
+      "itemWatchlist": "Item Watchlist",
       "orders": "Orders",
       "myOrders": "My Orders"
     },
@@ -1403,6 +1404,21 @@
     "gridAria": "Store products grid",
     "paginationAria": "My Store pagination",
     "promoted": "Promoted",
+    "watchlist": {
+      "title": "Item Watchlist",
+      "subtitle": "Explore and manage your collection of saved store items and merchandise.",
+      "emptyTitle": "Your watchlist is empty",
+      "emptySubtitle": "Click the heart icon on any store product card to save it to your personal watchlist.",
+      "browseStore": "Explore My Store",
+      "toggle": "Toggle Watchlist",
+      "added": "Added to Item Watchlist",
+      "removed": "Removed from Item Watchlist",
+      "failed": "Failed to update watchlist"
+    },
+    "shipping": {
+      "worldwide": "Worldwide",
+      "nationalOnly": "Domestic Only"
+    },
     "filters": {
       "all": "All items",
       "merchendise": "Merchendise",
@@ -1580,6 +1596,7 @@
     "invoiceStarted": "Invoice download started for {{order}}.",
     "status": {
       "processing": "Processing",
+      "dispatched": "Dispatched",
       "shipped": "Shipped",
       "delivered": "Delivered"
     },
@@ -1652,6 +1669,7 @@
     "statusUpdated": "Order status updated to {{status}}.",
     "status": {
       "processing": "Processing",
+      "dispatched": "Dispatched",
       "shipped": "Shipped",
       "delivered": "Delivered",
       "cancelled": "Cancelled"
@@ -1711,13 +1729,24 @@
       "unitLine": "{{price}} × {{qty}}",
       "subtotal": "SUBTOTAL",
       "paymentBreakdown": "PAYMENT BREAKDOWN",
-      "orderTotal": "Order Total",
+      "orderTotal": "Gross Sale Amount",
+      "vat": "VAT (20%)",
       "commission": "Platform Commission (10%)",
-      "sellerEarnings": "Seller Earnings",
-      "earningsNote": "Earnings are added to your balance after delivery confirmation.",
+      "sellerEarnings": "Net Seller Payout (70%)",
+      "earningsNote": "Earnings are credited to your balance after delivery confirmation.",
+      "shippingTracking": "Shipping & Tracking Information",
+      "courierLabel": "Courier",
+      "trackingCopied": "Tracking number copied to clipboard",
+      "trackPackage": "Track Package",
+      "dispatchDetails": "Courier & Tracking Details",
+      "courierName": "Courier Name",
+      "trackingNumber": "Tracking Number",
+      "customTrackingUrl": "Tracking URL (Optional - auto-generated if left empty)",
+      "dispatchedAt": "Dispatched on",
       "sellerActions": "SELLER ACTIONS",
       "updateStatus": "Update Status",
       "markProcessing": "Mark as Processing",
+      "markDispatched": "Mark as Dispatched",
       "markShipped": "Mark as Shipped",
       "markDelivered": "Mark as Delivered",
       "markCancelled": "Mark as Cancelled",

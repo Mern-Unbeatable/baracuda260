@@ -62,6 +62,7 @@ export const ROUTES = {
   USER_MY_STORE: '/user/my-store',
   USER_MY_STORE_UPLOAD: '/user/my-store/upload',
   USER_MY_STORE_EDIT: '/user/my-store/upload/:id',
+  USER_ITEM_WATCHLIST: '/user/item-watchlist',
   USER_FAVOURITE_PHOTOGRAPHERS: '/user/favourite-photographers',
   USER_FAVOURITE_PHOTOS: '/user/favourite-photos',
   USER_FAVOURITE_PHOTOS_DETAIL: '/user/favourite-photos/:id',

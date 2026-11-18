@@ -122,6 +122,10 @@ export const normalizeStoreProduct = (item) => {
     price: formatProductPrice(item.price),
     rawPrice: parseProductPrice(item.price),
     setEditionSize: item.setEditionSize || item.edition || '',
+    country: item.country || '',
+    city: item.city || '',
+    shippingScope: item.shippingScope || 'WORLDWIDE',
+    isSaved: Boolean(item.isSaved),
     bannerImage: image,
     image,
     images,
@@ -247,6 +251,15 @@ export const buildStoreProductFormData = (input) => {
   if (input.description != null) {
     formData.append('description', String(input.description).trim());
   }
+  if (input.country != null) {
+    formData.append('country', String(input.country).trim());
+  }
+  if (input.city != null) {
+    formData.append('city', String(input.city).trim());
+  }
+  if (input.shippingScope != null) {
+    formData.append('shippingScope', String(input.shippingScope).trim());
+  }
   formData.append(
     'copyrightConfirmed',
     String(Boolean(input.copyrightConfirmed ?? input.copyrightOk ?? true)),
@@ -353,4 +366,50 @@ export const captureStoreProductPromotionPaymentApi = async (payload) => {
     throw new Error(errorMsg);
   }
   return response;
+};
+
+export const STORE_WATCHLIST_QUERY_KEY = 'store-watchlist';
+
+/**
+ * Toggle product saved state in item watchlist.
+ * Endpoint: POST /v1/store/products/:id/watchlist
+ */
+export const toggleWatchlistApi = async (productId) => {
+  const response = await apiClient.post(`/v1/store/products/${productId}/watchlist`);
+  return response?.data ?? response;
+};
+
+/**
+ * Get current user's item watchlist.
+ * Endpoint: GET /v1/store/watchlist?page=1&limit=10
+ */
+export const getWatchlistApi = async ({ page = 1, limit = 10 } = {}) => {
+  const response = await apiClient.get('/v1/store/watchlist', {
+    params: { page, limit },
+  });
+  const payload = response?.data || response;
+  const rawList = Array.isArray(payload?.data)
+    ? payload.data
+    : Array.isArray(payload)
+      ? payload
+      : [];
+
+  const meta = payload?.meta || {
+    currentPage: page,
+    totalPages: 1,
+    totalRecords: rawList.length,
+    hasNext: false,
+    hasPrevious: false,
+  };
+
+  return {
+    data: rawList.map(normalizeStoreProduct),
+    meta: {
+      currentPage: Number(meta.currentPage || page),
+      totalPages: Number(meta.totalPages || 1),
+      totalRecords: Number(meta.totalRecords || rawList.length),
+      hasNext: Boolean(meta.hasNext),
+      hasPrevious: Boolean(meta.hasPrevious),
+    },
+  };
 };
