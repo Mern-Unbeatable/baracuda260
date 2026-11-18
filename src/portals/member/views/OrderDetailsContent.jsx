@@ -89,7 +89,9 @@ const ProgressStep = memo(({ state, title, detail, meta, isLast }) => {
           <p
             className={`shrink-0 text-[12px] font-medium leading-5 ${metaClass}`}
           >
-            {meta}
+            {typeof meta === 'object' && meta !== null
+              ? meta.trackingNumber || meta.courierName || ''
+              : meta}
           </p>
         </div>
         <p className={`mt-0.5 text-[13px] leading-5 ${detailClass}`}>
@@ -249,7 +251,7 @@ const OrderDetailsContent = memo(() => {
             meta={
               order.progress.shipped === 'pending'
                 ? t('myOrders.detail.pending')
-                : order.tracking || t('myOrders.detail.inTransit')
+                : (order.tracking?.trackingNumber || (typeof order.tracking === 'string' ? order.tracking : null) || t('myOrders.detail.inTransit'))
             }
           />
           <ProgressStep
