@@ -106,18 +106,18 @@ export const buildSellerOrderTimeline = (orderDateStr, status) => {
     },
     {
       id: 'processing',
-      state: ['PROCESSING', 'SHIPPED', 'DELIVERED'].includes(normStatus)
+      state: ['PROCESSING', 'SHIPPED', 'DISPATCHED', 'DELIVERED'].includes(normStatus)
         ? 'done'
         : 'pending',
-      date: ['PROCESSING', 'SHIPPED', 'DELIVERED'].includes(normStatus)
+      date: ['PROCESSING', 'SHIPPED', 'DISPATCHED', 'DELIVERED'].includes(normStatus)
         ? dateStr
         : null,
       time: null,
     },
     {
       id: 'shipped',
-      state: ['SHIPPED', 'DELIVERED'].includes(normStatus) ? 'done' : 'pending',
-      date: ['SHIPPED', 'DELIVERED'].includes(normStatus) ? dateStr : null,
+      state: ['SHIPPED', 'DISPATCHED', 'DELIVERED'].includes(normStatus) ? 'done' : 'pending',
+      date: ['SHIPPED', 'DISPATCHED', 'DELIVERED'].includes(normStatus) ? dateStr : null,
       time: null,
     },
     {
@@ -228,6 +228,10 @@ export const normalizeSellerOrderDetail = (data) => {
           0,
         )
       : data.total ?? 0);
+  const vatRaw =
+    data.paymentBreakdown?.vatAmount ??
+    data.vatAmount ??
+    totalRaw * 0.2;
   const commissionRaw =
     data.paymentBreakdown?.platformCommission ??
     data.adminCommission ??
@@ -235,7 +239,7 @@ export const normalizeSellerOrderDetail = (data) => {
   const earningsRaw =
     data.paymentBreakdown?.sellerEarnings ??
     data.sellerEarnings ??
-    totalRaw - commissionRaw;
+    (totalRaw - vatRaw - commissionRaw);
 
   return {
     id: data.id,
@@ -246,6 +250,12 @@ export const normalizeSellerOrderDetail = (data) => {
     status,
     rawStatus,
     paymentStatus: data.paymentStatus || 'Paid',
+    tracking: {
+      courierName: data.tracking?.courierName || data.courierName || null,
+      trackingNumber: data.tracking?.trackingNumber || data.trackingNumber || null,
+      trackingUrl: data.tracking?.trackingUrl || data.trackingUrl || null,
+      dispatchedAt: data.tracking?.dispatchedAt || data.dispatchedAt || null,
+    },
     customerName,
     customerEmail,
     customerPhone,
@@ -261,6 +271,8 @@ export const normalizeSellerOrderDetail = (data) => {
     unitPrice: firstItem.price,
     total: formatOrderCurrency(totalRaw),
     totalRaw,
+    vat: formatOrderCurrency(vatRaw),
+    vatRaw,
     commission: formatOrderCurrency(commissionRaw),
     commissionRaw,
     earnings: formatOrderCurrency(earningsRaw),
@@ -380,21 +392,39 @@ export const getSellerOrderDetailsApi = async (orderId) => {
  * PUT /api/v1/orders/seller/{{order_id}}/status
  *
  * @param {string | { orderId: string, status: string }} orderIdOrPayload
- * @param {string} [maybeStatus]
+ * @param {string | object} [maybeStatus]
+ * @param {object} [extraPayload]
  */
 export const updateSellerOrderStatusApi = async (
   orderIdOrPayload,
   maybeStatus,
+  extraPayload = {},
 ) => {
   let orderId;
   let status;
+  let courierName;
+  let trackingNumber;
+  let trackingUrl;
 
   if (typeof orderIdOrPayload === 'string') {
     orderId = orderIdOrPayload;
-    status = maybeStatus;
+    if (typeof maybeStatus === 'object') {
+      status = maybeStatus.status;
+      courierName = maybeStatus.courierName;
+      trackingNumber = maybeStatus.trackingNumber;
+      trackingUrl = maybeStatus.trackingUrl;
+    } else {
+      status = maybeStatus;
+      courierName = extraPayload.courierName;
+      trackingNumber = extraPayload.trackingNumber;
+      trackingUrl = extraPayload.trackingUrl;
+    }
   } else if (orderIdOrPayload && typeof orderIdOrPayload === 'object') {
     orderId = orderIdOrPayload.orderId || orderIdOrPayload.id;
     status = orderIdOrPayload.status;
+    courierName = orderIdOrPayload.courierName;
+    trackingNumber = orderIdOrPayload.trackingNumber;
+    trackingUrl = orderIdOrPayload.trackingUrl;
   }
 
   if (!orderId) {
@@ -404,9 +434,14 @@ export const updateSellerOrderStatusApi = async (
   const cleanId = String(orderId).trim();
   const normalizedStatus = String(status || '').toUpperCase();
 
+  const body = { status: normalizedStatus };
+  if (courierName !== undefined) body.courierName = courierName;
+  if (trackingNumber !== undefined) body.trackingNumber = trackingNumber;
+  if (trackingUrl !== undefined) body.trackingUrl = trackingUrl;
+
   const response = await apiClient.put(
     `/v1/orders/seller/${encodeURIComponent(cleanId)}/status`,
-    { status: normalizedStatus },
+    body,
   );
 
   return response?.data ?? response;

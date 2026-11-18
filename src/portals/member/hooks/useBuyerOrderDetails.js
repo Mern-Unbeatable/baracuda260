@@ -88,6 +88,12 @@ export const mapBuyerOrderDetail = (raw) => {
     shippingInfo.estimatedDelivery ||
     (isDelivered ? 'Delivered' : 'Est. Delivery');
 
+  const trackingInfo = d.tracking || {};
+  const courierName = trackingInfo.courierName || d.courierName || null;
+  const trackingNumber = trackingInfo.trackingNumber || d.trackingNumber || null;
+  const trackingUrl = trackingInfo.trackingUrl || d.trackingUrl || null;
+  const dispatchedAt = trackingInfo.dispatchedAt || d.dispatchedAt || null;
+
   return {
     id: d.id,
     orderNumber:
@@ -98,6 +104,12 @@ export const mapBuyerOrderDetail = (raw) => {
     placedShort: formatShortDate(d.date),
     processingAt: formatShortDate(d.date),
     status,
+    tracking: {
+      courierName,
+      trackingNumber,
+      trackingUrl,
+      dispatchedAt: dispatchedAt ? formatDate(dispatchedAt) : null,
+    },
     deliveredOn,
     productTitle: product.title || 'Product',
     storeName: sellerName,
@@ -134,7 +146,11 @@ export const mapBuyerOrderDetail = (raw) => {
       placed: 'done',
       processing: status === 'processing' ? 'current' : 'done',
       shipped:
-        status === 'shipped' ? 'current' : isDelivered ? 'done' : 'pending',
+        status === 'shipped' || status === 'dispatched'
+          ? 'current'
+          : isDelivered
+            ? 'done'
+            : 'pending',
       delivered: isDelivered ? 'done' : 'pending',
     },
     shippingName: shippingInfo.address ? 'Shipping Address' : 'Digital Delivery',

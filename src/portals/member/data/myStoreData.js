@@ -205,6 +205,9 @@ export const EMPTY_STORE_UPLOAD_FORM = {
   price: '',
   edition: '',
   description: '',
+  country: '',
+  city: '',
+  shippingScope: 'WORLDWIDE',
 };
 
 export const getStoreProductById = (productId) =>
@@ -232,5 +235,8 @@ export const buildStoreFormFromProduct = (product) => {
     price: rawPrice,
     edition: product.setEditionSize || product.edition || '',
     description: product.description || '',
+    country: product.country || '',
+    city: product.city || '',
+    shippingScope: product.shippingScope || 'WORLDWIDE',
   };
 };
