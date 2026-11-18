@@ -1,4 +1,4 @@
-import { MoreVertical } from 'lucide-react';
+import { Heart, MapPin, MoreVertical } from 'lucide-react';
 import React, {
   memo,
   useEffect,
@@ -7,9 +7,15 @@ import React, {
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import {
+  STORE_WATCHLIST_QUERY_KEY,
+  toggleWatchlistApi,
+} from '@/shared/api/store.api';
 
 const MENU_OFFSET_PX = 6;
 const MENU_FALLBACK_HEIGHT_PX = 160;
@@ -35,11 +41,36 @@ const MENU_WIDTH_PX = 148;
 const MemberStoreProductCard = memo(
   ({ product, onEdit, onDelete, onPromote }) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [isSaved, setIsSaved] = useState(Boolean(product.isSaved));
     const buttonWrapRef = useRef(null);
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
     const [placement, setPlacement] = useState(null);
+
+    useEffect(() => {
+      setIsSaved(Boolean(product.isSaved));
+    }, [product.isSaved]);
+
+    const handleWatchlistToggle = async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const nextSaved = !isSaved;
+      setIsSaved(nextSaved);
+      try {
+        await toggleWatchlistApi(product.id);
+        queryClient.invalidateQueries({ queryKey: [STORE_WATCHLIST_QUERY_KEY] });
+        toast.success(
+          nextSaved
+            ? t('myStore.watchlist.added', 'Added to Item Watchlist')
+            : t('myStore.watchlist.removed', 'Removed from Item Watchlist'),
+        );
+      } catch {
+        setIsSaved(!nextSaved);
+        toast.error(t('myStore.watchlist.failed', 'Failed to update watchlist'));
+      }
+    };
 
     useLayoutEffect(() => {
       if (!menuOpen || !buttonRef.current) {
@@ -178,32 +209,74 @@ const MemberStoreProductCard = memo(
             </span>
           ) : null}
 
-          <div className="absolute right-3 top-3" ref={buttonWrapRef}>
+          <div className="absolute right-3 top-3 flex items-center gap-1.5" ref={buttonWrapRef}>
             <Button
               unstyled
-              ref={buttonRef}
               type="button"
-              aria-expanded={menuOpen}
-              aria-haspopup="menu"
-              aria-label={t('myStore.actions.menu', { title: product.title })}
-              onClick={() => setMenuOpen((open) => !open)}
-              className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60 ${
-                menuOpen ? 'bg-black/60' : ''
-              }`}
+              onClick={handleWatchlistToggle}
+              aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
+              aria-pressed={isSaved}
+              className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
             >
-              <MoreVertical size={16} strokeWidth={2.5} aria-hidden="true" />
+              <Heart
+                size={16}
+                strokeWidth={2}
+                className={
+                  isSaved
+                    ? 'fill-[#e53935] text-[#e53935]'
+                    : 'fill-transparent text-[#161c27] hover:text-[#e53935]'
+                }
+              />
             </Button>
+            {onEdit || onDelete ? (
+              <Button
+                unstyled
+                ref={buttonRef}
+                type="button"
+                aria-expanded={menuOpen}
+                aria-haspopup="menu"
+                aria-label={t('myStore.actions.menu', { title: product.title })}
+                onClick={() => setMenuOpen((open) => !open)}
+                className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60 ${
+                  menuOpen ? 'bg-black/60' : ''
+                }`}
+              >
+                <MoreVertical size={16} strokeWidth={2.5} aria-hidden="true" />
+              </Button>
+            ) : null}
             {menu}
           </div>
         </div>
 
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <h3 className="text-[15px] font-bold leading-5 text-[#0d0d14] line-clamp-2 sm:text-[16px]">
+          <h3 className="line-clamp-2 text-[15px] font-bold leading-5 text-[#0d0d14] sm:text-[16px]">
             {product.title}
           </h3>
           <p className="line-clamp-2 text-[13px] leading-5 text-[#6b7280]">
             {product.description}
           </p>
+
+          {/* Location & Shipping Scope */}
+          {(product.city || product.country || product.shippingScope) ? (
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-[#6b7280]">
+              {(product.city || product.country) ? (
+                <span className="inline-flex items-center gap-1 text-[#4b5563]">
+                  <MapPin size={12} className="text-[#9ca3af]" />
+                  {[product.city, product.country].filter(Boolean).join(', ')}
+                </span>
+              ) : null}
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                product.shippingScope === 'NATIONAL'
+                  ? 'bg-[#fff7ed] text-[#c2410c]'
+                  : 'bg-[#ecfdf5] text-[#047857]'
+              }`}>
+                {product.shippingScope === 'NATIONAL'
+                  ? t('myStore.shipping.nationalOnly', 'Domestic Only')
+                  : t('myStore.shipping.worldwide', 'Worldwide')}
+              </span>
+            </div>
+          ) : null}
+
           <p className="mt-auto pt-2 text-[16px] font-bold leading-none text-[#0d0d14]">
             {product.price}
           </p>

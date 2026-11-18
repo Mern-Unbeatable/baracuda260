@@ -269,6 +269,9 @@ const MyStoreUploadContent = memo(() => {
       formData.append('price', String(_data.price).replace(/[^0-9.]/g, ''));
       formData.append('setEditionSize', _data.edition?.trim?.() || '');
       formData.append('description', _data.description?.trim?.() || '');
+      if (_data.country) formData.append('country', _data.country.trim());
+      if (_data.city) formData.append('city', _data.city.trim());
+      formData.append('shippingScope', _data.shippingScope || 'WORLDWIDE');
       formData.append('copyrightConfirmed', 'true');
 
       if (bannerFile) {
@@ -404,6 +407,64 @@ const MyStoreUploadContent = memo(() => {
               className="w-full resize-y rounded-[10px] border border-[#e4e8f8] bg-white px-4 py-3 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
               {...register('description')}
             />
+          </div>
+
+          {/* Item Location: Country & City */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <FieldLabel htmlFor="store-country">
+                {t('myStore.upload.country', 'Item Location (Country)')}
+              </FieldLabel>
+              <Input
+                id="store-country"
+                error={errors.country}
+                placeholder={t('myStore.upload.countryPlaceholder', 'e.g. United Kingdom, Poland, USA')}
+                inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+                labelClassName="hidden"
+                {...register('country')}
+              />
+            </div>
+            <div>
+              <FieldLabel htmlFor="store-city">
+                {t('myStore.upload.city', 'City')}
+              </FieldLabel>
+              <Input
+                id="store-city"
+                error={errors.city}
+                placeholder={t('myStore.upload.cityPlaceholder', 'e.g. London, Warsaw, New York')}
+                inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
+                labelClassName="hidden"
+                {...register('city')}
+              />
+            </div>
+          </div>
+
+          {/* Shipping Scope: Worldwide vs National */}
+          <div>
+            <FieldLabel>
+              {t('myStore.upload.shippingScope', 'Shipping Scope')}
+            </FieldLabel>
+            <div className="flex flex-wrap gap-4 pt-1">
+              <label className="flex cursor-pointer items-center gap-2.5 rounded-[10px] border border-[#e4e8f8] bg-white px-4 py-3 text-[14px] font-medium text-[#151e31] transition hover:border-[#4048cd]">
+                <input
+                  type="radio"
+                  value="WORLDWIDE"
+                  defaultChecked
+                  className="size-4 text-[#4048cd] focus:ring-[#4048cd]"
+                  {...register('shippingScope')}
+                />
+                <span>🌐 {t('myStore.upload.shippingWorldwide', 'Worldwide Shipping')}</span>
+              </label>
+              <label className="flex cursor-pointer items-center gap-2.5 rounded-[10px] border border-[#e4e8f8] bg-white px-4 py-3 text-[14px] font-medium text-[#151e31] transition hover:border-[#4048cd]">
+                <input
+                  type="radio"
+                  value="NATIONAL"
+                  className="size-4 text-[#4048cd] focus:ring-[#4048cd]"
+                  {...register('shippingScope')}
+                />
+                <span>📍 {t('myStore.upload.shippingNational', 'National only (Domestic)')}</span>
+              </label>
+            </div>
           </div>
 
           <DropzoneField

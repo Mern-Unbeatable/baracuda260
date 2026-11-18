@@ -3,11 +3,14 @@ import {
   BadgeCheck,
   Check,
   CheckCircle2,
+  Copy,
   CreditCard,
+  ExternalLink,
   MapPin,
   MessageSquare,
   RefreshCw,
   ShieldCheck,
+  Truck,
   X,
 } from 'lucide-react';
 import React, { memo } from 'react';
@@ -106,6 +109,16 @@ const OrderDetailsContent = memo(() => {
 
   const handleClose = () => {
     navigate(ROUTES.USER_MY_ORDERS);
+  };
+
+  const handleCopyTracking = async () => {
+    if (!order?.tracking?.trackingNumber) return;
+    try {
+      await navigator.clipboard.writeText(order.tracking.trackingNumber);
+      toast.success(t('myOrders.detail.trackingCopied', 'Tracking number copied!'));
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   if (isLoading) {
@@ -406,6 +419,59 @@ const OrderDetailsContent = memo(() => {
           <span>{order.paymentDate}</span>
         </div>
       </section>
+
+      {order.tracking?.trackingNumber ? (
+        <section className={`${cardClass} border-[#c7d2fe] bg-[#f8faff]`}>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="flex items-center gap-2 text-[11px] font-bold tracking-[0.16em] text-[#4048cd]">
+              <Truck size={15} />
+              {t('myOrders.detail.trackingTitle', 'PACKAGE TRACKING')}
+            </h2>
+            <span className="rounded-full bg-[#ede9fe] px-2.5 py-0.5 text-[11px] font-semibold text-[#6d28d9]">
+              {order.status === 'delivered' ? t('myOrders.status.delivered', 'Delivered') : t('myOrders.status.inTransit', 'In Transit')}
+            </span>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[12px] font-medium text-[#6b7280]">
+                {t('myOrders.detail.courierLabel', 'Courier')}: <strong className="text-[#111827]">{order.tracking.courierName || 'Standard Courier'}</strong>
+              </p>
+              <div className="mt-1.5 flex items-center gap-2">
+                <span className="font-mono text-[16px] font-bold tracking-wide text-[#111827]">
+                  {order.tracking.trackingNumber}
+                </span>
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handleCopyTracking}
+                  className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition hover:bg-[#e0e7ff] hover:text-[#4048cd]"
+                  title="Copy tracking number"
+                >
+                  <Copy size={14} />
+                </Button>
+              </div>
+              {order.tracking.dispatchedAt ? (
+                <p className="mt-1 text-[12px] text-[#6b7280]">
+                  {t('myOrders.detail.dispatchedOn', 'Dispatched on')}: {order.tracking.dispatchedAt}
+                </p>
+              ) : null}
+            </div>
+
+            {order.tracking.trackingUrl ? (
+              <a
+                href={order.tracking.trackingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#4048cd] px-5 text-[14px] font-bold text-white shadow-sm transition hover:bg-[#343cb0]"
+              >
+                <span>{t('myOrders.detail.trackPackage', 'Track Order')}</span>
+                <ExternalLink size={15} />
+              </a>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
 
       <section className={cardClass}>
         <SectionLabel>{t('myOrders.detail.shippingInfo')}</SectionLabel>

@@ -6,6 +6,7 @@ export const MY_ORDERS_PAGE_SIZE = 3;
 
 export const ORDER_STATUS = {
   PROCESSING: 'processing',
+  DISPATCHED: 'dispatched',
   SHIPPED: 'shipped',
   DELIVERED: 'delivered',
 };
@@ -16,6 +17,12 @@ export const ORDER_STATUS_STYLES = {
     dot: 'bg-[#f59e0b]',
     cardTint: 'border-[#fde6d2] bg-[#fffaf5]',
     iconBg: 'bg-[#fff4e8] text-[#c26a1a]',
+  },
+  [ORDER_STATUS.DISPATCHED]: {
+    badge: 'bg-[#ede9fe] text-[#6d28d9]',
+    dot: 'bg-[#7c3aed]',
+    cardTint: 'border-[#ebe4fb] bg-[#fbf9ff]',
+    iconBg: 'bg-[#f3eefc] text-[#7c3aed]',
   },
   [ORDER_STATUS.SHIPPED]: {
     badge: 'bg-[#f3eefc] text-[#7c3aed]',
@@ -33,6 +40,7 @@ export const ORDER_STATUS_STYLES = {
 
 export const ORDER_STATUS_LABEL_KEYS = {
   [ORDER_STATUS.PROCESSING]: 'myOrders.status.processing',
+  [ORDER_STATUS.DISPATCHED]: 'myOrders.status.dispatched',
   [ORDER_STATUS.SHIPPED]: 'myOrders.status.shipped',
   [ORDER_STATUS.DELIVERED]: 'myOrders.status.delivered',
 };
