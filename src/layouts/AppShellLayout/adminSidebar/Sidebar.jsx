@@ -42,6 +42,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { logout, selectUser } from '@/app/store/slices/authSlice';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher/LanguageSwitcher';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { ADMIN_OVERVIEW_ASSETS } from '@/portals/admin/data/adminOverviewData';
@@ -358,6 +359,8 @@ const Sidebar = ({
           )}
         </nav>
 
+        <LanguageSwitcher variant="compact" className="mt-1" />
+
         <Button
           unstyled
           type="button"
@@ -510,7 +513,7 @@ const Sidebar = ({
         )}
       </nav>
 
-      <div className="shrink-0 space-y-1.5 border-t border-gray-100 px-3 py-3">
+      <div className="shrink-0 space-y-2 border-t border-gray-100 px-3 py-3">
         <div className="flex items-center gap-3 rounded-lg bg-[#f6f6f6] px-3 py-2.5">
           <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-[#ee1c25] sm:size-12.5 sm:rounded-lg">
             <span className="absolute inset-0 flex items-center justify-center text-base font-bold text-white">
@@ -536,6 +539,8 @@ const Sidebar = ({
             ) : null}
           </div>
         </div>
+
+        <LanguageSwitcher variant="sidebar" direction="up" className="w-full" />
 
         <Button
           unstyled
