@@ -2,7 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { RefreshCw } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { selectUser } from '@/app/store/slices/authSlice';
 import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
 import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
 import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
@@ -43,6 +45,7 @@ import { resolveMediaUrl } from '@/shared/utils/media';
 const PhotographerProfileMain = memo(() => {
   const { t } = useTranslation();
   const location = useLocation();
+  const currentUser = useSelector(selectUser);
   const { username: paramUsername } = useParams();
   const [searchParams] = useSearchParams();
   const username = paramUsername || searchParams.get('username');
@@ -155,6 +158,14 @@ const PhotographerProfileMain = memo(() => {
       appreciation: raw.appreciation || PHOTOGRAPHER_TALENT_APPRECIATION,
     };
   }, [profileResponse, username]);
+
+  const isOwner = useMemo(() => {
+    if (!currentUser) return false;
+    if (username && currentUser.username === username) return true;
+    if (profile?.id && currentUser.id === profile.id) return true;
+    if (profile?.username && currentUser.username === profile.username) return true;
+    return false;
+  }, [currentUser, username, profile]);
 
   const introVideo = useMemo(() => {
     const raw = profileResponse?.data || profileResponse;
@@ -280,6 +291,7 @@ const PhotographerProfileMain = memo(() => {
               {activeTab === 'store' ? (
                 <PhotographerStoreSection
                   products={PHOTOGRAPHER_STORE_PRODUCTS}
+                  isOwner={isOwner}
                 />
               ) : null}
 

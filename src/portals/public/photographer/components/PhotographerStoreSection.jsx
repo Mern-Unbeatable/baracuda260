@@ -29,7 +29,7 @@ import {
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
-const StoreProductCard = memo(({ product, onView }) => {
+const StoreProductCard = memo(({ product, onView, isOwner = false }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -132,18 +132,20 @@ const StoreProductCard = memo(({ product, onView }) => {
             >
               {t('photographerProfile.store.viewProduct')}
             </Button>
-            <Button
-              unstyled
-              type="button"
-              onClick={() =>
-                navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
-                  state: { product },
-                })
-              }
-              className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#ee1c25] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#d01820]"
-            >
-              {t('photographerProfile.store.buyNow')}
-            </Button>
+            {!isOwner ? (
+              <Button
+                unstyled
+                type="button"
+                onClick={() =>
+                  navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
+                    state: { product },
+                  })
+                }
+                className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#ee1c25] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#d01820]"
+              >
+                {t('photographerProfile.store.buyNow')}
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>
@@ -152,7 +154,7 @@ const StoreProductCard = memo(({ product, onView }) => {
 });
 StoreProductCard.displayName = 'StoreProductCard';
 
-const StoreProductDetail = memo(({ product, onBack }) => {
+const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [sizeId, setSizeId] = useState(product.sizes?.[0]?.id || '');
@@ -246,42 +248,55 @@ const StoreProductDetail = memo(({ product, onBack }) => {
           ) : null}
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <div className="inline-flex h-11 items-center rounded-[10px] border border-[#e5e7eb] bg-white">
+            {!isOwner ? (
+              <>
+                <div className="inline-flex h-11 items-center rounded-[10px] border border-[#e5e7eb] bg-white">
+                  <Button
+                    unstyled
+                    type="button"
+                    aria-label={t('photographerProfile.store.decreaseQty')}
+                    onClick={() => setQty((value) => Math.max(1, value - 1))}
+                    className="inline-flex size-11 cursor-pointer items-center justify-center text-[#6b7280]"
+                  >
+                    <Minus size={16} aria-hidden="true" />
+                  </Button>
+                  <span className="min-w-8 text-center text-[14px] font-bold text-[#111827]">
+                    {String(qty).padStart(2, '0')}
+                  </span>
+                  <Button
+                    unstyled
+                    type="button"
+                    aria-label={t('photographerProfile.store.increaseQty')}
+                    onClick={() => setQty((value) => value + 1)}
+                    className="inline-flex size-11 cursor-pointer items-center justify-center text-[#6b7280]"
+                  >
+                    <Plus size={16} aria-hidden="true" />
+                  </Button>
+                </div>
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={() =>
+                    navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
+                      state: { product: { ...product, qty, sizeId } },
+                    })
+                  }
+                  className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-5 text-[14px] font-bold text-white transition hover:bg-[#d01820] sm:min-w-55"
+                >
+                  {t('photographerProfile.store.buyNow')}
+                  <ShoppingCart size={16} aria-hidden="true" />
+                </Button>
+              </>
+            ) : (
               <Button
                 unstyled
                 type="button"
-                aria-label={t('photographerProfile.store.decreaseQty')}
-                onClick={() => setQty((value) => Math.max(1, value - 1))}
-                className="inline-flex size-11 cursor-pointer items-center justify-center text-[#6b7280]"
+                onClick={() => navigate(ROUTES.USER_MY_STORE)}
+                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#4048cd] px-6 text-[14px] font-bold text-white transition hover:bg-[#343bb0]"
               >
-                <Minus size={16} aria-hidden="true" />
+                {t('myStore.title', 'My Store')}
               </Button>
-              <span className="min-w-8 text-center text-[14px] font-bold text-[#111827]">
-                {String(qty).padStart(2, '0')}
-              </span>
-              <Button
-                unstyled
-                type="button"
-                aria-label={t('photographerProfile.store.increaseQty')}
-                onClick={() => setQty((value) => value + 1)}
-                className="inline-flex size-11 cursor-pointer items-center justify-center text-[#6b7280]"
-              >
-                <Plus size={16} aria-hidden="true" />
-              </Button>
-            </div>
-            <Button
-              unstyled
-              type="button"
-              onClick={() =>
-                navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
-                  state: { product: { ...product, qty, sizeId } },
-                })
-              }
-              className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-5 text-[14px] font-bold text-white transition hover:bg-[#d01820] sm:min-w-55"
-            >
-              {t('photographerProfile.store.buyNow')}
-              <ShoppingCart size={16} aria-hidden="true" />
-            </Button>
+            )}
           </div>
         </div>
       </div>
@@ -290,7 +305,7 @@ const StoreProductDetail = memo(({ product, onBack }) => {
 });
 StoreProductDetail.displayName = 'StoreProductDetail';
 
-const PhotographerStoreSection = memo(({ products }) => {
+const PhotographerStoreSection = memo(({ products, isOwner = false }) => {
   const { t } = useTranslation();
   const [category, setCategory] = useState('all');
   const [selectedId, setSelectedId] = useState(null);
@@ -325,6 +340,7 @@ const PhotographerStoreSection = memo(({ products }) => {
       <StoreProductDetail
         product={selectedProduct}
         onBack={() => setSelectedId(null)}
+        isOwner={isOwner}
       />
     );
   }
@@ -367,6 +383,7 @@ const PhotographerStoreSection = memo(({ products }) => {
             key={product.id}
             product={product}
             onView={setSelectedId}
+            isOwner={isOwner}
           />
         ))}
       </div>

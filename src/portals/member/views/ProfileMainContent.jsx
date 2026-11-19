@@ -228,7 +228,10 @@ const ProfileMainContent = memo(() => {
       ) : null}
 
       {activeTab === 'store' ? (
-        <PhotographerStoreSection products={PHOTOGRAPHER_STORE_PRODUCTS} />
+        <PhotographerStoreSection
+          products={PHOTOGRAPHER_STORE_PRODUCTS}
+          isOwner={true}
+        />
       ) : null}
 
       {activeTab === 'premium' ? (
