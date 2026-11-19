@@ -64,8 +64,8 @@ const SearchableCombobox = memo(
           if (!allowCustom) {
             const exact = options.find(
               (o) =>
-                o.value.toLowerCase() === (query || '').toLowerCase() ||
-                o.label.toLowerCase() === (query || '').toLowerCase(),
+                (o?.value || '').toLowerCase() === (query || '').toLowerCase() ||
+                (o?.label || '').toLowerCase() === (query || '').toLowerCase(),
             );
             if (!exact) {
               setQuery(value || '');
@@ -281,8 +281,8 @@ const SearchableCombobox = memo(
               >
                 {filteredOptions.map((opt, idx) => {
                   const isSelected =
-                    opt.value.toLowerCase() === (value || '').toLowerCase() ||
-                    opt.label.toLowerCase() === (value || '').toLowerCase();
+                    (opt?.value || '').toLowerCase() === (value || '').toLowerCase() ||
+                    (opt?.label || '').toLowerCase() === (value || '').toLowerCase();
                   const isHighlighted = idx === highlightIndex;
 
                   return (

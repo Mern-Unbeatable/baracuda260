@@ -3,14 +3,15 @@ import { City, Country } from 'country-state-city';
 /**
  * Pre-sorted list of all countries in the world with flags and ISO codes.
  */
-export const ALL_COUNTRIES = Country.getAllCountries()
+export const ALL_COUNTRIES = (Country.getAllCountries() || [])
   .map((c) => ({
-    value: c.name,
-    label: c.name,
-    flag: c.flag,
-    isoCode: c.isoCode,
+    name: c.name || '',
+    value: c.name || '',
+    label: c.name || '',
+    flag: c.flag || '',
+    isoCode: c.isoCode || '',
   }))
-  .sort((a, b) => a.label.localeCompare(b.label));
+  .sort((a, b) => (a.label || '').localeCompare(b.label || ''));
 
 const cityCache = new Map();
 
@@ -29,9 +30,9 @@ export function getCitiesForCountry(isoCode) {
   }
 
   const raw = City.getCitiesOfCountry(upper) || [];
-  const uniqueNames = Array.from(new Set(raw.map((c) => c.name))).sort((a, b) =>
-    a.localeCompare(b),
-  );
+  const uniqueNames = Array.from(
+    new Set(raw.map((c) => (c.name || '').trim()).filter(Boolean)),
+  ).sort((a, b) => a.localeCompare(b));
 
   const formatted = uniqueNames.map((name) => ({
     value: name,
@@ -47,7 +48,7 @@ export function getCitiesForCountry(isoCode) {
  * Supports common variations like "UK", "USA".
  *
  * @param {string} countryNameOrCode
- * @returns {{ value: string, label: string, flag: string, isoCode: string } | null}
+ * @returns {{ name: string, value: string, label: string, flag: string, isoCode: string } | null}
  */
 export function findCountryByNameOrCode(countryNameOrCode) {
   if (!countryNameOrCode) return null;
@@ -55,17 +56,19 @@ export function findCountryByNameOrCode(countryNameOrCode) {
   if (!q) return null;
 
   if (q === 'uk') {
-    return ALL_COUNTRIES.find((c) => c.isoCode === 'GB') || null;
+    return ALL_COUNTRIES.find((c) => (c.isoCode || '').toUpperCase() === 'GB') || null;
   }
   if (q === 'usa') {
-    return ALL_COUNTRIES.find((c) => c.isoCode === 'US') || null;
+    return ALL_COUNTRIES.find((c) => (c.isoCode || '').toUpperCase() === 'US') || null;
   }
 
   return (
     ALL_COUNTRIES.find(
       (c) =>
-        c.name.toLowerCase() === q ||
-        c.isoCode.toLowerCase() === q,
+        (c.name && c.name.toLowerCase() === q) ||
+        (c.value && c.value.toLowerCase() === q) ||
+        (c.label && c.label.toLowerCase() === q) ||
+        (c.isoCode && c.isoCode.toLowerCase() === q),
     ) || null
   );
 }
