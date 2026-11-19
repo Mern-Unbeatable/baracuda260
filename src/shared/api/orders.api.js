@@ -338,19 +338,23 @@ export const getSellerOrderStatusCardApi = async () => {
 
 /**
  * Fetch seller orders with pagination, status, and date filters.
- * GET /api/v1/orders/seller?page=1&limit=10&status=All&date=This Month
+ * GET /api/v1/orders/seller?page=1&limit=10&status=All&date=All
  *
- * @param {{ page?: number, limit?: number, status?: string, date?: string }} params
+ * @param {{ page?: number, limit?: number, status?: string, date?: string, startDate?: string, endDate?: string }} params
  */
 export const getSellerOrdersApi = async ({
   page = 1,
   limit = 10,
   status = 'All',
-  date = 'This Month',
+  date = 'All',
+  startDate,
+  endDate,
 } = {}) => {
   const params = { page, limit };
   if (status) params.status = status;
   if (date) params.date = date;
+  if (startDate) params.startDate = startDate;
+  if (endDate) params.endDate = endDate;
 
   const response = await apiClient.get('/v1/orders/seller', { params });
   const payload = response?.data;
@@ -367,6 +371,7 @@ export const getSellerOrdersApi = async ({
     counts: payload?.counts || response?.counts || {
       All: rawList.length,
       Processing: 0,
+      Dispatched: 0,
       Shipped: 0,
       Delivered: 0,
       Cancelled: 0,

@@ -96,6 +96,10 @@ export const STORE_ORDER_STATUS_FILTERS = [
     id: STORE_ORDER_STATUS.PROCESSING,
     labelKey: 'storeOrders.filters.processing',
   },
+  {
+    id: STORE_ORDER_STATUS.DISPATCHED,
+    labelKey: 'storeOrders.filters.dispatched',
+  },
   { id: STORE_ORDER_STATUS.SHIPPED, labelKey: 'storeOrders.filters.shipped' },
   {
     id: STORE_ORDER_STATUS.DELIVERED,
@@ -108,6 +112,7 @@ export const STORE_ORDER_STATUS_FILTERS = [
 ];
 
 export const STORE_ORDER_DATE_FILTERS = [
+  { id: 'all', labelKey: 'storeOrders.date.all' },
   { id: 'today', labelKey: 'storeOrders.date.today' },
   { id: 'week', labelKey: 'storeOrders.date.week' },
   { id: 'month', labelKey: 'storeOrders.date.month' },

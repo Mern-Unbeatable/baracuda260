@@ -51,16 +51,18 @@ import { ROUTES } from '@/shared/config';
 const STATUS_API_MAP = {
   all: 'All',
   processing: 'Processing',
+  dispatched: 'Dispatched',
   shipped: 'Shipped',
   delivered: 'Delivered',
   cancelled: 'Cancelled',
 };
 
 const DATE_API_MAP = {
+  all: 'All',
   today: 'Today',
   week: 'This Week',
   month: 'This Month',
-  custom: 'All',
+  custom: 'Custom',
 };
 
 const StatusBadge = memo(({ status }) => {
@@ -243,7 +245,9 @@ RowActions.displayName = 'RowActions';
 const OrdersContent = memo(() => {
   const { t } = useTranslation();
   const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('month');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [localStatusOverrides, setLocalStatusOverrides] = useState({});
   const [statusModalConfig, setStatusModalConfig] = useState(null);
@@ -258,7 +262,7 @@ const OrdersContent = memo(() => {
   });
 
   const statusParam = STATUS_API_MAP[statusFilter] || 'All';
-  const dateParam = DATE_API_MAP[dateFilter] || 'This Month';
+  const dateParam = DATE_API_MAP[dateFilter] || 'All';
 
   // Seller orders list query
   const {
@@ -274,6 +278,8 @@ const OrdersContent = memo(() => {
       limit: STORE_ORDERS_PAGE_SIZE,
       status: statusParam,
       date: dateParam,
+      startDate: dateFilter === 'custom' ? customStartDate : undefined,
+      endDate: dateFilter === 'custom' ? customEndDate : undefined,
     }),
     queryFn: () =>
       getSellerOrdersApi({
@@ -281,6 +287,8 @@ const OrdersContent = memo(() => {
         limit: STORE_ORDERS_PAGE_SIZE,
         status: statusParam,
         date: dateParam,
+        startDate: dateFilter === 'custom' ? customStartDate : undefined,
+        endDate: dateFilter === 'custom' ? customEndDate : undefined,
       }),
     keepPreviousData: true,
   });
@@ -395,22 +403,68 @@ const OrdersContent = memo(() => {
         </div>
 
         {/* Date filters */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-1 text-[12px] font-semibold text-[#6b7280]">
-            {t('storeOrders.date.label')}
-          </span>
-          {STORE_ORDER_DATE_FILTERS.map((filter) => (
-            <FilterChip
-              key={filter.id}
-              active={dateFilter === filter.id}
-              onClick={() => {
-                setDateFilter(filter.id);
-                setCurrentPage(1);
-              }}
-            >
-              {t(filter.labelKey)}
-            </FilterChip>
-          ))}
+        <div className="flex flex-col gap-2 sm:items-end">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mr-1 text-[12px] font-semibold text-[#6b7280]">
+              {t('storeOrders.date.label')}
+            </span>
+            {STORE_ORDER_DATE_FILTERS.map((filter) => (
+              <FilterChip
+                key={filter.id}
+                active={dateFilter === filter.id}
+                onClick={() => {
+                  setDateFilter(filter.id);
+                  setCurrentPage(1);
+                }}
+              >
+                {t(filter.labelKey)}
+              </FilterChip>
+            ))}
+          </div>
+
+          {/* Custom Date Range Picker */}
+          {dateFilter === 'custom' && (
+            <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2 text-[12px] shadow-xs">
+              <span className="font-medium text-[#4b5563]">
+                {t('storeOrders.date.from', 'From')}:
+              </span>
+              <input
+                type="date"
+                value={customStartDate}
+                onChange={(e) => {
+                  setCustomStartDate(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="rounded-lg border border-[#d1d5db] bg-white px-2.5 py-1 text-[12px] text-[#374151] outline-none transition focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]"
+              />
+              <span className="font-medium text-[#4b5563]">
+                {t('storeOrders.date.to', 'To')}:
+              </span>
+              <input
+                type="date"
+                value={customEndDate}
+                min={customStartDate || undefined}
+                onChange={(e) => {
+                  setCustomEndDate(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="rounded-lg border border-[#d1d5db] bg-white px-2.5 py-1 text-[12px] text-[#374151] outline-none transition focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]"
+              />
+              {(customStartDate || customEndDate) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomStartDate('');
+                    setCustomEndDate('');
+                    setCurrentPage(1);
+                  }}
+                  className="cursor-pointer rounded-lg px-2 py-1 text-[11px] font-semibold text-[#ee1c25] hover:bg-red-50 transition"
+                >
+                  {t('storeOrders.date.clear', 'Clear')}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
