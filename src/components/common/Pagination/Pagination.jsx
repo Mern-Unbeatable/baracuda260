@@ -34,17 +34,29 @@ export default function Pagination({
   const { t } = useTranslation();
   const i18n = labels ?? paginationLabels(t);
 
-  const page = Math.min(Math.max(1, currentPage), totalPages);
+  const page = Math.min(Math.max(1, currentPage), Math.max(1, totalPages));
 
-  const windowPages = useMemo(() => {
-    const start = Math.min(page, Math.max(1, totalPages - windowSize + 1));
-    return Array.from({ length: windowSize }, (_, i) => start + i).filter(
-      (n) => n <= totalPages,
-    );
-  }, [page, totalPages, windowSize]);
-
-  const showEllipsis =
-    windowPages.length > 0 && windowPages[windowPages.length - 1] < totalPages;
+  const items = useMemo(() => {
+    if (totalPages <= 1) return [1];
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    if (page <= 4) {
+      return [1, 2, 3, 4, 5, '...', totalPages];
+    }
+    if (page >= totalPages - 3) {
+      return [
+        1,
+        '...',
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ];
+    }
+    return [1, '...', page - 1, page, page + 1, '...', totalPages];
+  }, [page, totalPages]);
 
   const go = (next) => {
     const target = Math.min(Math.max(1, next), totalPages);
@@ -78,39 +90,32 @@ export default function Pagination({
       >
         <ChevronLeft size={ICON} strokeWidth={2} aria-hidden="true" />
       </Button>
-      {windowPages.map((n) => (
-        <Button
-          unstyled
-          key={n}
-          type="button"
-          aria-label={i18n.page?.(n) ?? `Page ${n}`}
-          aria-current={page === n ? 'page' : undefined}
-          onClick={() => go(n)}
-          className={pageBtn(page === n)}
-        >
-          {n}
-        </Button>
-      ))}
-      {showEllipsis ? (
-        <>
-          <span
-            className="inline-flex size-8 items-center justify-center text-[14px] text-[#6b7280]"
-            aria-hidden="true"
-          >
-            …
-          </span>
+      {items.map((item, index) => {
+        if (item === '...') {
+          return (
+            <span
+              key={`ellipsis-${index}`}
+              className="inline-flex size-8 items-center justify-center text-[14px] text-[#6b7280]"
+              aria-hidden="true"
+            >
+              …
+            </span>
+          );
+        }
+        return (
           <Button
             unstyled
+            key={item}
             type="button"
-            aria-label={i18n.page?.(totalPages) ?? `Page ${totalPages}`}
-            aria-current={page === totalPages ? 'page' : undefined}
-            onClick={() => go(totalPages)}
-            className={pageBtn(page === totalPages)}
+            aria-label={i18n.page?.(item) ?? `Page ${item}`}
+            aria-current={page === item ? 'page' : undefined}
+            onClick={() => go(item)}
+            className={pageBtn(page === item)}
           >
-            {totalPages}
+            {item}
           </Button>
-        </>
-      ) : null}
+        );
+      })}
       <Button
         unstyled
         type="button"
