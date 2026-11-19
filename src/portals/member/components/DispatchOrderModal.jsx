@@ -1,26 +1,50 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ExternalLink, Loader2, Package, Truck, X } from 'lucide-react';
-import React, { memo, useEffect, useId, useState } from 'react';
-import { createPortal } from 'react-dom';
-import toast from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
-import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
-import CourierSelector from '@/portals/member/components/CourierSelector';
-import { saveCustomCourierPreset } from '@/portals/member/data/courierPresets';
-import { getApiErrorMessage } from '@/shared/api/client';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ExternalLink, Loader2, Package, Plus, Truck, X } from "lucide-react";
+import React, { memo, useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
+import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+import Button from "@/components/ui/Button";
+import Image from "@/components/ui/Image";
+import {
+  DEFAULT_COURIERS,
+  getSavedCustomCouriers,
+  removeCustomCourierPreset,
+  saveCustomCourierPreset,
+} from "@/portals/member/data/courierPresets";
+import { getApiErrorMessage } from "@/shared/api/client";
 import {
   SELLER_ORDER_DETAILS_QUERY_KEY,
   SELLER_ORDER_STATUS_CARD_QUERY_KEY,
   updateSellerOrderStatusApi,
-} from '@/shared/api/orders.api';
+} from "@/shared/api/orders.api";
 
 const ORDER_STATUS_OPTIONS = [
-  { value: 'PROCESSING', labelKey: 'storeOrders.status.processing', defaultLabel: 'Processing' },
-  { value: 'DISPATCHED', labelKey: 'storeOrders.status.dispatched', defaultLabel: 'Dispatched' },
-  { value: 'SHIPPED', labelKey: 'storeOrders.status.shipped', defaultLabel: 'Shipped' },
-  { value: 'DELIVERED', labelKey: 'storeOrders.status.delivered', defaultLabel: 'Delivered' },
-  { value: 'CANCELLED', labelKey: 'storeOrders.status.cancelled', defaultLabel: 'Cancelled' },
+  {
+    value: "PROCESSING",
+    labelKey: "storeOrders.status.processing",
+    defaultLabel: "Processing",
+  },
+  {
+    value: "DISPATCHED",
+    labelKey: "storeOrders.status.dispatched",
+    defaultLabel: "Dispatched",
+  },
+  {
+    value: "SHIPPED",
+    labelKey: "storeOrders.status.shipped",
+    defaultLabel: "Shipped",
+  },
+  {
+    value: "DELIVERED",
+    labelKey: "storeOrders.status.delivered",
+    defaultLabel: "Delivered",
+  },
+  {
+    value: "CANCELLED",
+    labelKey: "storeOrders.status.cancelled",
+    defaultLabel: "Cancelled",
+  },
 ];
 
 const DispatchOrderModal = memo(
@@ -29,11 +53,17 @@ const DispatchOrderModal = memo(
     const titleId = useId();
     const queryClient = useQueryClient();
 
-    const [targetStatus, setTargetStatus] = useState('DISPATCHED');
-    const [courierName, setCourierName] = useState('');
-    const [trackingNumber, setTrackingNumber] = useState('');
-    const [trackingUrl, setTrackingUrl] = useState('');
-    const [formError, setFormError] = useState('');
+    const [targetStatus, setTargetStatus] = useState("DISPATCHED");
+    const [courierName, setCourierName] = useState("");
+    const [trackingNumber, setTrackingNumber] = useState("");
+    const [trackingUrl, setTrackingUrl] = useState("");
+    const [formError, setFormError] = useState("");
+
+    const [customCouriers, setCustomCouriers] = useState(() =>
+      getSavedCustomCouriers(),
+    );
+    const [isAddingNewCourier, setIsAddingNewCourier] = useState(false);
+    const [newCourierInput, setNewCourierInput] = useState("");
 
     useEffect(() => {
       if (open && order) {
@@ -43,19 +73,51 @@ const DispatchOrderModal = memo(
             ? String(order.rawStatus).toUpperCase()
             : order.status
               ? String(order.status).toUpperCase()
-              : 'DISPATCHED';
+              : "DISPATCHED";
 
         setTargetStatus(initSt);
         setCourierName(
-          order.tracking?.courierName || order.courierName || 'Royal Mail',
+          order.tracking?.courierName || order.courierName || "Royal Mail",
         );
         setTrackingNumber(
-          order.tracking?.trackingNumber || order.trackingNumber || '',
+          order.tracking?.trackingNumber || order.trackingNumber || "",
         );
-        setTrackingUrl(order.tracking?.trackingUrl || order.trackingUrl || '');
-        setFormError('');
+        setTrackingUrl(order.tracking?.trackingUrl || order.trackingUrl || "");
+        setFormError("");
+        setCustomCouriers(getSavedCustomCouriers());
+        setIsAddingNewCourier(false);
+        setNewCourierInput("");
       }
     }, [open, order, initialStatus]);
+
+    const handleAddNewCourier = () => {
+      const trimmed = newCourierInput.trim();
+      if (!trimmed) return;
+      const updated = saveCustomCourierPreset(trimmed);
+      setCustomCouriers(updated);
+      setCourierName(trimmed);
+      setNewCourierInput("");
+      setIsAddingNewCourier(false);
+      toast.success(`"${trimmed}" added to courier presets.`);
+    };
+
+    const handleRemoveCustomCourier = (e, c) => {
+      e.stopPropagation();
+      const updated = removeCustomCourierPreset(c);
+      setCustomCouriers(updated);
+      if (courierName.toLowerCase().trim() === c.toLowerCase().trim()) {
+        setCourierName("Royal Mail");
+      }
+    };
+
+    const isCurrentCourierInPresets =
+      DEFAULT_COURIERS.some(
+        (c) => c.toLowerCase() === courierName.toLowerCase().trim(),
+      ) ||
+      customCouriers.some(
+        (c) => c.toLowerCase() === courierName.toLowerCase().trim(),
+      ) ||
+      !courierName.trim();
 
     const updateMutation = useMutation({
       mutationFn: (payload) => updateSellerOrderStatusApi(order.id, payload),
@@ -63,7 +125,7 @@ const DispatchOrderModal = memo(
         if (courierName.trim()) {
           saveCustomCourierPreset(courierName.trim());
         }
-        queryClient.invalidateQueries({ queryKey: ['seller-orders'] });
+        queryClient.invalidateQueries({ queryKey: ["seller-orders"] });
         queryClient.invalidateQueries({
           queryKey: SELLER_ORDER_STATUS_CARD_QUERY_KEY,
         });
@@ -73,7 +135,7 @@ const DispatchOrderModal = memo(
           });
         }
         toast.success(
-          t('storeOrders.statusUpdated', {
+          t("storeOrders.statusUpdated", {
             status: targetStatus,
           }),
         );
@@ -83,7 +145,7 @@ const DispatchOrderModal = memo(
       onError: (err) => {
         const msg = getApiErrorMessage(
           err,
-          'Failed to update order status and courier details.',
+          "Failed to update order status and courier details.",
         );
         setFormError(msg);
         toast.error(msg);
@@ -93,11 +155,11 @@ const DispatchOrderModal = memo(
     if (!open || !order) return null;
 
     const isDispatchOrShipped =
-      targetStatus === 'DISPATCHED' || targetStatus === 'SHIPPED';
+      targetStatus === "DISPATCHED" || targetStatus === "SHIPPED";
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      setFormError('');
+      setFormError("");
 
       const cleanCourier = courierName.trim();
       const cleanTracking = trackingNumber.trim();
@@ -106,8 +168,8 @@ const DispatchOrderModal = memo(
       if (isDispatchOrShipped && !cleanTracking) {
         setFormError(
           t(
-            'storeOrders.dispatchModal.trackingRequired',
-            'Please enter a tracking number so the buyer can track this shipment.',
+            "storeOrders.dispatchModal.trackingRequired",
+            "Please enter a tracking number so the buyer can track this shipment.",
           ),
         );
         return;
@@ -144,10 +206,16 @@ const DispatchOrderModal = memo(
                 <Truck size={20} />
               </div>
               <div>
-                <h2 id={titleId} className="text-[17px] font-bold text-[#111827]">
+                <h2
+                  id={titleId}
+                  className="text-[17px] font-bold text-[#111827]"
+                >
                   {isDispatchOrShipped
-                    ? t('storeOrders.dispatchModal.title', 'Dispatch Order')
-                    : t('storeOrders.dispatchModal.titleStatus', 'Update Order Status & Courier')}
+                    ? t("storeOrders.dispatchModal.title", "Dispatch Order")
+                    : t(
+                        "storeOrders.dispatchModal.titleStatus",
+                        "Update Order Status & Courier",
+                      )}
                 </h2>
                 <p className="text-[12px] text-[#6b7280]">
                   {order.orderIdDisplay || `#${order.orderNumber}`}
@@ -184,14 +252,20 @@ const DispatchOrderModal = memo(
                 {order.productTitle}
               </p>
               <p className="text-[12px] text-[#6b7280]">
-                Customer: <span className="font-medium text-[#374151]">{order.customerName}</span>
-                {order.quantity ? ` • Qty ${order.quantity}` : ''}
+                Customer:{" "}
+                <span className="font-medium text-[#374151]">
+                  {order.customerName}
+                </span>
+                {order.quantity ? ` • Qty ${order.quantity}` : ""}
               </p>
             </div>
           </div>
 
           {/* Form Content */}
-          <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+          <form
+            onSubmit={handleSubmit}
+            className="flex min-h-0 flex-1 flex-col"
+          >
             <div className="flex flex-col gap-4.5 overflow-y-auto px-6 py-5">
               {formError ? (
                 <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-[13px] text-red-700">
@@ -202,7 +276,7 @@ const DispatchOrderModal = memo(
               {/* Status Selector */}
               <div>
                 <label className="mb-1.5 block text-[13px] font-semibold text-[#111827]">
-                  {t('storeOrders.detail.updateStatus', 'Update Status to')}
+                  {t("storeOrders.detail.updateStatus", "Update Status to")}
                   <span className="text-red-500 ml-0.5">*</span>
                 </label>
                 <select
@@ -221,7 +295,10 @@ const DispatchOrderModal = memo(
               {/* Courier Section Header */}
               <div className="flex items-center justify-between border-t border-[#f3f4f6] pt-2">
                 <span className="text-[12px] font-bold uppercase tracking-wider text-[#4048cd]">
-                  {t('storeOrders.detail.dispatchDetails', 'Courier & Tracking Details')}
+                  {t(
+                    "storeOrders.detail.dispatchDetails",
+                    "Courier & Tracking Details",
+                  )}
                 </span>
                 {isDispatchOrShipped ? (
                   <span className="rounded bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
@@ -233,17 +310,170 @@ const DispatchOrderModal = memo(
               </div>
 
               {/* Courier Selection */}
-              <CourierSelector
-                value={courierName}
-                onChange={setCourierName}
-                required={isDispatchOrShipped}
-                theme="light"
-              />
+              <div>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="block text-[13px] font-medium text-[#374151]">
+                    {t(
+                      "storeOrders.dispatchModal.courierName",
+                      "Courier / Shipping Carrier",
+                    )}
+                    {isDispatchOrShipped ? (
+                      <span className="text-red-500 ml-0.5">*</span>
+                    ) : null}
+                  </label>
+                  <span className="text-[11px] text-[#6b7280]">
+                    Select preset or type any custom name
+                  </span>
+                </div>
+
+                {/* Courier Pills: Defaults + Custom Added + Add New Button */}
+                <div className="mb-2 flex flex-wrap items-center gap-1.5">
+                  {DEFAULT_COURIERS.map((c) => {
+                    const isSelected =
+                      courierName.toLowerCase().trim() ===
+                      c.toLowerCase().trim();
+                    return (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setCourierName(c)}
+                        className={`cursor-pointer rounded-lg px-2.5 py-1 text-[12px] font-medium transition ${
+                          isSelected
+                            ? "bg-[#4048cd] text-white shadow-xs"
+                            : "border border-[#e5e7eb] bg-white text-[#374151] hover:bg-[#f9fafb]"
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    );
+                  })}
+
+                  {/* User-added custom couriers */}
+                  {customCouriers.map((c) => {
+                    const isSelected =
+                      courierName.toLowerCase().trim() ===
+                      c.toLowerCase().trim();
+                    return (
+                      <div
+                        key={c}
+                        onClick={() => setCourierName(c)}
+                        className={`group inline-flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1 text-[12px] font-medium transition ${
+                          isSelected
+                            ? "bg-[#4048cd] text-white shadow-xs"
+                            : "border border-[#c7d2fe] bg-[#f0f4ff] text-[#3730a3] hover:bg-[#e0e7ff]"
+                        }`}
+                      >
+                        <span>{c}</span>
+                        <button
+                          type="button"
+                          onClick={(e) => handleRemoveCustomCourier(e, c)}
+                          title="Remove custom courier preset"
+                          className="ml-0.5 inline-flex size-3.5 items-center justify-center rounded-full opacity-60 transition hover:bg-black/10 hover:opacity-100"
+                        >
+                          <X size={10} />
+                        </button>
+                      </div>
+                    );
+                  })}
+
+                  {/* Add Custom Courier Button or Mini Input */}
+                  {!isAddingNewCourier ? (
+                    <button
+                      type="button"
+                      onClick={() => setIsAddingNewCourier(true)}
+                      className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-dashed border-[#4048cd]/40 bg-[#f8faff] px-2.5 py-1 text-[12px] font-semibold text-[#4048cd] transition hover:border-[#4048cd] hover:bg-[#eef2ff]"
+                    >
+                      <Plus size={12} />
+                      <span>
+                        {t(
+                          "storeOrders.dispatchModal.addCustomCourier",
+                          "+ Add Courier",
+                        )}
+                      </span>
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-1 rounded-lg border border-[#4048cd] bg-white p-0.5 shadow-xs">
+                      <input
+                        type="text"
+                        autoFocus
+                        value={newCourierInput}
+                        onChange={(e) => setNewCourierInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddNewCourier();
+                          } else if (e.key === "Escape") {
+                            setIsAddingNewCourier(false);
+                          }
+                        }}
+                        placeholder="Courier name..."
+                        className="h-6 w-28 rounded px-1.5 text-[12px] text-[#111827] outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddNewCourier}
+                        className="cursor-pointer rounded bg-[#4048cd] px-1.5 py-0.5 text-[11px] font-bold text-white transition hover:bg-[#343cb0]"
+                      >
+                        Add
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingNewCourier(false)}
+                        className="cursor-pointer p-0.5 text-[#6b7280] hover:text-[#111827]"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <input
+                  type="text"
+                  required={isDispatchOrShipped}
+                  value={courierName}
+                  onChange={(e) => setCourierName(e.target.value)}
+                  placeholder={t(
+                    "storeOrders.dispatchModal.courierPlaceholder",
+                    "e.g. Royal Mail, InPost, DHL, Evri, GLS, Sundarban, etc.",
+                  )}
+                  className="h-10.5 w-full rounded-xl border border-[#d1d5db] bg-white px-3.5 text-[14px] text-[#111827] outline-none transition focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]"
+                />
+
+                {!isCurrentCourierInPresets && courierName.trim() ? (
+                  <div className="mt-1.5 flex items-center justify-between">
+                    <p className="text-[11px] text-[#6b7280]">
+                      Custom carrier:{" "}
+                      <strong className="text-[#111827]">
+                        {courierName.trim()}
+                      </strong>
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = saveCustomCourierPreset(
+                          courierName.trim(),
+                        );
+                        setCustomCouriers(updated);
+                        toast.success(
+                          `"${courierName.trim()}" saved to presets.`,
+                        );
+                      }}
+                      className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-semibold text-[#4048cd] hover:underline"
+                    >
+                      <Plus size={11} />
+                      Save to quick presets
+                    </button>
+                  </div>
+                ) : null}
+              </div>
 
               {/* Tracking Number */}
               <div>
                 <label className="mb-1.5 block text-[13px] font-medium text-[#374151]">
-                  {t('storeOrders.dispatchModal.trackingNumber', 'Tracking Number')}
+                  {t(
+                    "storeOrders.dispatchModal.trackingNumber",
+                    "Tracking Number",
+                  )}
                   {isDispatchOrShipped ? (
                     <span className="text-red-500 ml-0.5">*</span>
                   ) : null}
@@ -254,8 +484,8 @@ const DispatchOrderModal = memo(
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
                   placeholder={t(
-                    'storeOrders.dispatchModal.trackingNumberPlaceholder',
-                    'e.g. GB123456789, 620000000123',
+                    "storeOrders.dispatchModal.trackingNumberPlaceholder",
+                    "e.g. GB123456789, 620000000123",
                   )}
                   className="h-10.5 w-full rounded-xl border border-[#d1d5db] bg-white px-3.5 font-mono text-[14px] text-[#111827] outline-none transition focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]"
                 />
@@ -265,8 +495,8 @@ const DispatchOrderModal = memo(
               <div>
                 <label className="mb-1 block text-[13px] font-medium text-[#374151]">
                   {t(
-                    'storeOrders.dispatchModal.trackingUrl',
-                    'Tracking URL (Optional)',
+                    "storeOrders.dispatchModal.trackingUrl",
+                    "Tracking URL (Optional)",
                   )}
                 </label>
                 <input
@@ -278,8 +508,8 @@ const DispatchOrderModal = memo(
                 />
                 <p className="mt-1 text-[11px] text-[#6b7280]">
                   {t(
-                    'storeOrders.dispatchModal.trackingUrlHint',
-                    'Leave blank to automatically generate tracking link for major couriers or universal package tracking.',
+                    "storeOrders.dispatchModal.trackingUrlHint",
+                    "Leave blank to automatically generate tracking link for major couriers or universal package tracking.",
                   )}
                 </p>
               </div>
@@ -287,7 +517,9 @@ const DispatchOrderModal = memo(
               {/* Notification note */}
               {isDispatchOrShipped ? (
                 <div className="rounded-xl border border-[#c7d2fe] bg-[#f0f4ff] p-3 text-[12px] text-[#3730a3]">
-                  <span className="font-semibold">Note:</span> The buyer will receive an automatic dispatch notification with courier and tracking details.
+                  <span className="font-semibold">Note:</span> The buyer will
+                  receive an automatic dispatch notification with courier and
+                  tracking details.
                 </div>
               ) : null}
             </div>
@@ -301,7 +533,7 @@ const DispatchOrderModal = memo(
                 disabled={updateMutation.isPending}
                 className="cursor-pointer rounded-xl border border-[#e5e7eb] bg-white px-4 py-2 text-[13px] font-semibold text-[#374151] transition hover:bg-gray-100"
               >
-                {t('storeOrders.dispatchModal.cancel', 'Cancel')}
+                {t("storeOrders.dispatchModal.cancel", "Cancel")}
               </Button>
               <Button
                 unstyled
@@ -318,9 +550,15 @@ const DispatchOrderModal = memo(
                   <>
                     <Truck size={15} />
                     <span>
-                      {targetStatus === 'DISPATCHED'
-                        ? t('storeOrders.dispatchModal.confirm', 'Confirm & Dispatch')
-                        : t('storeOrders.dispatchModal.saveStatus', 'Update Status & Save Details')}
+                      {targetStatus === "DISPATCHED"
+                        ? t(
+                            "storeOrders.dispatchModal.confirm",
+                            "Confirm & Dispatch",
+                          )
+                        : t(
+                            "storeOrders.dispatchModal.saveStatus",
+                            "Update Status & Save Details",
+                          )}
                     </span>
                   </>
                 )}
@@ -334,6 +572,6 @@ const DispatchOrderModal = memo(
   },
 );
 
-DispatchOrderModal.displayName = 'DispatchOrderModal';
+DispatchOrderModal.displayName = "DispatchOrderModal";
 
 export default DispatchOrderModal;

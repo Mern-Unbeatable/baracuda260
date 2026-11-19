@@ -1689,16 +1689,22 @@
       "statusLabel": "Status:",
       "all": "All {{count}}",
       "processing": "Processing {{count}}",
+      "dispatched": "Dispatched {{count}}",
       "shipped": "Shipped {{count}}",
       "delivered": "Delivered {{count}}",
       "cancelled": "Cancelled {{count}}"
     },
     "date": {
       "label": "Date:",
+      "all": "All",
       "today": "Today",
       "week": "This Week",
       "month": "This Month",
-      "custom": "Custom"
+      "custom": "Custom",
+      "range": "Date Range",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear"
     },
     "columns": {
       "orderId": "Order ID",

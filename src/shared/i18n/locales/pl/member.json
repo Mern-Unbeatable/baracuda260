@@ -1671,16 +1671,22 @@
       "statusLabel": "Status:",
       "all": "Wszystkie {{count}}",
       "processing": "W realizacji {{count}}",
-      "shipped": "Wysłane {{count}}",
+      "dispatched": "Wysłane (Dispatched) {{count}}",
+      "shipped": "W drodze {{count}}",
       "delivered": "Dostarczone {{count}}",
       "cancelled": "Anulowane {{count}}"
     },
     "date": {
       "label": "Data:",
+      "all": "Wszystkie",
       "today": "Dziś",
       "week": "Ten tydzień",
       "month": "Ten miesiąc",
-      "custom": "Niestandardowa"
+      "custom": "Niestandardowa",
+      "range": "Zakres dat",
+      "from": "Od",
+      "to": "Do",
+      "clear": "Wyczyść"
     },
     "columns": {
       "orderId": "ID zamówienia",
