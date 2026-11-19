@@ -344,7 +344,7 @@ export const getSellerOrderStatusCardApi = async () => {
  */
 export const getSellerOrdersApi = async ({
   page = 1,
-  limit = 10,
+  limit = 4,
   status = 'All',
   date = 'All',
   startDate,
