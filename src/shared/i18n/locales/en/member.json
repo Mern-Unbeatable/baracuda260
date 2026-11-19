@@ -1704,7 +1704,8 @@
       "range": "Date Range",
       "from": "From",
       "to": "To",
-      "clear": "Clear"
+      "clear": "Clear",
+      "last15Days": "Last 15 Days"
     },
     "columns": {
       "orderId": "Order ID",

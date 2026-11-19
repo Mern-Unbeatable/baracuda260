@@ -65,6 +65,24 @@ const DATE_API_MAP = {
   custom: 'Custom',
 };
 
+const formatDateForInput = (date) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const getLast15DaysRange = () => {
+  const end = new Date();
+  const start = new Date();
+  start.setDate(start.getDate() - 15);
+  return {
+    start: formatDateForInput(start),
+    end: formatDateForInput(end),
+  };
+};
+
 const StatusBadge = memo(({ status }) => {
   const { t } = useTranslation();
   const normalizedStatus = String(status || 'processing').toLowerCase();
@@ -415,6 +433,11 @@ const OrdersContent = memo(() => {
                 onClick={() => {
                   setDateFilter(filter.id);
                   setCurrentPage(1);
+                  if (filter.id === 'custom') {
+                    const range = getLast15DaysRange();
+                    setCustomStartDate(range.start);
+                    setCustomEndDate(range.end);
+                  }
                 }}
               >
                 {t(filter.labelKey)}
@@ -450,7 +473,7 @@ const OrdersContent = memo(() => {
                 }}
                 className="rounded-lg border border-[#d1d5db] bg-white px-2.5 py-1 text-[12px] text-[#374151] outline-none transition focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]"
               />
-              {(customStartDate || customEndDate) && (
+              {(customStartDate || customEndDate) ? (
                 <button
                   type="button"
                   onClick={() => {
@@ -461,6 +484,19 @@ const OrdersContent = memo(() => {
                   className="cursor-pointer rounded-lg px-2 py-1 text-[11px] font-semibold text-[#ee1c25] hover:bg-red-50 transition"
                 >
                   {t('storeOrders.date.clear', 'Clear')}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const range = getLast15DaysRange();
+                    setCustomStartDate(range.start);
+                    setCustomEndDate(range.end);
+                    setCurrentPage(1);
+                  }}
+                  className="cursor-pointer rounded-lg px-2 py-1 text-[11px] font-semibold text-[#4048cd] hover:bg-indigo-50 transition"
+                >
+                  {t('storeOrders.date.last15Days', 'Last 15 Days')}
                 </button>
               )}
             </div>
