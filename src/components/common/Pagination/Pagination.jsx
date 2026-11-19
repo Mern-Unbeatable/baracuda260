@@ -13,12 +13,12 @@ import { PAGINATION_WINDOW, paginationLabels } from './paginationLabels';
 
 const ICON = 16;
 
-const navBtn = `inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[#333333] transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS_RING}`;
+const navBtn = `inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[#333333] transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS_RING}`;
 
 function pageBtn(active) {
   return active
-    ? `inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#ee1c25] bg-[#ee1c25] text-[13px] font-semibold leading-none text-white shadow-sm ${FOCUS_RING}`
-    : `inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[13px] font-semibold leading-none text-[#333333] transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] ${FOCUS_RING}`;
+    ? `inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#ee1c25] bg-[#ee1c25] text-[13px] font-semibold leading-none text-white shadow-sm ${FOCUS_RING}`
+    : `inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[13px] font-semibold leading-none text-[#333333] transition hover:border-[#e5e7eb] hover:bg-[#f9fafb] ${FOCUS_RING}`;
 }
 
 /** Gallery-style pagination: first/prev/numbers/…/last/next. */
@@ -38,22 +38,14 @@ export default function Pagination({
 
   const items = useMemo(() => {
     if (totalPages <= 1) return [1];
-    if (totalPages <= 7) {
+    if (totalPages <= 4) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
-    if (page <= 4) {
-      return [1, 2, 3, 4, 5, '...', totalPages];
+    if (page <= 3) {
+      return [1, 2, 3, '...', totalPages];
     }
-    if (page >= totalPages - 3) {
-      return [
-        1,
-        '...',
-        totalPages - 4,
-        totalPages - 3,
-        totalPages - 2,
-        totalPages - 1,
-        totalPages,
-      ];
+    if (page >= totalPages - 2) {
+      return [1, '...', totalPages - 2, totalPages - 1, totalPages];
     }
     return [1, '...', page - 1, page, page + 1, '...', totalPages];
   }, [page, totalPages]);
