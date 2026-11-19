@@ -1713,7 +1713,27 @@
     },
     "actions": {
       "menu": "Actions for {{number}}",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "dispatch": "Dispatch",
+      "dispatchOrder": "Dispatch Order",
+      "editTracking": "Edit Tracking Info",
+      "addTracking": "+ Tracking"
+    },
+    "dispatchModal": {
+      "title": "Dispatch Order",
+      "titleEdit": "Update Courier & Tracking",
+      "subtitle": "Provide courier and tracking details so your customer can track their delivery.",
+      "courierName": "Courier / Shipping Carrier",
+      "courierPlaceholder": "e.g. Royal Mail, InPost, DHL, DPD, FedEx",
+      "trackingNumber": "Tracking Number",
+      "trackingNumberPlaceholder": "e.g. GB123456789, 620000000123",
+      "trackingUrl": "Tracking URL (Optional)",
+      "trackingUrlHint": "Leave blank to automatically generate tracking link for Royal Mail, InPost, DHL, DPD, FedEx, UPS.",
+      "trackingRequired": "Please enter a tracking number so the buyer can track this shipment.",
+      "cancel": "Cancel",
+      "confirm": "Confirm & Dispatch",
+      "save": "Save Tracking Details",
+      "success": "Order dispatched and tracking details updated successfully."
     },
     "detail": {
       "title": "Order #{{number}}",
@@ -1735,6 +1755,11 @@
       "sellerEarnings": "Net Seller Payout (70%)",
       "earningsNote": "Earnings are credited to your balance after delivery confirmation.",
       "shippingTracking": "Shipping & Tracking Information",
+      "noTrackingHint": "Add courier name and tracking number to notify your buyer and mark order dispatched.",
+      "addTrackingBtn": "+ Add Courier & Tracking",
+      "editTrackingBtn": "Edit Tracking",
+      "saveTrackingBtn": "Save Tracking Details",
+      "cancelEdit": "Cancel",
       "courierLabel": "Courier",
       "trackingCopied": "Tracking number copied to clipboard",
       "trackPackage": "Track Package",
