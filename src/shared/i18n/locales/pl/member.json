@@ -1686,7 +1686,8 @@
       "range": "Zakres dat",
       "from": "Od",
       "to": "Do",
-      "clear": "Wyczyść"
+      "clear": "Wyczyść",
+      "last15Days": "Ostatnie 15 dni"
     },
     "columns": {
       "orderId": "ID zamówienia",
