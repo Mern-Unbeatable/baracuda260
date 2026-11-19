@@ -187,21 +187,24 @@ const MemberStoreProductCard = memo(
         )
       : null;
 
+    const handleCardClick = (e) => {
+      if (
+        e.target.closest('button') ||
+        e.target.closest('a') ||
+        e.target.closest('[role="menu"]')
+      ) {
+        return;
+      }
+      onEdit?.();
+    };
+
     return (
-      <article className="group relative flex h-full flex-col overflow-hidden rounded-[16px] border border-[#eceef3] bg-white shadow-[0px_1px_3px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-[#ccd2e8] hover:shadow-[0_16px_32px_-8px_rgba(15,23,42,0.12)]">
+      <article
+        onClick={handleCardClick}
+        className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[16px] border border-[#eceef3] bg-white shadow-[0px_1px_3px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-[#ccd2e8] hover:shadow-[0_16px_32px_-8px_rgba(15,23,42,0.12)]"
+      >
         <div
-          role={onEdit ? 'button' : undefined}
-          tabIndex={onEdit ? 0 : undefined}
-          onClick={onEdit}
-          onKeyDown={(e) => {
-            if ((e.key === 'Enter' || e.key === ' ') && onEdit) {
-              e.preventDefault();
-              onEdit();
-            }
-          }}
-          className={`relative aspect-368/252 overflow-hidden bg-[#f3f4f6] ${
-            onEdit ? 'cursor-pointer' : ''
-          }`}
+          className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]"
         >
           <Image
             src={product.image}
@@ -268,20 +271,7 @@ const MemberStoreProductCard = memo(
         </div>
 
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <h3
-            role={onEdit ? 'button' : undefined}
-            tabIndex={onEdit ? 0 : undefined}
-            onClick={onEdit}
-            onKeyDown={(e) => {
-              if ((e.key === 'Enter' || e.key === ' ') && onEdit) {
-                e.preventDefault();
-                onEdit();
-              }
-            }}
-            className={`line-clamp-2 text-[15px] font-bold leading-5 text-[#0d0d14] sm:text-[16px] transition-colors duration-200 group-hover:text-[#4048cd] ${
-              onEdit ? 'cursor-pointer hover:underline' : ''
-            }`}
-          >
+          <h3 className="line-clamp-2 text-[15px] font-bold leading-5 text-[#0d0d14] sm:text-[16px] transition-colors duration-200 group-hover:text-[#4048cd]">
             {product.title}
           </h3>
           <p className="line-clamp-2 text-[13px] leading-5 text-[#6b7280]">
