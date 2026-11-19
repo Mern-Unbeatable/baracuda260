@@ -1725,6 +1725,7 @@
       "titleStatus": "Update Order Status & Courier",
       "subtitle": "Provide courier and tracking details so your customer can track their delivery.",
       "courierName": "Courier / Shipping Carrier",
+      "addCustomCourier": "+ Add Courier",
       "courierPlaceholder": "e.g. Royal Mail, InPost, DHL, DPD, FedEx",
       "trackingNumber": "Tracking Number",
       "trackingNumberPlaceholder": "e.g. GB123456789, 620000000123",

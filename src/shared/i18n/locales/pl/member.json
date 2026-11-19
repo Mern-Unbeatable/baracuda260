@@ -1707,6 +1707,7 @@
       "titleStatus": "Zaktualizuj status i dane kuriera",
       "subtitle": "Podaj dane kuriera i numer śledzenia, aby klient mógł śledzić przesyłkę.",
       "courierName": "Firma kurierska / Przewoźnik",
+      "addCustomCourier": "+ Dodaj kuriera",
       "courierPlaceholder": "np. Royal Mail, InPost, DHL, DPD, FedEx",
       "trackingNumber": "Numer śledzenia",
       "trackingNumberPlaceholder": "np. GB123456789, 620000000123",
