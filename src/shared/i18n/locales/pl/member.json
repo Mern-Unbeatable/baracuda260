@@ -1695,7 +1695,27 @@
     },
     "actions": {
       "menu": "Akcje dla {{number}}",
-      "viewDetails": "Zobacz szczegóły"
+      "viewDetails": "Zobacz szczegóły",
+      "dispatch": "Wyślij",
+      "dispatchOrder": "Wyślij zamówienie",
+      "editTracking": "Edytuj dane śledzenia",
+      "addTracking": "+ Śledzenie"
+    },
+    "dispatchModal": {
+      "title": "Wyślij zamówienie",
+      "titleEdit": "Zaktualizuj kuriera i śledzenie",
+      "subtitle": "Podaj dane kuriera i numer śledzenia, aby klient mógł śledzić przesyłkę.",
+      "courierName": "Firma kurierska / Przewoźnik",
+      "courierPlaceholder": "np. Royal Mail, InPost, DHL, DPD, FedEx",
+      "trackingNumber": "Numer śledzenia",
+      "trackingNumberPlaceholder": "np. GB123456789, 620000000123",
+      "trackingUrl": "Link do śledzenia (opcjonalnie)",
+      "trackingUrlHint": "Pozostaw puste, aby wygenerować automatyczny link dla głównych kurierów.",
+      "trackingRequired": "Wprowadź numer śledzenia przesyłki.",
+      "cancel": "Anuluj",
+      "confirm": "Zatwierdź i wyślij",
+      "save": "Zapisz dane śledzenia",
+      "success": "Zamówienie zostało oznaczone jako wysłane, a dane śledzenia zaktualizowane."
     },
     "detail": {
       "title": "Zamówienie #{{number}}",
@@ -1717,6 +1737,11 @@
       "sellerEarnings": "Wypłata netto sprzedawcy (70%)",
       "earningsNote": "Zarobki trafiają na saldo po potwierdzeniu dostawy.",
       "shippingTracking": "Informacje o przesyłce i śledzeniu",
+      "noTrackingHint": "Dodaj firmę kurierską i numer śledzenia, aby powiadomić kupującego.",
+      "addTrackingBtn": "+ Dodaj kuriera i śledzenie",
+      "editTrackingBtn": "Edytuj śledzenie",
+      "saveTrackingBtn": "Zapisz dane śledzenia",
+      "cancelEdit": "Anuluj",
       "courierLabel": "Kurier",
       "trackingCopied": "Numer śledzenia skopiowany do schowka",
       "trackPackage": "Śledź przesyłkę",
