@@ -28,8 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
-import CourierSelector from '@/portals/member/components/CourierSelector';
-import { saveCustomCourierPreset } from '@/portals/member/data/courierPresets';
+import DispatchOrderModal from '@/portals/member/components/DispatchOrderModal';
 import {
   getMarkActionLabelKey,
   STORE_ORDER_ACTION_STATUSES,
@@ -189,31 +188,18 @@ const SellerOrderDetailsContent = memo(() => {
   });
 
   const [draftStatus, setDraftStatus] = useState(STORE_ORDER_STATUS.DISPATCHED);
-  const [draftCourier, setDraftCourier] = useState('Royal Mail');
-  const [draftTrackingNumber, setDraftTrackingNumber] = useState('');
-  const [draftTrackingUrl, setDraftTrackingUrl] = useState('');
-  const [isEditingTracking, setIsEditingTracking] = useState(false);
+  const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
 
   // Sync draftStatus with the loaded order status
   useEffect(() => {
-    if (order) {
-      if (order.status) {
-        setDraftStatus(String(order.status).toLowerCase());
-      }
-      if (order.tracking) {
-        if (order.tracking.courierName) setDraftCourier(order.tracking.courierName);
-        if (order.tracking.trackingNumber) setDraftTrackingNumber(order.tracking.trackingNumber);
-        if (order.tracking.trackingUrl) setDraftTrackingUrl(order.tracking.trackingUrl);
-      }
+    if (order?.status) {
+      setDraftStatus(String(order.status).toLowerCase());
     }
   }, [order]);
 
   const updateStatusMutation = useMutation({
     mutationFn: (payload) => updateSellerOrderStatusApi(id, payload),
     onSuccess: (_, variables) => {
-      if (variables?.courierName && typeof variables.courierName === 'string') {
-        saveCustomCourierPreset(variables.courierName);
-      }
       queryClient.invalidateQueries({
         queryKey: SELLER_ORDER_DETAILS_QUERY_KEY(id),
       });
@@ -258,53 +244,29 @@ const SellerOrderDetailsContent = memo(() => {
     navigate(ROUTES.USER_ORDERS);
   };
 
-  const handleSaveTrackingDetails = () => {
-    if (!draftTrackingNumber.trim()) {
-      toast.error(
-        t(
-          'storeOrders.dispatchModal.trackingRequired',
-          'Please enter a tracking number so the buyer can track this shipment.',
-        ),
-      );
-      return;
-    }
-    const targetStatus =
-      String(order.status).toLowerCase() === 'processing'
-        ? STORE_ORDER_STATUS.DISPATCHED
-        : order.rawStatus || String(order.status).toUpperCase();
+  const handleOpenDispatchModal = () => {
+    setDraftStatus('dispatched');
+    setIsDispatchModalOpen(true);
+  };
 
-    updateStatusMutation.mutate(
-      {
-        status: targetStatus,
-        courierName: draftCourier.trim() || 'Royal Mail',
-        trackingNumber: draftTrackingNumber.trim(),
-        trackingUrl: draftTrackingUrl.trim() || undefined,
-      },
-      {
-        onSuccess: () => {
-          setIsEditingTracking(false);
-        },
-      },
-    );
+  const handleStatusDropdownChange = (event) => {
+    const nextStatus = event.target.value;
+    setDraftStatus(nextStatus);
+    const norm = String(nextStatus).toLowerCase();
+    if (norm === 'dispatched' || norm === 'shipped') {
+      setIsDispatchModalOpen(true);
+    }
   };
 
   const handleMarkStatus = () => {
     if (!draftStatus || updateStatusMutation.isPending) return;
     const norm = String(draftStatus).toLowerCase();
-    if ((norm === 'dispatched' || norm === 'shipped') && !draftTrackingNumber.trim()) {
-      toast.error(
-        t(
-          'storeOrders.dispatchModal.trackingRequired',
-          'Please enter a tracking number so the buyer can track this shipment.',
-        ),
-      );
+    if (norm === 'dispatched' || norm === 'shipped') {
+      setIsDispatchModalOpen(true);
       return;
     }
     updateStatusMutation.mutate({
       status: String(draftStatus).toUpperCase(),
-      courierName: draftCourier.trim() || undefined,
-      trackingNumber: draftTrackingNumber.trim() || undefined,
-      trackingUrl: draftTrackingUrl.trim() || undefined,
     });
   };
 
@@ -577,113 +539,51 @@ const SellerOrderDetailsContent = memo(() => {
             <Button
               unstyled
               type="button"
-              onClick={() => setIsEditingTracking((prev) => !prev)}
+              onClick={handleOpenDispatchModal}
               className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c7d2fe] bg-white px-2.5 py-1 text-[12px] font-semibold text-[#4048cd] shadow-xs transition hover:bg-[#e0e7ff]"
             >
               <Edit3 size={13} />
-              <span>{isEditingTracking ? t('storeOrders.detail.cancelEdit', 'Cancel') : t('storeOrders.detail.editTrackingBtn', 'Edit Tracking')}</span>
+              <span>{t('storeOrders.detail.editTrackingBtn', 'Edit Tracking')}</span>
             </Button>
           </div>
 
-          {!isEditingTracking ? (
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-md bg-[#4048cd] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
-                    {order.tracking.courierName || 'Courier'}
-                  </span>
-                  <span className="font-mono text-[15px] font-bold text-[#111827]">
-                    {order.tracking.trackingNumber}
-                  </span>
-                  <Button
-                    unstyled
-                    type="button"
-                    onClick={handleCopyTracking}
-                    className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition hover:bg-[#e0e7ff] hover:text-[#4048cd]"
-                    title="Copy tracking number"
-                  >
-                    <Copy size={14} />
-                  </Button>
-                </div>
-                {order.tracking.dispatchedAt ? (
-                  <p className="mt-1 text-[12px] text-[#6b7280]">
-                    {t('storeOrders.detail.dispatchedAt', 'Dispatched on')}: {order.tracking.dispatchedAt}
-                  </p>
-                ) : null}
-              </div>
-              {order.tracking.trackingUrl ? (
-                <a
-                  href={order.tracking.trackingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#4048cd] px-3.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-[#343cb0]"
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="rounded-md bg-[#4048cd] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                  {order.tracking.courierName || 'Courier'}
+                </span>
+                <span className="font-mono text-[15px] font-bold text-[#111827]">
+                  {order.tracking.trackingNumber}
+                </span>
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handleCopyTracking}
+                  className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition hover:bg-[#e0e7ff] hover:text-[#4048cd]"
+                  title="Copy tracking number"
                 >
-                  <span>{t('storeOrders.detail.trackPackage', 'Track Package')}</span>
-                  <ExternalLink size={14} />
-                </a>
+                  <Copy size={14} />
+                </Button>
+              </div>
+              {order.tracking.dispatchedAt ? (
+                <p className="mt-1 text-[12px] text-[#6b7280]">
+                  {t('storeOrders.detail.dispatchedAt', 'Dispatched on')}: {order.tracking.dispatchedAt}
+                </p>
               ) : null}
             </div>
-          ) : (
-            <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#c7d2fe] bg-white p-4">
-              <CourierSelector
-                value={draftCourier}
-                onChange={setDraftCourier}
-                required
-                theme="light"
-              />
-
-              <div>
-                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
-                  {t('storeOrders.detail.trackingNumber', 'Tracking Number')}
-                </span>
-                <input
-                  type="text"
-                  value={draftTrackingNumber}
-                  onChange={(e) => setDraftTrackingNumber(e.target.value)}
-                  placeholder="e.g. GB123456789, 620000000123"
-                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 font-mono text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
-                />
-              </div>
-
-              <div>
-                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
-                  {t('storeOrders.detail.customTrackingUrl', 'Tracking URL (Optional - auto-generated if left empty)')}
-                </span>
-                <input
-                  type="url"
-                  value={draftTrackingUrl}
-                  onChange={(e) => setDraftTrackingUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[13px] text-[#111827] outline-none focus:border-[#4048cd]"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={() => setIsEditingTracking(false)}
-                  className="cursor-pointer rounded-lg border border-[#e5e7eb] px-3.5 py-1.5 text-[12px] font-medium text-[#374151] hover:bg-gray-50"
-                >
-                  {t('storeOrders.detail.cancelEdit', 'Cancel')}
-                </Button>
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={handleSaveTrackingDetails}
-                  disabled={updateStatusMutation.isPending}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#4048cd] px-4 py-1.5 text-[12px] font-bold text-white shadow-xs hover:bg-[#343cb0] disabled:opacity-50"
-                >
-                  {updateStatusMutation.isPending ? (
-                    <Loader2 size={13} className="animate-spin" />
-                  ) : (
-                    <Save size={13} />
-                  )}
-                  <span>{t('storeOrders.detail.saveTrackingBtn', 'Save Tracking Details')}</span>
-                </Button>
-              </div>
-            </div>
-          )}
+            {order.tracking.trackingUrl ? (
+              <a
+                href={order.tracking.trackingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#4048cd] px-3.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-[#343cb0]"
+              >
+                <span>{t('storeOrders.detail.trackPackage', 'Track Package')}</span>
+                <ExternalLink size={14} />
+              </a>
+            ) : null}
+          </div>
         </section>
       ) : (
         <section className={`${cardClass} border-dashed border-[#c7d2fe] bg-[#f8faff]`}>
@@ -691,87 +591,23 @@ const SellerOrderDetailsContent = memo(() => {
             <SectionLabel icon={Truck}>
               {t('storeOrders.detail.shippingTracking', 'Shipping & Tracking Information')}
             </SectionLabel>
-            {!isEditingTracking ? (
-              <Button
-                unstyled
-                type="button"
-                onClick={() => setIsEditingTracking(true)}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#ffc107] px-3 py-1.5 text-[12px] font-bold text-[#111827] shadow-xs transition hover:bg-[#f5b800]"
-              >
-                <Truck size={13} />
-                <span>{t('storeOrders.detail.addTrackingBtn', '+ Add Courier & Tracking')}</span>
-              </Button>
-            ) : null}
+            <Button
+              unstyled
+              type="button"
+              onClick={handleOpenDispatchModal}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#ffc107] px-3 py-1.5 text-[12px] font-bold text-[#111827] shadow-xs transition hover:bg-[#f5b800]"
+            >
+              <Truck size={13} />
+              <span>{t('storeOrders.detail.addTrackingBtn', '+ Add Courier & Tracking')}</span>
+            </Button>
           </div>
 
-          {!isEditingTracking ? (
-            <p className="mt-3 text-[13px] text-[#6b7280]">
-              {t(
-                'storeOrders.detail.noTrackingHint',
-                'No courier or tracking number has been added yet. Add courier details to dispatch this order and update your customer.',
-              )}
-            </p>
-          ) : (
-            <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#c7d2fe] bg-white p-4">
-              <CourierSelector
-                value={draftCourier}
-                onChange={setDraftCourier}
-                required
-                theme="light"
-              />
-
-              <div>
-                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
-                  {t('storeOrders.detail.trackingNumber', 'Tracking Number')}
-                </span>
-                <input
-                  type="text"
-                  value={draftTrackingNumber}
-                  onChange={(e) => setDraftTrackingNumber(e.target.value)}
-                  placeholder="e.g. GB123456789, 620000000123"
-                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 font-mono text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
-                />
-              </div>
-
-              <div>
-                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
-                  {t('storeOrders.detail.customTrackingUrl', 'Tracking URL (Optional - auto-generated if left empty)')}
-                </span>
-                <input
-                  type="url"
-                  value={draftTrackingUrl}
-                  onChange={(e) => setDraftTrackingUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[13px] text-[#111827] outline-none focus:border-[#4048cd]"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={() => setIsEditingTracking(false)}
-                  className="cursor-pointer rounded-lg border border-[#e5e7eb] px-3.5 py-1.5 text-[12px] font-medium text-[#374151] hover:bg-gray-50"
-                >
-                  {t('storeOrders.detail.cancelEdit', 'Cancel')}
-                </Button>
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={handleSaveTrackingDetails}
-                  disabled={updateStatusMutation.isPending}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#ffc107] px-4 py-1.5 text-[12px] font-bold text-[#111827] shadow-xs hover:bg-[#f5b800] disabled:opacity-50"
-                >
-                  {updateStatusMutation.isPending ? (
-                    <Loader2 size={13} className="animate-spin" />
-                  ) : (
-                    <Save size={13} />
-                  )}
-                  <span>{t('storeOrders.detail.saveTrackingBtn', 'Save & Dispatch Order')}</span>
-                </Button>
-              </div>
-            </div>
-          )}
+          <p className="mt-3 text-[13px] text-[#6b7280]">
+            {t(
+              'storeOrders.detail.noTrackingHint',
+              'No courier or tracking number has been added yet. Add courier details to dispatch this order and update your customer.',
+            )}
+          </p>
         </section>
       )}
 
@@ -829,7 +665,7 @@ const SellerOrderDetailsContent = memo(() => {
           <span className="relative block">
             <select
               value={draftStatus}
-              onChange={(event) => setDraftStatus(event.target.value)}
+              onChange={handleStatusDropdownChange}
               disabled={updateStatusMutation.isPending}
               className="h-11 w-full cursor-pointer appearance-none rounded-[10px] border border-white/12 bg-[#27272a] py-2 pl-10 pr-10 text-[14px] font-semibold text-white outline-none focus:border-[#ffc107] disabled:opacity-60"
             >
@@ -852,59 +688,6 @@ const SellerOrderDetailsContent = memo(() => {
             />
           </span>
         </label>
-
-        {/* Courier & Tracking Details inside Seller Actions */}
-        <div className="mt-4 flex flex-col gap-3.5 rounded-xl border border-white/10 bg-[#27272a] p-4 text-white">
-          <div className="flex items-center justify-between">
-            <p className="text-[12px] font-bold uppercase tracking-wider text-[#ffc107]">
-              {t('storeOrders.detail.dispatchDetails', 'Courier & Tracking Details')}
-            </p>
-            {(String(draftStatus).toLowerCase() === 'dispatched' ||
-              String(draftStatus).toLowerCase() === 'shipped') ? (
-              <span className="rounded bg-[#ffc107]/20 px-2 py-0.5 text-[11px] font-semibold text-[#ffc107]">
-                Required for Dispatch
-              </span>
-            ) : (
-              <span className="text-[11px] text-white/50">Optional</span>
-            )}
-          </div>
-
-          <CourierSelector
-            value={draftCourier}
-            onChange={setDraftCourier}
-            required={
-              String(draftStatus).toLowerCase() === 'dispatched' ||
-              String(draftStatus).toLowerCase() === 'shipped'
-            }
-            theme="dark"
-          />
-
-          <div>
-            <span className="mb-1.5 block text-[12px] font-medium text-white/70">
-              {t('storeOrders.detail.trackingNumber', 'Tracking Number')}
-            </span>
-            <input
-              type="text"
-              value={draftTrackingNumber}
-              onChange={(e) => setDraftTrackingNumber(e.target.value)}
-              placeholder="e.g. GB123456789, 620000000123"
-              className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 font-mono text-[14px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
-            />
-          </div>
-
-          <div>
-            <span className="mb-1.5 block text-[12px] font-medium text-white/70">
-              {t('storeOrders.detail.customTrackingUrl', 'Tracking URL (Optional - auto-generated if left empty)')}
-            </span>
-            <input
-              type="url"
-              value={draftTrackingUrl}
-              onChange={(e) => setDraftTrackingUrl(e.target.value)}
-              placeholder="https://..."
-              className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
-            />
-          </div>
-        </div>
 
         <Button
           unstyled
@@ -948,6 +731,23 @@ const SellerOrderDetailsContent = memo(() => {
             ))}
           </div>
         </section>
+      ) : null}
+
+      {/* Dispatch & Tracking Modal */}
+      {order ? (
+        <DispatchOrderModal
+          open={isDispatchModalOpen}
+          order={order}
+          initialStatus={
+            draftStatus ? String(draftStatus).toUpperCase() : 'DISPATCHED'
+          }
+          onClose={() => {
+            setIsDispatchModalOpen(false);
+            if (order?.status) {
+              setDraftStatus(String(order.status).toLowerCase());
+            }
+          }}
+        />
       ) : null}
     </div>
   );
