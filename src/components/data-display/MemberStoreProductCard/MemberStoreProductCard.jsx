@@ -188,8 +188,21 @@ const MemberStoreProductCard = memo(
       : null;
 
     return (
-      <article className="flex h-full flex-col overflow-hidden rounded-[14px] border border-[#eceef3] bg-white shadow-[0px_1px_2px_rgba(15,23,42,0.04)]">
-        <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
+      <article className="group relative flex h-full flex-col overflow-hidden rounded-[16px] border border-[#eceef3] bg-white shadow-[0px_1px_3px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-[#ccd2e8] hover:shadow-[0_16px_32px_-8px_rgba(15,23,42,0.12)]">
+        <div
+          role={onEdit ? 'button' : undefined}
+          tabIndex={onEdit ? 0 : undefined}
+          onClick={onEdit}
+          onKeyDown={(e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && onEdit) {
+              e.preventDefault();
+              onEdit();
+            }
+          }}
+          className={`relative aspect-368/252 overflow-hidden bg-[#f3f4f6] ${
+            onEdit ? 'cursor-pointer' : ''
+          }`}
+        >
           <Image
             src={product.image}
             alt={product.title}
@@ -197,26 +210,32 @@ const MemberStoreProductCard = memo(
             height={252}
             loading="lazy"
             decoding="async"
-            className="size-full object-cover"
+            className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />
-          <span className="absolute left-3 top-3 inline-flex max-w-[calc(100%-3.5rem)] items-center rounded-md bg-[#3a3f4b]/88 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-[0.35px] text-white backdrop-blur-[2px]">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+          <span className="absolute left-3 top-3 inline-flex max-w-[calc(100%-3.5rem)] items-center rounded-md bg-[#3a3f4b]/88 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-[0.35px] text-white shadow-xs backdrop-blur-[2px] transition-all duration-300 group-hover:bg-[#3a3f4b]">
             {t(product.badgeKey, product.category || 'Product')}
           </span>
 
           {product.promoted ? (
-            <span className="absolute bottom-3 left-3 rounded-md bg-[#ee1c25] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
+            <span className="absolute bottom-3 left-3 rounded-md bg-[#ee1c25] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm transition-transform duration-300 group-hover:scale-105">
               {t('myStore.promoted')}
             </span>
           ) : null}
 
-          <div className="absolute right-3 top-3 flex items-center gap-1.5" ref={buttonWrapRef}>
+          <div
+            className="absolute right-3 top-3 flex items-center gap-1.5"
+            ref={buttonWrapRef}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Button
               unstyled
               type="button"
               onClick={handleWatchlistToggle}
               aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
               aria-pressed={isSaved}
-              className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
+              className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95"
             >
               <Heart
                 size={16}
@@ -224,7 +243,7 @@ const MemberStoreProductCard = memo(
                 className={
                   isSaved
                     ? 'fill-[#e53935] text-[#e53935]'
-                    : 'fill-transparent text-[#161c27] hover:text-[#e53935]'
+                    : 'fill-transparent text-[#161c27] transition-colors hover:text-[#e53935]'
                 }
               />
             </Button>
@@ -237,8 +256,8 @@ const MemberStoreProductCard = memo(
                 aria-haspopup="menu"
                 aria-label={t('myStore.actions.menu', { title: product.title })}
                 onClick={() => setMenuOpen((open) => !open)}
-                className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60 ${
-                  menuOpen ? 'bg-black/60' : ''
+                className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition-all duration-200 hover:scale-110 hover:bg-black/60 active:scale-95 ${
+                  menuOpen ? 'bg-black/60 scale-105' : ''
                 }`}
               >
                 <MoreVertical size={16} strokeWidth={2.5} aria-hidden="true" />
@@ -249,7 +268,20 @@ const MemberStoreProductCard = memo(
         </div>
 
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <h3 className="line-clamp-2 text-[15px] font-bold leading-5 text-[#0d0d14] sm:text-[16px]">
+          <h3
+            role={onEdit ? 'button' : undefined}
+            tabIndex={onEdit ? 0 : undefined}
+            onClick={onEdit}
+            onKeyDown={(e) => {
+              if ((e.key === 'Enter' || e.key === ' ') && onEdit) {
+                e.preventDefault();
+                onEdit();
+              }
+            }}
+            className={`line-clamp-2 text-[15px] font-bold leading-5 text-[#0d0d14] sm:text-[16px] transition-colors duration-200 group-hover:text-[#4048cd] ${
+              onEdit ? 'cursor-pointer hover:underline' : ''
+            }`}
+          >
             {product.title}
           </h3>
           <p className="line-clamp-2 text-[13px] leading-5 text-[#6b7280]">
@@ -265,10 +297,10 @@ const MemberStoreProductCard = memo(
                   {[product.city, product.country].filter(Boolean).join(', ')}
                 </span>
               ) : null}
-              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold transition-all duration-200 ${
                 product.shippingScope === 'NATIONAL'
-                  ? 'bg-[#fff7ed] text-[#c2410c]'
-                  : 'bg-[#ecfdf5] text-[#047857]'
+                  ? 'bg-[#fff7ed] text-[#c2410c] group-hover:bg-[#ffedd5]'
+                  : 'bg-[#ecfdf5] text-[#047857] group-hover:bg-[#d1fae5]'
               }`}>
                 {product.shippingScope === 'NATIONAL'
                   ? t('myStore.shipping.nationalOnly', 'Domestic Only')
@@ -277,7 +309,7 @@ const MemberStoreProductCard = memo(
             </div>
           ) : null}
 
-          <p className="mt-auto pt-2 text-[16px] font-bold leading-none text-[#0d0d14]">
+          <p className="mt-auto pt-2 text-[16px] font-bold leading-none text-[#0d0d14] transition-colors duration-200 group-hover:text-[#4048cd]">
             {product.price}
           </p>
         </div>
