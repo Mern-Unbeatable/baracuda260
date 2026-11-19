@@ -124,8 +124,8 @@ const SearchableCombobox = memo(
       if (!q) return null;
       return options.find(
         (o) =>
-          (o.value || '').toLowerCase() === q ||
-          (o.label || '').toLowerCase() === q,
+          (o?.value || '').toLowerCase() === q ||
+          (o?.label || '').toLowerCase() === q,
       );
     }, [options, query]);
 
