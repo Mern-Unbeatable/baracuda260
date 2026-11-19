@@ -36,10 +36,11 @@ const MENU_WIDTH_PX = 148;
  *   onEdit: () => void,
  *   onDelete: () => void,
  *   onPromote?: () => void,
+ *   showWatchlist?: boolean,
  * }} props
  */
 const MemberStoreProductCard = memo(
-  ({ product, onEdit, onDelete, onPromote }) => {
+  ({ product, onEdit, onDelete, onPromote, showWatchlist }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -48,6 +49,11 @@ const MemberStoreProductCard = memo(
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
     const [placement, setPlacement] = useState(null);
+
+    const canShowWatchlist =
+      typeof showWatchlist === 'boolean'
+        ? showWatchlist
+        : !onEdit && !onDelete;
 
     useEffect(() => {
       setIsSaved(Boolean(product.isSaved));
@@ -232,24 +238,26 @@ const MemberStoreProductCard = memo(
             ref={buttonWrapRef}
             onClick={(e) => e.stopPropagation()}
           >
-            <Button
-              unstyled
-              type="button"
-              onClick={handleWatchlistToggle}
-              aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
-              aria-pressed={isSaved}
-              className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95"
-            >
-              <Heart
-                size={16}
-                strokeWidth={2}
-                className={
-                  isSaved
-                    ? 'fill-[#e53935] text-[#e53935]'
-                    : 'fill-transparent text-[#161c27] transition-colors hover:text-[#e53935]'
-                }
-              />
-            </Button>
+            {canShowWatchlist ? (
+              <Button
+                unstyled
+                type="button"
+                onClick={handleWatchlistToggle}
+                aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
+                aria-pressed={isSaved}
+                className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95"
+              >
+                <Heart
+                  size={16}
+                  strokeWidth={2}
+                  className={
+                    isSaved
+                      ? 'fill-[#e53935] text-[#e53935]'
+                      : 'fill-transparent text-[#161c27] transition-colors hover:text-[#e53935]'
+                  }
+                />
+              </Button>
+            ) : null}
             {onEdit || onDelete ? (
               <Button
                 unstyled

@@ -70,24 +70,26 @@ const StoreProductCard = memo(({ product, onView, isOwner = false }) => {
         <span className="absolute left-2.5 top-2.5 rounded-full bg-[#111827]/85 px-2 py-1 text-[10px] font-bold tracking-[0.06em] text-white">
           {t(product.badgeKey, product.category || 'Product')}
         </span>
-        <Button
-          unstyled
-          type="button"
-          onClick={handleWatchlistToggle}
-          aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
-          aria-pressed={isSaved}
-          className="absolute right-2.5 top-2.5 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
-        >
-          <Heart
-            size={16}
-            strokeWidth={2}
-            className={
-              isSaved
-                ? 'fill-[#e53935] text-[#e53935]'
-                : 'fill-transparent text-[#161c27] hover:text-[#e53935]'
-            }
-          />
-        </Button>
+        {!isOwner ? (
+          <Button
+            unstyled
+            type="button"
+            onClick={handleWatchlistToggle}
+            aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
+            aria-pressed={isSaved}
+            className="absolute right-2.5 top-2.5 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
+          >
+            <Heart
+              size={16}
+              strokeWidth={2}
+              className={
+                isSaved
+                  ? 'fill-[#e53935] text-[#e53935]'
+                  : 'fill-transparent text-[#161c27] hover:text-[#e53935]'
+              }
+            />
+          </Button>
+        ) : null}
       </div>
       <div className="flex flex-col gap-3 p-3.5 sm:p-4">
         <div>
