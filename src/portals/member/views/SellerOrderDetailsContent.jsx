@@ -28,6 +28,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import CourierSelector from '@/portals/member/components/CourierSelector';
+import { saveCustomCourierPreset } from '@/portals/member/data/courierPresets';
 import {
   getMarkActionLabelKey,
   STORE_ORDER_ACTION_STATUSES,
@@ -209,6 +211,9 @@ const SellerOrderDetailsContent = memo(() => {
   const updateStatusMutation = useMutation({
     mutationFn: (payload) => updateSellerOrderStatusApi(id, payload),
     onSuccess: (_, variables) => {
+      if (variables?.courierName && typeof variables.courierName === 'string') {
+        saveCustomCourierPreset(variables.courierName);
+      }
       queryClient.invalidateQueries({
         queryKey: SELLER_ORDER_DETAILS_QUERY_KEY(id),
       });
@@ -620,34 +625,12 @@ const SellerOrderDetailsContent = memo(() => {
             </div>
           ) : (
             <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#c7d2fe] bg-white p-4">
-              <div>
-                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
-                  {t('storeOrders.detail.courierName', 'Courier Name')}
-                </span>
-                <div className="mb-2 flex flex-wrap gap-1.5">
-                  {['Royal Mail', 'InPost', 'DHL', 'DPD', 'FedEx', 'UPS'].map((cName) => (
-                    <button
-                      key={cName}
-                      type="button"
-                      onClick={() => setDraftCourier(cName)}
-                      className={`cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium transition ${
-                        draftCourier.toLowerCase() === cName.toLowerCase()
-                          ? 'bg-[#4048cd] text-white shadow-xs'
-                          : 'border border-[#e5e7eb] bg-[#f9fafb] text-[#374151] hover:bg-[#f3f4f6]'
-                      }`}
-                    >
-                      {cName}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={draftCourier}
-                  onChange={(e) => setDraftCourier(e.target.value)}
-                  placeholder="e.g. Royal Mail, InPost, DHL"
-                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
-                />
-              </div>
+              <CourierSelector
+                value={draftCourier}
+                onChange={setDraftCourier}
+                required
+                theme="light"
+              />
 
               <div>
                 <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
@@ -730,34 +713,12 @@ const SellerOrderDetailsContent = memo(() => {
             </p>
           ) : (
             <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#c7d2fe] bg-white p-4">
-              <div>
-                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
-                  {t('storeOrders.detail.courierName', 'Courier Name')}
-                </span>
-                <div className="mb-2 flex flex-wrap gap-1.5">
-                  {['Royal Mail', 'InPost', 'DHL', 'DPD', 'FedEx', 'UPS'].map((cName) => (
-                    <button
-                      key={cName}
-                      type="button"
-                      onClick={() => setDraftCourier(cName)}
-                      className={`cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium transition ${
-                        draftCourier.toLowerCase() === cName.toLowerCase()
-                          ? 'bg-[#4048cd] text-white shadow-xs'
-                          : 'border border-[#e5e7eb] bg-[#f9fafb] text-[#374151] hover:bg-[#f3f4f6]'
-                      }`}
-                    >
-                      {cName}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={draftCourier}
-                  onChange={(e) => setDraftCourier(e.target.value)}
-                  placeholder="e.g. Royal Mail, InPost, DHL"
-                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
-                />
-              </div>
+              <CourierSelector
+                value={draftCourier}
+                onChange={setDraftCourier}
+                required
+                theme="light"
+              />
 
               <div>
                 <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
@@ -908,34 +869,15 @@ const SellerOrderDetailsContent = memo(() => {
             )}
           </div>
 
-          <div>
-            <span className="mb-1.5 block text-[12px] font-medium text-white/70">
-              {t('storeOrders.detail.courierName', 'Courier Name')}
-            </span>
-            <div className="mb-2 flex flex-wrap gap-1.5">
-              {['Royal Mail', 'InPost', 'DHL', 'DPD', 'FedEx', 'UPS'].map((cName) => (
-                <button
-                  key={cName}
-                  type="button"
-                  onClick={() => setDraftCourier(cName)}
-                  className={`cursor-pointer rounded-md px-2 py-1 text-[11px] font-medium transition ${
-                    draftCourier.toLowerCase() === cName.toLowerCase()
-                      ? 'bg-[#ffc107] text-[#111827]'
-                      : 'bg-white/10 text-white/80 hover:bg-white/20'
-                  }`}
-                >
-                  {cName}
-                </button>
-              ))}
-            </div>
-            <input
-              type="text"
-              value={draftCourier}
-              onChange={(e) => setDraftCourier(e.target.value)}
-              placeholder="e.g. Royal Mail, InPost, DHL"
-              className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 text-[14px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
-            />
-          </div>
+          <CourierSelector
+            value={draftCourier}
+            onChange={setDraftCourier}
+            required={
+              String(draftStatus).toLowerCase() === 'dispatched' ||
+              String(draftStatus).toLowerCase() === 'shipped'
+            }
+            theme="dark"
+          />
 
           <div>
             <span className="mb-1.5 block text-[12px] font-medium text-white/70">

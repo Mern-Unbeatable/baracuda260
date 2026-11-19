@@ -6,21 +6,14 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import CourierSelector from '@/portals/member/components/CourierSelector';
+import { saveCustomCourierPreset } from '@/portals/member/data/courierPresets';
 import { getApiErrorMessage } from '@/shared/api/client';
 import {
   SELLER_ORDER_DETAILS_QUERY_KEY,
   SELLER_ORDER_STATUS_CARD_QUERY_KEY,
   updateSellerOrderStatusApi,
 } from '@/shared/api/orders.api';
-
-const POPULAR_COURIERS = [
-  'Royal Mail',
-  'InPost',
-  'DHL',
-  'DPD',
-  'FedEx',
-  'UPS',
-];
 
 const ORDER_STATUS_OPTIONS = [
   { value: 'PROCESSING', labelKey: 'storeOrders.status.processing', defaultLabel: 'Processing' },
@@ -67,6 +60,9 @@ const DispatchOrderModal = memo(
     const updateMutation = useMutation({
       mutationFn: (payload) => updateSellerOrderStatusApi(order.id, payload),
       onSuccess: () => {
+        if (courierName.trim()) {
+          saveCustomCourierPreset(courierName.trim());
+        }
         queryClient.invalidateQueries({ queryKey: ['seller-orders'] });
         queryClient.invalidateQueries({
           queryKey: SELLER_ORDER_STATUS_CARD_QUERY_KEY,
@@ -237,51 +233,12 @@ const DispatchOrderModal = memo(
               </div>
 
               {/* Courier Selection */}
-              <div>
-                <label className="mb-1.5 block text-[13px] font-medium text-[#374151]">
-                  {t(
-                    'storeOrders.dispatchModal.courierName',
-                    'Courier / Shipping Carrier',
-                  )}
-                  {isDispatchOrShipped ? (
-                    <span className="text-red-500 ml-0.5">*</span>
-                  ) : null}
-                </label>
-
-                {/* Popular presets */}
-                <div className="mb-2 flex flex-wrap gap-1.5">
-                  {POPULAR_COURIERS.map((c) => {
-                    const isSelected =
-                      courierName.toLowerCase().trim() === c.toLowerCase().trim();
-                    return (
-                      <button
-                        key={c}
-                        type="button"
-                        onClick={() => setCourierName(c)}
-                        className={`cursor-pointer rounded-lg px-2.5 py-1 text-[12px] font-medium transition ${
-                          isSelected
-                            ? 'bg-[#4048cd] text-white shadow-xs'
-                            : 'border border-[#e5e7eb] bg-white text-[#374151] hover:bg-[#f9fafb]'
-                        }`}
-                      >
-                        {c}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <input
-                  type="text"
-                  required={isDispatchOrShipped}
-                  value={courierName}
-                  onChange={(e) => setCourierName(e.target.value)}
-                  placeholder={t(
-                    'storeOrders.dispatchModal.courierPlaceholder',
-                    'e.g. Royal Mail, InPost, DHL, DPD, FedEx',
-                  )}
-                  className="h-10.5 w-full rounded-xl border border-[#d1d5db] bg-white px-3.5 text-[14px] text-[#111827] outline-none transition focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]"
-                />
-              </div>
+              <CourierSelector
+                value={courierName}
+                onChange={setCourierName}
+                required={isDispatchOrShipped}
+                theme="light"
+              />
 
               {/* Tracking Number */}
               <div>
@@ -322,7 +279,7 @@ const DispatchOrderModal = memo(
                 <p className="mt-1 text-[11px] text-[#6b7280]">
                   {t(
                     'storeOrders.dispatchModal.trackingUrlHint',
-                    'Leave blank to automatically generate tracking link for Royal Mail, InPost, DHL, DPD, FedEx, UPS.',
+                    'Leave blank to automatically generate tracking link for major couriers or universal package tracking.',
                   )}
                 </p>
               </div>
@@ -330,7 +287,7 @@ const DispatchOrderModal = memo(
               {/* Notification note */}
               {isDispatchOrShipped ? (
                 <div className="rounded-xl border border-[#c7d2fe] bg-[#f0f4ff] p-3 text-[12px] text-[#3730a3]">
-                  <span className="font-semibold">Note:</span> The buyer will receive an automatic dispatch notification with tracking details.
+                  <span className="font-semibold">Note:</span> The buyer will receive an automatic dispatch notification with courier and tracking details.
                 </div>
               ) : null}
             </div>
