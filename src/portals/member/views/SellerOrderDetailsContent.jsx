@@ -8,6 +8,7 @@ import {
   Clock,
   Copy,
   CreditCard,
+  Edit3,
   ExternalLink,
   Loader2,
   Mail,
@@ -186,19 +187,16 @@ const SellerOrderDetailsContent = memo(() => {
   });
 
   const [draftStatus, setDraftStatus] = useState(STORE_ORDER_STATUS.DISPATCHED);
-  const [draftCourier, setDraftCourier] = useState('');
+  const [draftCourier, setDraftCourier] = useState('Royal Mail');
   const [draftTrackingNumber, setDraftTrackingNumber] = useState('');
   const [draftTrackingUrl, setDraftTrackingUrl] = useState('');
+  const [isEditingTracking, setIsEditingTracking] = useState(false);
 
   // Sync draftStatus with the loaded order status
   useEffect(() => {
     if (order) {
       if (order.status) {
-        setDraftStatus(
-          order.status === STORE_ORDER_STATUS.SHIPPED || order.status === STORE_ORDER_STATUS.DISPATCHED
-            ? STORE_ORDER_STATUS.DELIVERED
-            : STORE_ORDER_STATUS.DISPATCHED,
-        );
+        setDraftStatus(order.rawStatus || String(order.status).toUpperCase());
       }
       if (order.tracking) {
         if (order.tracking.courierName) setDraftCourier(order.tracking.courierName);
@@ -253,6 +251,36 @@ const SellerOrderDetailsContent = memo(() => {
 
   const handleClose = () => {
     navigate(ROUTES.USER_ORDERS);
+  };
+
+  const handleSaveTrackingDetails = () => {
+    if (!draftTrackingNumber.trim()) {
+      toast.error(
+        t(
+          'storeOrders.dispatchModal.trackingRequired',
+          'Please enter a tracking number so the buyer can track this shipment.',
+        ),
+      );
+      return;
+    }
+    const targetStatus =
+      String(order.status).toLowerCase() === 'processing'
+        ? STORE_ORDER_STATUS.DISPATCHED
+        : order.rawStatus || String(order.status).toUpperCase();
+
+    updateStatusMutation.mutate(
+      {
+        status: targetStatus,
+        courierName: draftCourier.trim() || 'Royal Mail',
+        trackingNumber: draftTrackingNumber.trim(),
+        trackingUrl: draftTrackingUrl.trim() || undefined,
+      },
+      {
+        onSuccess: () => {
+          setIsEditingTracking(false);
+        },
+      },
+    );
   };
 
   const handleMarkStatus = () => {
@@ -524,51 +552,257 @@ const SellerOrderDetailsContent = memo(() => {
         </div>
       </section>
 
-      {/* Tracking info if dispatched */}
+      {/* Shipping & Tracking info */}
       {order.tracking?.trackingNumber ? (
         <section className={`${cardClass} border-[#c7d2fe] bg-[#f8faff]`}>
-          <SectionLabel icon={Truck}>
-            {t('storeOrders.detail.shippingTracking', 'Shipping & Tracking Information')}
-          </SectionLabel>
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="rounded-md bg-[#4048cd] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
-                  {order.tracking.courierName || 'Courier'}
+          <div className="flex items-center justify-between gap-3">
+            <SectionLabel icon={Truck}>
+              {t('storeOrders.detail.shippingTracking', 'Shipping & Tracking Information')}
+            </SectionLabel>
+            <Button
+              unstyled
+              type="button"
+              onClick={() => setIsEditingTracking((prev) => !prev)}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c7d2fe] bg-white px-2.5 py-1 text-[12px] font-semibold text-[#4048cd] shadow-xs transition hover:bg-[#e0e7ff]"
+            >
+              <Edit3 size={13} />
+              <span>{isEditingTracking ? t('storeOrders.detail.cancelEdit', 'Cancel') : t('storeOrders.detail.editTrackingBtn', 'Edit Tracking')}</span>
+            </Button>
+          </div>
+
+          {!isEditingTracking ? (
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-md bg-[#4048cd] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                    {order.tracking.courierName || 'Courier'}
+                  </span>
+                  <span className="font-mono text-[15px] font-bold text-[#111827]">
+                    {order.tracking.trackingNumber}
+                  </span>
+                  <Button
+                    unstyled
+                    type="button"
+                    onClick={handleCopyTracking}
+                    className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition hover:bg-[#e0e7ff] hover:text-[#4048cd]"
+                    title="Copy tracking number"
+                  >
+                    <Copy size={14} />
+                  </Button>
+                </div>
+                {order.tracking.dispatchedAt ? (
+                  <p className="mt-1 text-[12px] text-[#6b7280]">
+                    {t('storeOrders.detail.dispatchedAt', 'Dispatched on')}: {order.tracking.dispatchedAt}
+                  </p>
+                ) : null}
+              </div>
+              {order.tracking.trackingUrl ? (
+                <a
+                  href={order.tracking.trackingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#4048cd] px-3.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-[#343cb0]"
+                >
+                  <span>{t('storeOrders.detail.trackPackage', 'Track Package')}</span>
+                  <ExternalLink size={14} />
+                </a>
+              ) : null}
+            </div>
+          ) : (
+            <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#c7d2fe] bg-white p-4">
+              <div>
+                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
+                  {t('storeOrders.detail.courierName', 'Courier Name')}
                 </span>
-                <span className="font-mono text-[15px] font-bold text-[#111827]">
-                  {order.tracking.trackingNumber}
+                <div className="mb-2 flex flex-wrap gap-1.5">
+                  {['Royal Mail', 'InPost', 'DHL', 'DPD', 'FedEx', 'UPS'].map((cName) => (
+                    <button
+                      key={cName}
+                      type="button"
+                      onClick={() => setDraftCourier(cName)}
+                      className={`cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium transition ${
+                        draftCourier.toLowerCase() === cName.toLowerCase()
+                          ? 'bg-[#4048cd] text-white shadow-xs'
+                          : 'border border-[#e5e7eb] bg-[#f9fafb] text-[#374151] hover:bg-[#f3f4f6]'
+                      }`}
+                    >
+                      {cName}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  type="text"
+                  value={draftCourier}
+                  onChange={(e) => setDraftCourier(e.target.value)}
+                  placeholder="e.g. Royal Mail, InPost, DHL"
+                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
+                />
+              </div>
+
+              <div>
+                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
+                  {t('storeOrders.detail.trackingNumber', 'Tracking Number')}
                 </span>
+                <input
+                  type="text"
+                  value={draftTrackingNumber}
+                  onChange={(e) => setDraftTrackingNumber(e.target.value)}
+                  placeholder="e.g. GB123456789, 620000000123"
+                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 font-mono text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
+                />
+              </div>
+
+              <div>
+                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
+                  {t('storeOrders.detail.customTrackingUrl', 'Tracking URL (Optional - auto-generated if left empty)')}
+                </span>
+                <input
+                  type="url"
+                  value={draftTrackingUrl}
+                  onChange={(e) => setDraftTrackingUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[13px] text-[#111827] outline-none focus:border-[#4048cd]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
                 <Button
                   unstyled
                   type="button"
-                  onClick={handleCopyTracking}
-                  className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition hover:bg-[#e0e7ff] hover:text-[#4048cd]"
-                  title="Copy tracking number"
+                  onClick={() => setIsEditingTracking(false)}
+                  className="cursor-pointer rounded-lg border border-[#e5e7eb] px-3.5 py-1.5 text-[12px] font-medium text-[#374151] hover:bg-gray-50"
                 >
-                  <Copy size={14} />
+                  {t('storeOrders.detail.cancelEdit', 'Cancel')}
+                </Button>
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handleSaveTrackingDetails}
+                  disabled={updateStatusMutation.isPending}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#4048cd] px-4 py-1.5 text-[12px] font-bold text-white shadow-xs hover:bg-[#343cb0] disabled:opacity-50"
+                >
+                  {updateStatusMutation.isPending ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : (
+                    <Save size={13} />
+                  )}
+                  <span>{t('storeOrders.detail.saveTrackingBtn', 'Save Tracking Details')}</span>
                 </Button>
               </div>
-              {order.tracking.dispatchedAt ? (
-                <p className="mt-1 text-[12px] text-[#6b7280]">
-                  {t('storeOrders.detail.dispatchedAt', 'Dispatched on')}: {order.tracking.dispatchedAt}
-                </p>
-              ) : null}
             </div>
-            {order.tracking.trackingUrl ? (
-              <a
-                href={order.tracking.trackingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#4048cd] px-3.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-[#343cb0]"
+          )}
+        </section>
+      ) : (
+        <section className={`${cardClass} border-dashed border-[#c7d2fe] bg-[#f8faff]`}>
+          <div className="flex items-center justify-between gap-3">
+            <SectionLabel icon={Truck}>
+              {t('storeOrders.detail.shippingTracking', 'Shipping & Tracking Information')}
+            </SectionLabel>
+            {!isEditingTracking ? (
+              <Button
+                unstyled
+                type="button"
+                onClick={() => setIsEditingTracking(true)}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#ffc107] px-3 py-1.5 text-[12px] font-bold text-[#111827] shadow-xs transition hover:bg-[#f5b800]"
               >
-                <span>{t('storeOrders.detail.trackPackage', 'Track Package')}</span>
-                <ExternalLink size={14} />
-              </a>
+                <Truck size={13} />
+                <span>{t('storeOrders.detail.addTrackingBtn', '+ Add Courier & Tracking')}</span>
+              </Button>
             ) : null}
           </div>
+
+          {!isEditingTracking ? (
+            <p className="mt-3 text-[13px] text-[#6b7280]">
+              {t(
+                'storeOrders.detail.noTrackingHint',
+                'No courier or tracking number has been added yet. Add courier details to dispatch this order and update your customer.',
+              )}
+            </p>
+          ) : (
+            <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#c7d2fe] bg-white p-4">
+              <div>
+                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
+                  {t('storeOrders.detail.courierName', 'Courier Name')}
+                </span>
+                <div className="mb-2 flex flex-wrap gap-1.5">
+                  {['Royal Mail', 'InPost', 'DHL', 'DPD', 'FedEx', 'UPS'].map((cName) => (
+                    <button
+                      key={cName}
+                      type="button"
+                      onClick={() => setDraftCourier(cName)}
+                      className={`cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium transition ${
+                        draftCourier.toLowerCase() === cName.toLowerCase()
+                          ? 'bg-[#4048cd] text-white shadow-xs'
+                          : 'border border-[#e5e7eb] bg-[#f9fafb] text-[#374151] hover:bg-[#f3f4f6]'
+                      }`}
+                    >
+                      {cName}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  type="text"
+                  value={draftCourier}
+                  onChange={(e) => setDraftCourier(e.target.value)}
+                  placeholder="e.g. Royal Mail, InPost, DHL"
+                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
+                />
+              </div>
+
+              <div>
+                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
+                  {t('storeOrders.detail.trackingNumber', 'Tracking Number')}
+                </span>
+                <input
+                  type="text"
+                  value={draftTrackingNumber}
+                  onChange={(e) => setDraftTrackingNumber(e.target.value)}
+                  placeholder="e.g. GB123456789, 620000000123"
+                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 font-mono text-[14px] text-[#111827] outline-none focus:border-[#4048cd]"
+                />
+              </div>
+
+              <div>
+                <span className="mb-1.5 block text-[12px] font-semibold text-[#374151]">
+                  {t('storeOrders.detail.customTrackingUrl', 'Tracking URL (Optional - auto-generated if left empty)')}
+                </span>
+                <input
+                  type="url"
+                  value={draftTrackingUrl}
+                  onChange={(e) => setDraftTrackingUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="h-10 w-full rounded-lg border border-[#d1d5db] bg-white px-3 text-[13px] text-[#111827] outline-none focus:border-[#4048cd]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={() => setIsEditingTracking(false)}
+                  className="cursor-pointer rounded-lg border border-[#e5e7eb] px-3.5 py-1.5 text-[12px] font-medium text-[#374151] hover:bg-gray-50"
+                >
+                  {t('storeOrders.detail.cancelEdit', 'Cancel')}
+                </Button>
+                <Button
+                  unstyled
+                  type="button"
+                  onClick={handleSaveTrackingDetails}
+                  disabled={updateStatusMutation.isPending}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#ffc107] px-4 py-1.5 text-[12px] font-bold text-[#111827] shadow-xs hover:bg-[#f5b800] disabled:opacity-50"
+                >
+                  {updateStatusMutation.isPending ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : (
+                    <Save size={13} />
+                  )}
+                  <span>{t('storeOrders.detail.saveTrackingBtn', 'Save & Dispatch Order')}</span>
+                </Button>
+              </div>
+            </div>
+          )}
         </section>
-      ) : null}
+      )}
 
       {/* Payment breakdown */}
       <section className="rounded-[14px] border border-[#a7f3d0] bg-white p-5 sm:p-6">

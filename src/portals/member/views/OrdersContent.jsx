@@ -7,6 +7,7 @@ import {
   Percent,
   RefreshCw,
   ShoppingBag,
+  Truck,
   Wallet,
 } from 'lucide-react';
 import React, { memo, useMemo, useRef, useState } from 'react';
@@ -16,6 +17,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Pagination from '@/components/common/Pagination/Pagination';
 import PortalDropdown from '@/components/common/PortalDropdown/PortalDropdown';
 import DashboardStatCard from '@/components/data-display/DashboardStatCard/DashboardStatCard';
+import DispatchOrderModal from '@/portals/member/components/DispatchOrderModal';
 import {
   Table,
   TableBody,
@@ -145,7 +147,7 @@ const FilterChip = memo(({ active, children, onClick }) => (
 ));
 FilterChip.displayName = 'FilterChip';
 
-const RowActions = memo(({ order, onStatusChange }) => {
+const RowActions = memo(({ order, onStatusChange, onOpenDispatchModal }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -156,6 +158,10 @@ const RowActions = memo(({ order, onStatusChange }) => {
   const menuLabel = t('storeOrders.actions.menu', {
     number: order.orderNumber,
   });
+
+  const isDispatched =
+    String(order.status).toLowerCase() === 'dispatched' ||
+    String(order.status).toLowerCase() === 'shipped';
 
   return (
     <div className="relative flex justify-end" ref={buttonWrapRef}>
@@ -178,7 +184,7 @@ const RowActions = memo(({ order, onStatusChange }) => {
         onClose={() => setOpen(false)}
         buttonRef={buttonRef}
         buttonWrapRef={buttonWrapRef}
-        width={168}
+        width={180}
         aria-label={menuLabel}
         className="overflow-hidden rounded-[10px] border border-[#e5e7eb] bg-white py-1 shadow-[0_8px_24px_rgba(15,23,42,0.12)]"
       >
@@ -194,6 +200,21 @@ const RowActions = memo(({ order, onStatusChange }) => {
         >
           {t('storeOrders.actions.viewDetails')}
         </Button>
+        <Button
+          unstyled
+          type="button"
+          role="menuitem"
+          onClick={() => {
+            setOpen(false);
+            if (onOpenDispatchModal) onOpenDispatchModal(order);
+          }}
+          className="flex w-full cursor-pointer items-center gap-2 border-b border-[#f3f4f6] px-3 py-2 text-left text-[13px] font-semibold text-[#4048cd] transition hover:bg-[#f0f4ff]"
+        >
+          <Truck size={14} />
+          {isDispatched
+            ? t('storeOrders.actions.editTracking', 'Edit Tracking Info')
+            : t('storeOrders.actions.dispatchOrder', 'Dispatch Order')}
+        </Button>
         {STORE_ORDER_ACTION_STATUSES.map((status) => (
           <Button
             unstyled
@@ -202,7 +223,14 @@ const RowActions = memo(({ order, onStatusChange }) => {
             role="menuitem"
             onClick={() => {
               setOpen(false);
-              onStatusChange(order.id, status);
+              if (
+                (status === 'DISPATCHED' || status === 'SHIPPED') &&
+                onOpenDispatchModal
+              ) {
+                onOpenDispatchModal(order);
+              } else {
+                onStatusChange(order.id, status);
+              }
             }}
             className="flex w-full cursor-pointer items-center px-3 py-2 text-left text-[13px] font-medium text-[#374151] transition hover:bg-[#f3f4f6]"
           >
@@ -221,6 +249,7 @@ const OrdersContent = memo(() => {
   const [dateFilter, setDateFilter] = useState('month');
   const [currentPage, setCurrentPage] = useState(1);
   const [localStatusOverrides, setLocalStatusOverrides] = useState({});
+  const [dispatchModalOrder, setDispatchModalOrder] = useState(null);
 
   // Status card summary query
   const {
@@ -278,8 +307,8 @@ const OrdersContent = memo(() => {
   const queryClient = useQueryClient();
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ orderId, status }) =>
-      updateSellerOrderStatusApi(orderId, status),
+    mutationFn: ({ orderId, status, courierName, trackingNumber, trackingUrl }) =>
+      updateSellerOrderStatusApi(orderId, { status, courierName, trackingNumber, trackingUrl }),
     onMutate: async ({ orderId, status }) => {
       setLocalStatusOverrides((prev) => ({ ...prev, [orderId]: status }));
     },
@@ -290,7 +319,7 @@ const OrdersContent = memo(() => {
       });
       toast.success(
         t('storeOrders.statusUpdated', {
-          status: t(STORE_ORDER_STATUS_LABEL_KEYS[status]),
+          status: t(STORE_ORDER_STATUS_LABEL_KEYS[status] || status),
         }),
       );
     },
@@ -305,6 +334,11 @@ const OrdersContent = memo(() => {
   });
 
   const handleStatusChange = (orderId, nextStatus) => {
+    if (nextStatus === 'DISPATCHED' || nextStatus === 'SHIPPED') {
+      const targetOrder = orders.find((o) => o.id === orderId);
+      setDispatchModalOrder(targetOrder || { id: orderId });
+      return;
+    }
     updateStatusMutation.mutate({ orderId, status: nextStatus });
   };
 
@@ -567,10 +601,36 @@ const OrdersContent = memo(() => {
                     <StatusBadge status={order.status} />
                   </TableCell>
                   <TableCell className="px-3 py-4">
-                    <RowActions
-                      order={order}
-                      onStatusChange={handleStatusChange}
-                    />
+                    <div className="flex items-center justify-end gap-2">
+                      {order.status === 'processing' ? (
+                        <Button
+                          unstyled
+                          type="button"
+                          onClick={() => setDispatchModalOrder(order)}
+                          className="inline-flex h-7.5 cursor-pointer items-center gap-1.5 rounded-lg bg-[#4048cd] px-2.5 text-[12px] font-semibold text-white shadow-xs transition hover:bg-[#343cb0]"
+                          title="Dispatch order and provide tracking details"
+                        >
+                          <Truck size={13} />
+                          <span>{t('storeOrders.actions.dispatch', 'Dispatch')}</span>
+                        </Button>
+                      ) : (order.status === 'dispatched' || order.status === 'shipped') ? (
+                        <Button
+                          unstyled
+                          type="button"
+                          onClick={() => setDispatchModalOrder(order)}
+                          className="inline-flex h-7.5 cursor-pointer items-center gap-1.5 rounded-lg border border-[#e5e7eb] bg-white px-2.5 text-[12px] font-medium text-[#374151] transition hover:border-[#c7d2fe] hover:bg-[#f8faff] hover:text-[#4048cd]"
+                          title={order.trackingNumber ? `${order.courierName || 'Courier'}: ${order.trackingNumber}` : 'Add or edit tracking number'}
+                        >
+                          <Truck size={13} className={order.trackingNumber ? 'text-[#10b981]' : 'text-[#6b7280]'} />
+                          <span>{order.trackingNumber ? (order.courierName || 'Track') : t('storeOrders.actions.addTracking', '+ Tracking')}</span>
+                        </Button>
+                      ) : null}
+                      <RowActions
+                        order={order}
+                        onStatusChange={handleStatusChange}
+                        onOpenDispatchModal={(ord) => setDispatchModalOrder(ord)}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -598,6 +658,13 @@ const OrdersContent = memo(() => {
           ) : null}
         </footer>
       ) : null}
+
+      {/* Dispatch & Courier Tracking Modal */}
+      <DispatchOrderModal
+        open={Boolean(dispatchModalOrder)}
+        order={dispatchModalOrder}
+        onClose={() => setDispatchModalOrder(null)}
+      />
     </div>
   );
 });

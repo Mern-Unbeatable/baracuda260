@@ -162,6 +162,16 @@ export const normalizeSellerOrder = (item) => {
     earningsRaw: item.sellerEarnings,
     status: String(item.status || 'PROCESSING').toLowerCase(),
     rawStatus: item.status,
+    courierName: item.tracking?.courierName || item.courierName || '',
+    trackingNumber: item.tracking?.trackingNumber || item.trackingNumber || '',
+    trackingUrl: item.tracking?.trackingUrl || item.trackingUrl || '',
+    dispatchedAt: item.tracking?.dispatchedAt || item.dispatchedAt || null,
+    tracking: item.tracking || {
+      courierName: item.courierName || '',
+      trackingNumber: item.trackingNumber || '',
+      trackingUrl: item.trackingUrl || '',
+      dispatchedAt: item.dispatchedAt || null,
+    },
   };
 };
 
