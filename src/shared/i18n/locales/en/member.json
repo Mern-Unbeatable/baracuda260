@@ -1722,6 +1722,7 @@
     "dispatchModal": {
       "title": "Dispatch Order",
       "titleEdit": "Update Courier & Tracking",
+      "titleStatus": "Update Order Status & Courier",
       "subtitle": "Provide courier and tracking details so your customer can track their delivery.",
       "courierName": "Courier / Shipping Carrier",
       "courierPlaceholder": "e.g. Royal Mail, InPost, DHL, DPD, FedEx",
@@ -1733,6 +1734,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm & Dispatch",
       "save": "Save Tracking Details",
+      "saveStatus": "Update Status & Save Details",
       "success": "Order dispatched and tracking details updated successfully."
     },
     "detail": {

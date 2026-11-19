@@ -196,7 +196,7 @@ const SellerOrderDetailsContent = memo(() => {
   useEffect(() => {
     if (order) {
       if (order.status) {
-        setDraftStatus(order.rawStatus || String(order.status).toUpperCase());
+        setDraftStatus(String(order.status).toLowerCase());
       }
       if (order.tracking) {
         if (order.tracking.courierName) setDraftCourier(order.tracking.courierName);
@@ -285,11 +285,21 @@ const SellerOrderDetailsContent = memo(() => {
 
   const handleMarkStatus = () => {
     if (!draftStatus || updateStatusMutation.isPending) return;
+    const norm = String(draftStatus).toLowerCase();
+    if ((norm === 'dispatched' || norm === 'shipped') && !draftTrackingNumber.trim()) {
+      toast.error(
+        t(
+          'storeOrders.dispatchModal.trackingRequired',
+          'Please enter a tracking number so the buyer can track this shipment.',
+        ),
+      );
+      return;
+    }
     updateStatusMutation.mutate({
-      status: draftStatus,
-      courierName: draftCourier,
-      trackingNumber: draftTrackingNumber,
-      trackingUrl: draftTrackingUrl,
+      status: String(draftStatus).toUpperCase(),
+      courierName: draftCourier.trim() || undefined,
+      trackingNumber: draftTrackingNumber.trim() || undefined,
+      trackingUrl: draftTrackingUrl.trim() || undefined,
     });
   };
 
@@ -882,68 +892,77 @@ const SellerOrderDetailsContent = memo(() => {
           </span>
         </label>
 
-        {(draftStatus === STORE_ORDER_STATUS.DISPATCHED || draftStatus === STORE_ORDER_STATUS.SHIPPED) ? (
-          <div className="mt-4 flex flex-col gap-3.5 rounded-xl border border-white/10 bg-[#27272a] p-4 text-white">
+        {/* Courier & Tracking Details inside Seller Actions */}
+        <div className="mt-4 flex flex-col gap-3.5 rounded-xl border border-white/10 bg-[#27272a] p-4 text-white">
+          <div className="flex items-center justify-between">
             <p className="text-[12px] font-bold uppercase tracking-wider text-[#ffc107]">
               {t('storeOrders.detail.dispatchDetails', 'Courier & Tracking Details')}
             </p>
-
-            <div>
-              <span className="mb-1.5 block text-[12px] font-medium text-white/70">
-                {t('storeOrders.detail.courierName', 'Courier Name')}
+            {(String(draftStatus).toLowerCase() === 'dispatched' ||
+              String(draftStatus).toLowerCase() === 'shipped') ? (
+              <span className="rounded bg-[#ffc107]/20 px-2 py-0.5 text-[11px] font-semibold text-[#ffc107]">
+                Required for Dispatch
               </span>
-              <div className="mb-2 flex flex-wrap gap-1.5">
-                {['Royal Mail', 'InPost', 'DHL', 'DPD', 'FedEx', 'UPS'].map((cName) => (
-                  <button
-                    key={cName}
-                    type="button"
-                    onClick={() => setDraftCourier(cName)}
-                    className={`rounded-md px-2 py-1 text-[11px] font-medium transition ${
-                      draftCourier.toLowerCase() === cName.toLowerCase()
-                        ? 'bg-[#ffc107] text-[#111827]'
-                        : 'bg-white/10 text-white/80 hover:bg-white/20'
-                    }`}
-                  >
-                    {cName}
-                  </button>
-                ))}
-              </div>
-              <input
-                type="text"
-                value={draftCourier}
-                onChange={(e) => setDraftCourier(e.target.value)}
-                placeholder="e.g. Royal Mail, InPost, DHL"
-                className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 text-[14px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
-              />
-            </div>
-
-            <div>
-              <span className="mb-1.5 block text-[12px] font-medium text-white/70">
-                {t('storeOrders.detail.trackingNumber', 'Tracking Number')}
-              </span>
-              <input
-                type="text"
-                value={draftTrackingNumber}
-                onChange={(e) => setDraftTrackingNumber(e.target.value)}
-                placeholder="e.g. GB123456789, 620000000123"
-                className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 font-mono text-[14px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
-              />
-            </div>
-
-            <div>
-              <span className="mb-1.5 block text-[12px] font-medium text-white/70">
-                {t('storeOrders.detail.customTrackingUrl', 'Tracking URL (Optional - auto-generated if left empty)')}
-              </span>
-              <input
-                type="url"
-                value={draftTrackingUrl}
-                onChange={(e) => setDraftTrackingUrl(e.target.value)}
-                placeholder="https://..."
-                className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
-              />
-            </div>
+            ) : (
+              <span className="text-[11px] text-white/50">Optional</span>
+            )}
           </div>
-        ) : null}
+
+          <div>
+            <span className="mb-1.5 block text-[12px] font-medium text-white/70">
+              {t('storeOrders.detail.courierName', 'Courier Name')}
+            </span>
+            <div className="mb-2 flex flex-wrap gap-1.5">
+              {['Royal Mail', 'InPost', 'DHL', 'DPD', 'FedEx', 'UPS'].map((cName) => (
+                <button
+                  key={cName}
+                  type="button"
+                  onClick={() => setDraftCourier(cName)}
+                  className={`cursor-pointer rounded-md px-2 py-1 text-[11px] font-medium transition ${
+                    draftCourier.toLowerCase() === cName.toLowerCase()
+                      ? 'bg-[#ffc107] text-[#111827]'
+                      : 'bg-white/10 text-white/80 hover:bg-white/20'
+                  }`}
+                >
+                  {cName}
+                </button>
+              ))}
+            </div>
+            <input
+              type="text"
+              value={draftCourier}
+              onChange={(e) => setDraftCourier(e.target.value)}
+              placeholder="e.g. Royal Mail, InPost, DHL"
+              className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 text-[14px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
+            />
+          </div>
+
+          <div>
+            <span className="mb-1.5 block text-[12px] font-medium text-white/70">
+              {t('storeOrders.detail.trackingNumber', 'Tracking Number')}
+            </span>
+            <input
+              type="text"
+              value={draftTrackingNumber}
+              onChange={(e) => setDraftTrackingNumber(e.target.value)}
+              placeholder="e.g. GB123456789, 620000000123"
+              className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 font-mono text-[14px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
+            />
+          </div>
+
+          <div>
+            <span className="mb-1.5 block text-[12px] font-medium text-white/70">
+              {t('storeOrders.detail.customTrackingUrl', 'Tracking URL (Optional - auto-generated if left empty)')}
+            </span>
+            <input
+              type="url"
+              value={draftTrackingUrl}
+              onChange={(e) => setDraftTrackingUrl(e.target.value)}
+              placeholder="https://..."
+              className="h-10 w-full rounded-lg border border-white/15 bg-[#18181b] px-3 text-[13px] text-white outline-none placeholder:text-white/30 focus:border-[#ffc107]"
+            />
+          </div>
+        </div>
 
         <Button
           unstyled

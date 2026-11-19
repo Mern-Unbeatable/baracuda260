@@ -1704,6 +1704,7 @@
     "dispatchModal": {
       "title": "Wyślij zamówienie",
       "titleEdit": "Zaktualizuj kuriera i śledzenie",
+      "titleStatus": "Zaktualizuj status i dane kuriera",
       "subtitle": "Podaj dane kuriera i numer śledzenia, aby klient mógł śledzić przesyłkę.",
       "courierName": "Firma kurierska / Przewoźnik",
       "courierPlaceholder": "np. Royal Mail, InPost, DHL, DPD, FedEx",
@@ -1715,6 +1716,7 @@
       "cancel": "Anuluj",
       "confirm": "Zatwierdź i wyślij",
       "save": "Zapisz dane śledzenia",
+      "saveStatus": "Zaktualizuj status i zapisz dane",
       "success": "Zamówienie zostało oznaczone jako wysłane, a dane śledzenia zaktualizowane."
     },
     "detail": {

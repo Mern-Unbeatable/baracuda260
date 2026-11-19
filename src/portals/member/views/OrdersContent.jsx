@@ -223,11 +223,8 @@ const RowActions = memo(({ order, onStatusChange, onOpenDispatchModal }) => {
             role="menuitem"
             onClick={() => {
               setOpen(false);
-              if (
-                (status === 'DISPATCHED' || status === 'SHIPPED') &&
-                onOpenDispatchModal
-              ) {
-                onOpenDispatchModal(order);
+              if (onOpenDispatchModal) {
+                onOpenDispatchModal(order, status.toUpperCase());
               } else {
                 onStatusChange(order.id, status);
               }
@@ -249,7 +246,7 @@ const OrdersContent = memo(() => {
   const [dateFilter, setDateFilter] = useState('month');
   const [currentPage, setCurrentPage] = useState(1);
   const [localStatusOverrides, setLocalStatusOverrides] = useState({});
-  const [dispatchModalOrder, setDispatchModalOrder] = useState(null);
+  const [statusModalConfig, setStatusModalConfig] = useState(null);
 
   // Status card summary query
   const {
@@ -333,13 +330,13 @@ const OrdersContent = memo(() => {
     },
   });
 
+  const handleOpenStatusModal = (order, initialStatus = 'DISPATCHED') => {
+    setStatusModalConfig({ order, initialStatus });
+  };
+
   const handleStatusChange = (orderId, nextStatus) => {
-    if (nextStatus === 'DISPATCHED' || nextStatus === 'SHIPPED') {
-      const targetOrder = orders.find((o) => o.id === orderId);
-      setDispatchModalOrder(targetOrder || { id: orderId });
-      return;
-    }
-    updateStatusMutation.mutate({ orderId, status: nextStatus });
+    const targetOrder = orders.find((o) => o.id === orderId);
+    handleOpenStatusModal(targetOrder || { id: orderId }, nextStatus);
   };
 
   const headCell =
@@ -598,7 +595,14 @@ const OrdersContent = memo(() => {
                     {order.earnings}
                   </TableCell>
                   <TableCell className="px-3 py-4">
-                    <StatusBadge status={order.status} />
+                    <button
+                      type="button"
+                      onClick={() => handleOpenStatusModal(order, order.status)}
+                      title="Click to update status and courier details"
+                      className="cursor-pointer text-left transition hover:opacity-80"
+                    >
+                      <StatusBadge status={order.status} />
+                    </button>
                   </TableCell>
                   <TableCell className="px-3 py-4">
                     <div className="flex items-center justify-end gap-2">
@@ -606,7 +610,7 @@ const OrdersContent = memo(() => {
                         <Button
                           unstyled
                           type="button"
-                          onClick={() => setDispatchModalOrder(order)}
+                          onClick={() => handleOpenStatusModal(order, 'DISPATCHED')}
                           className="inline-flex h-7.5 cursor-pointer items-center gap-1.5 rounded-lg bg-[#4048cd] px-2.5 text-[12px] font-semibold text-white shadow-xs transition hover:bg-[#343cb0]"
                           title="Dispatch order and provide tracking details"
                         >
@@ -617,7 +621,7 @@ const OrdersContent = memo(() => {
                         <Button
                           unstyled
                           type="button"
-                          onClick={() => setDispatchModalOrder(order)}
+                          onClick={() => handleOpenStatusModal(order, order.status)}
                           className="inline-flex h-7.5 cursor-pointer items-center gap-1.5 rounded-lg border border-[#e5e7eb] bg-white px-2.5 text-[12px] font-medium text-[#374151] transition hover:border-[#c7d2fe] hover:bg-[#f8faff] hover:text-[#4048cd]"
                           title={order.trackingNumber ? `${order.courierName || 'Courier'}: ${order.trackingNumber}` : 'Add or edit tracking number'}
                         >
@@ -628,7 +632,7 @@ const OrdersContent = memo(() => {
                       <RowActions
                         order={order}
                         onStatusChange={handleStatusChange}
-                        onOpenDispatchModal={(ord) => setDispatchModalOrder(ord)}
+                        onOpenDispatchModal={handleOpenStatusModal}
                       />
                     </div>
                   </TableCell>
@@ -661,9 +665,10 @@ const OrdersContent = memo(() => {
 
       {/* Dispatch & Courier Tracking Modal */}
       <DispatchOrderModal
-        open={Boolean(dispatchModalOrder)}
-        order={dispatchModalOrder}
-        onClose={() => setDispatchModalOrder(null)}
+        open={Boolean(statusModalConfig)}
+        order={statusModalConfig?.order}
+        initialStatus={statusModalConfig?.initialStatus}
+        onClose={() => setStatusModalConfig(null)}
       />
     </div>
   );
