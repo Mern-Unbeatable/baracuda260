@@ -18,6 +18,7 @@ export default defineConfig({
           'vendor-redux': ['@reduxjs/toolkit', 'react-redux'],
           'vendor-i18n': ['i18next', 'react-i18next'],
           'vendor-charts': ['recharts'],
+          'vendor-geo': ['country-state-city'],
         },
       },
     },
