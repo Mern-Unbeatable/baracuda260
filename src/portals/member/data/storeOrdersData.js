@@ -2,7 +2,7 @@
 
 const H = '/assets/home';
 
-export const STORE_ORDERS_PAGE_SIZE = 8;
+export const STORE_ORDERS_PAGE_SIZE = 4;
 
 export const STORE_ORDER_STATUS = {
   PROCESSING: 'processing',
