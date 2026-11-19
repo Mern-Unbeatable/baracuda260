@@ -349,7 +349,7 @@ const MyStoreUploadContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-230 flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-7">
       <div className="flex items-center gap-3">
         <Link
           to={ROUTES.USER_MY_STORE}
