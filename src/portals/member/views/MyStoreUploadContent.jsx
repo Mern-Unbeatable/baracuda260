@@ -9,6 +9,12 @@ import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
 import CategoryMultiSelect from '@/components/forms/CategoryMultiSelect/CategoryMultiSelect';
+import SearchableCombobox from '@/components/forms/SearchableCombobox/SearchableCombobox';
+import {
+  ALL_COUNTRIES,
+  findCountryByNameOrCode,
+  getCitiesForCountry,
+} from '@/shared/utils/locationData';
 import {
   buildStoreFormFromProduct,
   EMPTY_STORE_UPLOAD_FORM,
@@ -123,11 +129,42 @@ const MyStoreUploadContent = memo(() => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue,
   } = useForm({
     defaultValues: editingProduct
       ? { ...buildStoreFormFromProduct(editingProduct), copyrightOk: true }
       : { ...EMPTY_STORE_UPLOAD_FORM, copyrightOk: false },
   });
+
+  useEffect(() => {
+    register('country');
+    register('city');
+  }, [register]);
+
+  const countryValue = watch('country') || '';
+  const cityValue = watch('city') || '';
+
+  const selectedCountry = useMemo(
+    () => findCountryByNameOrCode(countryValue),
+    [countryValue],
+  );
+
+  const cityOptions = useMemo(
+    () => (selectedCountry ? getCitiesForCountry(selectedCountry.isoCode) : []),
+    [selectedCountry],
+  );
+
+  const handleCountryChange = (val) => {
+    setValue('country', val, { shouldDirty: true, shouldValidate: true });
+    if (!val) {
+      setValue('city', '', { shouldDirty: true });
+    }
+  };
+
+  const handleCityChange = (val) => {
+    setValue('city', val, { shouldDirty: true, shouldValidate: true });
+  };
 
   const [bannerPreview, setBannerPreview] = useState(
     () => editingProduct?.image || '',
@@ -312,7 +349,7 @@ const MyStoreUploadContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-230 flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-7">
       <div className="flex items-center gap-3">
         <Link
           to={ROUTES.USER_MY_STORE}
@@ -409,32 +446,64 @@ const MyStoreUploadContent = memo(() => {
             />
           </div>
 
-          {/* Item Location: Country & City */}
+          {/* Item Location: Country & City (Searchable Dropdown + Type) */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <FieldLabel htmlFor="store-country">
                 {t('myStore.upload.country', 'Item Location (Country)')}
               </FieldLabel>
-              <Input
+              <SearchableCombobox
                 id="store-country"
-                error={errors.country}
-                placeholder={t('myStore.upload.countryPlaceholder', 'e.g. United Kingdom, Poland, USA')}
-                inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
-                labelClassName="hidden"
-                {...register('country')}
+                value={countryValue}
+                onChange={handleCountryChange}
+                options={ALL_COUNTRIES}
+                placeholder={t(
+                  'myStore.upload.countryPlaceholder',
+                  'Select or type country (e.g. United Kingdom, Poland)...',
+                )}
+                error={errors.country?.message}
+                emptyMessage={t(
+                  'myStore.upload.noCountryFound',
+                  'No matching country found',
+                )}
+                allowCustom={true}
+                maxResults={100}
               />
             </div>
             <div>
               <FieldLabel htmlFor="store-city">
                 {t('myStore.upload.city', 'City')}
               </FieldLabel>
-              <Input
+              <SearchableCombobox
                 id="store-city"
-                error={errors.city}
-                placeholder={t('myStore.upload.cityPlaceholder', 'e.g. London, Warsaw, New York')}
-                inputClassName="h-12 w-full rounded-[10px] border border-[#e4e8f8] bg-white px-4 text-[15px] text-[#151e31] outline-none placeholder:text-[#9aa3b5] focus:ring-2 focus:ring-[#4048cd]/25"
-                labelClassName="hidden"
-                {...register('city')}
+                value={cityValue}
+                onChange={handleCityChange}
+                options={cityOptions}
+                placeholder={
+                  selectedCountry
+                    ? t(
+                        'myStore.upload.cityPlaceholder',
+                        'Select or type city (e.g. London, Warsaw)...',
+                      )
+                    : t(
+                        'myStore.upload.selectCountryFirst',
+                        'Select country first (or type custom city)...',
+                      )
+                }
+                error={errors.city?.message}
+                emptyMessage={
+                  selectedCountry
+                    ? t(
+                        'myStore.upload.noCityFound',
+                        'No city found in list. You can type any custom city.',
+                      )
+                    : t(
+                        'myStore.upload.selectCountryFirst',
+                        'Please select a country first.',
+                      )
+                }
+                allowCustom={true}
+                maxResults={60}
               />
             </div>
           </div>

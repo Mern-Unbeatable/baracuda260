@@ -243,10 +243,15 @@ const RowActions = memo(({ order, onStatusChange, onOpenDispatchModal }) => {
             role="menuitem"
             onClick={() => {
               setOpen(false);
-              if (onOpenDispatchModal) {
-                onOpenDispatchModal(order, status.toUpperCase());
+              const upper = status.toUpperCase();
+              if (upper === 'DISPATCHED' || upper === 'SHIPPED') {
+                if (onOpenDispatchModal) {
+                  onOpenDispatchModal(order, upper);
+                } else {
+                  onStatusChange(order.id, upper);
+                }
               } else {
-                onStatusChange(order.id, status);
+                onStatusChange(order.id, upper);
               }
             }}
             className="flex w-full cursor-pointer items-center px-3 py-2 text-left text-[13px] font-medium text-[#374151] transition hover:bg-[#f3f4f6]"
@@ -357,12 +362,24 @@ const OrdersContent = memo(() => {
   });
 
   const handleOpenStatusModal = (order, initialStatus = 'DISPATCHED') => {
+    const upper = String(initialStatus || '').toUpperCase();
+    if (upper === 'PROCESSING') {
+      if (order?.id) {
+        updateStatusMutation.mutate({ orderId: order.id, status: 'PROCESSING' });
+      }
+      return;
+    }
     setStatusModalConfig({ order, initialStatus });
   };
 
   const handleStatusChange = (orderId, nextStatus) => {
-    const targetOrder = orders.find((o) => o.id === orderId);
-    handleOpenStatusModal(targetOrder || { id: orderId }, nextStatus);
+    const upper = String(nextStatus || '').toUpperCase();
+    if (upper === 'DISPATCHED' || upper === 'SHIPPED') {
+      const targetOrder = orders.find((o) => o.id === orderId);
+      handleOpenStatusModal(targetOrder || { id: orderId }, upper);
+      return;
+    }
+    updateStatusMutation.mutate({ orderId, status: upper });
   };
 
   const headCell =
