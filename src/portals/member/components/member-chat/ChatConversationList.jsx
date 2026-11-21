@@ -32,7 +32,7 @@ const ChatConversationList = memo(
     });
 
     return (
-      <aside className="flex h-full w-full shrink-0 flex-col border-r border-[#ececf0] bg-white lg:w-[340px] xl:w-[380px]">
+      <aside className="flex h-full w-full min-w-0 flex-col border-[#ececf0] bg-white xl:w-[320px] xl:shrink-0 xl:border-r 2xl:w-[380px]">
         <div className="flex items-center justify-between gap-3 px-5 pb-4 pt-5">
           <div className="flex items-center gap-2.5">
             <h1 className="text-[22px] font-semibold leading-none text-[#161c27]">

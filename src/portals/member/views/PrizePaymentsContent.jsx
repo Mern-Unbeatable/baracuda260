@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, Download, Loader2, Search } from 'lucide-react';
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -44,6 +44,7 @@ import {
   USER_PRIZE_MONEY_QUERY_KEY,
   USER_STORE_SALES_QUERY_KEY,
 } from '@/shared/api/payments.api';
+import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
 const CARD_SHADOW = 'shadow-[0px_4px_20px_-2px_rgba(83,42,168,0.04)]';
 
@@ -97,6 +98,19 @@ const formatTransactionDate = (rawDate, fallbackKey, t) => {
   return fallbackKey ? t(fallbackKey) : String(rawDate || '-');
 };
 
+const scrollToPaginatedSection = (fromEl) => {
+  const section = fromEl?.closest?.('section');
+  if (section) {
+    try {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    } catch {
+      // fall through
+    }
+  }
+  scrollToPageTop();
+};
+
 const TablePagination = memo(
   ({
     showingKey,
@@ -109,6 +123,7 @@ const TablePagination = memo(
     loading = false,
   }) => {
     const { t } = useTranslation();
+    const rootRef = useRef(null);
     const colors = PAGINATION_TONES[tone] ?? PAGINATION_TONES.red;
 
     let showingText;
@@ -135,8 +150,20 @@ const TablePagination = memo(
     const canPrev = currentPage > 1 && !loading;
     const canNext = currentPage < totalPages && !loading;
 
+    const goToPage = (nextPage) => {
+      if (nextPage === currentPage) return;
+      onPageChange?.(nextPage);
+      // After page change, jump to the top of this table — not stay on the footer.
+      window.requestAnimationFrame(() => {
+        scrollToPaginatedSection(rootRef.current);
+      });
+    };
+
     return (
-      <div className="flex min-h-16.75 w-full flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0">
+      <div
+        ref={rootRef}
+        className="flex min-h-16.75 w-full flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0"
+      >
         <p className={`px-2.5 text-[16px] leading-normal ${colors.text}`}>
           {showingText}
         </p>
@@ -144,7 +171,7 @@ const TablePagination = memo(
           <Button
             type="button"
             unstyled={true}
-            onClick={() => onPageChange?.(currentPage - 1)}
+            onClick={() => goToPage(currentPage - 1)}
             disabled={!canPrev}
             className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal transition ${
               !canPrev
@@ -157,7 +184,7 @@ const TablePagination = memo(
           <Button
             type="button"
             unstyled={true}
-            onClick={() => onPageChange?.(currentPage + 1)}
+            onClick={() => goToPage(currentPage + 1)}
             disabled={!canNext}
             className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal transition ${
               !canNext
@@ -250,7 +277,7 @@ const PrizingTable = memo(({ data, isLoading, page = 1, onPageChange }) => {
   return (
     <section
       aria-labelledby="prize-payments-prizing-heading"
-      className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
+      className="mb-8 scroll-mt-6 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
     >
       <div className="flex items-center justify-between border-b border-[#ececf0] px-6 py-5">
         <h2
@@ -382,7 +409,7 @@ const DonationsTable = memo(({ data, isLoading, page = 1, onPageChange }) => {
   return (
     <section
       aria-labelledby="prize-payments-donations-heading"
-      className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
+      className="mb-8 scroll-mt-6 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
     >
       <div className="flex items-center justify-between border-b border-[#ececf0] px-6 py-5">
         <div>
@@ -533,7 +560,7 @@ const PhotoSalesTable = memo(
     return (
       <section
         aria-labelledby="prize-payments-photo-sales-heading"
-        className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
+        className="mb-8 scroll-mt-6 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
       >
         <div className="flex flex-col gap-4 border-b border-[#ececf0] px-6 py-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-center gap-3">
@@ -766,7 +793,7 @@ const StoreSalesTable = memo(
     return (
       <section
         aria-labelledby="prize-payments-store-sales-heading"
-        className="mb-8 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
+        className="mb-8 scroll-mt-6 overflow-hidden rounded-xl border border-[#e2e8f0] bg-white"
       >
         <div className="flex flex-col gap-4 border-b border-[#ececf0] px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
@@ -949,7 +976,7 @@ const PaymentHistoryTable = memo(
     return (
       <section
         aria-labelledby="prize-payments-history-heading"
-        className={`overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white ${CARD_SHADOW}`}
+        className={`scroll-mt-6 overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white ${CARD_SHADOW}`}
       >
         <div className="flex items-center justify-between border-b border-[#ececf0] px-6 py-5">
           <h2

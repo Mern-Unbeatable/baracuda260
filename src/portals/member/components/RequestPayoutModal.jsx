@@ -1,5 +1,5 @@
 import { Loader2, X } from 'lucide-react';
-import React, { memo, useEffect, useId, useState } from 'react';
+import React, { memo, useEffect, useId, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -10,11 +10,11 @@ import {
   requestUserPayoutApi,
 } from '@/shared/api/payments.api';
 
-const PAYOUT_TYPES = [
-  { key: 'prizeMoney', label: 'Prize Money', value: 'Prize Money' },
-  { key: 'donations', label: 'Donations', value: 'Donations' },
-  { key: 'photoSales', label: 'Photo Sales', value: 'Photo Sales' },
-  { key: 'storeSales', label: 'Store Sales', value: 'Store Sales' },
+const PAYOUT_OPTIONS = [
+  { key: 'prizeMoney', apiType: 'Prize Money', labelKey: 'prizeMoney' },
+  { key: 'donations', apiType: 'Donations', labelKey: 'donations' },
+  { key: 'photoSales', apiType: 'Photo Sales', labelKey: 'photoSales' },
+  { key: 'storeSales', apiType: 'Store Sales', labelKey: 'storeSales' },
 ];
 
 const RequestPayoutModal = memo(
@@ -28,55 +28,68 @@ const RequestPayoutModal = memo(
     const { t } = useTranslation();
     const titleId = useId();
 
-    const [selectedType, setSelectedType] = useState('Prize Money');
+    const [selectedType, setSelectedType] = useState(defaultType);
     const [amount, setAmount] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
     useEffect(() => {
-      if (open) {
-        const matching = PAYOUT_TYPES.find((pt) => pt.key === defaultType);
-        setSelectedType(matching ? matching.value : 'Prize Money');
-        setAmount('');
-        setAccountNumber('');
-        setError('');
-      }
+      if (!open) return;
+      const nextType = PAYOUT_OPTIONS.some((opt) => opt.key === defaultType)
+        ? defaultType
+        : 'prizeMoney';
+      setSelectedType(nextType);
+      setAmount('');
+      setAccountNumber('');
+      setError('');
     }, [open, defaultType]);
+
+    const selectedOption = useMemo(
+      () =>
+        PAYOUT_OPTIONS.find((opt) => opt.key === selectedType) ||
+        PAYOUT_OPTIONS[0],
+      [selectedType],
+    );
+
+    const availableAmount = Number(availableBalances[selectedType] ?? 0);
+    const availableLabel = formatPrizeAmount(availableAmount);
 
     if (!open) return null;
 
-    const currentKey =
-      PAYOUT_TYPES.find((pt) => pt.value === selectedType)?.key || 'prizeMoney';
-    const currentAvailable = availableBalances[currentKey] ?? 0;
+    const handleSelectType = (key) => {
+      setSelectedType(key);
+      setAmount('');
+      setError('');
+    };
 
-    const handleMaxClick = () => {
-      if (currentAvailable > 0) {
-        setAmount(String(currentAvailable));
-        setError('');
-      }
+    const handleUseMax = () => {
+      if (!(availableAmount > 0)) return;
+      setAmount(String(availableAmount));
+      setError('');
     };
 
     const handleSubmit = async (event) => {
       event.preventDefault();
       setError('');
 
-      const numericAmount = Number(amount);
-      if (!amount || Number.isNaN(numericAmount) || numericAmount <= 0) {
+      const parsedAmount = Number(amount);
+
+      if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
         setError(
           t(
-            'prizePayments.payoutModal.invalidAmount',
-            'Please enter a valid payout amount.',
+            'prizePayments.payoutModal.amountRequired',
+            'Enter a valid payout amount.',
           ),
         );
         return;
       }
 
-      if (currentAvailable > 0 && numericAmount > currentAvailable) {
+      if (parsedAmount > availableAmount) {
         setError(
           t(
-            'prizePayments.payoutModal.amountExceeds',
-            'Amount exceeds current available balance.',
+            'prizePayments.payoutModal.amountTooHigh',
+            'Amount cannot exceed your available balance.',
           ),
         );
         return;
@@ -86,7 +99,7 @@ const RequestPayoutModal = memo(
         setError(
           t(
             'prizePayments.payoutModal.accountRequired',
-            'Account number or payment details are required.',
+            'PayPal account is required.',
           ),
         );
         return;
@@ -95,8 +108,8 @@ const RequestPayoutModal = memo(
       try {
         setIsSubmitting(true);
         await requestUserPayoutApi({
-          type: selectedType,
-          amount: numericAmount,
+          type: selectedOption.apiType,
+          amount: parsedAmount,
           accountNumber: accountNumber.trim(),
         });
 
@@ -130,7 +143,7 @@ const RequestPayoutModal = memo(
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          className="flex max-h-[min(92vh,850px)] w-full max-w-[540px] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_22px_70px_rgba(14,20,35,0.25)]"
+          className="flex w-full max-w-[640px] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_22px_70px_rgba(14,20,35,0.25)]"
           onClick={(event) => event.stopPropagation()}
         >
           <header className="border-b border-[#edf0f3] px-6 pb-5 pt-6 sm:px-8">
@@ -145,7 +158,7 @@ const RequestPayoutModal = memo(
                 <p className="mt-1 text-[14px] leading-5 text-[#6b7280]">
                   {t(
                     'prizePayments.payoutModal.subtitle',
-                    'Withdraw your available balance to your preferred payment account.',
+                    'Payouts are sent via PayPal. Enter your PayPal account to receive your available balance.',
                   )}
                 </p>
               </div>
@@ -165,38 +178,41 @@ const RequestPayoutModal = memo(
             onSubmit={handleSubmit}
             className="flex min-h-0 flex-1 flex-col"
           >
-            <div className="flex flex-col gap-5 overflow-y-auto px-6 py-6 sm:px-8">
-              {error && (
+            <div className="flex flex-col gap-5 px-6 py-6 sm:px-8">
+              {error ? (
                 <div className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-[14px] text-red-700">
                   {error}
                 </div>
-              )}
+              ) : null}
 
-              {/* Payout Category */}
               <div>
-                <label className="mb-2 block text-[14px] font-medium text-[#161c27]">
-                  {t('prizePayments.payoutModal.payoutType', 'Payout Category')}
-                </label>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {PAYOUT_TYPES.map(({ key, label, value }) => {
-                    const isSelected = selectedType === value;
-                    const bal = availableBalances[key] ?? 0;
+                <p className="mb-2.5 text-[14px] font-medium text-[#161c27]">
+                  {t(
+                    'prizePayments.payoutModal.payoutType',
+                    'Payout Category',
+                  )}
+                </p>
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  {PAYOUT_OPTIONS.map((option) => {
+                    const balance = Number(availableBalances[option.key] ?? 0);
+                    const isActive = selectedType === option.key;
                     return (
                       <button
-                        key={key}
+                        key={option.key}
                         type="button"
-                        onClick={() => setSelectedType(value)}
-                        className={`flex flex-col items-center justify-center rounded-xl border p-2.5 text-center transition ${
-                          isSelected
-                            ? 'border-[#ee1c25] bg-[#fff5f5] text-[#ee1c25] font-semibold ring-1 ring-[#ee1c25]'
-                            : 'border-[#e2e8f0] bg-white text-[#494453] hover:border-[#cbd5e1]'
+                        onClick={() => handleSelectType(option.key)}
+                        className={`rounded-xl border px-3.5 py-3 text-left transition ${
+                          isActive
+                            ? 'border-[#ee1c25] bg-[#fff5f5] text-[#ee1c25]'
+                            : 'border-[#e2e8f0] bg-white text-[#161c27] hover:border-[#cbd5e1]'
                         }`}
                       >
-                        <span className="text-[13px] leading-tight">
-                          {t(`prizePayments.payoutModal.types.${key}`, label)}
-                        </span>
-                        <span className="mt-1 text-[11px] text-[#9ca3af]">
-                          {formatPrizeAmount(bal)}
+                        <span className="block text-[13px] font-semibold leading-5 sm:text-[14px]">
+                          {t(
+                            `prizePayments.payoutModal.types.${option.labelKey}`,
+                            option.apiType,
+                          )}{' '}
+                          ({formatPrizeAmount(balance)})
                         </span>
                       </button>
                     );
@@ -204,34 +220,32 @@ const RequestPayoutModal = memo(
                 </div>
               </div>
 
-              {/* Amount */}
               <div>
-                <div className="mb-2 flex items-center justify-between">
+                <div className="mb-2 flex items-center justify-between gap-3">
                   <label className="text-[14px] font-medium text-[#161c27]">
                     {t('prizePayments.payoutModal.amount', 'Payout Amount ($)')}
                   </label>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[12px] text-[#15803d]">
+                  <div className="flex items-center gap-2 text-[13px]">
+                    <span className="font-medium text-[#15803d]">
                       {t('prizePayments.payoutModal.availableBalance', {
-                        amount: formatPrizeAmount(currentAvailable),
-                        defaultValue: `Available: ${formatPrizeAmount(currentAvailable)}`,
+                        amount: availableLabel,
+                        defaultValue: `Available: ${availableLabel}`,
                       })}
                     </span>
-                    {currentAvailable > 0 && (
-                      <button
-                        type="button"
-                        onClick={handleMaxClick}
-                        className="text-[12px] font-semibold text-[#ee1c25] hover:underline"
-                      >
-                        Max
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={handleUseMax}
+                      disabled={!(availableAmount > 0)}
+                      className="font-semibold text-[#ee1c25] transition hover:underline disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {t('prizePayments.payoutModal.max', 'Max')}
+                    </button>
                   </div>
                 </div>
                 <Input
                   type="number"
-                  step="0.01"
                   min="0"
+                  step="0.01"
                   value={amount}
                   onChange={(event) => setAmount(event.target.value)}
                   placeholder={t(
@@ -243,12 +257,11 @@ const RequestPayoutModal = memo(
                 />
               </div>
 
-              {/* Account Number / Payment Detail */}
               <div>
                 <label className="mb-2 block text-[14px] font-medium text-[#161c27]">
                   {t(
                     'prizePayments.payoutModal.accountNumber',
-                    'Account / Phone / PayPal / IBAN',
+                    'PayPal Account',
                   )}
                 </label>
                 <Input
@@ -257,7 +270,7 @@ const RequestPayoutModal = memo(
                   onChange={(event) => setAccountNumber(event.target.value)}
                   placeholder={t(
                     'prizePayments.payoutModal.accountNumberPlaceholder',
-                    'e.g. (702) 555-0122 or user@paypal.com',
+                    'e.g. you@email.com or your PayPal phone number',
                   )}
                   inputClassName="w-full rounded-xl border border-[#e2e8f0] px-4 py-2.5 text-[15px] text-[#161c27] outline-none focus:border-[#ee1c25]"
                   labelClassName="hidden"

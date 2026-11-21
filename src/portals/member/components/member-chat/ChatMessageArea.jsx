@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   Check,
   CheckCheck,
   Copy,
@@ -1190,21 +1191,32 @@ const ChatMessageBubble = memo(
 
 ChatMessageBubble.displayName = 'ChatMessageBubble';
 
-const ChatThreadHeader = memo(({ conversation }) => {
+const ChatThreadHeader = memo(({ conversation, onBack }) => {
   const { t } = useTranslation();
 
   if (!conversation) return null;
 
   return (
-    <div className="flex h-18 shrink-0 items-center justify-between border-b border-[#ececf0] bg-white px-6">
-      <div className="flex items-center gap-3">
-        <div className="relative">
+    <div className="flex h-16 shrink-0 items-center gap-2 border-b border-[#ececf0] bg-white px-3 sm:h-18 sm:gap-3 sm:px-5 lg:px-6">
+      {onBack ? (
+        <Button
+          unstyled
+          type="button"
+          onClick={onBack}
+          aria-label={t('memberChat.backToList', 'Back to messages')}
+          className="inline-flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#494453] transition hover:bg-[#f3f4f6] xl:hidden"
+        >
+          <ArrowLeft size={20} strokeWidth={2} aria-hidden="true" />
+        </Button>
+      ) : null}
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <div className="relative shrink-0">
           <Image
             src={conversation.avatar}
             alt={conversation.name}
             width={44}
             height={44}
-            className="size-11 rounded-full object-cover"
+            className="size-10 rounded-full object-cover sm:size-11"
           />
           {conversation.online ? (
             <span
@@ -1213,11 +1225,11 @@ const ChatThreadHeader = memo(({ conversation }) => {
             />
           ) : null}
         </div>
-        <div>
-          <h2 className="text-[16px] font-semibold text-[#161c27]">
+        <div className="min-w-0">
+          <h2 className="truncate text-[15px] font-semibold text-[#161c27] sm:text-[16px]">
             {conversation.name}
           </h2>
-          <p className="text-[12px] text-[#6b7280]">
+          <p className="truncate text-[12px] text-[#6b7280]">
             {conversation.online
               ? t('memberChat.online')
               : conversation.subtitle || t('memberChat.offline')}
@@ -1699,6 +1711,7 @@ const ChatMessageArea = memo(
     onCancelReply,
     onDeleteMessage,
     currentUserId,
+    onBack,
   }) => {
     const { t } = useTranslation();
     const messagesEndRef = useRef(null);
@@ -1718,10 +1731,10 @@ const ChatMessageArea = memo(
 
     return (
       <section className="flex min-h-0 min-w-0 flex-1 flex-col bg-[#f8fafc]">
-        <ChatThreadHeader conversation={conversation} />
+        <ChatThreadHeader conversation={conversation} onBack={onBack} />
 
         <div
-          className="scrollbar-light flex-1 overflow-y-auto px-5 py-5"
+          className="scrollbar-light flex-1 overflow-y-auto px-3 py-4 sm:px-5 sm:py-5"
           onClick={() => setActiveMenuId(null)}
         >
           <div className="mx-auto flex min-h-full max-w-[860px] flex-col justify-end gap-3">

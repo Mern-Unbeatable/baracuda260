@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
 import React, {
   memo,
   useCallback,
@@ -644,8 +643,11 @@ const MemberChatContent = memo(() => {
   return (
     <div className="mx-auto flex h-full min-h-0 w-full max-w-395 flex-col">
       <div className="flex min-h-0 flex-1 overflow-hidden rounded-[20px] border border-[#ececf0] bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]">
+        {/* < xl: Messenger-style list OR thread. xl+: list + panel split. */}
         <div
-          className={`${showMobileThread ? 'hidden' : 'flex'} h-full min-h-0 lg:flex`}
+          className={`h-full min-h-0 w-full min-w-0 xl:w-auto xl:shrink-0 ${
+            showMobileThread ? 'hidden xl:flex' : 'flex'
+          }`}
         >
           <ChatConversationList
             conversations={conversations}
@@ -659,49 +661,40 @@ const MemberChatContent = memo(() => {
           />
         </div>
 
+        {/* < xl: full-width thread after select. xl+: always right panel. */}
         <div
-          className={`${showMobileThread ? 'flex' : 'hidden'} min-h-0 min-w-0 flex-1 flex-col lg:flex`}
+          className={`min-h-0 min-w-0 flex-1 flex-col ${
+            showMobileThread ? 'flex' : 'hidden xl:flex'
+          }`}
         >
           {activeConversation ? (
-            <>
-              <Button
-                unstyled
-                type="button"
-                onClick={() => setShowMobileThread(false)}
-                className="inline-flex items-center gap-2 border-b border-[#ececf0] px-4 py-3 text-[14px] font-medium text-[#494453] lg:hidden"
-              >
-                <ArrowLeft size={18} strokeWidth={2} aria-hidden="true" />
-                {t('memberChat.backToList')}
-              </Button>
-              <div className="flex min-h-0 flex-1 flex-col">
-                <ChatMessageArea
-                  conversation={activeConversation}
-                  messages={messages}
-                  draft={draft}
-                  onDraftChange={handleDraftChange}
-                  onSend={handleSend}
-                  selectedFile={selectedFile}
-                  onFileSelect={setSelectedFile}
-                  onFileRemove={() => setSelectedFile(null)}
-                  isSending={
-                    sendMutation.isPending ||
-                    editMutation.isPending ||
-                    deleteMutation.isPending
-                  }
-                  isLoadingMessages={isLoadingMessages}
-                  editingMessage={editingMessage}
-                  onStartEdit={handleStartEdit}
-                  onCancelEdit={handleCancelEdit}
-                  replyToMessage={replyToMessage}
-                  onStartReply={handleStartReply}
-                  onCancelReply={handleCancelReply}
-                  onDeleteMessage={handleDeleteMessage}
-                  currentUserId={currentUserId}
-                />
-              </div>
-            </>
+            <ChatMessageArea
+              conversation={activeConversation}
+              messages={messages}
+              draft={draft}
+              onDraftChange={handleDraftChange}
+              onSend={handleSend}
+              selectedFile={selectedFile}
+              onFileSelect={setSelectedFile}
+              onFileRemove={() => setSelectedFile(null)}
+              isSending={
+                sendMutation.isPending ||
+                editMutation.isPending ||
+                deleteMutation.isPending
+              }
+              isLoadingMessages={isLoadingMessages}
+              editingMessage={editingMessage}
+              onStartEdit={handleStartEdit}
+              onCancelEdit={handleCancelEdit}
+              replyToMessage={replyToMessage}
+              onStartReply={handleStartReply}
+              onCancelReply={handleCancelReply}
+              onDeleteMessage={handleDeleteMessage}
+              currentUserId={currentUserId}
+              onBack={() => setShowMobileThread(false)}
+            />
           ) : (
-            <div className="flex flex-1 flex-col items-center justify-center bg-[#f8fafc] px-6 text-center text-[15px] text-[#6b7280]">
+            <div className="hidden flex-1 flex-col items-center justify-center bg-[#f8fafc] px-6 text-center text-[15px] text-[#6b7280] xl:flex">
               <p className="font-medium text-[#161c27]">
                 {conversations.length === 0
                   ? 'No conversations started yet'
@@ -717,7 +710,7 @@ const MemberChatContent = memo(() => {
                   unstyled
                   type="button"
                   onClick={() => setIsComposeOpen(true)}
-                  className="mt-4 rounded-full border border-[#c7d2fe] bg-[#eef2ff] px-5 py-2 text-[14px] font-semibold text-[#4048cd] hover:bg-[#ecedfa] transition"
+                  className="mt-4 rounded-full border border-[#c7d2fe] bg-[#eef2ff] px-5 py-2 text-[14px] font-semibold text-[#4048cd] transition hover:bg-[#ecedfa]"
                 >
                   Start a Chat
                 </Button>
