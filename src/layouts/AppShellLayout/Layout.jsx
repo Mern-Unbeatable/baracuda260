@@ -12,6 +12,18 @@ import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import { ROUTES } from '@/shared/config';
 import { isAdminRole } from '@/shared/utils/roles';
 
+const SIDEBAR_DESKTOP_OPEN_KEY = 'my12photos.sidebar.desktopOpen';
+
+const readDesktopOpenPreference = () => {
+  try {
+    const stored = localStorage.getItem(SIDEBAR_DESKTOP_OPEN_KEY);
+    if (stored === null) return true;
+    return stored !== 'false';
+  } catch {
+    return true;
+  }
+};
+
 const normalizePath = (pathname) => {
   if (!pathname) return null;
   return pathname.replace(/\/+$/, '') || '/';
@@ -22,7 +34,15 @@ const Layout = memo(() => {
   const location = useLocation();
   const user = useSelector(selectUser);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [desktopOpen, setDesktopOpen] = useState(true);
+  const [desktopOpen, setDesktopOpen] = useState(readDesktopOpenPreference);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SIDEBAR_DESKTOP_OPEN_KEY, String(desktopOpen));
+    } catch {
+      // Ignore storage write failures (private mode, quota, etc.)
+    }
+  }, [desktopOpen]);
 
   const isAdmin = isAdminRole(user?.role);
   const currentPath = normalizePath(location.pathname);
@@ -130,7 +150,7 @@ const Layout = memo(() => {
         aria-label={t('dashboard.sidebar.navAria')}
         className={`
           fixed inset-y-0 left-0 z-30 w-72 transform transition-all duration-300 ease-in-out
-          lg:relative lg:z-auto lg:shrink-0
+          lg:relative lg:z-30 lg:shrink-0
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           ${desktopOpen ? 'lg:w-72 lg:translate-x-0' : 'lg:w-16 lg:translate-x-0'}
         `}

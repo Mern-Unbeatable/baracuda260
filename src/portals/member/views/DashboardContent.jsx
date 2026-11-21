@@ -37,24 +37,24 @@ const CompetitionRow = memo(({ item }) => {
   const { t } = useTranslation();
 
   return (
-    <article className="flex flex-col gap-4 rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:gap-6 sm:p-4.25">
-      <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-32">
+    <article className="group flex cursor-pointer flex-col gap-3 rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white p-3 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d7d2e0] hover:shadow-md sm:flex-row sm:items-center sm:gap-6 sm:p-4.25">
+      <div className="relative aspect-16/10 w-full shrink-0 overflow-hidden rounded-xl sm:aspect-auto sm:h-20 sm:w-32">
         <Image
           src={item.image}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover transition duration-200 group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-0 bg-black/20" aria-hidden="true" />
+        <div className="absolute inset-0 bg-black/15" aria-hidden="true" />
       </div>
 
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <h3 className="text-[16px] font-semibold leading-7 text-[#161c27] sm:text-[18px]">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="min-w-0 flex-1 text-[16px] font-semibold leading-6 text-[#161c27] sm:text-[18px] sm:leading-7">
             {item.title || (item.titleKey ? t(item.titleKey) : '')}
           </h3>
           {item.tag || item.badgeKey ? (
             <span
-              className={`rounded-full px-3 py-0.5 text-[12px] font-bold tracking-[0.6px] ${
+              className={`shrink-0 rounded-full px-3 py-0.5 text-[12px] font-bold tracking-[0.6px] ${
                 BADGE_TONES[item.badgeTone] || BADGE_TONES.blue
               }`}
             >
@@ -62,7 +62,8 @@ const CompetitionRow = memo(({ item }) => {
             </span>
           ) : null}
         </div>
-        <div className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2">
+
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
           {item.participantsCount != null || item.participantsKey ? (
             <span className="inline-flex items-center gap-1 text-[13px] font-medium tracking-[0.6px] text-[#494453] sm:text-[14px]">
               <Users
@@ -97,15 +98,13 @@ const CompetitionRow = memo(({ item }) => {
             </span>
           ) : null}
         </div>
-      </div>
 
-      <div className="flex items-center justify-between gap-3 sm:w-48 sm:shrink-0 sm:flex-col sm:items-end sm:justify-center sm:gap-1 sm:px-6">
-        <div className="sm:w-full sm:text-right">
-          <p className="text-[13px] font-medium tracking-[0.6px] text-[#494453] sm:text-[14px]">
+        <div className="sm:hidden">
+          <p className="text-[13px] font-medium tracking-[0.6px] text-[#494453]">
             {t(item.statusLabelKey || 'dashboard.competitions.yourSubmission')}
           </p>
           <p
-            className={`mt-0.5 inline-flex items-center gap-1 text-[15px] font-bold sm:text-[16px] sm:leading-6 ${
+            className={`mt-0.5 inline-flex items-center gap-1 text-[15px] font-bold ${
               STATUS_TONES[item.statusTone] || STATUS_TONES.purple
             }`}
           >
@@ -115,6 +114,22 @@ const CompetitionRow = memo(({ item }) => {
             {item.rankStr || (item.statusValueKey ? t(item.statusValueKey) : '')}
           </p>
         </div>
+      </div>
+
+      <div className="hidden sm:block sm:w-48 sm:shrink-0 sm:px-6 sm:text-right">
+        <p className="text-[14px] font-medium tracking-[0.6px] text-[#494453]">
+          {t(item.statusLabelKey || 'dashboard.competitions.yourSubmission')}
+        </p>
+        <p
+          className={`mt-0.5 inline-flex items-center justify-end gap-1 text-[16px] font-bold leading-6 ${
+            STATUS_TONES[item.statusTone] || STATUS_TONES.purple
+          }`}
+        >
+          {item.showTrophy ? (
+            <Trophy size={14} aria-hidden="true" className="text-[#855300]" />
+          ) : null}
+          {item.rankStr || (item.statusValueKey ? t(item.statusValueKey) : '')}
+        </p>
       </div>
     </article>
   );
@@ -168,7 +183,7 @@ const UserDashboardView = memo(() => {
 
       <section
         aria-label={t('dashboard.stats.aria')}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-5"
+        className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-5"
       >
         {isLoading
           ? Array.from({ length: 5 }).map((_, idx) => (
