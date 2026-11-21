@@ -13,7 +13,6 @@ import MemberSellPhotoFields from '@/portals/member/components/member-sell-photo
 import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import {
   ARTISTIC_CATEGORIES,
-  DEFAULT_CATEGORY,
   DEFAULT_SIGN_ID,
   SINGLE_PHOTO_ASSETS,
   ZODIAC_SIGNS,
@@ -36,6 +35,14 @@ import {
 } from '@/shared/api/premiumPhotos.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const toUuidOrEmpty = (value) => {
+  const raw = String(value || '').trim();
+  return UUID_RE.test(raw) ? raw : '';
+};
 
 const findSign = (id) =>
   ZODIAC_SIGNS.find((sign) => sign.id === id) ?? ZODIAC_SIGNS[5];
@@ -126,8 +133,8 @@ const SinglePhotoContent = memo(
       formState: { errors },
     } = useForm({
       defaultValues: {
-        category: DEFAULT_CATEGORY,
-        subCategory: 'astrophotography',
+        category: '',
+        subCategory: '',
         title: '',
         story: '',
         price: defaultPrice,
@@ -142,9 +149,10 @@ const SinglePhotoContent = memo(
     useEffect(() => {
       if (categoriesList.length > 0 && !selectedCategory) {
         const first = categoriesList[0];
-        const val = first.id || first.slug;
+        const val = first.id || first.slug || '';
         setSelectedCategory(val);
         setValue('category', val);
+        setValue('subCategory', '');
       }
     }, [categoriesList, selectedCategory, setValue]);
 
@@ -208,6 +216,11 @@ const SinglePhotoContent = memo(
       }
     }, [existingArtwork, setValue, photoFile]);
 
+    const redirectToMyArtwork = () => {
+      queryClient.invalidateQueries({ queryKey: USER_ARTWORKS_QUERY_KEY });
+      navigate(ROUTES.USER_MY_ARTWORK);
+    };
+
     // Update Artwork Mutation
     const updateArtworkMutation = useMutation({
       mutationFn: (payload) => updateArtworkApi(editId, payload),
@@ -215,9 +228,8 @@ const SinglePhotoContent = memo(
         toast.success(
           t('singlePhoto.updateSuccess', 'Artwork updated successfully!'),
         );
-        queryClient.invalidateQueries({ queryKey: USER_ARTWORKS_QUERY_KEY });
         queryClient.invalidateQueries({ queryKey: ['artwork-detail', editId] });
-        navigate(ROUTES.USER_MY_ARTWORK);
+        redirectToMyArtwork();
       },
       onError: (err) => {
         toast.error(
@@ -277,8 +289,10 @@ const SinglePhotoContent = memo(
     const createArtworkMutation = useMutation({
       mutationFn: createArtworkApi,
       onSuccess: () => {
-        toast.success(t('singlePhoto.uploadSuccess', 'Artwork published successfully!'));
-        setSuccessOpen(true);
+        toast.success(
+          t('singlePhoto.uploadSuccess', 'Artwork published successfully!'),
+        );
+        redirectToMyArtwork();
       },
       onError: (err) => {
         toast.error(
@@ -391,11 +405,13 @@ const SinglePhotoContent = memo(
           formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
           formData.append('resolution', data.resolution || '60000x60000');
           formData.append('quality', data.quality || '4K');
-          if (data.category || selectedCategory) {
-            formData.append('categoryId', data.category || selectedCategory);
-          }
-          if (data.subCategory) {
-            formData.append('subcategoryId', data.subCategory);
+          const sellCategoryId = toUuidOrEmpty(
+            data.category || selectedCategory,
+          );
+          const sellSubcategoryId = toUuidOrEmpty(data.subCategory);
+          if (sellCategoryId) formData.append('categoryId', sellCategoryId);
+          if (sellSubcategoryId) {
+            formData.append('subcategoryId', sellSubcategoryId);
           }
           if (photoFile) {
             formData.append('images', photoFile);
@@ -414,17 +430,19 @@ const SinglePhotoContent = memo(
         formData.append('zodiacSign', signName.toUpperCase());
         formData.append(
           'competitionState',
-          publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+          publishTarget === 'competition' ? 'IN_COMPETITION' : 'PROFILE_ONLY',
         );
         formData.append('isAiGenerated', String(aiCreated === 'yes'));
         formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
         formData.append('resolution', data.resolution || '60000x60000');
         formData.append('quality', data.quality || '4K');
-        if (data.category || selectedCategory) {
-          formData.append('categoryId', data.category || selectedCategory);
-        }
-        if (data.subCategory) {
-          formData.append('subcategoryId', data.subCategory);
+        const editCategoryId = toUuidOrEmpty(
+          data.category || selectedCategory,
+        );
+        const editSubcategoryId = toUuidOrEmpty(data.subCategory);
+        if (editCategoryId) formData.append('categoryId', editCategoryId);
+        if (editSubcategoryId) {
+          formData.append('subcategoryId', editSubcategoryId);
         }
         if (photoFile) {
           formData.append('images', photoFile);
@@ -442,8 +460,9 @@ const SinglePhotoContent = memo(
           c.slug === data.category ||
           c.id === selectedCategory,
       );
-      const categoryId =
-        catMatch?.id || data.category || selectedCategory || '';
+      const categoryId = toUuidOrEmpty(
+        catMatch?.id || data.category || selectedCategory,
+      );
 
       const subMatch = subCategoriesList.find(
         (s) =>
@@ -451,7 +470,9 @@ const SinglePhotoContent = memo(
           s.slug === data.subCategory ||
           s.name === data.subCategory,
       );
-      const subcategoryId = subMatch?.id || data.subCategory || '';
+      const subcategoryId = toUuidOrEmpty(
+        subMatch?.id || data.subCategory,
+      );
 
       if (isSell) {
         createSellPhotoMutation.mutate({
@@ -463,40 +484,31 @@ const SinglePhotoContent = memo(
           copyrightConfirmed: Boolean(data.copyrightOk),
           resolution: data.resolution || '60000x60000',
           quality: data.quality || '4K',
-          categoryId,
-          subcategoryId,
+          categoryId: categoryId || undefined,
+          subcategoryId: subcategoryId || undefined,
           images: photoFile,
           video: selectedVideo || undefined,
         });
         return;
       }
 
-      // 1. Submit main artwork (POST /api/v1/artworks)
+      // Submit main artwork (POST /api/v1/artworks)
       createArtworkMutation.mutate({
         kind: 'SINGLE',
         zodiacSign: signName.toUpperCase(),
         title: data.title || 'Untitled Artwork',
         story: data.story || '',
-        competitionState: publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+        competitionState:
+          publishTarget === 'competition' ? 'IN_COMPETITION' : 'PROFILE_ONLY',
         isAiGenerated: aiCreated === 'yes',
         copyrightConfirmed: Boolean(data.copyrightOk),
         resolution: data.resolution || '60000x60000',
         quality: data.quality || '4K',
-        categoryId,
-        subcategoryId,
+        categoryId: categoryId || undefined,
+        subcategoryId: subcategoryId || undefined,
         images: photoFile,
         video: selectedVideo || undefined,
       });
-
-      // 2. If separate video comment is desired:
-      if (selectedVideo) {
-        videoCommentMutation.mutate({
-          title: data.title || 'My Studio & Artwork Update',
-          story: data.story || '',
-          isAiGenerated: aiCreated === 'yes',
-          video: selectedVideo,
-        });
-      }
     };
 
     const handleCloseSuccess = () => {
@@ -749,6 +761,7 @@ const SinglePhotoContent = memo(
               onCategoryChange={(val) => {
                 setSelectedCategory(val);
                 setValue('category', val);
+                setValue('subCategory', '');
               }}
               publishTarget={publishTarget}
               setPublishTarget={setPublishTarget}

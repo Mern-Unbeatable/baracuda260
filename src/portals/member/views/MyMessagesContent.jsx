@@ -8,7 +8,6 @@ import {
   Plus,
   RefreshCw,
   Sparkles,
-  Trash2,
   X,
 } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
@@ -27,6 +26,7 @@ import {
   USER_POSTS_QUERY_KEY,
 } from '@/shared/api/posts.api';
 import { ROUTES } from '@/shared/config';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
 const PAGE_SIZE = 9;
 
@@ -343,108 +343,10 @@ const EditPostModal = memo(({ open, post, onSave, onCancel, isSaving }) => {
 
 EditPostModal.displayName = 'EditPostModal';
 
-const DeleteConfirmModal = memo(({ open, post, onConfirm, onCancel, isDeleting }) => {
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && !isDeleting) {
-        onCancel();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, isDeleting, onCancel]);
-
-  if (!open || !post) return null;
-
-  return createPortal(
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="delete-post-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-    >
-      <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
-        onClick={isDeleting ? undefined : onCancel}
-      />
-      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all">
-        <div className="flex items-center justify-between pb-3">
-          <div className="flex items-center gap-3 text-[#dc2626]">
-            <span className="flex size-10 items-center justify-center rounded-full bg-red-100">
-              <Trash2 size={20} strokeWidth={2} />
-            </span>
-            <h3
-              id="delete-post-title"
-              className="text-lg font-semibold text-[#161c27]"
-            >
-              {t('myMessages.deleteModal.title', 'Delete Post')}
-            </h3>
-          </div>
-          <button
-            type="button"
-            disabled={isDeleting}
-            onClick={onCancel}
-            className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 disabled:opacity-50"
-            aria-label="Close"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        <p className="mt-2 text-[14px] leading-6 text-[#494453]">
-          {t(
-            'myMessages.deleteModal.message',
-            'Are you sure you want to delete this post? This action cannot be undone.',
-          )}
-        </p>
-
-        {post.body ? (
-          <div className="mt-3 line-clamp-2 rounded-lg bg-gray-50 p-3 text-[13px] text-gray-600 italic">
-            &ldquo;{post.body}&rdquo;
-          </div>
-        ) : null}
-
-        <div className="mt-6 flex items-center justify-end gap-3">
-          <Button
-            unstyled
-            type="button"
-            disabled={isDeleting}
-            onClick={onCancel}
-            className="rounded-xl border border-gray-200 px-4 py-2.5 text-[14px] font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
-            {t('common.cancel', 'Cancel')}
-          </Button>
-          <Button
-            unstyled
-            type="button"
-            disabled={isDeleting}
-            onClick={() => onConfirm(post.id)}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#dc2626] px-4 py-2.5 text-[14px] font-medium text-white shadow-sm hover:bg-[#b91c1c] disabled:opacity-50"
-          >
-            {isDeleting ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Trash2 size={16} />
-            )}
-            {t('myMessages.deleteModal.confirm', 'Delete')}
-          </Button>
-        </div>
-      </div>
-    </div>,
-    document.body,
-  );
-});
-
-DeleteConfirmModal.displayName = 'DeleteConfirmModal';
-
 const MyMessagesContent = memo(() => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
-  const [postToDelete, setPostToDelete] = useState(null);
   const [postToEdit, setPostToEdit] = useState(null);
 
   const {
@@ -464,7 +366,6 @@ const MyMessagesContent = memo(() => {
     mutationFn: (id) => deletePostApi(id),
     onSuccess: () => {
       toast.success(t('myMessages.deleteSuccess', 'Post deleted successfully!'));
-      setPostToDelete(null);
       queryClient.invalidateQueries({ queryKey: ['user-posts'] });
     },
     onError: (err) => {
@@ -497,22 +398,23 @@ const MyMessagesContent = memo(() => {
     setPostToEdit(post);
   }, []);
 
-  const handleDeleteClick = useCallback((post) => {
-    setPostToDelete(post);
-  }, []);
-
-  const handleConfirmDelete = useCallback(
-    (id) => {
-      deleteMutation.mutate(id);
+  const handleDeleteClick = useCallback(
+    async (post) => {
+      if (!post?.id) return;
+      const confirmed = await confirmDestructiveAction({
+        title: t('myMessages.deleteModal.title', 'Delete Post'),
+        text: t(
+          'myMessages.deleteModal.message',
+          'Are you sure you want to delete this post? This action cannot be undone.',
+        ),
+        confirmButtonText: t('common.delete', 'Delete'),
+        cancelButtonText: t('common.cancel', 'Cancel'),
+      });
+      if (!confirmed) return;
+      deleteMutation.mutate(post.id);
     },
-    [deleteMutation],
+    [deleteMutation, t],
   );
-
-  const handleCancelDelete = useCallback(() => {
-    if (!deleteMutation.isPending) {
-      setPostToDelete(null);
-    }
-  }, [deleteMutation.isPending]);
 
   const handleSaveEdit = useCallback(
     (payload) => {
@@ -651,15 +553,6 @@ const MyMessagesContent = memo(() => {
         onSave={handleSaveEdit}
         onCancel={handleCancelEdit}
         isSaving={updateMutation.isPending}
-      />
-
-      {/* Delete confirmation modal */}
-      <DeleteConfirmModal
-        open={Boolean(postToDelete)}
-        post={postToDelete}
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-        isDeleting={deleteMutation.isPending}
       />
     </div>
   );

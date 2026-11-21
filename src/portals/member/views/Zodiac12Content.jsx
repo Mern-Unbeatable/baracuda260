@@ -15,7 +15,6 @@ import {
   ALL_SLOTS,
   ARTISTIC_CATEGORIES,
   BLUE_SLOTS,
-  DEFAULT_CATEGORY,
   RED_SLOTS,
   ZODIAC12_ASSETS,
 } from '@/portals/member/data/zodiac12Assets';
@@ -190,8 +189,8 @@ const Zodiac12Content = memo(
       formState: { errors },
     } = useForm({
       defaultValues: {
-        category: DEFAULT_CATEGORY,
-        subCategory: 'astrophotography',
+        category: '',
+        subCategory: '',
         title: '',
         story: '',
         price: defaultPrice,
@@ -235,9 +234,10 @@ const Zodiac12Content = memo(
     useEffect(() => {
       if (categoriesList.length > 0 && !selectedCategory) {
         const first = categoriesList[0];
-        const val = first.id || first.slug;
+        const val = first.id || first.slug || '';
         setSelectedCategory(val);
         setValue('category', val);
+        setValue('subCategory', '');
       }
     }, [categoriesList, selectedCategory, setValue]);
 
@@ -479,7 +479,7 @@ const Zodiac12Content = memo(
         formData.append('story', data.story || '');
         formData.append(
           'competitionState',
-          publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+          publishTarget === 'competition' ? 'IN_COMPETITION' : 'PROFILE_ONLY',
         );
         formData.append('isAiGenerated', String(aiCreated === 'yes'));
         formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
@@ -504,8 +504,16 @@ const Zodiac12Content = memo(
           c.slug === data.category ||
           c.id === selectedCategory,
       );
-      const categoryId =
-        catMatch?.id || data.category || selectedCategory || '';
+      const uuidRe =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      const toUuid = (value) => {
+        const raw = String(value || '').trim();
+        return uuidRe.test(raw) ? raw : '';
+      };
+
+      const categoryId = toUuid(
+        catMatch?.id || data.category || selectedCategory,
+      );
 
       const subMatch = subCategoriesList.find(
         (s) =>
@@ -513,7 +521,7 @@ const Zodiac12Content = memo(
           s.slug === data.subCategory ||
           s.name === data.subCategory,
       );
-      const subcategoryId = subMatch?.id || data.subCategory || '';
+      const subcategoryId = toUuid(subMatch?.id || data.subCategory);
 
       const orderedImages = ALL_SLOTS.map((s) => files[s.id]).filter(Boolean);
 
@@ -541,8 +549,8 @@ const Zodiac12Content = memo(
           copyrightConfirmed: Boolean(data.copyrightOk),
           resolution: data.resolution || '60000x60000',
           quality: data.quality || '4K',
-          categoryId,
-          subcategoryId,
+          categoryId: categoryId || undefined,
+          subcategoryId: subcategoryId || undefined,
           images: orderedImages,
         });
         return;
@@ -550,15 +558,17 @@ const Zodiac12Content = memo(
 
       createArtworkMutation.mutate({
         kind: 'TWELVE',
+        theme: 'FULL',
         title: data.title || 'Untitled Artwork',
         story: data.story || '',
-        competitionState: publishTarget === 'competition' ? 'all' : 'PROFILE_ONLY',
+        competitionState:
+          publishTarget === 'competition' ? 'IN_COMPETITION' : 'PROFILE_ONLY',
         isAiGenerated: aiCreated === 'yes',
         copyrightConfirmed: Boolean(data.copyrightOk),
         resolution: data.resolution || '60000x60000',
         quality: data.quality || '4K',
-        categoryId,
-        subcategoryId,
+        categoryId: categoryId || undefined,
+        subcategoryId: subcategoryId || undefined,
         images: orderedImages,
       });
     };

@@ -9,7 +9,7 @@ const MemberArtworkCardFooter = memo(({ item, onSwitchCompetition }) => {
 
   if (item.footerState === 'active') {
     return (
-      <div className="rounded-xl bg-[#ecfdf3] p-3">
+      <div className="flex h-full flex-col rounded-xl bg-[#ecfdf3] p-3">
         <div className="flex items-center justify-between gap-2">
           <p className="min-w-0 truncate text-[13px] font-semibold text-[#166534]">
             {item.competitionName}
@@ -18,18 +18,20 @@ const MemberArtworkCardFooter = memo(({ item, onSwitchCompetition }) => {
             {t('myArtwork.card.live')}
           </span>
         </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <div className="rounded-lg bg-white px-3 py-2 text-center">
+        <div className="mt-3 grid flex-1 grid-cols-2 gap-2">
+          <div className="flex flex-col justify-center rounded-lg bg-white px-3 py-2 text-center">
             <p className="text-[11px] font-medium uppercase text-[#6b7280]">
               {t('myArtwork.card.votes')}
             </p>
             <p className="text-[20px] font-bold text-[#16a34a]">{item.votes}</p>
           </div>
-          <div className="rounded-lg bg-white px-3 py-2 text-center">
+          <div className="flex flex-col justify-center rounded-lg bg-white px-3 py-2 text-center">
             <p className="text-[11px] font-medium uppercase text-[#6b7280]">
               {t('myArtwork.card.rank')}
             </p>
-            <p className="text-[20px] font-bold text-[#4048cd]">{item.rank}</p>
+            <p className="text-[20px] font-bold text-[#4048cd]">
+              {item.rank || '—'}
+            </p>
           </div>
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[12px]">
@@ -100,7 +102,7 @@ const MemberArtworkCardFooter = memo(({ item, onSwitchCompetition }) => {
               Votes
             </p>
             <p className="mt-0.5 text-[16px] font-bold text-[#7c3aed]">
-              {item.endedVotes}
+              {item.endedVotes ?? item.votes ?? '0'}
             </p>
           </div>
           <div className="flex flex-col items-center justify-center border-l border-[#e9d5ff] text-center">
@@ -108,7 +110,9 @@ const MemberArtworkCardFooter = memo(({ item, onSwitchCompetition }) => {
               Rank
             </p>
             <p className="mt-0.5 text-[16px] font-bold text-[#7c3aed]">
-              #{item.finalRank ?? '-'}
+              {item.finalRank
+                ? `#${item.finalRank}`
+                : item.rank || '—'}
             </p>
           </div>
         </div>

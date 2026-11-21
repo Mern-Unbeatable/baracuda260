@@ -22,7 +22,7 @@ const MemberArtworkCard = memo(
       BADGE_STYLES[item.albumBadge] ?? BADGE_STYLES['Single Photo'];
 
     return (
-      <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white shadow-sm">
+      <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-[#c7cbf2] hover:shadow-[0_12px_28px_rgba(15,23,42,0.10)]">
         <div className="relative aspect-368/252 shrink-0 overflow-hidden bg-[#f3f4f6]">
           <Link
             to={myArtworkDetailPath(item.id)}
@@ -34,7 +34,7 @@ const MemberArtworkCard = memo(
               width={368}
               height={252}
               loading="lazy"
-              className="h-full w-full object-cover transition hover:scale-[1.02]"
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
             />
           </Link>
           <span
@@ -67,16 +67,18 @@ const MemberArtworkCard = memo(
           ) : null}
         </div>
 
-        <div className="flex flex-1 flex-col p-4">
-          <div className="flex flex-col gap-1.5 text-[13px] text-[#6b7280] sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-            <span className="font-medium text-[#494453]">{item.category}</span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="inline-flex items-center gap-1">
+        <div className="flex min-h-0 flex-1 flex-col p-4">
+          <div className="flex min-h-10 items-start justify-between gap-2 text-[13px] text-[#6b7280]">
+            <span className="min-w-0 truncate font-medium text-[#494453]">
+              {item.category}
+            </span>
+            <div className="flex shrink-0 flex-col items-end gap-0.5 text-right sm:flex-row sm:items-center sm:gap-x-3">
+              <span className="inline-flex items-center gap-1 whitespace-nowrap">
                 <Calendar size={14} strokeWidth={2} aria-hidden="true" />
                 {t('myArtwork.card.uploaded', { date: item.uploadedDate })}
               </span>
               {item.uploadedTime ? (
-                <span className="inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-1 whitespace-nowrap">
                   <Clock size={14} strokeWidth={2} aria-hidden="true" />
                   {item.uploadedTime}
                 </span>
@@ -84,19 +86,19 @@ const MemberArtworkCard = memo(
             </div>
           </div>
 
-          <h2 className="mt-2 min-h-10 text-[16px] font-bold leading-snug text-[#0d0d14]">
+          <h2 className="mt-2 h-10 text-[16px] font-bold leading-5 text-[#0d0d14]">
             <Link
               to={myArtworkDetailPath(item.id)}
-              className="line-clamp-2 transition hover:text-[#4048cd]"
+              className="line-clamp-2 transition group-hover:text-[#4048cd]"
             >
               {item.title}
             </Link>
           </h2>
-          <p className="mt-1.5 line-clamp-2 min-h-10 text-[14px] leading-[1.43] text-[#6b7280]">
-            {item.description}
+          <p className="mt-1.5 h-10 line-clamp-2 text-[14px] leading-5 text-[#6b7280]">
+            {item.description || '\u00A0'}
           </p>
 
-          <div className="mt-3 flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-[#6b7280]">
+          <div className="mt-3 flex h-6 flex-wrap items-center gap-x-4 gap-y-1 overflow-hidden text-[13px] text-[#6b7280]">
             <span className="inline-flex items-center gap-1.5">
               <Eye size={14} strokeWidth={2} aria-hidden="true" />
               {t('myArtwork.card.views', { count: item.views })}
@@ -124,7 +126,7 @@ const MemberArtworkCard = memo(
             ) : null}
           </div>
 
-          <div className="mt-4 min-h-42.5">
+          <div className="mt-auto flex min-h-44 flex-col justify-end pt-4">
             <MemberArtworkCardFooter
               item={item}
               onSwitchCompetition={onSwitchCompetition}

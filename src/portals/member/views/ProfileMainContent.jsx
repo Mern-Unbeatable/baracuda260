@@ -1,9 +1,13 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw } from 'lucide-react';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import MemberProfileCoverHeader from '@/components/data-display/MemberProfileCoverHeader/MemberProfileCoverHeader';
 import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsBar/MemberProfileStatsBar';
+import WeeklyAppreciationBanner from '@/components/data-display/WeeklyAppreciationBanner/WeeklyAppreciationBanner';
+import UploadIntroVideoModal from '@/portals/member/components/member-artwork/UploadIntroVideoModal';
 import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import {
   MEMBER_ARTWORK,
@@ -20,22 +24,68 @@ import PhotographerMessagesSection from '@/portals/public/photographer/component
 import PhotographerProfileTabs from '@/portals/public/photographer/components/PhotographerProfileTabs';
 import PhotographerShareBanner from '@/portals/public/photographer/components/PhotographerShareBanner';
 import PhotographerSlideshowsSection from '@/portals/public/photographer/components/PhotographerSlideshowsSection';
+import PhotographerStandaloneVideosSection from '@/portals/public/photographer/components/PhotographerStandaloneVideosSection';
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
-import PhotographerStandaloneVideosSection from '@/portals/public/photographer/components/PhotographerStandaloneVideosSection';
-import WeeklyAppreciationBanner from '@/components/data-display/WeeklyAppreciationBanner/WeeklyAppreciationBanner';
 import {
   PHOTOGRAPHER_ASSETS,
   PHOTOGRAPHER_STORE_PRODUCTS,
 } from '@/portals/public/photographer/data/photographerProfileData';
+import {
+  deleteArtworkApi,
+  USER_ARTWORKS_QUERY_KEY,
+  VIDEO_COMMENTS_QUERY_KEY,
+} from '@/shared/api/artworks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
+import { USER_PROFILE_ME_QUERY_KEY } from '@/shared/api/userProfile.api';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { resolveMediaUrl } from '@/shared/utils/media';
+
+const PROFILE_TAB_IDS = new Set([
+  'profile',
+  'artwork',
+  'store',
+  'premium',
+  'posts',
+]);
+const PROFILE_TAB_SEARCH_PARAM = 'tab';
+
+const resolveProfileTab = (searchParams) => {
+  if (searchParams.has(SLIDESHOW_SEARCH_PARAM)) return 'artwork';
+  const tab = searchParams.get(PROFILE_TAB_SEARCH_PARAM);
+  return PROFILE_TAB_IDS.has(tab) ? tab : 'profile';
+};
 
 const ProfileMainContent = memo(() => {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(() =>
-    searchParams.has(SLIDESHOW_SEARCH_PARAM) ? 'artwork' : 'profile',
+  const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = resolveProfileTab(searchParams);
+  const [editingVideo, setEditingVideo] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const handleTabChange = useCallback(
+    (tabId) => {
+      if (!PROFILE_TAB_IDS.has(tabId)) return;
+
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (tabId === 'profile') {
+            next.delete(PROFILE_TAB_SEARCH_PARAM);
+          } else {
+            next.set(PROFILE_TAB_SEARCH_PARAM, tabId);
+          }
+          if (tabId !== 'artwork') {
+            next.delete(SLIDESHOW_SEARCH_PARAM);
+          }
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
   );
 
   const {
@@ -45,6 +95,44 @@ const ProfileMainContent = memo(() => {
     error,
     refetch,
   } = useUserProfileMe();
+
+  const deleteVideoMutation = useMutation({
+    mutationFn: (videoId) => deleteArtworkApi(videoId),
+    onSuccess: () => {
+      toast.success(
+        t('standaloneVideos.deleteSuccess', 'Video deleted successfully.'),
+      );
+      queryClient.invalidateQueries({ queryKey: USER_PROFILE_ME_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: USER_ARTWORKS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: VIDEO_COMMENTS_QUERY_KEY });
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(err) ||
+          t('standaloneVideos.deleteError', 'Failed to delete video.'),
+      );
+    },
+  });
+
+  const handleEditVideo = (video) => {
+    setEditingVideo(video);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDeleteVideo = async (video) => {
+    if (!video?.id) return;
+    const confirmed = await confirmDestructiveAction({
+      title: t('standaloneVideos.deleteConfirmTitle', 'Delete this video?'),
+      text: t(
+        'standaloneVideos.deleteConfirmText',
+        'This 1-minute video update will be permanently removed.',
+      ),
+      confirmButtonText: t('common.delete', 'Delete'),
+      cancelButtonText: t('common.cancel', 'Cancel'),
+    });
+    if (!confirmed) return;
+    deleteVideoMutation.mutate(video.id);
+  };
 
   const profile = useMemo(() => {
     if (!profileData) return null;
@@ -186,7 +274,7 @@ const ProfileMainContent = memo(() => {
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col pb-8 sm:pb-10">
       <MemberProfileCoverHeader profile={profile} />
-      <PhotographerProfileTabs activeTab={activeTab} onChange={setActiveTab} />
+      <PhotographerProfileTabs activeTab={activeTab} onChange={handleTabChange} />
 
       {activeTab === 'profile' ? (
         <>
@@ -213,6 +301,10 @@ const ProfileMainContent = memo(() => {
               []
             }
             artistName={profile.name}
+            canManage
+            onEdit={handleEditVideo}
+            onDelete={handleDeleteVideo}
+            isDeletingId={deleteVideoMutation.isPending ? deleteVideoMutation.variables : null}
           />
           <PhotographerSlideshowsSection
             canManage
@@ -223,6 +315,19 @@ const ProfileMainContent = memo(() => {
             subtitleKey="photographerProfile.artwork.subtitle"
             photos={MEMBER_ARTWORK}
             showCompetitionTag
+          />
+          <UploadIntroVideoModal
+            isOpen={isEditModalOpen}
+            editingVideo={editingVideo}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingVideo(null);
+            }}
+            onSuccess={() => {
+              setIsEditModalOpen(false);
+              setEditingVideo(null);
+              refetch();
+            }}
           />
         </>
       ) : null}

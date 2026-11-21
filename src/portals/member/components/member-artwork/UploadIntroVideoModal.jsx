@@ -6,17 +6,20 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import {
   createArtworkVideoCommentApi,
+  updateArtworkVideoCommentApi,
   USER_ARTWORKS_QUERY_KEY,
   VIDEO_COMMENTS_QUERY_KEY,
 } from '@/shared/api/artworks.api';
 import { USER_PROFILE_ME_QUERY_KEY } from '@/shared/api/userProfile.api';
+import { resolveMediaUrl } from '@/shared/utils/media';
 
 const MAX_VIDEO_SECONDS = 65; // 60 seconds with 5-second buffer
 
-const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
+const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess, editingVideo = null }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const fileInputRef = useRef(null);
+  const isEditMode = Boolean(editingVideo?.id);
 
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -35,18 +38,34 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
     };
   }, [previewUrl]);
 
-  // Reset state when opening
+  // Reset / hydrate state when opening
   useEffect(() => {
-    if (isOpen) {
-      setFile(null);
+    if (!isOpen) return;
+
+    setFile(null);
+    setError('');
+    setIsDragOver(false);
+
+    if (editingVideo?.id) {
+      const existingStory = (editingVideo.story || '').trim();
+      const defaultStory =
+        'Sharing a quick 1-minute message about my upcoming photo series and thanking my supporters!';
+      setTitle(editingVideo.title || '');
+      setStory(existingStory === defaultStory ? '' : existingStory);
+      setPreviewUrl(
+        resolveMediaUrl(editingVideo.videoUrl || editingVideo.thumbnailUrl) ||
+          null,
+      );
+      setDuration(
+        editingVideo.duration != null ? Number(editingVideo.duration) : null,
+      );
+    } else {
       setPreviewUrl(null);
       setDuration(null);
       setTitle('');
       setStory('');
-      setError('');
-      setIsDragOver(false);
     }
-  }, [isOpen]);
+  }, [isOpen, editingVideo]);
 
   // Handle ESC key to close
   useEffect(() => {
@@ -115,18 +134,27 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
 
   const uploadMutation = useMutation({
     mutationFn: async () => {
-      return await createArtworkVideoCommentApi({
-        title: title || '1-Minute Video Update',
-        story:
-          story ||
-          'Sharing a quick 1-minute message about my upcoming photo series and thanking my supporters!',
+      const payload = {
+        title: title.trim() || '1-Minute Video Update',
+        story: story.trim(),
         isAiGenerated: false,
+        video: file || undefined,
+      };
+
+      if (isEditMode) {
+        return await updateArtworkVideoCommentApi(editingVideo.id, payload);
+      }
+
+      return await createArtworkVideoCommentApi({
+        ...payload,
         video: file,
       });
     },
     onSuccess: (data) => {
       toast.success(
-        t('introVideo.uploadSuccess', '1-minute video uploaded successfully!'),
+        isEditMode
+          ? t('introVideo.updateSuccess', '1-minute video updated successfully!')
+          : t('introVideo.uploadSuccess', '1-minute video uploaded successfully!'),
       );
       // Invalidate queries so Profile (standaloneVideos) and My Artwork update immediately
       queryClient.invalidateQueries({ queryKey: USER_PROFILE_ME_QUERY_KEY });
@@ -146,11 +174,11 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!file) {
+    if (!isEditMode && !file) {
       setError(t('introVideo.errorNoFile', 'Please select a video file to upload.'));
       return;
     }
-    if (duration && duration > MAX_VIDEO_SECONDS) {
+    if (file && duration && duration > MAX_VIDEO_SECONDS) {
       setError(
         t(
           'introVideo.errorTooLong',
@@ -164,27 +192,31 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
 
   if (!isOpen) return null;
 
-  const isDurationValid = duration !== null && duration <= MAX_VIDEO_SECONDS;
-  const isTooLong = duration !== null && duration > MAX_VIDEO_SECONDS;
+  const isDurationValid =
+    duration === null || duration <= MAX_VIDEO_SECONDS || (!file && isEditMode);
+  const isTooLong = Boolean(file) && duration !== null && duration > MAX_VIDEO_SECONDS;
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="upload-intro-video-title"
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+        className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Modal Dialog */}
-      <div className="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+      <div
+        className="relative z-10 flex w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl transition-all"
+        style={{ maxHeight: 'calc(100vh - 2rem)' }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+        <div className="flex shrink-0 items-center justify-between border-b border-gray-100 bg-white px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-50 text-[#4048cd]">
               <Video size={22} strokeWidth={2.2} />
@@ -194,10 +226,20 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
                 id="upload-intro-video-title"
                 className="text-lg font-bold text-[#111827]"
               >
-                {t('introVideo.modalTitle', 'Upload 1-Minute Introduction Video')}
+                {isEditMode
+                  ? t('introVideo.editModalTitle', 'Edit 1-Minute Video Update')
+                  : t('introVideo.modalTitle', 'Upload 1-Minute Introduction Video')}
               </h2>
               <p className="text-xs text-[#6b7280]">
-                {t('introVideo.modalSubtitle', 'Introduce yourself and your work directly on your profile')}
+                {isEditMode
+                  ? t(
+                      'introVideo.editModalSubtitle',
+                      'Update the title, description, or replace the video file',
+                    )
+                  : t(
+                      'introVideo.modalSubtitle',
+                      'Introduce yourself and your work directly on your profile',
+                    )}
               </p>
             </div>
           </div>
@@ -205,14 +247,21 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+            className="cursor-pointer rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Content Form */}
-        <form onSubmit={handleSubmit} className="p-6">
+        <form
+          onSubmit={handleSubmit}
+          className="flex min-h-0 flex-1 flex-col overflow-hidden"
+        >
+          <div
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5"
+            style={{ maxHeight: 'calc(100vh - 2rem - 9.5rem)' }}
+          >
           {/* Upload Dropzone */}
           <div
             onDragOver={(e) => {
@@ -254,9 +303,15 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
                   className="max-h-48 w-full rounded-lg bg-black object-contain shadow-xs"
                 />
                 <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
-                  <span className="font-semibold text-gray-700 truncate max-w-xs">
-                    {file?.name}
-                  </span>
+                  {file?.name ? (
+                    <span className="font-semibold text-gray-700 truncate max-w-xs">
+                      {file.name}
+                    </span>
+                  ) : isEditMode ? (
+                    <span className="font-semibold text-gray-700">
+                      {t('introVideo.currentVideo', 'Current video')}
+                    </span>
+                  ) : null}
                   {duration !== null && (
                     <span
                       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-medium ${
@@ -273,12 +328,19 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
                       {formatDuration(duration)} / 1:00 min
                     </span>
                   )}
-                  <span className="text-gray-400">
-                    ({(file.size / (1024 * 1024)).toFixed(1)} MB)
-                  </span>
+                  {file ? (
+                    <span className="text-gray-400">
+                      ({(file.size / (1024 * 1024)).toFixed(1)} MB)
+                    </span>
+                  ) : null}
                 </div>
                 <p className="text-[11px] text-gray-400 hover:text-gray-600 underline">
-                  {t('introVideo.changeVideo', 'Click to choose another video')}
+                  {isEditMode
+                    ? t(
+                        'introVideo.replaceVideoOptional',
+                        'Click to replace video (optional)',
+                      )
+                    : t('introVideo.changeVideo', 'Click to choose another video')}
                 </p>
               </div>
             ) : (
@@ -346,18 +408,18 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
               onChange={(e) => setStory(e.target.value)}
               placeholder={t(
                 'introVideo.videoStoryPlaceholder',
-                'Sharing a quick 1-minute message about my upcoming photo series and thanking my supporters!',
+                'Optional short message about this update…',
               )}
-              className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-gray-900 focus:border-[#4048cd] focus:outline-hidden focus:ring-2 focus:ring-[#4048cd]/20"
+              className="min-h-16 w-full resize-y rounded-xl border border-gray-200 px-3.5 py-2 text-sm text-gray-900 focus:border-[#4048cd] focus:outline-hidden focus:ring-2 focus:ring-[#4048cd]/20"
             />
           </div>
 
           {/* Information box */}
-          <div className="mt-4 rounded-xl bg-indigo-50/60 border border-indigo-100 p-3.5 text-xs text-[#353bb5] flex items-start gap-2.5">
-            <Video size={16} className="shrink-0 mt-0.5" />
+          <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-indigo-100 bg-indigo-50/60 p-3.5 text-xs text-[#353bb5]">
+            <Video size={16} className="mt-0.5 shrink-0" />
             <div>
               <p className="font-semibold">{t('introVideo.infoTitle', 'Why upload a 1-minute video?')}</p>
-              <p className="mt-0.5 text-indigo-900/80 leading-relaxed">
+              <p className="mt-0.5 leading-relaxed text-indigo-900/80">
                 {t(
                   'introVideo.infoDesc',
                   'Your video will be featured prominently on your public profile bio so collectors, visitors, and competition voters can get to know you.',
@@ -365,31 +427,41 @@ const UploadIntroVideoModal = memo(({ isOpen, onClose, onSuccess }) => {
               </p>
             </div>
           </div>
+          </div>
 
           {/* Footer Actions */}
-          <div className="mt-6 flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
+          <div className="flex items-center justify-end gap-3 border-t border-gray-100 bg-white px-6 py-4">
             <button
               type="button"
               onClick={onClose}
               disabled={uploadMutation.isPending}
-              className="rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition"
+              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed"
             >
               {t('common.cancel', 'Cancel')}
             </button>
             <button
               type="submit"
-              disabled={!file || isTooLong || uploadMutation.isPending}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#4048cd] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#343bb0] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={
+                (!isEditMode && !file) ||
+                isTooLong ||
+                uploadMutation.isPending ||
+                !isDurationValid
+              }
+              className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#4048cd] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#343bb0] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {uploadMutation.isPending ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  {t('introVideo.uploading', 'Uploading...')}
+                  {isEditMode
+                    ? t('introVideo.updating', 'Updating...')
+                    : t('introVideo.uploading', 'Uploading...')}
                 </>
               ) : (
                 <>
                   <Upload size={16} />
-                  {t('introVideo.submitBtn', 'Upload 1-Min Video')}
+                  {isEditMode
+                    ? t('introVideo.updateBtn', 'Save Changes')
+                    : t('introVideo.submitBtn', 'Upload 1-Min Video')}
                 </>
               )}
             </button>

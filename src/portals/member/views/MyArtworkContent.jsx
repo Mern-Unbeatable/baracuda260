@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Loader2, Pencil, Plus, RefreshCw, X } from 'lucide-react';
+import { Images, Loader2, Pencil, Plus, RefreshCw, RotateCcw, X } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
@@ -35,6 +35,7 @@ import {
 } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
 const SHOWCASE_BADGE_KEYS = {
@@ -139,11 +140,19 @@ const MyArtworkContent = memo(() => {
     },
   });
 
-  const handleDeleteArtwork = (item) => {
+  const handleDeleteArtwork = async (item) => {
     if (!item?.id) return;
-    if (window.confirm(t('myArtwork.confirmDelete', 'Are you sure you want to delete this artwork?'))) {
-      deleteMutation.mutate(item.id);
-    }
+    const confirmed = await confirmDestructiveAction({
+      title: t('myArtwork.deleteConfirmTitle', 'Delete this artwork?'),
+      text: t(
+        'myArtwork.confirmDelete',
+        'Are you sure you want to delete this artwork?',
+      ),
+      confirmButtonText: t('common.delete', 'Delete'),
+      cancelButtonText: t('common.cancel', 'Cancel'),
+    });
+    if (!confirmed) return;
+    deleteMutation.mutate(item.id);
   };
 
   const promoteMutation = useMutation({
@@ -262,19 +271,22 @@ const MyArtworkContent = memo(() => {
   }));
 
   const kindParam = TAB_KIND_MAP[filterTab];
+  const promotedOnly = filterTab === 'Promoted';
 
   // Fetch live artworks from GET /api/v1/artworks
   const {
     data: apiResult,
     isLoading,
     isFetching,
+    isPlaceholderData,
     isError,
     error,
     refetch,
   } = useQuery({
     queryKey: [
       ...USER_ARTWORKS_QUERY_KEY,
-      kindParam,
+      kindParam ?? 'ALL',
+      promotedOnly,
       statusFilter,
       sort,
       page,
@@ -284,6 +296,7 @@ const MyArtworkContent = memo(() => {
       getUserArtworksApi({
         kind: kindParam,
         status: statusFilter,
+        promoted: promotedOnly,
         sort,
         page,
         limit: MY_ARTWORK_PAGE_SIZE,
@@ -291,18 +304,15 @@ const MyArtworkContent = memo(() => {
     placeholderData: keepPreviousData,
   });
 
+  // Skeleton only on true first load (no cached/previous data yet).
+  // Avoid flashing skeleton again after upload redirect / background refetch.
+  const showArtworkSkeleton = isLoading && !apiResult;
+
   const liveItems = apiResult?.items ?? [];
   const meta = apiResult?.meta;
   const totalPages = Math.max(1, meta?.totalPages ?? 1);
   const totalRecords = meta?.totalRecords ?? liveItems.length;
-
-  // Filter promoted on client if "Promoted" tab is active
-  const displayedItems = useMemo(() => {
-    if (filterTab === 'Promoted') {
-      return liveItems.filter((it) => it.promoted);
-    }
-    return liveItems;
-  }, [liveItems, filterTab]);
+  const displayedItems = liveItems;
 
   // Compute stat cards from live data or fallbacks
   const statCards = useMemo(() => {
@@ -363,21 +373,21 @@ const MyArtworkContent = memo(() => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-        <div className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-4">
-          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-6 lg:gap-8">
+      <header className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between xl:gap-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-3">
+          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[32px] sm:leading-9 lg:text-[40px] lg:leading-9.5">
             {t('myArtwork.title')}
           </h1>
           <p className="max-w-240 text-[15px] leading-6 text-[#494453] sm:text-[16px]">
             {t('myArtwork.subtitle')}
           </p>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center gap-3">
-          <UploadIntroVideoButton className="rounded-xl border border-[#c7cbf2] bg-white px-5 py-2.5 text-[16px] leading-6 text-[#4048cd] shadow-sm hover:bg-[#f5f6ff]" />
+        <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3 xl:w-auto xl:shrink-0">
+          <UploadIntroVideoButton className="h-11 w-full justify-center rounded-xl border border-[#c7cbf2] bg-white px-4 text-[14px] leading-6 text-[#4048cd] shadow-sm hover:bg-[#f5f6ff] sm:h-11 sm:flex-1 sm:px-5 sm:text-[15px] xl:w-auto xl:flex-none" />
           <Link
             to={ROUTES.USER_MY_ARTWORK_UPLOAD}
-            className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-5 py-2.5 text-[16px] leading-6 text-white shadow-sm transition hover:bg-[#d41921]"
+            className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#ee1c25] px-4 text-[14px] font-medium leading-6 text-white shadow-sm transition hover:bg-[#d41921] sm:flex-1 sm:px-5 sm:text-[15px] xl:w-auto xl:flex-none"
           >
             <Plus size={16} strokeWidth={2} aria-hidden="true" />
             {t('myArtwork.uploadCta')}
@@ -387,14 +397,14 @@ const MyArtworkContent = memo(() => {
 
       <section
         aria-label={t('myArtwork.stats.aria')}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5 xl:gap-5"
+        className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 lg:gap-4"
       >
         {statCards.map((stat) => (
           <DashboardStatCard key={stat.id} {...stat} />
         ))}
       </section>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between xl:gap-4">
         <FilterPillGroup
           items={filterItems}
           value={filterTab}
@@ -405,10 +415,10 @@ const MyArtworkContent = memo(() => {
           density="compact"
           layout="scroll"
           ariaLabel={t('myArtwork.filters.aria')}
-          className="lg:max-w-3xl"
+          className="min-w-0 xl:max-w-3xl"
         />
 
-        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+        <div className="flex shrink-0 items-center gap-2 overflow-x-auto pb-0.5">
           <MemberFilterSelect
             label={t('myArtwork.statusFilterAria')}
             value={statusFilter}
@@ -448,7 +458,7 @@ const MyArtworkContent = memo(() => {
         </div>
       </div>
 
-      {isLoading ? (
+      {showArtworkSkeleton ? (
         <div className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {Array.from({ length: MY_ARTWORK_PAGE_SIZE }).map((_, idx) => (
             <div
@@ -462,9 +472,59 @@ const MyArtworkContent = memo(() => {
           ))}
         </div>
       ) : displayedItems.length === 0 ? (
-        <p className="text-[16px] text-[#494453]" role="status">
-          {t('myArtwork.empty')}
-        </p>
+        <div
+          role="status"
+          className="relative flex min-h-80 flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#d7dbe7] bg-[linear-gradient(180deg,#ffffff_0%,#f7f8fc_100%)] px-6 py-14 text-center shadow-[0px_1px_2px_rgba(15,23,42,0.04)] sm:px-10"
+        >
+          <div
+            className="pointer-events-none absolute inset-x-10 top-0 h-24 rounded-b-full bg-[radial-gradient(circle_at_center,rgba(64,72,205,0.12),transparent_70%)]"
+            aria-hidden="true"
+          />
+          <span className="relative inline-flex size-16 items-center justify-center rounded-2xl bg-[#ecedfa] text-[#4048cd] shadow-sm ring-1 ring-[#d7dbf5]">
+            <Images size={28} strokeWidth={1.75} aria-hidden="true" />
+          </span>
+          <div className="relative mt-5 max-w-md">
+            <h3 className="text-[18px] font-bold tracking-[-0.2px] text-[#161c27] sm:text-[20px]">
+              {t('myArtwork.emptyTitle', 'No artwork found')}
+            </h3>
+            <p className="mt-2 text-[14px] leading-relaxed text-[#6b7280] sm:text-[15px]">
+              {filterTab !== 'All' || statusFilter !== 'all'
+                ? t(
+                    'myArtwork.emptyFilteredSubtitle',
+                    'Nothing matches your current filters. Try another type or status, or clear filters to see all of your work.',
+                  )
+                : t(
+                    'myArtwork.emptySubtitle',
+                    'Upload your first single photo, 6-photo story, or zodiac album to start building your gallery.',
+                  )}
+            </p>
+          </div>
+          <div className="relative mt-6 flex flex-wrap items-center justify-center gap-3">
+            {filterTab !== 'All' || statusFilter !== 'all' ? (
+              <Button
+                unstyled
+                type="button"
+                onClick={() => {
+                  setFilterTab('All');
+                  setStatusFilter('all');
+                  setSort('newest');
+                  setPage(1);
+                }}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[#c7cbf2] bg-white px-5 py-2.5 text-[14px] font-semibold text-[#4048cd] shadow-sm transition hover:bg-[#f5f6ff]"
+              >
+                <RotateCcw size={15} aria-hidden="true" />
+                {t('myArtwork.clearFilters', 'Clear filters')}
+              </Button>
+            ) : null}
+            <Link
+              to={ROUTES.USER_MY_ARTWORK_UPLOAD}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-5 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#d41921]"
+            >
+              <Plus size={16} strokeWidth={2} aria-hidden="true" />
+              {t('myArtwork.uploadCta')}
+            </Link>
+          </div>
+        </div>
       ) : (
         <section
           aria-label={t('myArtwork.gridAria')}
@@ -489,7 +549,7 @@ const MyArtworkContent = memo(() => {
         </section>
       )}
 
-      {displayedItems.length > 0 ? (
+      {!showArtworkSkeleton && displayedItems.length > 0 ? (
         <footer className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
             {t('myArtwork.showing', {

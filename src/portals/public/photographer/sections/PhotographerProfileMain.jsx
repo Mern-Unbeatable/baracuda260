@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw } from 'lucide-react';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
 import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
 import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
@@ -42,18 +42,50 @@ import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { resolveMediaUrl } from '@/shared/utils/media';
 
+const PROFILE_TAB_IDS = new Set([
+  'profile',
+  'artwork',
+  'store',
+  'premium',
+  'posts',
+]);
+const PROFILE_TAB_SEARCH_PARAM = 'tab';
+
+const resolveProfileTab = (searchParams) => {
+  if (searchParams.has(SLIDESHOW_SEARCH_PARAM)) return 'artwork';
+  const tab = searchParams.get(PROFILE_TAB_SEARCH_PARAM);
+  return PROFILE_TAB_IDS.has(tab) ? tab : 'profile';
+};
+
 const PhotographerProfileMain = memo(() => {
   const { t } = useTranslation();
-  const location = useLocation();
   const currentUser = useSelector(selectUser);
   const { username: paramUsername } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const username = paramUsername || searchParams.get('username');
+  const activeTab = resolveProfileTab(searchParams);
 
-  const [activeTab, setActiveTab] = useState(
-    () =>
-      location.state?.tab ||
-      (searchParams.has(SLIDESHOW_SEARCH_PARAM) ? 'artwork' : 'profile'),
+  const handleTabChange = useCallback(
+    (tabId) => {
+      if (!PROFILE_TAB_IDS.has(tabId)) return;
+
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (tabId === 'profile') {
+            next.delete(PROFILE_TAB_SEARCH_PARAM);
+          } else {
+            next.set(PROFILE_TAB_SEARCH_PARAM, tabId);
+          }
+          if (tabId !== 'artwork') {
+            next.delete(SLIDESHOW_SEARCH_PARAM);
+          }
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
   );
 
   const {
@@ -242,7 +274,7 @@ const PhotographerProfileMain = memo(() => {
               <PhotographerProfileHeader profile={profile} />
               <PhotographerProfileTabs
                 activeTab={activeTab}
-                onChange={setActiveTab}
+                onChange={handleTabChange}
               />
 
               {activeTab === 'profile' ? (

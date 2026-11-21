@@ -1,4 +1,4 @@
-import { MapPin, Sparkles } from 'lucide-react';
+import { Loader2, MapPin, Sparkles } from 'lucide-react';
 import React, { memo } from 'react';
 import AiGeneratedPhotoBadge from '@/components/data-display/AiGeneratedPhotoBadge/AiGeneratedPhotoBadge';
 import Button from '@/components/ui/Button';
@@ -285,10 +285,16 @@ const ZodiacStoryFormPanel = memo(
         type="submit"
         disabled={isSubmitting}
         unstyled={true}
-        className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921] disabled:opacity-60"
+        className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-70"
       >
-        <Sparkles size={24} aria-hidden="true" />
-        {submitLabel || t(`${i18nPrefix}.submit`)}
+        {isSubmitting ? (
+          <Loader2 size={24} className="animate-spin" aria-hidden="true" />
+        ) : (
+          <Sparkles size={24} aria-hidden="true" />
+        )}
+        {isSubmitting
+          ? t('common.submitting', 'Submitting...')
+          : submitLabel || t(`${i18nPrefix}.submit`)}
       </Button>
     </form>
   ),

@@ -680,7 +680,10 @@ export const createArtworkApi = async (payload) => {
   formData.append('kind', payload.kind || 'SINGLE');
   formData.append('title', payload.title || '');
   formData.append('story', payload.story || '');
-  formData.append('competitionState', payload.competitionState || 'all');
+  formData.append(
+    'competitionState',
+    payload.competitionState || 'IN_COMPETITION',
+  );
   formData.append(
     'isAiGenerated',
     String(
@@ -703,9 +706,15 @@ export const createArtworkApi = async (payload) => {
 
   if (payload.resolution) formData.append('resolution', payload.resolution);
   if (payload.quality) formData.append('quality', payload.quality);
-  if (payload.categoryId) formData.append('categoryId', payload.categoryId);
-  if (payload.subcategoryId)
+
+  const uuidRe =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (payload.categoryId && uuidRe.test(String(payload.categoryId))) {
+    formData.append('categoryId', payload.categoryId);
+  }
+  if (payload.subcategoryId && uuidRe.test(String(payload.subcategoryId))) {
     formData.append('subcategoryId', payload.subcategoryId);
+  }
 
   // SINGLE: zodiacSign
   if (payload.zodiacSign) {
@@ -777,6 +786,45 @@ export const createArtworkVideoCommentApi = async ({
 
   const response = await apiClient.post(
     '/v1/artworks/video-comment',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+
+  return response?.data ?? response;
+};
+
+/**
+ * Update a standalone 1-minute video (title/story and optional new video file).
+ * Endpoint: PUT /v1/artworks/video-comment/:id
+ *
+ * @param {string} videoId
+ * @param {{
+ *   title?: string,
+ *   story?: string,
+ *   isAiGenerated?: boolean | string,
+ *   video?: File,
+ * }} payload
+ */
+export const updateArtworkVideoCommentApi = async (
+  videoId,
+  { title, story, isAiGenerated, video } = {},
+) => {
+  if (!videoId) throw new Error('Video ID is required');
+
+  const formData = new FormData();
+  if (title !== undefined) formData.append('title', title);
+  if (story !== undefined) formData.append('story', story ?? '');
+  if (isAiGenerated !== undefined) {
+    formData.append('isAiGenerated', String(Boolean(isAiGenerated)));
+  }
+  if (video) formData.append('video', video);
+
+  const response = await apiClient.put(
+    `/v1/artworks/video-comment/${encodeURIComponent(videoId)}`,
     formData,
     {
       headers: {
@@ -930,14 +978,19 @@ export const normalizeUserArtwork = (item) => {
   // Competition & status mapping
   const compState = String(item.competitionState || '').toUpperCase();
   let footerState = 'profileOnly';
-  if (compState === 'IN_COMPETITION' || item.competition) {
-    footerState = 'active';
-  } else if (compState === 'ENDED' || item.competition?.status === 'ENDED') {
+  if (compState === 'ENDED') {
     footerState = 'ended';
+  } else if (compState === 'IN_COMPETITION') {
+    footerState = 'active';
   }
 
+  const promotionEndsAt = item.promotion?.endsAt
+    ? new Date(item.promotion.endsAt).getTime()
+    : null;
   const isPromoted = Boolean(
-    item.promotion && item.promotion.isActive !== false,
+    item.promotion &&
+      item.promotion.isActive !== false &&
+      (promotionEndsAt == null || promotionEndsAt > Date.now()),
   );
 
   return {
@@ -973,6 +1026,16 @@ export const normalizeUserArtwork = (item) => {
   };
 };
 
+const USER_ARTWORK_STATUS_API_MAP = {
+  all: undefined,
+  profileOnly: 'PROFILE_ONLY',
+  inCompetition: 'IN_COMPETITION',
+  ended: 'ENDED',
+  PROFILE_ONLY: 'PROFILE_ONLY',
+  IN_COMPETITION: 'IN_COMPETITION',
+  ENDED: 'ENDED',
+};
+
 /**
  * Fetch member artworks with filtering and sorting.
  * Endpoint: GET /v1/artworks?kind=TWELVE&status=all&sort=newest&page=1&limit=10
@@ -980,6 +1043,7 @@ export const normalizeUserArtwork = (item) => {
  * @param {{
  *   kind?: string, // 'ALL' | 'SINGLE' | 'SIX' | 'TWELVE'
  *   status?: string, // 'all' | 'inCompetition' | 'profileOnly' | 'ended'
+ *   promoted?: boolean,
  *   sort?: string, // 'newest' | 'oldest'
  *   page?: number,
  *   limit?: number,
@@ -988,6 +1052,7 @@ export const normalizeUserArtwork = (item) => {
 export const getUserArtworksApi = async ({
   kind,
   status = 'all',
+  promoted = false,
   sort = 'newest',
   page = 1,
   limit = 10,
@@ -1000,8 +1065,14 @@ export const getUserArtworksApi = async ({
   if (kind && kind !== 'ALL' && kind !== 'All') {
     params.kind = String(kind).toUpperCase();
   }
-  if (status && status !== 'all') {
-    params.status = status;
+  const statusParam =
+    USER_ARTWORK_STATUS_API_MAP[status] ??
+    (status && status !== 'all' ? String(status).toUpperCase() : undefined);
+  if (statusParam) {
+    params.status = statusParam;
+  }
+  if (promoted) {
+    params.promoted = 'true';
   }
   if (sort) {
     params.sort = sort;

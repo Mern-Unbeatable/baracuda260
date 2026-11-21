@@ -35,8 +35,8 @@ const MemberMessageCard = memo(({ message, onEdit, onDelete, isDeleting }) => {
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white shadow-sm transition hover:shadow-md">
-      <div className="flex items-start justify-between gap-3 p-4 pb-3">
-        <div className="flex min-w-0 items-center gap-3">
+      <div className="flex items-start gap-3 p-4 pb-3">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           <Image
             src={message?.authorAvatar}
             alt=""
@@ -45,49 +45,55 @@ const MemberMessageCard = memo(({ message, onEdit, onDelete, isDeleting }) => {
             className="size-11 shrink-0 rounded-full object-cover"
           />
           <div className="min-w-0">
-            <p className="truncate text-[15px] font-semibold text-[#161c27]">
-              {message?.authorName}
-            </p>
-            <p className="truncate text-[13px] text-[#6b7280]">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <p className="truncate text-[15px] font-semibold text-[#161c27]">
+                {message?.authorName}
+              </p>
+              <span className="inline-flex shrink-0 rounded-full bg-[#ecedfa] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-[#4048cd]">
+                {t('myMessages.card.badge')}
+              </span>
+            </div>
+            <p className="mt-0.5 truncate text-[13px] text-[#6b7280]">
               {message?.postedDate || message?.relativeTime}
               {message?.postedTime ? ` • ${message?.postedTime}` : ''}
             </p>
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1.5">
-          <span className="rounded-full bg-[#ecedfa] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-[#4048cd]">
-            {t('myMessages.card.badge')}
-          </span>
-          {onEdit ? (
-            <button
-              type="button"
-              onClick={() => onEdit(message)}
-              disabled={isDeleting}
-              aria-label={t('myMessages.card.edit', 'Edit post')}
-              title={t('myMessages.card.edit', 'Edit post')}
-              className="inline-flex size-7 cursor-pointer items-center justify-center rounded-lg text-[#9ca3af] transition hover:bg-[#eff6ff] hover:text-[#2563eb] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Pencil size={14} strokeWidth={2} />
-            </button>
-          ) : null}
-          {onDelete ? (
-            <button
-              type="button"
-              onClick={() => onDelete(message)}
-              disabled={isDeleting}
-              aria-label={t('myMessages.card.delete', 'Delete post')}
-              title={t('myMessages.card.delete', 'Delete post')}
-              className="inline-flex size-7 cursor-pointer items-center justify-center rounded-lg text-[#9ca3af] transition hover:bg-[#fee2e2] hover:text-[#dc2626] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isDeleting ? (
-                <Loader2 size={14} className="animate-spin text-[#dc2626]" />
-              ) : (
-                <Trash2 size={15} strokeWidth={2} />
-              )}
-            </button>
-          ) : null}
-        </div>
+        {(onEdit || onDelete) && (
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 self-start">
+            {onEdit ? (
+              <Button
+                unstyled
+                type="button"
+                onClick={() => onEdit(message)}
+                disabled={isDeleting}
+                aria-label={t('myMessages.card.edit', 'Edit post')}
+                title={t('myMessages.card.edit', 'Edit post')}
+                className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full border border-[#e8eaef] bg-white text-[#4048cd] transition hover:bg-[#eef0ff] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Pencil size={14} strokeWidth={2} />
+              </Button>
+            ) : null}
+            {onDelete ? (
+              <Button
+                unstyled
+                type="button"
+                onClick={() => onDelete(message)}
+                disabled={isDeleting}
+                aria-label={t('myMessages.card.delete', 'Delete post')}
+                title={t('myMessages.card.delete', 'Delete post')}
+                className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full border border-[#e8eaef] bg-white text-[#ee1c25] transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Trash2 size={14} strokeWidth={2} />
+                )}
+              </Button>
+            ) : null}
+          </div>
+        )}
       </div>
 
       {textContent ? (
