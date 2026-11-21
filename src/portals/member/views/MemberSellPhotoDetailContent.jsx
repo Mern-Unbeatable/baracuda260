@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
-import React, { memo, useEffect, useState } from 'react';
+import { ArrowLeft, RefreshCw } from 'lucide-react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailImageDetails/GalleryDetailImageDetails';
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
+import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
 import SignBadge from '@/components/data-display/SignBadge/SignBadge';
 import SixStoryStrip from '@/components/data-display/SixStoryStrip/SixStoryStrip';
 import TwelveStoryStrip from '@/components/data-display/TwelveStoryStrip/TwelveStoryStrip';
@@ -14,7 +15,9 @@ import { getSellPhotoDetailById } from '@/portals/member/data/sellPhotosDetailDa
 import {
   getMarketplacePremiumPhotoDetailsApi,
   MARKETPLACE_PREMIUM_PHOTO_DETAIL_QUERY_KEY,
+  normalizeMarketplaceDetail,
 } from '@/shared/api/premiumPhotos.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
 import {
   GALLERY_DETAIL_ASSETS,
@@ -47,15 +50,40 @@ DetailPanel.displayName = 'DetailPanel';
 const MemberSellPhotoDetailContent = memo(() => {
   const { t } = useTranslation();
   const { id } = useParams();
+  const location = useLocation();
 
-  const { data: apiDetail, isLoading } = useQuery({
+  const listFallback = useMemo(() => {
+    const raw = location.state?.sellPhoto;
+    if (!raw || String(raw.id) !== String(id)) return null;
+    return (
+      normalizeMarketplaceDetail({
+        ...raw,
+        kind: raw.kind || raw.albumBadge,
+        images:
+          raw.images ||
+          (raw.image || raw.coverImage
+            ? [{ url: raw.image || raw.coverImage }]
+            : null),
+      }) || raw
+    );
+  }, [id, location.state]);
+
+  const {
+    data: apiDetail,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: MARKETPLACE_PREMIUM_PHOTO_DETAIL_QUERY_KEY(id),
     queryFn: () => getMarketplacePremiumPhotoDetailsApi(id),
     enabled: Boolean(id),
     staleTime: 60 * 1000,
+    retry: 1,
   });
 
-  const detail = apiDetail || getSellPhotoDetailById(id);
+  const detail =
+    apiDetail || listFallback || getSellPhotoDetailById(id) || null;
   const [activeIndex, setActiveIndex] = useState(0);
 
   const config = detail
@@ -89,7 +117,39 @@ const MemberSellPhotoDetailContent = memo(() => {
   }
 
   if (!detail) {
-    return <Navigate to={ROUTES.USER_SELL_PHOTOS} replace />;
+    return (
+      <div className="mx-auto flex w-full max-w-395 flex-col items-center justify-center gap-4 py-24 text-center">
+        <p className="text-[16px] text-[#494453]">
+          {getApiErrorMessage(
+            error,
+            t(
+              'sellPhotos.detail.notFound',
+              'This selling photo could not be found.',
+            ),
+          )}
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {isError ? (
+            <Button
+              unstyled
+              type="button"
+              onClick={() => refetch()}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[#e5e7eb] bg-white px-4 py-2.5 text-sm font-semibold text-[#111827] transition hover:bg-[#f9fafb]"
+            >
+              <RefreshCw size={16} />
+              {t('common.retry', 'Retry')}
+            </Button>
+          ) : null}
+          <Link
+            to={ROUTES.USER_SELL_PHOTOS}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#d41921]"
+          >
+            <ArrowLeft size={16} />
+            {t('sellPhotos.detail.back', 'Back to Sell Photos')}
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   const activeSlide = slides[activeIndex] || slides[0];
@@ -124,8 +184,7 @@ const MemberSellPhotoDetailContent = memo(() => {
   const specRows = [
     { label: t('buyPhotos.detail.specs.resolution'), value: detail.resolution },
     { label: t('buyPhotos.detail.specs.format'), value: detail.format },
-    { label: t('buyPhotos.detail.specs.camera'), value: detail.camera },
-  ];
+  ].filter((row) => Boolean(row.value));
 
   const statItems = [
     { label: t('buyPhotos.detail.likesReceived'), value: detail.likesMetric },
@@ -133,8 +192,11 @@ const MemberSellPhotoDetailContent = memo(() => {
     { label: t('sellPhotos.detail.totalSell'), value: detail.totalSellMetric },
   ];
 
+  const mediaBleedClass =
+    'relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 lg:left-0 lg:w-full lg:max-w-none lg:translate-x-0';
+
   return (
-    <div className="mx-auto flex w-full max-w-395 flex-col gap-6 sm:gap-8">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-5 overflow-x-hidden sm:gap-8">
       <Link
         to={ROUTES.USER_SELL_PHOTOS}
         className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
@@ -143,52 +205,60 @@ const MemberSellPhotoDetailContent = memo(() => {
         {t('sellPhotos.detail.back')}
       </Link>
 
-      <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]">
-        <Image
-          src={heroSrc}
-          alt={heroAlt}
-          width={1536}
-          height={653}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        {activeSlide ? (
-          <SignBadge slide={activeSlide} blue={blueBadge} />
-        ) : null}
+      <div className={mediaBleedClass}>
+        <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-video lg:aspect-1536/653 lg:rounded-[20px]">
+          <Image
+            src={heroSrc}
+            alt={heroAlt}
+            width={1536}
+            height={653}
+            priority
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {activeSlide ? (
+            <SignBadge slide={activeSlide} blue={blueBadge} />
+          ) : null}
+          <PhotoAiBadgeOverlay
+            show={detail.isAiGenerated}
+            placement="hero-end"
+            size="lg"
+          />
 
-        {showStoryChrome || slideCount > 1 ? (
-          <>
-            <Button
-              unstyled
-              type="button"
-              onClick={goPrev}
-              aria-label={t('galleryDetail.previousPhoto')}
-              className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-12.75 sm:size-12.75"
-            >
-              <Image
-                src={GALLERY_DETAIL_ASSETS.arrow}
-                alt=""
-                width={16}
-                height={32}
-                className="h-7 w-3.5 rotate-180 object-contain sm:h-8 sm:w-4"
-              />
-            </Button>
-            <Button
-              unstyled
-              type="button"
-              onClick={goNext}
-              aria-label={t('galleryDetail.nextPhoto')}
-              className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-12.75 sm:size-12.75"
-            >
-              <Image
-                src={GALLERY_DETAIL_ASSETS.arrow}
-                alt=""
-                width={16}
-                height={32}
-                className="h-7 w-3.5 object-contain sm:h-8 sm:w-4"
-              />
-            </Button>
-          </>
-        ) : null}
+          {showStoryChrome || slideCount > 1 ? (
+            <>
+              <Button
+                unstyled
+                type="button"
+                onClick={goPrev}
+                aria-label={t('galleryDetail.previousPhoto')}
+                className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-12.75 sm:size-12.75"
+              >
+                <Image
+                  src={GALLERY_DETAIL_ASSETS.arrow}
+                  alt=""
+                  width={16}
+                  height={32}
+                  className="h-7 w-3.5 rotate-180 object-contain sm:h-8 sm:w-4"
+                />
+              </Button>
+              <Button
+                unstyled
+                type="button"
+                onClick={goNext}
+                aria-label={t('galleryDetail.nextPhoto')}
+                className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-12.75 sm:size-12.75"
+              >
+                <Image
+                  src={GALLERY_DETAIL_ASSETS.arrow}
+                  alt=""
+                  width={16}
+                  height={32}
+                  className="h-7 w-3.5 object-contain sm:h-8 sm:w-4"
+                />
+              </Button>
+            </>
+          ) : null}
+        </div>
       </div>
 
       {config.curveSrc ? (
@@ -220,11 +290,14 @@ const MemberSellPhotoDetailContent = memo(() => {
         />
       ) : null}
 
-      <GalleryDetailVideo
-        poster={videoPoster}
-        src={videoSrc}
-        title={detail.title}
-      />
+      <div className={mediaBleedClass}>
+        <GalleryDetailVideo
+          poster={videoPoster}
+          src={videoSrc}
+          title={detail.title}
+          className="rounded-none lg:rounded-[20px]"
+        />
+      </div>
 
       <div className="flex flex-wrap gap-2 sm:gap-3">
         {[badgeLabel, categoryLabel].filter(Boolean).map((tag) => (
@@ -271,16 +344,16 @@ const MemberSellPhotoDetailContent = memo(() => {
         </DetailPanel>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         {statItems.map((stat) => (
           <div
             key={stat.label}
-            className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-black/8 bg-[#f5f5f5] px-4 py-4 text-center"
+            className="flex min-w-0 flex-col items-center justify-center gap-1.5 rounded-xl border border-black/8 bg-[#f5f5f5] px-2 py-3 text-center sm:gap-2 sm:rounded-2xl sm:px-4 sm:py-4"
           >
-            <p className="w-full text-[11px] font-semibold uppercase tracking-wider text-[#6b7280] sm:text-[12px]">
+            <p className="w-full text-[9px] font-semibold uppercase leading-tight tracking-wider text-[#6b7280] sm:text-[12px]">
               {stat.label}
             </p>
-            <p className="w-full text-[28px] font-semibold leading-none text-[#161c27] sm:text-[32px]">
+            <p className="w-full text-[20px] font-semibold leading-none text-[#161c27] sm:text-[32px]">
               {stat.value}
             </p>
           </div>

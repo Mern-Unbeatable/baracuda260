@@ -6,7 +6,55 @@ import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/Photo
 import Button from '@/components/ui/Button';
 import useSavedArtworks from '@/portals/member/hooks/useSavedArtworks';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 8;
+
+const FavouritePhotoCard = memo(function FavouritePhotoCard({
+  photo,
+  onSave,
+  onEngage,
+}) {
+  const handleSave = useCallback(() => {
+    onSave(photo.id);
+  }, [onSave, photo.id]);
+
+  const handleEngage = useCallback(() => {
+    if (photo.engagementDisabled) return;
+    return onEngage(photo.id, photo.engagementType || 'like');
+  }, [
+    onEngage,
+    photo.engagementDisabled,
+    photo.engagementType,
+    photo.id,
+  ]);
+
+  return (
+    <div className="h-full min-w-0 [content-visibility:auto] [contain-intrinsic-size:auto_420px]">
+      <PhotoShowcaseCard
+        id={photo.id}
+        href={photo.href ?? `/user/favourite-photos/${photo.id}`}
+        image={photo.image}
+        badge={photo.badge}
+        title={photo.title}
+        titleClassName="line-clamp-1"
+        description={photo.description}
+        likes={photo.likes}
+        views={photo.views}
+        date={photo.date}
+        price={photo.price}
+        competitionLabel={photo.competitionLabel}
+        extraPhotosLabel={photo.extraPhotosLabel}
+        topRightType="none"
+        engagementType={photo.engagementType || 'like'}
+        engagementDisabled={Boolean(photo.engagementDisabled)}
+        initialSaved={photo.saved ?? true}
+        initialLiked={photo.liked ?? photo.isLiked ?? false}
+        onLikeToggle={photo.engagementDisabled ? undefined : handleEngage}
+        onSaveToggle={handleSave}
+        className="h-full"
+      />
+    </div>
+  );
+});
 
 /**
  * Member Favourite Photos view — displays user's bookmarked & favorited photos
@@ -25,7 +73,7 @@ const FavouritePhotosContent = memo(() => {
     error,
     refetch,
     toggleSave,
-    toggleLike,
+    toggleEngagement,
   } = useSavedArtworks({ page: currentPage, limit: PAGE_SIZE });
 
   const totalRecords = meta?.totalRecords ?? items.length;
@@ -33,29 +81,31 @@ const FavouritePhotosContent = memo(() => {
   const from = totalRecords > 0 ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
   const to = Math.min(currentPage * PAGE_SIZE, totalRecords);
 
-  const handleSaveToggle = useCallback(
-    (photoId, isSaved) => {
+  const handleSave = useCallback(
+    (photoId) => {
       toggleSave(photoId);
     },
     [toggleSave],
   );
 
-  const handleLikeToggle = useCallback(
-    (photoId, nextLiked) => {
-      toggleLike(photoId);
-    },
-    [toggleLike],
+  const handleEngage = useCallback(
+    (photoId, engagementType) =>
+      toggleEngagement(photoId, engagementType || 'like'),
+    [toggleEngagement],
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-395 flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-395 flex-col gap-6 overflow-x-hidden">
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
             {t('favouritePhotos.title', 'Favourite Photos')}
           </h1>
           {isFetching && !isLoading ? (
-            <div className="flex items-center gap-2 text-[13px] text-[#7a7484]">
+            <div
+              className="flex items-center gap-2 text-[13px] text-[#7a7484]"
+              aria-live="polite"
+            >
               <RefreshCw size={14} className="animate-spin text-[#4048cd]" />
               <span>{t('common.updating', 'Updating...')}</span>
             </div>
@@ -107,31 +157,14 @@ const FavouritePhotosContent = memo(() => {
             'favouritePhotos.gridAria',
             'Favourite photos showcase',
           )}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {items.map((photo) => (
-            <PhotoShowcaseCard
+            <FavouritePhotoCard
               key={photo.id}
-              id={photo.id}
-              href={photo.href ?? `/user/favourite-photos/${photo.id}`}
-              image={photo.image}
-              badge={photo.badge}
-              title={photo.title}
-              titleClassName="line-clamp-1"
-              description={photo.description}
-              likes={photo.likes}
-              views={photo.views}
-              date={photo.date}
-              price={photo.price}
-              competitionLabel={photo.competitionLabel}
-              extraPhotosLabel={photo.extraPhotosLabel}
-              topRightType="none"
-              initialSaved={photo.saved ?? true}
-              initialLiked={photo.liked ?? photo.isLiked ?? false}
-              onLikeToggle={(nextLiked) =>
-                handleLikeToggle(photo.id, nextLiked)
-              }
-              onSaveToggle={(isSaved) => handleSaveToggle(photo.id, isSaved)}
+              photo={photo}
+              onSave={handleSave}
+              onEngage={handleEngage}
             />
           ))}
         </section>
@@ -150,7 +183,7 @@ const FavouritePhotosContent = memo(() => {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={(nextPage) => setCurrentPage(nextPage)}
+            onPageChange={setCurrentPage}
             ariaLabel={t(
               'favouritePhotos.paginationAria',
               'Favourite photos pagination',

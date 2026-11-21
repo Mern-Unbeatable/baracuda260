@@ -27,6 +27,7 @@ import {
 } from '@/shared/api/premiumPhotos.api';
 import { ROUTES } from '@/shared/config';
 import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
 const SHOWCASE_BADGE_KEYS = {
   'Single Photo': 'common.badges.singlePhoto',
@@ -191,11 +192,19 @@ const SellPhotosContent = memo(() => {
     },
   });
 
-  const handleDeletePhoto = (item) => {
+  const handleDeletePhoto = async (item) => {
     if (!item?.id) return;
-    if (window.confirm(t('sellPhotos.confirmDelete', 'Are you sure you want to delete this photo listing?'))) {
-      deleteMutation.mutate(item.id);
-    }
+    const confirmed = await confirmDestructiveAction({
+      title: t('sellPhotos.deleteConfirmTitle', 'Delete this photo listing?'),
+      text: t(
+        'sellPhotos.confirmDelete',
+        'Are you sure you want to delete this photo listing?',
+      ),
+      confirmButtonText: t('common.delete', 'Delete'),
+      cancelButtonText: t('common.cancel', 'Cancel'),
+    });
+    if (!confirmed) return;
+    deleteMutation.mutate(item.id);
   };
 
   const handleEditPhoto = (item) => {
@@ -279,13 +288,33 @@ const SellPhotosContent = memo(() => {
       />
 
       {isLoading ? (
-        <div className="flex w-full items-center justify-center py-20 text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#4048cd] border-t-transparent" />
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="flex h-80 animate-pulse flex-col rounded-2xl border border-[#e8eaef] bg-white p-4 shadow-sm"
+            >
+              <div className="h-44 w-full rounded-xl bg-[#e2e8f0]" />
+              <div className="mt-4 h-5 w-3/4 rounded bg-[#e2e8f0]" />
+              <div className="mt-2 h-4 w-1/2 rounded bg-[#e2e8f0]" />
+            </div>
+          ))}
         </div>
       ) : displayItems.length === 0 ? (
-        <p className="text-[16px] text-[#494453]" role="status">
-          {t('sellPhotos.empty')}
-        </p>
+        <div
+          role="status"
+          className="relative flex min-h-72 flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#d7dbe7] bg-[linear-gradient(180deg,#ffffff_0%,#f7f8fc_100%)] px-6 py-14 text-center"
+        >
+          <h3 className="text-[18px] font-bold text-[#161c27]">
+            {t('sellPhotos.emptyTitle', 'No selling photos yet')}
+          </h3>
+          <p className="mt-2 max-w-md text-[14px] leading-6 text-[#6b7280]">
+            {t(
+              'sellPhotos.empty',
+              'Upload photos to start selling them in the marketplace.',
+            )}
+          </p>
+        </div>
       ) : (
         <section
           aria-label={t('sellPhotos.gridAria')}

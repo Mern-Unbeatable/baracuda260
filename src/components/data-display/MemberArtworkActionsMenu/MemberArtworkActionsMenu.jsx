@@ -40,45 +40,59 @@ const MemberArtworkActionsMenu = memo(
           className="overflow-hidden rounded-[10px] border border-black/10 bg-white py-1 shadow-lg"
         >
           {[
-            {
-              key: 'edit',
-              label: t('myArtwork.actions.edit', 'Edit'),
-              action: () => onEdit?.(item),
-            },
-            ...(item?.footerState !== 'active'
-              ? [
-                  {
-                    key: 'switchCompetition',
-                    label: t(
-                      'myArtwork.actions.switchCompetition',
-                      'Enter Competition',
-                    ),
-                    action: () => onSwitchCompetition?.(item),
-                  },
-                ]
-              : []),
-            {
-              key: 'delete',
-              label: t('myArtwork.actions.delete', 'Delete'),
-              action: () => onDelete?.(item),
-            },
-            {
-              key: 'promote',
-              label: t('myArtwork.actions.promote', 'Promote'),
-              action: () => onPromote?.(item),
-            },
-          ].map(({ key, label, action }) => (
-            <Button
-              unstyled
-              key={key}
-              type="button"
-              role="menuitem"
-              onClick={() => handleAction(action)}
-              className="w-full cursor-pointer px-4 py-2.5 text-left text-[14px] font-medium text-[#1c1c1c] transition hover:bg-[#fde8e9] hover:text-[#ee1c25]"
-            >
-              {label}
-            </Button>
-          ))}
+            onEdit
+              ? {
+                  key: 'edit',
+                  label: t('myArtwork.actions.edit', 'Edit'),
+                  action: () => onEdit(item),
+                  danger: false,
+                }
+              : null,
+            onSwitchCompetition && item?.footerState !== 'active'
+              ? {
+                  key: 'switchCompetition',
+                  label: t(
+                    'myArtwork.actions.switchCompetition',
+                    'Enter Competition',
+                  ),
+                  action: () => onSwitchCompetition(item),
+                  danger: false,
+                }
+              : null,
+            onDelete
+              ? {
+                  key: 'delete',
+                  label: t('myArtwork.actions.delete', 'Delete'),
+                  action: () => onDelete(item),
+                  danger: true,
+                }
+              : null,
+            onPromote
+              ? {
+                  key: 'promote',
+                  label: t('myArtwork.actions.promote', 'Promote'),
+                  action: () => onPromote(item),
+                  danger: false,
+                }
+              : null,
+          ]
+            .filter(Boolean)
+            .map(({ key, label, action, danger }) => (
+              <Button
+                unstyled
+                key={key}
+                type="button"
+                role="menuitem"
+                onClick={() => handleAction(action)}
+                className={`w-full cursor-pointer px-4 py-2.5 text-left text-[14px] font-medium transition ${
+                  danger
+                    ? 'text-[#ee1c25] hover:bg-[#fde8e9]'
+                    : 'text-[#1c1c1c] hover:bg-[#fde8e9] hover:text-[#ee1c25]'
+                }`}
+              >
+                {label}
+              </Button>
+            ))}
         </PortalDropdown>
       </div>
     );

@@ -2,22 +2,28 @@ import React, { memo, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { RefreshCw } from 'lucide-react';
 import Pagination from '@/components/common/Pagination/Pagination';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import Image from '@/components/ui/Image';
-import {
-  MARKETPLACE_PAGE_SIZE,
-  MARKETPLACE_PRODUCTS,
-} from '@/portals/public/marketplace/data/marketplaceData';
+import { MARKETPLACE_PAGE_SIZE } from '@/portals/public/marketplace/data/marketplaceData';
 import { ROUTES } from '@/shared/config';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { useMarketplaceFilters } from '../hooks/useMarketplaceFilters';
 
+const photographerStorePath = (username) => {
+  const base = username
+    ? `/photographer/${encodeURIComponent(String(username).replace(/^@/, ''))}`
+    : ROUTES.PHOTOGRAPHER_PROFILE;
+  return `${base}?tab=store`;
+};
+
 const MarketplaceProductCard = memo(({ product }) => {
   const { t } = useTranslation();
+  const href = photographerStorePath(product.username);
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
@@ -30,7 +36,7 @@ const MarketplaceProductCard = memo(({ product }) => {
           decoding="async"
         />
         <span className="absolute left-2.5 top-2.5 rounded-full bg-[#111827]/85 px-2 py-1 text-[10px] font-bold tracking-[0.06em] text-white">
-          {t(product.badgeKey)}
+          {t(product.badgeKey, product.category || 'Product')}
         </span>
         {product.promoted ? (
           <span className="absolute bottom-2.5 left-2.5 rounded-md bg-[#ee1c25] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
@@ -40,8 +46,8 @@ const MarketplaceProductCard = memo(({ product }) => {
       </div>
       <div className="flex flex-1 flex-col gap-3 p-3.5 sm:p-4">
         <div>
-          <Link to={ROUTES.PHOTOGRAPHER_PROFILE} state={{ tab: 'store' }}>
-            <h3 className="line-clamp-2 text-[14px] font-bold leading-5 text-[#111827] transition hover:text-[#4048cd] hover:underline cursor-pointer">
+          <Link to={href}>
+            <h3 className="line-clamp-2 cursor-pointer text-[14px] font-bold leading-5 text-[#111827] transition hover:text-[#4048cd] hover:underline">
               {product.title}
             </h3>
           </Link>
@@ -57,7 +63,7 @@ const MarketplaceProductCard = memo(({ product }) => {
             {product.price}
           </p>
           <div className="flex items-center gap-1.5">
-            <Link to={ROUTES.PHOTOGRAPHER_PROFILE} state={{ tab: 'store' }}>
+            <Link to={href}>
               <Button variant="outline" className="h-8 px-2.5 text-[12px]">
                 {t('marketplace.viewProduct')}
               </Button>
@@ -93,70 +99,67 @@ const CameraIcon = ({ className }) => (
 
 const MarketplaceStoreCard = memo(({ store }) => {
   const { t } = useTranslation();
-
-  const storeProducts = useMemo(() => {
-    return MARKETPLACE_PRODUCTS.filter(
-      (p) => p.store === store.storeName,
-    ).slice(0, 12);
-  }, [store.storeName]);
+  const href = photographerStorePath(store.username);
+  const storeProducts = useMemo(
+    () => (Array.isArray(store.products) ? store.products.slice(0, 12) : []),
+    [store.products],
+  );
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white p-4 sm:p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+    <article className="flex flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] sm:p-5">
+      <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <Link
-          to={ROUTES.PHOTOGRAPHER_PROFILE}
-          state={{ tab: 'store' }}
-          className="flex items-center gap-3.5 hover:opacity-80 transition group"
+          to={href}
+          className="group flex items-center gap-3.5 transition hover:opacity-80"
         >
           <Image
             src={store.authorImage || store.image}
             alt={store.storeName}
-            className="size-14 sm:size-16 rounded-full object-cover border-2 border-white shadow-md ring-1 ring-[#e8eaef] group-hover:ring-[#4048cd] transition-all shrink-0"
+            className="size-14 shrink-0 rounded-full border-2 border-white object-cover shadow-md ring-1 ring-[#e8eaef] transition-all group-hover:ring-[#4048cd] sm:size-16"
             loading="lazy"
             decoding="async"
           />
           <div>
-            <h3 className="text-[17px] font-bold text-[#111827] flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-[17px] font-bold text-[#111827]">
               {store.storeName}
               {store.promoted ? (
-                <span className="rounded-md bg-[#ee1c25] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.35px] text-white shadow-sm shrink-0">
+                <span className="shrink-0 rounded-md bg-[#ee1c25] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
                   {t('marketplace.promoted')}
                 </span>
               ) : null}
             </h3>
-            <p className="text-[13px] text-[#6b7280] line-clamp-1 mt-0.5">
+            <p className="mt-0.5 line-clamp-1 text-[13px] text-[#6b7280]">
               {store.description}
             </p>
           </div>
         </Link>
 
-        <div className="flex flex-col shrink-0">
+        <div className="flex shrink-0 flex-col">
           <span className="mb-1 text-[11px] font-medium tracking-wide text-[#9ca3af]">
             Artwork Appreciation:
           </span>
-          <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
-            <div className="flex items-center gap-1.5 rounded-full bg-[#fdfaf2] border border-[#f3e5c8] px-2.5 py-1 shrink-0">
-              <CameraIcon className="w-4 h-4 text-[#d4af37]" />
+          <div className="scrollbar-hide flex items-center gap-3 overflow-x-auto">
+            <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#f3e5c8] bg-[#fdfaf2] px-2.5 py-1">
+              <CameraIcon className="h-4 w-4 text-[#d4af37]" />
               <span className="text-[13px] font-bold text-[#927129]">
                 {store.scores?.gold || 0}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-full bg-[#f5f7f9] border border-[#e2e8f0] px-2.5 py-1 shrink-0">
-              <CameraIcon className="w-4 h-4 text-[#94a3b8]" />
+            <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#e2e8f0] bg-[#f5f7f9] px-2.5 py-1">
+              <CameraIcon className="h-4 w-4 text-[#94a3b8]" />
               <span className="text-[13px] font-bold text-[#475569]">
                 {store.scores?.silver || 0}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-full bg-[#fdf7f4] border border-[#eedfd5] px-2.5 py-1 shrink-0">
-              <CameraIcon className="w-4 h-4 text-[#cd7f32]" />
+            <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#eedfd5] bg-[#fdf7f4] px-2.5 py-1">
+              <CameraIcon className="h-4 w-4 text-[#cd7f32]" />
               <span className="text-[13px] font-bold text-[#925c42]">
                 {store.scores?.bronze || 0}
               </span>
             </div>
             <Link
-              to={ROUTES.PHOTOGRAPHER_PROFILE}
-              state={{ tab: 'store' }}
-              className="ml-1 text-[13px] font-semibold text-[#4048cd] hover:underline whitespace-nowrap"
+              to={href}
+              className="ml-1 whitespace-nowrap text-[13px] font-semibold text-[#4048cd] hover:underline"
             >
               See All
             </Link>
@@ -164,23 +167,28 @@ const MarketplaceStoreCard = memo(({ store }) => {
         </div>
       </div>
 
-      <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-1 px-1">
-        {storeProducts.map((product) => (
-          <Link
-            key={product.id}
-            to={ROUTES.PHOTOGRAPHER_PROFILE}
-            state={{ tab: 'store' }}
-            className="shrink-0 group block overflow-hidden rounded-[10px] border border-[#e8eaef] hover:border-[#4048cd] hover:shadow-md transition-all"
-          >
-            <div className="w-24 h-24 sm:w-28 sm:h-28 relative bg-[#f3f4f6]">
-              <Image
-                src={product.image}
-                alt={product.title}
-                className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            </div>
-          </Link>
-        ))}
+      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-2">
+        {storeProducts.length === 0 ? (
+          <p className="py-6 text-[13px] text-[#9ca3af]">
+            {t('marketplace.noProducts', 'No products yet')}
+          </p>
+        ) : (
+          storeProducts.map((product) => (
+            <Link
+              key={product.id}
+              to={href}
+              className="group block shrink-0 overflow-hidden rounded-[10px] border border-[#e8eaef] transition-all hover:border-[#4048cd] hover:shadow-md"
+            >
+              <div className="relative h-24 w-24 bg-[#f3f4f6] sm:h-28 sm:w-28">
+                <Image
+                  src={product.image}
+                  alt={product.title}
+                  className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+            </Link>
+          ))
+        )}
       </div>
     </article>
   );
@@ -199,7 +207,11 @@ const MarketplaceMain = memo(() => {
     currentPage,
     setPage,
     totalPages,
+    totalRecords,
     pagedItems,
+    isLoading,
+    isError,
+    refetch,
   } = useMarketplaceFilters();
 
   return (
@@ -246,7 +258,25 @@ const MarketplaceMain = memo(() => {
             </div>
           </div>
 
-          {pagedItems.length === 0 ? (
+          {isLoading ? (
+            <div className="flex min-h-48 items-center justify-center">
+              <RefreshCw size={22} className="animate-spin text-[#4048cd]" />
+            </div>
+          ) : isError ? (
+            <div className="flex flex-col items-center gap-3 rounded-[14px] border border-dashed border-[#e4e4e4] bg-[#fafafa] px-6 py-14 text-center">
+              <p className="text-[16px] font-bold text-[#161c27]">
+                {t('marketplace.loadError', 'Failed to load stores.')}
+              </p>
+              <Button
+                unstyled
+                type="button"
+                onClick={() => refetch()}
+                className="rounded-lg bg-[#4048cd] px-4 py-2 text-[13px] font-semibold text-white"
+              >
+                {t('common.retry', 'Retry')}
+              </Button>
+            </div>
+          ) : pagedItems.length === 0 ? (
             <div className="rounded-[14px] border border-dashed border-[#e4e4e4] bg-[#fafafa] px-6 py-14 text-center">
               <p className="text-[18px] font-bold text-[#161c27]">
                 {t('marketplace.emptyTitle')}
@@ -274,16 +304,16 @@ const MarketplaceMain = memo(() => {
             </section>
           )}
 
-          {activeItems.length > 0 ? (
+          {!isLoading && !isError && totalRecords > 0 ? (
             <footer className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
               <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
                 {t('marketplace.showing', {
                   from: (currentPage - 1) * MARKETPLACE_PAGE_SIZE + 1,
                   to: Math.min(
                     currentPage * MARKETPLACE_PAGE_SIZE,
-                    activeItems.length,
+                    totalRecords,
                   ),
-                  total: activeItems.length,
+                  total: totalRecords,
                 })}
               </p>
               <Pagination

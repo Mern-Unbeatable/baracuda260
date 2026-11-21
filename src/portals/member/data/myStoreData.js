@@ -1,8 +1,22 @@
 /** Member My Store — product listings + upload. */
 
+import { ROUTES } from '@/shared/config';
+
 const H = '/assets/home';
 
 export const MY_STORE_PAGE_SIZE = 8;
+
+export const myStoreDetailPath = (id) =>
+  `${ROUTES.USER_MY_STORE}/${encodeURIComponent(id)}`;
+
+/** Public photographer store product detail (non-owners / watchlist). */
+export const publicStoreProductPath = (username, productId) => {
+  const handle = String(username || '')
+    .trim()
+    .replace(/^@/, '');
+  if (!handle || !productId) return ROUTES.MARKETPLACE;
+  return `/photographer/${encodeURIComponent(handle)}?tab=store&product=${encodeURIComponent(String(productId))}`;
+};
 
 export const STORE_CATEGORY_LIST = [
   { id: 'merchendise', value: 'Merchendise', label: 'Merchendise', labelKey: 'myStore.categories.merchendise' },

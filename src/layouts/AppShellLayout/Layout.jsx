@@ -191,7 +191,7 @@ const Layout = memo(() => {
 
         <div className="flex min-h-0 flex-1 flex-col bg-[#f9fafb]">
           <div
-            className="scrollbar-white min-h-0 w-full flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8"
+            className="scrollbar-white min-h-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8"
             data-lenis-prevent
           >
             {isAdmin && !isAdminReadyPage ? (

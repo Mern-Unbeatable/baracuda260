@@ -27,7 +27,6 @@ import {
   PHOTOGRAPHER_MESSAGES,
   PHOTOGRAPHER_PREMIUM,
   PHOTOGRAPHER_PROFILE,
-  PHOTOGRAPHER_STORE_PRODUCTS,
   PHOTOGRAPHER_TALENT_APPRECIATION,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import {
@@ -322,7 +321,8 @@ const PhotographerProfileMain = memo(() => {
 
               {activeTab === 'store' ? (
                 <PhotographerStoreSection
-                  products={PHOTOGRAPHER_STORE_PRODUCTS}
+                  userId={profile?.id}
+                  username={username || profile?.username}
                   isOwner={isOwner}
                 />
               ) : null}

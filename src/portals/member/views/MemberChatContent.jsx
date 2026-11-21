@@ -1,6 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -22,10 +29,15 @@ import {
   sendChatMessageApi,
 } from '@/shared/api/chat.api';
 import {
+  emitStopTyping,
+  emitTyping,
+  getSocket,
   joinChatRoom,
   leaveChatRoom,
   subscribeToIncomingMessages,
   subscribeToMessageUpdates,
+  subscribeToPresence,
+  subscribeToTyping,
 } from '@/shared/lib/chatSocket';
 
 const MemberChatContent = memo(() => {
@@ -46,10 +58,36 @@ const MemberChatContent = memo(() => {
   const [draft, setDraft] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [editingMessage, setEditingMessage] = useState(null);
+  const [replyToMessage, setReplyToMessage] = useState(null);
   const [showMobileThread, setShowMobileThread] = useState(
     Boolean(initialRoomId),
   );
   const [isComposeOpen, setIsComposeOpen] = useState(false);
+  const [onlineUserIds, setOnlineUserIds] = useState(() => new Set());
+  const [peerIsTyping, setPeerIsTyping] = useState(false);
+  const typingIdleTimerRef = useRef(null);
+  const isTypingRef = useRef(false);
+  const peerTypingTimerRef = useRef(null);
+
+  // Connect socket + track presence as soon as chat page opens
+  useEffect(() => {
+    getSocket();
+    return subscribeToPresence({
+      onOnlineUsers: (ids) => setOnlineUserIds(new Set(ids.map(String))),
+      onUserOnline: (userId) =>
+        setOnlineUserIds((prev) => {
+          const next = new Set(prev);
+          next.add(String(userId));
+          return next;
+        }),
+      onUserOffline: (userId) =>
+        setOnlineUserIds((prev) => {
+          const next = new Set(prev);
+          next.delete(String(userId));
+          return next;
+        }),
+    });
+  }, []);
 
   // 1. Fetch chat rooms list
   const { data: rawChatList = [], isLoading: isLoadingChats } = useQuery({
@@ -87,6 +125,7 @@ const MemberChatContent = memo(() => {
         preview = '📎 Attachment';
       }
 
+      const peerId = user.id ? String(user.id) : '';
       return {
         id: item.roomId,
         roomId: item.roomId,
@@ -94,13 +133,13 @@ const MemberChatContent = memo(() => {
         name: user.name || user.username || 'User',
         handle: user.username ? `@${user.username}` : '@user',
         avatar: user.avatar || '/assets/home/avatar-anna.webp',
-        online: Boolean(user.isOnline),
+        online: Boolean(user.isOnline) || (peerId && onlineUserIds.has(peerId)),
         time,
         preview,
         unread: 0,
       };
     });
-  }, [rawChatList]);
+  }, [rawChatList, onlineUserIds]);
 
   // Handle auto-creating or opening room if targetUserId was supplied in navigation state
   useEffect(() => {
@@ -150,12 +189,13 @@ const MemberChatContent = memo(() => {
     [conversations, activeId],
   );
 
-  // 2. Fetch messages for active room
+  // 2. Fetch messages for active room (poll as fallback if socket drops)
   const { data: messagesData, isLoading: isLoadingMessages } = useQuery({
     queryKey: CHAT_MESSAGES_QUERY_KEY(activeId),
     queryFn: () => getChatMessagesApi({ roomId: activeId, page: 1, limit: 50 }),
     enabled: Boolean(activeId),
     staleTime: 5 * 1000,
+    refetchInterval: 8 * 1000,
   });
 
   // Mark room as read when activeId changes
@@ -170,10 +210,17 @@ const MemberChatContent = memo(() => {
 
     joinChatRoom(activeId);
 
+    setPeerIsTyping(false);
+
     const unsubscribeMessages = subscribeToIncomingMessages((incoming) => {
       const incomingRoomId = incoming?.roomId || incoming?.room;
       // If message belongs to active room
       if (incomingRoomId === activeId) {
+        setPeerIsTyping(false);
+        if (peerTypingTimerRef.current) {
+          window.clearTimeout(peerTypingTimerRef.current);
+          peerTypingTimerRef.current = null;
+        }
         queryClient.setQueryData(CHAT_MESSAGES_QUERY_KEY(activeId), (old) => {
           if (!old)
             return { messages: [incoming], total: 1, page: 1, limit: 50 };
@@ -195,6 +242,33 @@ const MemberChatContent = memo(() => {
 
       // Invalidate chat list so lastMessage and timestamp refresh
       queryClient.invalidateQueries({ queryKey: CHAT_LIST_QUERY_KEY });
+    });
+
+    const unsubscribeTyping = subscribeToTyping({
+      onTyping: (payload) => {
+        const roomId = payload?.roomId;
+        const userId = String(payload?.userId || '');
+        if (roomId && String(roomId) !== String(activeId)) return;
+        if (userId && currentUserId && userId === String(currentUserId)) return;
+        setPeerIsTyping(true);
+        if (peerTypingTimerRef.current) {
+          window.clearTimeout(peerTypingTimerRef.current);
+        }
+        peerTypingTimerRef.current = window.setTimeout(() => {
+          setPeerIsTyping(false);
+        }, 2500);
+      },
+      onStopTyping: (payload) => {
+        const roomId = payload?.roomId;
+        const userId = String(payload?.userId || '');
+        if (roomId && String(roomId) !== String(activeId)) return;
+        if (userId && currentUserId && userId === String(currentUserId)) return;
+        setPeerIsTyping(false);
+        if (peerTypingTimerRef.current) {
+          window.clearTimeout(peerTypingTimerRef.current);
+          peerTypingTimerRef.current = null;
+        }
+      },
     });
 
     // Real-time edits, deletes, and read updates
@@ -251,21 +325,108 @@ const MemberChatContent = memo(() => {
     return () => {
       unsubscribeMessages();
       unsubscribeUpdates();
+      unsubscribeTyping();
+      if (isTypingRef.current) {
+        emitStopTyping(activeId);
+        isTypingRef.current = false;
+      }
+      if (typingIdleTimerRef.current) {
+        window.clearTimeout(typingIdleTimerRef.current);
+        typingIdleTimerRef.current = null;
+      }
+      if (peerTypingTimerRef.current) {
+        window.clearTimeout(peerTypingTimerRef.current);
+        peerTypingTimerRef.current = null;
+      }
       leaveChatRoom(activeId);
     };
-  }, [activeId, queryClient]);
+  }, [activeId, queryClient, currentUserId]);
+
+  const handleDraftChange = useCallback(
+    (value) => {
+      const nextValue =
+        typeof value === 'string' ? value : value?.target?.value || '';
+      setDraft(nextValue);
+
+      if (!activeId || editingMessage) return;
+
+      if (nextValue.trim()) {
+        if (!isTypingRef.current) {
+          isTypingRef.current = true;
+          emitTyping(activeId);
+        }
+        if (typingIdleTimerRef.current) {
+          window.clearTimeout(typingIdleTimerRef.current);
+        }
+        typingIdleTimerRef.current = window.setTimeout(() => {
+          if (isTypingRef.current) {
+            isTypingRef.current = false;
+            emitStopTyping(activeId);
+          }
+        }, 1200);
+      } else if (isTypingRef.current) {
+        isTypingRef.current = false;
+        emitStopTyping(activeId);
+        if (typingIdleTimerRef.current) {
+          window.clearTimeout(typingIdleTimerRef.current);
+          typingIdleTimerRef.current = null;
+        }
+      }
+    },
+    [activeId, editingMessage],
+  );
 
   // 4. Send Message Mutation (supports multipart text and file attachments)
   const sendMutation = useMutation({
     mutationFn: sendChatMessageApi,
-    onSuccess: (response) => {
-      const newMsg = response?.data || response;
+    onSuccess: (response, variables) => {
+      let newMsg = response?.data || response;
+      // If API omitted nested replyTo, rebuild it from the message we replied to
+      if (newMsg && variables?.replyToId && !newMsg.replyTo) {
+        const parent =
+          replyToMessage?.id === variables.replyToId
+            ? replyToMessage
+            : (queryClient.getQueryData(CHAT_MESSAGES_QUERY_KEY(activeId))
+                ?.messages || []
+              ).find((m) => m.id === variables.replyToId);
+
+        if (parent) {
+          newMsg = {
+            ...newMsg,
+            replyToId: variables.replyToId,
+            replyTo: {
+              id: parent.id,
+              content: parent.content ?? parent.text ?? null,
+              fileUrl: parent.fileUrl ?? null,
+              fileType: parent.fileType ?? null,
+              fileName: parent.fileName ?? null,
+              isDeleted: Boolean(parent.isDeleted),
+              senderId: parent.senderId || parent.sender?.id || null,
+              sender: parent.sender || null,
+            },
+          };
+        }
+      }
+
       if (newMsg && activeId) {
         queryClient.setQueryData(CHAT_MESSAGES_QUERY_KEY(activeId), (old) => {
           if (!old) return { messages: [newMsg], total: 1, page: 1, limit: 50 };
           const prevList = Array.isArray(old.messages) ? old.messages : [];
           if (newMsg.id && prevList.some((m) => m.id === newMsg.id)) {
-            return old;
+            // Socket may have inserted first — still merge reply metadata
+            return {
+              ...old,
+              messages: prevList.map((m) =>
+                m.id === newMsg.id
+                  ? {
+                      ...m,
+                      ...newMsg,
+                      replyTo: newMsg.replyTo || m.replyTo || null,
+                      replyToId: newMsg.replyToId || m.replyToId || null,
+                    }
+                  : m,
+              ),
+            };
           }
           return {
             ...old,
@@ -276,6 +437,15 @@ const MemberChatContent = memo(() => {
       }
       setDraft('');
       setSelectedFile(null);
+      setReplyToMessage(null);
+      if (isTypingRef.current && activeId) {
+        isTypingRef.current = false;
+        emitStopTyping(activeId);
+      }
+      if (typingIdleTimerRef.current) {
+        window.clearTimeout(typingIdleTimerRef.current);
+        typingIdleTimerRef.current = null;
+      }
       queryClient.invalidateQueries({ queryKey: CHAT_LIST_QUERY_KEY });
     },
     onError: (error) => {
@@ -350,9 +520,11 @@ const MemberChatContent = memo(() => {
     setDraft('');
     setSelectedFile(null);
     setEditingMessage(null);
+    setReplyToMessage(null);
   };
 
   const handleStartEdit = (message) => {
+    setReplyToMessage(null);
     setEditingMessage(message);
     setDraft(message.text || '');
     setSelectedFile(null);
@@ -361,6 +533,16 @@ const MemberChatContent = memo(() => {
   const handleCancelEdit = () => {
     setEditingMessage(null);
     setDraft('');
+  };
+
+  const handleStartReply = (message) => {
+    if (!message?.id || message.isDeleted) return;
+    setEditingMessage(null);
+    setReplyToMessage(message);
+  };
+
+  const handleCancelReply = () => {
+    setReplyToMessage(null);
   };
 
   const handleDeleteMessage = (messageId) => {
@@ -386,13 +568,23 @@ const MemberChatContent = memo(() => {
       roomId: activeId,
       content: text,
       file: selectedFile,
+      replyToId: replyToMessage?.id || null,
     });
   };
 
-  // Normalize messages for ChatMessageBubble
+  // Normalize messages for ChatMessageBubble (oldest → newest, latest at bottom)
   const messages = useMemo(() => {
-    const rawMessages = messagesData?.messages || [];
-    return rawMessages.map((msg) => {
+    const rawMessages = Array.isArray(messagesData?.messages)
+      ? [...messagesData.messages]
+      : [];
+
+    rawMessages.sort((a, b) => {
+      const aTime = new Date(a?.createdAt || 0).getTime();
+      const bTime = new Date(b?.createdAt || 0).getTime();
+      return aTime - bTime;
+    });
+
+    const normalized = rawMessages.map((msg) => {
       const isSent =
         msg.senderId === currentUserId || msg.sender?.id === currentUserId;
 
@@ -421,9 +613,26 @@ const MemberChatContent = memo(() => {
         isEdited: Boolean(msg.isEdited),
         isDeleted: Boolean(msg.isDeleted),
         sender: msg.sender,
+        replyTo: msg.replyTo
+          ? {
+              id: msg.replyTo.id,
+              text: msg.replyTo.content,
+              fileUrl: msg.replyTo.fileUrl,
+              fileType: msg.replyTo.fileType,
+              fileName: msg.replyTo.fileName,
+              isDeleted: Boolean(msg.replyTo.isDeleted),
+              sender: msg.replyTo.sender,
+              senderId: msg.replyTo.senderId,
+            }
+          : null,
       };
     });
-  }, [messagesData, currentUserId]);
+
+    if (peerIsTyping) {
+      normalized.push({ id: 'peer-typing', type: 'typing' });
+    }
+    return normalized;
+  }, [messagesData, currentUserId, peerIsTyping]);
 
   const handleRoomCreated = (newRoomId) => {
     setActiveId(newRoomId);
@@ -469,7 +678,7 @@ const MemberChatContent = memo(() => {
                   conversation={activeConversation}
                   messages={messages}
                   draft={draft}
-                  onDraftChange={setDraft}
+                  onDraftChange={handleDraftChange}
                   onSend={handleSend}
                   selectedFile={selectedFile}
                   onFileSelect={setSelectedFile}
@@ -483,7 +692,11 @@ const MemberChatContent = memo(() => {
                   editingMessage={editingMessage}
                   onStartEdit={handleStartEdit}
                   onCancelEdit={handleCancelEdit}
+                  replyToMessage={replyToMessage}
+                  onStartReply={handleStartReply}
+                  onCancelReply={handleCancelReply}
                   onDeleteMessage={handleDeleteMessage}
+                  currentUserId={currentUserId}
                 />
               </div>
             </>

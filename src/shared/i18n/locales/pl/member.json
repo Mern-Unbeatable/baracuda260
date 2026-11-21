@@ -1069,9 +1069,11 @@
     "gridAria": "Siatka zdjęć na sprzedaż",
     "filters": {
       "aria": "Filtruj zdjęcia na sprzedaż według typu",
-      "all": "Wszystkie prace",
+      "all": "Wszystkie zdjęcia",
       "promoted": "Promowane"
     },
+    "emptyTitle": "Brak zdjęć na sprzedaż",
+    "deleteConfirmTitle": "Usunąć to ogłoszenie zdjęcia?",
     "uploadMenu": {
       "aria": "Wybierz format pracy",
       "heading": "Wybierz format pracy",
@@ -1092,7 +1094,9 @@
       "price": "Cena",
       "pricePlaceholder": "$2.00",
       "resolution": "Rozdzielczość",
-      "resolutionPlaceholder": "6000 × 4000 px",
+      "resolutionPlaceholder": "6000*6000",
+      "fileSizePlaceholder": "125 KB",
+      "qualityPlaceholder": "4K",
       "format": "Format",
       "formatPlaceholder": "JPEG, PDF, PNG",
       "camera": "Aparat",

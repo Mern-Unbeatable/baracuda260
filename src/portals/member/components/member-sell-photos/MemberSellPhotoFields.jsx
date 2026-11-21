@@ -3,17 +3,17 @@ import { useTranslation } from 'react-i18next';
 import Input from '@/components/ui/Input';
 
 const inputClassName =
-  'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[16px] leading-6 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30';
+  'w-full rounded-lg bg-[#fafaff] px-3.5 py-3 text-[13px] leading-5 text-[#161c27] placeholder:text-[#a8a8b0] outline-none focus:ring-2 focus:ring-[#4048cd]/30 sm:px-[17px] sm:py-3.5 sm:text-[16px] sm:leading-6';
 
 const labelClassName =
-  'text-[16px] font-medium uppercase leading-6 text-[#494453]';
+  'text-[12px] font-medium uppercase leading-5 tracking-wide text-[#494453] sm:text-[16px] sm:leading-6';
 
 const MemberSellPhotoFields = memo(({ idPrefix, register, errors = {} }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col gap-4 sm:gap-5">
+      <div className="flex flex-col gap-2 sm:gap-2.5">
         <label htmlFor={`${idPrefix}-price`} className={labelClassName}>
           {t('sellPhotos.fields.price')}
         </label>
@@ -30,8 +30,8 @@ const MemberSellPhotoFields = memo(({ idPrefix, register, errors = {} }) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div className="flex flex-col gap-2.5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
+        <div className="flex flex-col gap-2 sm:gap-2.5">
           <label htmlFor={`${idPrefix}-resolution`} className={labelClassName}>
             {t('uploadForm.resolution')}
           </label>
@@ -47,13 +47,13 @@ const MemberSellPhotoFields = memo(({ idPrefix, register, errors = {} }) => {
           />
         </div>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2 sm:gap-2.5">
           <label htmlFor={`${idPrefix}-file-size`} className={labelClassName}>
             {t('uploadForm.fileSize')}
           </label>
           <Input
             id={`${idPrefix}-file-size`}
-            placeholder="125 KB"
+            placeholder={t('sellPhotos.fields.fileSizePlaceholder')}
             error={errors.fileSize}
             inputClassName={inputClassName}
             labelClassName="hidden"
@@ -63,13 +63,13 @@ const MemberSellPhotoFields = memo(({ idPrefix, register, errors = {} }) => {
           />
         </div>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2 sm:gap-2.5">
           <label htmlFor={`${idPrefix}-quality`} className={labelClassName}>
             {t('uploadForm.quality')}
           </label>
           <Input
             id={`${idPrefix}-quality`}
-            placeholder="4K"
+            placeholder={t('sellPhotos.fields.qualityPlaceholder')}
             error={errors.quality}
             inputClassName={inputClassName}
             labelClassName="hidden"

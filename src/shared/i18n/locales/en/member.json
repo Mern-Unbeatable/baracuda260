@@ -1087,9 +1087,11 @@
     "gridAria": "Selling photos grid",
     "filters": {
       "aria": "Filter selling photos by type",
-      "all": "All Artwork",
+      "all": "All Photos",
       "promoted": "Promoted"
     },
+    "emptyTitle": "No selling photos yet",
+    "deleteConfirmTitle": "Delete this photo listing?",
     "uploadMenu": {
       "aria": "Select artwork format",
       "heading": "Select Artwork Format",
@@ -1110,7 +1112,9 @@
       "price": "Price",
       "pricePlaceholder": "$2.00",
       "resolution": "Resolution",
-      "resolutionPlaceholder": "6000 × 4000 px",
+      "resolutionPlaceholder": "6000*6000",
+      "fileSizePlaceholder": "125 KB",
+      "qualityPlaceholder": "4K",
       "format": "Format",
       "formatPlaceholder": "JPEG, PDF, PNG",
       "camera": "Camera",

@@ -54,6 +54,9 @@ const MyStore = lazy(() => import('@/portals/member/pages/MyStore'));
 const MyStoreUpload = lazy(
   () => import('@/portals/member/pages/MyStoreUpload'),
 );
+const MyStoreDetail = lazy(
+  () => import('@/portals/member/pages/MyStoreDetail'),
+);
 const ItemWatchlist = lazy(
   () => import('@/portals/member/pages/ItemWatchlist'),
 );
@@ -159,6 +162,10 @@ export const memberRoutes = (
       element={<MyStoreUpload />}
     />
     <Route path={seg(ROUTES.USER_MY_STORE_EDIT)} element={<MyStoreUpload />} />
+    <Route
+      path={seg(ROUTES.USER_MY_STORE_DETAIL)}
+      element={<MyStoreDetail />}
+    />
     <Route
       path={seg(ROUTES.USER_ITEM_WATCHLIST)}
       element={<ItemWatchlist />}

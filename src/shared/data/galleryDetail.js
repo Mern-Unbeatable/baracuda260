@@ -50,6 +50,7 @@ export const resolveGalleryDetailMedia = (story, heroSrc) => ({
   donationBio: story.donationBio || story.story || null,
 });
 
+/** Demo-only placeholders — do not use for live artwork/sell detail pages. */
 export const DEFAULT_GALLERY_IMAGE_DETAILS = {
   credit: 'Wong kar-wai',
   creativeNumber: '2278500954',
@@ -61,18 +62,36 @@ export const DEFAULT_GALLERY_IMAGE_DETAILS = {
   categories: 'Stock Photos Flower',
 };
 
+const formatBytes = (bytes) => {
+  const n = Number(bytes);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  if (n >= 1024 * 1024) return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+  if (n >= 1024) return `${Math.round(n / 1024)} KB`;
+  return `${n} B`;
+};
+
+const mimeToFileType = (format) => {
+  if (!format || typeof format !== 'string') return null;
+  if (format.includes('/')) {
+    const subtype = format.split('/')[1]?.split('+')[0];
+    return subtype ? subtype.toUpperCase() : format;
+  }
+  return format;
+};
+
 export const resolveGalleryImageDetails = (story) => {
-  const fromStory = story.imageDetails ?? {};
+  const fromStory = story?.imageDetails ?? {};
   const categories = [
-    story.categoryName || story.category,
-    story.subcategoryName || story.subcategory,
-    story.badge,
+    story?.categoryName || story?.category,
+    story?.subcategoryName || story?.subcategory,
+    story?.badge,
   ]
     .filter(Boolean)
     .join(', ');
 
-  let formattedDate = fromStory.uploadDate || story.uploadDate || story.date;
-  if (!formattedDate && story.createdAt) {
+  let formattedDate =
+    fromStory.uploadDate || story?.uploadDate || story?.uploadedDate || story?.date;
+  if (!formattedDate && story?.createdAt) {
     try {
       const d = new Date(story.createdAt);
       if (!Number.isNaN(d.getTime())) {
@@ -87,47 +106,48 @@ export const resolveGalleryImageDetails = (story) => {
     }
   }
 
+  const bytes =
+    fromStory.bytes ??
+    story?.bytes ??
+    story?.video?.bytes ??
+    (Array.isArray(story?.images)
+      ? story.images[0]?.bytes
+      : Object.values(story?.images || {})[0]?.bytes);
+
   return {
     credit:
       fromStory.credit ??
-      story.photographer ??
-      story.user?.name ??
-      story.user?.username ??
-      DEFAULT_GALLERY_IMAGE_DETAILS.credit,
-    creditHref: story.user?.username
+      story?.photographer ??
+      story?.user?.name ??
+      story?.user?.username ??
+      null,
+    creditHref: story?.user?.username
       ? `/photographer/${story.user.username}`
-      : story.user?.id
+      : story?.user?.id
         ? `/photographer/${story.user.id}`
         : null,
     creativeNumber:
       fromStory.creativeNumber ??
-      story.creativeNumber ??
-      (story.id ? String(story.id).slice(0, 8).toUpperCase() : null) ??
-      DEFAULT_GALLERY_IMAGE_DETAILS.creativeNumber,
-    camera: fromStory.camera ?? story.camera ?? null,
-    resolution:
-      fromStory.resolution ??
-      story.resolution ??
-      DEFAULT_GALLERY_IMAGE_DETAILS.resolution,
-    quality:
-      fromStory.quality ??
-      story.quality ??
-      DEFAULT_GALLERY_IMAGE_DETAILS.quality,
+      story?.creativeNumber ??
+      (story?.id ? String(story.id).slice(0, 8).toUpperCase() : null),
+    // Upload forms never collect camera — never surface seed/API leftovers
+    camera: null,
+    resolution: fromStory.resolution ?? story?.resolution ?? null,
+    quality: fromStory.quality ?? story?.quality ?? null,
     fileType:
       fromStory.fileType ??
-      story.format ??
-      DEFAULT_GALLERY_IMAGE_DETAILS.fileType,
-    fileSize:
-      fromStory.fileSize ??
-      (story.bytes
-        ? `${(story.bytes / (1024 * 1024)).toFixed(1)} MB`
-        : DEFAULT_GALLERY_IMAGE_DETAILS.fileSize),
-    uploadDate: formattedDate || DEFAULT_GALLERY_IMAGE_DETAILS.uploadDate,
-    categories:
-      fromStory.categories ??
-      (categories || DEFAULT_GALLERY_IMAGE_DETAILS.categories),
+      mimeToFileType(story?.format) ??
+      mimeToFileType(
+        Array.isArray(story?.images)
+          ? story.images[0]?.format
+          : Object.values(story?.images || {})[0]?.format,
+      ) ??
+      null,
+    fileSize: fromStory.fileSize ?? formatBytes(bytes),
+    uploadDate: formattedDate || null,
+    categories: fromStory.categories || categories || null,
     isAiGenerated: Boolean(
-      fromStory.isAiGenerated ?? story.isAiGenerated ?? story.aiBadge,
+      fromStory.isAiGenerated ?? story?.isAiGenerated ?? story?.aiBadge,
     ),
   };
 };

@@ -3,6 +3,7 @@ import { resolveMediaUrl } from '@/shared/utils/media';
 
 export const STORE_PRODUCTS_QUERY_KEY = 'store-products';
 export const STORE_PRODUCT_DETAILS_QUERY_KEY = 'store-product-details';
+export const STORE_PUBLIC_STORES_QUERY_KEY = 'store-public-stores';
 
 /**
  * Valid category values supported by the backend:
@@ -110,15 +111,26 @@ export const normalizeStoreProduct = (item) => {
         : []
   ).map((img) => resolveMediaUrl(typeof img === 'string' ? img : img?.url));
 
+  const description = item.description || '';
+  const gallery =
+    images.length > 0 ? images : image ? [image] : [];
+
   return {
     id: String(item.id),
     userId: item.userId || item.user?.id,
+    username: item.user?.username || item.username || '',
     category: primaryCategory,
     categories: rawCategories,
     badgeKey,
     badgeLabel: primaryCategory,
     title: item.title || 'Untitled Product',
-    description: item.description || '',
+    description,
+    detailParagraphs: description
+      ? description
+          .split(/\n+/)
+          .map((p) => p.trim())
+          .filter(Boolean)
+      : [],
     price: formatProductPrice(item.price),
     rawPrice: parseProductPrice(item.price),
     setEditionSize: item.setEditionSize || item.edition || '',
@@ -128,7 +140,9 @@ export const normalizeStoreProduct = (item) => {
     isSaved: Boolean(item.isSaved),
     bannerImage: image,
     image,
-    images,
+    images: gallery,
+    gallery,
+    sizes: Array.isArray(item.sizes) ? item.sizes : [],
     promoted: Boolean(item.isPromoted || item.promoted),
     isActive: item.isActive !== false,
     createdAt: item.createdAt,
@@ -145,6 +159,93 @@ export const normalizeStoreProduct = (item) => {
 };
 
 /**
+ * Normalizes a public marketplace store from GET /v1/store/public.
+ */
+export const normalizePublicStore = (store) => {
+  if (!store) return null;
+  const products = Array.isArray(store.products)
+    ? store.products.map((item) => {
+        const normalized = normalizeStoreProduct({
+          ...item,
+          user: {
+            id: store.id,
+            name: store.name,
+            username: store.username,
+            avatar: store.avatar,
+          },
+        });
+        return {
+          ...normalized,
+          store: store.name || store.username || 'Creator',
+          username: store.username,
+          promoted: Boolean(store.isPromoted),
+        };
+      })
+    : [];
+
+  const appreciation = store.artworkAppreciation || {};
+
+  return {
+    id: String(store.id),
+    storeName: store.name || store.username || 'Creator Store',
+    username: store.username || '',
+    authorImage: resolveMediaUrl(store.avatar || ''),
+    description: store.bio || '',
+    image: resolveMediaUrl(store.avatar || products[0]?.image || ''),
+    promoted: Boolean(store.isPromoted),
+    scores: {
+      gold: Number(appreciation.premiumPhotos || 0),
+      silver: Number(appreciation.submissions || 0),
+      bronze: Number(appreciation.followers || 0),
+    },
+    products,
+  };
+};
+
+/**
+ * Endpoint: GET /v1/store/public?page=1&limit=10&search=&promoted=true
+ */
+export const getPublicStoresApi = async ({
+  page = 1,
+  limit = 8,
+  search,
+  promotedOnly = false,
+} = {}) => {
+  const params = { page, limit };
+  if (search) params.search = search;
+  if (promotedOnly) params.promoted = 'true';
+
+  const response = await apiClient.get('/v1/store/public', { params });
+  const payload = response?.data || response;
+  const rawList = Array.isArray(payload?.data)
+    ? payload.data
+    : Array.isArray(payload)
+      ? payload
+      : [];
+
+  const meta = payload?.meta || {};
+  const totalRecords = Number(
+    meta.total ?? meta.totalRecords ?? rawList.length,
+  );
+  const currentPage = Number(meta.page ?? meta.currentPage ?? page);
+  const pageLimit = Number(meta.limit ?? limit);
+  const totalPages = Number(
+    meta.totalPages || Math.max(1, Math.ceil(totalRecords / pageLimit) || 1),
+  );
+
+  return {
+    data: rawList.map(normalizePublicStore).filter(Boolean),
+    meta: {
+      currentPage,
+      totalPages,
+      totalRecords,
+      hasNext: currentPage < totalPages,
+      hasPrevious: currentPage > 1,
+    },
+  };
+};
+
+/**
  * Endpoint: GET /v1/store?category=ART_PRINTS&page=1&limit=10
  */
 export const getStoreProductsApi = async ({
@@ -153,6 +254,7 @@ export const getStoreProductsApi = async ({
   limit = 8,
   search,
   userId,
+  username,
 } = {}) => {
   const params = {
     page,
@@ -167,6 +269,9 @@ export const getStoreProductsApi = async ({
   }
   if (userId) {
     params.userId = userId;
+  }
+  if (username) {
+    params.username = String(username).replace(/^@/, '');
   }
 
   const response = await apiClient.get('/v1/store', { params });

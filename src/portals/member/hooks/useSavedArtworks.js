@@ -7,7 +7,10 @@ import {
 import { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { toggleLikeArtworkApi } from '@/shared/api/artworks.api';
+import {
+  toggleLikeArtworkApi,
+  voteArtworkApi,
+} from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
 import {
   getSavedArtworksApi,
@@ -15,8 +18,7 @@ import {
   toggleSaveArtworkApi,
 } from '@/shared/api/userProfile.api';
 import { ROUTES } from '@/shared/config';
-import { galleryDetailPath } from '@/shared/data/galleryPhotos';
-import { resolveMediaUrl } from '@/shared/utils/media';
+import { optimizeImageUrl, resolveMediaUrl } from '@/shared/utils/media';
 
 /**
  * Extract items array from varying response structures.
@@ -94,24 +96,43 @@ export const normalizeSavedArtwork = (item) => {
         })
       : '';
 
-  const imageUrl = resolveMediaUrl(
+  const rawImage =
     rawArtwork.coverImage ||
-      rawArtwork.image ||
-      rawArtwork.featuredImage ||
-      item.coverImage ||
-      item.image ||
-      item.featuredImage ||
-      '',
-  );
+    rawArtwork.featuredImage ||
+    rawArtwork.media?.[0]?.thumbnailUrl ||
+    rawArtwork.media?.[0]?.url ||
+    rawArtwork.image ||
+    item.coverImage ||
+    item.featuredImage ||
+    item.media?.[0]?.thumbnailUrl ||
+    item.media?.[0]?.url ||
+    item.image ||
+    '';
+  // Card grids must never decode full-resolution originals — that stalls scroll.
+  const imageUrl = optimizeImageUrl(resolveMediaUrl(rawImage), 480);
 
-  const likesCount = Number(
-    rawArtwork.likesCount ??
-      rawArtwork.likes ??
-      rawArtwork.votesCount ??
-      item.likesCount ??
-      item.likes ??
-      0,
+  const competitionState = String(
+    rawArtwork.competitionState || item.competitionState || '',
+  ).toUpperCase();
+  const competitionStatus = String(
+    rawArtwork.competition?.status ||
+      item.competition?.status ||
+      '',
+  ).toUpperCase();
+  const usesVotes =
+    competitionState === 'IN_COMPETITION' || competitionState === 'ENDED';
+  const votingClosed = Boolean(
+    rawArtwork.votingClosed ??
+      item.votingClosed ??
+      (competitionState === 'ENDED' ||
+        (Boolean(competitionStatus) && competitionStatus !== 'OPEN')),
   );
+  const engagementType = usesVotes ? 'vote' : 'like';
+
+  const likesCount = Number(rawArtwork.likesCount ?? item.likesCount ?? 0);
+  const votesCount = Number(rawArtwork.votesCount ?? item.votesCount ?? 0);
+  // Heart metric: votes for competition entries, likes otherwise — never mix them
+  const engagementCount = usesVotes ? votesCount : likesCount;
 
   const isLiked = Boolean(
     rawArtwork.isLiked ??
@@ -121,6 +142,15 @@ export const normalizeSavedArtwork = (item) => {
       item.liked ??
       false,
   );
+  const isVoted = Boolean(
+    rawArtwork.isVoted ??
+      rawArtwork.voted ??
+      rawArtwork.isVotedByUser ??
+      item.isVoted ??
+      item.voted ??
+      false,
+  );
+  const engaged = usesVotes ? isVoted : isLiked;
 
   return {
     id: artworkId,
@@ -135,23 +165,29 @@ export const normalizeSavedArtwork = (item) => {
       item.description ||
       '',
     image: imageUrl || '/assets/home/photo-city.webp',
-    likes: likesCount,
-    liked: isLiked,
-    isLiked,
+    likes: engagementCount,
+    liked: engaged,
+    isLiked: engaged,
+    isVoted,
+    engagementType,
+    engagementDisabled: usesVotes && votingClosed,
+    votingClosed,
     views:
       (rawArtwork.viewsCount ?? item.viewsCount) != null
         ? Number(rawArtwork.viewsCount ?? item.viewsCount).toLocaleString(
             'en-US',
           )
         : null,
-    votes: rawArtwork.votesCount ?? item.votesCount ?? 0,
+    votes: votesCount,
+    likesCount,
     date: dateFormatted,
     competitionLabel:
-      (rawArtwork.competitionState || item.competitionState) ===
-      'IN_COMPETITION'
+      competitionState === 'IN_COMPETITION' && !votingClosed
         ? 'In Competition'
-        : null,
-    competitionState: rawArtwork.competitionState || item.competitionState,
+        : votingClosed && usesVotes
+          ? 'Competition Ended'
+          : null,
+    competitionState,
     status: rawArtwork.status || item.status,
     user: rawArtwork.user || item.user || null,
     saved: item.isSaved ?? rawArtwork.isSaved ?? true,
@@ -168,17 +204,23 @@ export default function useSavedArtworks({ page = 1, limit = 10 } = {}) {
   const query = useQuery({
     queryKey: SAVED_ARTWORKS_QUERY_KEY({ page, limit }),
     queryFn: () => getSavedArtworksApi({ page, limit }),
-    staleTime: 30 * 1000,
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const rawData = query.data;
-  const rawItems = extractItems(rawData);
-  const meta = extractMeta(rawData, page, limit, rawItems.length);
 
   const items = useMemo(() => {
-    return rawItems.map(normalizeSavedArtwork).filter(Boolean);
-  }, [rawItems]);
+    return extractItems(rawData).map(normalizeSavedArtwork).filter(Boolean);
+  }, [rawData]);
+
+  const meta = useMemo(
+    () => extractMeta(rawData, page, limit, items.length),
+    [rawData, page, limit, items.length],
+  );
 
   const toggleSaveMutation = useMutation({
     mutationFn: (artworkId) => toggleSaveArtworkApi(artworkId),
@@ -198,27 +240,37 @@ export default function useSavedArtworks({ page = 1, limit = 10 } = {}) {
     },
   });
 
-  const toggleLikeMutation = useMutation({
-    mutationFn: (artworkId) => toggleLikeArtworkApi(artworkId),
-    onSuccess: (response, artworkId) => {
+  const toggleEngagementMutation = useMutation({
+    mutationFn: async ({ artworkId, engagementType }) => {
+      if (engagementType === 'vote') {
+        return voteArtworkApi(artworkId);
+      }
+      return toggleLikeArtworkApi(artworkId);
+    },
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
       queryClient.invalidateQueries({ queryKey: ['user-artworks'] });
       queryClient.invalidateQueries({
-        queryKey: ['artwork-detail', artworkId],
+        queryKey: ['artwork-detail', variables.artworkId],
       });
       if (response?.message) {
         toast.success(response.message);
       }
     },
-    onError: (err) => {
+    onError: (err, variables) => {
       toast.error(
         getApiErrorMessage(
           err,
-          t('common.errors.general', 'Failed to update like status.'),
+          variables?.engagementType === 'vote'
+            ? t('competitionsPage.voteError', 'Failed to record vote.')
+            : t('common.errors.general', 'Failed to update like status.'),
         ),
       );
     },
   });
+
+  const toggleEngagement = (artworkId, engagementType = 'like') =>
+    toggleEngagementMutation.mutateAsync({ artworkId, engagementType });
 
   return {
     ...query,
@@ -227,8 +279,9 @@ export default function useSavedArtworks({ page = 1, limit = 10 } = {}) {
     toggleSave: toggleSaveMutation.mutate,
     toggleSaveAsync: toggleSaveMutation.mutateAsync,
     isTogglingSave: toggleSaveMutation.isPending,
-    toggleLike: toggleLikeMutation.mutate,
-    toggleLikeAsync: toggleLikeMutation.mutateAsync,
-    isTogglingLike: toggleLikeMutation.isPending,
+    toggleLike: (artworkId) => toggleEngagement(artworkId, 'like'),
+    toggleLikeAsync: (artworkId) => toggleEngagement(artworkId, 'like'),
+    toggleEngagement,
+    isTogglingLike: toggleEngagementMutation.isPending,
   };
 }

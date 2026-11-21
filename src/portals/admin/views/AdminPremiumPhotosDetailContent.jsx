@@ -1,4 +1,4 @@
-import { ArrowLeft, Camera, Image as ImageIcon, Maximize2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon, Maximize2, Trash2 } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -380,30 +380,15 @@ const AdminPremiumPhotosDetailContent = memo(() => {
         key: 'resolution',
         icon: Maximize2,
         label: t('adminPremiumPhotosDetail.specs.resolution', 'Resolution'),
-        value:
-          photo.imageDetails?.resolution ||
-          photo.resolution ||
-          '9504 x 6336 px',
+        value: photo.imageDetails?.resolution || photo.resolution || null,
       },
       {
         key: 'format',
         icon: ImageIcon,
         label: t('adminPremiumPhotosDetail.specs.format', 'Format'),
-        value:
-          photo.imageDetails?.format ||
-          photo.format ||
-          'RAW / TIFF / JPEG',
+        value: photo.imageDetails?.format || photo.format || null,
       },
-      {
-        key: 'camera',
-        icon: Camera,
-        label: t('adminPremiumPhotosDetail.specs.camera', 'Camera'),
-        value:
-          photo.imageDetails?.quality ||
-          photo.camera ||
-          'Ultra HD 8K',
-      },
-    ];
+    ].filter((row) => Boolean(row.value));
 
     return {
       id: photo.id,

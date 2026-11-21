@@ -13,13 +13,14 @@ import {
 import React, { memo, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import AwardArtworkModal from '@/components/data-display/AwardArtworkModal/AwardArtworkModal';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
 import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
+import DownscaledImage from '@/components/ui/DownscaledImage';
 import {
   PUBLIC_ARTWORKS_QUERY_KEY,
   reportArtworkApi,
@@ -34,7 +35,8 @@ import {
   toggleLikePremiumPhotoApi,
   toggleSavePremiumPhotoApi,
 } from '@/shared/api/premiumPhotos.api';
-import { AppLink, ImgIcon } from '@/shared/site-chrome';
+import { ImgIcon } from '@/shared/site-chrome';
+import { optimizeImageUrl } from '@/shared/utils/media';
 
 const TROPHY_ICON = '/assets/home/icon-trophy-cup.svg';
 
@@ -47,7 +49,7 @@ const formatCount = (value) => parseCount(value).toLocaleString('en-US');
 
 const ImageOverlayBadge = ({ children, className = '' }) => (
   <span
-    className={`inline-flex items-center rounded-md bg-white/92 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-[0.35px] text-[#0d0d14] shadow-sm backdrop-blur-[2px] ${className}`.trim()}
+    className={`inline-flex items-center rounded-md bg-white px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-[0.35px] text-[#0d0d14] shadow-sm ${className}`.trim()}
   >
     {children}
   </span>
@@ -55,7 +57,7 @@ const ImageOverlayBadge = ({ children, className = '' }) => (
 
 const DarkOverlayBadge = ({ children, className = '' }) => (
   <span
-    className={`inline-flex items-center gap-1 rounded-lg bg-black/50 px-2 py-1 text-[11px] font-semibold leading-none text-white backdrop-blur-[2px] ${className}`.trim()}
+    className={`inline-flex items-center gap-1 rounded-lg bg-black/55 px-2 py-1 text-[11px] font-semibold leading-none text-white ${className}`.trim()}
   >
     {children}
   </span>
@@ -89,6 +91,7 @@ const PhotoShowcaseCard = memo(
     initialLiked = false,
     onLikeToggle,
     engagementType = 'like',
+    engagementDisabled = false,
     itemType,
     kind,
     isVideo,
@@ -98,6 +101,7 @@ const PhotoShowcaseCard = memo(
     userId,
   }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [saved, setSaved] = useState(initialSaved);
     const [liked, setLiked] = useState(initialLiked);
@@ -182,21 +186,65 @@ const PhotoShowcaseCard = memo(
     };
 
     const isVoteMode = engagementType === 'vote';
+    const isEngagementDisabled = Boolean(engagementDisabled);
+
+    const revertEngagement = (wasNext) => {
+      setLiked(!wasNext);
+      setLikesCount((prev) =>
+        wasNext ? Math.max(0, prev - 1) : prev + 1,
+      );
+    };
+
+    const applyEngagementResponse = (res) => {
+      const count =
+        res?.data?.votesCount ??
+        res?.votesCount ??
+        res?.data?.likesCount ??
+        res?.likesCount ??
+        res?.data?.likes ??
+        res?.likes;
+      if (count != null) {
+        setLikesCount(parseCount(count));
+      }
+      const engagedRes =
+        res?.data?.voted ??
+        res?.voted ??
+        res?.data?.isVoted ??
+        res?.isVoted ??
+        res?.data?.isLiked ??
+        res?.isLiked ??
+        res?.data?.liked ??
+        res?.liked;
+      if (engagedRes != null) {
+        setLiked(Boolean(engagedRes));
+      }
+    };
 
     const handleLike = async (event) => {
       event.preventDefault();
       event.stopPropagation();
+      if (isEngagementDisabled) return;
       const next = !liked;
       setLiked(next);
       setLikesCount((prev) => (next ? prev + 1 : Math.max(0, prev - 1)));
       if (onLikeToggle) {
-        onLikeToggle(next, id);
+        try {
+          const result = onLikeToggle(next, id);
+          if (result != null && typeof result.then === 'function') {
+            const res = await result;
+            applyEngagementResponse(res);
+          }
+        } catch {
+          // Parent mutation shows the error toast; only revert optimistic UI here
+          revertEngagement(next);
+        }
         return;
       }
       if (id) {
         if (isVoteMode) {
           try {
             const res = await voteArtworkApi(id);
+            applyEngagementResponse(res);
             queryClient.invalidateQueries({
               queryKey: PUBLIC_ARTWORKS_QUERY_KEY,
             });
@@ -211,8 +259,7 @@ const PhotoShowcaseCard = memo(
                 ),
             );
           } catch (err) {
-            setLiked(!next);
-            setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
+            revertEngagement(next);
             toast.error(
               getApiErrorMessage(
                 err,
@@ -231,22 +278,7 @@ const PhotoShowcaseCard = memo(
             ? await toggleLikePremiumPhotoApi(id)
             : await toggleLikeArtworkApi(id);
 
-          const count =
-            res?.data?.likesCount ??
-            res?.likesCount ??
-            res?.data?.likes ??
-            res?.likes;
-          if (count != null) {
-            setLikesCount(parseCount(count));
-          }
-          const isLikedRes =
-            res?.data?.isLiked ??
-            res?.isLiked ??
-            res?.data?.liked ??
-            res?.liked;
-          if (isLikedRes != null) {
-            setLiked(Boolean(isLikedRes));
-          }
+          applyEngagementResponse(res);
 
           if (isPremiumPhoto) {
             queryClient.invalidateQueries({
@@ -259,8 +291,7 @@ const PhotoShowcaseCard = memo(
 
           if (res?.message) toast.success(res.message);
         } catch (err) {
-          setLiked(!next);
-          setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
+          revertEngagement(next);
           toast.error(
             getApiErrorMessage(
               err,
@@ -279,6 +310,27 @@ const PhotoShowcaseCard = memo(
         return;
       }
       setMenuOpen((prev) => !prev);
+    };
+
+    const openDetail = () => {
+      if (!href || href === '#') return;
+      if (/^https?:\/\//.test(href)) {
+        window.location.assign(href);
+        return;
+      }
+      navigate(href);
+    };
+
+    const handleCardActivate = (event) => {
+      if (
+        event.target.closest('button') ||
+        event.target.closest('a') ||
+        event.target.closest('[role="menu"]') ||
+        event.target.closest('[data-card-interactive]')
+      ) {
+        return;
+      }
+      openDetail();
     };
 
     const handleReport = async ({ reason, details }) => {
@@ -305,21 +357,29 @@ const PhotoShowcaseCard = memo(
       <>
         <MarketingCard
           variant="showcase"
-          className={`group overflow-hidden ${className}`.trim()}
+          role="link"
+          tabIndex={0}
+          onClick={handleCardActivate}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              handleCardActivate(event);
+            }
+          }}
+          className={`group flex h-full cursor-pointer flex-col overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_420px] ${className}`.trim()}
         >
-          <AppLink href={href} className="block focus-visible:outline-none">
             <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
               {isVideoCard && videoUrl && !image ? (
                 <div className="relative h-full w-full bg-[#0d0d14]">
                   <video
                     src={videoUrl}
-                    preload="metadata"
+                    preload="none"
                     muted
                     playsInline
-                    className="h-full w-full object-cover"
+                    className="pointer-events-none h-full w-full object-cover"
                   />
                   <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25">
-                    <div className="flex size-11 items-center justify-center rounded-full bg-white/90 text-[#0d0d14] shadow-md backdrop-blur-xs transition group-hover:scale-110">
+                    <div className="flex size-11 items-center justify-center rounded-full bg-white text-[#0d0d14] shadow-md">
                       <Play
                         size={18}
                         className="translate-x-0.5 fill-[#0d0d14]"
@@ -329,18 +389,20 @@ const PhotoShowcaseCard = memo(
                 </div>
               ) : (
                 <div className="relative h-full w-full">
-                  <Image
-                    src={image}
+                  <DownscaledImage
+                    src={optimizeImageUrl(image, 480)}
                     alt={imageAlt ?? title}
                     width={368}
                     height={252}
+                    maxWidth={736}
+                    sizes="(max-width:640px) 100vw, (max-width:1280px) 50vw, 25vw"
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                    className="pointer-events-none h-full w-full object-cover"
                   />
                   {isVideoCard && videoUrl && (
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/15">
-                      <div className="flex size-11 items-center justify-center rounded-full bg-white/90 text-[#0d0d14] shadow-md backdrop-blur-xs transition group-hover:scale-110">
+                      <div className="flex size-11 items-center justify-center rounded-full bg-white text-[#0d0d14] shadow-md">
                         <Play
                           size={18}
                           className="translate-x-0.5 fill-[#0d0d14]"
@@ -373,7 +435,7 @@ const PhotoShowcaseCard = memo(
                     defaultValue: `Favorite ${title}`,
                   })}
                   aria-pressed={liked}
-                  className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
+                  className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white text-[#161c27] shadow-sm transition hover:bg-[#f8fafc]"
                 >
                   <Heart
                     size={16}
@@ -395,7 +457,7 @@ const PhotoShowcaseCard = memo(
                     aria-label={t('gallery.moreActions', {
                       defaultValue: 'More actions',
                     })}
-                    className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-[2px] transition hover:bg-black/60"
+                    className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/55 text-white transition hover:bg-black/70"
                   >
                     <MoreVertical
                       size={16}
@@ -513,54 +575,79 @@ const PhotoShowcaseCard = memo(
               ) : null}
             </div>
 
-            <div className="p-4">
+            <div className="flex flex-1 flex-col p-4">
               <TitleTag
                 title={typeof title === 'string' ? title : undefined}
-                className={`text-[18px] font-bold leading-[1.3] text-[#0d0d14] transition group-hover:text-[#4048cd] line-clamp-2 lg:line-clamp-1 ${titleClassName}`.trim()}
+                className={`text-[18px] font-bold leading-[1.3] text-[#0d0d14] group-hover:text-[#4048cd] line-clamp-2 lg:line-clamp-1 ${titleClassName}`.trim()}
               >
                 {title}
               </TitleTag>
 
-              {description ? (
-                <p className="mt-2 line-clamp-2 text-[14px] leading-normal text-[#6b7280]">
-                  {description}
-                </p>
-              ) : null}
+              <p className="mt-2 min-h-[2.625rem] line-clamp-2 text-[14px] leading-normal text-[#6b7280]">
+                {description || '\u00A0'}
+              </p>
 
-              <div className="mt-3 flex w-full items-center justify-between gap-2 text-[12px] font-medium">
+              <div className="mt-auto flex w-full items-center justify-between gap-2 pt-3 text-[13px] font-medium">
                 <Button
                   unstyled
                   type="button"
                   onClick={handleLike}
+                  disabled={isEngagementDisabled}
                   aria-pressed={liked}
-                  aria-label={
-                    liked
-                      ? t('gallery.unlike', { defaultValue: 'Unlike photo' })
-                      : t('gallery.like', { defaultValue: 'Like photo' })
+                  aria-disabled={isEngagementDisabled}
+                  title={
+                    isEngagementDisabled
+                      ? t(
+                          'competitionsPage.votingClosed',
+                          'Voting is closed. This competition has already ended.',
+                        )
+                      : undefined
                   }
-                  className="inline-flex cursor-pointer items-center gap-1 text-[#e53935] transition hover:opacity-80"
+                  aria-label={
+                    isEngagementDisabled
+                      ? t(
+                          'competitionsPage.votingClosed',
+                          'Voting is closed. This competition has already ended.',
+                        )
+                      : liked
+                        ? isVoteMode
+                          ? t('gallery.unvote', { defaultValue: 'Remove vote' })
+                          : t('gallery.unlike', { defaultValue: 'Unlike photo' })
+                        : isVoteMode
+                          ? t('gallery.vote', { defaultValue: 'Vote for photo' })
+                          : t('gallery.like', { defaultValue: 'Like photo' })
+                  }
+                  className={`inline-flex items-center gap-1.5 transition ${
+                    isEngagementDisabled
+                      ? 'cursor-not-allowed text-[#c4c9d4] opacity-70'
+                      : liked
+                        ? 'cursor-pointer text-[#e53935] hover:opacity-80'
+                        : 'cursor-pointer text-[#9ca3af] hover:opacity-80'
+                  }`}
                 >
                   <Heart
-                    size={14}
+                    size={18}
                     strokeWidth={2}
                     aria-hidden="true"
                     className={
-                      liked
-                        ? 'fill-[#e53935] text-[#e53935]'
-                        : 'fill-transparent text-[#e53935]'
+                      isEngagementDisabled
+                        ? 'fill-transparent text-[#c4c9d4]'
+                        : liked
+                          ? 'fill-[#e53935] text-[#e53935]'
+                          : 'fill-transparent text-[#9ca3af]'
                     }
                   />
                   <span>{likesCount.toLocaleString('en-US')}</span>
                 </Button>
                 {views ? (
-                  <span className="inline-flex items-center gap-1 text-[#9ca3af]">
-                    <Eye size={14} strokeWidth={2} aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 text-[#9ca3af]">
+                    <Eye size={18} strokeWidth={2} aria-hidden="true" />
                     {views}
                   </span>
                 ) : null}
                 {date ? (
-                  <span className="inline-flex items-center gap-1 text-[#9ca3af]">
-                    <Calendar size={14} strokeWidth={2} aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 text-[#9ca3af]">
+                    <Calendar size={18} strokeWidth={2} aria-hidden="true" />
                     {date}
                   </span>
                 ) : null}
@@ -584,26 +671,29 @@ const PhotoShowcaseCard = memo(
                 </p>
               ) : null}
             </div>
-          </AppLink>
         </MarketingCard>
 
-        <ReportPhotoModal
-          open={reportOpen}
-          onClose={() => setReportOpen(false)}
-          photoTitle={title}
-          onSubmit={handleReport}
-        />
+        {reportOpen ? (
+          <ReportPhotoModal
+            open={reportOpen}
+            onClose={() => setReportOpen(false)}
+            photoTitle={title}
+            onSubmit={handleReport}
+          />
+        ) : null}
 
-        <AwardArtworkModal
-          open={awardOpen}
-          onClose={() => setAwardOpen(false)}
-          submissionId={id}
-          artworkTitle={title}
-          photographerName={photographerName || photographer}
-          artworkImage={image}
-          userId={userId}
-          appreciation={awards}
-        />
+        {awardOpen ? (
+          <AwardArtworkModal
+            open={awardOpen}
+            onClose={() => setAwardOpen(false)}
+            submissionId={id}
+            artworkTitle={title}
+            photographerName={photographerName || photographer}
+            artworkImage={image}
+            userId={userId}
+            appreciation={awards}
+          />
+        ) : null}
       </>
     );
   },

@@ -1,7 +1,7 @@
 import { Calendar, Clock, Eye, Heart, Images } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu';
 import MemberArtworkCardFooter from '@/components/data-display/MemberArtworkCardFooter/MemberArtworkCardFooter';
 import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
@@ -18,27 +18,39 @@ const BADGE_STYLES = {
 const MemberArtworkCard = memo(
   ({ item, badgeLabel, onEdit, onDelete, onPromote, onSwitchCompetition }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const badgeClass =
       BADGE_STYLES[item.albumBadge] ?? BADGE_STYLES['Single Photo'];
+    const detailPath = myArtworkDetailPath(item.id);
+
+    const openDetails = () => {
+      navigate(detailPath, { state: { artwork: item } });
+    };
 
     return (
-      <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-[#c7cbf2] hover:shadow-[0_12px_28px_rgba(15,23,42,0.10)]">
+      <article
+        onClick={openDetails}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openDetails();
+          }
+        }}
+        role="link"
+        tabIndex={0}
+        className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-[#c7cbf2] hover:shadow-[0_12px_28px_rgba(15,23,42,0.10)]"
+      >
         <div className="relative aspect-368/252 shrink-0 overflow-hidden bg-[#f3f4f6]">
-          <Link
-            to={myArtworkDetailPath(item.id)}
-            className="block h-full w-full"
-          >
-            <Image
-              src={item.image}
-              alt={item.title}
-              width={368}
-              height={252}
-              loading="lazy"
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
-            />
-          </Link>
+          <Image
+            src={item.image}
+            alt={item.title}
+            width={368}
+            height={252}
+            loading="lazy"
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
+          />
           <span
-            className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.35px] shadow-sm backdrop-blur-[2px] ${badgeClass}`}
+            className={`pointer-events-none absolute left-3 top-3 z-[1] rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.35px] shadow-sm backdrop-blur-[2px] ${badgeClass}`}
           >
             {badgeLabel}
           </span>
@@ -47,20 +59,26 @@ const MemberArtworkCard = memo(
             placement="card-end"
             size="sm"
           />
-          <MemberArtworkActionsMenu
-            item={item}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPromote={onPromote}
-            onSwitchCompetition={onSwitchCompetition}
-          />
+          <div
+            className="relative z-20"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <MemberArtworkActionsMenu
+              item={item}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onPromote={onPromote}
+              onSwitchCompetition={onSwitchCompetition}
+            />
+          </div>
           {item.promoted ? (
-            <span className="absolute bottom-3 left-3 rounded-md bg-[#22c55e] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
+            <span className="pointer-events-none absolute bottom-3 left-3 z-[1] rounded-md bg-[#22c55e] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
               {t('myArtwork.card.promoted')}
             </span>
           ) : null}
           {item.extraPhotoCount != null ? (
-            <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg bg-black/55 px-2 py-1 text-[11px] font-semibold text-white">
+            <span className="pointer-events-none absolute bottom-3 right-3 z-[1] inline-flex items-center gap-1 rounded-lg bg-black/55 px-2 py-1 text-[11px] font-semibold text-white">
               <Images size={14} strokeWidth={2} aria-hidden="true" />
               {t('myArtwork.card.extraPhotos', { count: item.extraPhotoCount })}
             </span>
@@ -88,7 +106,9 @@ const MemberArtworkCard = memo(
 
           <h2 className="mt-2 h-10 text-[16px] font-bold leading-5 text-[#0d0d14]">
             <Link
-              to={myArtworkDetailPath(item.id)}
+              to={detailPath}
+              state={{ artwork: item }}
+              onClick={(e) => e.stopPropagation()}
               className="line-clamp-2 transition group-hover:text-[#4048cd]"
             >
               {item.title}
@@ -126,7 +146,11 @@ const MemberArtworkCard = memo(
             ) : null}
           </div>
 
-          <div className="mt-auto flex min-h-44 flex-col justify-end pt-4">
+          <div
+            className="mt-auto flex min-h-44 flex-col justify-end pt-4"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
             <MemberArtworkCardFooter
               item={item}
               onSwitchCompetition={onSwitchCompetition}

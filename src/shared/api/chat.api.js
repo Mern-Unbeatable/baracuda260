@@ -117,9 +117,15 @@ export const getChatMessagesApi = async ({ roomId, page = 1, limit = 50 }) => {
  *   roomId: string,
  *   content?: string,
  *   file?: File | Blob,
+ *   replyToId?: string | null,
  * }} payload
  */
-export const sendChatMessageApi = async ({ roomId, content, file }) => {
+export const sendChatMessageApi = async ({
+  roomId,
+  content,
+  file,
+  replyToId = null,
+}) => {
   if (!roomId) throw new Error('Room ID is required');
   if (!content?.trim() && !file) {
     throw new Error('Message content or file is required');
@@ -132,15 +138,14 @@ export const sendChatMessageApi = async ({ roomId, content, file }) => {
   if (file) {
     formData.append('file', file);
   }
+  if (replyToId) {
+    formData.append('replyToId', String(replyToId));
+  }
 
+  // Let the browser set multipart boundary — forcing Content-Type drops fields like replyToId
   const response = await apiClient.post(
     `/v1/chat/${encodeURIComponent(roomId)}/messages`,
     formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    },
   );
   return response?.data !== undefined ? response.data : response;
 };

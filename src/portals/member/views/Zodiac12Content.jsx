@@ -19,7 +19,6 @@ import {
   ZODIAC12_ASSETS,
 } from '@/portals/member/data/zodiac12Assets';
 import { ROUTES } from '@/shared/config';
-import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import {
   CATEGORIES_QUERY_KEY,
   getCategoriesApi,
@@ -88,30 +87,30 @@ const ZodiacSlotCard = memo(
 
     return (
       <article
-        className={`flex h-full min-w-0 w-full flex-col gap-6.75 rounded-xl border bg-white p-5 ${theme.cardBorder}`}
+        className={`flex h-full min-w-0 w-full flex-col gap-4 rounded-xl border bg-white p-3.5 sm:gap-6.75 sm:p-5 ${theme.cardBorder}`}
       >
-        <div className="flex w-full flex-1 flex-col items-center gap-5">
+        <div className="flex w-full flex-1 flex-col items-center gap-3 sm:gap-5">
           <div className="flex w-full items-center justify-between whitespace-nowrap">
             <p
-              className={`shrink-0 text-[20px] font-semibold leading-6 ${theme.number}`}
+              className={`shrink-0 text-[14px] font-semibold leading-5 sm:text-[20px] sm:leading-6 ${theme.number}`}
             >
               #{slot.number}
             </p>
-            <p className="shrink-0 text-[16px] font-medium leading-6 text-[#3a3a3a]">
+            <p className="shrink-0 text-[11px] font-medium uppercase leading-5 text-[#3a3a3a] sm:text-[16px] sm:normal-case sm:leading-6">
               {t(slot.elementKey)}
             </p>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-3">
+          <div className="flex w-full flex-col items-center gap-2 sm:gap-3">
             <SlotIcon slot={slot} />
-            <div className="flex w-full flex-col items-center gap-1 text-center">
+            <div className="flex w-full flex-col items-center gap-0.5 text-center sm:gap-1">
               <p
-                className={`w-full text-[20px] font-medium leading-6 ${theme.name}`}
+                className={`w-full text-[14px] font-medium leading-5 sm:text-[20px] sm:leading-6 ${theme.name}`}
               >
                 {t(slot.nameKey)}
               </p>
               <p
-                className={`flex min-h-12 w-full items-start justify-center text-[16px] font-medium leading-6 ${theme.range}`}
+                className={`flex min-h-8 w-full items-start justify-center text-[12px] font-medium leading-4 sm:min-h-12 sm:text-[16px] sm:leading-6 ${theme.range}`}
               >
                 {t(slot.rangeKey)}
               </p>
@@ -139,14 +138,14 @@ const ZodiacSlotCard = memo(
             unstyled
             type="button"
             onClick={onAddPhoto}
-            className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${theme.buttonBorder} ${theme.buttonText}`}
+            className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 text-[13px] font-medium leading-5 transition hover:bg-black/2 sm:gap-2.5 sm:px-6 sm:py-3 sm:text-[16px] sm:leading-6 ${theme.buttonBorder} ${theme.buttonText}`}
           >
             <Image
               src={theme.upload}
               alt=""
-              width={24}
-              height={24}
-              className="size-6 shrink-0"
+              width={20}
+              height={20}
+              className="size-5 shrink-0 sm:size-6"
             />
             {addLabel}
           </Button>
@@ -194,9 +193,9 @@ const Zodiac12Content = memo(
         title: '',
         story: '',
         price: defaultPrice,
-        resolution: BUY_PHOTO_DEFAULT_SPECS.resolution,
-        fileSize: '125 KB',
-        quality: '4K',
+        resolution: '',
+        fileSize: '',
+        quality: '',
         copyrightOk: false,
       },
     });
@@ -248,7 +247,10 @@ const Zodiac12Content = memo(
         toast.success(
           t('sellPhotos.uploadSuccess', 'Photo story submitted for sale successfully!'),
         );
-        setSuccessOpen(true);
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photos'],
+        });
+        navigate(ROUTES.USER_SELL_PHOTOS);
       },
       onError: (err) => {
         toast.error(
@@ -590,19 +592,19 @@ const Zodiac12Content = memo(
     );
 
     return (
-      <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
+      <div className="mx-auto flex w-full max-w-395 flex-col gap-5 sm:gap-8">
         <Link
           to={isEdit ? ROUTES.USER_MY_ARTWORK : backHref}
-          className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#707070] transition hover:text-[#ee1c25]"
+          className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-[13px] font-medium leading-5 text-[#707070] transition hover:text-[#ee1c25] sm:gap-2 sm:text-[16px] sm:leading-6"
         >
-          <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
+          <ArrowLeft size={18} aria-hidden="true" className="shrink-0 sm:size-6" />
           {isEdit
             ? t('myArtwork.backToArtwork', 'Back to My Artwork')
             : t('zodiac12.backToSelection')}
         </Link>
 
         <div
-          className="relative h-16 w-full overflow-visible sm:h-20 lg:h-25.75"
+          className="relative h-12 w-full overflow-visible sm:h-20 lg:h-25.75"
           aria-hidden="true"
         >
           <Image
@@ -612,16 +614,16 @@ const Zodiac12Content = memo(
           />
         </div>
 
-        <section className="flex w-full flex-col items-center gap-6 rounded-[20px] bg-[#ecedfa] px-5 py-6 sm:px-10 lg:flex-row lg:justify-center lg:gap-21 lg:px-16 xl:px-52">
+        <section className="flex w-full flex-col items-center gap-4 rounded-[16px] bg-[#ecedfa] px-4 py-5 sm:gap-6 sm:rounded-[20px] sm:px-10 sm:py-6 lg:flex-row lg:justify-center lg:gap-21 lg:px-16 xl:px-52">
           <Image
             src={ZODIAC12_ASSETS.sun}
             alt=""
             width={132}
             height={132}
-            className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
+            className="size-16 shrink-0 object-contain sm:size-28 lg:size-33"
           />
-          <div className="flex max-w-184 flex-col items-center gap-2 text-center">
-            <h1 className="text-[24px] font-semibold leading-[1.35] text-black sm:text-[30px] lg:text-[36px] lg:leading-12.5">
+          <div className="flex max-w-184 flex-col items-center gap-1.5 text-center sm:gap-2">
+            <h1 className="text-[18px] font-semibold leading-[1.35] text-black sm:text-[30px] lg:text-[36px] lg:leading-12.5">
               <Trans
                 i18nKey="zodiac12.bannerTitle"
                 components={{
@@ -630,7 +632,7 @@ const Zodiac12Content = memo(
                 }}
               />
             </h1>
-            <p className="text-[16px] font-normal leading-6 text-[#4e4e4e] sm:text-[18px] lg:text-[20px]">
+            <p className="text-[13px] font-normal leading-5 text-[#4e4e4e] sm:text-[18px] sm:leading-6 lg:text-[20px]">
               {t('zodiac12.bannerSubtitle')}
             </p>
           </div>
@@ -639,12 +641,12 @@ const Zodiac12Content = memo(
             alt=""
             width={132}
             height={132}
-            className="size-20 shrink-0 object-contain sm:size-28 lg:size-33"
+            className="size-16 shrink-0 object-contain sm:size-28 lg:size-33"
           />
         </section>
 
-        <section className="flex w-full flex-col gap-5">
-          <h2 className="text-[20px] font-semibold leading-8 text-[#494453]">
+        <section className="flex w-full flex-col gap-4 sm:gap-5">
+          <h2 className="text-[16px] font-semibold leading-5 text-[#494453] sm:text-[20px] sm:leading-8">
             {t('zodiac12.gridTitle')}
           </h2>
 

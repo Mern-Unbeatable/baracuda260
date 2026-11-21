@@ -87,22 +87,79 @@ export const getCompetitionWinnersApi = async ({
   }));
 };
 
+const formatCompetitionItem = (comp) => {
+  if (!comp || typeof comp !== 'object') return null;
+  const endsAt = comp.endsAt || comp.endDate || null;
+  const prizeRaw = comp.prizePool ?? comp.prize ?? comp.totalPrize;
+  const prize =
+    prizeRaw == null || prizeRaw === ''
+      ? null
+      : typeof prizeRaw === 'number'
+        ? `$${Number(prizeRaw).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`
+        : String(prizeRaw);
+
+  let endsAtLabel = endsAt;
+  if (endsAt) {
+    try {
+      const d = new Date(endsAt);
+      if (!Number.isNaN(d.getTime())) {
+        endsAtLabel = d.toISOString().slice(0, 10);
+      }
+    } catch {
+      endsAtLabel = String(endsAt);
+    }
+  }
+
+  const monthName =
+    comp.month && comp.year
+      ? new Date(comp.year, Number(comp.month) - 1, 1).toLocaleString('en-US', {
+          month: 'long',
+          year: 'numeric',
+        })
+      : null;
+
+  return {
+    id: comp.id,
+    title:
+      comp.title ||
+      comp.name ||
+      (monthName ? `${monthName} Competition` : 'Current Monthly Competition'),
+    status: comp.status || 'OPEN',
+    prize,
+    endsAt: endsAtLabel,
+    year: comp.year,
+    month: comp.month,
+    raw: comp,
+  };
+};
+
 /**
- * Fetches list of active/open competitions for artwork submission or switching.
- * Endpoint: GET /v1/competitions
+ * Fetches the OPEN competition currently underway (monthly).
+ * Endpoint: GET /v1/competitions  (returns a single competition when kind is omitted)
+ * @returns {Promise<Array<{ id: string, title: string, status: string, prize?: string, endsAt?: string }>>}
  */
 export const getActiveCompetitionsApi = async (params = {}) => {
   try {
+    // Omitting year/month lets the API return (or auto-create) the current OPEN month
     const response = await apiClient.get('/v1/competitions', {
-      params: { status: 'OPEN', ...params },
+      params: { ...params },
     });
     const payload = response?.data !== undefined ? response.data : response;
-    const list = Array.isArray(payload?.data)
-      ? payload.data
-      : Array.isArray(payload)
-        ? payload
-        : [];
-    return list;
+    const raw = payload?.data !== undefined ? payload.data : payload;
+
+    if (Array.isArray(raw)) {
+      return raw
+        .map(formatCompetitionItem)
+        .filter((item) => item && (!item.status || item.status === 'OPEN'));
+    }
+
+    const item = formatCompetitionItem(raw);
+    if (!item) return [];
+    // Backend auto-starts the current month when none is open
+    return !item.status || item.status === 'OPEN' ? [item] : [];
   } catch {
     return [];
   }

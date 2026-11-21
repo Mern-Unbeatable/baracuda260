@@ -5,7 +5,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 
 const fieldClass =
-  'w-full rounded-lg bg-[#fafaff] px-[17px] py-3.5 text-[14px] leading-6 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30';
+  'w-full rounded-lg bg-[#fafaff] px-3.5 py-3 text-[13px] leading-5 text-[#707070] outline-none focus:ring-2 focus:ring-[#4048cd]/30 sm:px-[17px] sm:py-3.5 sm:text-[14px] sm:leading-6';
 
 const ZodiacStoryFormPanel = memo(
   ({
@@ -30,13 +30,13 @@ const ZodiacStoryFormPanel = memo(
     <form
       onSubmit={onSubmit}
       noValidate
-      className="flex w-full flex-col gap-6 rounded-[20px] bg-[#ecedfa] p-5"
+      className="flex w-full flex-col gap-4 rounded-[16px] bg-[#ecedfa] p-4 sm:gap-6 sm:rounded-[20px] sm:p-5"
     >
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-4 sm:gap-5">
+        <div className="flex flex-col gap-2 sm:gap-2.5">
           <label
             htmlFor={`${i18nPrefix}-title`}
-            className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
+            className="text-[12px] font-medium uppercase leading-5 tracking-wide text-[#494453] sm:text-[16px] sm:leading-6"
           >
             {t(`${i18nPrefix}.collectionTitle`)}
           </label>
@@ -54,7 +54,7 @@ const ZodiacStoryFormPanel = memo(
         </div>
 
         <div className="flex flex-col gap-2.5">
-          <p className="text-[16px] font-medium uppercase leading-6 text-[#494453]">
+          <p className="text-[12px] font-medium uppercase leading-5 tracking-wide text-[#494453] sm:text-[16px] sm:leading-6">
             {t(`${i18nPrefix}.artisticCategory`)}
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -113,7 +113,7 @@ const ZodiacStoryFormPanel = memo(
             <div className="flex flex-col gap-2.5">
               <label
                 htmlFor={`${i18nPrefix}-story`}
-                className="text-[16px] font-medium uppercase leading-6 text-[#494453]"
+                className="text-[12px] font-medium uppercase leading-5 tracking-wide text-[#494453] sm:text-[16px] sm:leading-6"
               >
                 Story / Concept / Creative Log
               </label>
@@ -136,10 +136,11 @@ const ZodiacStoryFormPanel = memo(
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium uppercase text-[#494453]">
+                <span className="text-[12px] font-medium uppercase tracking-wide text-[#494453] sm:text-[14px]">
                   {t('uploadForm.resolution')}
                 </span>
                 <Input
+                  placeholder={t('uploadForm.resolutionPlaceholder')}
                   error={errors.resolution}
                   inputClassName={fieldClass}
                   labelClassName="hidden"
@@ -149,10 +150,11 @@ const ZodiacStoryFormPanel = memo(
                 />
               </label>
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium uppercase text-[#494453]">
+                <span className="text-[12px] font-medium uppercase tracking-wide text-[#494453] sm:text-[14px]">
                   {t('uploadForm.fileSize')}
                 </span>
                 <Input
+                  placeholder={t('uploadForm.fileSizePlaceholder')}
                   error={errors.fileSize}
                   inputClassName={fieldClass}
                   labelClassName="hidden"
@@ -162,10 +164,11 @@ const ZodiacStoryFormPanel = memo(
                 />
               </label>
               <label className="flex flex-col gap-2.5">
-                <span className="text-[14px] font-medium uppercase text-[#494453]">
+                <span className="text-[12px] font-medium uppercase tracking-wide text-[#494453] sm:text-[14px]">
                   {t('uploadForm.quality')}
                 </span>
                 <Input
+                  placeholder={t('uploadForm.qualityPlaceholder')}
                   error={errors.quality}
                   inputClassName={fieldClass}
                   labelClassName="hidden"
@@ -226,7 +229,7 @@ const ZodiacStoryFormPanel = memo(
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-[16px] font-medium leading-6 text-[#323030]">
+        <p className="text-[14px] font-medium leading-5 text-[#323030] sm:text-[16px] sm:leading-6">
           {t('uploadForm.aiCreatedQuestion')}
         </p>
         <div className="flex flex-wrap items-center gap-6">
@@ -237,7 +240,7 @@ const ZodiacStoryFormPanel = memo(
               onChange={() => setAiCreated(aiCreated === 'yes' ? '' : 'yes')}
               className="size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
             />
-            <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+            <span className="text-[13px] font-medium leading-5 text-[#323030] sm:text-[16px] sm:leading-6">
               {t('uploadForm.aiCreatedYes')}
             </span>
           </label>
@@ -248,7 +251,7 @@ const ZodiacStoryFormPanel = memo(
               onChange={() => setAiCreated(aiCreated === 'no' ? '' : 'no')}
               className="size-4.5 shrink-0 cursor-pointer rounded-xs border border-black bg-white accent-[#ee1c25]"
             />
-            <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+            <span className="text-[13px] font-medium leading-5 text-[#323030] sm:text-[16px] sm:leading-6">
               {t('uploadForm.aiCreatedNo')}
             </span>
           </label>
@@ -270,7 +273,7 @@ const ZodiacStoryFormPanel = memo(
               required: t('singlePhoto.errors.copyrightRequired'),
             })}
           />
-          <span className="text-[15px] font-medium leading-6 text-[#323030] sm:text-[16px]">
+          <span className="text-[13px] font-medium leading-5 text-[#323030] sm:text-[16px] sm:leading-6">
             {t(`${i18nPrefix}.copyrightConfirm`)}
           </span>
         </label>
@@ -285,12 +288,12 @@ const ZodiacStoryFormPanel = memo(
         type="submit"
         disabled={isSubmitting}
         unstyled={true}
-        className="inline-flex w-full cursor-pointer items-center justify-center gap-4 rounded-lg bg-[#ee1c25] px-6 py-3 text-[16px] font-medium leading-6 text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg bg-[#ee1c25] px-5 py-2.5 text-[14px] font-medium leading-5 text-white transition hover:bg-[#d41921] disabled:cursor-not-allowed disabled:opacity-70 sm:gap-4 sm:px-6 sm:py-3 sm:text-[16px] sm:leading-6"
       >
         {isSubmitting ? (
-          <Loader2 size={24} className="animate-spin" aria-hidden="true" />
+          <Loader2 size={20} className="animate-spin sm:size-6" aria-hidden="true" />
         ) : (
-          <Sparkles size={24} aria-hidden="true" />
+          <Sparkles size={20} aria-hidden="true" className="sm:size-6" />
         )}
         {isSubmitting
           ? t('common.submitting', 'Submitting...')

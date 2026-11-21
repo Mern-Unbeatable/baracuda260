@@ -404,7 +404,6 @@ const AdminGalleryDetailContent = memo(() => {
       badge: badgeLabel,
       date: uploadDate,
       imageDetails: {
-        camera: artwork.camera,
         resolution: artwork.resolution,
         quality: artwork.quality,
         fileType: artwork.format,

@@ -1,11 +1,38 @@
 import { Clock, Plus, RefreshCw, Sparkles } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import Button from '@/components/ui/Button';
+import { myArtworkDetailPath } from '@/portals/member/data/myArtworkDetailData';
+import { ROUTES } from '@/shared/config';
 
 const MemberArtworkCardFooter = memo(({ item, onSwitchCompetition }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const openResults = () => {
+    const competition = item.competition || item.raw?.competition;
+    const kind = String(item.kind || item.raw?.kind || 'SINGLE').toUpperCase();
+    const year = competition?.year;
+    const month = competition?.month;
+
+    // Prefer public leaderboard when competition period is known
+    if (year && month) {
+      const params = new URLSearchParams({
+        kind,
+        year: String(year),
+        month: String(month),
+      });
+      navigate(`${ROUTES.LEADERBOARD}?${params.toString()}`);
+      return;
+    }
+
+    // Fallback: artwork detail rankings / results
+    navigate(myArtworkDetailPath(item.id), {
+      state: { artwork: item, openResults: true },
+    });
+  };
 
   if (item.footerState === 'active') {
     return (
@@ -130,9 +157,10 @@ const MemberArtworkCardFooter = memo(({ item, onSwitchCompetition }) => {
           <Button
             unstyled
             type="button"
+            onClick={openResults}
             className="flex-1 inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#e9d5ff] bg-white/40 px-3 py-1.5 text-[12px] font-semibold text-[#7c3aed] transition hover:bg-white/60"
           >
-            Results
+            {t('myArtwork.card.results', 'Results')}
           </Button>
         </div>
       </div>

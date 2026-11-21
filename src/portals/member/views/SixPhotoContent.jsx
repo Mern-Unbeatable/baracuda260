@@ -91,30 +91,30 @@ const ZodiacSlotCard = memo(
 
     return (
       <article
-        className={`flex h-full min-w-0 flex-col gap-6.75 rounded-xl border bg-white p-5 ${themeStyles.cardBorder}`}
+        className={`flex h-full min-w-0 flex-col gap-4 rounded-xl border bg-white p-3.5 sm:gap-6.75 sm:p-5 ${themeStyles.cardBorder}`}
       >
-        <div className="flex w-full flex-1 flex-col items-center gap-5">
+        <div className="flex w-full flex-1 flex-col items-center gap-3 sm:gap-5">
           <div className="flex w-full items-center justify-between whitespace-nowrap">
             <p
-              className={`shrink-0 text-[20px] font-semibold leading-6 ${themeStyles.number}`}
+              className={`shrink-0 text-[14px] font-semibold leading-5 sm:text-[20px] sm:leading-6 ${themeStyles.number}`}
             >
               #{slot.number}
             </p>
-            <p className="shrink-0 text-[16px] font-medium leading-6 text-[#3a3a3a]">
+            <p className="shrink-0 text-[11px] font-medium uppercase leading-5 text-[#3a3a3a] sm:text-[16px] sm:normal-case sm:leading-6">
               {t(slot.elementKey)}
             </p>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-3">
+          <div className="flex w-full flex-col items-center gap-2 sm:gap-3">
             <SlotIcon slot={slot} />
-            <div className="flex w-full flex-col items-center gap-1 text-center">
+            <div className="flex w-full flex-col items-center gap-0.5 text-center sm:gap-1">
               <p
-                className={`w-full text-[20px] font-medium leading-6 ${themeStyles.name}`}
+                className={`w-full text-[14px] font-medium leading-5 sm:text-[20px] sm:leading-6 ${themeStyles.name}`}
               >
                 {t(slot.nameKey)}
               </p>
               <p
-                className={`flex min-h-12 w-full items-start justify-center text-[16px] font-medium leading-6 ${themeStyles.range}`}
+                className={`flex min-h-8 w-full items-start justify-center text-[12px] font-medium leading-4 sm:min-h-12 sm:text-[16px] sm:leading-6 ${themeStyles.range}`}
               >
                 {t(slot.rangeKey)}
               </p>
@@ -142,14 +142,14 @@ const ZodiacSlotCard = memo(
             unstyled
             type="button"
             onClick={onAddPhoto}
-            className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-black/2 ${themeStyles.buttonBorder} ${themeStyles.buttonText}`}
+            className={`mt-auto inline-flex w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 text-[13px] font-medium leading-5 transition hover:bg-black/2 sm:gap-2.5 sm:px-6 sm:py-3 sm:text-[16px] sm:leading-6 ${themeStyles.buttonBorder} ${themeStyles.buttonText}`}
           >
             <Image
               src={themeStyles.upload}
               alt=""
-              width={24}
-              height={24}
-              className="size-6 shrink-0"
+              width={20}
+              height={20}
+              className="size-5 shrink-0 sm:size-6"
             />
             {addLabel}
           </Button>
@@ -199,9 +199,9 @@ const SixPhotoContent = memo(
         title: '',
         story: '',
         price: defaultPrice,
-        resolution: '6000*6000',
-        fileSize: '125 KB',
-        quality: '4K',
+        resolution: '',
+        fileSize: '',
+        quality: '',
         copyrightOk: false,
       },
     });
@@ -256,7 +256,10 @@ const SixPhotoContent = memo(
         toast.success(
           t('sellPhotos.uploadSuccess', 'Photo story submitted for sale successfully!'),
         );
-        setSuccessOpen(true);
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photos'],
+        });
+        navigate(ROUTES.USER_SELL_PHOTOS);
       },
       onError: (err) => {
         toast.error(
@@ -565,31 +568,31 @@ const SixPhotoContent = memo(
     };
 
     return (
-      <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
+      <div className="mx-auto flex w-full max-w-395 flex-col gap-5 sm:gap-8">
         <Link
           to={isEdit ? ROUTES.USER_MY_ARTWORK : backHref}
-          className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#202020] transition hover:text-[#ee1c25]"
+          className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-[13px] font-medium leading-5 text-[#202020] transition hover:text-[#ee1c25] sm:gap-2 sm:text-[16px] sm:leading-6"
         >
-          <ArrowLeft size={24} aria-hidden="true" className="shrink-0" />
+          <ArrowLeft size={18} aria-hidden="true" className="shrink-0 sm:size-6" />
           {isEdit
             ? t('myArtwork.backToArtwork', 'Back to My Artwork')
             : t('sixPhoto.backToSelection')}
         </Link>
 
-        <div className="flex flex-col gap-8">
-          <section className="flex w-full flex-col gap-6 rounded-[20px] border border-[rgba(0,0,0,0.2)] bg-white p-5 sm:p-8">
+        <div className="flex flex-col gap-5 sm:gap-8">
+          <section className="flex w-full flex-col gap-4 rounded-[16px] border border-[rgba(0,0,0,0.2)] bg-white p-3.5 sm:gap-6 sm:rounded-[20px] sm:p-8">
             <div className="flex items-center gap-2">
               <SparklesLucide
-                size={16}
-                className="shrink-0 text-[#1b1b1b]"
+                size={14}
+                className="shrink-0 text-[#1b1b1b] sm:size-4"
                 aria-hidden="true"
               />
-              <h1 className="text-[18px] font-medium leading-6 text-[#1b1b1b] sm:text-[20px]">
+              <h1 className="text-[15px] font-medium leading-5 text-[#1b1b1b] sm:text-[20px] sm:leading-6">
                 {t('sixPhoto.selectTheme')}
               </h1>
             </div>
 
-            <div className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-center lg:gap-6">
+            <div className="flex flex-col items-stretch gap-4 sm:gap-6 lg:flex-row lg:items-center lg:gap-6">
               {THEMES.map((item, index) => {
                 const selected = item.id === themeId;
                 const styles = selected ? item.selected : item.idle;
@@ -597,7 +600,7 @@ const SixPhotoContent = memo(
                 return (
                   <React.Fragment key={item.id}>
                     {index > 0 ? (
-                      <p className="shrink-0 text-center text-[18px] font-semibold leading-6 text-black sm:text-[20px]">
+                      <p className="shrink-0 text-center text-[14px] font-semibold leading-5 text-black sm:text-[20px] sm:leading-6">
                         {t('sixPhoto.or')}
                       </p>
                     ) : null}
@@ -606,19 +609,19 @@ const SixPhotoContent = memo(
                       type="button"
                       aria-pressed={selected}
                       onClick={() => handleThemeChange(item.id)}
-                      className={`flex flex-1 cursor-pointer flex-col gap-4 rounded-[10px] border p-5 text-left transition sm:p-6 ${styles.card}`}
+                      className={`flex flex-1 cursor-pointer flex-col gap-3 rounded-[10px] border p-3.5 text-left transition sm:gap-4 sm:p-6 ${styles.card}`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <span className="flex min-w-0 items-center gap-2">
                           <Image
                             src={item.icon}
                             alt=""
-                            width={24}
-                            height={24}
-                            className="size-6 shrink-0"
+                            width={20}
+                            height={20}
+                            className="size-5 shrink-0 sm:size-6"
                           />
                           <span
-                            className={`text-[16px] font-semibold leading-6 sm:text-[18px] xl:text-[20px] ${styles.title}`}
+                            className={`text-[14px] font-semibold leading-5 sm:text-[18px] sm:leading-6 xl:text-[20px] ${styles.title}`}
                           >
                             {t(item.titleKey)}
                           </span>
@@ -629,17 +632,17 @@ const SixPhotoContent = memo(
                             alt=""
                             width={8}
                             height={8}
-                            className="mt-2 size-2 shrink-0"
+                            className="mt-1.5 size-2 shrink-0 sm:mt-2"
                           />
                         ) : (
                           <span
-                            className="mt-2 size-2 shrink-0"
+                            className="mt-1.5 size-2 shrink-0 sm:mt-2"
                             aria-hidden="true"
                           />
                         )}
                       </div>
                       <p
-                        className={`text-[15px] font-medium leading-6 sm:text-[16px] ${styles.body}`}
+                        className={`text-[12px] font-medium leading-4 sm:text-[16px] sm:leading-6 ${styles.body}`}
                       >
                         {t(item.descriptionKey)}
                       </p>
@@ -661,12 +664,12 @@ const SixPhotoContent = memo(
             />
           </div>
 
-          <section className="flex w-full flex-col gap-7">
-            <div className="flex max-w-121.25 flex-col gap-3">
-              <h2 className="text-[20px] font-semibold leading-6 text-[#0b0b0b]">
+          <section className="flex w-full flex-col gap-4 sm:gap-7">
+            <div className="flex max-w-121.25 flex-col gap-1.5 sm:gap-3">
+              <h2 className="text-[16px] font-semibold leading-5 text-[#0b0b0b] sm:text-[20px] sm:leading-6">
                 {t('sixPhoto.slotsTitle')}
               </h2>
-              <p className="text-[16px] font-medium leading-6 text-[#484848]">
+              <p className="text-[12px] font-medium leading-4 text-[#484848] sm:text-[16px] sm:leading-6">
                 {t('sixPhoto.slotsSubtitle')}
               </p>
             </div>
@@ -692,24 +695,24 @@ const SixPhotoContent = memo(
             ) : null}
           </section>
 
-          <article className="rounded-xl border border-[#e6e8ef] bg-white p-5">
-            <h3 className="text-[24px] font-semibold leading-8 text-[#2a282d]">
+          <article className="rounded-xl border border-[#e6e8ef] bg-white p-3.5 sm:p-5">
+            <h3 className="text-[16px] font-semibold leading-5 text-[#2a282d] sm:text-[20px] sm:leading-7">
               Upload Videos
             </h3>
-            <p className="mt-1 text-[13px] leading-5 text-[#717784]">
+            <p className="mt-1 text-[11px] leading-4 text-[#717784] sm:text-[13px] sm:leading-5">
               Help your pro prepare by showing them the work area. Optional but
               highly recommended.
             </p>
             <Button
               unstyled
               type="button"
-              className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
+              className="mt-3 flex h-24 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white px-3 text-[#7f8593] transition hover:border-[#b9bfd0] sm:mt-4 sm:h-28"
             >
-              <Upload size={24} className="mb-2 text-[#b1b6c5]" />
-              <span className="text-[16px] leading-6">
+              <Upload size={20} className="mb-1.5 text-[#b1b6c5] sm:mb-2 sm:size-6" />
+              <span className="text-center text-[13px] leading-5 sm:text-[16px] sm:leading-6">
                 Click to upload Videos or drag &amp; drop
               </span>
-              <span className="text-[12px] text-[#9ca3af]">
+              <span className="text-[11px] text-[#9ca3af] sm:text-[12px]">
                 MP4 — max 10MB each
               </span>
             </Button>

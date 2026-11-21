@@ -417,12 +417,13 @@ const GalleryDetailView = memo(
           <Shell>
             <Breadcrumb title={story.title} />
 
-            <div className="relative mt-4 aspect-1536/653 w-full overflow-hidden rounded-2xl sm:mt-5 sm:rounded-[20px]">
+            <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden rounded-2xl sm:mt-5 sm:rounded-[20px] lg:aspect-1536/653">
               <Image
                 src={heroSrc}
                 alt={heroAlt}
                 width={1536}
                 height={653}
+                priority
                 className="absolute inset-0 h-full w-full object-cover"
               />
               {activeSlide ? (

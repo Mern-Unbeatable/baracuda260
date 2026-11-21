@@ -240,12 +240,13 @@ const MemberArtworkDetailContent = memo(
           {backLabel || t('myArtwork.detail.back')}
         </Link>
 
-        <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]">
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl sm:rounded-[20px] lg:aspect-1536/653">
           <Image
             src={heroSrc}
             alt={heroAlt}
             width={1536}
             height={653}
+            priority
             className="absolute inset-0 h-full w-full object-cover"
           />
           {activeSlide ? (
@@ -415,23 +416,25 @@ const MemberArtworkDetailContent = memo(
 
         <GalleryDetailImageDetails details={imageDetails} />
 
-        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+        <div className="grid grid-cols-2 gap-2 sm:gap-4">
           {statItems.map((stat) => (
             <div
               key={stat.label}
-              className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-black/8 bg-[#f5f5f5] px-4 py-4 text-center"
+              className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-black/8 bg-[#f5f5f5] px-2 py-3 text-center sm:gap-2 sm:rounded-2xl sm:px-4 sm:py-4"
             >
-              <p className="w-full text-[11px] font-semibold uppercase tracking-wider text-[#6b7280] sm:text-[12px]">
+              <p className="w-full text-[10px] font-semibold uppercase tracking-wider text-[#6b7280] sm:text-[12px]">
                 {stat.label}
               </p>
-              <p className="w-full text-[28px] font-semibold leading-none text-[#161c27] sm:text-[32px]">
+              <p className="w-full text-[22px] font-semibold leading-none text-[#161c27] sm:text-[32px]">
                 {stat.value}
               </p>
             </div>
           ))}
         </div>
 
-        {detail.footerState === 'active' ? (
+        {detail.footerState === 'active' ||
+        detail.footerState === 'ended' ||
+        detail.showRankings ? (
           <MemberArtworkGlobalRankings
             rankings={detail.rankings}
             showingCount={detail.showingCount}

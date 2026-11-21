@@ -99,6 +99,37 @@ export const USER_PROFILE_USERNAME_QUERY_KEY = (username) => [
   String(username || '').replace(/^@/, ''),
 ];
 
+export const USER_SEARCH_QUERY_KEY = 'user-search';
+
+/**
+ * Search users by username or display name.
+ * GET /api/v1/users/search?q=maya&limit=8
+ *
+ * @param {{ q?: string, limit?: number }} params
+ */
+export const searchUsersApi = async ({ q = '', limit = 8 } = {}) => {
+  const query = String(q || '')
+    .trim()
+    .replace(/^@/, '');
+  if (query.length < 2) return [];
+
+  const response = await apiClient.get('/v1/users/search', {
+    params: { q: query, limit },
+  });
+  const payload = response?.data !== undefined ? response.data : response;
+  const list = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload?.data)
+      ? payload.data
+      : [];
+  return list.map((user) => ({
+    id: user.id,
+    name: user.name || user.username || '',
+    username: user.username || '',
+    avatar: user.avatar || null,
+  }));
+};
+
 /**
  * Fetch list of photographers the user follows (favourite profiles).
  * GET /api/v1/users/following?page=1&limit=10

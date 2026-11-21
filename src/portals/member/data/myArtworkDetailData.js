@@ -137,10 +137,16 @@ export const normalizeArtworkDetail = (item) => {
     ];
   }
 
+  const competitionState = String(
+    item.competitionState || item.footerState || '',
+  ).toUpperCase();
+  const isEnded =
+    item.footerState === 'ended' || competitionState === 'ENDED';
   const inCompetition =
     item.footerState === 'active' ||
-    item.competitionState === 'IN_COMPETITION' ||
-    Boolean(item.competition);
+    competitionState === 'IN_COMPETITION' ||
+    (!isEnded && Boolean(item.competition));
+  const showRankings = inCompetition || isEnded;
   const demoRankings = COMPETITION_DETAILS.monochrome.rankings;
 
   const createdDate = item.createdAt ? new Date(item.createdAt) : null;
@@ -195,10 +201,14 @@ export const normalizeArtworkDetail = (item) => {
         false,
     ),
     inCompetition,
-    footerState: inCompetition ? 'active' : item.footerState || 'profileOnly',
-    usesVotesViews: inCompetition,
-    showRankings: inCompetition,
-    rankings: inCompetition ? item.globalRankings || demoRankings : [],
+    footerState: isEnded
+      ? 'ended'
+      : inCompetition
+        ? 'active'
+        : item.footerState || 'profileOnly',
+    usesVotesViews: inCompetition || isEnded,
+    showRankings,
+    rankings: showRankings ? item.globalRankings || demoRankings : [],
     showingCount: 5,
     showingTotal: '24,802',
     videoPoster: primaryImage,

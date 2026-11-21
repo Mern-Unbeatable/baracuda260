@@ -414,7 +414,6 @@ const AdminCompetitionDetailContent = memo(() => {
       points: artwork.points != null ? String(artwork.points) : null,
       rank: artwork.rank ?? artwork.artworkRankInCompetition ?? null,
       prizeMoney: artwork.prizeMoney ?? null,
-      camera: artwork.camera || null,
       resolution: artwork.resolution || null,
       format: artwork.format || null,
       quality: artwork.quality || null,
@@ -705,16 +704,11 @@ const AdminCompetitionDetailContent = memo(() => {
                 ) : null}
               </div>
 
-              {(detail.camera || detail.resolution || detail.format || detail.quality || detail.zodiacSign) ? (
+              {(detail.resolution || detail.format || detail.quality || detail.zodiacSign) ? (
                 <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-[#ececf0] bg-[#fafafa] p-4 sm:p-5">
                   <span className="text-[12px] font-bold uppercase tracking-wider text-[#6b7280]">
                     Equipment & Specs:
                   </span>
-                  {detail.camera ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-black/5 bg-white px-3 py-1 text-[13px] font-medium text-[#111827]">
-                      📷 {detail.camera}
-                    </span>
-                  ) : null}
                   {detail.resolution ? (
                     <span className="inline-flex items-center gap-1.5 rounded-lg border border-black/5 bg-white px-3 py-1 text-[13px] font-medium text-[#111827]">
                       📐 {detail.resolution}

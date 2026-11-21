@@ -12,16 +12,355 @@ import {
   Pause,
   Pencil,
   Play,
+  Reply,
   Send,
   Smile,
+  Square,
   Trash2,
   X,
 } from 'lucide-react';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+
+const pickSupportedAudioMime = () => {
+  if (typeof MediaRecorder === 'undefined') return '';
+  const candidates = [
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/mp4',
+    'audio/ogg;codecs=opus',
+    'audio/ogg',
+  ];
+  return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || '';
+};
+
+const formatRecordingTime = (totalSeconds) => {
+  const mins = Math.floor(totalSeconds / 60)
+    .toString()
+    .padStart(2, '0');
+  const secs = Math.floor(totalSeconds % 60)
+    .toString()
+    .padStart(2, '0');
+  return `${mins}:${secs}`;
+};
+
+const EVERYDAY_EMOJIS = [
+  '😀',
+  '😃',
+  '😄',
+  '😁',
+  '😆',
+  '😅',
+  '😂',
+  '🤣',
+  '😊',
+  '😇',
+  '🙂',
+  '😉',
+  '😌',
+  '😍',
+  '🥰',
+  '😘',
+  '😗',
+  '😙',
+  '😚',
+  '😋',
+  '😛',
+  '😝',
+  '😜',
+  '🤪',
+  '🤨',
+  '🧐',
+  '🤓',
+  '😎',
+  '🤩',
+  '🥳',
+  '😏',
+  '😒',
+  '😞',
+  '😔',
+  '😟',
+  '😕',
+  '🙁',
+  '☹️',
+  '😣',
+  '😖',
+  '😫',
+  '😩',
+  '🥺',
+  '😢',
+  '😭',
+  '😤',
+  '😠',
+  '😡',
+  '🤬',
+  '🤯',
+  '😳',
+  '🥵',
+  '🥶',
+  '😱',
+  '😨',
+  '😰',
+  '😥',
+  '😓',
+  '🤗',
+  '🤔',
+  '🤭',
+  '🤫',
+  '🤥',
+  '😶',
+  '😐',
+  '😑',
+  '😬',
+  '🙄',
+  '😯',
+  '😦',
+  '😧',
+  '😮',
+  '😲',
+  '🥱',
+  '😴',
+  '🤤',
+  '😪',
+  '😵',
+  '🤐',
+  '🥴',
+  '🤢',
+  '🤮',
+  '🤧',
+  '😷',
+  '🤒',
+  '🤕',
+  '🤑',
+  '🤠',
+  '😈',
+  '👿',
+  '👻',
+  '💀',
+  '☠️',
+  '👽',
+  '🤖',
+  '💩',
+  '😺',
+  '😸',
+  '😹',
+  '😻',
+  '👍',
+  '👎',
+  '👏',
+  '🙌',
+  '🤝',
+  '✌️',
+  '🤞',
+  '🤟',
+  '🤘',
+  '👌',
+  '🤌',
+  '🤏',
+  '👈',
+  '👉',
+  '👆',
+  '👇',
+  '☝️',
+  '👋',
+  '🤚',
+  '🖐️',
+  '✋',
+  '🖖',
+  '👊',
+  '✊',
+  '🤛',
+  '🤜',
+  '💪',
+  '🙏',
+  '🫶',
+  '❤️',
+  '🧡',
+  '💛',
+  '💚',
+  '💙',
+  '💜',
+  '🖤',
+  '🤍',
+  '🤎',
+  '💔',
+  '❣️',
+  '💕',
+  '💞',
+  '💓',
+  '💗',
+  '💖',
+  '💘',
+  '💝',
+  '🔥',
+  '✨',
+  '⭐',
+  '🌟',
+  '💯',
+  '✅',
+  '❌',
+  '⚠️',
+  '🎉',
+  '🎊',
+  '🎈',
+  '🎁',
+  '🏆',
+  '🥇',
+  '🥈',
+  '🥉',
+  '☀️',
+  '🌙',
+  '⭐️',
+  '🌈',
+  '☁️',
+  '⚡',
+  '❄️',
+  '🌸',
+  '🌹',
+  '🍀',
+  '🍕',
+  '🍔',
+  '🍟',
+  '🌮',
+  '🍣',
+  '🍩',
+  '🍪',
+  '🎂',
+  '☕',
+  '🍵',
+  '🍺',
+  '🍻',
+  '🍷',
+  '🍸',
+  '🏠',
+  '🚗',
+  '✈️',
+  '🚀',
+  '⏰',
+  '📱',
+  '💻',
+  '📷',
+  '🎵',
+  '🎧',
+  '🎬',
+  '🎮',
+  '📎',
+  '📌',
+  '📍',
+  '💡',
+  '🔑',
+  '🔒',
+  '🐶',
+  '🐱',
+  '🐭',
+  '🐹',
+  '🐰',
+  '🦊',
+  '🐻',
+  '🐼',
+  '🐨',
+  '🐯',
+  '🦁',
+  '🐮',
+];
+
+const EmojiPickerModal = memo(({ open, onClose, onSelect }) => {
+  const { t } = useTranslation();
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') onClose?.();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return createPortal(
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      className="fixed inset-0 z-50 flex items-end justify-center p-3 sm:items-center sm:p-6"
+    >
+      <button
+        type="button"
+        className="absolute inset-0 bg-[#0f172a]/45 backdrop-blur-[2px]"
+        onClick={onClose}
+        aria-label={t('common.close', 'Close')}
+      />
+      <div className="relative z-10 flex max-h-[min(78vh,560px)] w-full max-w-[420px] flex-col overflow-hidden rounded-2xl border border-[#e8eaef] bg-white shadow-[0_24px_64px_-16px_rgba(15,23,42,0.28)]">
+        <header className="flex items-center justify-between gap-3 border-b border-[#eceef3] px-4 py-3.5 sm:px-5">
+          <div>
+            <h2
+              id={titleId}
+              className="text-[16px] font-bold tracking-[-0.2px] text-[#161c27]"
+            >
+              {t('memberChat.emojiPickerTitle', 'Emojis')}
+            </h2>
+            <p className="mt-0.5 text-[12px] text-[#6b7280]">
+              {t(
+                'memberChat.emojiPickerHint',
+                'Tap to add. You can select multiple.',
+              )}
+            </p>
+          </div>
+          <Button
+            unstyled
+            type="button"
+            onClick={onClose}
+            className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#161c27]"
+            aria-label={t('common.close', 'Close')}
+          >
+            <X size={18} />
+          </Button>
+        </header>
+
+        <div className="scrollbar-light grid grid-cols-7 gap-1.5 overflow-y-auto p-3 sm:grid-cols-8 sm:gap-2 sm:p-4">
+          {EVERYDAY_EMOJIS.map((emoji) => (
+            <button
+              key={emoji}
+              type="button"
+              onClick={() => onSelect?.(emoji)}
+              className="inline-flex aspect-square cursor-pointer items-center justify-center rounded-xl text-[28px] transition hover:bg-[#f3f4f6] active:scale-95 sm:text-[30px]"
+              aria-label={t('memberChat.insertEmoji', 'Insert {{emoji}}', {
+                emoji,
+              })}
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+
+        <footer className="flex items-center justify-end border-t border-[#eceef3] bg-[#fafbfc] px-4 py-3 sm:px-5">
+          <Button
+            unstyled
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 cursor-pointer items-center rounded-xl bg-[#4048cd] px-4 text-[13px] font-semibold text-white transition hover:bg-[#343bb0]"
+          >
+            {t('common.done', 'Done')}
+          </Button>
+        </footer>
+      </div>
+    </div>,
+    document.body,
+  );
+});
+
+EmojiPickerModal.displayName = 'EmojiPickerModal';
 
 const formatFileSize = (bytes) => {
   if (!bytes || Number.isNaN(bytes)) return '';
@@ -29,6 +368,111 @@ const formatFileSize = (bytes) => {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
+
+/** Detect emoji-only chat messages so we can render them larger. */
+const getEmojiOnlyScale = (rawText) => {
+  const text = String(rawText || '').trim();
+  if (!text) return null;
+
+  // Strip variation selectors / ZWJ / spaces for counting "emoji units"
+  const withoutModifiers = text.replace(/[\uFE0F\u200D\s]/g, '');
+  if (!withoutModifiers) return null;
+
+  // Reject if any letters/digits/common punctuation remain
+  if (/[A-Za-z0-9@#$%&*_=+\[\]{}\\|;:"'<>,.?/~`!]/.test(withoutModifiers)) {
+    return null;
+  }
+
+  const emojiMatches = text.match(
+    /\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*/gu,
+  );
+  if (!emojiMatches?.length) return null;
+
+  // Ensure the message is only those emoji graphemes (+ whitespace)
+  const rebuilt = emojiMatches.join('');
+  if (text.replace(/\s+/g, '') !== rebuilt.replace(/\s+/g, '')) return null;
+
+  const count = emojiMatches.length;
+  if (count <= 2) return 'text-[40px] leading-none sm:text-[44px]';
+  if (count <= 6) return 'text-[32px] leading-snug sm:text-[36px]';
+  return 'text-[24px] leading-snug sm:text-[28px]';
+};
+
+const getReplyPreviewLabel = (message) => {
+  if (!message) return 'Message';
+  if (message.isDeleted) return 'Original message was unsent';
+  const text = String(message.text || message.content || '').trim();
+  if (text) return text;
+  const fileType = String(message.fileType || '').toLowerCase();
+  if (
+    fileType === 'image' ||
+    fileType.startsWith('image/') ||
+    /\.(jpeg|jpg|png|webp|gif|svg)$/i.test(message.fileUrl || '')
+  ) {
+    return 'Photo';
+  }
+  if (
+    fileType === 'video' ||
+    fileType.startsWith('video/') ||
+    /\.(mp4|webm|mov)$/i.test(message.fileUrl || '')
+  ) {
+    return 'Video';
+  }
+  if (
+    fileType === 'audio' ||
+    fileType.startsWith('audio/') ||
+    /\.(webm|ogg|mp3|m4a|wav|aac)$/i.test(
+      message.fileUrl || message.fileName || '',
+    )
+  ) {
+    return 'Voice message';
+  }
+  if (message.fileUrl || message.fileName) {
+    return message.fileName || 'Attachment';
+  }
+  return 'Message';
+};
+
+const getReplyAuthorLabel = (message, currentUserId) => {
+  if (!message) return 'Message';
+  const senderId = message.senderId || message.sender?.id;
+  if (senderId && currentUserId && String(senderId) === String(currentUserId)) {
+    return 'You';
+  }
+  if (message.type === 'sent') return 'You';
+  return (
+    message.sender?.name ||
+    message.sender?.username ||
+    'Message'
+  );
+};
+
+const InlineReplyQuote = memo(({ replyTo, isSent, currentUserId }) => {
+  if (!replyTo) return null;
+  const author = getReplyAuthorLabel(replyTo, currentUserId);
+  const preview = getReplyPreviewLabel(replyTo);
+
+  return (
+    <div
+      className={`mb-2 rounded-xl border-l-4 px-2.5 py-1.5 text-left ${
+        isSent
+          ? 'border-white/70 bg-white/15 text-white/90'
+          : 'border-[#4048cd] bg-[#f3f4ff] text-[#494453]'
+      }`}
+    >
+      <p
+        className={`truncate text-[11px] font-semibold ${
+          isSent ? 'text-white' : 'text-[#4048cd]'
+        }`}
+      >
+        {author}
+      </p>
+      <p className="truncate text-[12px] leading-4 opacity-90">{preview}</p>
+    </div>
+  );
+});
+
+InlineReplyQuote.displayName = 'InlineReplyQuote';
 
 const VoiceWaveform = memo(({ active = false }) => (
   <div className="flex h-8 items-end gap-0.5" aria-hidden="true">
@@ -45,102 +489,184 @@ const VoiceWaveform = memo(({ active = false }) => (
 VoiceWaveform.displayName = 'VoiceWaveform';
 
 /**
- * Facebook-style message action menu popover
+ * Message action menu — portaled + flips above near the composer so it isn't clipped.
  */
 const FacebookMessageMenu = memo(
   ({
     isSent,
     canEdit,
     onEdit,
+    onReply,
     onCopy,
     onDelete,
     isOpen,
     onToggle,
     onClose,
   }) => {
+    const buttonWrapRef = useRef(null);
+    const buttonRef = useRef(null);
     const menuRef = useRef(null);
+    const [placement, setPlacement] = useState(null);
 
     useEffect(() => {
-      if (!isOpen) return;
+      if (!isOpen) return undefined;
       const handleClickOutside = (e) => {
-        if (menuRef.current && !menuRef.current.contains(e.target)) {
-          onClose();
-        }
+        const inButton = buttonWrapRef.current?.contains(e.target);
+        const inMenu = menuRef.current?.contains(e.target);
+        if (!inButton && !inMenu) onClose();
+      };
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') onClose();
       };
       document.addEventListener('mousedown', handleClickOutside);
-      return () =>
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
         document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
     }, [isOpen, onClose]);
 
+    useEffect(() => {
+      if (!isOpen || !buttonRef.current) {
+        setPlacement(null);
+        return undefined;
+      }
+
+      const updatePosition = () => {
+        const rect = buttonRef.current.getBoundingClientRect();
+        const menuHeight = menuRef.current?.offsetHeight || 140;
+        const menuWidth = menuRef.current?.offsetWidth || 148;
+        const gap = 6;
+        const margin = 8;
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const openUpward = spaceBelow < menuHeight + gap + 72; // keep clear of composer
+
+        const top = openUpward
+          ? Math.max(margin, rect.top - menuHeight - gap)
+          : Math.min(
+              window.innerHeight - menuHeight - margin,
+              rect.bottom + gap,
+            );
+
+        let left = isSent ? rect.right - menuWidth : rect.left;
+        left = Math.min(
+          Math.max(margin, left),
+          window.innerWidth - menuWidth - margin,
+        );
+
+        setPlacement({ top, left, openUpward });
+      };
+
+      updatePosition();
+      window.addEventListener('resize', updatePosition);
+      window.addEventListener('scroll', updatePosition, true);
+      return () => {
+        window.removeEventListener('resize', updatePosition);
+        window.removeEventListener('scroll', updatePosition, true);
+      };
+    }, [isOpen, isSent]);
+
+    const menu =
+      isOpen &&
+      createPortal(
+        <div
+          ref={menuRef}
+          role="menu"
+          style={{
+            position: 'fixed',
+            zIndex: 80,
+            top: placement?.top ?? -9999,
+            left: placement?.left ?? -9999,
+            visibility: placement ? 'visible' : 'hidden',
+          }}
+          className="min-w-36 overflow-hidden rounded-xl border border-gray-100 bg-white p-1 shadow-[0_12px_32px_rgba(15,23,42,0.18)]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {onReply ? (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onClose();
+                onReply();
+              }}
+              className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-gray-700 transition hover:bg-gray-50"
+            >
+              <Reply size={14} className="text-gray-500" />
+              <span>Reply</span>
+            </button>
+          ) : null}
+
+          {canEdit ? (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onClose();
+                onEdit();
+              }}
+              className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-gray-700 transition hover:bg-gray-50"
+            >
+              <Pencil size={14} className="text-gray-500" />
+              <span>Edit</span>
+            </button>
+          ) : null}
+
+          {onCopy ? (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onClose();
+                onCopy();
+              }}
+              className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-gray-700 transition hover:bg-gray-50"
+            >
+              <Copy size={14} className="text-gray-500" />
+              <span>Copy text</span>
+            </button>
+          ) : null}
+
+          {isSent ? (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onClose();
+                onDelete();
+              }}
+              className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-red-600 transition hover:bg-red-50"
+            >
+              <Trash2 size={14} className="text-red-500" />
+              <span>Unsend</span>
+            </button>
+          ) : null}
+        </div>,
+        document.body,
+      );
+
     return (
-      <div className="relative shrink-0 self-center" ref={menuRef}>
+      <div className="relative shrink-0 self-center" ref={buttonWrapRef}>
         <button
+          ref={buttonRef}
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             onToggle();
           }}
           title="More"
-          className={`flex size-7 items-center justify-center rounded-full border border-gray-200 bg-white/95 text-gray-500 shadow-sm transition hover:bg-gray-100 hover:text-gray-800 cursor-pointer ${
+          className={`flex size-7 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white/95 text-gray-500 shadow-sm transition hover:bg-gray-100 hover:text-gray-800 ${
             isOpen
               ? 'opacity-100 ring-2 ring-[#4048cd]/20'
               : 'opacity-0 group-hover:opacity-100'
           }`}
           aria-label="Message actions"
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
         >
           <MoreHorizontal size={15} />
         </button>
-
-        {isOpen && (
-          <div
-            className={`absolute z-30 min-w-36 overflow-hidden rounded-xl border border-gray-100 bg-white p-1 shadow-xl animate-in fade-in zoom-in-95 duration-100 ${
-              isSent ? 'right-0 top-full mt-1' : 'left-0 top-full mt-1'
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {canEdit && (
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  onEdit();
-                }}
-                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
-              >
-                <Pencil size={14} className="text-gray-500" />
-                <span>Edit</span>
-              </button>
-            )}
-
-            {onCopy && (
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  onCopy();
-                }}
-                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
-              >
-                <Copy size={14} className="text-gray-500" />
-                <span>Copy text</span>
-              </button>
-            )}
-
-            {isSent && (
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  onDelete();
-                }}
-                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-red-600 hover:bg-red-50 transition cursor-pointer"
-              >
-                <Trash2 size={14} className="text-red-500" />
-                <span>Unsend</span>
-              </button>
-            )}
-          </div>
-        )}
+        {menu}
       </div>
     );
   },
@@ -214,88 +740,16 @@ const FacebookUnsendModal = memo(({ open, onClose, onConfirm, isDeleting }) => {
 
 FacebookUnsendModal.displayName = 'FacebookUnsendModal';
 
-/**
- * Facebook-style inline message editor
- */
-const InlineMessageEditor = memo(
-  ({ value, onChange, onSave, onCancel, isSaving }) => {
-    const textareaRef = useRef(null);
-
-    useEffect(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-        textareaRef.current.setSelectionRange(
-          textareaRef.current.value.length,
-          textareaRef.current.value.length,
-        );
-      }
-    }, []);
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        if (value.trim()) onSave();
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        onCancel();
-      }
-    };
-
-    return (
-      <div className="w-full max-w-[min(100%,460px)] rounded-2xl border-2 border-[#4048cd] bg-white p-3 shadow-lg transition">
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          rows={Math.min(5, Math.max(2, (value.match(/\n/g) || []).length + 1))}
-          className="w-full resize-none bg-transparent text-[14px] leading-6 text-gray-900 outline-none"
-          placeholder="Edit message..."
-          disabled={isSaving}
-        />
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 pt-2 text-[11px] text-gray-400">
-          <span>Escape to cancel · Enter to save</span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onCancel}
-              disabled={isSaving}
-              className="rounded-lg px-2.5 py-1 font-semibold text-gray-600 hover:bg-gray-100 transition cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={onSave}
-              disabled={!value.trim() || isSaving}
-              className="inline-flex items-center gap-1 rounded-lg bg-[#4048cd] px-3.5 py-1 font-semibold text-white hover:bg-[#343bb7] transition disabled:opacity-40 cursor-pointer"
-            >
-              {isSaving ? <Loader2 size={13} className="animate-spin" /> : null}
-              <span>Save</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  },
-);
-
-InlineMessageEditor.displayName = 'InlineMessageEditor';
-
 const ChatMessageBubble = memo(
   ({
     message,
     t,
     onStartEdit,
+    onStartReply,
     onOpenUnsend,
-    editingMessage,
-    draft,
-    onDraftChange,
-    onSend,
-    onCancelEdit,
-    isSending,
     activeMenuId,
     setActiveMenuId,
+    currentUserId,
   }) => {
     if (message.type === 'date') {
       return (
@@ -325,15 +779,24 @@ const ChatMessageBubble = memo(
     const hasFile = Boolean(message.fileUrl || message.variant === 'file');
     const isImageFile =
       hasFile &&
-      (message.fileType?.startsWith('image/') ||
+      (message.fileType === 'image' ||
+        message.fileType?.startsWith('image/') ||
         /\.(jpeg|jpg|png|webp|gif|svg)$/i.test(message.fileUrl || ''));
     const isVideoFile =
       message.variant === 'video' ||
       (hasFile &&
-        (message.fileType?.startsWith('video/') ||
+        (message.fileType === 'video' ||
+          message.fileType?.startsWith('video/') ||
           /\.(mp4|webm|mov)$/i.test(message.fileUrl || '')));
-
-    const isEditingThis = editingMessage?.id === message.id;
+    const isAudioFile =
+      message.variant === 'voice' ||
+      message.variant === 'audio' ||
+      (hasFile &&
+        (message.fileType === 'audio' ||
+          message.fileType?.startsWith('audio/') ||
+          /\.(webm|ogg|mp3|m4a|wav|aac)$/i.test(
+            message.fileUrl || message.fileName || '',
+          )));
 
     const handleCopy = (text) => {
       if (!text) return;
@@ -360,11 +823,20 @@ const ChatMessageBubble = memo(
       );
     }
 
+    const replyQuote = (
+      <InlineReplyQuote
+        replyTo={message.replyTo}
+        isSent={isSent}
+        currentUserId={currentUserId}
+      />
+    );
+
     const actionMenu = (
       <FacebookMessageMenu
         isSent={isSent}
         canEdit={isSent && Boolean(message.text) && !hasFile}
         onEdit={() => onStartEdit?.(message)}
+        onReply={() => onStartReply?.(message)}
         onCopy={message.text ? () => handleCopy(message.text) : null}
         onDelete={() => onOpenUnsend?.(message.id)}
         isOpen={activeMenuId === message.id}
@@ -391,6 +863,7 @@ const ChatMessageBubble = memo(
                 : 'rounded-bl-md bg-white text-[#161c27] shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-[#ececf0]'
             }`}
           >
+            {replyQuote}
             <a
               href={message.fileUrl}
               target="_blank"
@@ -425,6 +898,71 @@ const ChatMessageBubble = memo(
       );
     }
 
+    // Audio / Voice Message
+    if (isAudioFile) {
+      return (
+        <div
+          className={`group flex items-center gap-1.5 py-1 ${
+            isSent ? 'justify-end flex-row' : 'justify-start flex-row'
+          }`}
+        >
+          {isSent ? actionMenu : null}
+          <div
+            className={`max-w-[min(100%,360px)] rounded-[20px] px-4 py-3 ${
+              isSent
+                ? 'rounded-br-md bg-[#4048cd] text-white'
+                : 'rounded-bl-md bg-white text-[#161c27] shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-[#ececf0]'
+            }`}
+          >
+            {replyQuote}
+            <div className="flex items-center gap-3">
+              <span
+                className={`inline-flex size-10 shrink-0 items-center justify-center rounded-full ${
+                  isSent ? 'bg-white/15' : 'bg-[#ecedfa] text-[#4048cd]'
+                }`}
+              >
+                <Mic size={18} strokeWidth={2} aria-hidden="true" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[13px] font-semibold">
+                  {message.fileName || t('memberChat.voiceMessage', 'Voice message')}
+                </p>
+                {message.fileUrl ? (
+                  <audio
+                    controls
+                    preload="metadata"
+                    src={message.fileUrl}
+                    className={`mt-1.5 h-8 w-full max-w-[240px] ${
+                      isSent ? '[&::-webkit-media-controls-panel]:bg-white/20' : ''
+                    }`}
+                  >
+                    <track kind="captions" />
+                  </audio>
+                ) : null}
+              </div>
+            </div>
+            {message.text ? (
+              <p className="mt-2 text-[14px] leading-6">{message.text}</p>
+            ) : null}
+            <div
+              className={`mt-2 flex items-center gap-1.5 text-[11px] ${
+                isSent ? 'justify-end text-white/75' : 'text-[#9ca3af]'
+              }`}
+            >
+              {isEdited ? (
+                <span className="italic opacity-80 text-[10px]">(edited)</span>
+              ) : null}
+              {message.time ? <span>{message.time}</span> : null}
+              {isSent && message.read ? (
+                <CheckCheck size={14} strokeWidth={2} aria-hidden="true" />
+              ) : null}
+            </div>
+          </div>
+          {!isSent ? actionMenu : null}
+        </div>
+      );
+    }
+
     // Video Message
     if (isVideoFile) {
       return (
@@ -441,6 +979,9 @@ const ChatMessageBubble = memo(
                 : 'rounded-bl-md bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-[#ececf0]'
             }`}
           >
+            {message.replyTo ? (
+              <div className="px-3 pt-3">{replyQuote}</div>
+            ) : null}
             {message.fileUrl ? (
               <video
                 src={message.fileUrl}
@@ -504,6 +1045,7 @@ const ChatMessageBubble = memo(
                 : 'rounded-bl-md bg-white text-[#161c27] shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-[#ececf0]'
             }`}
           >
+            {replyQuote}
             <div className="flex items-center gap-3">
               <span
                 className={`inline-flex size-10 shrink-0 items-center justify-center rounded-xl ${
@@ -594,6 +1136,9 @@ const ChatMessageBubble = memo(
       );
     }
 
+    const messageText = message.textKey ? t(message.textKey) : message.text;
+    const emojiScaleClass = getEmojiOnlyScale(messageText);
+
     // Standard Text Message
     return (
       <div
@@ -601,42 +1146,41 @@ const ChatMessageBubble = memo(
           isSent ? 'justify-end flex-row' : 'justify-start flex-row'
         }`}
       >
-        {isSent && !isEditingThis ? actionMenu : null}
+        {isSent ? actionMenu : null}
 
-        {isEditingThis ? (
-          <InlineMessageEditor
-            value={draft}
-            onChange={onDraftChange}
-            onSave={onSend}
-            onCancel={onCancelEdit}
-            isSaving={isSending}
-          />
-        ) : (
-          <div
-            className={`max-w-[min(100%,420px)] rounded-[20px] px-4 py-2.5 text-[14px] leading-6 transition ${
-              isSent
-                ? 'rounded-br-md bg-[#4048cd] text-white shadow-xs'
-                : 'rounded-bl-md bg-white text-[#161c27] shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-[#ececf0]'
+        <div
+          className={`max-w-[min(100%,420px)] rounded-[20px] transition ${
+            emojiScaleClass
+              ? 'px-3 py-2'
+              : 'px-4 py-2.5 text-[14px] leading-6'
+          } ${
+            isSent
+              ? 'rounded-br-md bg-[#4048cd] text-white shadow-xs'
+              : 'rounded-bl-md bg-white text-[#161c27] shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-[#ececf0]'
+          }`}
+        >
+          {replyQuote}
+          <p
+            className={`whitespace-pre-wrap break-words ${
+              emojiScaleClass || ''
             }`}
           >
-            <p className="whitespace-pre-wrap break-words">
-              {message.textKey ? t(message.textKey) : message.text}
-            </p>
-            <div
-              className={`mt-1 flex items-center gap-1.5 text-[11px] ${
-                isSent ? 'justify-end text-white/75' : 'text-[#9ca3af]'
-              }`}
-            >
-              {isEdited ? (
-                <span className="italic opacity-80 text-[10px]">(edited)</span>
-              ) : null}
-              {message.time ? <span>{message.time}</span> : null}
-              {isSent && message.read ? (
-                <CheckCheck size={14} strokeWidth={2} aria-hidden="true" />
-              ) : null}
-            </div>
+            {messageText}
+          </p>
+          <div
+            className={`mt-1 flex items-center gap-1.5 text-[11px] ${
+              isSent ? 'justify-end text-white/75' : 'text-[#9ca3af]'
+            }`}
+          >
+            {isEdited ? (
+              <span className="italic opacity-80 text-[10px]">(edited)</span>
+            ) : null}
+            {message.time ? <span>{message.time}</span> : null}
+            {isSent && message.read ? (
+              <CheckCheck size={14} strokeWidth={2} aria-hidden="true" />
+            ) : null}
           </div>
-        )}
+        </div>
 
         {!isSent ? actionMenu : null}
       </div>
@@ -698,12 +1242,177 @@ const ChatComposer = memo(
     isSending = false,
     editingMessage,
     onCancelEdit,
+    replyToMessage,
+    onCancelReply,
+    currentUserId,
   }) => {
     const { t } = useTranslation();
     const fileInputRef = useRef(null);
     const textareaRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
+    const mediaStreamRef = useRef(null);
+    const audioChunksRef = useRef([]);
+    const recordingTimerRef = useRef(null);
+    const [emojiOpen, setEmojiOpen] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordingSeconds, setRecordingSeconds] = useState(0);
+    const selectionRef = useRef({ start: 0, end: 0 });
 
     const isEditing = Boolean(editingMessage);
+    const isReplying = Boolean(replyToMessage) && !isEditing;
+
+    const stopMediaTracks = () => {
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+        mediaStreamRef.current = null;
+      }
+    };
+
+    const clearRecordingTimer = () => {
+      if (recordingTimerRef.current) {
+        window.clearInterval(recordingTimerRef.current);
+        recordingTimerRef.current = null;
+      }
+    };
+
+    const stopRecording = (shouldSave = true) => {
+      const recorder = mediaRecorderRef.current;
+      if (!recorder) {
+        setIsRecording(false);
+        clearRecordingTimer();
+        stopMediaTracks();
+        return;
+      }
+
+      if (recorder.state !== 'inactive') {
+        // onstop handler will finalize the file when shouldSave is true
+        recorder._shouldSave = shouldSave;
+        recorder.stop();
+      } else {
+        setIsRecording(false);
+        clearRecordingTimer();
+        stopMediaTracks();
+      }
+    };
+
+    const startRecording = async () => {
+      if (disabled || isSending || isEditing || isRecording) return;
+      if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+        toast.error(
+          t(
+            'memberChat.voiceUnsupported',
+            'Voice recording is not supported in this browser.',
+          ),
+        );
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStreamRef.current = stream;
+        const mimeType = pickSupportedAudioMime();
+        const recorder = mimeType
+          ? new MediaRecorder(stream, { mimeType })
+          : new MediaRecorder(stream);
+        mediaRecorderRef.current = recorder;
+        audioChunksRef.current = [];
+        recorder._shouldSave = true;
+
+        recorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        recorder.onstop = () => {
+          clearRecordingTimer();
+          setIsRecording(false);
+          setRecordingSeconds(0);
+          stopMediaTracks();
+
+          const shouldSave = recorder._shouldSave !== false;
+          const chunks = audioChunksRef.current;
+          audioChunksRef.current = [];
+          mediaRecorderRef.current = null;
+
+          if (!shouldSave || !chunks.length) return;
+
+          const blobType = recorder.mimeType || mimeType || 'audio/webm';
+          const extension = blobType.includes('mp4')
+            ? 'm4a'
+            : blobType.includes('ogg')
+              ? 'ogg'
+              : 'webm';
+          const file = new File(
+            [new Blob(chunks, { type: blobType })],
+            `voice-${Date.now()}.${extension}`,
+            { type: blobType },
+          );
+          onFileSelect?.(file);
+          toast.success(
+            t('memberChat.voiceReady', 'Voice note ready to send'),
+          );
+        };
+
+        recorder.start(250);
+        setIsRecording(true);
+        setRecordingSeconds(0);
+        clearRecordingTimer();
+        recordingTimerRef.current = window.setInterval(() => {
+          setRecordingSeconds((prev) => prev + 1);
+        }, 1000);
+      } catch (error) {
+        stopMediaTracks();
+        toast.error(
+          error?.name === 'NotAllowedError'
+            ? t(
+                'memberChat.voicePermissionDenied',
+                'Microphone permission denied. Please allow access and try again.',
+              )
+            : t(
+                'memberChat.voiceStartFailed',
+                'Could not start voice recording.',
+              ),
+        );
+      }
+    };
+
+    useEffect(() => {
+      return () => {
+        clearRecordingTimer();
+        if (mediaRecorderRef.current?.state === 'recording') {
+          mediaRecorderRef.current._shouldSave = false;
+          mediaRecorderRef.current.stop();
+        }
+        stopMediaTracks();
+      };
+    }, []);
+
+    const rememberSelection = () => {
+      const el = textareaRef.current;
+      if (!el) return;
+      selectionRef.current = {
+        start: el.selectionStart ?? value.length,
+        end: el.selectionEnd ?? value.length,
+      };
+    };
+
+    const insertEmoji = (emoji) => {
+      if (!emoji || disabled || isSending) return;
+      const current = String(value || '');
+      const start = selectionRef.current.start ?? current.length;
+      const end = selectionRef.current.end ?? current.length;
+      const next = `${current.slice(0, start)}${emoji}${current.slice(end)}`;
+      const caret = start + emoji.length;
+      selectionRef.current = { start: caret, end: caret };
+      onChange?.(next);
+      window.requestAnimationFrame(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.focus();
+        el.setSelectionRange(caret, caret);
+      });
+    };
 
     const handleKeyDown = (event) => {
       if (event.key === 'Enter' && !event.shiftKey) {
@@ -712,40 +1421,100 @@ const ChatComposer = memo(
       } else if (event.key === 'Escape' && isEditing) {
         event.preventDefault();
         onCancelEdit?.();
+      } else if (event.key === 'Escape' && isReplying) {
+        event.preventDefault();
+        onCancelReply?.();
       }
     };
 
+    useEffect(() => {
+      if (!isEditing || !textareaRef.current) return;
+      const el = textareaRef.current;
+      el.focus();
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+      selectionRef.current = { start: len, end: len };
+    }, [isEditing, editingMessage?.id]);
+
+    useEffect(() => {
+      if (!isReplying || !textareaRef.current) return;
+      textareaRef.current.focus();
+    }, [isReplying, replyToMessage?.id]);
+
     return (
       <div className="border-t border-[#ececf0] bg-white px-5 py-4">
-        {/* Facebook-style Edit Banner */}
-        {isEditing ? (
-          <div className="mb-2 flex items-center justify-between gap-3 rounded-xl border border-[#c7d2fe] bg-[#f5f7ff] px-3.5 py-2 text-[12px] text-[#4048cd] animate-in fade-in duration-150">
-            <div className="flex min-w-0 items-center gap-2">
-              <Pencil size={14} className="shrink-0 text-[#4048cd]" />
-              <span className="font-semibold text-[#312e81]">
-                Editing message:
-              </span>
-              <span className="truncate italic text-[#4338ca] max-w-sm">
-                "{editingMessage.text}"
-              </span>
+        <EmojiPickerModal
+          open={emojiOpen}
+          onClose={() => setEmojiOpen(false)}
+          onSelect={insertEmoji}
+        />
+
+        {isReplying ? (
+          <div className="mb-2 flex items-start justify-between gap-2 rounded-xl border border-[#c7d2fe] bg-[#f5f7ff] px-3.5 py-2 animate-in fade-in duration-150">
+            <div className="min-w-0 border-l-[3px] border-[#4048cd] pl-2.5">
+              <p className="text-[11px] font-semibold text-[#4048cd]">
+                Replying to {getReplyAuthorLabel(replyToMessage, currentUserId)}
+              </p>
+              <p className="truncate text-[12px] text-[#494453]">
+                {getReplyPreviewLabel(replyToMessage)}
+              </p>
             </div>
             <button
               type="button"
-              onClick={onCancelEdit}
-              className="rounded-full p-1 text-[#4338ca] hover:bg-[#e0e7ff] transition cursor-pointer"
-              aria-label="Cancel editing"
+              onClick={onCancelReply}
+              className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#e0e7ff] hover:text-[#161c27]"
+              aria-label={t('common.cancel', 'Cancel reply')}
             >
-              <X size={15} />
+              <X size={14} />
             </button>
           </div>
         ) : null}
 
+        {/* Recording indicator */}
+        {isRecording ? (
+          <div className="mb-2 flex items-center justify-between gap-3 rounded-xl border border-[#fecaca] bg-[#fef2f2] px-3.5 py-2 text-[12px] text-[#b91c1c]">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span className="relative inline-flex size-2.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#ef4444] opacity-60" />
+                <span className="relative inline-flex size-2.5 rounded-full bg-[#ef4444]" />
+              </span>
+              <span className="font-semibold">
+                {t('memberChat.recording', 'Recording')}
+              </span>
+              <span className="tabular-nums text-[#7f1d1d]">
+                {formatRecordingTime(recordingSeconds)}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Button
+                unstyled
+                type="button"
+                onClick={() => stopRecording(false)}
+                className="inline-flex h-8 cursor-pointer items-center rounded-lg px-2.5 text-[12px] font-semibold text-[#7f1d1d] transition hover:bg-[#fee2e2]"
+              >
+                {t('common.cancel', 'Cancel')}
+              </Button>
+              <Button
+                unstyled
+                type="button"
+                onClick={() => stopRecording(true)}
+                className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg bg-[#dc2626] px-3 text-[12px] font-semibold text-white transition hover:bg-[#b91c1c]"
+              >
+                <Square size={12} className="fill-white" aria-hidden="true" />
+                {t('memberChat.stopRecording', 'Stop')}
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
         {/* Selected file preview */}
-        {selectedFile && !isEditing ? (
+        {selectedFile && !isEditing && !isRecording ? (
           <div className="mb-2 flex items-center justify-between gap-2 rounded-xl border border-[#c7d2fe] bg-[#f5f7ff] px-3.5 py-2 text-[12px] text-[#4048cd] animate-in fade-in duration-150">
             <div className="flex min-w-0 items-center gap-2">
               {selectedFile.type?.startsWith('image/') ? (
                 <ImageIcon size={16} className="shrink-0 text-[#4048cd]" />
+              ) : selectedFile.type?.startsWith('audio/') ? (
+                <Mic size={16} className="shrink-0 text-[#4048cd]" />
               ) : (
                 <FileText size={16} className="shrink-0 text-[#4048cd]" />
               )}
@@ -782,7 +1551,7 @@ const ChatComposer = memo(
 
         <div
           className={`flex items-end gap-3 rounded-[24px] border bg-white px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition ${
-            isEditing
+            isEditing || isReplying
               ? 'border-[#4048cd] ring-2 ring-[#4048cd]/10'
               : 'border-[#ececf0]'
           }`}
@@ -804,38 +1573,79 @@ const ChatComposer = memo(
             ref={textareaRef}
             rows={1}
             value={value}
-            onChange={(event) => onChange(event.target.value)}
+            onChange={(event) => {
+              onChange(event.target.value);
+              selectionRef.current = {
+                start: event.target.selectionStart ?? event.target.value.length,
+                end: event.target.selectionEnd ?? event.target.value.length,
+              };
+            }}
+            onSelect={rememberSelection}
+            onClick={rememberSelection}
+            onKeyUp={rememberSelection}
             onKeyDown={handleKeyDown}
             placeholder={
               isEditing
-                ? 'Edit your message (Press Enter to save, Esc to cancel)...'
-                : t('memberChat.inputPlaceholder')
+                ? t('memberChat.editPlaceholder', 'Edit message...')
+                : isReplying
+                  ? t('memberChat.replyPlaceholder', 'Write a reply...')
+                  : t('memberChat.inputPlaceholder')
             }
             disabled={disabled || isSending}
             className="max-h-28 min-h-[24px] flex-1 resize-none bg-transparent py-1 text-[14px] leading-6 text-[#161c27] placeholder:text-[#9ca3af] outline-none disabled:opacity-50"
           />
 
           <div className="flex shrink-0 items-center gap-1">
+            <Button
+              unstyled
+              type="button"
+              aria-label={t('memberChat.emoji')}
+              onClick={() => {
+                rememberSelection();
+                setEmojiOpen(true);
+              }}
+              disabled={disabled || isSending}
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd] disabled:opacity-40"
+            >
+              <Smile size={18} strokeWidth={2} aria-hidden="true" />
+            </Button>
             {!isEditing ? (
-              <>
-                <Button
-                  unstyled
-                  type="button"
-                  aria-label={t('memberChat.emoji')}
-                  className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd]"
-                >
-                  <Smile size={18} strokeWidth={2} aria-hidden="true" />
-                </Button>
-                <Button
-                  unstyled
-                  type="button"
-                  aria-label={t('memberChat.voice')}
-                  className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#4048cd]"
-                >
+              <Button
+                unstyled
+                type="button"
+                aria-label={
+                  isRecording
+                    ? t('memberChat.stopRecording', 'Stop recording')
+                    : t('memberChat.voice')
+                }
+                aria-pressed={isRecording}
+                onClick={() =>
+                  isRecording ? stopRecording(true) : startRecording()
+                }
+                disabled={disabled || isSending}
+                className={`inline-flex size-9 cursor-pointer items-center justify-center rounded-full transition disabled:opacity-40 ${
+                  isRecording
+                    ? 'bg-[#fee2e2] text-[#dc2626] hover:bg-[#fecaca]'
+                    : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#4048cd]'
+                }`}
+              >
+                {isRecording ? (
+                  <Square size={14} className="fill-current" aria-hidden="true" />
+                ) : (
                   <Mic size={18} strokeWidth={2} aria-hidden="true" />
-                </Button>
-              </>
-            ) : null}
+                )}
+              </Button>
+            ) : (
+              <Button
+                unstyled
+                type="button"
+                onClick={onCancelEdit}
+                aria-label={t('common.cancel', 'Cancel')}
+                className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#161c27]"
+              >
+                <X size={18} strokeWidth={2} aria-hidden="true" />
+              </Button>
+            )}
             <Button
               unstyled
               type="button"
@@ -884,7 +1694,11 @@ const ChatMessageArea = memo(
     editingMessage,
     onStartEdit,
     onCancelEdit,
+    replyToMessage,
+    onStartReply,
+    onCancelReply,
     onDeleteMessage,
+    currentUserId,
   }) => {
     const { t } = useTranslation();
     const messagesEndRef = useRef(null);
@@ -910,14 +1724,14 @@ const ChatMessageArea = memo(
           className="scrollbar-light flex-1 overflow-y-auto px-5 py-5"
           onClick={() => setActiveMenuId(null)}
         >
-          <div className="mx-auto flex max-w-[860px] flex-col gap-3">
+          <div className="mx-auto flex min-h-full max-w-[860px] flex-col justify-end gap-3">
             {isLoadingMessages ? (
-              <div className="flex items-center justify-center py-12 text-[#9ca3af]">
-                <Loader2 size={24} className="animate-spin mr-2" />
+              <div className="flex flex-1 items-center justify-center py-12 text-[#9ca3af]">
+                <Loader2 size={24} className="mr-2 animate-spin" />
                 <span className="text-[14px]">Loading messages...</span>
               </div>
             ) : messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center text-[#9ca3af]">
+              <div className="flex flex-1 flex-col items-center justify-center py-16 text-center text-[#9ca3af]">
                 <p className="text-[14px] font-medium text-[#6b7280]">
                   No messages yet
                 </p>
@@ -932,15 +1746,11 @@ const ChatMessageArea = memo(
                   message={message}
                   t={t}
                   onStartEdit={onStartEdit}
+                  onStartReply={onStartReply}
                   onOpenUnsend={(id) => setUnsendTargetId(id)}
-                  editingMessage={editingMessage}
-                  draft={draft}
-                  onDraftChange={onDraftChange}
-                  onSend={onSend}
-                  onCancelEdit={onCancelEdit}
-                  isSending={isSending}
                   activeMenuId={activeMenuId}
                   setActiveMenuId={setActiveMenuId}
+                  currentUserId={currentUserId}
                 />
               ))
             )}
@@ -959,6 +1769,9 @@ const ChatMessageArea = memo(
           isSending={isSending}
           editingMessage={editingMessage}
           onCancelEdit={onCancelEdit}
+          replyToMessage={replyToMessage}
+          onCancelReply={onCancelReply}
+          currentUserId={currentUserId}
         />
 
         {/* Facebook-style Unsend Dialog */}

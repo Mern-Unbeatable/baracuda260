@@ -88,23 +88,22 @@ const MyArtworkContent = memo(() => {
   };
 
   const switchCompetitionMutation = useMutation({
-    mutationFn: ({ artworkId, competitionId, newCompetitionId, isResubmit }) => {
+    mutationFn: ({ artworkId, isResubmit }) => {
+      // Backend auto-joins the OPEN competition currently underway this month
       if (isResubmit) {
-        return resubmitArtworkApi(artworkId, {
-          newCompetitionId: newCompetitionId || competitionId,
-        });
+        return resubmitArtworkApi(artworkId);
       }
-      return switchArtworkToCompetitionApi(artworkId, { competitionId });
+      return switchArtworkToCompetitionApi(artworkId);
     },
     onSuccess: (_, variables) => {
       const msg = variables?.isResubmit
         ? t(
             'myArtwork.resubmitSuccess',
-            'Artwork successfully resubmitted to competition!',
+            'Artwork resubmitted to the current monthly competition!',
           )
         : t(
             'myArtwork.switchSuccess',
-            'Artwork successfully entered into competition!',
+            'Artwork entered into the current monthly competition!',
           );
       toast.success(msg);
       setSwitchingArtwork(null);

@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -46,6 +47,21 @@ const getKindFromTab = (tab) => {
   if (s.includes('12') || s.includes('ZODIAC')) return 'TWELVE';
   if (s.includes('6') || s.includes('SIX')) return 'SIX';
   return 'SINGLE';
+};
+
+const tabFromKind = (kind) => {
+  const k = String(kind || '').toUpperCase();
+  if (k === 'TWELVE') return LEADERBOARD_ALBUM_TABS[2];
+  if (k === 'SIX') return LEADERBOARD_ALBUM_TABS[1];
+  return LEADERBOARD_ALBUM_TABS[0];
+};
+
+const monthNameFromIndex = (month) => {
+  const idx = Number(month);
+  if (Number.isFinite(idx) && idx >= 1 && idx <= 12) {
+    return LEADERBOARD_MONTHS[idx - 1];
+  }
+  return null;
 };
 
 const LeaderboardPodium = memo(({ winners = [] }) => {
@@ -431,9 +447,33 @@ LeaderboardPageFilters.displayName = 'LeaderboardPageFilters';
  */
 const TopPhotographers = memo(({ variant = 'home' }) => {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
   const isPage = variant === 'page';
-  const [albumTab, setAlbumTab] = useState(LEADERBOARD_ALBUM_TABS[0]);
-  const monthMenu = useMonthMenu('September');
+
+  const queryKind = isPage ? searchParams.get('kind') : null;
+  const queryMonth = isPage ? searchParams.get('month') : null;
+  const queryYear = isPage ? searchParams.get('year') : null;
+
+  const [albumTab, setAlbumTab] = useState(() =>
+    tabFromKind(queryKind),
+  );
+  const monthMenu = useMonthMenu(
+    monthNameFromIndex(queryMonth) || 'September',
+  );
+  const [standingsYear, setStandingsYear] = useState(() => {
+    const y = Number(queryYear);
+    return Number.isFinite(y) && y >= 2000 ? y : LEADERBOARD_STANDINGS_YEAR;
+  });
+
+  useEffect(() => {
+    if (!isPage) return;
+    if (queryKind) setAlbumTab(tabFromKind(queryKind));
+    const monthName = monthNameFromIndex(queryMonth);
+    if (monthName) monthMenu.setMonth(monthName);
+    const y = Number(queryYear);
+    if (Number.isFinite(y) && y >= 2000) setStandingsYear(y);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync from URL only
+  }, [isPage, queryKind, queryMonth, queryYear]);
 
   const monthIndex = useMemo(() => {
     const target = String(monthMenu.month || '')
@@ -457,13 +497,13 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
       ...COMPETITIONS_QUERY_KEY,
       'leaderboard',
       kind,
-      LEADERBOARD_STANDINGS_YEAR,
+      standingsYear,
       monthIndex,
     ],
     queryFn: () =>
       getCompetitionWinnersApi({
         kind,
-        year: LEADERBOARD_STANDINGS_YEAR,
+        year: standingsYear,
         month: monthIndex,
         page: 1,
         limit: 10,
@@ -474,8 +514,8 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
   const liveStandings = isPage
     ? t('leaderboard.liveStandings', {
         month: t(`common.months.${monthMenu.month}`, monthMenu.month),
-        year: LEADERBOARD_STANDINGS_YEAR,
-        defaultValue: `Live standings for ${monthMenu.month} ${LEADERBOARD_STANDINGS_YEAR}`,
+        year: standingsYear,
+        defaultValue: `Live standings for ${monthMenu.month} ${standingsYear}`,
       })
     : t('home.leaderboard.liveStandings', {
         defaultValue: 'Finalized monthly rankings and top photographers.',

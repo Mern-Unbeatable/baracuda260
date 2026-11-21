@@ -39,6 +39,17 @@ apiClient.interceptors.request.use(
         i18n.resolvedLanguage || i18n.language || DEFAULT_LOCALE;
     }
 
+    // FormData must use browser-generated multipart boundary — keep default
+    // application/json off or replyToId / file fields never reach the server.
+    if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+      if (typeof config.headers.delete === 'function') {
+        config.headers.delete('Content-Type');
+      } else {
+        delete config.headers['Content-Type'];
+        delete config.headers['content-type'];
+      }
+    }
+
     return config;
   },
   (error) => {

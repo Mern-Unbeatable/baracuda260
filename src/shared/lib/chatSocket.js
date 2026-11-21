@@ -3,29 +3,44 @@ import { SOCKET_CONFIG } from '@/shared/config';
 
 let socketInstance = null;
 
+const getAuthToken = () => {
+  const raw =
+    localStorage.getItem('token') ||
+    localStorage.getItem('accessToken') ||
+    '';
+  return String(raw).replace(/^Bearer\s+/i, '').trim();
+};
+
+const buildAuthPayload = (token) =>
+  token
+    ? {
+        token,
+        accessToken: token,
+      }
+    : {};
+
 /**
  * Returns an active socket instance, initializing one if not yet created.
  */
 export const getSocket = () => {
-  if (socketInstance?.connected) return socketInstance;
+  const token = getAuthToken();
+  const authPayload = buildAuthPayload(token);
 
-  const token = localStorage.getItem('token');
-  const authPayload = token
-    ? {
-        token: `Bearer ${token}`,
-        accessToken: token,
-      }
-    : {};
+  if (socketInstance?.connected) {
+    socketInstance.auth = authPayload;
+    return socketInstance;
+  }
 
   if (!socketInstance) {
     socketInstance = io(SOCKET_CONFIG.URL, {
       auth: authPayload,
       extraHeaders: token ? { Authorization: `Bearer ${token}` } : {},
       transports: ['websocket', 'polling'],
-      autoConnect: true,
+      autoConnect: Boolean(token),
       reconnection: true,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: 12,
       reconnectionDelay: 1500,
+      withCredentials: true,
     });
 
     socketInstance.on('connect', () => {
@@ -35,26 +50,32 @@ export const getSocket = () => {
     socketInstance.on('connect_error', (err) => {
       console.warn('[Chat Socket] Connect error:', err?.message || err);
     });
-  } else if (!socketInstance.connected) {
+  } else {
     socketInstance.auth = authPayload;
-    socketInstance.connect();
+    if (token && !socketInstance.connected) {
+      socketInstance.connect();
+    }
   }
 
   return socketInstance;
 };
 
 /**
- * Join a direct or group room for realtime messages.
- * Emits common room-join event variants used across socket.io backends.
+ * Join a direct chat room for realtime messages.
  *
  * @param {string} roomId
  */
 export const joinChatRoom = (roomId) => {
   if (!roomId) return;
   const socket = getSocket();
-  socket.emit('join_room', { roomId });
-  socket.emit('joinRoom', roomId);
-  socket.emit('join', roomId);
+  const payload = { roomId: String(roomId) };
+  if (socket.connected) {
+    socket.emit('join_room', payload);
+  } else {
+    socket.once('connect', () => {
+      socket.emit('join_room', payload);
+    });
+  }
 };
 
 /**
@@ -65,9 +86,69 @@ export const joinChatRoom = (roomId) => {
 export const leaveChatRoom = (roomId) => {
   if (!roomId) return;
   const socket = getSocket();
-  socket.emit('leave_room', { roomId });
-  socket.emit('leaveRoom', roomId);
-  socket.emit('leave', roomId);
+  socket.emit('leave_room', { roomId: String(roomId) });
+};
+
+/**
+ * Notify peers that the current user is typing in a room.
+ *
+ * @param {string} roomId
+ */
+export const emitTyping = (roomId) => {
+  if (!roomId) return;
+  const socket = getSocket();
+  socket.emit('typing', { roomId: String(roomId) });
+};
+
+/**
+ * Notify peers that the current user stopped typing.
+ *
+ * @param {string} roomId
+ */
+export const emitStopTyping = (roomId) => {
+  if (!roomId) return;
+  const socket = getSocket();
+  socket.emit('stop_typing', { roomId: String(roomId) });
+};
+
+/**
+ * Subscribe to peer typing indicators for the active room.
+ *
+ * @param {{
+ *   onTyping?: (payload: { userId: string, roomId: string }) => void,
+ *   onStopTyping?: (payload: { userId: string, roomId: string }) => void,
+ * }} handlers
+ * @returns {() => void}
+ */
+export const subscribeToTyping = ({ onTyping, onStopTyping } = {}) => {
+  const socket = getSocket();
+
+  const typingHandler = (payload) => {
+    if (payload) onTyping?.(payload);
+  };
+  const stopHandler = (payload) => {
+    if (payload) onStopTyping?.(payload);
+  };
+
+  if (onTyping) {
+    socket.on('user_typing', typingHandler);
+    socket.on('typing', typingHandler);
+  }
+  if (onStopTyping) {
+    socket.on('user_stopped_typing', stopHandler);
+    socket.on('stop_typing', stopHandler);
+  }
+
+  return () => {
+    if (onTyping) {
+      socket.off('user_typing', typingHandler);
+      socket.off('typing', typingHandler);
+    }
+    if (onStopTyping) {
+      socket.off('user_stopped_typing', stopHandler);
+      socket.off('stop_typing', stopHandler);
+    }
+  };
 };
 
 /**
@@ -88,15 +169,68 @@ export const subscribeToIncomingMessages = (callback) => {
   ];
 
   const handler = (payload) => {
-    if (payload) {
-      callback(payload);
-    }
+    if (payload) callback(payload);
   };
 
   events.forEach((evt) => socket.on(evt, handler));
 
   return () => {
     events.forEach((evt) => socket.off(evt, handler));
+  };
+};
+
+/**
+ * Subscribes to online / offline presence updates.
+ *
+ * @param {{
+ *   onOnlineUsers?: (userIds: string[]) => void,
+ *   onUserOnline?: (userId: string) => void,
+ *   onUserOffline?: (userId: string) => void,
+ * }} handlers
+ * @returns {() => void}
+ */
+export const subscribeToPresence = ({
+  onOnlineUsers,
+  onUserOnline,
+  onUserOffline,
+} = {}) => {
+  const socket = getSocket();
+
+  const onlineUsersHandler = (payload) => {
+    const ids = Array.isArray(payload)
+      ? payload
+      : Array.isArray(payload?.userIds)
+        ? payload.userIds
+        : [];
+    onOnlineUsers?.(ids.map(String));
+  };
+
+  const userOnlineHandler = (payload) => {
+    const userId = payload?.userId || payload?.id || payload;
+    if (userId) onUserOnline?.(String(userId));
+  };
+
+  const userOfflineHandler = (payload) => {
+    const userId = payload?.userId || payload?.id || payload;
+    if (userId) onUserOffline?.(String(userId));
+  };
+
+  if (onOnlineUsers) socket.on('online_users', onlineUsersHandler);
+  if (onUserOnline) socket.on('user_online', userOnlineHandler);
+  if (onUserOffline) socket.on('user_offline', userOfflineHandler);
+
+  // Ask server again after (re)connect
+  const onConnect = () => {
+    socket.emit('get_online_users');
+  };
+  socket.on('connect', onConnect);
+  if (socket.connected) onConnect();
+
+  return () => {
+    if (onOnlineUsers) socket.off('online_users', onlineUsersHandler);
+    if (onUserOnline) socket.off('user_online', userOnlineHandler);
+    if (onUserOffline) socket.off('user_offline', userOfflineHandler);
+    socket.off('connect', onConnect);
   };
 };
 

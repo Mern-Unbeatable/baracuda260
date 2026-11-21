@@ -1,6 +1,5 @@
 import { SELL_PHOTOS_ITEMS } from '@/portals/member/data/sellPhotosData';
 import { ROUTES } from '@/shared/config';
-import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
 import {
   GALLERY_DETAIL_ASSETS,
   toGalleryDetailEntry,
@@ -66,9 +65,9 @@ export const getSellPhotoDetailById = (id) => {
     badge: item.albumBadge,
     category: item.category ?? 'Nature',
     price: item.detailPrice ?? item.price,
-    resolution: item.resolution ?? BUY_PHOTO_DEFAULT_SPECS.resolution,
-    format: item.format ?? BUY_PHOTO_DEFAULT_SPECS.format,
-    camera: item.camera ?? BUY_PHOTO_DEFAULT_SPECS.camera,
+    resolution: item.resolution ?? null,
+    format: item.format ?? null,
+    camera: null,
     likesMetric: parseMetric(item.hearts, '2150'),
     viewsMetric: parseMetric(item.views, '12400'),
     totalSellMetric: parseMetric(item.totalSell, '120'),

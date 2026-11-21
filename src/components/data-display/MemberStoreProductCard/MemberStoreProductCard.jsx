@@ -10,8 +10,13 @@ import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import {
+  myStoreDetailPath,
+  publicStoreProductPath,
+} from '@/portals/member/data/myStoreData';
 import {
   STORE_WATCHLIST_QUERY_KEY,
   toggleWatchlistApi,
@@ -36,12 +41,14 @@ const MENU_WIDTH_PX = 148;
  *   onEdit: () => void,
  *   onDelete: () => void,
  *   onPromote?: () => void,
+ *   onView?: () => void,
  *   showWatchlist?: boolean,
  * }} props
  */
 const MemberStoreProductCard = memo(
-  ({ product, onEdit, onDelete, onPromote, showWatchlist }) => {
+  ({ product, onEdit, onDelete, onPromote, onView, showWatchlist }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [menuOpen, setMenuOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(Boolean(product.isSaved));
@@ -193,6 +200,25 @@ const MemberStoreProductCard = memo(
         )
       : null;
 
+    const isOwnerCard = Boolean(onEdit || onDelete);
+
+    const openDetails = () => {
+      if (onView) {
+        onView(product);
+        return;
+      }
+      // Owners manage listings on My Store detail (edit/delete).
+      if (isOwnerCard) {
+        navigate(myStoreDetailPath(product.id), { state: { product } });
+        return;
+      }
+      // Watchlist / non-owner → public photographer store product view.
+      const username = product.username || product.user?.username;
+      navigate(publicStoreProductPath(username, product.id), {
+        state: { product },
+      });
+    };
+
     const handleCardClick = (e) => {
       if (
         e.target.closest('button') ||
@@ -201,12 +227,20 @@ const MemberStoreProductCard = memo(
       ) {
         return;
       }
-      onEdit?.();
+      openDetails();
     };
 
     return (
       <article
         onClick={handleCardClick}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openDetails();
+          }
+        }}
+        role="link"
+        tabIndex={0}
         className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[16px] border border-[#eceef3] bg-white shadow-[0px_1px_3px_rgba(15,23,42,0.04)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-[#ccd2e8] hover:shadow-[0_16px_32px_-8px_rgba(15,23,42,0.12)]"
       >
         <div

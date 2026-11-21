@@ -11,8 +11,16 @@ const FavouritePhotographersContent = memo(() => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { items, meta, isLoading, isError, error, toggleFollow, isTogglingFollow } =
-    useUserFollowing({ page: currentPage, limit: PAGE_SIZE });
+  const {
+    items,
+    meta,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    toggleFollow,
+    isTogglingFollow,
+  } = useUserFollowing({ page: currentPage, limit: PAGE_SIZE });
 
   const totalRecords = meta?.totalRecords ?? items.length;
   const totalPages = meta?.totalPages ?? 1;
@@ -24,10 +32,10 @@ const FavouritePhotographersContent = memo(() => {
           <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] sm:leading-9.5 lg:text-[40px]">
             {t('favouritePhotographers.title')}
           </h1>
-          {isLoading ? (
-            <div className="flex items-center gap-2 text-[14px] text-[#7a7484]">
-              <RefreshCw size={16} className="animate-spin text-[#4048cd]" />
-              <span>{t('common.loading', 'Loading...')}</span>
+          {isFetching && !isLoading ? (
+            <div className="flex items-center gap-2 text-[13px] text-[#7a7484]">
+              <RefreshCw size={14} className="animate-spin text-[#4048cd]" />
+              <span>{t('common.updating', 'Updating...')}</span>
             </div>
           ) : null}
         </div>

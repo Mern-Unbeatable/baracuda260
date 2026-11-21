@@ -140,8 +140,11 @@
     "aiGeneratedBadgeLabel": "AI-generated content",
     "aiCreatedConfirmed": "This artwork will be labeled as AI-generated in the gallery and on your profile.",
     "resolution": "Resolution",
+    "resolutionPlaceholder": "6000*6000",
     "fileSize": "File Size",
+    "fileSizePlaceholder": "125 KB",
     "quality": "Quality",
+    "qualityPlaceholder": "4K",
     "errors": {
       "priceRequired": "Price is required.",
       "resolutionRequired": "Resolution is required.",

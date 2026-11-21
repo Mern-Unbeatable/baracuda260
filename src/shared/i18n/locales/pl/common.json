@@ -140,8 +140,11 @@
     "aiGeneratedBadgeLabel": "Treść wygenerowana przez AI",
     "aiCreatedConfirmed": "To dzieło będzie oznaczone jako wygenerowane przez AI w galerii i na Twoim profilu.",
     "resolution": "Rozdzielczość",
+    "resolutionPlaceholder": "6000*6000",
     "fileSize": "Rozmiar pliku",
+    "fileSizePlaceholder": "125 KB",
     "quality": "Jakość",
+    "qualityPlaceholder": "4K",
     "errors": {
       "priceRequired": "Cena jest wymagana.",
       "resolutionRequired": "Rozdzielczość jest wymagana.",

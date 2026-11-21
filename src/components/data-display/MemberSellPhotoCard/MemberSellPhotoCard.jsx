@@ -1,8 +1,9 @@
 import { Calendar, Clock, Eye, Heart, Images } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MemberArtworkActionsMenu from '@/components/data-display/MemberArtworkActionsMenu/MemberArtworkActionsMenu';
+import PhotoAiBadgeOverlay from '@/components/data-display/PhotoAiBadgeOverlay/PhotoAiBadgeOverlay';
 import Image from '@/components/ui/Image';
 import { sellPhotoDetailPath } from '@/portals/member/data/sellPhotosDetailData';
 
@@ -15,15 +16,26 @@ const BADGE_STYLES = {
 const MemberSellPhotoCard = memo(
   ({ item, badgeLabel, onEdit, onDelete, onPromote }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const badgeClass =
       BADGE_STYLES[item.albumBadge] ?? BADGE_STYLES['Single Photo'];
+    const detailPath = sellPhotoDetailPath(item.id);
+
+    const openDetails = () => {
+      navigate(detailPath, { state: { sellPhoto: item } });
+    };
 
     return (
-      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.1)] bg-white shadow-sm">
+      <article
+        onClick={openDetails}
+        className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e8eaef] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      >
         <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
-          <Link
-            to={sellPhotoDetailPath(item.id)}
-            className="block h-full w-full"
+          <button
+            type="button"
+            onClick={openDetails}
+            className="absolute inset-0 z-0 cursor-pointer"
+            aria-label={t('sellPhotos.card.openDetails', 'Open photo details')}
           >
             <Image
               src={item.image}
@@ -31,27 +43,38 @@ const MemberSellPhotoCard = memo(
               width={368}
               height={252}
               loading="lazy"
-              className="h-full w-full object-cover transition hover:scale-[1.02]"
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
             />
-          </Link>{' '}
+          </button>
           <span
-            className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.35px] shadow-sm backdrop-blur-[2px] ${badgeClass}`}
+            className={`pointer-events-none absolute left-3 top-3 z-[1] rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.35px] shadow-sm backdrop-blur-[2px] ${badgeClass}`}
           >
             {badgeLabel}
           </span>
-          <MemberArtworkActionsMenu
-            item={item}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPromote={onPromote}
+          <PhotoAiBadgeOverlay
+            show={item.isAiGenerated}
+            placement="card-end"
+            size="sm"
           />
+          <div
+            className="relative z-20"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <MemberArtworkActionsMenu
+              item={item}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onPromote={onPromote}
+            />
+          </div>
           {item.promoted ? (
-            <span className="absolute bottom-3 left-3 rounded-md bg-[#3a3a42]/85 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
+            <span className="pointer-events-none absolute bottom-3 left-3 z-[1] rounded-md bg-[#3a3a42]/85 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
               {t('sellPhotos.card.promoted')}
             </span>
           ) : null}
           {item.extraPhotoCount != null ? (
-            <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg bg-black/55 px-2 py-1 text-[11px] font-semibold text-white">
+            <span className="pointer-events-none absolute bottom-3 right-3 z-[1] inline-flex items-center gap-1 rounded-lg bg-black/55 px-2 py-1 text-[11px] font-semibold text-white">
               <Images size={14} strokeWidth={2} aria-hidden="true" />
               {t('sellPhotos.card.extraPhotos', {
                 count: item.extraPhotoCount,
@@ -61,15 +84,20 @@ const MemberSellPhotoCard = memo(
         </div>
 
         <div className="flex flex-1 flex-col p-4">
-          <h2 className="text-[16px] font-bold leading-snug text-[#0d0d14]">
+          <h2 className="line-clamp-2 text-[16px] font-bold leading-snug text-[#0d0d14]">
             <Link
-              to={sellPhotoDetailPath(item.id)}
-              className="transition hover:text-[#4048cd]"
+              to={detailPath}
+              state={{ sellPhoto: item }}
+              className="cursor-pointer transition hover:text-[#4048cd]"
             >
               {item.title}
             </Link>
           </h2>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-[#6b7280]">
+          <button
+            type="button"
+            onClick={openDetails}
+            className="mt-3 flex w-full cursor-pointer flex-wrap items-center gap-x-4 gap-y-2 text-left text-[13px] text-[#6b7280]"
+          >
             <span className="inline-flex items-center gap-1.5">
               <Heart
                 size={14}
@@ -87,12 +115,16 @@ const MemberSellPhotoCard = memo(
               <Calendar size={14} strokeWidth={2} aria-hidden="true" />
               {item.uploadedDate}
             </span>
-          </div>
+          </button>
 
           <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
-            <span className="text-[18px] font-bold text-[#4048cd]">
+            <button
+              type="button"
+              onClick={openDetails}
+              className="cursor-pointer text-[18px] font-bold text-[#4048cd] transition hover:opacity-80"
+            >
               {item.price}
-            </span>
+            </button>
             {item.expiryDate ? (
               <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#ee1c25]">
                 <Clock size={14} strokeWidth={2} aria-hidden="true" />

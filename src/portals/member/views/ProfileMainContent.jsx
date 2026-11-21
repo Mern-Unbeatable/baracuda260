@@ -27,10 +27,7 @@ import PhotographerSlideshowsSection from '@/portals/public/photographer/compone
 import PhotographerStandaloneVideosSection from '@/portals/public/photographer/components/PhotographerStandaloneVideosSection';
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
-import {
-  PHOTOGRAPHER_ASSETS,
-  PHOTOGRAPHER_STORE_PRODUCTS,
-} from '@/portals/public/photographer/data/photographerProfileData';
+import { PHOTOGRAPHER_ASSETS } from '@/portals/public/photographer/data/photographerProfileData';
 import {
   deleteArtworkApi,
   USER_ARTWORKS_QUERY_KEY,
@@ -334,7 +331,8 @@ const ProfileMainContent = memo(() => {
 
       {activeTab === 'store' ? (
         <PhotographerStoreSection
-          products={PHOTOGRAPHER_STORE_PRODUCTS}
+          userId={profile?.id}
+          username={profile?.username}
           isOwner={true}
         />
       ) : null}

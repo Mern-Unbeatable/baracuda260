@@ -59,9 +59,13 @@ const extractMeta = (data, fallbackPage, fallbackLimit, itemsLength) => {
 /**
  * Hook to retrieve member's following list (favourite photographers) and toggle follow state.
  *
- * @param {{ page?: number, limit?: number }} params
+ * @param {{ page?: number, limit?: number, enabled?: boolean }} params
  */
-export default function useUserFollowing({ page = 1, limit = 12 } = {}) {
+export default function useUserFollowing({
+  page = 1,
+  limit = 12,
+  enabled = true,
+} = {}) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
@@ -70,6 +74,7 @@ export default function useUserFollowing({ page = 1, limit = 12 } = {}) {
   const query = useQuery({
     queryKey,
     queryFn: () => getUserFollowingApi({ page, limit }),
+    enabled,
     staleTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });

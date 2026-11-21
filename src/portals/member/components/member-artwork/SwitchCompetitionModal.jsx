@@ -1,40 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { Calendar, CheckCircle, Loader2, Sparkles, Trophy, X } from 'lucide-react';
+import {
+  Calendar,
+  Loader2,
+  Sparkles,
+  Trophy,
+  X,
+} from 'lucide-react';
 import React, { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { getActiveCompetitionsApi } from '@/shared/api/competitions.api';
 
-const DEFAULT_ACTIVE_COMPETITIONS = [
-  {
-    id: 'comp-oct-2026',
-    title: 'October 2026 Competition',
-    status: 'OPEN',
-    prize: '$1,500.00',
-    endsAt: '2026-10-31',
-  },
-  {
-    id: 'comp-zodiac-2026',
-    title: 'Zodiac Story Master Showcase',
-    status: 'OPEN',
-    prize: '$3,500.00',
-    endsAt: '2026-11-15',
-  },
-  {
-    id: 'comp-autumn-2026',
-    title: 'Global Single Photo Contest',
-    status: 'OPEN',
-    prize: '$2,500.00',
-    endsAt: '2026-11-30',
-  },
-];
-
 const SwitchCompetitionModal = memo(
   ({ artwork, onClose, onConfirm, isLoading }) => {
     const { t } = useTranslation();
-    const [selectedCompetitionId, setSelectedCompetitionId] = useState('');
-    const [customId, setCustomId] = useState('');
-    const [useCustom, setUseCustom] = useState(false);
     const [error, setError] = useState('');
 
     const { data: apiCompetitions = [], isLoading: isLoadingComps } = useQuery({
@@ -43,16 +22,8 @@ const SwitchCompetitionModal = memo(
       staleTime: 60 * 1000,
     });
 
-    const competitions =
-      apiCompetitions.length > 0
-        ? apiCompetitions
-        : DEFAULT_ACTIVE_COMPETITIONS;
-
-    useEffect(() => {
-      if (competitions.length > 0 && !selectedCompetitionId) {
-        setSelectedCompetitionId(competitions[0].id);
-      }
-    }, [competitions, selectedCompetitionId]);
+    // Backend always joins the current OPEN competition for this month
+    const activeCompetition = apiCompetitions[0] || null;
 
     useEffect(() => {
       setError('');
@@ -66,25 +37,10 @@ const SwitchCompetitionModal = memo(
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      const finalId = useCustom
-        ? customId.trim()
-        : selectedCompetitionId.trim();
-
-      if (!finalId) {
-        setError(
-          t(
-            'myArtwork.switchCompetition.selectRequired',
-            'Please select or provide a competition ID.',
-          ),
-        );
-        return;
-      }
-
+      // Backend auto-resolves / auto-starts the current month's OPEN competition
       setError('');
       onConfirm({
         artworkId: artwork.id,
-        competitionId: finalId,
-        newCompetitionId: finalId,
         isResubmit,
       });
     };
@@ -93,14 +49,13 @@ const SwitchCompetitionModal = memo(
       <div
         role="dialog"
         aria-modal="true"
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4"
       >
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
           onClick={isLoading ? undefined : onClose}
         />
-        <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white p-6 shadow-2xl transition-all my-8">
-          {/* Header */}
+        <div className="relative z-10 my-8 w-full max-w-lg overflow-hidden rounded-2xl bg-white p-6 shadow-2xl transition-all">
           <div className="flex items-center justify-between border-b border-gray-100 pb-3">
             <div className="flex items-center gap-2.5">
               <span className="flex size-9 items-center justify-center rounded-xl bg-[#fef3c7] text-[#b45309]">
@@ -122,11 +77,11 @@ const SwitchCompetitionModal = memo(
                   {isResubmit
                     ? t(
                         'myArtwork.switchCompetition.modalResubmitSubtitle',
-                        'Choose a new active competition to resubmit this artwork for voting.',
+                        'This artwork will rejoin this month’s competition. A new month starts automatically on the 1st.',
                       )
                     : t(
                         'myArtwork.switchCompetition.modalSubtitle',
-                        'Switch this artwork to active competition for community voting.',
+                        'This artwork will enter this month’s competition. A new month starts automatically on the 1st.',
                       )}
                 </p>
               </div>
@@ -143,7 +98,6 @@ const SwitchCompetitionModal = memo(
           </div>
 
           <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
-            {/* Artwork Preview Card */}
             <div className="flex items-center gap-3.5 rounded-xl border border-gray-100 bg-[#fafaff] p-3">
               {artwork.image ? (
                 <img
@@ -169,97 +123,61 @@ const SwitchCompetitionModal = memo(
               </div>
             </div>
 
-            {/* Competition Selection */}
             <div>
-              <label className="text-[13px] font-semibold text-[#374151]">
+              <p className="text-[13px] font-semibold text-[#374151]">
                 {t(
-                  'myArtwork.switchCompetition.selectLabel',
-                  'Select Active Competition',
+                  'myArtwork.switchCompetition.currentLabel',
+                  'Current monthly competition',
                 )}
-              </label>
+              </p>
 
-              {!useCustom ? (
-                <div className="mt-2 flex flex-col gap-2 max-h-56 overflow-y-auto pr-1">
-                  {isLoadingComps ? (
-                    <div className="flex items-center justify-center py-6 text-gray-400">
-                      <Loader2 size={20} className="animate-spin" />
+              <div className="mt-2">
+                {isLoadingComps ? (
+                  <div className="flex items-center justify-center py-6 text-gray-400">
+                    <Loader2 size={20} className="animate-spin" />
+                  </div>
+                ) : activeCompetition ? (
+                  <div className="rounded-xl border border-[#4048cd] bg-[#ecedfa]/30 p-3 ring-2 ring-[#4048cd]/20">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-[14px] font-semibold text-[#111827]">
+                          {activeCompetition.title}
+                        </p>
+                        <p className="mt-1 text-[12px] leading-5 text-[#494453]">
+                          {t(
+                            'myArtwork.switchCompetition.currentHint',
+                            'Voting continues with the competition as it is currently progressing. No other competition can be chosen.',
+                          )}
+                        </p>
+                        {activeCompetition.endsAt ? (
+                          <p className="mt-1.5 flex items-center gap-1 text-[11px] text-gray-500">
+                            <Calendar size={12} />
+                            Ends: {activeCompetition.endsAt}
+                          </p>
+                        ) : null}
+                      </div>
+                      {activeCompetition.prize ? (
+                        <span className="shrink-0 rounded-lg bg-[#ecfdf3] px-2 py-1 text-[11px] font-bold text-[#166534]">
+                          {activeCompetition.prize}
+                        </span>
+                      ) : null}
                     </div>
-                  ) : (
-                    competitions.map((comp) => {
-                      const isSelected = selectedCompetitionId === comp.id;
-                      return (
-                        <button
-                          key={comp.id}
-                          type="button"
-                          onClick={() => setSelectedCompetitionId(comp.id)}
-                          className={`flex cursor-pointer items-center justify-between rounded-xl border p-3 text-left transition ${
-                            isSelected
-                              ? 'border-[#4048cd] bg-[#ecedfa]/30 ring-2 ring-[#4048cd]/20'
-                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span
-                              className={`flex size-5 items-center justify-center rounded-full border ${
-                                isSelected
-                                  ? 'border-[#4048cd] bg-[#4048cd] text-white'
-                                  : 'border-gray-300'
-                              }`}
-                            >
-                              {isSelected ? (
-                                <CheckCircle size={14} className="stroke-2" />
-                              ) : null}
-                            </span>
-                            <div>
-                              <p className="text-[14px] font-semibold text-[#111827]">
-                                {comp.title}
-                              </p>
-                              {comp.endsAt ? (
-                                <p className="mt-0.5 flex items-center gap-1 text-[11px] text-gray-500">
-                                  <Calendar size={12} />
-                                  Ends: {comp.endsAt}
-                                </p>
-                              ) : null}
-                            </div>
-                          </div>
-                          {comp.prize ? (
-                            <span className="rounded-lg bg-[#ecfdf3] px-2 py-1 text-[11px] font-bold text-[#166534]">
-                              {comp.prize}
-                            </span>
-                          ) : null}
-                        </button>
-                      );
-                    })
-                  )}
-                </div>
-              ) : (
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    value={customId}
-                    onChange={(e) => setCustomId(e.target.value)}
-                    placeholder="e.g. comp-140767d3-fa6b-4cdc-ab25-f1ccffd436c2"
-                    className="w-full rounded-xl border border-gray-200 bg-[#fafaff] px-3.5 py-2.5 text-[14px] text-[#111827] outline-none focus:border-[#4048cd] focus:ring-2 focus:ring-[#4048cd]/20"
-                  />
-                </div>
-              )}
-
-              <button
-                type="button"
-                onClick={() => setUseCustom(!useCustom)}
-                className="mt-2 text-[12px] font-medium text-[#4048cd] hover:underline"
-              >
-                {useCustom
-                  ? '← Choose from active competitions list'
-                  : 'Or specify custom Competition ID'}
-              </button>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[13px] text-amber-800">
+                    {t(
+                      'myArtwork.switchCompetition.noActive',
+                      'No open competition was found yet. Confirming will start this month’s competition automatically if needed.',
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {error ? (
               <p className="text-xs font-medium text-red-500">{error}</p>
             ) : null}
 
-            {/* Footer actions */}
             <div className="mt-2 flex items-center justify-end gap-2.5 border-t border-gray-100 pt-3">
               <button
                 type="button"
@@ -271,7 +189,7 @@ const SwitchCompetitionModal = memo(
               </button>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || isLoadingComps}
                 className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#4048cd] px-5 py-2 text-[14px] font-semibold text-white transition hover:bg-[#333bb0] disabled:opacity-50"
               >
                 {isLoading ? (
@@ -284,7 +202,10 @@ const SwitchCompetitionModal = memo(
                       'myArtwork.switchCompetition.resubmitAction',
                       'Resubmit to Competition',
                     )
-                  : t('myArtwork.switchCompetition.submit', 'Enter Competition')}
+                  : t(
+                      'myArtwork.switchCompetition.submit',
+                      'Enter Competition',
+                    )}
               </button>
             </div>
           </form>

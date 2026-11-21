@@ -124,70 +124,83 @@ const MemberFavouritePhotographerCard = memo(
           </div>
         </div>
 
-        {bioText ? (
-          <blockquote className="mt-4 line-clamp-3 text-[14px] italic leading-[1.6] text-[#494453]">
-            &ldquo;{bioText}&rdquo;
-          </blockquote>
-        ) : null}
+        <blockquote className="mt-4 min-h-[4.8em] line-clamp-3 text-[14px] italic leading-[1.6] text-[#494453]">
+          {bioText ? (
+            <>&ldquo;{bioText}&rdquo;</>
+          ) : (
+            <span className="invisible select-none" aria-hidden="true">
+              &ldquo;placeholder&rdquo;
+            </span>
+          )}
+        </blockquote>
 
-        {followedDate ? (
-          <div className="mt-4 inline-flex w-full items-center gap-2 rounded-lg bg-[#e8f0fe] px-3 py-2 text-[13px] font-medium text-[#4048cd]">
+        <div className="mt-auto flex flex-col">
+          <div
+            className={`mt-4 inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium ${
+              followedDate
+                ? 'bg-[#e8f0fe] text-[#4048cd]'
+                : 'invisible bg-[#e8f0fe] text-[#4048cd]'
+            }`}
+            aria-hidden={!followedDate}
+          >
             <Calendar
               size={14}
               strokeWidth={2}
               aria-hidden="true"
               className="shrink-0"
             />
-            {t('favouritePhotographers.card.followedYou', {
-              date: followedDate,
-              defaultValue: `Followed on ${followedDate}`,
-            })}
+            {followedDate
+              ? t('favouritePhotographers.card.followedYou', {
+                  date: followedDate,
+                  defaultValue: `Followed on ${followedDate}`,
+                })
+              : '\u00A0'}
           </div>
-        ) : null}
 
-        <div className="mt-4 grid grid-cols-2 divide-x divide-[#e5e7eb] rounded-lg border border-[#e5e7eb] bg-[#fafafa] py-3 text-center">
-          <div className="px-2">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6b7280]">
-              {t('favouritePhotographers.card.followers')}
-            </p>
-            <p className="mt-1 text-[20px] font-bold text-[#0d0d14]">
-              {followers}
-            </p>
+          <div className="mt-4 grid grid-cols-2 divide-x divide-[#e5e7eb] rounded-lg border border-[#e5e7eb] bg-[#fafafa] py-3 text-center">
+            <div className="px-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6b7280]">
+                {t('favouritePhotographers.card.followers')}
+              </p>
+              <p className="mt-1 text-[20px] font-bold text-[#0d0d14]">
+                {followers}
+              </p>
+            </div>
+            <div className="px-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6b7280]">
+                {t('favouritePhotographers.card.artworks')}
+              </p>
+              <p className="mt-1 text-[20px] font-bold text-[#0d0d14]">
+                {artworks}
+              </p>
+            </div>
           </div>
-          <div className="px-2">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6b7280]">
-              {t('favouritePhotographers.card.artworks')}
-            </p>
-            <p className="mt-1 text-[20px] font-bold text-[#0d0d14]">
-              {artworks}
-            </p>
-          </div>
-        </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <Button
-            unstyled
-            type="button"
-            disabled={isToggling}
-            aria-pressed={following}
-            onClick={handleFollowClick}
-            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-[13px] font-semibold transition disabled:opacity-60 ${
-              following
-                ? 'border-[#4048cd] bg-[#ecedfa] text-[#4048cd]'
-                : 'border-[#4048cd] bg-[#4048cd] text-white hover:bg-[#363eb8]'
-            }`}
-          >
-            <UserCheck size={15} strokeWidth={2} aria-hidden="true" />
-            {following
-              ? t('favouritePhotographers.card.following')
-              : t('favouritePhotographers.card.follow')}
-          </Button>
-          <Link
-            to={profileHref}
-            className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#d1d5db] bg-white px-3 py-2.5 text-[13px] font-semibold text-[#494453] transition hover:border-[#4048cd] hover:text-[#4048cd]"
-          >
-            {t('favouritePhotographers.card.viewProfile')}
-          </Link>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <Button
+              unstyled
+              type="button"
+              disabled={isToggling}
+              aria-pressed={following}
+              onClick={handleFollowClick}
+              className={`inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-[13px] font-semibold transition disabled:opacity-60 ${
+                following
+                  ? 'border-[#4048cd] bg-[#ecedfa] text-[#4048cd]'
+                  : 'border-[#4048cd] bg-[#4048cd] text-white hover:bg-[#363eb8]'
+              }`}
+            >
+              <UserCheck size={15} strokeWidth={2} aria-hidden="true" />
+              {following
+                ? t('favouritePhotographers.card.following')
+                : t('favouritePhotographers.card.follow')}
+            </Button>
+            <Link
+              to={profileHref}
+              className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#d1d5db] bg-white px-3 py-2.5 text-[13px] font-semibold text-[#494453] transition hover:border-[#4048cd] hover:text-[#4048cd]"
+            >
+              {t('favouritePhotographers.card.viewProfile')}
+            </Link>
+          </div>
         </div>
       </article>
     );

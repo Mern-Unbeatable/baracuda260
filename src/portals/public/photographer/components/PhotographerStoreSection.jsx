@@ -1,28 +1,33 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft,
   Heart,
   MapPin,
   Minus,
   Plus,
+  RefreshCw,
   ShoppingBag,
   ShoppingCart,
 } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { selectIsAuthenticated } from '@/app/store/slices/authSlice';
 import Pagination from '@/components/common/Pagination/Pagination';
 import CategoryFilterDropdown from '@/components/common/CategoryFilterDropdown/CategoryFilterDropdown';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
-  getPhotographerStoreProduct,
   PHOTOGRAPHER_STORE_CATEGORIES,
   PHOTOGRAPHER_STORE_PAGE_SIZE,
 } from '@/portals/public/photographer/data/photographerProfileData';
 import { filterStoreProducts } from '@/portals/member/data/myStoreData';
 import {
+  getStoreProductDetailsApi,
+  getStoreProductsApi,
+  STORE_PRODUCTS_QUERY_KEY,
   STORE_WATCHLIST_QUERY_KEY,
   toggleWatchlistApi,
 } from '@/shared/api/store.api';
@@ -159,11 +164,56 @@ StoreProductCard.displayName = 'StoreProductCard';
 const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryClient = useQueryClient();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const [sizeId, setSizeId] = useState(product.sizes?.[0]?.id || '');
   const [qty, setQty] = useState(1);
-  const [activeImage, setActiveImage] = useState(
-    product.gallery?.[0] || product.image,
-  );
+  const [isSaved, setIsSaved] = useState(Boolean(product.isSaved));
+  const gallery =
+    product.gallery?.length > 0
+      ? product.gallery
+      : product.images?.length > 0
+        ? product.images
+        : product.image
+          ? [product.image]
+          : [];
+  const [activeImage, setActiveImage] = useState(gallery[0] || product.image);
+
+  useEffect(() => {
+    setIsSaved(Boolean(product.isSaved));
+  }, [product.isSaved, product.id]);
+
+  const handleWatchlistToggle = async () => {
+    if (!isAuthenticated) {
+      toast.error(
+        t(
+          'myStore.watchlist.loginRequired',
+          'Please log in to save items to your watchlist.',
+        ),
+      );
+      navigate(ROUTES.LOGIN, { state: { from: location } });
+      return;
+    }
+
+    const nextSaved = !isSaved;
+    setIsSaved(nextSaved);
+    try {
+      await toggleWatchlistApi(product.id);
+      queryClient.invalidateQueries({ queryKey: [STORE_WATCHLIST_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [STORE_PRODUCTS_QUERY_KEY, 'detail', product.id],
+      });
+      toast.success(
+        nextSaved
+          ? t('myStore.watchlist.added', 'Added to Item Watchlist')
+          : t('myStore.watchlist.removed', 'Removed from Item Watchlist'),
+      );
+    } catch {
+      setIsSaved(!nextSaved);
+      toast.error(t('myStore.watchlist.failed', 'Failed to update watchlist'));
+    }
+  };
 
   return (
     <div className="mt-6 sm:mt-8">
@@ -179,16 +229,36 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
         <div>
-          <div className="overflow-hidden rounded-[14px] bg-[#f3f4f6]">
+          <div className="relative overflow-hidden rounded-[14px] bg-[#f3f4f6]">
             <Image
               src={activeImage}
               alt={product.title}
               className="aspect-4/3 w-full object-cover"
             />
+            {!isOwner ? (
+              <Button
+                unstyled
+                type="button"
+                onClick={handleWatchlistToggle}
+                aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
+                aria-pressed={isSaved}
+                className="absolute right-3 top-3 inline-flex size-10 cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#161c27] shadow-md backdrop-blur-[2px] transition hover:scale-105 hover:bg-white"
+              >
+                <Heart
+                  size={18}
+                  strokeWidth={2}
+                  className={
+                    isSaved
+                      ? 'fill-[#e53935] text-[#e53935]'
+                      : 'fill-transparent text-[#161c27]'
+                  }
+                />
+              </Button>
+            ) : null}
           </div>
-          {product.gallery?.length > 1 ? (
+          {gallery.length > 1 ? (
             <div className="mt-3 grid grid-cols-4 gap-2.5">
-              {product.gallery.map((src) => (
+              {gallery.map((src) => (
                 <Button
                   unstyled
                   key={src}
@@ -216,7 +286,12 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
             {product.title}
           </h2>
           <div className="mt-3 space-y-3 text-[14px] leading-6 text-[#6b7280]">
-            {product.detailParagraphs.map((paragraph) => (
+            {(product.detailParagraphs?.length
+              ? product.detailParagraphs
+              : product.description
+                ? [product.description]
+                : []
+            ).map((paragraph) => (
               <p key={paragraph.slice(0, 28)}>{paragraph}</p>
             ))}
           </div>
@@ -278,6 +353,26 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
                 <Button
                   unstyled
                   type="button"
+                  onClick={handleWatchlistToggle}
+                  aria-pressed={isSaved}
+                  className={`inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] border px-4 text-[14px] font-bold transition ${
+                    isSaved
+                      ? 'border-[#fecaca] bg-[#fef2f2] text-[#e53935]'
+                      : 'border-[#e5e7eb] bg-white text-[#161c27] hover:border-[#fca5a5] hover:text-[#e53935]'
+                  }`}
+                >
+                  <Heart
+                    size={16}
+                    strokeWidth={2}
+                    className={isSaved ? 'fill-[#e53935]' : 'fill-transparent'}
+                  />
+                  {isSaved
+                    ? t('myStore.watchlist.saved', 'Saved')
+                    : t('myStore.watchlist.save', 'Watchlist')}
+                </Button>
+                <Button
+                  unstyled
+                  type="button"
                   onClick={() =>
                     navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
                       state: { product: { ...product, qty, sizeId } },
@@ -307,99 +402,263 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
 });
 StoreProductDetail.displayName = 'StoreProductDetail';
 
-const PhotographerStoreSection = memo(({ products, isOwner = false }) => {
-  const { t } = useTranslation();
-  const [category, setCategory] = useState('all');
-  const [selectedId, setSelectedId] = useState(null);
+const isDemoUserId = (id) => {
+  if (!id) return true;
+  const value = String(id);
+  return value.startsWith('demo-') || value === 'elenavance';
+};
 
-  const selectedProduct = selectedId
-    ? getPhotographerStoreProduct(selectedId)
-    : null;
+const PhotographerStoreSection = memo(
+  ({ products: productsProp, userId, username, isOwner = false }) => {
+    const { t } = useTranslation();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [category, setCategory] = useState('all');
+    const productFromUrl = searchParams.get('product');
+    const [selectedId, setSelectedId] = useState(productFromUrl || null);
+    const [page, setPage] = useState(1);
 
-  const filterItems = useMemo(
-    () =>
-      PHOTOGRAPHER_STORE_CATEGORIES.map((item) => ({
-        id: item.id,
-        value: item.value || item.id,
-        label: t(item.labelKey, item.label || item.value || item.id),
-      })),
-    [t],
-  );
+    useEffect(() => {
+      if (productFromUrl) setSelectedId(productFromUrl);
+    }, [productFromUrl]);
 
-  const filtered = useMemo(() => {
-    if (category === 'all') return products;
-    return filterStoreProducts(products, category);
-  }, [category, products]);
+    const clearSelectedProduct = () => {
+      setSelectedId(null);
+      if (!searchParams.get('product')) return;
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete('product');
+          return next;
+        },
+        { replace: true },
+      );
+    };
 
-  const { currentPage, setPage, totalPages, pagedItems } = usePaginatedSlice(
-    filtered,
-    PHOTOGRAPHER_STORE_PAGE_SIZE,
-    [category],
-  );
+    const openProductDetail = (productId) => {
+      const id = String(productId);
+      setSelectedId(id);
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.set('product', id);
+          return next;
+        },
+        { replace: true },
+      );
+    };
 
-  if (selectedProduct) {
-    return (
-      <StoreProductDetail
-        product={selectedProduct}
-        onBack={() => setSelectedId(null)}
-        isOwner={isOwner}
-      />
+    const cleanUserId =
+      userId && !isDemoUserId(userId) ? String(userId) : '';
+    const cleanUsername = String(username || '')
+      .trim()
+      .replace(/^@/, '');
+    // Never query the live API with demo/mock handles
+    const apiUsername =
+      cleanUsername &&
+      cleanUsername.toLowerCase() !== 'elenavance' &&
+      !cleanUserId
+        ? cleanUsername
+        : '';
+
+    // Owner store: auth-scoped /v1/store (no username). Public: prefer userId.
+    const canFetchApi = Boolean(isOwner || cleanUserId || apiUsername);
+    const storeScopeKey = isOwner
+      ? `owner:${cleanUserId || 'me'}`
+      : cleanUserId
+        ? `user:${cleanUserId}`
+        : `username:${apiUsername}`;
+
+    const {
+      data: apiResult,
+      isLoading,
+      isError,
+      refetch,
+    } = useQuery({
+      queryKey: [
+        STORE_PRODUCTS_QUERY_KEY,
+        'photographer-store',
+        storeScopeKey,
+        category,
+        page,
+      ],
+      queryFn: () =>
+        getStoreProductsApi({
+          ...(isOwner
+            ? cleanUserId
+              ? { userId: cleanUserId }
+              : {}
+            : cleanUserId
+              ? { userId: cleanUserId }
+              : { username: apiUsername }),
+          category: category === 'all' ? undefined : category,
+          page,
+          limit: PHOTOGRAPHER_STORE_PAGE_SIZE,
+        }),
+      enabled: canFetchApi,
+      staleTime: 30 * 1000,
+    });
+
+    const products = useMemo(() => {
+      if (apiResult?.data?.length) return apiResult.data;
+      if (
+        Array.isArray(productsProp) &&
+        productsProp.length &&
+        !canFetchApi
+      ) {
+        return productsProp;
+      }
+      return apiResult?.data || [];
+    }, [apiResult?.data, productsProp, canFetchApi]);
+
+    const totalPages = apiResult?.meta?.totalPages || 1;
+
+    const listSelectedProduct = useMemo(() => {
+      if (!selectedId) return null;
+      return products.find((p) => String(p.id) === String(selectedId)) || null;
+    }, [products, selectedId]);
+
+    const { data: deepLinkProduct } = useQuery({
+      queryKey: [STORE_PRODUCTS_QUERY_KEY, 'detail', selectedId],
+      queryFn: () => getStoreProductDetailsApi(selectedId),
+      enabled: Boolean(selectedId) && !listSelectedProduct,
+      staleTime: 60 * 1000,
+    });
+
+    const selectedProduct = listSelectedProduct || deepLinkProduct || null;
+
+    const filterItems = useMemo(
+      () =>
+        PHOTOGRAPHER_STORE_CATEGORIES.map((item) => ({
+          id: item.id,
+          value: item.value || item.id,
+          label: t(item.labelKey, item.label || item.value || item.id),
+        })),
+      [t],
     );
-  }
 
-  return (
-    <section className="mt-6 sm:mt-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <ShoppingBag
-              size={22}
-              className="shrink-0 text-[#4048cd]"
-              aria-hidden="true"
-            />
-            <h2 className="text-[20px] font-bold text-[#111827] sm:text-[22px]">
-              {t('photographerProfile.store.title')}
-            </h2>
+    // Client-side filter only for legacy prop-fed lists without a live API scope
+    const filtered = useMemo(() => {
+      if (canFetchApi) return products;
+      if (category === 'all') return products;
+      return filterStoreProducts(products, category);
+    }, [category, canFetchApi, products]);
+
+    const legacyPaging = usePaginatedSlice(
+      filtered,
+      PHOTOGRAPHER_STORE_PAGE_SIZE,
+      [category],
+    );
+
+    const pagedItems = canFetchApi ? products : legacyPaging.pagedItems;
+    const currentPage = canFetchApi ? page : legacyPaging.currentPage;
+    const pages = canFetchApi ? totalPages : legacyPaging.totalPages;
+    const onPageChange = canFetchApi ? setPage : legacyPaging.setPage;
+
+    useEffect(() => {
+      setPage(1);
+    }, [category, storeScopeKey]);
+
+    if (selectedProduct) {
+      return (
+        <StoreProductDetail
+          product={selectedProduct}
+          onBack={clearSelectedProduct}
+          isOwner={isOwner}
+        />
+      );
+    }
+
+    return (
+      <section className="mt-6 sm:mt-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <ShoppingBag
+                size={22}
+                className="shrink-0 text-[#4048cd]"
+                aria-hidden="true"
+              />
+              <h2 className="text-[20px] font-bold text-[#111827] sm:text-[22px]">
+                {t('photographerProfile.store.title')}
+              </h2>
+            </div>
+            <p className="mt-1 max-w-2xl text-[14px] leading-6 text-[#6b7280] sm:text-[15px]">
+              {t('photographerProfile.store.subtitle')}
+            </p>
           </div>
-          <p className="mt-1 max-w-2xl text-[14px] leading-6 text-[#6b7280] sm:text-[15px]">
-            {t('photographerProfile.store.subtitle')}
+
+          <div className="shrink-0">
+            <CategoryFilterDropdown
+              items={filterItems}
+              value={category}
+              onChange={(next) => {
+                setCategory(next);
+                setPage(1);
+              }}
+              align="right"
+              labelPrefix={t(
+                'photographerProfile.store.categoryPrefix',
+                'Category:',
+              )}
+              ariaLabel={t('photographerProfile.store.filtersAria')}
+            />
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="mt-10 flex min-h-40 items-center justify-center">
+            <RefreshCw size={22} className="animate-spin text-[#4048cd]" />
+          </div>
+        ) : isError ? (
+          <div className="mt-10 flex flex-col items-center gap-3 text-center">
+            <p className="text-[14px] text-red-600">
+              {t(
+                'photographerProfile.store.loadError',
+                'Failed to load store products.',
+              )}
+            </p>
+            <Button
+              unstyled
+              type="button"
+              onClick={() => refetch()}
+              className="rounded-lg bg-[#4048cd] px-4 py-2 text-[13px] font-semibold text-white"
+            >
+              {t('common.retry', 'Retry')}
+            </Button>
+          </div>
+        ) : pagedItems.length === 0 ? (
+          <p className="mt-10 rounded-xl border border-dashed border-[#e5e7eb] bg-white px-6 py-12 text-center text-[14px] text-[#6b7280]">
+            {t(
+              'photographerProfile.store.empty',
+              'No store products yet.',
+            )}
           </p>
-        </div>
+        ) : (
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            {pagedItems.map((product) => (
+              <StoreProductCard
+                key={product.id}
+                product={product}
+                onView={openProductDetail}
+                isOwner={isOwner}
+              />
+            ))}
+          </div>
+        )}
 
-        {/* Category Dropdown Filter */}
-        <div className="shrink-0">
-          <CategoryFilterDropdown
-            items={filterItems}
-            value={category}
-            onChange={setCategory}
-            align="right"
-            labelPrefix={t('photographerProfile.store.categoryPrefix', 'Category:')}
-            ariaLabel={t('photographerProfile.store.filtersAria')}
+        {pages > 1 ? (
+          <Pagination
+            className="mt-8"
+            currentPage={currentPage}
+            totalPages={pages}
+            onPageChange={onPageChange}
+            ariaLabel={t('photographerProfile.store.paginationAria')}
           />
-        </div>
-      </div>
-
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        {pagedItems.map((product) => (
-          <StoreProductCard
-            key={product.id}
-            product={product}
-            onView={setSelectedId}
-            isOwner={isOwner}
-          />
-        ))}
-      </div>
-
-      <Pagination
-        className="mt-8"
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setPage}
-        ariaLabel={t('photographerProfile.store.paginationAria')}
-      />
-    </section>
-  );
-});
+        ) : null}
+      </section>
+    );
+  },
+);
 
 PhotographerStoreSection.displayName = 'PhotographerStoreSection';
 

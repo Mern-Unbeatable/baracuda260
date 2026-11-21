@@ -10,7 +10,6 @@ import ZodiacStoryFormPanel from '@/components/forms/ZodiacStoryFormPanel/Zodiac
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import MemberSellPhotoFields from '@/portals/member/components/member-sell-photos/MemberSellPhotoFields';
-import PhotoSubmitSuccessModal from '@/portals/member/components/member-upload/singlePhoto/PhotoSubmitSuccessModal';
 import {
   ARTISTIC_CATEGORIES,
   DEFAULT_SIGN_ID,
@@ -83,7 +82,7 @@ ZodiacIcon.displayName = 'ZodiacIcon';
 const SinglePhotoContent = memo(
   ({
     backHref = ROUTES.USER_UPLOAD_PHOTOS,
-    uploadAnotherHref = ROUTES.USER_UPLOAD_PHOTOS,
+    uploadAnotherHref: _uploadAnotherHref = ROUTES.USER_UPLOAD_PHOTOS,
     purpose = 'artwork',
     defaultPrice = '$2.00',
   }) => {
@@ -138,9 +137,9 @@ const SinglePhotoContent = memo(
         title: '',
         story: '',
         price: defaultPrice,
-        resolution: '6000*6000',
-        fileSize: '125 KB',
-        quality: '4K',
+        resolution: '',
+        fileSize: '',
+        quality: '',
         copyrightOk: false,
       },
     });
@@ -161,7 +160,6 @@ const SinglePhotoContent = memo(
     const [photoFile, setPhotoFile] = useState(null);
     const [photoPreview, setPhotoPreview] = useState(null);
     const [photoError, setPhotoError] = useState('');
-    const [successOpen, setSuccessOpen] = useState(false);
 
     // Fetch existing artwork in edit mode
     const { data: existingArtwork } = useQuery({
@@ -248,7 +246,10 @@ const SinglePhotoContent = memo(
         toast.success(
           t('sellPhotos.uploadSuccess', 'Photo submitted for sale successfully!'),
         );
-        setSuccessOpen(true);
+        queryClient.invalidateQueries({
+          queryKey: ['marketplace-premium-photos'],
+        });
+        navigate(ROUTES.USER_SELL_PHOTOS);
       },
       onError: (err) => {
         toast.error(
@@ -386,7 +387,6 @@ const SinglePhotoContent = memo(
     const onSubmit = async (data) => {
       if (!photoFile && !photoPreview) {
         setPhotoError(t('singlePhoto.errors.photoRequired'));
-        setSuccessOpen(false);
         return;
       }
       setPhotoError('');
@@ -511,34 +511,30 @@ const SinglePhotoContent = memo(
       });
     };
 
-    const handleCloseSuccess = () => {
-      setSuccessOpen(false);
-    };
-
     return (
       <div className="mx-auto w-full max-w-395">
         {/* Figma: left 930 | gap ~71 | right 579 */}
-        <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-10 xl:gap-17.75">
+        <div className="grid w-full grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,930fr)_minmax(280px,579fr)] lg:gap-10 xl:gap-17.75">
           {/* LEFT */}
-          <div className="flex min-w-0 flex-col gap-4">
-            <div className="flex flex-col gap-8">
-              <div className="flex flex-col gap-8.5">
+          <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col gap-5 sm:gap-8">
+              <div className="flex flex-col gap-5 sm:gap-8.5">
                 <Link
                   to={isEdit ? ROUTES.USER_MY_ARTWORK : backHref}
-                  className="inline-flex w-fit cursor-pointer items-center gap-2 text-[16px] font-medium leading-6 text-[#272727] transition hover:text-[#ee1c25]"
+                  className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-[13px] font-medium leading-5 text-[#272727] transition hover:text-[#ee1c25] sm:gap-2 sm:text-[16px] sm:leading-6"
                 >
                   <ArrowLeft
-                    size={24}
+                    size={18}
                     aria-hidden="true"
-                    className="shrink-0"
+                    className="shrink-0 sm:size-6"
                   />
                   {isEdit
                     ? t('myArtwork.backToArtwork', 'Back to My Artwork')
                     : t('singlePhoto.backToSelection')}
                 </Link>
 
-                <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-6.5">
-                  <p className="mb-5 whitespace-pre-wrap text-[16px] font-medium uppercase tracking-[0.28em] text-[#28252f]">
+                <section className="w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-white p-3.5 sm:p-6.5">
+                  <p className="mb-2.5 whitespace-pre-wrap text-[11px] font-medium uppercase tracking-[0.16em] text-[#28252f] sm:mb-5 sm:text-[16px] sm:tracking-[0.28em]">
                     {t('singlePhoto.selectSign')}
                   </p>
                   <div className="relative">
@@ -550,17 +546,17 @@ const SinglePhotoContent = memo(
                       onClick={() => {
                         setSignOpen((open) => !open);
                       }}
-                      className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-3.5 text-left"
+                      className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[rgba(0,0,0,0.17)] bg-white p-2.5 text-left sm:p-3.5"
                     >
                       <span className="flex min-w-0 items-center gap-1.5">
-                        <ZodiacIcon sign={selectedSign} />
-                        <span className="truncate text-[16px] leading-6 text-[#1b1b1b]">
+                        <ZodiacIcon sign={selectedSign} size={24} />
+                        <span className="truncate text-[13px] leading-5 text-[#1b1b1b] sm:text-[16px] sm:leading-6">
                           {t(selectedSign.nameKey)} ({t(selectedSign.rangeKey)})
                         </span>
                       </span>
                       <ChevronDown
-                        size={18}
-                        className={`shrink-0 text-[#494453] transition ${signOpen ? 'rotate-180' : ''}`}
+                        size={16}
+                        className={`shrink-0 text-[#494453] transition sm:size-[18px] ${signOpen ? 'rotate-180' : ''}`}
                         aria-hidden="true"
                       />
                     </Button>
@@ -581,13 +577,13 @@ const SinglePhotoContent = memo(
                                 setSignId(sign.id);
                                 setSignOpen(false);
                               }}
-                              className={`flex w-full cursor-pointer items-center gap-2 px-3.5 py-2.5 text-left text-[15px] transition hover:bg-[#ecedfa] ${
+                              className={`flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-[13px] transition hover:bg-[#ecedfa] sm:px-3.5 sm:py-2.5 sm:text-[15px] ${
                                 sign.id === signId
                                   ? 'bg-[#ecedfa] text-[#4048cd]'
                                   : 'text-[#1b1b1b]'
                               }`}
                             >
-                              <ZodiacIcon sign={sign} size={28} />
+                              <ZodiacIcon sign={sign} size={24} />
                               <span>
                                 {t(sign.nameKey)} ({t(sign.rangeKey)})
                               </span>
@@ -611,34 +607,34 @@ const SinglePhotoContent = memo(
                 />
               </div>
 
-              <div className="flex w-full max-w-121.25 flex-col gap-4">
-                <h1 className="text-[24px] font-semibold leading-6 text-[#2a282d]">
+              <div className="flex w-full max-w-121.25 flex-col gap-1.5 sm:gap-4">
+                <h1 className="text-[16px] font-semibold leading-5 text-[#2a282d] sm:text-[20px] sm:leading-6">
                   {t('singlePhoto.slotsTitle')}
                 </h1>
-                <p className="text-[16px] font-medium leading-6 text-[#555555]">
+                <p className="text-[12px] font-medium leading-4 text-[#555555] sm:text-[14px] sm:leading-5">
                   {t('singlePhoto.slotsSubtitle')}
                 </p>
               </div>
             </div>
 
-            <article className="flex w-full flex-col items-center gap-6.75 rounded-xl border border-[#c4c6f0] bg-white p-5">
-              <div className="flex w-full flex-col items-center gap-5">
+            <article className="flex w-full flex-col items-center gap-3 rounded-xl border border-[#c4c6f0] bg-white p-3.5 sm:gap-6.75 sm:p-5">
+              <div className="flex w-full flex-col items-center gap-3 sm:gap-5">
                 <div className="flex w-full items-center justify-between">
-                  <p className="text-[20px] font-semibold leading-6 text-[#4048cd]">
+                  <p className="text-[14px] font-semibold leading-5 text-[#4048cd] sm:text-[20px] sm:leading-6">
                     #{selectedSign.number}
                   </p>
-                  <p className="text-[16px] font-medium uppercase leading-6 text-[#5e5d61]">
+                  <p className="text-[11px] font-medium uppercase leading-5 text-[#5e5d61] sm:text-[16px] sm:leading-6">
                     {t(selectedSign.elementKey)}
                   </p>
                 </div>
 
-                <div className="flex w-37.25 flex-col items-center gap-3">
-                  <ZodiacIcon sign={selectedSign} variant="slot" />
-                  <div className="flex w-full flex-col items-center gap-1 text-center">
-                    <p className="w-full text-[20px] font-medium leading-6 text-[#1b1e56]">
+                <div className="flex w-37.25 flex-col items-center gap-1.5 sm:gap-3">
+                  <ZodiacIcon sign={selectedSign} variant="slot" size={40} />
+                  <div className="flex w-full flex-col items-center gap-0.5 text-center sm:gap-1">
+                    <p className="w-full text-[14px] font-medium leading-5 text-[#1b1e56] sm:text-[20px] sm:leading-6">
                       {t(selectedSign.nameKey)}
                     </p>
-                    <p className="w-full whitespace-pre-wrap text-[16px] font-medium leading-6 text-[#666dd7]">
+                    <p className="w-full whitespace-pre-wrap text-[12px] font-medium leading-4 text-[#666dd7] sm:text-[16px] sm:leading-6">
                       {t(selectedSign.rangeKey)}
                     </p>
                   </div>
@@ -667,19 +663,19 @@ const SinglePhotoContent = memo(
                   unstyled
                   type="button"
                   onClick={handlePickPhoto}
-                  className={`inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border bg-white px-6 py-3 text-[16px] font-medium leading-6 transition hover:bg-[#ecedfa] ${
+                  className={`inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white px-3 py-2 text-[13px] font-medium leading-5 transition hover:bg-[#ecedfa] sm:gap-2.5 sm:px-6 sm:py-3 sm:text-[16px] sm:leading-6 ${
                     photoError
                       ? 'border-red-500 text-red-500'
                       : 'border-[#4048cd] text-[#4048cd]'
                   }`}
                 >
-                  <ArrowUpFromLine size={24} aria-hidden="true" />
+                  <ArrowUpFromLine size={16} aria-hidden="true" className="sm:size-6" />
                   {t('singlePhoto.addPhoto')}
                 </Button>
               )}
 
               {photoError ? (
-                <p className="w-full text-sm text-red-600" role="alert">
+                <p className="w-full text-[12px] text-red-600 sm:text-sm" role="alert">
                   {photoError}
                 </p>
               ) : null}
@@ -693,11 +689,11 @@ const SinglePhotoContent = memo(
               />
             </article>
 
-            <article className="rounded-xl border border-[#e6e8ef] bg-white p-5">
-              <h3 className="text-[24px] font-semibold leading-8 text-[#2a282d]">
+            <article className="rounded-xl border border-[#e6e8ef] bg-white p-3.5 sm:p-5">
+              <h3 className="text-[16px] font-semibold leading-5 text-[#2a282d] sm:text-[20px] sm:leading-7">
                 Upload Videos
               </h3>
-              <p className="mt-1 text-[13px] leading-5 text-[#717784]">
+              <p className="mt-1 text-[11px] leading-4 text-[#717784] sm:text-[13px] sm:leading-5">
                 1-minute video comment / update for your artwork. Optional but highly recommended.
               </p>
 
@@ -727,13 +723,13 @@ const SinglePhotoContent = memo(
                   unstyled
                   type="button"
                   onClick={handlePickVideo}
-                  className="mt-4 flex h-28 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white text-[#7f8593] transition hover:border-[#b9bfd0]"
+                  className="mt-3 flex h-24 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#d8dbe6] bg-white px-3 text-[#7f8593] transition hover:border-[#b9bfd0] sm:mt-4 sm:h-28"
                 >
-                  <Upload size={24} className="mb-2 text-[#b1b6c5]" />
-                  <span className="text-[16px] leading-6">
+                  <Upload size={20} className="mb-1.5 text-[#b1b6c5] sm:mb-2 sm:size-6" />
+                  <span className="text-center text-[13px] leading-5 sm:text-[16px] sm:leading-6">
                     Click to upload Video or drag &amp; drop
                   </span>
-                  <span className="text-[12px] text-[#9ca3af]">
+                  <span className="text-[11px] text-[#9ca3af] sm:text-[12px]">
                     MP4 — max 1 minute (up to 25MB)
                   </span>
                 </Button>
@@ -795,11 +791,6 @@ const SinglePhotoContent = memo(
           </aside>
         </div>
 
-        <PhotoSubmitSuccessModal
-          open={successOpen}
-          onClose={handleCloseSuccess}
-          uploadAnotherHref={uploadAnotherHref}
-        />
       </div>
     );
   },

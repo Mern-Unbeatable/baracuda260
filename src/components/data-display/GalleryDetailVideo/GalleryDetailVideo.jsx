@@ -3,7 +3,7 @@ import React, { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
 
-const GalleryDetailVideo = memo(({ poster, src, title }) => {
+const GalleryDetailVideo = memo(({ poster, src, title, className = '' }) => {
   const { t } = useTranslation();
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
@@ -29,7 +29,9 @@ const GalleryDetailVideo = memo(({ poster, src, title }) => {
   if (!src) return null;
 
   return (
-    <div className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl bg-[#0d0d14] sm:rounded-[20px]">
+    <div
+      className={`relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-[#0d0d14] sm:aspect-video sm:rounded-[20px] lg:aspect-1536/653 ${className}`.trim()}
+    >
       <video
         ref={videoRef}
         className="h-full w-full object-cover"

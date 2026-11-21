@@ -1,5 +1,7 @@
 import { API_CONFIG } from '@/shared/config';
-import { BUY_PHOTO_DEFAULT_SPECS } from '@/shared/data/buyPhotos';
+import {
+  BUY_PHOTO_LICENSE,
+} from '@/shared/data/buyPhotos';
 import { GALLERY_DETAIL_ASSETS } from '@/shared/data/galleryDetail';
 import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
 import { SIX_BLUE_STORY_SLIDES } from '@/shared/data/gallerySixStoryBlue';
@@ -337,13 +339,15 @@ export const extractImagesList = (rawImages) => {
  * Normalizes details payload from GET /v1/marketplace/premium-photos/:id
  */
 export const normalizeMarketplaceDetail = (item) => {
-  if (!item) return null;
+  if (!item || typeof item !== 'object') return null;
 
   const rawKind = String(item.kind || 'SINGLE').toUpperCase();
   const variant = mapKindToVariant(rawKind, item.theme);
   const badge = mapKindToBadge(rawKind);
 
-  const imagesList = extractImagesList(item.images);
+  const imagesList = extractImagesList(
+    item.images || item.media || (item.image ? [{ url: item.image }] : null),
+  );
   const coverUrl =
     imagesList[0]?.url || resolveMediaUrl(item.coverImage || item.image || '');
 
@@ -431,14 +435,14 @@ export const normalizeMarketplaceDetail = (item) => {
     price: `$${priceNum.toFixed(2)}`,
     priceAmount: priceNum,
     rawPrice: priceNum,
-    resolution: item.resolution || BUY_PHOTO_DEFAULT_SPECS.resolution,
-    format:
-      item.format || imagesList[0]?.format || BUY_PHOTO_DEFAULT_SPECS.format,
-    camera: item.camera || BUY_PHOTO_DEFAULT_SPECS.camera,
-    quality: item.quality || '4K',
+    resolution: item.resolution || null,
+    format: item.format || imagesList[0]?.format || null,
+    // Upload forms do not collect camera — omit seed/API leftovers from UI
+    camera: null,
+    quality: item.quality || null,
     license: item.license || BUY_PHOTO_LICENSE,
     zodiacSign: item.zodiacSign || null,
-    isAiGenerated: Boolean(item.isAiGenerated),
+    isAiGenerated: Boolean(item.isAiGenerated || item.aiBadge),
     copyrightConfirmed: Boolean(item.copyrightConfirmed),
     bytes: imagesList[0]?.bytes || item.bytes || null,
     likesCount: Number(item.likesCount ?? 0),
@@ -575,6 +579,7 @@ export const getMarketplacePremiumPhotosApi = async ({
       date: formattedDate,
       createdAt: item.createdAt,
       promoted: Array.isArray(item.promotions) && item.promotions.length > 0,
+      isAiGenerated: Boolean(item.isAiGenerated || item.aiBadge),
       raw: item,
     };
   });
@@ -592,10 +597,20 @@ export const getMarketplacePremiumPhotosApi = async ({
  * @param {string} id
  */
 export const getMarketplacePremiumPhotoDetailsApi = async (id) => {
+  if (!id) throw new Error('Photo ID is required');
+
   const response = await apiClient.get(`/v1/marketplace/premium-photos/${id}`);
-  const payload = response?.data !== undefined ? response.data : response;
-  const item = payload?.data || payload;
-  return normalizeMarketplaceDetail(item);
+  // apiClient interceptor already unwraps axios `response.data`
+  const item =
+    response?.data && typeof response.data === 'object' && !Array.isArray(response.data)
+      ? response.data
+      : response;
+
+  const normalized = normalizeMarketplaceDetail(item);
+  if (!normalized?.id) {
+    throw new Error('Premium photo details could not be loaded');
+  }
+  return normalized;
 };
 
 /**

@@ -108,7 +108,7 @@ const ItemWatchlistContent = memo(() => {
             </p>
           </div>
           <Link
-            to={ROUTES.USER_MY_STORE}
+            to={ROUTES.MARKETPLACE}
             className="mt-2 inline-flex items-center gap-2 rounded-xl bg-[#4048cd] px-5 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#343cb0]"
           >
             <ShoppingBag size={16} />

@@ -1,7 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Bookmark,
-  Camera,
   Flag,
   Heart,
   Image as ImageIcon,
@@ -221,13 +220,7 @@ const BuyPhotoDetailView = memo(({ photo }) => {
       label: t('buyPhotos.detail.specs.format'),
       value: photo.format,
     },
-    {
-      key: 'camera',
-      icon: Camera,
-      label: t('buyPhotos.detail.specs.camera'),
-      value: photo.camera,
-    },
-  ];
+  ].filter((row) => Boolean(row.value));
 
   return (
     <SitePageLayout

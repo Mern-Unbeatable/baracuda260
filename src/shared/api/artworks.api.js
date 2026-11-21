@@ -229,6 +229,8 @@ export const getArtworkDetailsApi = async (submissionId) => {
       : null,
     comments: normalizedComments,
     isAiGenerated: Boolean(data.isAiGenerated || data.aiBadge),
+    // Upload forms never collect camera — hide seed leftovers on detail pages
+    camera: null,
   };
 };
 
@@ -557,40 +559,29 @@ export const updateArtworkApi = async (artworkId, payload) => {
 /**
  * Switch an artwork to enter a competition.
  * Endpoint: POST /v1/artworks/:id/switch-to-competition
+ * Backend auto-resolves the OPEN competition currently underway.
  *
  * @param {string} artworkId
- * @param {{ competitionId: string } | string} payload
  */
-export const switchArtworkToCompetitionApi = async (artworkId, payload) => {
+export const switchArtworkToCompetitionApi = async (artworkId) => {
   if (!artworkId) throw new Error('Artwork ID is required');
-  const body =
-    typeof payload === 'string' ? { competitionId: payload } : payload;
   const response = await apiClient.post(
     `/v1/artworks/${artworkId}/switch-to-competition`,
-    body,
+    {},
   );
   return response?.data !== undefined ? response.data : response;
 };
 
 /**
- * Resubmit an ended artwork into a new competition.
+ * Resubmit an ended artwork into the OPEN competition currently underway.
  * Endpoint: POST /v1/artworks/:id/resubmit
+ * Backend auto-resolves the active monthly competition — no competitionId needed.
  *
  * @param {string} artworkId
- * @param {{ newCompetitionId: string } | string} payload
  */
-export const resubmitArtworkApi = async (artworkId, payload) => {
+export const resubmitArtworkApi = async (artworkId) => {
   if (!artworkId) throw new Error('Artwork ID is required');
-  const body =
-    typeof payload === 'string'
-      ? { newCompetitionId: payload }
-      : payload.newCompetitionId
-        ? payload
-        : { newCompetitionId: payload.competitionId };
-  const response = await apiClient.post(
-    `/v1/artworks/${artworkId}/resubmit`,
-    body,
-  );
+  const response = await apiClient.post(`/v1/artworks/${artworkId}/resubmit`, {});
   return response?.data !== undefined ? response.data : response;
 };
 
@@ -1009,9 +1000,22 @@ export const normalizeUserArtwork = (item) => {
     promoted: isPromoted,
     extraPhotoCount,
     footerState,
+    competitionId: item.competitionId || item.competition?.id || null,
+    competition: item.competition
+      ? {
+          id: item.competition.id,
+          title: item.competition.title,
+          year: item.competition.year,
+          month: item.competition.month,
+          endsAt: item.competition.endsAt,
+          status: item.competition.status,
+        }
+      : null,
     competitionName: item.competition?.title || 'Active Competition',
     votes: String(item.votesCount ?? 0),
+    endedVotes: String(item.votesCount ?? 0),
     rank: item.rank ? `#${item.rank}` : null,
+    finalRank: item.rank || null,
     votingEnds: item.competition?.endsAt || '',
     isAiGenerated: Boolean(item.isAiGenerated),
     zodiacSign: item.zodiacSign,

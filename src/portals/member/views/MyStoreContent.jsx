@@ -21,6 +21,7 @@ import {
   STORE_PRODUCTS_QUERY_KEY,
 } from '@/shared/api/store.api';
 import { ROUTES } from '@/shared/config';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
 const MyStoreContent = memo(() => {
   const { t } = useTranslation();
@@ -170,6 +171,17 @@ const MyStoreContent = memo(() => {
 
   const handleDelete = async (product) => {
     if (!product?.id) return;
+    const confirmed = await confirmDestructiveAction({
+      title: t('myStore.deleteConfirmTitle', 'Delete this product?'),
+      text: t(
+        'myStore.confirmDelete',
+        'Are you sure you want to delete "{{title}}"? This cannot be undone.',
+        { title: product.title || t('myStore.title', 'Product') },
+      ),
+      confirmButtonText: t('common.delete', 'Delete'),
+      cancelButtonText: t('common.cancel', 'Cancel'),
+    });
+    if (!confirmed) return;
     try {
       await deleteProduct(product.id, product.title);
     } catch {
