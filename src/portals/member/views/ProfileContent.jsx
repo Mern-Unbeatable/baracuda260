@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Lock } from 'lucide-react';
+import { Eye, EyeOff, Lock } from 'lucide-react';
 import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -13,8 +13,6 @@ import {
   ADMIN_PROFILE_ASSETS,
   AVATAR_SIZE,
   DEFAULT_ADMIN_PROFILE,
-  EYE_ICON_HEIGHT,
-  EYE_ICON_WIDTH,
   USER_ICON_SIZE,
 } from '@/portals/member/data/profileData';
 import useUserProfileMe from '@/portals/member/hooks/useUserProfileMe';
@@ -127,17 +125,13 @@ const PasswordInput = memo(
                 show ? t('login.hidePassword') : t('login.showPassword')
               }
               aria-pressed={show}
-              className="absolute right-4 top-1/2 flex h-5 w-6 -translate-y-1/2 cursor-pointer items-center justify-center"
+              className="absolute right-3 top-1/2 z-10 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition hover:bg-black/5 hover:text-[#4048cd]"
             >
-              <Image
-                src={
-                  show ? ADMIN_PROFILE_ASSETS.eyeOff : ADMIN_PROFILE_ASSETS.eye
-                }
-                alt=""
-                width={EYE_ICON_WIDTH}
-                height={EYE_ICON_HEIGHT}
-                className="h-3.75 w-5.5 object-contain"
-              />
+              {show ? (
+                <EyeOff size={18} strokeWidth={2} aria-hidden="true" />
+              ) : (
+                <Eye size={18} strokeWidth={2} aria-hidden="true" />
+              )}
             </Button>
           </div>
         </div>

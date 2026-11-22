@@ -1,5 +1,7 @@
 import {
   ArrowUpFromLine,
+  Eye,
+  EyeOff,
   Globe,
   Lock,
   Mail,
@@ -25,11 +27,6 @@ import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
 import { DEFAULT_MEMBER_SETTINGS } from '@/portals/member/data/memberSettingsData';
-import {
-  ADMIN_PROFILE_ASSETS,
-  EYE_ICON_HEIGHT,
-  EYE_ICON_WIDTH,
-} from '@/portals/member/data/profileData';
 import useUserProfileMe from '@/portals/member/hooks/useUserProfileMe';
 import { changePasswordApi } from '@/shared/api/auth.api';
 import { getApiErrorMessage } from '@/shared/api/client';
@@ -304,17 +301,13 @@ const PasswordField = memo(
               show ? t('login.hidePassword') : t('login.showPassword')
             }
             aria-pressed={show}
-            className="absolute right-4 top-1/2 flex h-5 w-6 -translate-y-1/2 cursor-pointer items-center justify-center"
+            className="absolute right-3 top-1/2 z-10 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition hover:bg-black/5 hover:text-[#4048cd]"
           >
-            <Image
-              src={
-                show ? ADMIN_PROFILE_ASSETS.eyeOff : ADMIN_PROFILE_ASSETS.eye
-              }
-              alt=""
-              width={EYE_ICON_WIDTH}
-              height={EYE_ICON_HEIGHT}
-              className="h-3.75 w-5.5 object-contain"
-            />
+            {show ? (
+              <EyeOff size={18} strokeWidth={2} aria-hidden="true" />
+            ) : (
+              <Eye size={18} strokeWidth={2} aria-hidden="true" />
+            )}
           </Button>
         </div>
         {error ? (
