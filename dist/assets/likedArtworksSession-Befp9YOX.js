@@ -1,0 +1,1 @@
+const n="m12p:liked-artwork-ids",i=()=>{try{const e=sessionStorage.getItem(n),t=e?JSON.parse(e):[];return new Set(Array.isArray(t)?t.map(String):[])}catch{return new Set}},a=(e,t)=>{if(!e)return;const r=i(),s=String(e);t?r.add(s):r.delete(s);try{sessionStorage.setItem(n,JSON.stringify([...r]))}catch{}},o=e=>e?i().has(String(e)):!1;export{o as h,a as w};
