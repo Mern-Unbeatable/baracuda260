@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Pagination from '@/components/common/Pagination/Pagination';
@@ -6,15 +8,16 @@ import FilterPillGroup from '@/components/marketing/FilterPillGroup/FilterPillGr
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import Button from '@/components/ui/Button';
 import {
-  matchesWinnerAlbumFilter,
   SHOWCASE_BADGE_KEYS,
   WINNER_BADGE_KEYS,
   WINNER_FILTER_TABS,
-  WINNERS_ARCHIVE as WINNERS,
-  winnerDetailPath,
 } from '@/portals/public/winners/data/winnersArchive';
+import {
+  COMPETITIONS_QUERY_KEY,
+  getWinnersArchiveApi,
+} from '@/shared/api/competitions.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 import {
   ImgIcon,
   Shell,
@@ -22,7 +25,7 @@ import {
   useMonthMenu,
 } from '@/shared/site-chrome';
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 12;
 
 const ASSETS = {
   chevron: '/assets/home/chevron-down.svg',
@@ -44,32 +47,72 @@ const MONTHS = [
   'December',
 ];
 
+const filterTabToKind = (filterTab) => {
+  if (filterTab === 'Single Photo') return 'SINGLE';
+  if (filterTab === '6 Photos') return 'SIX';
+  if (filterTab === '12 photos - full Zodiac Story') return 'TWELVE';
+  return 'ALL';
+};
+
+const defaultMonthName = () => {
+  const prev = new Date();
+  prev.setMonth(prev.getMonth() - 1);
+  return MONTHS[prev.getMonth()];
+};
+
 const WinnersContent = memo(() => {
   const { t } = useTranslation();
   const [filterTab, setFilterTab] = useState('All Entries');
+  const [page, setPage] = useState(1);
   const {
     month,
     setMonth,
     open: monthOpen,
     setOpen: setMonthOpen,
     ref: monthRef,
-  } = useMonthMenu('July');
+  } = useMonthMenu(defaultMonthName());
 
-  const filteredWinners = useMemo(
-    () =>
-      WINNERS.filter(
-        (item) =>
-          item.month === month && matchesWinnerAlbumFilter(item, filterTab),
-      ),
-    [filterTab, month],
-  );
+  const monthNumber = MONTHS.indexOf(month) + 1;
+  const year = useMemo(() => {
+    const now = new Date();
+    // If selected month is after the current month, treat it as previous year
+    if (monthNumber > now.getMonth() + 1) return now.getFullYear() - 1;
+    return now.getFullYear();
+  }, [monthNumber]);
+
+  const kind = filterTabToKind(filterTab);
 
   const {
-    currentPage,
-    setPage,
-    totalPages,
-    pagedItems: pagedWinners,
-  } = usePaginatedSlice(filteredWinners, PAGE_SIZE, [filterTab, month]);
+    data: winnersResult,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: [
+      ...COMPETITIONS_QUERY_KEY,
+      'winners-archive',
+      { year, month: monthNumber, kind, page, limit: PAGE_SIZE },
+    ],
+    queryFn: () =>
+      getWinnersArchiveApi({
+        year,
+        month: monthNumber,
+        kind,
+        page,
+        limit: PAGE_SIZE,
+      }),
+    placeholderData: (previous) => previous,
+    staleTime: 60 * 1000,
+  });
+
+  const winners = winnersResult?.data || [];
+  const meta = winnersResult?.meta || {
+    currentPage: page,
+    totalPages: 1,
+    totalRecords: winners.length,
+  };
 
   const filterItems = WINNER_FILTER_TABS.map((tab) => ({
     value: tab.value,
@@ -127,6 +170,7 @@ const WinnersContent = memo(() => {
                             onClick={() => {
                               setMonth(name);
                               setMonthOpen(false);
+                              setPage(1);
                             }}
                             className={`flex w-full items-center gap-2 px-3 py-2.5 text-left text-[14px] font-medium transition ${
                               selected
@@ -148,13 +192,25 @@ const WinnersContent = memo(() => {
 
           <div className="mt-6 flex flex-col gap-4 lg:mt-4 lg:flex-row lg:items-center lg:justify-between">
             <p className="text-[16px] font-medium uppercase tracking-[0.5px] text-[#222]">
-              {t('winners.historicRecords', { count: filteredWinners.length })}
+              {t('winners.historicRecords', {
+                count: meta.totalRecords ?? winners.length,
+              })}
+              {isFetching && !isLoading ? (
+                <Loader2
+                  size={14}
+                  className="ml-2 inline animate-spin text-[#4048cd]"
+                  aria-hidden="true"
+                />
+              ) : null}
             </p>
 
             <FilterPillGroup
               items={filterItems}
               value={filterTab}
-              onChange={setFilterTab}
+              onChange={(next) => {
+                setFilterTab(next);
+                setPage(1);
+              }}
               density="compact"
               layout="scroll"
               ariaLabel={t('winners.filterAria', {
@@ -164,7 +220,37 @@ const WinnersContent = memo(() => {
             />
           </div>
 
-          {filteredWinners.length === 0 ? (
+          {isLoading ? (
+            <div className="mt-11 flex min-h-[220px] flex-col items-center justify-center gap-3 rounded-xl border border-[#e5e7eb] bg-[#f9fafb]">
+              <Loader2
+                size={28}
+                className="animate-spin text-[#4048cd]"
+                aria-hidden="true"
+              />
+              <p className="text-[14px] text-[#6b7280]">
+                {t('common.loading', 'Loading...')}
+              </p>
+            </div>
+          ) : isError ? (
+            <div className="mt-11 flex flex-col items-center justify-center gap-3 rounded-xl border border-[#fee2e2] bg-[#fef2f2] px-6 py-16 text-center">
+              <AlertCircle size={28} className="text-[#ee1c25]" />
+              <p className="text-[16px] font-semibold text-[#111827]">
+                {getApiErrorMessage(
+                  error,
+                  t('winners.error', 'Could not load winners.'),
+                )}
+              </p>
+              <Button
+                unstyled
+                type="button"
+                onClick={() => refetch()}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#0d0d14] px-4 py-2 text-[14px] font-medium text-white"
+              >
+                <RefreshCw size={14} aria-hidden="true" />
+                {t('common.retry', 'Try again')}
+              </Button>
+            </div>
+          ) : winners.length === 0 ? (
             <div className="mt-11 rounded-xl border border-dashed border-black/15 px-6 py-16 text-center">
               <p className="text-[18px] font-bold text-[#0d0d14]">
                 {t('winners.emptyTitle')}
@@ -176,11 +262,11 @@ const WinnersContent = memo(() => {
           ) : (
             <>
               <div className="mt-11 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-                {pagedWinners.map((item) => (
+                {winners.map((item) => (
                   <PhotoShowcaseCard
                     key={item.id}
-                    id={item.id}
-                    href={winnerDetailPath(item.id)}
+                    id={item.submissionId || item.id}
+                    href={item.href}
                     image={item.image}
                     imageAlt={item.title}
                     title={item.title}
@@ -205,16 +291,19 @@ const WinnersContent = memo(() => {
                           })
                         : undefined
                     }
+                    engagementDisabled
                   />
                 ))}
               </div>
-              <Pagination
-                className="mt-10"
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setPage}
-                ariaLabel={t('winners.paginationAria')}
-              />
+              {meta.totalPages > 1 ? (
+                <Pagination
+                  className="mt-10"
+                  currentPage={meta.currentPage || page}
+                  totalPages={meta.totalPages}
+                  onPageChange={setPage}
+                  ariaLabel={t('winners.paginationAria')}
+                />
+              ) : null}
             </>
           )}
         </Shell>

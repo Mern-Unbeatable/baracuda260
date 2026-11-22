@@ -232,6 +232,21 @@ export const getArtworkDetailsApi = async (submissionId) => {
     isLiked: Boolean(data.isLiked || data.liked),
     isSaved: Boolean(data.isSaved || data.saved),
     likesCount: Number(data.likesCount ?? data.likes ?? 0) || 0,
+    competition: data.competition || null,
+    votingClosed: (() => {
+      if (data.votingClosed != null) return Boolean(data.votingClosed);
+      const competitionStatus = String(
+        data.competition?.status || '',
+      ).toUpperCase();
+      const endsAtMs = data.competition?.endsAt
+        ? new Date(data.competition.endsAt).getTime()
+        : NaN;
+      return Boolean(
+        data.competitionState === 'ENDED' ||
+          (competitionStatus && competitionStatus !== 'OPEN') ||
+          (Number.isFinite(endsAtMs) && endsAtMs <= Date.now()),
+      );
+    })(),
     // Upload forms never collect camera — hide seed leftovers on detail pages
     camera: null,
   };
@@ -1323,6 +1338,19 @@ export const getPublicArtworksApi = async ({
     const resolvedCategory =
       item.categoryName || item.category?.name || item.category || '';
 
+    const competitionStatus = String(item.competition?.status || '').toUpperCase();
+    const endsAtMs = item.competition?.endsAt
+      ? new Date(item.competition.endsAt).getTime()
+      : NaN;
+    const votingClosed =
+      item.votingClosed != null
+        ? Boolean(item.votingClosed)
+        : Boolean(
+            item.competitionState === 'ENDED' ||
+              (competitionStatus && competitionStatus !== 'OPEN') ||
+              (Number.isFinite(endsAtMs) && endsAtMs <= Date.now()),
+          );
+
     return {
       id: item.id,
       kind: rawKind,
@@ -1348,11 +1376,14 @@ export const getPublicArtworksApi = async ({
       likes: likesNum.toLocaleString('en-US'),
       likesCount: likesNum,
       isLiked: Boolean(item.isLiked || item.liked),
+      isVoted: Boolean(item.isVoted || item.voted),
       isSaved: Boolean(item.isSaved || item.saved),
       isAiGenerated: Boolean(item.isAiGenerated || item.aiBadge),
       date: formattedDate,
       createdAt: item.createdAt,
       competitionState: item.competitionState || status,
+      competition: item.competition || null,
+      votingClosed,
       status: item.status,
       detailPath,
       images: item.images,

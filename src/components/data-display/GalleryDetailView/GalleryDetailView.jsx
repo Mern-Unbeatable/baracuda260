@@ -240,8 +240,22 @@ const GalleryDetailView = memo(
           story?.competitionState !== 'PROFILE_ONLY' &&
           entry?.competitionState !== 'PROFILE_ONLY';
 
+    const votingClosed = (() => {
+      if (story?.votingClosed != null) return Boolean(story.votingClosed);
+      if (entry?.votingClosed != null) return Boolean(entry.votingClosed);
+      const competitionStatus = String(
+        story?.competition?.status || entry?.competition?.status || '',
+      ).toUpperCase();
+      return Boolean(
+        story?.competitionState === 'ENDED' ||
+          entry?.competitionState === 'ENDED' ||
+          (competitionStatus && competitionStatus !== 'OPEN'),
+      );
+    })();
+
     const handleVote = async () => {
-      if (!artworkId || isOwnSubmission || voting || hasVoted) return;
+      if (!artworkId || isOwnSubmission || voting || hasVoted || votingClosed)
+        return;
       try {
         setVoting(true);
         const res = await voteArtworkApi(artworkId);
@@ -617,25 +631,41 @@ const GalleryDetailView = memo(
                 {isInCompetition ? (
                   <MarketingButton
                     type="button"
-                    disabled={isOwnSubmission || voting || hasVoted}
+                    disabled={
+                      isOwnSubmission || voting || hasVoted || votingClosed
+                    }
                     onClick={handleVote}
                     title={
-                      isOwnSubmission
-                        ? t('galleryDetail.cannotVoteOwn')
-                        : hasVoted
-                          ? t('galleryDetail.alreadyVoted', 'Already voted')
-                          : undefined
+                      votingClosed
+                        ? t(
+                            'competitionsPage.votingClosed',
+                            'Voting is closed. This competition has already ended.',
+                          )
+                        : isOwnSubmission
+                          ? t('galleryDetail.cannotVoteOwn')
+                          : hasVoted
+                            ? t(
+                                'galleryDetail.alreadyVoted',
+                                'Already voted',
+                              )
+                            : undefined
                     }
                     className={
-                      hasVoted ? 'bg-[#16a34a] hover:bg-[#15803d]' : ''
+                      votingClosed
+                        ? 'cursor-not-allowed opacity-60'
+                        : hasVoted
+                          ? 'bg-[#16a34a] hover:bg-[#15803d]'
+                          : ''
                     }
                   >
                     <ImgIcon src={ASSETS.voteHeart} size={20} />
-                    {voting
-                      ? t('common.voting', 'Voting...')
-                      : hasVoted
-                        ? t('galleryDetail.voted', 'Voted!')
-                        : t('galleryDetail.castVote')}
+                    {votingClosed
+                      ? t('competitionsPage.votingClosedShort', 'Voting closed')
+                      : voting
+                        ? t('common.voting', 'Voting...')
+                        : hasVoted
+                          ? t('galleryDetail.voted', 'Voted!')
+                          : t('galleryDetail.castVote')}
                   </MarketingButton>
                 ) : (
                   <MarketingButton

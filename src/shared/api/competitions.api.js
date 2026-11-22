@@ -188,6 +188,130 @@ const winnerAlbumPath = (submissionId, kind) => {
   return `/gallery/${submissionId}`;
 };
 
+const RANK_LABELS = {
+  1: '1st PLACE',
+  2: '2nd PLACE',
+  3: '3rd PLACE',
+};
+
+const KIND_TO_BADGE = {
+  SINGLE: 'Single Photo',
+  SIX: '6 Photos Story',
+  TWELVE: '12 photos - full Zodiac Story',
+};
+
+/**
+ * Winners Archive page.
+ * Endpoint: GET /v1/competitions/winners?year=&month=&kind=&page=&limit=
+ *
+ * @param {{
+ *   year?: number,
+ *   month?: number,
+ *   kind?: string,
+ *   page?: number,
+ *   limit?: number,
+ * }} [params]
+ */
+export const getWinnersArchiveApi = async ({
+  year,
+  month,
+  kind = 'ALL',
+  page = 1,
+  limit = 12,
+} = {}) => {
+  const params = {
+    page,
+    limit,
+    kind: String(kind || 'ALL').toUpperCase(),
+  };
+  if (year) params.year = year;
+  if (month) params.month = month;
+
+  const response = await apiClient.get('/v1/competitions/winners', { params });
+  const payload = response?.data !== undefined ? response.data : response;
+  const nested = payload?.data !== undefined ? payload.data : payload;
+  const list = Array.isArray(nested?.data)
+    ? nested.data
+    : Array.isArray(nested)
+      ? nested
+      : Array.isArray(payload)
+        ? payload
+        : [];
+  const rawMeta = nested?.meta || payload?.meta || {};
+
+  const data = list.map((item, idx) => {
+    const rank = Number(item.rank || idx + 1);
+    const kindValue = String(item.kind || 'SINGLE').toUpperCase();
+    const submissionId = item.submissionId || item.submission?.id || item.id;
+    const imageRaw =
+      item.submission?.featuredImage ||
+      item.submission?.media?.[0]?.url ||
+      item.user?.avatar ||
+      '';
+    const monthNum = Number(item.competition?.month || month || 0);
+    const yearNum = Number(item.competition?.year || year || 0);
+    const monthName =
+      monthNum >= 1 && monthNum <= 12
+        ? new Date(2000, monthNum - 1, 1).toLocaleString('en-US', {
+            month: 'long',
+          })
+        : '';
+    let dateLabel = '';
+    if (item.createdAt) {
+      try {
+        const d = new Date(item.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+          dateLabel = d.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          });
+        }
+      } catch {
+        dateLabel = '';
+      }
+    }
+
+    const albumBadge = KIND_TO_BADGE[kindValue] || 'Single Photo';
+
+    return {
+      id: item.id || submissionId || `winner-${idx}`,
+      submissionId,
+      title: item.submission?.title || item.user?.name || 'Winning entry',
+      description: item.user?.name
+        ? `Winner — ${item.user.name}`
+        : 'Competition winner',
+      votes: Number(item.votes ?? 0).toLocaleString('en-US'),
+      views: null,
+      date: dateLabel,
+      month: monthName,
+      year: yearNum || null,
+      rank: RANK_LABELS[rank] || `${rank}`,
+      rankNumber: rank,
+      album: albumBadge,
+      albumBadge,
+      extraPhotoCount:
+        kindValue === 'TWELVE' ? 11 : kindValue === 'SIX' ? 5 : null,
+      image: imageRaw ? resolveMediaUrl(imageRaw) : null,
+      photographer: item.user?.name || 'Photographer',
+      userId: item.userId || item.user?.id || null,
+      kind: kindValue,
+      href: winnerAlbumPath(submissionId, kindValue),
+    };
+  });
+
+  return {
+    data,
+    meta: {
+      currentPage: Number(rawMeta.currentPage ?? page),
+      totalPages: Math.max(1, Number(rawMeta.totalPages ?? 1)),
+      totalRecords: Number(rawMeta.totalRecords ?? data.length),
+      hasNext: Boolean(rawMeta.hasNext),
+      hasPrevious: Boolean(rawMeta.hasPrevious),
+    },
+  };
+};
+
 /**
  * Previous-month (or latest closed) top winners for home "Monthly Winners".
  * Endpoint: GET /v1/competitions/winners

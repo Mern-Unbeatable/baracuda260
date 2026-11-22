@@ -1,6 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
+import { getApiErrorMessage } from '@/shared/api/client';
+import { subscribeNewsletterApi } from '@/shared/api/newsletter.api';
 import ImgIcon from './ImgIcon';
 import Shell from './Shell';
 import { SITE_ASSETS } from './siteAssets';
@@ -26,6 +29,40 @@ const StayUpdated = memo(({ variant = 'page' }) => {
   const { t } = useTranslation();
   const panelClass = PANEL_CLASS[variant] || PANEL_CLASS.page;
   const innerClass = INNER_CLASS[variant] || INNER_CLASS.page;
+  const [email, setEmail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const value = email.trim();
+    if (!value) {
+      toast.error(
+        t('newsletter.emailRequired', 'Please enter your email address'),
+      );
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await subscribeNewsletterApi(value);
+      toast.success(
+        t(
+          'newsletter.success',
+          'Successfully subscribed to the newsletter',
+        ),
+      );
+      setEmail('');
+    } catch (error) {
+      toast.error(
+        getApiErrorMessage(
+          error,
+          t('newsletter.error', 'Could not subscribe. Please try again.'),
+        ),
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section className="bg-white py-10 sm:py-16">
@@ -51,22 +88,31 @@ const StayUpdated = memo(({ variant = 'page' }) => {
             </div>
             <form
               className="flex w-full max-w-130 flex-col gap-3 rounded-[33px] bg-white/24 p-3 sm:flex-row sm:items-center"
-              onSubmit={(event) => event.preventDefault()}
+              onSubmit={handleSubmit}
             >
               <label className="flex flex-1 items-center gap-1 rounded-3xl bg-white px-4 py-3">
                 <ImgIcon src={SITE_ASSETS.mail} size={24} />
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
+                  required
+                  disabled={submitting}
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                   placeholder={t('newsletter.placeholder')}
-                  className="w-full bg-transparent text-[12px] text-[#222] outline-none placeholder:text-[#7d7d7d]"
+                  className="w-full bg-transparent text-[12px] text-[#222] outline-none placeholder:text-[#7d7d7d] disabled:opacity-60"
                 />
               </label>
               <Button
                 unstyled
                 type="submit"
-                className="cursor-pointer rounded-[27px] bg-[#ee1c25] px-8 py-2 text-[15px] font-semibold leading-tight text-white"
+                disabled={submitting}
+                className="cursor-pointer rounded-[27px] bg-[#ee1c25] px-8 py-2 text-[15px] font-semibold leading-tight text-white disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {t('newsletter.subscribe')}
+                {submitting
+                  ? t('newsletter.subscribing', 'Subscribing...')
+                  : t('newsletter.subscribe')}
               </Button>
             </form>
           </div>

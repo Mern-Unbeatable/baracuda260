@@ -4,6 +4,17 @@ export const ADMIN_NEWSLETTER_SUBSCRIBERS_QUERY_KEY = [
   'admin-newsletter-subscribers',
 ];
 
+/**
+ * Public newsletter signup.
+ * Endpoint: POST /v1/newsletter/subscribe  { email }
+ */
+export const subscribeNewsletterApi = async (email) => {
+  const response = await apiClient.post('/v1/newsletter/subscribe', {
+    email: String(email || '').trim().toLowerCase(),
+  });
+  return response?.data ?? response;
+};
+
 export const getNewsletterSubscribersApi = async ({ page, limit }) => {
   const response = await apiClient.get('/v1/newsletter/subscribers', {
     params: { page, limit },

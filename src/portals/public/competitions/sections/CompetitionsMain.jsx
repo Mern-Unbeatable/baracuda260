@@ -513,6 +513,7 @@ const CompetitionsMain = memo(({ activeHref = ROUTES.COMPETITIONS }) => {
                       )}
                       description={photo.description}
                       engagementType="vote"
+                      engagementDisabled={Boolean(photo.votingClosed)}
                       likes={photo.votes}
                       initialLiked={photo.isVoted || photo.isLiked}
                       initialSaved={photo.isSaved}

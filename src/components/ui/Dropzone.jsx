@@ -108,7 +108,7 @@ const Dropzone = forwardRef(
                 <img
                   src={previewUrl}
                   alt={file.name}
-                  className={`object-cover ${previewClassName}`}
+                  className={previewClassName || 'max-h-64 w-full object-contain'}
                 />
               )}
             </div>

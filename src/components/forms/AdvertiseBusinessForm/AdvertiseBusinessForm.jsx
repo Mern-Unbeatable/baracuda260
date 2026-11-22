@@ -1,22 +1,42 @@
-import { Globe, MapPin, Store, Upload } from 'lucide-react';
-import React, { memo, useMemo, useState } from 'react';
+import { Globe, MapPin, Store } from 'lucide-react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 import MarketingButton from '@/components/marketing/MarketingButton/MarketingButton';
 import Button from '@/components/ui/Button';
+import Dropzone from '@/components/ui/Dropzone';
 import Input from '@/components/ui/Input';
 
-const DURATION_OPTIONS = [
-  { days: 7, price: 35, start: '7 Aug 2026', end: '24 Aug 2026' },
-  {
-    days: 14,
-    price: 60,
-    start: '17 Aug 2026',
-    end: '31 Aug 2026',
-    popular: true,
-  },
-  { days: 30, price: 100, start: '17 Aug 2026', end: '16 Sept 2026' },
+const DURATION_BASE = [
+  { days: 7, price: 35 },
+  { days: 14, price: 60, popular: true },
+  { days: 30, price: 100 },
 ];
+
+const formatAdDate = (date) =>
+  date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+const buildDurationOptions = (fromDate = new Date()) => {
+  const start = new Date(fromDate);
+  start.setHours(0, 0, 0, 0);
+  const startLabel = formatAdDate(start);
+
+  return DURATION_BASE.map((option) => {
+    const end = new Date(start);
+    end.setDate(end.getDate() + option.days);
+    return {
+      ...option,
+      start: startLabel,
+      end: formatAdDate(end),
+      startsAt: start.toISOString(),
+      endsAt: end.toISOString(),
+    };
+  });
+};
 
 const inputClass =
   'w-full rounded-[8px] border border-[#e5e7eb] bg-white px-4 py-2.5 text-[13px] text-[#111827] placeholder:text-[#9ca3af] outline-none transition focus:border-[#4048cd]/40 focus:ring-2 focus:ring-[#4048cd]/20';
@@ -29,6 +49,8 @@ const AdvertiseBusinessForm = memo(
     const {
       register,
       handleSubmit,
+      setValue,
+      watch,
       formState: { errors },
     } = useForm({
       defaultValues: {
@@ -40,18 +62,37 @@ const AdvertiseBusinessForm = memo(
         website: '',
         description: '',
         location: '',
+        media: null,
       },
     });
 
+    const mediaFile = watch('media');
+
+    useEffect(() => {
+      register('media', {
+        required: 'Business image is required',
+        validate: (value) =>
+          (value instanceof File && value.type.startsWith('image/')) ||
+          'Please upload an image file',
+      });
+    }, [register]);
+
+    const durationOptions = useMemo(() => buildDurationOptions(new Date()), []);
+
     const selected = useMemo(
       () =>
-        DURATION_OPTIONS.find((option) => option.days === selectedDuration) ??
-        DURATION_OPTIONS[1],
-      [selectedDuration],
+        durationOptions.find((option) => option.days === selectedDuration) ??
+        durationOptions[1],
+      [durationOptions, selectedDuration],
     );
 
     const onFormSubmit = (data) => {
-      onSubmit?.({ ...data, duration: selected, businessType });
+      onSubmit?.({
+        ...data,
+        media: data.media || mediaFile || null,
+        duration: selected,
+        businessType,
+      });
     };
 
     return (
@@ -245,20 +286,29 @@ const AdvertiseBusinessForm = memo(
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="w-full max-w-xs space-y-2">
             <span className="text-[14px] font-semibold text-[#202531]">
-              Business Image
+              Business Image <span className="text-[#ee1c25]">*</span>
             </span>
-            <Button
-              unstyled
-              type="button"
-              className="flex h-28 w-full flex-col items-center justify-center rounded-[10px] border border-dashed border-[#d1d5db] bg-white text-[#6b7280] transition hover:border-[#9ca3af]"
-            >
-              <Upload size={18} className="mb-2 text-[#9ca3af]" />
-              <span className="text-[12px]">
-                Click to upload or drag and drop
-              </span>
-            </Button>
+            <Dropzone
+              id="advertise-business-image"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              label="Click to upload or drag and drop"
+              sublabel="PNG, JPG or WEBP"
+              error={errors.media}
+              className="min-h-28"
+              previewClassName="max-h-48 w-full object-contain"
+              onChange={(event) => {
+                const file = event.target.files?.[0] ?? null;
+                setValue('media', file, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              }}
+            />
+            {errors.media ? (
+              <p className="text-sm text-red-500">{errors.media.message}</p>
+            ) : null}
           </div>
 
           <div>
@@ -271,7 +321,7 @@ const AdvertiseBusinessForm = memo(
             </p>
 
             <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
-              {DURATION_OPTIONS.map((option) => {
+              {durationOptions.map((option) => {
                 const active = option.days === selectedDuration;
                 return (
                   <Button

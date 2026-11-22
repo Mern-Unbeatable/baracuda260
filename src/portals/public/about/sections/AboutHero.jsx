@@ -6,6 +6,8 @@ import {
   ABOUT_HERO_SLIDE_MS,
   ABOUT_HERO_SLIDES,
 } from '@/portals/public/about/data/aboutAssets';
+import { ROUTES } from '@/shared/config';
+import { AppLink } from '@/shared/site-chrome';
 
 const AboutHero = memo(() => {
   const { t } = useTranslation();
@@ -36,7 +38,9 @@ const AboutHero = memo(() => {
         />
       ))}
       <div className="absolute inset-0 bg-linear-to-r from-[#1b1e56] from-28% via-[#1b1e56]/70 to-transparent" />
-      <div className="relative mx-auto flex min-h-130 w-full max-w-480 items-center px-4 py-16 sm:px-6 md:min-h-170 md:px-10 xl:min-h-200 xl:px-48">
+
+      {/* Extra bottom space so CTAs/dots clear the overlapping stats card */}
+      <div className="relative mx-auto flex min-h-130 w-full max-w-480 items-center px-4 pb-28 pt-16 sm:px-6 md:min-h-170 md:pb-36 md:px-10 xl:min-h-200 xl:px-48 xl:pb-44">
         <div className="flex w-full max-w-171.75 flex-col gap-9">
           <div className="flex flex-col gap-3">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4.25 py-1.75">
@@ -53,15 +57,15 @@ const AboutHero = memo(() => {
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-            <a
-              href="#"
-              className="inline-flex items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white"
+            <AppLink
+              href={ROUTES.SIGNUP}
+              className="inline-flex items-center justify-center rounded-full bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d91921]"
             >
               {t('about.hero.ctaJoin')}
-            </a>
+            </AppLink>
             <a
               href="#how-competitions-work"
-              className="inline-flex items-center justify-center rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white"
+              className="inline-flex items-center justify-center rounded-full bg-[#4048cd] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#333bb0]"
             >
               {t('about.hero.ctaLearn')}
             </a>
@@ -69,24 +73,27 @@ const AboutHero = memo(() => {
         </div>
       </div>
 
+      {/* Dots sit above the floating stats card, not on its edge */}
       <div
-        className="absolute bottom-12.5 left-1/2 flex -translate-x-1/2 items-center gap-1.75"
+        className="absolute bottom-28 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 md:bottom-32 xl:bottom-36"
         role="tablist"
         aria-label={t('common.heroSlides')}
       >
-        {ABOUT_HERO_SLIDES.map((_, index) => {
+        {ABOUT_HERO_SLIDES.map((src, index) => {
           const active = index === activeIndex;
           return (
             <Button
               unstyled
-              key={ABOUT_HERO_SLIDES[index]}
+              key={src}
               type="button"
               role="tab"
               aria-selected={active}
               aria-label={t('common.showSlide', { n: index + 1 })}
               onClick={() => setActiveIndex(index)}
-              className={`size-3.5 rounded-full transition ${
-                active ? 'bg-white' : 'bg-white/50 hover:bg-white/80'
+              className={`rounded-full transition-all duration-300 ${
+                active
+                  ? 'h-2.5 w-6 bg-white'
+                  : 'size-2.5 bg-white/45 hover:bg-white/75'
               }`}
             />
           );
