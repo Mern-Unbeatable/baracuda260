@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AlertCircle, Funnel, Loader2, RefreshCw, X } from 'lucide-react';
+import { AlertCircle, Funnel, Loader2, RefreshCw } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import Pagination from '@/components/common/Pagination/Pagination';
 import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
 import FilterCheckboxGroup from '@/components/marketing/FilterCheckboxGroup/FilterCheckboxGroup';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
+import MobileFiltersDrawer from '@/components/marketing/MobileFiltersDrawer/MobileFiltersDrawer';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import Button from '@/components/ui/Button';
 import {
@@ -32,7 +33,7 @@ const SHOWCASE_BADGE_KEYS = {
   '12 photos - full Zodiac Story': 'common.badges.twelveZodiacFull',
 };
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 12;
 
 const DEFAULT_CATEGORIES = [
   'Nature',
@@ -376,36 +377,23 @@ const CompetitionsMain = memo(({ activeHref = ROUTES.COMPETITIONS }) => {
               title={t(`${i18nPrefix}.title`)}
               description={t(`${i18nPrefix}.subtitle`)}
             />
-            <div className="mt-4 flex flex-col gap-3">
-              {searchBar}
-              <div className="flex items-center justify-between">
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={() => setFiltersOpen(true)}
-                  aria-expanded={filtersOpen}
-                  aria-controls={filtersDrawerId}
-                  aria-label={t(`${i18nPrefix}.filters`)}
-                  className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border-0 bg-[#F6F7F8] px-3.5 py-2.5 text-[14px] font-medium text-[#0d0d14] transition hover:bg-[#eceef0]"
-                >
-                  <Funnel size={18} strokeWidth={2} aria-hidden="true" />
-                  {t(`${i18nPrefix}.filters`)}
-                  {hasActiveFilters && (
-                    <span className="size-2 rounded-full bg-[#ee1c25]" />
-                  )}
-                </Button>
-
+            <div className="mt-4 flex items-center gap-2">
+              <div className="min-w-0 flex-1">{searchBar}</div>
+              <Button
+                unstyled
+                type="button"
+                onClick={() => setFiltersOpen(true)}
+                aria-expanded={filtersOpen}
+                aria-controls={filtersDrawerId}
+                aria-label={t(`${i18nPrefix}.filters`)}
+                className="inline-flex h-12 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg border-0 bg-[#F6F7F8] px-3 text-[14px] font-medium text-[#0d0d14] transition hover:bg-[#eceef0]"
+              >
+                <Funnel size={18} strokeWidth={2} aria-hidden="true" />
+                <span>{t(`${i18nPrefix}.filters`)}</span>
                 {hasActiveFilters && (
-                  <Button
-                    unstyled
-                    type="button"
-                    onClick={handleClearFilters}
-                    className="text-[13px] font-medium text-[#ee1c25] hover:underline"
-                  >
-                    {t(`${i18nPrefix}.clearFilters`)}
-                  </Button>
+                  <span className="size-2 rounded-full bg-[#ee1c25]" />
                 )}
-              </div>
+              </Button>
             </div>
           </div>
 
@@ -551,62 +539,37 @@ const CompetitionsMain = memo(({ activeHref = ROUTES.COMPETITIONS }) => {
         </Shell>
       </section>
 
-      {/* Mobile Drawer Filter */}
-      <div
-        className={`fixed inset-0 z-120 lg:hidden ${
-          filtersOpen ? 'pointer-events-auto' : 'pointer-events-none'
-        }`}
-        aria-hidden={!filtersOpen}
-      >
-        <Button
-          unstyled
-          type="button"
-          aria-label={t(`${i18nPrefix}.closeFilters`)}
-          onClick={closeFilters}
-          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
-            filtersOpen ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-        <aside
-          id={filtersDrawerId}
-          role="dialog"
-          aria-modal="true"
-          aria-label={t(`${i18nPrefix}.filtersTitle`)}
-          className={`absolute inset-y-0 left-0 flex w-[min(100%,320px)] flex-col bg-white shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out sm:w-90 ${
-            filtersOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
-            <h2 className="text-[18px] font-bold text-[#3a3a42]">
-              {t(`${i18nPrefix}.filtersTitle`)}
-            </h2>
-            <Button
-              unstyled
-              type="button"
-              onClick={closeFilters}
-              aria-label={t(`${i18nPrefix}.closeFilters`)}
-              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-black/10 text-[#0d0d14] transition hover:bg-[#f3f4f6]"
-            >
-              <X size={18} strokeWidth={2} aria-hidden="true" />
-            </Button>
-          </div>
-          <div className="flex-1 overflow-y-auto px-5 py-6">
-            <ShowcaseFiltersPanel {...filterPanelProps} />
-          </div>
-          {hasActiveFilters && (
-            <div className="border-t border-black/10 p-4">
+      <MobileFiltersDrawer
+        open={filtersOpen}
+        onClose={closeFilters}
+        id={filtersDrawerId}
+        title={t(`${i18nPrefix}.filtersTitle`, 'Filters')}
+        closeLabel={t(`${i18nPrefix}.closeFilters`, 'Close filters')}
+        footer={
+          <div className="flex gap-3">
+            {hasActiveFilters ? (
               <Button
                 unstyled
                 type="button"
                 onClick={handleClearFilters}
-                className="w-full rounded-lg bg-[#f3f4f6] py-2.5 text-center text-[14px] font-semibold text-[#0d0d14] transition hover:bg-[#e5e7eb]"
+                className="flex-1 rounded-lg border border-[#e5e7eb] py-2.5 text-center text-[14px] font-semibold text-[#111827] hover:bg-[#f9fafb]"
               >
-                {t(`${i18nPrefix}.clearFilters`)}
+                {t(`${i18nPrefix}.clearFilters`, 'Clear')}
               </Button>
-            </div>
-          )}
-        </aside>
-      </div>
+            ) : null}
+            <Button
+              unstyled
+              type="button"
+              onClick={closeFilters}
+              className="flex-1 rounded-lg bg-[#ee1c25] py-2.5 text-center text-[14px] font-semibold text-white hover:bg-[#d91921]"
+            >
+              {t('common.done', 'Done')}
+            </Button>
+          </div>
+        }
+      >
+        <ShowcaseFiltersPanel {...filterPanelProps} />
+      </MobileFiltersDrawer>
     </SitePageLayout>
   );
 });

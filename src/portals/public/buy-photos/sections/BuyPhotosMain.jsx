@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { AlertCircle, Funnel, Loader2, RefreshCw, X } from 'lucide-react';
+import { AlertCircle, Funnel, Loader2, RefreshCw } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Pagination from '@/components/common/Pagination/Pagination';
 import PhotoShowcaseCard from '@/components/data-display/PhotoShowcaseCard/PhotoShowcaseCard';
 import FilterCheckboxGroup from '@/components/marketing/FilterCheckboxGroup/FilterCheckboxGroup';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
+import MobileFiltersDrawer from '@/components/marketing/MobileFiltersDrawer/MobileFiltersDrawer';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import Button from '@/components/ui/Button';
 import {
@@ -25,7 +26,7 @@ import {
 } from '@/shared/data/albumTypes';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 12;
 
 const DEFAULT_CATEGORIES = [
   'Nature',
@@ -356,15 +357,15 @@ const BuyPhotosMain = memo(({ activeHref = ROUTES.BUY_PHOTOS }) => {
                 'Discover and purchase high-quality photos and albums from talented photographers.',
               )}
             />
-            <div className="mt-4 flex flex-col gap-3">
-              {searchBar}
+            <div className="mt-4 flex items-center gap-2">
+              <div className="min-w-0 flex-1">{searchBar}</div>
               <Button
                 unstyled
                 type="button"
                 onClick={() => setFiltersOpen(true)}
                 aria-expanded={filtersOpen}
                 aria-controls={filtersDrawerId}
-                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-[#e5e7eb] bg-white px-4 py-2.5 text-[14px] font-semibold text-[#111827] shadow-sm transition hover:bg-[#f9fafb]"
+                className="inline-flex h-12 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-[#e5e7eb] bg-white px-3 text-[14px] font-semibold text-[#111827] shadow-sm transition hover:bg-[#f9fafb]"
               >
                 <Funnel size={16} strokeWidth={2} aria-hidden="true" />
                 <span>{t(`${i18nPrefix}.filters`, 'Filters')}</span>
@@ -380,7 +381,7 @@ const BuyPhotosMain = memo(({ activeHref = ROUTES.BUY_PHOTOS }) => {
           <div className="grid gap-8 lg:grid-cols-[260px_1fr] xl:gap-10">
             {/* Desktop Filters Sidebar */}
             <aside aria-label={t(`${i18nPrefix}.filtersTitle`, 'Filters')}>
-              <div className="sticky top-24 hidden lg:block">
+              <div className="sticky top-40 hidden lg:block">
                 <div className="mb-6 flex items-center justify-between border-b border-[#e5e7eb] pb-4">
                   <h2 className="text-[18px] font-semibold text-[#111827]">
                     {t(`${i18nPrefix}.filtersTitle`, 'Filters')}
@@ -543,64 +544,37 @@ const BuyPhotosMain = memo(({ activeHref = ROUTES.BUY_PHOTOS }) => {
         </Shell>
       </section>
 
-      {/* Mobile Drawer */}
-      {filtersOpen && (
-        <div
-          id={filtersDrawerId}
-          role="dialog"
-          aria-modal="true"
-          aria-label={t(`${i18nPrefix}.filtersTitle`, 'Filters')}
-          className="fixed inset-0 z-50 flex lg:hidden"
-        >
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
-            onClick={closeFilters}
-          />
-
-          {/* Drawer content */}
-          <div className="relative ml-auto flex h-full w-full max-w-xs flex-col bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between border-b border-[#e5e7eb] pb-4">
-              <h2 className="text-[18px] font-semibold text-[#111827]">
-                {t(`${i18nPrefix}.filtersTitle`, 'Filters')}
-              </h2>
-              <button
-                type="button"
-                onClick={closeFilters}
-                className="rounded-lg p-1 text-[#6b7280] hover:bg-[#f3f4f6]"
-                aria-label={t('common.close', 'Close')}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto py-6">
-              <ShowcaseFiltersPanel {...filterPanelProps} />
-            </div>
-
-            <div className="border-t border-[#e5e7eb] pt-4 flex gap-3">
-              {hasActiveFilters && (
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={handleClearFilters}
-                  className="flex-1 rounded-lg border border-[#e5e7eb] py-2.5 text-center text-[14px] font-semibold text-[#111827] hover:bg-[#f9fafb]"
-                >
-                  {t('common.clear', 'Clear')}
-                </Button>
-              )}
+      <MobileFiltersDrawer
+        open={filtersOpen}
+        onClose={closeFilters}
+        id={filtersDrawerId}
+        title={t(`${i18nPrefix}.filtersTitle`, 'Filters')}
+        closeLabel={t('common.close', 'Close')}
+        footer={
+          <div className="flex gap-3">
+            {hasActiveFilters ? (
               <Button
                 unstyled
                 type="button"
-                onClick={closeFilters}
-                className="flex-1 rounded-lg bg-[#ee1c25] py-2.5 text-center text-[14px] font-semibold text-white hover:bg-[#d91921]"
+                onClick={handleClearFilters}
+                className="flex-1 rounded-lg border border-[#e5e7eb] py-2.5 text-center text-[14px] font-semibold text-[#111827] hover:bg-[#f9fafb]"
               >
-                {t('common.apply', 'Apply')}
+                {t('common.clear', 'Clear')}
               </Button>
-            </div>
+            ) : null}
+            <Button
+              unstyled
+              type="button"
+              onClick={closeFilters}
+              className="flex-1 rounded-lg bg-[#ee1c25] py-2.5 text-center text-[14px] font-semibold text-white hover:bg-[#d91921]"
+            >
+              {t('common.apply', 'Apply')}
+            </Button>
           </div>
-        </div>
-      )}
+        }
+      >
+        <ShowcaseFiltersPanel {...filterPanelProps} />
+      </MobileFiltersDrawer>
     </SitePageLayout>
   );
 });

@@ -28,13 +28,21 @@ const SitePageLayout = memo(
       if (!node) return undefined;
 
       const updateHeight = () => {
-        setChromeHeight(node.getBoundingClientRect().height);
+        const next = node.getBoundingClientRect().height;
+        setChromeHeight(next);
+        document.documentElement.style.setProperty(
+          '--site-chrome-height',
+          `${next}px`,
+        );
       };
 
       updateHeight();
       const observer = new ResizeObserver(updateHeight);
       observer.observe(node);
-      return () => observer.disconnect();
+      return () => {
+        observer.disconnect();
+        document.documentElement.style.removeProperty('--site-chrome-height');
+      };
     }, []);
 
     return (

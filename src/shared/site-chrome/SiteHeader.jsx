@@ -1,4 +1,5 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '@/app/store/slices/authSlice';
@@ -24,6 +25,27 @@ const SiteHeader = memo(({ activeHref }) => {
   }));
 
   const headerBtnClass = `${ACTION_BTN_PRIMARY} whitespace-nowrap`;
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [menuOpen]);
+
+  // Close when navigating to a different page via activeHref change.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [activeHref]);
 
   const authActions = isAuthenticated ? (
     <AppLink
@@ -51,6 +73,50 @@ const SiteHeader = memo(({ activeHref }) => {
       </AppLink>
     </>
   );
+
+  const mobileMenu =
+    menuOpen && typeof document !== 'undefined'
+      ? createPortal(
+          <div
+            className="fixed inset-x-0 bottom-0 top-[var(--site-chrome-height,118px)] z-[190] 2xl:hidden"
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              type="button"
+              aria-label={t('header.closeMenu')}
+              className="absolute inset-0 bg-black/40"
+              onClick={() => setMenuOpen(false)}
+            />
+            <div className="relative max-h-full overflow-y-auto overscroll-contain border-t border-black/5 bg-white px-4 py-4 shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
+              <nav className="flex flex-col gap-1" aria-label="Mobile">
+                {navLinks.map(({ labelKey, href, active }) => (
+                  <AppLink
+                    key={href}
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`rounded-lg px-3 py-2.5 text-sm font-semibold ${
+                      active
+                        ? 'bg-[#ee1c25]/5 text-[#ee1c25]'
+                        : 'text-[#6b7280]'
+                    }`}
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    {t(labelKey)}
+                  </AppLink>
+                ))}
+              </nav>
+              <div className="mt-4 flex flex-col gap-2 border-t border-black/5 pt-4 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+                <LanguageSwitcher className="w-full [&_button]:w-full [&_button]:justify-between" />
+                <div className="flex flex-col gap-2 [&_a]:text-center [&_a]:text-sm">
+                  {authActions}
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
 
   return (
     <header className="relative border-b border-black/4 bg-white">
@@ -117,31 +183,7 @@ const SiteHeader = memo(({ activeHref }) => {
         </Button>
       </div>
 
-      {menuOpen && (
-        <div className="border-t border-black/5 bg-white px-4 py-4 2xl:hidden">
-          <nav className="flex flex-col gap-1">
-            {navLinks.map(({ labelKey, href, active }) => (
-              <AppLink
-                key={href}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className={`rounded-lg px-3 py-2.5 text-sm font-semibold ${
-                  active ? 'bg-[#ee1c25]/5 text-[#ee1c25]' : 'text-[#6b7280]'
-                }`}
-                aria-current={active ? 'page' : undefined}
-              >
-                {t(labelKey)}
-              </AppLink>
-            ))}
-          </nav>
-          <div className="mt-4 flex flex-col gap-2 border-t border-black/5 pt-4">
-            <LanguageSwitcher className="w-full [&_button]:w-full [&_button]:justify-between" />
-            <div className="flex flex-col gap-2 [&_a]:text-center [&_a]:text-sm">
-              {authActions}
-            </div>
-          </div>
-        </div>
-      )}
+      {mobileMenu}
     </header>
   );
 });
