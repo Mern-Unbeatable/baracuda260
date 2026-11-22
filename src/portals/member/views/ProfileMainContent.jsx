@@ -279,10 +279,8 @@ const ProfileMainContent = memo(() => {
   const introVideo = useMemo(() => {
     if (!profileData?.introVideo) return null;
     return {
-      image:
-        resolveMediaUrl(
-          profileData.introVideoThumbnail || profileData.coverPhoto,
-        ) || '',
+      // Never fall back to coverPhoto — cover is the profile banner only
+      image: resolveMediaUrl(profileData.introVideoThumbnail) || '',
       url: resolveMediaUrl(profileData.introVideo),
       title: `${profileData.name || 'Artist'} · Introduction Video`,
       isDummy: false,
@@ -290,7 +288,6 @@ const ProfileMainContent = memo(() => {
   }, [
     profileData?.introVideo,
     profileData?.introVideoThumbnail,
-    profileData?.coverPhoto,
     profileData?.name,
   ]);
 

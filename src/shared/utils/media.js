@@ -7,7 +7,13 @@ import { API_CONFIG } from '@/shared/config';
 export const resolveMediaUrl = (path) => {
   if (!path) return '';
   if (/^(https?:|data:|blob:)/i.test(path)) return path;
-  return `${API_CONFIG.ORIGIN}/${path.replace(/^\/+/, '')}`;
+  const cleaned = String(path).replace(/^\/+/, '');
+  // Encode path segments so filenames with spaces/special chars load as absolute URLs
+  const encoded = cleaned
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+  return `${API_CONFIG.ORIGIN}/${encoded}`;
 };
 
 /**

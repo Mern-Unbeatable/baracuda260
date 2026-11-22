@@ -31,6 +31,15 @@ const PhotographerFeaturedVideo = memo(({ video }) => {
                 alt={video.title || '1-Minute Introduction Video'}
                 className="h-full w-full object-cover transition duration-300 hover:scale-[1.01]"
               />
+            ) : video.url ? (
+              <video
+                src={video.url}
+                muted
+                playsInline
+                preload="metadata"
+                className="pointer-events-none h-full w-full object-cover"
+                aria-hidden="true"
+              />
             ) : (
               <div className="h-full w-full bg-linear-to-tr from-[#161c27] via-[#232d3f] to-[#3a4763]" />
             )}

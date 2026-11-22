@@ -242,7 +242,8 @@ const PhotographerProfileMain = memo(() => {
     const raw = profileResponse?.data || profileResponse;
     if (!raw?.introVideo) return null;
     return {
-      image: resolveMediaUrl(raw.introVideoThumbnail || raw.coverPhoto) || '',
+      // Never fall back to coverPhoto — cover is the profile banner only
+      image: resolveMediaUrl(raw.introVideoThumbnail) || '',
       url: resolveMediaUrl(raw.introVideo),
       title: `${profile?.name || 'Artist'} · Introduction Video`,
       isDummy: false,

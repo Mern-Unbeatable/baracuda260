@@ -6,13 +6,21 @@ import {
   Phone,
   RefreshCw,
 } from 'lucide-react';
-import React, { forwardRef, memo, useEffect, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '@/app/store/slices/authSlice';
+import SearchableCombobox from '@/components/forms/SearchableCombobox/SearchableCombobox';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
@@ -29,6 +37,12 @@ import {
   updateUserProfileApi,
   USER_PROFILE_ME_QUERY_KEY,
 } from '@/shared/api/userProfile.api';
+import {
+  ALL_COUNTRIES,
+  findCountryByNameOrCode,
+  getCitiesForCountry,
+} from '@/shared/utils/locationData';
+import { resolveMediaUrl } from '@/shared/utils/media';
 
 const fieldLabelClass =
   'text-[12px] font-semibold uppercase tracking-[1.2px] text-[#4048cd]';
@@ -136,7 +150,7 @@ const PhotoUploadSection = memo(
     const { t } = useTranslation();
     const fileInputRef = useRef(null);
 
-    const displayImage = previewUrl || currentImage;
+    const displayImage = previewUrl || resolveMediaUrl(currentImage) || '';
 
     const handleFileChange = (event) => {
       const file = event.target.files?.[0];
@@ -192,16 +206,20 @@ const PhotoUploadSection = memo(
         {displayImage ? (
           <div className="flex flex-col gap-4">
             <div
-              className={`relative overflow-hidden border border-[rgba(0,0,0,0.08)] bg-[#fafaff] ${
+              className={`relative overflow-hidden border border-[rgba(0,0,0,0.08)] ${
                 isAvatar
-                  ? 'size-32 rounded-full border-4 border-white shadow-md'
-                  : 'h-48 w-full rounded-xl sm:h-56'
+                  ? 'size-32 rounded-full border-4 border-white bg-[#fafaff] shadow-md'
+                  : 'aspect-[2.4/1] w-full max-w-2xl rounded-xl bg-[#111827]'
               }`}
             >
               <Image
                 src={displayImage}
                 alt={t(titleKey)}
-                className="h-full w-full object-cover"
+                className={`h-full w-full ${
+                  isAvatar
+                    ? 'object-cover'
+                    : 'object-contain object-center'
+                }`}
               />
             </div>
 
@@ -405,6 +423,8 @@ const SettingsContent = memo(() => {
     getValues: getProfileValues,
     formState: { errors: profileErrors },
     reset: resetProfile,
+    watch: watchProfile,
+    setValue: setProfileValue,
   } = useForm({
     defaultValues: {
       fullName: DEFAULT_MEMBER_SETTINGS.fullName,
@@ -416,6 +436,34 @@ const SettingsContent = memo(() => {
       bio: DEFAULT_MEMBER_SETTINGS.bio || '',
     },
   });
+
+  useEffect(() => {
+    registerProfile('country');
+    registerProfile('city');
+  }, [registerProfile]);
+
+  const countryValue = watchProfile('country') || '';
+  const cityValue = watchProfile('city') || '';
+
+  const selectedCountry = useMemo(
+    () => findCountryByNameOrCode(countryValue),
+    [countryValue],
+  );
+
+  const cityOptions = useMemo(
+    () => (selectedCountry ? getCitiesForCountry(selectedCountry.isoCode) : []),
+    [selectedCountry],
+  );
+
+  const handleCountryChange = (val) => {
+    setProfileValue('country', val, { shouldDirty: true, shouldValidate: true });
+    // Reset city when country changes so city list stays valid
+    setProfileValue('city', '', { shouldDirty: true });
+  };
+
+  const handleCityChange = (val) => {
+    setProfileValue('city', val, { shouldDirty: true, shouldValidate: true });
+  };
 
   const {
     register: registerPortfolio,
@@ -453,6 +501,9 @@ const SettingsContent = memo(() => {
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarFileName, setAvatarFileName] = useState('');
   const [avatarPreview, setAvatarPreview] = useState(null);
+
+  // Which settings card is currently saving (keeps other Save buttons idle)
+  const [savingSection, setSavingSection] = useState(null);
 
   const handleCoverChange = (file) => {
     if (file && typeof file === 'object') {
@@ -496,8 +547,8 @@ const SettingsContent = memo(() => {
 
   // Mutation 1: Update Profile (PUT /api/v1/users/profile)
   const updateProfileMutation = useMutation({
-    mutationFn: (formData) => updateUserProfileApi(formData),
-    onSuccess: (response) => {
+    mutationFn: ({ formData }) => updateUserProfileApi(formData),
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: USER_PROFILE_ME_QUERY_KEY });
 
       const updatedUser = response?.data || response;
@@ -514,8 +565,21 @@ const SettingsContent = memo(() => {
         dispatch(updateUser(updatedUser));
       }
 
-      setCoverFile(null);
-      setAvatarFile(null);
+      const section = variables?.section;
+      if (section === 'cover') {
+        setCoverFile(null);
+        setCoverFileName('');
+        setCoverPreview(null);
+      } else if (section === 'avatar') {
+        setAvatarFile(null);
+        setAvatarFileName('');
+        setAvatarPreview(null);
+      } else if (section === 'profile' || section === 'portfolio') {
+        // text-only saves — keep pending photo files
+      } else {
+        setCoverFile(null);
+        setAvatarFile(null);
+      }
 
       toast.success(
         response?.message ||
@@ -533,11 +597,15 @@ const SettingsContent = memo(() => {
         ),
       );
     },
+    onSettled: () => {
+      setSavingSection(null);
+    },
   });
 
   const submitProfileUpdate = (
     profileOverrides = {},
     portfolioOverrides = {},
+    section = 'profile',
   ) => {
     const profileValues = { ...getProfileValues(), ...profileOverrides };
     const portfolioValues = { ...getPortfolioValues(), ...portfolioOverrides };
@@ -604,22 +672,26 @@ const SettingsContent = memo(() => {
 
     formData.append('socialLinks', JSON.stringify(socialLinksObj));
 
-    if (avatarFile instanceof File) {
-      formData.append('avatar', avatarFile);
-    }
-    if (coverFile instanceof File) {
-      formData.append('coverPhoto', coverFile);
+    // Only attach the file for the section being saved
+    if (section === 'cover') {
+      if (coverFile instanceof File) formData.append('coverPhoto', coverFile);
+    } else if (section === 'avatar') {
+      if (avatarFile instanceof File) formData.append('avatar', avatarFile);
+    } else {
+      if (avatarFile instanceof File) formData.append('avatar', avatarFile);
+      if (coverFile instanceof File) formData.append('coverPhoto', coverFile);
     }
 
-    updateProfileMutation.mutate(formData);
+    setSavingSection(section);
+    updateProfileMutation.mutate({ formData, section });
   };
 
   const onProfileSave = (data) => {
-    submitProfileUpdate(data);
+    submitProfileUpdate(data, {}, 'profile');
   };
 
   const onPortfolioSave = (data) => {
-    submitProfileUpdate({}, data);
+    submitProfileUpdate({}, data, 'portfolio');
   };
 
   // Mutation 2: Change Password (POST /api/v1/auth/change-password)
@@ -743,18 +815,62 @@ const SettingsContent = memo(() => {
           />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <SettingsField
-              id="settings-city"
-              label={t('memberSettings.profile.city', 'City')}
-              placeholder="e.g. Warsaw"
-              {...registerProfile('city')}
-            />
-            <SettingsField
-              id="settings-country"
-              label={t('memberSettings.profile.country', 'Country')}
-              placeholder="e.g. United Kingdom"
-              {...registerProfile('country')}
-            />
+            <div className="flex flex-col gap-2">
+              <label htmlFor="settings-country" className={fieldLabelClass}>
+                {t('memberSettings.profile.country', 'Country')}
+              </label>
+              <SearchableCombobox
+                id="settings-country"
+                value={countryValue}
+                onChange={handleCountryChange}
+                options={ALL_COUNTRIES}
+                placeholder={t(
+                  'memberSettings.profile.countryPlaceholder',
+                  'Select country...',
+                )}
+                emptyMessage={t(
+                  'memberSettings.profile.noCountryFound',
+                  'No matching country found',
+                )}
+                allowCustom={false}
+                maxResults={100}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="settings-city" className={fieldLabelClass}>
+                {t('memberSettings.profile.city', 'City')}
+              </label>
+              <SearchableCombobox
+                id="settings-city"
+                value={cityValue}
+                onChange={handleCityChange}
+                options={cityOptions}
+                placeholder={
+                  selectedCountry
+                    ? t(
+                        'memberSettings.profile.cityPlaceholder',
+                        'Select city...',
+                      )
+                    : t(
+                        'memberSettings.profile.selectCountryFirst',
+                        'Select country first...',
+                      )
+                }
+                emptyMessage={
+                  selectedCountry
+                    ? t(
+                        'memberSettings.profile.noCityFound',
+                        'No city found for this country.',
+                      )
+                    : t(
+                        'memberSettings.profile.selectCountryFirst',
+                        'Select country first...',
+                      )
+                }
+                allowCustom={false}
+                maxResults={60}
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -776,10 +892,10 @@ const SettingsContent = memo(() => {
           <Button
             type="submit"
             unstyled={true}
-            disabled={updateProfileMutation.isPending}
+            disabled={savingSection === 'profile'}
             className={saveButtonClass}
           >
-            {updateProfileMutation.isPending ? (
+            {savingSection === 'profile' ? (
               <span className="flex items-center gap-2">
                 <RefreshCw size={16} className="animate-spin" />
                 {t('common.saving', 'Saving...')}
@@ -847,10 +963,10 @@ const SettingsContent = memo(() => {
           <Button
             type="submit"
             unstyled={true}
-            disabled={updateProfileMutation.isPending}
+            disabled={savingSection === 'portfolio'}
             className={saveButtonClass}
           >
-            {updateProfileMutation.isPending ? (
+            {savingSection === 'portfolio' ? (
               <span className="flex items-center gap-2">
                 <RefreshCw size={16} className="animate-spin" />
                 {t('common.saving', 'Saving...')}
@@ -870,8 +986,8 @@ const SettingsContent = memo(() => {
         currentImage={profileData?.coverPhoto}
         previewUrl={coverPreview}
         hasUnsavedFile={Boolean(coverFile)}
-        isSaving={updateProfileMutation.isPending}
-        onSave={() => submitProfileUpdate()}
+        isSaving={savingSection === 'cover'}
+        onSave={() => submitProfileUpdate({}, {}, 'cover')}
         onFileChange={handleCoverChange}
       />
 
@@ -883,8 +999,8 @@ const SettingsContent = memo(() => {
         currentImage={profileData?.avatar}
         previewUrl={avatarPreview}
         hasUnsavedFile={Boolean(avatarFile)}
-        isSaving={updateProfileMutation.isPending}
-        onSave={() => submitProfileUpdate()}
+        isSaving={savingSection === 'avatar'}
+        onSave={() => submitProfileUpdate({}, {}, 'avatar')}
         onFileChange={handleAvatarChange}
         isAvatar
       />
