@@ -20,7 +20,7 @@ import PhotographerAwardCounters from '@/components/data-display/PhotographerAwa
 import ReportPhotoModal from '@/components/data-display/ReportPhotoModal/ReportPhotoModal';
 import MarketingCard from '@/components/marketing/MarketingCard/MarketingCard';
 import Button from '@/components/ui/Button';
-import DownscaledImage from '@/components/ui/DownscaledImage';
+import Image from '@/components/ui/Image';
 import {
   PUBLIC_ARTWORKS_QUERY_KEY,
   reportArtworkApi,
@@ -389,15 +389,12 @@ const PhotoShowcaseCard = memo(
                 </div>
               ) : (
                 <div className="relative h-full w-full">
-                  <DownscaledImage
+                  <Image
                     src={optimizeImageUrl(image, 480)}
                     alt={imageAlt ?? title}
                     width={368}
                     height={252}
-                    maxWidth={736}
                     sizes="(max-width:640px) 100vw, (max-width:1280px) 50vw, 25vw"
-                    loading="lazy"
-                    decoding="async"
                     className="pointer-events-none h-full w-full object-cover"
                   />
                   {isVideoCard && videoUrl && (

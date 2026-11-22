@@ -1043,6 +1043,8 @@ const USER_ARTWORK_STATUS_API_MAP = {
 /**
  * Fetch member artworks with filtering and sorting.
  * Endpoint: GET /v1/artworks?kind=TWELVE&status=all&sort=newest&page=1&limit=10
+ * Also supports public profile view via username:
+ * GET /v1/artworks?username={{username}}&status=all&page=1&limit=10
  *
  * @param {{
  *   kind?: string, // 'ALL' | 'SINGLE' | 'SIX' | 'TWELVE'
@@ -1051,6 +1053,7 @@ const USER_ARTWORK_STATUS_API_MAP = {
  *   sort?: string, // 'newest' | 'oldest'
  *   page?: number,
  *   limit?: number,
+ *   username?: string,
  * }} [params]
  */
 export const getUserArtworksApi = async ({
@@ -1060,6 +1063,7 @@ export const getUserArtworksApi = async ({
   sort = 'newest',
   page = 1,
   limit = 10,
+  username,
 } = {}) => {
   const params = {
     page,
@@ -1080,6 +1084,9 @@ export const getUserArtworksApi = async ({
   }
   if (sort) {
     params.sort = sort;
+  }
+  if (username?.trim()) {
+    params.username = username.trim().replace(/^@/, '');
   }
 
   const response = await apiClient.get('/v1/artworks', { params });
@@ -1106,6 +1113,84 @@ export const getUserArtworksApi = async ({
     items: normalized,
     data: normalized,
     meta,
+  };
+};
+
+/**
+ * Map normalized user artwork into photographer profile showcase card shape.
+ * @param {ReturnType<typeof normalizeUserArtwork>} item
+ */
+export const mapArtworkToProfileShowcase = (item) => {
+  if (!item) return null;
+  const kind = String(item.kind || 'SINGLE').toUpperCase();
+  const inCompetition =
+    String(item.competitionState || '').toUpperCase() === 'IN_COMPETITION';
+
+  let href = `/gallery/${item.id}`;
+  if (kind === 'TWELVE') {
+    href = inCompetition
+      ? `/competitions/zodiac/${item.id}`
+      : `/gallery/zodiac/${item.id}`;
+  } else if (kind === 'SIX') {
+    href = inCompetition
+      ? `/competitions/story/${item.id}`
+      : `/gallery/story/${item.id}`;
+  } else if (inCompetition) {
+    href = `/competitions/${item.id}`;
+  }
+
+  return {
+    id: item.id,
+    title: item.title,
+    description: item.description || '',
+    image: item.image,
+    badge: item.albumBadge || 'Single Photo',
+    votes: item.votes || item.hearts || '0',
+    views: item.views || '0',
+    date: item.uploadedDate || '',
+    inCompetition,
+    extraPhotoCount: item.extraPhotoCount,
+    isAiGenerated: item.isAiGenerated,
+    price: item.raw?.price ? `$${Number(item.raw.price).toFixed(2)}` : undefined,
+    href,
+  };
+};
+
+/**
+ * Map competition artwork into featured banner slides.
+ * @param {ReturnType<typeof normalizeUserArtwork>} item
+ */
+export const mapArtworkToFeaturedBanner = (item) => {
+  if (!item) return null;
+  const votingEndsRaw = item.votingEnds;
+  let votingEnds = '';
+  if (votingEndsRaw) {
+    const d = new Date(votingEndsRaw);
+    votingEnds = Number.isNaN(d.getTime())
+      ? String(votingEndsRaw)
+      : d.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        });
+  }
+
+  const kind = String(item.kind || 'SINGLE').toUpperCase();
+  let detailHref = `/competitions/${item.id}`;
+  if (kind === 'TWELVE') detailHref = `/competitions/zodiac/${item.id}`;
+  else if (kind === 'SIX') detailHref = `/competitions/story/${item.id}`;
+
+  return {
+    id: item.id,
+    badge: 'CURRENTLY IN COMPETITION',
+    uploaded: item.uploadedDate || '',
+    title: item.competitionName || 'Active Competition',
+    subtitle: item.title || '',
+    votes: Number(String(item.votes || '0').replace(/,/g, '')) || 0,
+    rank: item.finalRank || item.rank || '—',
+    votingEnds,
+    image: item.image,
+    detailHref,
   };
 };
 

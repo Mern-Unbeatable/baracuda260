@@ -50,10 +50,11 @@ export function useProfileSlideshows({
         : getSlideshowsApi({ page: 1, limit: 50 }),
   });
 
+  // Only load source photos when creating/editing — avoids extra work on artwork scroll.
   const sourcePhotosQuery = useQuery({
     queryKey: [...SLIDESHOWS_QUERY_KEY, 'source-photos'],
     queryFn: () => getSlideshowSourcePhotosApi({ page: 1, limit: 15 }),
-    enabled: canManage,
+    enabled: canManage && builder.open,
   });
 
   const refreshList = () =>
@@ -224,7 +225,9 @@ export function useProfileSlideshows({
     sourcePhotosLoading: sourcePhotosQuery.isPending,
     sourcePhotosError: sourcePhotosQuery.isError,
     refetchSourcePhotos: sourcePhotosQuery.refetch,
-    canCreate: sourcePhotos.length >= SLIDESHOW_MIN_PHOTOS,
+    // Allow opening the builder even before source photos load; the modal
+    // validates the minimum photo count after the deferred fetch completes.
+    canCreate: canManage,
 
     builder,
     isSaving,

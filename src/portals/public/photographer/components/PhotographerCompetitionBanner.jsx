@@ -1,37 +1,106 @@
-import { ChevronLeft, ChevronRight, Heart, Trophy } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ChevronLeft, ChevronRight, Heart, Loader2, Trophy } from 'lucide-react';
+import React, { memo, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { selectUser } from '@/app/store/slices/authSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from '@/app/store/slices/authSlice';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  USER_ARTWORKS_QUERY_KEY,
+  voteArtworkApi,
+} from '@/shared/api/artworks.api';
+import { ROUTES } from '@/shared/config';
+import { optimizeImageUrl } from '@/shared/utils/media';
 
 const PhotographerCompetitionBanner = memo(
-  ({ featured, photographerName, userId }) => {
+  ({ featured, photographerName, userId, username }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const user = useSelector(selectUser);
+    const isAuthenticated = useSelector(selectIsAuthenticated);
     const [index, setIndex] = useState(0);
-    const items = Array.isArray(featured) ? featured : [featured];
+    const [items, setItems] = useState(() =>
+      Array.isArray(featured) ? featured.filter(Boolean) : featured ? [featured] : [],
+    );
+
+    useEffect(() => {
+      setItems(
+        Array.isArray(featured)
+          ? featured.filter(Boolean)
+          : featured
+            ? [featured]
+            : [],
+      );
+      setIndex(0);
+    }, [featured]);
+
     const current = items[index] || items[0];
 
     const isOwnProfile = Boolean(
       user &&
         (user.id === userId ||
-          (user.firstName &&
-            photographerName
-              ?.toLowerCase()
-              .includes(user.firstName.toLowerCase())) ||
+          (username && user.username === username) ||
           (user.username &&
             photographerName
               ?.toLowerCase()
-              .includes(user.username.toLowerCase()))),
+              .includes(String(user.username).toLowerCase()))),
     );
+
+    const voteMutation = useMutation({
+      mutationFn: (artworkId) => voteArtworkApi(artworkId),
+      onSuccess: (_data, artworkId) => {
+        setItems((prev) =>
+          prev.map((item) =>
+            item.id === artworkId
+              ? { ...item, votes: Number(item.votes || 0) + 1 }
+              : item,
+          ),
+        );
+        toast.success(
+          t('photographerProfile.featured.voteSuccess', 'Vote cast successfully.'),
+        );
+        queryClient.invalidateQueries({ queryKey: USER_ARTWORKS_QUERY_KEY });
+        if (username) {
+          queryClient.invalidateQueries({
+            queryKey: ['profile-competition-artworks', username],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['profile-artworks', username],
+          });
+        }
+      },
+      onError: (error) => {
+        toast.error(
+          getApiErrorMessage(
+            error,
+            t('photographerProfile.featured.voteFailed', 'Failed to cast vote.'),
+          ),
+        );
+      },
+    });
 
     if (!current) return null;
 
     const go = (dir) => {
       setIndex((prev) => (prev + dir + items.length) % items.length);
+    };
+
+    const handleVote = () => {
+      if (!current?.id || voteMutation.isPending) return;
+      if (!isAuthenticated) {
+        navigate(ROUTES.LOGIN, { state: { from: window.location.pathname } });
+        return;
+      }
+      if (isOwnProfile) return;
+      voteMutation.mutate(current.id);
     };
 
     return (
@@ -63,8 +132,9 @@ const PhotographerCompetitionBanner = memo(
           <div className="flex flex-col gap-5 p-4 sm:p-5 lg:flex-row lg:items-stretch lg:gap-6 lg:p-6">
             <div className="relative aspect-16/10 w-full shrink-0 overflow-hidden rounded-xl lg:aspect-auto lg:h-auto lg:w-[42%]">
               <Image
-                src={current.image}
+                src={optimizeImageUrl(current.image, 900)}
                 alt={current.subtitle}
+                priority
                 className="h-full w-full object-cover"
               />
             </div>
@@ -84,15 +154,24 @@ const PhotographerCompetitionBanner = memo(
                 <Button
                   unstyled
                   type="button"
-                  disabled={isOwnProfile}
+                  disabled={isOwnProfile || voteMutation.isPending}
+                  onClick={handleVote}
                   title={
                     isOwnProfile
                       ? t('photographerProfile.featured.cannotVoteOwn')
                       : undefined
                   }
-                  className={`inline-flex h-10 items-center gap-2 rounded-[10px] px-4 text-[13px] font-bold text-white transition ${isOwnProfile ? 'cursor-not-allowed bg-[#ef4444]/50' : 'cursor-pointer bg-[#ee1c25] hover:bg-[#d01820]'}`}
+                  className={`inline-flex h-10 items-center gap-2 rounded-[10px] px-4 text-[13px] font-bold text-white transition ${
+                    isOwnProfile
+                      ? 'cursor-not-allowed bg-[#ef4444]/50'
+                      : 'cursor-pointer bg-[#ee1c25] hover:bg-[#d01820] disabled:cursor-not-allowed disabled:opacity-60'
+                  }`}
                 >
-                  <Heart size={15} className="fill-white" aria-hidden="true" />
+                  {voteMutation.isPending ? (
+                    <Loader2 size={15} className="animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Heart size={15} className="fill-white" aria-hidden="true" />
+                  )}
                   {t('photographerProfile.featured.castVote')}
                 </Button>
               </div>

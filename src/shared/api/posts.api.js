@@ -81,14 +81,18 @@ export const normalizePost = (item) => {
 };
 
 /**
- * Fetch member posts list.
+ * Fetch posts list (own posts, or a photographer's public posts by username).
  * GET /api/v1/posts?page=1&limit=10
+ * GET /api/v1/posts?username={{username}}&page=1&limit=10
  *
- * @param {{ page?: number, limit?: number }} [params]
+ * @param {{ page?: number, limit?: number, username?: string }} [params]
  */
-export const getPostsApi = async ({ page = 1, limit = 10 } = {}) => {
+export const getPostsApi = async ({ page = 1, limit = 10, username } = {}) => {
+  const params = { page, limit };
+  if (username?.trim()) params.username = username.trim().replace(/^@/, '');
+
   const response = await apiClient.get('/v1/posts', {
-    params: { page, limit },
+    params,
   });
 
   const payload = response?.data;

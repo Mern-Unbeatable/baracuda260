@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw } from 'lucide-react';
 import React, { memo, useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -9,12 +9,6 @@ import MemberProfileStatsBar from '@/components/data-display/MemberProfileStatsB
 import WeeklyAppreciationBanner from '@/components/data-display/WeeklyAppreciationBanner/WeeklyAppreciationBanner';
 import UploadIntroVideoModal from '@/portals/member/components/member-artwork/UploadIntroVideoModal';
 import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
-import {
-  MEMBER_ARTWORK,
-  MEMBER_FEATURED,
-  MEMBER_MESSAGES,
-  MEMBER_PREMIUM,
-} from '@/portals/member/data/memberProfileData';
 import useUserProfileMe from '@/portals/member/hooks/useUserProfileMe';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
 import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
@@ -27,17 +21,41 @@ import PhotographerSlideshowsSection from '@/portals/public/photographer/compone
 import PhotographerStandaloneVideosSection from '@/portals/public/photographer/components/PhotographerStandaloneVideosSection';
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
-import { PHOTOGRAPHER_ASSETS } from '@/portals/public/photographer/data/photographerProfileData';
 import {
   deleteArtworkApi,
+  getUserArtworksApi,
+  mapArtworkToFeaturedBanner,
+  mapArtworkToProfileShowcase,
   USER_ARTWORKS_QUERY_KEY,
   VIDEO_COMMENTS_QUERY_KEY,
 } from '@/shared/api/artworks.api';
 import { getApiErrorMessage } from '@/shared/api/client';
+import {
+  getMarketplacePremiumPhotosApi,
+  MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY,
+} from '@/shared/api/premiumPhotos.api';
+import { getPostsApi, USER_POSTS_QUERY_KEY } from '@/shared/api/posts.api';
 import { USER_PROFILE_ME_QUERY_KEY } from '@/shared/api/userProfile.api';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { resolveMediaUrl } from '@/shared/utils/media';
+
+const mapPostToProfileMessage = (post) => {
+  if (!post) return null;
+  return {
+    id: post.id,
+    author: post.authorName || post.user?.name || 'Photographer',
+    avatar:
+      post.authorAvatar ||
+      resolveMediaUrl(post.user?.avatar) ||
+      DASHBOARD_ASSETS.avatar,
+    date: post.postedDate || '',
+    time: post.postedTime || '',
+    text: post.body || '',
+    image: post.image || post.mediaUrl || null,
+    likes: post.likesCount ?? post.likes ?? 0,
+  };
+};
 
 const PROFILE_TAB_IDS = new Set([
   'profile',
@@ -92,6 +110,62 @@ const ProfileMainContent = memo(() => {
     error,
     refetch,
   } = useUserProfileMe();
+
+  const username = profileData?.username || '';
+
+  const isArtworkTab = activeTab === 'artwork';
+  const isPremiumTab = activeTab === 'premium';
+  const isPostsTab = activeTab === 'posts';
+
+  const { data: artworksResponse, isLoading: isArtworksLoading } = useQuery({
+    queryKey: [...USER_ARTWORKS_QUERY_KEY, 'member-profile', 'all'],
+    queryFn: () =>
+      getUserArtworksApi({
+        status: 'all',
+        sort: 'newest',
+        page: 1,
+        limit: 24,
+      }),
+    enabled: Boolean(profileData?.id) && isArtworkTab,
+    staleTime: 60 * 1000,
+  });
+
+  const { data: competitionArtworksResponse } = useQuery({
+    queryKey: [...USER_ARTWORKS_QUERY_KEY, 'member-profile', 'competition'],
+    queryFn: () =>
+      getUserArtworksApi({
+        status: 'inCompetition',
+        sort: 'newest',
+        page: 1,
+        limit: 10,
+      }),
+    enabled: Boolean(profileData?.id) && isArtworkTab,
+    staleTime: 60 * 1000,
+  });
+
+  const { data: premiumPhotosResponse } = useQuery({
+    queryKey: MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY({
+      kind: 'ALL',
+      username,
+      scope: 'member-profile',
+    }),
+    queryFn: () =>
+      getMarketplacePremiumPhotosApi({
+        kind: 'ALL',
+        page: 1,
+        limit: 20,
+        username,
+      }),
+    enabled: Boolean(username) && isPremiumTab,
+    staleTime: 60 * 1000,
+  });
+
+  const { data: postsResponse, isLoading: isPostsLoading } = useQuery({
+    queryKey: USER_POSTS_QUERY_KEY({ scope: 'member-me', page: 1, limit: 20 }),
+    queryFn: () => getPostsApi({ page: 1, limit: 20 }),
+    enabled: Boolean(profileData?.id) && isPostsTab,
+    staleTime: 60 * 1000,
+  });
 
   const deleteVideoMutation = useMutation({
     mutationFn: (videoId) => deleteArtworkApi(videoId),
@@ -156,14 +230,13 @@ const ProfileMainContent = memo(() => {
       socialObj = profileData.socialLinks;
     } else if (Array.isArray(profileData.socialLinks)) {
       profileData.socialLinks.forEach((url) => {
-        if (typeof url === 'string') {
-          if (url.includes('instagram.com')) socialObj.instagram = url;
-          else if (url.includes('twitter.com') || url.includes('x.com'))
-            socialObj.twitter = url;
-          else if (url.includes('youtube.com')) socialObj.youtube = url;
-          else if (url.includes('tiktok.com')) socialObj.tiktok = url;
-          else if (!socialObj.website) socialObj.website = url;
-        }
+        if (typeof url !== 'string') return;
+        if (url.includes('instagram.com')) socialObj.instagram = url;
+        else if (url.includes('twitter.com') || url.includes('x.com'))
+          socialObj.twitter = url;
+        else if (url.includes('youtube.com')) socialObj.youtube = url;
+        else if (url.includes('tiktok.com')) socialObj.tiktok = url;
+        else if (!socialObj.website) socialObj.website = url;
       });
     }
 
@@ -206,26 +279,15 @@ const ProfileMainContent = memo(() => {
   }, [profileData]);
 
   const introVideo = useMemo(() => {
-    if (profileData?.introVideo) {
-      return {
-        image:
-          resolveMediaUrl(
-            profileData.introVideoThumbnail || profileData.coverPhoto,
-          ) || PHOTOGRAPHER_ASSETS.featuredVideo,
-        url: resolveMediaUrl(profileData.introVideo),
-        title: `${profileData.name || 'Artist'} · Introduction Video`,
-        isDummy: false,
-      };
-    }
-    // High-quality introduction video demo fallback
+    if (!profileData?.introVideo) return null;
     return {
       image:
-        resolveMediaUrl(profileData?.coverPhoto) ||
-        PHOTOGRAPHER_ASSETS.featuredVideo,
-      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      title: `${profileData?.name || 'Artist'} · Introduction Video`,
-      isDummy: true,
-      duration: '1:00',
+        resolveMediaUrl(
+          profileData.introVideoThumbnail || profileData.coverPhoto,
+        ) || '',
+      url: resolveMediaUrl(profileData.introVideo),
+      title: `${profileData.name || 'Artist'} · Introduction Video`,
+      isDummy: false,
     };
   }, [
     profileData?.introVideo,
@@ -234,9 +296,68 @@ const ProfileMainContent = memo(() => {
     profileData?.name,
   ]);
 
-  const appreciation = useMemo(() => {
-    return profileData?.appreciation || null;
-  }, [profileData?.appreciation]);
+  const appreciation = useMemo(
+    () => profileData?.appreciation || null,
+    [profileData?.appreciation],
+  );
+
+  const profileArtworks = useMemo(() => {
+    const items = artworksResponse?.items || artworksResponse?.data || [];
+    return items.map(mapArtworkToProfileShowcase).filter(Boolean);
+  }, [artworksResponse]);
+
+  const featuredCompetition = useMemo(() => {
+    const items =
+      competitionArtworksResponse?.items ||
+      competitionArtworksResponse?.data ||
+      [];
+    return items.map(mapArtworkToFeaturedBanner).filter(Boolean);
+  }, [competitionArtworksResponse]);
+
+  const profilePosts = useMemo(() => {
+    const items = postsResponse?.items || [];
+    return items.map(mapPostToProfileMessage).filter(Boolean);
+  }, [postsResponse]);
+
+  const premiumPhotos = useMemo(() => {
+    const items = premiumPhotosResponse?.data || [];
+    return items.map((item) => {
+      if (item.image && item.badge) return item;
+      return {
+        id: item.id,
+        title: item.title || 'Premium Photo',
+        description: item.description || item.story || '',
+        image:
+          resolveMediaUrl(
+            item.coverImage || item.image || item.media?.[0]?.url,
+          ) || '',
+        badge: item.badge || 'Single Photo',
+        votes: String(item.likesCount ?? item.votes ?? 0),
+        views: String(item.viewsCount ?? item.views ?? 0),
+        date: item.createdAt
+          ? new Date(item.createdAt).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })
+          : '',
+        price: item.price
+          ? `$${Number(item.price).toFixed(2)}`
+          : item.formattedPrice,
+        href: item.href,
+        isAiGenerated: Boolean(item.isAiGenerated),
+      };
+    });
+  }, [premiumPhotosResponse]);
+
+  const activeSubmissionId = useMemo(
+    () =>
+      profileArtworks[0]?.id ||
+      featuredCompetition[0]?.id ||
+      profileData?.standaloneVideos?.[0]?.id ||
+      null,
+    [profileArtworks, featuredCompetition, profileData?.standaloneVideos],
+  );
 
   if (isLoading) {
     return (
@@ -278,19 +399,27 @@ const ProfileMainContent = memo(() => {
           <WeeklyAppreciationBanner className="mt-5 sm:mt-6" />
           <MemberProfileStatsBar stats={profile.stats} />
           <PhotographerAboutSection profile={profile} />
-          <PhotographerFeaturedVideo video={introVideo} />
+          {introVideo ? <PhotographerFeaturedVideo video={introVideo} /> : null}
           <PhotographerTalentAppreciation
             appreciation={appreciation}
             photographerName={profile.name}
             userId={profile.id}
             username={profile.username}
+            submissionId={activeSubmissionId}
           />
         </>
       ) : null}
 
       {activeTab === 'artwork' ? (
         <>
-          <PhotographerCompetitionBanner featured={MEMBER_FEATURED} />
+          {featuredCompetition.length > 0 ? (
+            <PhotographerCompetitionBanner
+              featured={featuredCompetition}
+              photographerName={profile.name}
+              userId={profile.id}
+              username={profile.username}
+            />
+          ) : null}
           <PhotographerStandaloneVideosSection
             videos={
               profileData?.standaloneVideos ||
@@ -301,18 +430,23 @@ const ProfileMainContent = memo(() => {
             canManage
             onEdit={handleEditVideo}
             onDelete={handleDeleteVideo}
-            isDeletingId={deleteVideoMutation.isPending ? deleteVideoMutation.variables : null}
+            isDeletingId={
+              deleteVideoMutation.isPending ? deleteVideoMutation.variables : null
+            }
           />
-          <PhotographerSlideshowsSection
-            canManage
-            ownerName={profile.name}
-          />
-          <PhotographerArtworkGrid
-            titleKey="photographerProfile.artwork.title"
-            subtitleKey="photographerProfile.artwork.subtitle"
-            photos={MEMBER_ARTWORK}
-            showCompetitionTag
-          />
+          <PhotographerSlideshowsSection canManage ownerName={profile.name} />
+          {isArtworksLoading ? (
+            <div className="mt-10 flex min-h-40 items-center justify-center">
+              <RefreshCw size={24} className="animate-spin text-[#4048cd]" />
+            </div>
+          ) : (
+            <PhotographerArtworkGrid
+              titleKey="photographerProfile.artwork.title"
+              subtitleKey="photographerProfile.artwork.subtitle"
+              photos={profileArtworks}
+              showCompetitionTag
+            />
+          )}
           <UploadIntroVideoModal
             isOpen={isEditModalOpen}
             editingVideo={editingVideo}
@@ -341,13 +475,19 @@ const ProfileMainContent = memo(() => {
         <PhotographerArtworkGrid
           titleKey="photographerProfile.premium.title"
           subtitleKey="photographerProfile.premium.subtitle"
-          photos={MEMBER_PREMIUM}
+          photos={premiumPhotos}
           showPrice
         />
       ) : null}
 
       {activeTab === 'posts' ? (
-        <PhotographerMessagesSection messages={MEMBER_MESSAGES} />
+        isPostsLoading ? (
+          <div className="mt-10 flex min-h-40 items-center justify-center">
+            <RefreshCw size={24} className="animate-spin text-[#4048cd]" />
+          </div>
+        ) : (
+          <PhotographerMessagesSection messages={profilePosts} />
+        )
       ) : null}
 
       <PhotographerShareBanner photographerName={profile.name} />

@@ -7,6 +7,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { selectUser } from '@/app/store/slices/authSlice';
 import PhotographerProfileHeader from '@/components/data-display/PhotographerProfileHeader/PhotographerProfileHeader';
 import PhotographerStatsBar from '@/components/data-display/PhotographerStatsBar/PhotographerStatsBar';
+import WeeklyAppreciationBanner from '@/components/data-display/WeeklyAppreciationBanner/WeeklyAppreciationBanner';
 import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import PhotographerAboutSection from '@/portals/public/photographer/components/PhotographerAboutSection';
 import PhotographerArtworkGrid from '@/portals/public/photographer/components/PhotographerArtworkGrid';
@@ -19,20 +20,16 @@ import PhotographerSlideshowsSection from '@/portals/public/photographer/compone
 import PhotographerStoreSection from '@/portals/public/photographer/components/PhotographerStoreSection';
 import PhotographerTalentAppreciation from '@/portals/public/photographer/components/PhotographerTalentAppreciation';
 import PhotographerStandaloneVideosSection from '@/portals/public/photographer/components/PhotographerStandaloneVideosSection';
-import WeeklyAppreciationBanner from '@/components/data-display/WeeklyAppreciationBanner/WeeklyAppreciationBanner';
 import {
-  PHOTOGRAPHER_ARTWORK,
-  PHOTOGRAPHER_FEATURED,
-  PHOTOGRAPHER_FEATURED_VIDEO,
-  PHOTOGRAPHER_MESSAGES,
-  PHOTOGRAPHER_PREMIUM,
-  PHOTOGRAPHER_PROFILE,
-  PHOTOGRAPHER_TALENT_APPRECIATION,
-} from '@/portals/public/photographer/data/photographerProfileData';
+  getUserArtworksApi,
+  mapArtworkToFeaturedBanner,
+  mapArtworkToProfileShowcase,
+} from '@/shared/api/artworks.api';
 import {
   getMarketplacePremiumPhotosApi,
   MARKETPLACE_PREMIUM_PHOTOS_QUERY_KEY,
 } from '@/shared/api/premiumPhotos.api';
+import { getPostsApi, USER_POSTS_QUERY_KEY } from '@/shared/api/posts.api';
 import {
   getUserProfileByUsernameApi,
   USER_PROFILE_USERNAME_QUERY_KEY,
@@ -40,6 +37,23 @@ import {
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { resolveMediaUrl } from '@/shared/utils/media';
+
+const mapPostToProfileMessage = (post) => {
+  if (!post) return null;
+  return {
+    id: post.id,
+    author: post.authorName || post.user?.name || 'Photographer',
+    avatar:
+      post.authorAvatar ||
+      resolveMediaUrl(post.user?.avatar) ||
+      DASHBOARD_ASSETS.avatar,
+    date: post.postedDate || '',
+    time: post.postedTime || '',
+    text: post.body || '',
+    image: post.image || post.mediaUrl || null,
+    likes: post.likesCount ?? post.likes ?? 0,
+  };
+};
 
 const PROFILE_TAB_IDS = new Set([
   'profile',
@@ -61,7 +75,9 @@ const PhotographerProfileMain = memo(() => {
   const currentUser = useSelector(selectUser);
   const { username: paramUsername } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const username = paramUsername || searchParams.get('username');
+  const username = (paramUsername || searchParams.get('username') || '')
+    .trim()
+    .replace(/^@/, '');
   const activeTab = resolveProfileTab(searchParams);
 
   const handleTabChange = useCallback(
@@ -116,19 +132,44 @@ const PhotographerProfileMain = memo(() => {
     staleTime: 60 * 1000,
   });
 
+  const { data: artworksResponse, isLoading: isArtworksLoading } = useQuery({
+    queryKey: ['profile-artworks', username],
+    queryFn: () =>
+      getUserArtworksApi({
+        username,
+        status: 'all',
+        sort: 'newest',
+        page: 1,
+        limit: 50,
+      }),
+    enabled: Boolean(username),
+    staleTime: 60 * 1000,
+  });
+
+  const { data: competitionArtworksResponse } = useQuery({
+    queryKey: ['profile-competition-artworks', username],
+    queryFn: () =>
+      getUserArtworksApi({
+        username,
+        status: 'inCompetition',
+        sort: 'newest',
+        page: 1,
+        limit: 20,
+      }),
+    enabled: Boolean(username),
+    staleTime: 60 * 1000,
+  });
+
+  const { data: postsResponse, isLoading: isPostsLoading } = useQuery({
+    queryKey: USER_POSTS_QUERY_KEY({ username, page: 1, limit: 20 }),
+    queryFn: () => getPostsApi({ username, page: 1, limit: 20 }),
+    enabled: Boolean(username),
+    staleTime: 60 * 1000,
+  });
+
   const profile = useMemo(() => {
     const raw = profileResponse?.data || profileResponse;
-    if (!raw || (!raw.id && !raw.username)) {
-      if (!username) {
-        return {
-          id: 'demo-elena-vance',
-          username: 'elenavance',
-          ...PHOTOGRAPHER_PROFILE,
-          appreciation: PHOTOGRAPHER_TALENT_APPRECIATION,
-        };
-      }
-      return null;
-    }
+    if (!raw || (!raw.id && !raw.username)) return null;
 
     const handle = raw.username ? `@${raw.username.replace(/^@/, '')}` : '';
     const location = [raw.city, raw.country].filter(Boolean).join(', ');
@@ -148,14 +189,13 @@ const PhotographerProfileMain = memo(() => {
       socialObj = raw.socialLinks;
     } else if (Array.isArray(raw.socialLinks)) {
       raw.socialLinks.forEach((url) => {
-        if (typeof url === 'string') {
-          if (url.includes('instagram.com')) socialObj.instagram = url;
-          else if (url.includes('twitter.com') || url.includes('x.com'))
-            socialObj.twitter = url;
-          else if (url.includes('youtube.com')) socialObj.youtube = url;
-          else if (url.includes('tiktok.com')) socialObj.tiktok = url;
-          else if (!socialObj.website) socialObj.website = url;
-        }
+        if (typeof url !== 'string') return;
+        if (url.includes('instagram.com')) socialObj.instagram = url;
+        else if (url.includes('twitter.com') || url.includes('x.com'))
+          socialObj.twitter = url;
+        else if (url.includes('youtube.com')) socialObj.youtube = url;
+        else if (url.includes('tiktok.com')) socialObj.tiktok = url;
+        else if (!socialObj.website) socialObj.website = url;
       });
     }
 
@@ -186,58 +226,124 @@ const PhotographerProfileMain = memo(() => {
         totalHearts: Number(raw.stats?.totalHearts ?? 0),
       },
       standaloneVideos: raw.standaloneVideos || [],
-      appreciation: raw.appreciation || PHOTOGRAPHER_TALENT_APPRECIATION,
+      appreciation: raw.appreciation || null,
     };
-  }, [profileResponse, username]);
+  }, [profileResponse]);
 
   const isOwner = useMemo(() => {
-    if (!currentUser) return false;
+    if (!currentUser || !profile) return false;
     if (username && currentUser.username === username) return true;
-    if (profile?.id && currentUser.id === profile.id) return true;
-    if (profile?.username && currentUser.username === profile.username) return true;
+    if (profile.id && currentUser.id === profile.id) return true;
+    if (profile.username && currentUser.username === profile.username) return true;
     return false;
   }, [currentUser, username, profile]);
 
   const introVideo = useMemo(() => {
     const raw = profileResponse?.data || profileResponse;
-    if (raw?.introVideo) {
-      return {
-        image:
-          resolveMediaUrl(
-            raw.introVideoThumbnail ||
-              raw.coverPhoto,
-          ) || PHOTOGRAPHER_FEATURED_VIDEO.image,
-        url: resolveMediaUrl(raw.introVideo),
-        title: `${profile?.name || 'Artist'} · Introduction Video`,
-        isDummy: false,
-      };
-    }
-    // High-quality dummy introduction video demo fallback
+    if (!raw?.introVideo) return null;
     return {
-      image:
-        resolveMediaUrl(raw?.coverPhoto) ||
-        PHOTOGRAPHER_FEATURED_VIDEO.image,
-      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      image: resolveMediaUrl(raw.introVideoThumbnail || raw.coverPhoto) || '',
+      url: resolveMediaUrl(raw.introVideo),
       title: `${profile?.name || 'Artist'} · Introduction Video`,
-      isDummy: true,
-      duration: '1:00',
+      isDummy: false,
     };
   }, [profileResponse, profile?.name]);
+
+  const profileArtworks = useMemo(() => {
+    const items = artworksResponse?.items || artworksResponse?.data || [];
+    return items.map(mapArtworkToProfileShowcase).filter(Boolean);
+  }, [artworksResponse]);
+
+  const featuredCompetition = useMemo(() => {
+    const items =
+      competitionArtworksResponse?.items ||
+      competitionArtworksResponse?.data ||
+      [];
+    return items.map(mapArtworkToFeaturedBanner).filter(Boolean);
+  }, [competitionArtworksResponse]);
+
+  const profilePosts = useMemo(() => {
+    const items = postsResponse?.items || [];
+    return items.map(mapPostToProfileMessage).filter(Boolean);
+  }, [postsResponse]);
+
+  const premiumPhotos = useMemo(() => {
+    const items = premiumPhotosResponse?.data || [];
+    return items.map((item) => {
+      if (item.image && item.badge) return item;
+      return {
+        id: item.id,
+        title: item.title || 'Premium Photo',
+        description: item.description || item.story || '',
+        image:
+          resolveMediaUrl(
+            item.coverImage || item.image || item.media?.[0]?.url,
+          ) || '',
+        badge: item.badge || 'Single Photo',
+        votes: String(item.likesCount ?? item.votes ?? 0),
+        views: String(item.viewsCount ?? item.views ?? 0),
+        date: item.createdAt
+          ? new Date(item.createdAt).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })
+          : '',
+        price: item.price
+          ? `$${Number(item.price).toFixed(2)}`
+          : item.formattedPrice,
+        href: item.href,
+        isAiGenerated: Boolean(item.isAiGenerated),
+      };
+    });
+  }, [premiumPhotosResponse]);
 
   const activeSubmissionId = useMemo(() => {
     const raw = profileResponse?.data || profileResponse;
     return (
-      profile?.featuredArtworkId ||
-      profile?.featuredSubmissionId ||
-      profile?.submissionId ||
+      profileArtworks[0]?.id ||
+      featuredCompetition[0]?.id ||
       raw?.standaloneVideos?.[0]?.id ||
-      raw?.artworks?.[0]?.id ||
-      raw?.submissions?.[0]?.id ||
       premiumPhotosResponse?.data?.[0]?.submissionId ||
       premiumPhotosResponse?.data?.[0]?.id ||
       null
     );
-  }, [profile, profileResponse, premiumPhotosResponse?.data]);
+  }, [
+    profileArtworks,
+    featuredCompetition,
+    profileResponse,
+    premiumPhotosResponse?.data,
+  ]);
+
+  if (!username) {
+    return (
+      <SitePageLayout
+        activeHref=""
+        rootClassName="photographer-profile-root"
+        announcementTone="blue"
+        newsletterVariant="page"
+      >
+        <section className="bg-white section-py-top pb-10 sm:pb-12">
+          <Shell>
+            <div className="flex min-h-[300px] flex-col items-center justify-center gap-4 py-16 text-center">
+              <p className="text-[18px] font-semibold text-[#111827]">
+                {t(
+                  'photographerProfile.notFound',
+                  'Photographer profile not found',
+                )}
+              </p>
+              <p className="text-[14px] text-[#6b7280]">
+                {t(
+                  'photographerProfile.usernameRequired',
+                  'Open a photographer profile with a valid username.',
+                )}
+              </p>
+            </div>
+          </Shell>
+        </section>
+      </SitePageLayout>
+    );
+  }
 
   return (
     <SitePageLayout
@@ -281,7 +387,9 @@ const PhotographerProfileMain = memo(() => {
                   <WeeklyAppreciationBanner className="mt-5 sm:mt-6" />
                   <PhotographerStatsBar stats={profile.stats} />
                   <PhotographerAboutSection profile={profile} />
-                  <PhotographerFeaturedVideo video={introVideo} />
+                  {introVideo ? (
+                    <PhotographerFeaturedVideo video={introVideo} />
+                  ) : null}
                   <PhotographerTalentAppreciation
                     appreciation={profile.appreciation}
                     photographerName={profile.name}
@@ -294,28 +402,38 @@ const PhotographerProfileMain = memo(() => {
 
               {activeTab === 'artwork' ? (
                 <>
-                  <PhotographerCompetitionBanner
-                    featured={PHOTOGRAPHER_FEATURED}
-                  />
+                  {featuredCompetition.length > 0 ? (
+                    <PhotographerCompetitionBanner
+                      featured={featuredCompetition}
+                      photographerName={profile.name}
+                      userId={profile.id}
+                      username={username || profile.username}
+                    />
+                  ) : null}
                   <PhotographerStandaloneVideosSection
-                    videos={
-                      profile?.standaloneVideos ||
-                      profileResponse?.standaloneVideos ||
-                      profileResponse?.data?.standaloneVideos ||
-                      []
-                    }
+                    videos={profile.standaloneVideos || []}
                     artistName={profile.name}
                   />
                   <PhotographerSlideshowsSection
                     username={username || profile.username}
                     ownerName={profile.name}
+                    canManage={isOwner}
                   />
-                  <PhotographerArtworkGrid
-                    titleKey="photographerProfile.artwork.title"
-                    subtitleKey="photographerProfile.artwork.subtitle"
-                    photos={PHOTOGRAPHER_ARTWORK}
-                    showCompetitionTag
-                  />
+                  {isArtworksLoading ? (
+                    <div className="mt-10 flex min-h-40 items-center justify-center">
+                      <RefreshCw
+                        size={24}
+                        className="animate-spin text-[#4048cd]"
+                      />
+                    </div>
+                  ) : (
+                    <PhotographerArtworkGrid
+                      titleKey="photographerProfile.artwork.title"
+                      subtitleKey="photographerProfile.artwork.subtitle"
+                      photos={profileArtworks}
+                      showCompetitionTag
+                    />
+                  )}
                 </>
               ) : null}
 
@@ -331,17 +449,22 @@ const PhotographerProfileMain = memo(() => {
                 <PhotographerArtworkGrid
                   titleKey="photographerProfile.premium.title"
                   subtitleKey="photographerProfile.premium.subtitle"
-                  photos={
-                    premiumPhotosResponse?.data?.length
-                      ? premiumPhotosResponse.data
-                      : PHOTOGRAPHER_PREMIUM
-                  }
+                  photos={premiumPhotos}
                   showPrice
                 />
               ) : null}
 
               {activeTab === 'posts' ? (
-                <PhotographerMessagesSection messages={PHOTOGRAPHER_MESSAGES} />
+                isPostsLoading ? (
+                  <div className="mt-10 flex min-h-40 items-center justify-center">
+                    <RefreshCw
+                      size={24}
+                      className="animate-spin text-[#4048cd]"
+                    />
+                  </div>
+                ) : (
+                  <PhotographerMessagesSection messages={profilePosts} />
+                )
               ) : null}
 
               <PhotographerShareBanner photographerName={profile.name} />
@@ -349,10 +472,16 @@ const PhotographerProfileMain = memo(() => {
           ) : (
             <div className="flex min-h-[300px] flex-col items-center justify-center gap-4 py-16 text-center">
               <p className="text-[18px] font-semibold text-[#111827]">
-                {t('photographerProfile.notFound', 'Photographer profile not found')}
+                {t(
+                  'photographerProfile.notFound',
+                  'Photographer profile not found',
+                )}
               </p>
               <p className="text-[14px] text-[#6b7280]">
-                {t('photographerProfile.notFoundDesc', 'The photographer profile you are looking for does not exist.')}
+                {t(
+                  'photographerProfile.notFoundDesc',
+                  'The photographer profile you are looking for does not exist.',
+                )}
               </p>
             </div>
           )}

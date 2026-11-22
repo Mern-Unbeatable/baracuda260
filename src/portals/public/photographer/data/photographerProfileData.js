@@ -7,7 +7,7 @@ export const PHOTOGRAPHER_ASSETS = {
   avatar: `${A}/avatar-marta.webp`,
   featuredHero: `${A}/photo-morning.webp`,
   featuredVideo: `${A}/photo-morning.webp`,
-  messageHero: `${A}/photo-golden.webp`,
+  messageHero: `${A}/photo-morning.webp`,
   messageMushroom: `${A}/photo-forest.webp`,
   profileCover: `${A}/photo-silent.webp`,
 };

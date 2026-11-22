@@ -51,8 +51,12 @@ const PhotographerSlideshowsSection = memo(
       return null;
     }
 
-    const createDisabled = sourcePhotosLoading || !canCreate;
-    const showNeedMoreHint = canManage && !sourcePhotosLoading && !canCreate;
+    const createDisabled = !canCreate;
+    const showNeedMoreHint =
+      canManage &&
+      builder.open &&
+      !sourcePhotosLoading &&
+      sourcePhotos.length < SLIDESHOW_MIN_PHOTOS;
 
     const createButton = (
       <Button

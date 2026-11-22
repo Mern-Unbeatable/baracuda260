@@ -23,7 +23,6 @@ import {
   PHOTOGRAPHER_STORE_CATEGORIES,
   PHOTOGRAPHER_STORE_PAGE_SIZE,
 } from '@/portals/public/photographer/data/photographerProfileData';
-import { filterStoreProducts } from '@/portals/member/data/myStoreData';
 import {
   getStoreProductDetailsApi,
   getStoreProductsApi,
@@ -32,7 +31,6 @@ import {
   toggleWatchlistApi,
 } from '@/shared/api/store.api';
 import { ROUTES } from '@/shared/config';
-import usePaginatedSlice from '@/shared/hooks/usePaginatedSlice';
 
 const StoreProductCard = memo(({ product, onView, isOwner = false }) => {
   const { t } = useTranslation();
@@ -409,7 +407,7 @@ const isDemoUserId = (id) => {
 };
 
 const PhotographerStoreSection = memo(
-  ({ products: productsProp, userId, username, isOwner = false }) => {
+  ({ userId, username, isOwner = false }) => {
     const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
     const [category, setCategory] = useState('all');
@@ -452,13 +450,7 @@ const PhotographerStoreSection = memo(
     const cleanUsername = String(username || '')
       .trim()
       .replace(/^@/, '');
-    // Never query the live API with demo/mock handles
-    const apiUsername =
-      cleanUsername &&
-      cleanUsername.toLowerCase() !== 'elenavance' &&
-      !cleanUserId
-        ? cleanUsername
-        : '';
+    const apiUsername = !cleanUserId && cleanUsername ? cleanUsername : '';
 
     // Owner store: auth-scoped /v1/store (no username). Public: prefer userId.
     const canFetchApi = Boolean(isOwner || cleanUserId || apiUsername);
@@ -498,17 +490,7 @@ const PhotographerStoreSection = memo(
       staleTime: 30 * 1000,
     });
 
-    const products = useMemo(() => {
-      if (apiResult?.data?.length) return apiResult.data;
-      if (
-        Array.isArray(productsProp) &&
-        productsProp.length &&
-        !canFetchApi
-      ) {
-        return productsProp;
-      }
-      return apiResult?.data || [];
-    }, [apiResult?.data, productsProp, canFetchApi]);
+    const products = useMemo(() => apiResult?.data || [], [apiResult?.data]);
 
     const totalPages = apiResult?.meta?.totalPages || 1;
 
@@ -536,23 +518,10 @@ const PhotographerStoreSection = memo(
       [t],
     );
 
-    // Client-side filter only for legacy prop-fed lists without a live API scope
-    const filtered = useMemo(() => {
-      if (canFetchApi) return products;
-      if (category === 'all') return products;
-      return filterStoreProducts(products, category);
-    }, [category, canFetchApi, products]);
-
-    const legacyPaging = usePaginatedSlice(
-      filtered,
-      PHOTOGRAPHER_STORE_PAGE_SIZE,
-      [category],
-    );
-
-    const pagedItems = canFetchApi ? products : legacyPaging.pagedItems;
-    const currentPage = canFetchApi ? page : legacyPaging.currentPage;
-    const pages = canFetchApi ? totalPages : legacyPaging.totalPages;
-    const onPageChange = canFetchApi ? setPage : legacyPaging.setPage;
+    const pagedItems = products;
+    const currentPage = page;
+    const pages = totalPages;
+    const onPageChange = setPage;
 
     useEffect(() => {
       setPage(1);

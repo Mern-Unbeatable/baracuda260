@@ -168,46 +168,59 @@ const PhotographerArtworkGrid = memo(
         />
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {pagedPhotos.map((photo) => (
-            <PhotoShowcaseCard
-              key={photo.id}
-              id={photo.id}
-              href={galleryDetailPath(photo.id)}
-              image={photo.image}
-              imageAlt={photo.title}
-              title={photo.title}
-              badge={t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
-                defaultValue: photo.badge,
-              })}
-              description={photo.description}
-              likes={photo.votes}
-              views={photo.views}
-              date={photo.date}
-              price={showPrice ? photo.price : undefined}
-              isAiGenerated={photo.isAiGenerated}
-              competitionLabel={
-                showCompetitionTag && photo.inCompetition
-                  ? t('photographerProfile.competitionTag')
-                  : undefined
-              }
-              extraPhotosLabel={
-                photo.extraPhotoCount
-                  ? t('winners.extraPhotos', { count: photo.extraPhotoCount })
-                  : undefined
-              }
-            />
-          ))}
+          {pagedPhotos.length === 0 ? (
+            <div className="col-span-full rounded-2xl border border-dashed border-[#d7dbe7] bg-white px-6 py-14 text-center">
+              <p className="text-[15px] font-medium text-[#687186]">
+                {t(
+                  'photographerProfile.artwork.empty',
+                  'No artwork published yet.',
+                )}
+              </p>
+            </div>
+          ) : (
+            pagedPhotos.map((photo) => (
+              <PhotoShowcaseCard
+                key={photo.id}
+                id={photo.id}
+                href={photo.href || galleryDetailPath(photo.id)}
+                image={photo.image}
+                imageAlt={photo.title}
+                title={photo.title}
+                badge={t(SHOWCASE_BADGE_KEYS[photo.badge] || photo.badge, {
+                  defaultValue: photo.badge,
+                })}
+                description={photo.description}
+                likes={photo.votes}
+                views={photo.views}
+                date={photo.date}
+                price={showPrice ? photo.price : undefined}
+                isAiGenerated={photo.isAiGenerated}
+                competitionLabel={
+                  showCompetitionTag && photo.inCompetition
+                    ? t('photographerProfile.competitionTag')
+                    : undefined
+                }
+                extraPhotosLabel={
+                  photo.extraPhotoCount
+                    ? t('winners.extraPhotos', { count: photo.extraPhotoCount })
+                    : undefined
+                }
+              />
+            ))
+          )}
         </div>
 
-        <Pagination
-          className="mt-8"
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          ariaLabel={t('gallery.paginationAria', {
-            defaultValue: 'Gallery pagination',
-          })}
-        />
+        {filteredPhotos.length > 0 ? (
+          <Pagination
+            className="mt-8"
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            ariaLabel={t('gallery.paginationAria', {
+              defaultValue: 'Gallery pagination',
+            })}
+          />
+        ) : null}
       </section>
     );
   },

@@ -3,6 +3,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/ui/Button';
 import { isSlideshowPlayable } from '@/shared/data/slideshows';
+import { optimizeImageUrl } from '@/shared/utils/media';
 
 const HOVER_PREVIEW_MS = 1100;
 
@@ -111,7 +112,7 @@ const SlideshowCard = memo(
                 className={`absolute inset-x-0 top-3 aspect-368/252 origin-top overflow-hidden rounded-2xl bg-[#e5e7eb] shadow-sm transition duration-300 ease-out ${className}`}
               >
                 <img
-                  src={photos[depth].image}
+                  src={optimizeImageUrl(photos[depth].image, 480)}
                   alt=""
                   loading="lazy"
                   decoding="async"
@@ -125,7 +126,7 @@ const SlideshowCard = memo(
             {coverPhotos.map((photo, i) => (
               <img
                 key={photo.id}
-                src={photo.image}
+                src={optimizeImageUrl(photo.image, 480)}
                 alt=""
                 loading="lazy"
                 decoding="async"
