@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw } from 'lucide-react';
-import React, { memo, useEffect, useState } from 'react';
+import { RefreshCw, X } from 'lucide-react';
+import React, { memo, useEffect, useId, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -102,8 +103,255 @@ const ConversationItem = memo(({ thread, onOpen }) => {
 
 ConversationItem.displayName = 'ConversationItem';
 
+const ContactSupportFormFields = memo(
+  ({
+    register,
+    errors,
+    watchedSubject,
+    isSubmitting,
+    onSubmit,
+    idPrefix = 'contact-support',
+  }) => {
+    const { t } = useTranslation();
+
+    return (
+      <form
+        onSubmit={onSubmit}
+        noValidate
+        className="flex w-full flex-col gap-6"
+      >
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5 sm:flex-row sm:gap-5">
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <label
+                htmlFor={`${idPrefix}-name`}
+                className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
+              >
+                {t('contactSupport.fullName')}
+              </label>
+              <Input
+                id={`${idPrefix}-name`}
+                type="text"
+                placeholder={t('contactSupport.fullNamePlaceholder')}
+                error={errors.fullName}
+                inputClassName={inputClassName}
+                labelClassName="hidden"
+                {...register('fullName', {
+                  required: t('contactSupport.errors.nameRequired'),
+                })}
+              />
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <label
+                htmlFor={`${idPrefix}-email`}
+                className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
+              >
+                {t('contactSupport.email')}
+              </label>
+              <Input
+                id={`${idPrefix}-email`}
+                type="email"
+                placeholder={t('contactSupport.emailPlaceholder')}
+                error={errors.email}
+                inputClassName={inputClassName}
+                labelClassName="hidden"
+                {...register('email', {
+                  required: t('contactSupport.errors.emailRequired'),
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: t('contactSupport.errors.emailInvalid'),
+                  },
+                })}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label
+              htmlFor={`${idPrefix}-subject`}
+              className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
+            >
+              {t('contactSupport.subject')}
+            </label>
+            <select
+              id={`${idPrefix}-subject`}
+              aria-invalid={Boolean(errors.subject)}
+              className={`${inputClassName} appearance-none bg-size-[16px] bg-position-[right_15px_center] bg-no-repeat pr-11`}
+              style={{
+                backgroundImage:
+                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7484' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+              }}
+              {...register('subject', {
+                required: t('contactSupport.errors.subjectRequired'),
+              })}
+            >
+              {SUBJECT_OPTIONS.map((option) => (
+                <option
+                  key={option.value || 'placeholder'}
+                  value={option.value}
+                  disabled={!option.value}
+                >
+                  {t(option.labelKey, { defaultValue: option.defaultLabel })}
+                </option>
+              ))}
+            </select>
+            {errors.subject ? (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.subject.message}
+              </p>
+            ) : null}
+
+            {watchedSubject === 'other' ? (
+              <div className="mt-2 flex flex-col gap-2">
+                <Input
+                  id={`${idPrefix}-custom-subject`}
+                  type="text"
+                  placeholder={t(
+                    'contactSupport.customSubjectPlaceholder',
+                    'Specify your subject...',
+                  )}
+                  error={errors.customSubject}
+                  inputClassName={inputClassName}
+                  labelClassName="hidden"
+                  {...register('customSubject', {
+                    required: t(
+                      'contactSupport.errors.subjectRequired',
+                      'Please specify a subject.',
+                    ),
+                  })}
+                />
+              </div>
+            ) : null}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label
+              htmlFor={`${idPrefix}-message`}
+              className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
+            >
+              {t('contactSupport.message')}
+            </label>
+            <textarea
+              id={`${idPrefix}-message`}
+              placeholder={t('contactSupport.messagePlaceholder')}
+              rows={5}
+              aria-invalid={Boolean(errors.message)}
+              className={`${inputClassName} min-h-37 resize-y`}
+              {...register('message', {
+                required: t('contactSupport.errors.messageRequired'),
+              })}
+            />
+            {errors.message ? (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.message.message}
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <Button
+          type="submit"
+          unstyled={true}
+          disabled={isSubmitting}
+          className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921] disabled:opacity-60"
+        >
+          {isSubmitting ? (
+            <RefreshCw size={20} className="animate-spin text-white" />
+          ) : (
+            <Image
+              src={CONTACT_SUPPORT_ASSETS.send}
+              alt=""
+              width={24}
+              height={24}
+              className="size-6 shrink-0 -rotate-52"
+            />
+          )}
+          {isSubmitting
+            ? t('common.sending', 'Sending...')
+            : t('contactSupport.send')}
+        </Button>
+      </form>
+    );
+  },
+);
+
+ContactSupportFormFields.displayName = 'ContactSupportFormFields';
+
+const ContactSupportFormModal = memo(
+  ({ open, onClose, register, errors, watchedSubject, isSubmitting, onSubmit }) => {
+    const { t } = useTranslation();
+    const titleId = useId();
+
+    useEffect(() => {
+      if (!open) return undefined;
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = previousOverflow;
+      };
+    }, [open]);
+
+    if (!open) return null;
+
+    return createPortal(
+      <div
+        className="fixed inset-0 z-130 flex items-end justify-center bg-black/50 p-0 backdrop-blur-[2px] sm:items-center sm:p-4 lg:hidden"
+        role="presentation"
+        onClick={onClose}
+      >
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          className="flex max-h-[min(92vh,840px)] w-full max-w-[560px] flex-col overflow-hidden rounded-t-[24px] bg-white shadow-[0_22px_70px_rgba(14,20,35,0.25)] sm:rounded-[24px]"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <header className="flex shrink-0 items-start justify-between gap-3 border-b border-[#edf0f3] px-5 pb-4 pt-5 sm:px-6">
+            <div className="min-w-0 pr-2">
+              <h2
+                id={titleId}
+                className="text-[22px] font-semibold tracking-[-0.4px] text-[#161c27] sm:text-[24px]"
+              >
+                {t('contactSupport.formTitle')}
+              </h2>
+              <p className="mt-1 text-[14px] leading-5 text-[#494453]">
+                {t('contactSupport.formSubtitle')}
+              </p>
+            </div>
+            <Button
+              unstyled
+              type="button"
+              onClick={onClose}
+              aria-label={t('common.close', 'Close')}
+              className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/10 text-[#0d0d14] transition hover:bg-[#f3f4f6]"
+            >
+              <X size={18} strokeWidth={2} aria-hidden="true" />
+            </Button>
+          </header>
+
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            <ContactSupportFormFields
+              register={register}
+              errors={errors}
+              watchedSubject={watchedSubject}
+              isSubmitting={isSubmitting}
+              onSubmit={onSubmit}
+              idPrefix="contact-support-mobile"
+            />
+          </div>
+        </div>
+      </div>,
+      document.body,
+    );
+  },
+);
+
+ContactSupportFormModal.displayName = 'ContactSupportFormModal';
+
 /**
  * Contact Support — Figma node 195:800 (admin main area; sidebar from Layout).
+ * Mobile: form opens as a modal. Desktop: form stays inline beside conversations.
  */
 const ContactSupportContent = memo(() => {
   const { t } = useTranslation();
@@ -114,6 +362,7 @@ const ContactSupportContent = memo(() => {
   const [filter, setFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [activeThread, setActiveThread] = useState(null);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   const {
     register,
@@ -166,6 +415,7 @@ const ContactSupportContent = memo(() => {
         customSubject: '',
         message: '',
       });
+      setIsFormModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ['user-support-tickets'] });
     },
     onError: (err) => {
@@ -201,10 +451,39 @@ const ContactSupportContent = memo(() => {
   const totalPages = meta.totalPages || 1;
   const hasNext = Boolean(meta.hasNext);
   const hasPrevious = Boolean(meta.hasPrevious);
+  const submitHandler = handleSubmit(onSubmit);
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col items-stretch gap-8 lg:flex-row lg:gap-15">
-      <section className="flex w-full min-w-0 flex-col gap-7.5 lg:max-w-192.5 lg:flex-1">
+      {/* Mobile page intro + open-form CTA */}
+      <div className="flex w-full flex-col gap-4 lg:hidden">
+        <header className="flex flex-col gap-3">
+          <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27]">
+            {t('contactSupport.formTitle')}
+          </h1>
+          <p className="text-[16px] font-normal leading-6 text-[#494453]">
+            {t('contactSupport.formSubtitle')}
+          </p>
+        </header>
+        <Button
+          unstyled
+          type="button"
+          onClick={() => setIsFormModalOpen(true)}
+          className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921]"
+        >
+          <Image
+            src={CONTACT_SUPPORT_ASSETS.send}
+            alt=""
+            width={22}
+            height={22}
+            className="size-5.5 shrink-0 -rotate-52"
+          />
+          {t('contactSupport.send')}
+        </Button>
+      </div>
+
+      {/* Desktop inline form */}
+      <section className="hidden w-full min-w-0 flex-col gap-7.5 lg:flex lg:max-w-192.5 lg:flex-1">
         <header className="flex flex-col gap-4">
           <h1 className="text-[28px] font-semibold tracking-[-0.75px] text-[#161c27] sm:text-[36px] lg:text-[40px]">
             {t('contactSupport.formTitle')}
@@ -214,163 +493,16 @@ const ContactSupportContent = memo(() => {
           </p>
         </header>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          className="flex w-full flex-col gap-6 rounded-[20px] bg-white p-5 sm:p-8 lg:p-10"
-        >
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-5 sm:flex-row sm:gap-5">
-              <div className="flex min-w-0 flex-1 flex-col gap-3">
-                <label
-                  htmlFor="contact-support-name"
-                  className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
-                >
-                  {t('contactSupport.fullName')}
-                </label>
-                <Input
-                  id="contact-support-name"
-                  type="text"
-                  placeholder={t('contactSupport.fullNamePlaceholder')}
-                  error={errors.fullName}
-                  inputClassName={inputClassName}
-                  labelClassName="hidden"
-                  {...register('fullName', {
-                    required: t('contactSupport.errors.nameRequired'),
-                  })}
-                />
-              </div>
-
-              <div className="flex min-w-0 flex-1 flex-col gap-3">
-                <label
-                  htmlFor="contact-support-email"
-                  className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
-                >
-                  {t('contactSupport.email')}
-                </label>
-                <Input
-                  id="contact-support-email"
-                  type="email"
-                  placeholder={t('contactSupport.emailPlaceholder')}
-                  error={errors.email}
-                  inputClassName={inputClassName}
-                  labelClassName="hidden"
-                  {...register('email', {
-                    required: t('contactSupport.errors.emailRequired'),
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: t('contactSupport.errors.emailInvalid'),
-                    },
-                  })}
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <label
-                htmlFor="contact-support-subject"
-                className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
-              >
-                {t('contactSupport.subject')}
-              </label>
-              <select
-                id="contact-support-subject"
-                aria-invalid={Boolean(errors.subject)}
-                className={`${inputClassName} appearance-none bg-size-[16px] bg-position-[right_15px_center] bg-no-repeat pr-11`}
-                style={{
-                  backgroundImage:
-                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7484' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
-                }}
-                {...register('subject', {
-                  required: t('contactSupport.errors.subjectRequired'),
-                })}
-              >
-                {SUBJECT_OPTIONS.map((option) => (
-                  <option
-                    key={option.value || 'placeholder'}
-                    value={option.value}
-                    disabled={!option.value}
-                  >
-                    {t(option.labelKey, { defaultValue: option.defaultLabel })}
-                  </option>
-                ))}
-              </select>
-              {errors.subject ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {errors.subject.message}
-                </p>
-              ) : null}
-
-              {watchedSubject === 'other' ? (
-                <div className="mt-2 flex flex-col gap-2">
-                  <Input
-                    id="contact-support-custom-subject"
-                    type="text"
-                    placeholder={t(
-                      'contactSupport.customSubjectPlaceholder',
-                      'Specify your subject...',
-                    )}
-                    error={errors.customSubject}
-                    inputClassName={inputClassName}
-                    labelClassName="hidden"
-                    {...register('customSubject', {
-                      required: t(
-                        'contactSupport.errors.subjectRequired',
-                        'Please specify a subject.',
-                      ),
-                    })}
-                  />
-                </div>
-              ) : null}
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <label
-                htmlFor="contact-support-message"
-                className="text-[16px] font-medium uppercase tracking-[1.2px] text-[#4e525b]"
-              >
-                {t('contactSupport.message')}
-              </label>
-              <textarea
-                id="contact-support-message"
-                placeholder={t('contactSupport.messagePlaceholder')}
-                rows={5}
-                aria-invalid={Boolean(errors.message)}
-                className={`${inputClassName} min-h-37 resize-y`}
-                {...register('message', {
-                  required: t('contactSupport.errors.messageRequired'),
-                })}
-              />
-              {errors.message ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {errors.message.message}
-                </p>
-              ) : null}
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            unstyled={true}
-            disabled={createMutation.isPending}
-            className="inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-[50px] bg-[#ee1c25] px-6 py-3 text-[16px] font-medium text-white transition hover:bg-[#d41921] disabled:opacity-60"
-          >
-            {createMutation.isPending ? (
-              <RefreshCw size={20} className="animate-spin text-white" />
-            ) : (
-              <Image
-                src={CONTACT_SUPPORT_ASSETS.send}
-                alt=""
-                width={24}
-                height={24}
-                className="size-6 shrink-0 -rotate-52"
-              />
-            )}
-            {createMutation.isPending
-              ? t('common.sending', 'Sending...')
-              : t('contactSupport.send')}
-          </Button>
-        </form>
+        <div className="flex w-full flex-col rounded-[20px] bg-white p-5 sm:p-8 lg:p-10">
+          <ContactSupportFormFields
+            register={register}
+            errors={errors}
+            watchedSubject={watchedSubject}
+            isSubmitting={createMutation.isPending}
+            onSubmit={submitHandler}
+            idPrefix="contact-support-desktop"
+          />
+        </div>
       </section>
 
       <section className="flex w-full min-w-0 flex-col gap-7.5 lg:max-w-187.5 lg:flex-1">
@@ -429,7 +561,7 @@ const ContactSupportContent = memo(() => {
               <button
                 type="button"
                 onClick={() => refetchTickets()}
-                className="rounded-lg bg-[#2563eb] px-4 py-2 text-[13px] font-medium text-white transition hover:bg-[#1d4ed8]"
+                className="cursor-pointer rounded-lg bg-[#2563eb] px-4 py-2 text-[13px] font-medium text-white transition hover:bg-[#1d4ed8]"
               >
                 {t('common.retry', 'Retry')}
               </button>
@@ -482,6 +614,16 @@ const ContactSupportContent = memo(() => {
           ) : null}
         </div>
       </section>
+
+      <ContactSupportFormModal
+        open={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        register={register}
+        errors={errors}
+        watchedSubject={watchedSubject}
+        isSubmitting={createMutation.isPending}
+        onSubmit={submitHandler}
+      />
 
       <ConversationMessageModal
         open={Boolean(activeThread)}
