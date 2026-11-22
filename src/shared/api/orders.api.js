@@ -328,6 +328,37 @@ export const getBuyerOrderDetailsApi = async (orderId) => {
 };
 
 /**
+ * Download buyer order invoice PDF.
+ * GET /api/v1/orders/buyer/{{order_id}}/invoice
+ *
+ * @param {string} orderId
+ */
+export const downloadBuyerOrderInvoiceApi = async (orderId) => {
+  const cleanId = String(orderId || '').trim();
+  if (!cleanId) throw new Error('Order ID is required');
+
+  const response = await apiClient.get(
+    `/v1/orders/buyer/${encodeURIComponent(cleanId)}/invoice`,
+    { responseType: 'blob' },
+  );
+
+  const blob =
+    response instanceof Blob
+      ? response
+      : new Blob([response], { type: 'application/pdf' });
+
+  const shortId = cleanId.split('-')[0].toUpperCase();
+  const downloadUrl = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = downloadUrl;
+  link.download = `invoice-${shortId}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(downloadUrl);
+};
+
+/**
  * Fetch seller order status card statistics.
  * GET /api/v1/orders/seller/status-card
  */

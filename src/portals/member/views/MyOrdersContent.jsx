@@ -5,7 +5,7 @@ import {
   CheckCircle2,
   Clock,
   Copy,
-  FileText,
+  Download,
   Package,
   RefreshCw,
   Truck,
@@ -24,6 +24,8 @@ import {
   ORDER_STATUS_STYLES,
 } from '@/portals/member/data/myOrdersData';
 import useBuyerOrders from '@/portals/member/hooks/useBuyerOrders';
+import { getApiErrorMessage } from '@/shared/api/client';
+import { downloadBuyerOrderInvoiceApi } from '@/shared/api/orders.api';
 import { ROUTES } from '@/shared/config';
 
 const STAT_ICONS = {
@@ -117,6 +119,7 @@ const OrderCard = memo(({ order }) => {
   const { t } = useTranslation();
   const detailHref = ROUTES.USER_MY_ORDERS_DETAIL.replace(':id', order.id);
   const displayOrderNumber = String(order.orderNumber || '').replace(/^#+/, '');
+  const [isDownloadingInvoice, setIsDownloadingInvoice] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -127,8 +130,27 @@ const OrderCard = memo(({ order }) => {
     }
   };
 
-  const handleInvoice = () => {
-    toast.success(t('myOrders.invoiceStarted', { order: order.orderNumber }));
+  const handleInvoice = async () => {
+    if (!order?.id || isDownloadingInvoice) return;
+    try {
+      setIsDownloadingInvoice(true);
+      await downloadBuyerOrderInvoiceApi(order.id);
+      toast.success(
+        t('myOrders.invoiceStarted', {
+          order: order.orderNumber,
+          defaultValue: `Invoice downloaded for ${order.orderNumber}.`,
+        }),
+      );
+    } catch (error) {
+      toast.error(
+        getApiErrorMessage(
+          error,
+          t('myOrders.invoiceFailed', 'Failed to download invoice.'),
+        ),
+      );
+    } finally {
+      setIsDownloadingInvoice(false);
+    }
   };
 
   return (
@@ -151,12 +173,19 @@ const OrderCard = memo(({ order }) => {
             unstyled
             type="button"
             onClick={handleInvoice}
+            disabled={isDownloadingInvoice}
+            title={t('myOrders.downloadInvoice', 'Download invoice')}
             aria-label={t('myOrders.invoiceAria', {
               number: order.orderNumber,
+              defaultValue: `Download invoice for ${order.orderNumber}`,
             })}
-            className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd]"
+            className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#687186] transition hover:bg-[#f6f7f9] hover:text-[#4048cd] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <FileText size={14} aria-hidden="true" />
+            {isDownloadingInvoice ? (
+              <RefreshCw size={14} className="animate-spin" aria-hidden="true" />
+            ) : (
+              <Download size={14} aria-hidden="true" />
+            )}
           </Button>
           <p className="inline-flex items-center gap-1.5 text-[13px] text-[#687186]">
             <Calendar size={13} className="text-[#9aa3b5]" aria-hidden="true" />
