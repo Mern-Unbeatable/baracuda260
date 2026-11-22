@@ -271,9 +271,7 @@ const ProfileMainContent = memo(() => {
         totalArtwork: Number(profileData.stats?.totalArtwork ?? 0),
         competitionEntries: Number(profileData.stats?.competitionEntries ?? 0),
         totalHearts: Number(profileData.stats?.totalHearts ?? 0),
-        premiumPhotos: Number(
-          profileData.stats?.premiumPhotos ?? profileData.stats?.totalVideos ?? 0,
-        ),
+        premiumPhotos: Number(profileData.stats?.premiumPhotos ?? 0),
       },
     };
   }, [profileData]);
