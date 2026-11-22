@@ -1,5 +1,5 @@
 import React, { memo, useLayoutEffect, useRef, useState } from 'react';
-import PromoBanner from '@/components/marketing/PromoBanner/PromoBanner';
+import SitePromoBanner from '@/components/marketing/PromoBanner/SitePromoBanner';
 import SiteAnnouncement from './SiteAnnouncement';
 import SiteFooter from './SiteFooter';
 import SiteHeader from './SiteHeader';
@@ -48,13 +48,7 @@ const SitePageLayout = memo(
         </div>
         <div style={{ height: chromeHeight }} aria-hidden="true" />
         {children}
-        {showPromoBanner ? (
-          <PromoBanner
-            subtitle="Turn your website traffic into revenue by enabling targeted advertising. Our platform allows businesses to showcase their products and services directly to your audience through strategically placed ads."
-            ctaLabel="www.e-commerce.com"
-            href="#"
-          />
-        ) : null}
+        {showPromoBanner ? <SitePromoBanner /> : null}
         <StayUpdated variant={newsletterVariant} />
         <SiteFooter />
       </div>

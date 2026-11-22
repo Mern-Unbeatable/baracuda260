@@ -229,6 +229,9 @@ export const getArtworkDetailsApi = async (submissionId) => {
       : null,
     comments: normalizedComments,
     isAiGenerated: Boolean(data.isAiGenerated || data.aiBadge),
+    isLiked: Boolean(data.isLiked || data.liked),
+    isSaved: Boolean(data.isSaved || data.saved),
+    likesCount: Number(data.likesCount ?? data.likes ?? 0) || 0,
     // Upload forms never collect camera — hide seed leftovers on detail pages
     camera: null,
   };
@@ -1208,6 +1211,7 @@ export const PUBLIC_ARTWORKS_QUERY_KEY = ['public-artworks'];
  *   subcategoryId?: string,
  *   kind?: string,
  *   search?: string,
+ *   sort?: 'newest' | 'popular' | 'most_liked',
  * }} [params]
  */
 export const getPublicArtworksApi = async ({
@@ -1218,6 +1222,7 @@ export const getPublicArtworksApi = async ({
   subcategoryId,
   kind,
   search,
+  sort,
 } = {}) => {
   const params = {
     status,
@@ -1229,6 +1234,7 @@ export const getPublicArtworksApi = async ({
   if (subcategoryId) params.subcategoryId = subcategoryId;
   if (kind && kind !== 'ALL') params.kind = String(kind).toUpperCase();
   if (search?.trim()) params.search = search.trim();
+  if (sort) params.sort = sort;
 
   const response = await apiClient.get('/v1/artworks/public/all', { params });
   const payload = response?.data !== undefined ? response.data : response;

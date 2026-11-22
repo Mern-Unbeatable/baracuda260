@@ -36,7 +36,7 @@ const AdvertiseBusinessForm = memo(
         email: '',
         phone: '',
         businessName: '',
-        page: 'Home',
+        page: 'home',
         website: '',
         description: '',
         location: '',
@@ -166,12 +166,25 @@ const AdvertiseBusinessForm = memo(
               <select
                 id="advertise-page"
                 className={`h-11 ${inputClass}`}
-                {...register('page')}
+                {...register('page', { required: 'Select page is required' })}
               >
-                <option value="Home">Home</option>
-                <option value="Gallery">Gallery</option>
-                <option value="Competitions">Competitions</option>
-                <option value="Buy Photos">Buy Photos</option>
+                <option value="home">Home</option>
+                <option value="gallery">Gallery</option>
+                <option value="gallery-details">Gallery Details</option>
+                <option value="competitions">Competitions</option>
+                <option value="competitions-details">
+                  Competitions Details
+                </option>
+                <option value="buy-photo">Buy Photos</option>
+                <option value="buy-photo-details">Buy Photo Details</option>
+                <option value="leaderboard">Leaderboard</option>
+                <option value="winner">Winners</option>
+                <option value="photographer-profile">
+                  Photographer Profile
+                </option>
+                <option value="about">About</option>
+                <option value="album">Album Types</option>
+                <option value="checkout-page">Checkout</option>
               </select>
             </div>
 

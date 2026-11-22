@@ -242,6 +242,7 @@ const PhotoShowcasePageContent = memo(
                   badge={t(`${i18nPrefix}.eyebrow`)}
                   badgeTone="indigo"
                   title={t(`${i18nPrefix}.title`)}
+                  endClassName="sm:w-full sm:max-w-md sm:flex-1"
                   end={searchBar}
                 />
 

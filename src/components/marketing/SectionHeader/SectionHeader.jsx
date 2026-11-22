@@ -50,6 +50,7 @@ export default function SectionHeader({
   badgeTone = 'red',
   align = 'center',
   end = null,
+  endClassName = '',
   className = '',
 }) {
   const left = align === 'left';
@@ -70,7 +71,7 @@ export default function SectionHeader({
             className="min-w-0 max-w-none flex-1"
           />
           <div
-            className={`w-full shrink-0 ${left ? 'sm:w-auto' : 'sm:mx-auto'}`}
+            className={`w-full shrink-0 ${left ? 'sm:w-auto' : 'sm:mx-auto'} ${endClassName}`.trim()}
           >
             {end}
           </div>
@@ -92,15 +93,17 @@ export default function SectionHeader({
           {badge ? <p className={badgeClass(badgeTone)}>{badge}</p> : null}
           {title ? (
             <div
-              className={`flex w-full flex-col ${TITLE_ROW_GAP} sm:flex-row sm:items-start`.trim()}
+              className={`flex w-full flex-col ${TITLE_ROW_GAP} sm:flex-row sm:items-center sm:justify-between`.trim()}
             >
               <h2 className={`min-w-0 shrink-0 ${titleClass}`}>{title}</h2>
-              <div className="w-full sm:ml-auto sm:max-w-lg sm:flex-1">
+              <div
+                className={`w-full sm:ml-auto sm:w-auto sm:max-w-none sm:flex-none ${endClassName}`.trim()}
+              >
                 {end}
               </div>
             </div>
           ) : (
-            <div className={`w-full ${left ? 'sm:ml-auto' : 'mx-auto'}`}>
+            <div className={`w-full ${left ? 'sm:ml-auto' : 'mx-auto'} ${endClassName}`.trim()}>
               {end}
             </div>
           )}

@@ -36,6 +36,10 @@ import {
   toggleSavePremiumPhotoApi,
 } from '@/shared/api/premiumPhotos.api';
 import { ImgIcon } from '@/shared/site-chrome';
+import {
+  hasLikedArtworkInSession,
+  writeLikedArtworkId,
+} from '@/shared/utils/likedArtworksSession';
 import { optimizeImageUrl } from '@/shared/utils/media';
 
 const TROPHY_ICON = '/assets/home/icon-trophy-cup.svg';
@@ -92,6 +96,7 @@ const PhotoShowcaseCard = memo(
     onLikeToggle,
     engagementType = 'like',
     engagementDisabled = false,
+    saveDisabled = false,
     itemType,
     kind,
     isVideo,
@@ -104,7 +109,10 @@ const PhotoShowcaseCard = memo(
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [saved, setSaved] = useState(initialSaved);
-    const [liked, setLiked] = useState(initialLiked);
+    const [liked, setLiked] = useState(() => {
+      if (initialLiked) return true;
+      return hasLikedArtworkInSession(id);
+    });
     const [likesCount, setLikesCount] = useState(() => parseCount(likes));
     const [reportOpen, setReportOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -126,8 +134,16 @@ const PhotoShowcaseCard = memo(
     }, [initialSaved]);
 
     useEffect(() => {
-      setLiked(initialLiked);
-    }, [initialLiked]);
+      if (initialLiked) {
+        setLiked(true);
+        return;
+      }
+      if (hasLikedArtworkInSession(id)) {
+        setLiked(true);
+        return;
+      }
+      setLiked(false);
+    }, [initialLiked, id]);
 
     useEffect(() => {
       setLikesCount(parseCount(likes));
@@ -140,9 +156,33 @@ const PhotoShowcaseCard = memo(
       return 'bottom-3';
     };
 
+    const patchPublicArtworkCaches = (patch) => {
+      queryClient.setQueriesData(
+        { queryKey: PUBLIC_ARTWORKS_QUERY_KEY },
+        (old) => {
+          if (!old || !Array.isArray(old.data)) return old;
+          return {
+            ...old,
+            data: old.data.map((item) =>
+              item?.id === id ? { ...item, ...patch } : item,
+            ),
+          };
+        },
+      );
+    };
+
     const handleSave = async (event) => {
       event.preventDefault();
       event.stopPropagation();
+      if (saveDisabled) {
+        toast.error(
+          t(
+            'gallery.cannotSaveOwn',
+            'You cannot save your own artwork.',
+          ),
+        );
+        return;
+      }
       const next = !saved;
       setSaved(next);
       if (onSaveToggle) {
@@ -155,6 +195,12 @@ const PhotoShowcaseCard = memo(
             ? await toggleSavePremiumPhotoApi(id)
             : await toggleSaveArtworkApi(id);
 
+          const savedRes =
+            res?.data?.saved ?? res?.saved ?? res?.data?.isSaved ?? res?.isSaved;
+          const confirmedSaved =
+            savedRes != null ? Boolean(savedRes) : next;
+          setSaved(confirmedSaved);
+
           if (isPremiumPhoto) {
             queryClient.invalidateQueries({
               queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
@@ -163,13 +209,14 @@ const PhotoShowcaseCard = memo(
               queryKey: ['public-premium-photo-detail', id],
             });
           } else {
+            patchPublicArtworkCaches({ isSaved: confirmedSaved });
             queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
             queryClient.invalidateQueries({ queryKey: ['artwork-detail', id] });
           }
 
           toast.success(
             res?.message ||
-              (next
+              (confirmedSaved
                 ? t('gallery.savedSuccess', 'Saved to favourites')
                 : t('gallery.unsavedSuccess', 'Removed from favourites')),
           );
@@ -280,6 +327,22 @@ const PhotoShowcaseCard = memo(
 
           applyEngagementResponse(res);
 
+          const likedRes =
+            res?.data?.liked ??
+            res?.liked ??
+            res?.data?.isLiked ??
+            res?.isLiked;
+          const confirmedLiked =
+            likedRes != null ? Boolean(likedRes) : next;
+          const count =
+            res?.data?.likesCount ??
+            res?.likesCount ??
+            res?.data?.likes ??
+            res?.likes;
+
+          setLiked(confirmedLiked);
+          writeLikedArtworkId(id, confirmedLiked);
+
           if (isPremiumPhoto) {
             queryClient.invalidateQueries({
               queryKey: PUBLIC_PREMIUM_PHOTOS_QUERY_KEY,
@@ -287,9 +350,25 @@ const PhotoShowcaseCard = memo(
             queryClient.invalidateQueries({
               queryKey: ['public-premium-photo-detail', id],
             });
+          } else {
+            const patch = { isLiked: confirmedLiked };
+            if (count != null) {
+              const confirmedCount = parseCount(count);
+              patch.likesCount = confirmedCount;
+              patch.likes = confirmedCount.toLocaleString('en-US');
+            }
+            patchPublicArtworkCaches(patch);
+            queryClient.invalidateQueries({
+              queryKey: ['artwork-detail', id],
+            });
           }
 
-          if (res?.message) toast.success(res.message);
+          toast.success(
+            res?.message ||
+              (confirmedLiked
+                ? t('gallery.likedSuccess', 'Added to likes')
+                : t('gallery.unlikedSuccess', 'Removed from likes')),
+          );
         } catch (err) {
           revertEngagement(next);
           toast.error(
@@ -531,22 +610,41 @@ const PhotoShowcaseCard = memo(
                 unstyled
                 type="button"
                 onClick={handleSave}
+                disabled={saveDisabled}
                 aria-pressed={saved}
-                aria-label={
-                  saved
-                    ? t('gallery.unsave', {
-                        title,
-                        defaultValue: `Unsave ${title}`,
-                      })
-                    : t('gallery.saveAction', {
-                        title,
-                        defaultValue: `Save ${title}`,
-                      })
+                aria-disabled={saveDisabled}
+                title={
+                  saveDisabled
+                    ? t(
+                        'gallery.cannotSaveOwn',
+                        'You cannot save your own artwork.',
+                      )
+                    : undefined
                 }
-                className={`absolute bottom-4 left-4 inline-flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-semibold leading-none shadow-sm transition ${
+                aria-label={
+                  saveDisabled
+                    ? t(
+                        'gallery.cannotSaveOwn',
+                        'You cannot save your own artwork.',
+                      )
+                    : saved
+                      ? t('gallery.unsave', {
+                          title,
+                          defaultValue: `Unsave ${title}`,
+                        })
+                      : t('gallery.saveAction', {
+                          title,
+                          defaultValue: `Save ${title}`,
+                        })
+                }
+                className={`absolute bottom-4 left-4 z-20 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-semibold leading-none shadow-sm transition ${
                   saved
                     ? 'bg-[#ee1c25] text-white'
                     : 'bg-[#fff1f2] text-[#ee1c25]'
+                } ${
+                  saveDisabled
+                    ? 'cursor-not-allowed opacity-60'
+                    : 'cursor-pointer'
                 }`}
               >
                 <Bookmark
@@ -614,37 +712,43 @@ const PhotoShowcaseCard = memo(
                           ? t('gallery.vote', { defaultValue: 'Vote for photo' })
                           : t('gallery.like', { defaultValue: 'Like photo' })
                   }
-                  className={`inline-flex items-center gap-1.5 transition ${
+                  className={`relative z-10 inline-flex items-center gap-1.5 transition ${
                     isEngagementDisabled
                       ? 'cursor-not-allowed text-[#c4c9d4] opacity-70'
                       : liked
-                        ? 'cursor-pointer text-[#e53935] hover:opacity-80'
-                        : 'cursor-pointer text-[#9ca3af] hover:opacity-80'
+                        ? 'cursor-pointer text-[#ee1c25] hover:opacity-80'
+                        : 'cursor-pointer text-[#6b7280] hover:text-[#ee1c25]'
                   }`}
                 >
                   <Heart
                     size={18}
-                    strokeWidth={2}
+                    strokeWidth={2.25}
                     aria-hidden="true"
                     className={
                       isEngagementDisabled
                         ? 'fill-transparent text-[#c4c9d4]'
                         : liked
-                          ? 'fill-[#e53935] text-[#e53935]'
-                          : 'fill-transparent text-[#9ca3af]'
+                          ? 'fill-[#ee1c25] text-[#ee1c25]'
+                          : 'fill-transparent text-[#6b7280]'
                     }
                   />
-                  <span>{likesCount.toLocaleString('en-US')}</span>
+                  <span
+                    className={
+                      liked ? 'font-semibold text-[#ee1c25]' : 'text-[#6b7280]'
+                    }
+                  >
+                    {likesCount.toLocaleString('en-US')}
+                  </span>
                 </Button>
                 {views ? (
-                  <span className="inline-flex items-center gap-1.5 text-[#9ca3af]">
-                    <Eye size={18} strokeWidth={2} aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 text-[#6b7280]">
+                    <Eye size={18} strokeWidth={2.25} aria-hidden="true" />
                     {views}
                   </span>
                 ) : null}
                 {date ? (
-                  <span className="inline-flex items-center gap-1.5 text-[#9ca3af]">
-                    <Calendar size={18} strokeWidth={2} aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 text-[#6b7280]">
+                    <Calendar size={18} strokeWidth={2.25} aria-hidden="true" />
                     {date}
                   </span>
                 ) : null}

@@ -19,7 +19,9 @@ import Image from '@/components/ui/Image';
 import { getApiErrorMessage } from '@/shared/api/client';
 import {
   COMPETITIONS_QUERY_KEY,
+  getActiveCompetitionsApi,
   getCompetitionWinnersApi,
+  getLiveLeaderboardApi,
 } from '@/shared/api/competitions.api';
 import { ROUTES } from '@/shared/config';
 import {
@@ -343,7 +345,13 @@ const LeaderboardStandings = memo(({ rows = [] }) => {
 LeaderboardStandings.displayName = 'LeaderboardStandings';
 
 const LeaderboardPageFilters = memo(
-  ({ albumTab, onAlbumTabChange, monthMenu, isFetching = false }) => {
+  ({
+    albumTab,
+    onAlbumTabChange,
+    monthMenu,
+    onMonthChange,
+    isFetching = false,
+  }) => {
     const { t } = useTranslation();
     const {
       month,
@@ -352,6 +360,8 @@ const LeaderboardPageFilters = memo(
       setOpen: setMonthOpen,
       ref: monthRef,
     } = monthMenu;
+
+    const selectMonth = onMonthChange || setMonth;
 
     return (
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
@@ -408,7 +418,7 @@ const LeaderboardPageFilters = memo(
                       onMouseDown={(e) => e.stopPropagation()}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setMonth(name);
+                        selectMonth(name);
                         setMonthOpen(false);
                       }}
                       className={`flex w-full cursor-pointer items-center justify-between px-3.5 py-2.5 text-left text-[14px] font-medium transition ${
@@ -464,14 +474,41 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
     const y = Number(queryYear);
     return Number.isFinite(y) && y >= 2000 ? y : LEADERBOARD_STANDINGS_YEAR;
   });
+  const [useLiveStandings, setUseLiveStandings] = useState(
+    () => !queryMonth && !queryYear,
+  );
+
+  const { data: activeCompetitions = [] } = useQuery({
+    queryKey: [...COMPETITIONS_QUERY_KEY, 'active-open'],
+    queryFn: () => getActiveCompetitionsApi(),
+    staleTime: 60 * 1000,
+  });
+
+  const openCompetition = activeCompetitions[0] || null;
+
+  // Sync month UI to the running OPEN competition when showing live standings
+  useEffect(() => {
+    if (!openCompetition?.month || !openCompetition?.year) return;
+    if (!useLiveStandings && isPage) return;
+    const monthName = monthNameFromIndex(openCompetition.month);
+    if (monthName) monthMenu.setMonth(monthName);
+    setStandingsYear(openCompetition.year);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCompetition?.month, openCompetition?.year, useLiveStandings, isPage]);
 
   useEffect(() => {
     if (!isPage) return;
     if (queryKind) setAlbumTab(tabFromKind(queryKind));
     const monthName = monthNameFromIndex(queryMonth);
-    if (monthName) monthMenu.setMonth(monthName);
+    if (monthName) {
+      monthMenu.setMonth(monthName);
+      setUseLiveStandings(false);
+    }
     const y = Number(queryYear);
-    if (Number.isFinite(y) && y >= 2000) setStandingsYear(y);
+    if (Number.isFinite(y) && y >= 2000) {
+      setStandingsYear(y);
+      setUseLiveStandings(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- sync from URL only
   }, [isPage, queryKind, queryMonth, queryYear]);
 
@@ -485,6 +522,10 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
 
   const kind = getKindFromTab(albumTab);
 
+  // Home always shows the running OPEN competition.
+  // Leaderboard page defaults to live; choosing a month loads that period.
+  const isLiveQuery = !isPage || useLiveStandings;
+
   const {
     data: winners = [],
     isLoading,
@@ -496,30 +537,57 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
     queryKey: [
       ...COMPETITIONS_QUERY_KEY,
       'leaderboard',
+      isLiveQuery ? 'live' : 'month',
       kind,
-      standingsYear,
-      monthIndex,
+      isLiveQuery ? null : standingsYear,
+      isLiveQuery ? null : monthIndex,
     ],
     queryFn: () =>
-      getCompetitionWinnersApi({
-        kind,
-        year: standingsYear,
-        month: monthIndex,
-        page: 1,
-        limit: 10,
-      }),
+      isLiveQuery
+        ? getLiveLeaderboardApi({ kind, limit: 10 })
+        : getCompetitionWinnersApi({
+            kind,
+            year: standingsYear,
+            month: monthIndex,
+            page: 1,
+            limit: 10,
+          }),
     staleTime: 60 * 1000,
   });
 
-  const liveStandings = isPage
-    ? t('leaderboard.liveStandings', {
+  const handleMonthChange = (name) => {
+    monthMenu.setMonth(name);
+    const openMonthName = monthNameFromIndex(openCompetition?.month);
+    const openYear = openCompetition?.year;
+    if (
+      openMonthName &&
+      openYear &&
+      String(name).toLowerCase() === String(openMonthName).toLowerCase() &&
+      standingsYear === openYear
+    ) {
+      setUseLiveStandings(true);
+      return;
+    }
+    setUseLiveStandings(false);
+  };
+
+  const liveStandings = !isPage
+    ? t('home.leaderboard.liveStandings', {
         month: t(`common.months.${monthMenu.month}`, monthMenu.month),
         year: standingsYear,
-        defaultValue: `Live standings for ${monthMenu.month} ${standingsYear}`,
+        defaultValue: `${monthMenu.month} ${standingsYear} live standings`,
       })
-    : t('home.leaderboard.liveStandings', {
-        defaultValue: 'Finalized monthly rankings and top photographers.',
-      });
+    : isLiveQuery
+      ? t('leaderboard.liveStandings', {
+          month: t(`common.months.${monthMenu.month}`, monthMenu.month),
+          year: standingsYear,
+          defaultValue: `Live standings for ${monthMenu.month} ${standingsYear}`,
+        })
+      : t('leaderboard.closedStandings', {
+          month: t(`common.months.${monthMenu.month}`, monthMenu.month),
+          year: standingsYear,
+          defaultValue: `Final standings for ${monthMenu.month} ${standingsYear}`,
+        });
 
   return (
     <section className="bg-[#f7f8fa] section-py">
@@ -541,6 +609,7 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
                 albumTab={albumTab}
                 onAlbumTabChange={setAlbumTab}
                 monthMenu={monthMenu}
+                onMonthChange={handleMonthChange}
                 isFetching={isFetching}
               />
             ) : (
@@ -605,10 +674,15 @@ const TopPhotographers = memo(({ variant = 'home' }) => {
               )}
             </p>
             <p className="mt-1 text-[14px] text-[#6b7280]">
-              {t(
-                'leaderboard.emptySubtitle',
-                'Select another month or album format to see competition results.',
-              )}
+              {isLiveQuery
+                ? t(
+                    'leaderboard.emptyLiveSubtitle',
+                    'No votes yet for the running competition. Check back soon or try another album format.',
+                  )
+                : t(
+                    'leaderboard.emptySubtitle',
+                    'Select another month or album format to see competition results.',
+                  )}
             </p>
           </div>
         ) : (

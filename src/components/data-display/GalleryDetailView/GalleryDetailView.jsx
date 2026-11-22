@@ -48,6 +48,10 @@ import {
   toGalleryDetailEntry,
 } from '@/shared/data/galleryDetail';
 import { AppLink, ImgIcon, Shell, SitePageLayout } from '@/shared/site-chrome';
+import {
+  hasLikedArtworkInSession,
+  writeLikedArtworkId,
+} from '@/shared/utils/likedArtworksSession';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import GalleryDetailBreadcrumb from './GalleryDetailBreadcrumb';
 
@@ -91,25 +95,35 @@ const GalleryDetailView = memo(
     const [submittingComment, setSubmittingComment] = useState(false);
     const [donationOpen, setDonationOpen] = useState(true);
 
+    const artworkId = story?.id || entry?.id;
+
     const [voting, setVoting] = useState(false);
     const [hasVoted, setHasVoted] = useState(false);
     const [isSaved, setIsSaved] = useState(
       Boolean(story.isSaved || story.saved),
     );
     const [saving, setSaving] = useState(false);
-    const [isLiked, setIsLiked] = useState(
-      Boolean(story.isLiked || story.liked),
-    );
+    const [isLiked, setIsLiked] = useState(() => {
+      if (story.isLiked || story.liked) return true;
+      return hasLikedArtworkInSession(artworkId);
+    });
     const [liking, setLiking] = useState(false);
     const [likesCount, setLikesCount] = useState(
       () => Number(String(story.likes ?? '0').replace(/,/g, '')) || 0,
     );
 
     useEffect(() => {
-      setIsLiked(Boolean(story.isLiked || story.liked));
+      if (story.isLiked || story.liked) {
+        setIsLiked(true);
+      } else if (hasLikedArtworkInSession(artworkId)) {
+        setIsLiked(true);
+      } else {
+        setIsLiked(false);
+      }
       setLikesCount(Number(String(story.likes ?? '0').replace(/,/g, '')) || 0);
       setIsSaved(Boolean(story.isSaved || story.saved));
     }, [
+      artworkId,
       story.id,
       story.isLiked,
       story.liked,
@@ -117,8 +131,6 @@ const GalleryDetailView = memo(
       story.isSaved,
       story.saved,
     ]);
-
-    const artworkId = story?.id || entry?.id;
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -252,18 +264,32 @@ const GalleryDetailView = memo(
 
     const handleSaveToggle = async () => {
       if (!artworkId || saving) return;
+      if (isOwnSubmission) {
+        toast.error(
+          t(
+            'gallery.cannotSaveOwn',
+            'You cannot save your own artwork.',
+          ),
+        );
+        return;
+      }
       const next = !isSaved;
       setIsSaved(next);
       try {
         setSaving(true);
         const res = await toggleSaveArtworkApi(artworkId);
-        queryClient.invalidateQueries({
-          queryKey: ['artwork-detail', artworkId],
-        });
+        const savedRes =
+          res?.data?.saved ?? res?.saved ?? res?.data?.isSaved ?? res?.isSaved;
+        const confirmedSaved =
+          savedRes != null ? Boolean(savedRes) : next;
+        setIsSaved(confirmedSaved);
+        queryClient.setQueryData(['artwork-detail', artworkId], (old) =>
+          old ? { ...old, isSaved: confirmedSaved, saved: confirmedSaved } : old,
+        );
         queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
         toast.success(
           res?.message ||
-            (next
+            (confirmedSaved
               ? t('gallery.savedSuccess', 'Saved to favourites')
               : t('gallery.unsavedSuccess', 'Removed from favourites')),
         );
@@ -298,15 +324,30 @@ const GalleryDetailView = memo(
         }
         const isLikedRes =
           res?.data?.isLiked ?? res?.isLiked ?? res?.data?.liked ?? res?.liked;
-        if (isLikedRes != null) {
-          setIsLiked(Boolean(isLikedRes));
-        }
-        queryClient.invalidateQueries({
-          queryKey: ['artwork-detail', artworkId],
-        });
-        queryClient.invalidateQueries({ queryKey: ['saved-artworks'] });
-        queryClient.invalidateQueries({ queryKey: ['user-artworks'] });
-        if (res?.message) toast.success(res.message);
+        const confirmedLiked =
+          isLikedRes != null ? Boolean(isLikedRes) : next;
+        setIsLiked(confirmedLiked);
+        writeLikedArtworkId(artworkId, confirmedLiked);
+        queryClient.setQueryData(['artwork-detail', artworkId], (old) =>
+          old
+            ? {
+                ...old,
+                isLiked: confirmedLiked,
+                liked: confirmedLiked,
+                likesCount: count != null ? Number(count) : old.likesCount,
+                likes:
+                  count != null
+                    ? String(count)
+                    : old.likes,
+              }
+            : old,
+        );
+        toast.success(
+          res?.message ||
+            (confirmedLiked
+              ? t('gallery.likedSuccess', 'Added to likes')
+              : t('gallery.unlikedSuccess', 'Removed from likes')),
+        );
       } catch (err) {
         setIsLiked(!next);
         setLikesCount((prev) => (next ? Math.max(0, prev - 1) : prev + 1));
@@ -602,19 +643,23 @@ const GalleryDetailView = memo(
                     variant="outline"
                     disabled={liking}
                     onClick={handleLikeToggle}
-                    className={isLiked ? 'text-[#e53935] border-[#e53935]' : ''}
+                    className={
+                      isLiked
+                        ? 'border-[#ee1c25] bg-[#fff1f2] text-[#ee1c25]'
+                        : ''
+                    }
                   >
                     <Heart
                       size={18}
-                      strokeWidth={2}
+                      strokeWidth={2.25}
                       aria-hidden="true"
                       className={
                         isLiked
-                          ? 'fill-[#e53935] text-[#e53935]'
-                          : 'text-[#494453]'
+                          ? 'fill-[#ee1c25] text-[#ee1c25]'
+                          : 'fill-transparent text-[#494453]'
                       }
                     />
-                    <span>
+                    <span className={isLiked ? 'font-semibold text-[#ee1c25]' : ''}>
                       {likesCount > 0 ? likesCount.toLocaleString('en-US') : ''}{' '}
                       {isLiked
                         ? t('common.liked', 'Liked')
@@ -626,23 +671,37 @@ const GalleryDetailView = memo(
                 <MarketingButton
                   type="button"
                   variant="outline"
-                  disabled={saving}
+                  disabled={saving || isOwnSubmission}
                   onClick={handleSaveToggle}
-                  className={isSaved ? 'text-[#ee1c25] border-[#ee1c25]' : ''}
+                  title={
+                    isOwnSubmission
+                      ? t(
+                          'gallery.cannotSaveOwn',
+                          'You cannot save your own artwork.',
+                        )
+                      : undefined
+                  }
+                  className={`${
+                    isSaved
+                      ? 'border-[#ee1c25] bg-[#fff1f2] text-[#ee1c25]'
+                      : ''
+                  } ${isOwnSubmission ? 'opacity-60' : ''}`}
                 >
                   <Bookmark
                     size={18}
-                    strokeWidth={2}
+                    strokeWidth={2.25}
                     aria-hidden="true"
                     className={
                       isSaved
                         ? 'fill-[#ee1c25] text-[#ee1c25]'
-                        : 'text-[#494453]'
+                        : 'fill-transparent text-[#ee1c25]'
                     }
                   />
-                  {isSaved
-                    ? t('gallery.saved', 'Saved')
-                    : t('gallery.save', 'Save')}
+                  <span className={isSaved ? 'font-semibold text-[#ee1c25]' : 'text-[#ee1c25]'}>
+                    {isSaved
+                      ? t('gallery.saved', 'Saved')
+                      : t('gallery.save', 'Save')}
+                  </span>
                 </MarketingButton>
 
                 <MarketingButton

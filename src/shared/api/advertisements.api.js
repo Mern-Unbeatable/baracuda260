@@ -1,6 +1,79 @@
 import { apiClient } from './client';
 
 export const ADMIN_ADVERTISEMENTS_QUERY_KEY = ['admin-advertisements'];
+export const PUBLIC_ADVERTISEMENTS_QUERY_KEY = ['public-advertisements'];
+
+/** Page slugs accepted by GET /v1/advertisements/public?page= */
+export const ADVERTISEMENT_PAGES = [
+  'home',
+  'competitions',
+  'competitions-details',
+  'gallery',
+  'gallery-details',
+  'photographer-profile',
+  'checkout-page',
+  'buy-photo',
+  'buy-photo-details',
+  'album',
+  'leaderboard',
+  'winner',
+  'about',
+];
+
+/**
+ * Map a frontend pathname to the advertisement selectPage slug.
+ * @param {string} pathname
+ * @returns {string | null}
+ */
+export const resolveAdvertisementPage = (pathname = '/') => {
+  const p = String(pathname || '/').replace(/\/+$/, '') || '/';
+
+  if (p === '/') return 'home';
+  if (p === '/competitions') return 'competitions';
+  if (p.startsWith('/competitions/')) return 'competitions-details';
+  if (p === '/gallery') return 'gallery';
+  if (p.startsWith('/gallery/')) return 'gallery-details';
+  if (p.startsWith('/photographer')) return 'photographer-profile';
+  if (p.includes('/checkout')) return 'checkout-page';
+  if (p === '/buy-photos' || p === '/marketplace') return 'buy-photo';
+  if (p.startsWith('/buy-photos/')) return 'buy-photo-details';
+  if (p === '/album-types' || p.startsWith('/album')) return 'album';
+  if (p === '/leaderboard') return 'leaderboard';
+  if (p === '/winners' || p.startsWith('/winners/')) return 'winner';
+  if (p === '/about') return 'about';
+  return null;
+};
+
+/**
+ * Active public ads for a site page.
+ * Endpoint: GET /v1/advertisements/public?page=home
+ *
+ * @param {{ page?: string }} [params]
+ */
+export const getPublicAdvertisementsApi = async ({ page } = {}) => {
+  const params = {};
+  if (page) params.page = String(page).toLowerCase();
+
+  const response = await apiClient.get('/v1/advertisements/public', { params });
+  const payload = response?.data !== undefined ? response.data : response;
+  const list = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload?.data)
+      ? payload.data
+      : [];
+
+  return list.map((ad) => ({
+    id: ad.id,
+    businessName: ad.businessName || '',
+    businessType: ad.businessType || 'ONLINE',
+    description: ad.description || '',
+    descriptionPl: ad.description_pl || ad.descriptionPl || '',
+    media: ad.media || ad.businessImage || '',
+    websiteUrl: ad.websiteUrl || '',
+    location: ad.location || '',
+    locationPl: ad.location_pl || ad.locationPl || '',
+  }));
+};
 
 export const getAdminAdvertisementsApi = async ({ page, limit }) => {
   const response = await apiClient.get('/v1/advertisements/admin/all', {
