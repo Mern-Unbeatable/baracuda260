@@ -1419,7 +1419,10 @@
       "downloads": "Available Downloads"
     },
     "invoiceAria": "Download invoice for {{title}}",
-    "invoiceStarted": "Invoice download started for {{title}}."
+    "downloadInvoice": "Download invoice",
+    "invoiceStarted": "Invoice downloaded for {{title}}.",
+    "invoiceFailed": "Failed to download invoice.",
+    "invoiceUnavailable": "Invoice is not available for this purchase."
   },
   "myStore": {
     "title": "My Store",

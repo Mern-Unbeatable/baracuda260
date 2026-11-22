@@ -1,4 +1,4 @@
-import { CloudDownload, Image, RefreshCw, Wallet } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Pagination from '@/components/common/Pagination/Pagination';
@@ -7,7 +7,6 @@ import MemberPurchasePhotoCard from '@/components/data-display/MemberPurchasePho
 import Button from '@/components/ui/Button';
 import {
   PURCHASE_PHOTOS_PAGE_SIZE,
-  PURCHASE_PHOTOS_PAGE_SIZE_OPTIONS,
   PURCHASE_STAT_CARDS,
 } from '@/portals/member/data/purchasePhotosData';
 import usePurchasePhotos from '@/portals/member/hooks/usePurchasePhotos';
@@ -18,7 +17,7 @@ const PurchaseStatCards = memo(({ stats, isLoading }) => {
   return (
     <div
       aria-label={t('purchasePhotos.stats.aria')}
-      className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+      className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4"
     >
       {PURCHASE_STAT_CARDS.map((card) => {
         let iconBg = card.iconBg;
@@ -48,7 +47,6 @@ PurchaseStatCards.displayName = 'PurchaseStatCards';
 
 const PurchasePhotosContent = memo(() => {
   const { t } = useTranslation();
-  const [pageSize, setPageSize] = useState(PURCHASE_PHOTOS_PAGE_SIZE);
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -61,18 +59,13 @@ const PurchasePhotosContent = memo(() => {
     isError,
     error,
     refetch,
-  } = usePurchasePhotos({ page: currentPage, limit: pageSize });
+  } = usePurchasePhotos({
+    page: currentPage,
+    limit: PURCHASE_PHOTOS_PAGE_SIZE,
+  });
 
   const totalRecords = meta?.totalRecords ?? items.length;
   const totalPages = meta?.totalPages ?? 1;
-
-  const handlePageSizeChange = (event) => {
-    setPageSize(Number(event.target.value));
-    setCurrentPage(1);
-  };
-
-  const from = totalRecords === 0 ? 0 : (currentPage - 1) * pageSize + 1;
-  const to = Math.min(currentPage * pageSize, totalRecords);
 
   return (
     <div className="mx-auto flex w-full max-w-395 flex-col gap-8">
@@ -124,7 +117,7 @@ const PurchasePhotosContent = memo(() => {
       ) : (
         <section
           aria-label={t('purchasePhotos.gridAria')}
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
+          className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4"
         >
           {items.map((purchase) => (
             <MemberPurchasePhotoCard key={purchase.id} purchase={purchase} />
@@ -132,36 +125,24 @@ const PurchasePhotosContent = memo(() => {
         </section>
       )}
 
-      {totalRecords > 0 ? (
-        <footer className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
-            <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
-              {t('purchasePhotos.showing', { from, to, total: totalRecords })}
-            </p>
-            <label className="inline-flex items-center gap-2 text-[13px] text-[#687186]">
-              <span>{t('purchasePhotos.perPage')}</span>
-              <select
-                value={pageSize}
-                onChange={handlePageSizeChange}
-                className="h-9 rounded-lg border border-[#e4e4e4] bg-white px-2.5 text-[13px] font-medium text-[#373737] outline-none focus:ring-2 focus:ring-[#4048cd]/20"
-              >
-                {PURCHASE_PHOTOS_PAGE_SIZE_OPTIONS.map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          {totalPages > 1 ? (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              ariaLabel={t('purchasePhotos.paginationAria')}
-            />
-          ) : null}
+      {items.length > 0 ? (
+        <footer className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
+            {t('purchasePhotos.showing', {
+              from: (currentPage - 1) * PURCHASE_PHOTOS_PAGE_SIZE + 1,
+              to: Math.min(
+                currentPage * PURCHASE_PHOTOS_PAGE_SIZE,
+                totalRecords,
+              ),
+              total: totalRecords,
+            })}
+          </p>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            ariaLabel={t('purchasePhotos.paginationAria')}
+          />
         </footer>
       ) : null}
     </div>
