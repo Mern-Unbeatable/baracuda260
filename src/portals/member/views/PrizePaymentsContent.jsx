@@ -3,7 +3,7 @@ import { ChevronDown, Download, Loader2, Search } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -44,6 +44,7 @@ import {
   USER_PRIZE_MONEY_QUERY_KEY,
   USER_STORE_SALES_QUERY_KEY,
 } from '@/shared/api/payments.api';
+import { ROUTES } from '@/shared/config';
 import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
 const CARD_SHADOW = 'shadow-[0px_4px_20px_-2px_rgba(83,42,168,0.04)]';
@@ -176,7 +177,7 @@ const TablePagination = memo(
             className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal transition ${
               !canPrev
                 ? 'cursor-not-allowed border-gray-200 text-gray-400 opacity-50'
-                : `${colors.border} ${colors.text} hover:bg-black/5`
+                : `cursor-pointer ${colors.border} ${colors.text} hover:bg-black/5`
             }`}
           >
             {t('prizePayments.pagination.previous')}
@@ -189,7 +190,7 @@ const TablePagination = memo(
             className={`rounded-xl border px-4 py-2 text-[16px] font-medium capitalize leading-normal transition ${
               !canNext
                 ? 'cursor-not-allowed border-gray-200 text-gray-400 opacity-50'
-                : `${colors.border} ${colors.text} hover:bg-black/5`
+                : `cursor-pointer ${colors.border} ${colors.text} hover:bg-black/5`
             }`}
           >
             {t('prizePayments.pagination.next')}
@@ -663,6 +664,12 @@ const PhotoSalesTable = memo(
                 {t('prizePayments.photoSales.columns.salePrice')}
               </TableHead>
               <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+                {t(
+                  'prizePayments.photoSales.columns.platformFee',
+                  'Platform Fee',
+                )}
+              </TableHead>
+              <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
                 {t('prizePayments.photoSales.columns.yourEarnings')}
               </TableHead>
               <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
@@ -674,7 +681,7 @@ const PhotoSalesTable = memo(
             {filteredRows.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={7}
+                  colSpan={8}
                   className="py-12 text-center text-[15px] text-[#7a7484]"
                 >
                   {t(
@@ -696,6 +703,13 @@ const PhotoSalesTable = memo(
                   typeof row.salePrice === 'number'
                     ? formatPrizeAmount(row.salePrice)
                     : row.salePrice;
+                const platformFee =
+                  typeof row.platformFee === 'number'
+                    ? formatPrizeAmount(row.platformFee)
+                    : row.platformFee ||
+                      (typeof row.salePrice === 'number'
+                        ? formatPrizeAmount(row.salePrice * 0.1)
+                        : '-');
                 const yourEarnings =
                   typeof row.yourEarnings === 'number'
                     ? formatPrizeAmount(row.yourEarnings)
@@ -728,6 +742,9 @@ const PhotoSalesTable = memo(
                     </TableCell>
                     <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
                       {salePrice}
+                    </TableCell>
+                    <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                      {platformFee}
                     </TableCell>
                     <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
                       {yourEarnings}
@@ -861,6 +878,12 @@ const StoreSalesTable = memo(
               </TableHead>
               <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
                 {t(
+                  'prizePayments.storeSales.columns.platformFee',
+                  'Platform Fee',
+                )}
+              </TableHead>
+              <TableHead className="text-[12px] font-bold uppercase tracking-[0.6px] text-[#7a7484]">
+                {t(
                   'prizePayments.storeSales.columns.yourEarnings',
                   'Your Earnings',
                 )}
@@ -874,7 +897,7 @@ const StoreSalesTable = memo(
             {rows.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={8}
+                  colSpan={9}
                   className="py-12 text-center text-[15px] text-[#7a7484]"
                 >
                   {t('prizePayments.storeSales.empty', 'No store sales found.')}
@@ -887,6 +910,13 @@ const StoreSalesTable = memo(
                   typeof row.salePrice === 'number'
                     ? formatPrizeAmount(row.salePrice)
                     : row.salePrice || '$0.00';
+                const platformFee =
+                  typeof row.platformFee === 'number'
+                    ? formatPrizeAmount(row.platformFee)
+                    : row.platformFee ||
+                      (typeof row.salePrice === 'number'
+                        ? formatPrizeAmount(row.salePrice * 0.1)
+                        : '$0.00');
                 const yourEarnings =
                   typeof row.yourEarnings === 'number'
                     ? formatPrizeAmount(row.yourEarnings)
@@ -927,13 +957,23 @@ const StoreSalesTable = memo(
                       {salePrice}
                     </TableCell>
                     <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
+                      {platformFee}
+                    </TableCell>
+                    <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
                       {yourEarnings}
                     </TableCell>
                     <TableCell className="py-5 text-[14px] leading-5 text-[#0c0c0c] sm:text-[15px]">
                       {row.productId ? (
                         <Link
-                          to={`/my-store`}
-                          className="text-[14px] font-medium text-[#4048cd] hover:underline"
+                          to={ROUTES.USER_MY_STORE_DETAIL.replace(
+                            ':id',
+                            encodeURIComponent(row.productId),
+                          )}
+                          state={{
+                            from: `${ROUTES.USER_PRIZE_PAYMENTS}?tab=storeSales`,
+                            fromLabel: 'prizePayments',
+                          }}
+                          className="cursor-pointer text-[14px] font-medium text-[#4048cd] hover:underline"
                         >
                           {t('prizePayments.storeSales.details', 'Details')}
                         </Link>
@@ -1089,11 +1129,32 @@ const PaymentHistoryTable = memo(
 
 PaymentHistoryTable.displayName = 'PaymentHistoryTable';
 
+const VALID_PRIZE_TABS = new Set(PRIZE_PAYMENTS_TABS.map((tab) => tab.value));
+
 const PrizePaymentsContent = memo(() => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState('prizeMoney');
+  const tabFromUrl = searchParams.get('tab');
+  const activeTab = VALID_PRIZE_TABS.has(tabFromUrl) ? tabFromUrl : 'prizeMoney';
+
+  const setActiveTab = (nextTab) => {
+    const next = VALID_PRIZE_TABS.has(nextTab) ? nextTab : 'prizeMoney';
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        if (next === 'prizeMoney') {
+          params.delete('tab');
+        } else {
+          params.set('tab', next);
+        }
+        return params;
+      },
+      { replace: true },
+    );
+  };
+
   const [prizingPage, setPrizingPage] = useState(1);
   const [donationsPage, setDonationsPage] = useState(1);
   const [photoSalesPage, setPhotoSalesPage] = useState(1);
@@ -1242,6 +1303,14 @@ const PrizePaymentsContent = memo(() => {
         photoSalesStats.photosSold != null
           ? String(photoSalesStats.photosSold)
           : undefined,
+      platformFee:
+        photoSalesStats.platformFee != null
+          ? formatPrizeAmount(photoSalesStats.platformFee)
+          : undefined,
+      yourEarnings:
+        photoSalesStats.yourEarnings != null
+          ? formatPrizeAmount(photoSalesStats.yourEarnings)
+          : undefined,
       availableEarnings:
         photoSalesStats.available != null
           ? formatPrizeAmount(photoSalesStats.available)
@@ -1267,6 +1336,10 @@ const PrizePaymentsContent = memo(() => {
       itemsSold:
         storeSalesStats.itemsSold != null
           ? String(storeSalesStats.itemsSold)
+          : undefined,
+      platformFee:
+        storeSalesStats.platformFee != null
+          ? formatPrizeAmount(storeSalesStats.platformFee)
           : undefined,
       yourEarnings:
         storeSalesStats.yourEarnings != null
@@ -1415,6 +1488,15 @@ const PrizePaymentsContent = memo(() => {
       {activeTab === 'donations' ? (
         <p className="mb-8 rounded-xl border border-[#dbeafe] bg-[#eff6ff] px-4 py-3 text-[14px] leading-6 text-[#1e40af]">
           {t('prizePayments.donations.commissionBanner')}
+        </p>
+      ) : null}
+
+      {activeTab === 'photoSales' ? (
+        <p className="mb-8 rounded-xl border border-[#dbeafe] bg-[#eff6ff] px-4 py-3 text-[14px] leading-6 text-[#1e40af]">
+          {t(
+            'prizePayments.photoSales.commissionBanner',
+            'Platform commission: 10% per photo sale. You earn 90% of each sale.',
+          )}
         </p>
       ) : null}
 

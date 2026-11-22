@@ -201,7 +201,7 @@ const RequestPayoutModal = memo(
                         key={option.key}
                         type="button"
                         onClick={() => handleSelectType(option.key)}
-                        className={`rounded-xl border px-3.5 py-3 text-left transition ${
+                        className={`cursor-pointer rounded-xl border px-3.5 py-3 text-left transition ${
                           isActive
                             ? 'border-[#ee1c25] bg-[#fff5f5] text-[#ee1c25]'
                             : 'border-[#e2e8f0] bg-white text-[#161c27] hover:border-[#cbd5e1]'
@@ -236,7 +236,7 @@ const RequestPayoutModal = memo(
                       type="button"
                       onClick={handleUseMax}
                       disabled={!(availableAmount > 0)}
-                      className="font-semibold text-[#ee1c25] transition hover:underline disabled:cursor-not-allowed disabled:opacity-40"
+                      className="cursor-pointer font-semibold text-[#ee1c25] transition hover:underline disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       {t('prizePayments.payoutModal.max', 'Max')}
                     </button>

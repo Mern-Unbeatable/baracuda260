@@ -99,6 +99,20 @@ export const PHOTO_SALES_SUMMARY = [
     valueClass: 'text-[#161c27]',
   },
   {
+    id: 'platformFee',
+    labelKey: 'prizePayments.photoSales.summary.platformFee',
+    valueKey: 'prizePayments.photoSales.summary.platformFeeValue',
+    hintKey: 'prizePayments.photoSales.summary.platformFeeHint',
+    valueClass: 'text-[#d97706]',
+  },
+  {
+    id: 'yourEarnings',
+    labelKey: 'prizePayments.photoSales.summary.yourEarnings',
+    valueKey: 'prizePayments.photoSales.summary.yourEarningsValue',
+    hintKey: 'prizePayments.photoSales.summary.yourEarningsHint',
+    valueClass: 'text-[#161c27]',
+  },
+  {
     id: 'availableEarnings',
     labelKey: 'prizePayments.photoSales.summary.availableEarnings',
     valueKey: 'prizePayments.photoSales.summary.availableEarningsValue',
@@ -135,6 +149,13 @@ export const STORE_SALES_SUMMARY = [
     valueKey: 'prizePayments.storeSales.summary.itemsSoldValue',
     hintKey: 'prizePayments.storeSales.summary.itemsSoldHint',
     valueClass: 'text-[#161c27]',
+  },
+  {
+    id: 'platformFee',
+    labelKey: 'prizePayments.storeSales.summary.platformFee',
+    valueKey: 'prizePayments.storeSales.summary.platformFeeValue',
+    hintKey: 'prizePayments.storeSales.summary.platformFeeHint',
+    valueClass: 'text-[#d97706]',
   },
   {
     id: 'yourEarnings',

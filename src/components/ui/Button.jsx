@@ -12,7 +12,7 @@ const Button = forwardRef(
     ref,
   ) => {
     const baseClasses =
-      'inline-flex items-center justify-center font-bold rounded-[4px] transition uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed';
+      'inline-flex cursor-pointer items-center justify-center font-bold rounded-[4px] transition uppercase tracking-wider disabled:cursor-not-allowed disabled:opacity-50';
 
     const variants = {
       primary: 'bg-[#ee1c25] hover:bg-[#d01820] text-white',
@@ -21,8 +21,9 @@ const Button = forwardRef(
         'border border-[#e2e8f0] bg-white hover:bg-[#f8f9fa] text-[#111827]',
     };
 
+    // Unstyled buttons still get pointer so page CTAs don't look non-clickable
     const finalClass = unstyled
-      ? className
+      ? `cursor-pointer disabled:cursor-not-allowed ${className}`.trim()
       : `${baseClasses} ${variants[variant] || ''} ${className}`;
 
     return (

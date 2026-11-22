@@ -70,6 +70,23 @@ const MyStoreDetailContent = memo(() => {
   const [activeImage, setActiveImage] = useState(null);
   const displayImage = activeImage || gallery[0] || product?.image || '';
 
+  const backFrom = location.state?.from;
+  const backFromPrizePayments =
+    typeof backFrom === 'string' &&
+    backFrom.startsWith(ROUTES.USER_PRIZE_PAYMENTS);
+
+  const handleBack = () => {
+    if (backFrom) {
+      navigate(backFrom);
+      return;
+    }
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+    navigate(ROUTES.USER_MY_STORE);
+  };
+
   if (isLoading && !product) {
     return (
       <div className="mx-auto flex w-full max-w-395 flex-col items-center justify-center py-24 text-center">
@@ -104,13 +121,20 @@ const MyStoreDetailContent = memo(() => {
               {t('common.retry', 'Retry')}
             </Button>
           ) : null}
-          <Link
-            to={ROUTES.USER_MY_STORE}
+          <Button
+            unstyled
+            type="button"
+            onClick={handleBack}
             className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-[#e4e4e4] bg-white px-4 py-2 text-[14px] font-semibold text-[#161c27] transition hover:bg-[#f6f7f9]"
           >
             <ArrowLeft size={16} aria-hidden="true" />
-            {t('myStore.detail.back', 'Back to My Store')}
-          </Link>
+            {backFromPrizePayments
+              ? t(
+                  'myStore.detail.backToPrizePayments',
+                  'Back to Prize & Payments',
+                )
+              : t('myStore.detail.back', 'Back to My Store')}
+          </Button>
         </div>
       </div>
     );
@@ -124,11 +148,16 @@ const MyStoreDetailContent = memo(() => {
         <Button
           unstyled
           type="button"
-          onClick={() => navigate(ROUTES.USER_MY_STORE)}
+          onClick={handleBack}
           className="inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-[#6b7280] transition hover:text-[#4048cd]"
         >
           <ArrowLeft size={14} aria-hidden="true" />
-          {t('myStore.detail.back', 'Back to My Store')}
+          {backFromPrizePayments
+            ? t(
+                'myStore.detail.backToPrizePayments',
+                'Back to Prize & Payments',
+              )
+            : t('myStore.detail.back', 'Back to My Store')}
         </Button>
         {isOwner ? (
           <Link
