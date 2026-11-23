@@ -2,6 +2,7 @@ import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   Area,
   AreaChart,
@@ -15,22 +16,19 @@ import {
 } from 'recharts';
 import { selectUser } from '@/app/store/slices/authSlice';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
+import AdminOverviewStatCard from '@/components/data-display/AdminOverviewStatCard/AdminOverviewStatCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import useAdminDashboard from '@/portals/admin/hooks/useAdminDashboard';
 import {
   CARD_BORDER,
   CARD_SHADOW,
-  COMMUNITY_COUNTRIES,
   OVERVIEW_STATS_PRIMARY,
   OVERVIEW_STATS_SECONDARY,
-  PENDING_SUBMISSIONS,
-  REVENUE_DATA,
   REVENUE_PERIODS,
   VISITOR_DATA,
 } from '@/portals/admin/data/adminOverviewData';
-
-import AdminOverviewStatCard from '@/components/data-display/AdminOverviewStatCard/AdminOverviewStatCard';
+import { ROUTES } from '@/shared/config';
 
 const VisitorChart = memo(() => {
   const { t } = useTranslation();
@@ -56,15 +54,15 @@ const VisitorChart = memo(() => {
       className={`flex min-h-0 flex-col rounded-[18px] bg-white p-5 sm:p-7 ${CARD_BORDER} ${CARD_SHADOW}`}
     >
       <header>
-        <h2 className="text-[18px] leading-7 tracking-[-0.5px] text-[#172033] sm:text-[20px]">
+        <h2 className="text-[18px] font-semibold leading-7 tracking-[-0.5px] text-[#161c27] sm:text-[20px] lg:text-[22px]">
           {t('adminOverview.analytics.title')}
         </h2>
-        <p className="mt-1.5 text-[14px] leading-5 text-[#696969] sm:text-[16px] sm:leading-5.25">
+        <p className="mt-1.5 text-[13px] leading-5 text-[#494453] sm:text-[14px]">
           {t('adminOverview.analytics.subtitle')}
         </p>
       </header>
 
-      <p className="mt-6 text-[28px] font-extrabold tracking-[-1.2px] text-[#172033] sm:mt-7 sm:text-[32px]">
+      <p className="mt-5 text-[24px] font-bold tracking-[-0.64px] text-[#161c27] sm:mt-6 sm:text-[28px]">
         {t('adminOverview.analytics.total')}
       </p>
 
@@ -148,10 +146,11 @@ PendingBadge.displayName = 'PendingBadge';
 
 const PendingReviewCard = memo(({ data, isLoading }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const submissions =
-    data?.submissions?.length > 0 ? data.submissions : PENDING_SUBMISSIONS;
-  const pendingCount = data?.pendingDecisions;
+  const submissions = Array.isArray(data?.submissions) ? data.submissions : [];
+  const pendingCount = data?.pendingDecisions ?? submissions.length;
+  const openCompetitions = () => navigate(ROUTES.ADMIN_MY_COMPETITIONS);
 
   return (
     <article
@@ -159,18 +158,19 @@ const PendingReviewCard = memo(({ data, isLoading }) => {
     >
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-[18px] leading-7 tracking-[-0.5px] text-[#172033] sm:text-[20px]">
+          <h2 className="text-[18px] font-semibold leading-7 tracking-[-0.5px] text-[#172033] sm:text-[20px]">
             {t('adminOverview.pending.title')}
           </h2>
           <p className="mt-1.5 text-[13px] leading-5 text-[#8993a5] sm:text-[14px]">
-            {pendingCount !== undefined
-              ? `${pendingCount} ${t('adminOverview.pending.badge').toLowerCase()}`
-              : t('adminOverview.pending.subtitle')}
+            {isLoading
+              ? t('common.loading', 'Loading...')
+              : `${pendingCount} ${t('adminOverview.pending.badge').toLowerCase()}`}
           </p>
         </div>
         <Button
           unstyled
           type="button"
+          onClick={openCompetitions}
           className="inline-flex shrink-0 items-center gap-0.5 text-[13px] font-bold text-[#3068d3] transition hover:text-[#2454b0] sm:text-[14px]"
         >
           {t('adminOverview.pending.reviewAll')}
@@ -178,59 +178,68 @@ const PendingReviewCard = memo(({ data, isLoading }) => {
         </Button>
       </header>
 
-      <ul className="mt-5 flex flex-1 flex-col" role="list">
-        {submissions.map((item) => {
-          const title = item.title || (item.titleKey ? t(item.titleKey) : '');
-          const meta =
-            item.author || item.country
-              ? [item.author, item.country].filter(Boolean).join(' • ')
-              : item.metaKey
-                ? t(item.metaKey)
-                : '';
-          const isVideo =
-            typeof item.image === 'string' &&
-            item.image.toLowerCase().endsWith('.mp4');
+      {submissions.length > 0 ? (
+        <ul className="mt-5 flex flex-1 flex-col" role="list">
+          {submissions.map((item) => {
+            const title = item.title || '';
+            const meta = [item.author, item.country].filter(Boolean).join(' • ');
+            const isVideo =
+              typeof item.image === 'string' &&
+              item.image.toLowerCase().endsWith('.mp4');
 
-          return (
-            <li
-              key={item.id}
-              className="flex items-center gap-3 border-b border-[#f0f1f4] py-2.5 last:border-b-0 sm:gap-3"
-            >
-              <div className="relative size-11 shrink-0 overflow-hidden rounded-[9px] bg-[#dce4ed]">
-                {isVideo ? (
-                  <video
-                    src={item.image}
-                    className="absolute inset-0 size-full object-cover"
-                    muted
-                    playsInline
-                  />
-                ) : (
-                  <Image
-                    src={item.image}
-                    alt=""
-                    width={44}
-                    height={44}
-                    className="absolute inset-0 size-full object-cover"
-                  />
+            return (
+              <li
+                key={item.id}
+                className="flex items-center gap-3 border-b border-[#f0f1f4] py-2.5 last:border-b-0 sm:gap-3"
+              >
+                <div className="relative size-11 shrink-0 overflow-hidden rounded-[9px] bg-[#dce4ed]">
+                  {isVideo ? (
+                    <video
+                      src={item.image}
+                      className="absolute inset-0 size-full object-cover"
+                      muted
+                      playsInline
+                    />
+                  ) : item.image ? (
+                    <Image
+                      src={item.image}
+                      alt=""
+                      width={44}
+                      height={44}
+                      className="absolute inset-0 size-full object-cover"
+                    />
+                  ) : null}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[14px] font-bold leading-5 text-[#172033] sm:text-[15px]">
+                    {title}
+                  </p>
+                  <p className="truncate text-[12px] leading-5 text-[#8590a1] sm:text-[13px]">
+                    {meta}
+                  </p>
+                </div>
+                <PendingBadge />
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <div className="mt-5 flex flex-1 items-center justify-center py-8 text-center">
+          <p className="text-[13px] text-[#8993a5] sm:text-[14px]">
+            {isLoading
+              ? t('common.loading', 'Loading...')
+              : t(
+                  'adminOverview.pending.empty',
+                  'No submissions waiting for a decision.',
                 )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[15px] font-bold leading-5 text-[#172033] sm:text-[16px]">
-                  {title}
-                </p>
-                <p className="truncate text-[13px] leading-5 text-[#8590a1] sm:text-[14px]">
-                  {meta}
-                </p>
-              </div>
-              <PendingBadge />
-            </li>
-          );
-        })}
-      </ul>
+          </p>
+        </div>
+      )}
 
       <Button
         unstyled
         type="button"
+        onClick={openCompetitions}
         className="mt-4 w-full rounded-[9px] bg-[#ee1c25] px-4 py-3 text-[14px] font-bold text-white transition hover:bg-[#d41921]"
       >
         {t('adminOverview.pending.openQueue')}
@@ -274,7 +283,7 @@ const CommunityReachCard = memo(({ reachData }) => {
       </header>
 
       <ul className="mt-4 flex flex-col gap-4 sm:mt-5 sm:gap-4" role="list">
-        {countries
+        {countries?.length
           ? countries.map((country) => (
               <li
                 key={country.id}
@@ -304,33 +313,14 @@ const CommunityReachCard = memo(({ reachData }) => {
                 </div>
               </li>
             ))
-          : COMMUNITY_COUNTRIES.map((country) => (
-              <li
-                key={country.id}
-                className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4"
-              >
-                <div className="flex w-full shrink-0 items-center gap-3 sm:w-40">
-                  <span
-                    className={`size-4.5 shrink-0 rounded-[9px] ${country.flagClass}`}
-                    aria-hidden="true"
-                  />
-                  <span className="text-[14px] font-bold leading-5 text-[#172033]">
-                    {t(country.nameKey)}
-                  </span>
-                </div>
-                <div className="flex min-w-0 flex-1 items-center gap-3">
-                  <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[#edf0f5]">
-                    <div
-                      className="h-full rounded-full bg-[#4e7ee0]"
-                      style={{ width: `${country.percent}%` }}
-                    />
-                  </div>
-                  <span className="w-14 shrink-0 text-right text-[12px] font-bold leading-5 text-[#6f7a8f] sm:w-25 sm:text-[13px]">
-                    {t(country.valueKey)}
-                  </span>
-                </div>
+          : (
+              <li className="py-6 text-center text-[13px] text-[#8993a5] sm:text-[14px]">
+                {t(
+                  'adminOverview.community.empty',
+                  'No country participation data yet.',
+                )}
               </li>
-            ))}
+            )}
       </ul>
     </article>
   );
@@ -458,7 +448,22 @@ const RevenueTrendCard = memo(({ trendData }) => {
   const { t } = useTranslation();
 
   const chartData = useMemo(() => {
-    if (!trendData?.labels?.length) return REVENUE_DATA;
+    if (!trendData?.labels?.length) {
+      return [
+        'jan',
+        'feb',
+        'mar',
+        'apr',
+        'may',
+        'jun',
+        'jul',
+        'aug',
+        'sep',
+        'oct',
+        'nov',
+        'dec',
+      ].map((month) => ({ month, commission: 0, promoted: 0 }));
+    }
     const donations = trendData.commissionDonation || [];
     const stores = trendData.commissionStore || [];
     const promoted = trendData.promoted || [];
@@ -615,40 +620,40 @@ const AdminOverviewContent = memo(() => {
   const { dashboardData, isLoading } = useAdminDashboard();
 
   const primaryStatValues = {
-    users: dashboardData?.registeredUsers,
-    photos: dashboardData?.photosSubmitted,
-    votes: dashboardData?.votesCast,
-    totalCommission:
-      dashboardData?.totalCommission !== undefined
-        ? `$${dashboardData.totalCommission.toLocaleString()}`
-        : undefined,
-    thisMonthCommission:
-      dashboardData?.thisMonthCommission !== undefined
-        ? `$${dashboardData.thisMonthCommission.toLocaleString()}`
-        : undefined,
+    users: { value: dashboardData?.registeredUsers },
+    photos: { value: dashboardData?.photosSubmitted },
+    votes: { value: dashboardData?.votesCast },
+    totalCommission: {
+      value: dashboardData?.totalCommission,
+      isCurrency: true,
+    },
+    thisMonthCommission: {
+      value: dashboardData?.thisMonthCommission,
+      isCurrency: true,
+    },
   };
 
   const secondaryStatValues = {
-    totalPromoted:
-      dashboardData?.totalPromoted !== undefined
-        ? `$${dashboardData.totalPromoted.toLocaleString()}`
-        : undefined,
-    thisMonthPromoted:
-      dashboardData?.thisMonthPromoted !== undefined
-        ? `$${dashboardData.thisMonthPromoted.toLocaleString()}`
-        : undefined,
-    totalRevenue:
-      dashboardData?.totalRevenue !== undefined
-        ? `$${dashboardData.totalRevenue.toLocaleString()}`
-        : undefined,
-    totalPayouts:
-      dashboardData?.totalPayouts !== undefined
-        ? `$${dashboardData.totalPayouts.toLocaleString()}`
-        : undefined,
+    totalPromoted: {
+      value: dashboardData?.totalPromoted,
+      isCurrency: true,
+    },
+    thisMonthPromoted: {
+      value: dashboardData?.thisMonthPromoted,
+      isCurrency: true,
+    },
+    totalRevenue: {
+      value: dashboardData?.totalRevenue,
+      isCurrency: true,
+    },
+    totalPayouts: {
+      value: dashboardData?.totalPayouts,
+      isCurrency: true,
+    },
   };
 
   return (
-    <div className="flex w-full flex-col gap-8 sm:gap-10">
+    <div className="flex w-full flex-col gap-6 sm:gap-8">
       <AdminPageHeader
         eyebrow={t('adminOverview.greeting', { name: displayName })}
         title={t('adminOverview.title')}
@@ -657,30 +662,28 @@ const AdminOverviewContent = memo(() => {
 
       <section
         aria-label={t('adminOverview.stats.aria')}
-        className="flex flex-col gap-4 xl:gap-5"
+        className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5"
       >
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
-          {OVERVIEW_STATS_PRIMARY.map((stat) => (
-            <AdminOverviewStatCard
-              key={stat.id}
-              labelKey={stat.labelKey}
-              valueKey={stat.valueKey}
-              value={primaryStatValues[stat.id]}
-              isLoading={isLoading}
-            />
-          ))}
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:gap-5">
-          {OVERVIEW_STATS_SECONDARY.map((stat) => (
-            <AdminOverviewStatCard
-              key={stat.id}
-              labelKey={stat.labelKey}
-              valueKey={stat.valueKey}
-              value={secondaryStatValues[stat.id]}
-              isLoading={isLoading}
-            />
-          ))}
-        </div>
+        {OVERVIEW_STATS_PRIMARY.map((stat) => (
+          <AdminOverviewStatCard
+            key={stat.id}
+            labelKey={stat.labelKey}
+            valueKey={stat.valueKey}
+            value={primaryStatValues[stat.id]?.value}
+            isCurrency={Boolean(primaryStatValues[stat.id]?.isCurrency)}
+            isLoading={isLoading}
+          />
+        ))}
+        {OVERVIEW_STATS_SECONDARY.map((stat) => (
+          <AdminOverviewStatCard
+            key={stat.id}
+            labelKey={stat.labelKey}
+            valueKey={stat.valueKey}
+            value={secondaryStatValues[stat.id]?.value}
+            isCurrency={Boolean(secondaryStatValues[stat.id]?.isCurrency)}
+            isLoading={isLoading}
+          />
+        ))}
       </section>
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-5">

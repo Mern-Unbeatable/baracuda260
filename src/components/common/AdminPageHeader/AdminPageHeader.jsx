@@ -1,13 +1,14 @@
 import React, { memo } from 'react';
 
 const EYEBROW_CLASS =
-  'text-[14px] font-extrabold uppercase leading-[19px] tracking-[1.55px] text-[#7f8ba1]';
+  'text-[12px] font-extrabold uppercase leading-4 tracking-[1.2px] text-[#7f8ba1] sm:text-[13px] sm:tracking-[1.4px] lg:text-[14px] lg:tracking-[1.55px]';
 const TITLE_CLASS =
-  'font-manrope text-[36px] font-semibold leading-[42px] tracking-[-1.68px] text-[#151e31]';
-const DESCRIPTION_CLASS = 'text-[16px] leading-[25px] text-[#687186]';
+  'font-manrope text-[28px] font-semibold leading-tight tracking-[-0.96px] text-[#151e31] sm:text-[32px] sm:tracking-[-1.2px] lg:text-[36px] lg:leading-[42px] lg:tracking-[-1.68px]';
+const DESCRIPTION_CLASS =
+  'text-[14px] leading-6 text-[#687186] sm:text-[15px] lg:text-[16px] lg:leading-[25px]';
 
-const TITLE_AFTER_EYEBROW_SPACING = 'pt-1.5 sm:pt-3';
-const DESCRIPTION_SPACING = 'pt-1.5 sm:pt-3';
+const TITLE_AFTER_EYEBROW_SPACING = 'pt-1.5 sm:pt-2.5';
+const DESCRIPTION_SPACING = 'pt-1.5 sm:pt-2.5';
 
 /**
  * Shared admin page chrome: eyebrow (badge), title, description — one typography scale app-wide.
