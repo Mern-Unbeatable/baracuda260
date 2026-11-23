@@ -1,11 +1,12 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import {
-  filterGalleryCards,
   GALLERY_PAGE_SIZE,
+  GALLERY_PAGE_SIZE_MOBILE,
 } from '@/portals/admin/data/adminGalleryData';
+import { toggleCompetitionFilter } from '@/portals/admin/data/adminCompetitionsData';
 import {
   ADMIN_ARTWORKS_QUERY_KEY,
   deleteAdminArtworkApi,
@@ -15,18 +16,46 @@ import { getApiErrorMessage } from '@/shared/api/client';
 import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
+const FILTER_TO_KIND = {
+  single: 'SINGLE',
+  six: 'SIX',
+  zodiac: 'TWELVE',
+};
+
+const MOBILE_MQ = '(max-width: 639px)';
+
+const readIsMobile = () => {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia(MOBILE_MQ).matches;
+};
+
 /**
- * Showcase filter + server pagination hook for Admin Gallery.
- * Connects directly to GET /v1/admin/artworks?competitionState=PROFILE_ONLY&page=1&limit=10.
+ * Showcase filter + server pagination for Admin Gallery (PROFILE_ONLY).
+ * Matches competitions: mobile 10/page, sm+ 8/page, server-side kind filter.
  */
 export default function useAdminGalleryShowcase({
   competitionState = 'PROFILE_ONLY',
-  pageSize = GALLERY_PAGE_SIZE,
 } = {}) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState(null);
   const [page, setPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(readIsMobile);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const media = window.matchMedia(MOBILE_MQ);
+    const onChange = () => {
+      setIsMobile(media.matches);
+      setPage(1);
+    };
+    onChange();
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  const pageSize = isMobile ? GALLERY_PAGE_SIZE_MOBILE : GALLERY_PAGE_SIZE;
+  const kind = activeFilter ? FILTER_TO_KIND[activeFilter] : undefined;
 
   const {
     data: apiResult,
@@ -38,7 +67,9 @@ export default function useAdminGalleryShowcase({
   } = useQuery({
     queryKey: [
       ...ADMIN_ARTWORKS_QUERY_KEY,
+      'gallery',
       competitionState,
+      kind || 'ALL',
       page,
       pageSize,
     ],
@@ -46,10 +77,12 @@ export default function useAdminGalleryShowcase({
       getAdminArtworksApi({
         competitionState,
         status: 'APPROVED',
+        kind,
         page,
         limit: pageSize,
       }),
-    placeholderData: keepPreviousData,
+    placeholderData: undefined,
+    staleTime: 30 * 1000,
   });
 
   const deleteMutation = useMutation({
@@ -86,18 +119,13 @@ export default function useAdminGalleryShowcase({
     }
   };
 
-  const cards = useMemo(() => apiResult?.data ?? [], [apiResult?.data]);
+  const visibleCards = apiResult?.data ?? [];
   const meta = apiResult?.meta;
   const totalPages = Math.max(1, meta?.totalPages ?? 1);
   const totalRecords = meta?.totalRecords ?? 0;
 
-  const visibleCards = useMemo(
-    () => filterGalleryCards(cards, activeFilter),
-    [cards, activeFilter],
-  );
-
   const handleFilterClick = (filterId) => {
-    setActiveFilter(filterId);
+    setActiveFilter((current) => toggleCompetitionFilter(current, filterId));
     setPage(1);
     scrollToPageTop();
   };
@@ -114,7 +142,7 @@ export default function useAdminGalleryShowcase({
     totalPages,
     totalRecords,
     visibleCards,
-    allCards: cards,
+    allCards: visibleCards,
     isLoading,
     isError,
     error,

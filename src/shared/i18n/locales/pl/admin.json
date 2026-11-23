@@ -288,6 +288,7 @@
     "empty": "Brak wpisów pasujących do tego filtra.",
     "loading": "Ładowanie galerii prac...",
     "error": "Nie udało się załadować galerii prac.",
+    "viewDetails": "Zobacz szczegóły",
     "delete": "Usuń",
     "deleteSuccess": "Praca konkursowa została pomyślnie usunięta.",
     "deleteError": "Nie udało się usunąć pracy konkursowej.",

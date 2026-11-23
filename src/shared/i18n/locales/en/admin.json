@@ -284,6 +284,7 @@
     "empty": "No entries match this filter.",
     "loading": "Loading gallery artworks...",
     "error": "Failed to load gallery artworks.",
+    "viewDetails": "View details",
     "delete": "Delete",
     "deleteSuccess": "Artwork deleted successfully.",
     "deleteError": "Failed to delete artwork.",
