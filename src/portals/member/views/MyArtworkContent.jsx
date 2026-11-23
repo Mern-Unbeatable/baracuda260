@@ -417,7 +417,7 @@ const MyArtworkContent = memo(() => {
           className="min-w-0 xl:max-w-3xl"
         />
 
-        <div className="flex shrink-0 items-center gap-2 overflow-x-auto pb-0.5">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <MemberFilterSelect
             label={t('myArtwork.statusFilterAria')}
             value={statusFilter}

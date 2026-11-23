@@ -17,7 +17,7 @@ const MemberArtworkActionsMenu = memo(
     };
 
     return (
-      <div className="absolute right-3 top-3" ref={buttonWrapRef}>
+      <div className="relative" ref={buttonWrapRef}>
         <Button
           unstyled
           ref={buttonRef}
@@ -26,7 +26,7 @@ const MemberArtworkActionsMenu = memo(
           aria-haspopup="menu"
           aria-label={t('myArtwork.card.options')}
           onClick={() => setOpen((current) => !current)}
-          className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#0d0d14] shadow-sm transition hover:bg-white"
+          className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white shadow-sm backdrop-blur-[2px] transition hover:bg-black/65 hover:scale-105"
         >
           <MoreVertical size={18} strokeWidth={2} aria-hidden="true" />
         </Button>

@@ -406,6 +406,7 @@
     "empty": "No entries match this filter.",
     "loading": "Loading premium photos...",
     "error": "Failed to load premium photos.",
+    "viewDetails": "View details",
     "delete": "Delete",
     "deleteSuccess": "Premium photo deleted successfully.",
     "deleteError": "Failed to delete premium photo.",

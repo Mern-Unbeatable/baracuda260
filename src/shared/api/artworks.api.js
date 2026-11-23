@@ -158,6 +158,74 @@ export const updateAdminArtworkStatusApi = async (artworkId, status) => {
  * Fetches single artwork / competition submission details by ID.
  * @param {string} submissionId
  */
+const addNormalizedArtworkImage = (target, key, img) => {
+  if (key == null || key === '' || !img) return;
+
+  const rawUrl = typeof img === 'string' ? img : img.url || img.thumbnailUrl;
+  if (!rawUrl) return;
+
+  const url = resolveMediaUrl(rawUrl);
+  const thumbnailUrl = resolveMediaUrl(
+    typeof img === 'string' ? rawUrl : img.thumbnailUrl || img.url || rawUrl,
+  );
+  const entry =
+    typeof img === 'string'
+      ? { url, thumbnailUrl }
+      : {
+          ...img,
+          url,
+          thumbnailUrl,
+        };
+
+  const keyStr = String(key);
+  target[keyStr] = entry;
+  target[keyStr.toLowerCase()] = entry;
+  target[keyStr.toUpperCase()] = entry;
+};
+
+/**
+ * Backend detail payloads expose `media[]` (and sometimes `images`).
+ * Edit forms expect an images map keyed by zodiac slot id / index.
+ */
+const normalizeArtworkImagesMap = (data) => {
+  const normalizedImages = {};
+
+  const rawImages = data?.images;
+  if (rawImages && typeof rawImages === 'object' && !Array.isArray(rawImages)) {
+    Object.entries(rawImages).forEach(([key, img]) => {
+      addNormalizedArtworkImage(normalizedImages, key, img);
+    });
+  } else if (Array.isArray(rawImages)) {
+    rawImages.forEach((img, idx) => {
+      addNormalizedArtworkImage(normalizedImages, idx, img);
+      if (img?.zodiacSign) {
+        addNormalizedArtworkImage(normalizedImages, img.zodiacSign, img);
+      }
+    });
+  }
+
+  const media = Array.isArray(data?.media) ? data.media : [];
+  media
+    .filter((item) => {
+      if (!item) return false;
+      const kind = String(item.kind || 'IMAGE').toUpperCase();
+      return kind === 'IMAGE' || kind === 'PHOTO';
+    })
+    .slice()
+    .sort((a, b) => Number(a.slotIndex ?? 0) - Number(b.slotIndex ?? 0))
+    .forEach((item, idx) => {
+      if (item.zodiacSign) {
+        addNormalizedArtworkImage(normalizedImages, item.zodiacSign, item);
+      }
+      if (item.slotIndex != null) {
+        addNormalizedArtworkImage(normalizedImages, item.slotIndex, item);
+      }
+      addNormalizedArtworkImage(normalizedImages, idx, item);
+    });
+
+  return normalizedImages;
+};
+
 export const getArtworkDetailsApi = async (submissionId) => {
   if (!submissionId) return null;
   let response;
@@ -178,19 +246,10 @@ export const getArtworkDetailsApi = async (submissionId) => {
   }
   if (!data) return null;
 
-  const rawImages = data.images;
-  const normalizedImages = {};
-  if (rawImages && typeof rawImages === 'object') {
-    Object.entries(rawImages).forEach(([key, img]) => {
-      if (img && typeof img === 'object') {
-        normalizedImages[key] = {
-          ...img,
-          url: resolveMediaUrl(img.url),
-          thumbnailUrl: resolveMediaUrl(img.thumbnailUrl || img.url),
-        };
-      }
-    });
-  }
+  const normalizedImages = normalizeArtworkImagesMap(data);
+  const firstImageEntry = Object.values(normalizedImages).find(
+    (img) => img?.url,
+  );
 
   const rawComments = Array.isArray(data.comments) ? data.comments : [];
   const normalizedComments = rawComments.map((c) => {
@@ -241,18 +300,59 @@ export const getArtworkDetailsApi = async (submissionId) => {
     badge = 'Video';
   }
 
+  const categoryObj =
+    data.category && typeof data.category === 'object' ? data.category : null;
+  const categoryId = data.categoryId || categoryObj?.id || null;
   const resolvedCategory =
-    data.categoryName || data.category?.name || data.category || '';
+    data.categoryName ||
+    categoryObj?.name ||
+    (typeof data.category === 'string' ? data.category : '') ||
+    '';
+  const subcategoryObj =
+    data.subcategory && typeof data.subcategory === 'object'
+      ? data.subcategory
+      : null;
+  const subcategoryId =
+    data.subcategoryId || data.subCategoryId || subcategoryObj?.id || null;
+  const storyText = data.story || data.description || '';
+  const featuredImage =
+    resolveMediaUrl(data.featuredImage) ||
+    resolveMediaUrl(data.coverImage) ||
+    resolveMediaUrl(data.image) ||
+    firstImageEntry?.url ||
+    null;
 
   return {
     ...data,
     badge,
     kind: rawKind,
+    categoryId,
     categoryName: resolvedCategory,
+    // Keep display string for detail pages; edit forms use categoryId.
     category: resolvedCategory,
+    categoryObject: categoryObj,
+    subcategoryId,
+    subcategory: subcategoryObj,
+    subcategoryName:
+      data.subcategoryName || subcategoryObj?.name || null,
+    story: storyText,
+    description: storyText,
     photographer: data.user?.name || data.user?.username || 'Photographer',
-    featuredImage: resolveMediaUrl(data.featuredImage),
+    featuredImage,
     images: normalizedImages,
+    media: Array.isArray(data.media)
+      ? data.media.map((item) =>
+          item
+            ? {
+                ...item,
+                url: resolveMediaUrl(item.url),
+                thumbnailUrl: resolveMediaUrl(
+                  item.thumbnailUrl || item.url,
+                ),
+              }
+            : item,
+        )
+      : data.media,
     user: data.user
       ? {
           ...data.user,

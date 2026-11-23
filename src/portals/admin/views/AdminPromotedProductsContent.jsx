@@ -30,7 +30,7 @@ import { ROUTES } from '@/shared/config';
 
 const StatCardsStrip = memo(({ summary, isLoading }) => {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
       {PROMOTED_STAT_CARDS.map((card) => {
         const Icon =
           card.id === 'totalPromotions'
@@ -101,17 +101,17 @@ const PromotedCard = memo(({ card }) => {
     : String(card.type || 'PROMOTED').toUpperCase();
 
   return (
-    <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)]">
+    <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
       <Link
         to={detailPath}
-        className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
+        className="relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
       >
         <Image
           src={card.image}
           alt={title}
           width={CARD_IMAGE_WIDTH}
           height={CARD_IMAGE_HEIGHT}
-          className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-[1.02]"
+          className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
         />
         <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
           {typeLabel}
@@ -224,17 +224,17 @@ const SimpleCard = memo(({ card }) => {
     : String(card.type || 'PRODUCT').toUpperCase();
 
   return (
-    <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)]">
+    <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
       <Link
         to={detailPath}
-        className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
+        className="relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
       >
         <Image
           src={card.image}
           alt={title}
           width={CARD_IMAGE_WIDTH}
           height={CARD_IMAGE_HEIGHT}
-          className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-[1.02]"
+          className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
         />
         <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
           {typeLabel}
@@ -321,12 +321,12 @@ const PromotedTypeFilters = memo(({ activeFilter, onFilterClick }) => {
     <div
       role="group"
       aria-label={t('adminPromoted.filters.aria')}
-      className="flex flex-wrap items-center gap-2 sm:gap-3"
+      className="flex w-full max-w-full items-center gap-2 overflow-x-auto overscroll-x-contain pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {PROMOTED_FILTERS.map((filter) => {
         const selected =
-          activeFilter.toLowerCase() === filter.id.toLowerCase();
-        const isAll = filter.id.toLowerCase() === 'all';
+          String(activeFilter || 'all').toLowerCase() ===
+          filter.id.toLowerCase();
 
         return (
           <Button
@@ -335,11 +335,9 @@ const PromotedTypeFilters = memo(({ activeFilter, onFilterClick }) => {
             type="button"
             aria-pressed={selected}
             onClick={() => onFilterClick(filter.id)}
-            className={`cursor-pointer rounded-full px-4 py-2 text-[13px] font-semibold leading-5 transition sm:px-5 sm:text-[14px] ${
+            className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-semibold sm:px-3.5 sm:py-2 sm:text-[13px] ${
               selected
-                ? isAll
-                  ? 'bg-[#4048cd] text-white'
-                  : 'bg-[#dfe1f5] text-[#171717] ring-1 ring-[#c5cae9]'
+                ? 'bg-[#dfe1f5] text-[#171717] ring-1 ring-[#c5cae9]'
                 : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
             }`}
           >
@@ -359,7 +357,7 @@ const PromotedStatusFilters = memo(({ statusFilter, onStatusFilterClick }) => {
     <div
       role="group"
       aria-label={t('adminPromoted.status.aria')}
-      className="flex flex-wrap items-center gap-2"
+      className="flex w-full max-w-full items-center gap-2 overflow-x-auto overscroll-x-contain pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:w-auto"
     >
       {PROMOTED_STATUS_FILTERS.map((filter) => {
         const selected =
@@ -372,7 +370,7 @@ const PromotedStatusFilters = memo(({ statusFilter, onStatusFilterClick }) => {
             type="button"
             aria-pressed={selected}
             onClick={() => onStatusFilterClick(filter.id)}
-            className={`cursor-pointer rounded-full px-3.5 py-1.5 text-[12px] font-semibold leading-4 transition sm:text-[13px] ${
+            className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-semibold sm:text-[13px] ${
               selected
                 ? 'bg-[#111827] text-white shadow-sm'
                 : 'border border-[#e5e7eb] bg-white text-[#4b5563] hover:bg-[#f9fafb]'
@@ -393,7 +391,7 @@ const ShowcaseGrid = memo(({ cards }) => {
   return (
     <section
       aria-label={t('adminPromoted.gridAria')}
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 2xl:grid-cols-4"
+      className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
     >
       {cards.map((card) => (
         <ShowcaseCard key={card.id} card={card} />
@@ -423,13 +421,11 @@ const AdminPromotedProductsContent = memo(() => {
   } = useAdminPromotedProductsShowcase();
 
   return (
-    <div className="flex w-full flex-col gap-6 sm:gap-8">
-      {/* Top summary stat cards */}
+    <div className="flex w-full flex-col gap-5 sm:gap-7">
       <StatCardsStrip summary={summary} isLoading={isLoading} />
 
-      {/* Header and filters */}
-      <div className="flex flex-col gap-4">
-        <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <header className="flex min-w-0 flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-3">
             <AdminPageHeader title={t('adminPromoted.title')} />
             {isFetching && !isLoading ? (
@@ -440,15 +436,16 @@ const AdminPromotedProductsContent = memo(() => {
               />
             ) : null}
           </div>
-          <PromotedTypeFilters
-            activeFilter={activeFilter}
-            onFilterClick={handleFilterClick}
-          />
+          <div className="min-w-0 w-full lg:ml-auto lg:w-auto lg:max-w-none">
+            <PromotedTypeFilters
+              activeFilter={activeFilter}
+              onFilterClick={handleFilterClick}
+            />
+          </div>
         </header>
 
-        {/* Secondary status filter */}
-        <div className="flex items-center justify-between border-t border-[#f0f1f4] pt-3">
-          <span className="text-[12px] font-semibold uppercase tracking-wider text-[#9ca3af]">
+        <div className="flex min-w-0 flex-col gap-2 border-t border-[#f0f1f4] pt-3 sm:flex-row sm:items-center sm:justify-between">
+          <span className="shrink-0 text-[12px] font-semibold uppercase tracking-wider text-[#9ca3af]">
             {t('adminPromoted.status.aria', 'Filter by status')}
           </span>
           <PromotedStatusFilters
@@ -458,17 +455,16 @@ const AdminPromotedProductsContent = memo(() => {
         </div>
       </div>
 
-      {/* Content states */}
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center gap-2 py-20 text-center text-[#687186]">
-          <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
-          <span className="text-[14px] font-medium">
+        <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
+          <div className="size-7 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+          <span className="text-[13px] font-medium">
             {t('adminPromoted.loading', 'Loading promoted items...')}
           </span>
         </div>
       ) : isError ? (
-        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center text-[#6b7280]">
-          <p className="text-[15px] font-medium text-[#ee1c25]">
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+          <p className="text-[14px] font-medium text-[#ee1c25]">
             {error?.message ||
               t('adminPromoted.error', 'Failed to load promoted items.')}
           </p>
@@ -476,7 +472,7 @@ const AdminPromotedProductsContent = memo(() => {
             unstyled
             type="button"
             onClick={() => refetch()}
-            className="cursor-pointer rounded-lg bg-[#ee1c25] px-4 py-2 text-[14px] font-semibold text-white hover:bg-[#d41921]"
+            className="cursor-pointer rounded-lg bg-[#ee1c25] px-4 py-2 text-[13px] font-semibold text-white hover:bg-[#d41921]"
           >
             {t('adminPromoted.retry', 'Retry')}
           </Button>
@@ -485,13 +481,12 @@ const AdminPromotedProductsContent = memo(() => {
         <ShowcaseGrid cards={visibleCards} />
       ) : (
         <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
-          <p className="text-[16px] font-medium">{t('adminPromoted.empty')}</p>
+          <p className="text-[14px] font-medium">{t('adminPromoted.empty')}</p>
         </div>
       )}
 
-      {/* Pagination */}
       {!isLoading && !isError && totalPages > 1 ? (
-        <div className="flex justify-center pt-2 sm:pt-4">
+        <div className="flex justify-center pt-1">
           <AdminPagination
             variant="competitions"
             page={page}

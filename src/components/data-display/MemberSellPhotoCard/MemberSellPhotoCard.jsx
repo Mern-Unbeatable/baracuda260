@@ -30,7 +30,7 @@ const MemberSellPhotoCard = memo(
         onClick={openDetails}
         className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e8eaef] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
       >
-        <div className="relative aspect-368/252 overflow-hidden bg-[#f3f4f6]">
+        <div className="relative aspect-[368/252] overflow-hidden bg-[#f3f4f6]">
           <button
             type="button"
             onClick={openDetails}
@@ -57,7 +57,7 @@ const MemberSellPhotoCard = memo(
             size="sm"
           />
           <div
-            className="relative z-20"
+            className="absolute right-3 top-3 z-20"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >

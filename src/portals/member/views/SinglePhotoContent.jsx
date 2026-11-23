@@ -144,8 +144,9 @@ const SinglePhotoContent = memo(
       },
     });
 
-    // Auto set initial category from API if available
+    // Auto set initial category from API if available (create mode only)
     useEffect(() => {
+      if (isEdit) return;
       if (categoriesList.length > 0 && !selectedCategory) {
         const first = categoriesList[0];
         const val = first.id || first.slug || '';
@@ -153,7 +154,7 @@ const SinglePhotoContent = memo(
         setValue('category', val);
         setValue('subCategory', '');
       }
-    }, [categoriesList, selectedCategory, setValue]);
+    }, [categoriesList, selectedCategory, setValue, isEdit]);
 
     const [publishTarget, setPublishTarget] = useState('competition');
     const [aiCreated, setAiCreated] = useState('');
@@ -176,8 +177,13 @@ const SinglePhotoContent = memo(
         'story',
         existingArtwork.story || existingArtwork.description || '',
       );
-      if (existingArtwork.categoryId || existingArtwork.category?.id) {
-        const catId = existingArtwork.categoryId || existingArtwork.category?.id;
+      const catId =
+        existingArtwork.categoryId ||
+        existingArtwork.categoryObject?.id ||
+        (typeof existingArtwork.category === 'object'
+          ? existingArtwork.category?.id
+          : null);
+      if (catId) {
         setSelectedCategory(catId);
         setValue('category', catId);
       }

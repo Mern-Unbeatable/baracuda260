@@ -40,7 +40,7 @@ const MemberArtworkCard = memo(
         tabIndex={0}
         className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.15)] bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-[#c7cbf2] hover:shadow-[0_12px_28px_rgba(15,23,42,0.10)]"
       >
-        <div className="relative aspect-368/252 shrink-0 overflow-hidden bg-[#f3f4f6]">
+        <div className="relative aspect-[368/252] shrink-0 overflow-hidden bg-[#f3f4f6]">
           <Image
             src={item.image}
             alt={item.title}
@@ -60,7 +60,7 @@ const MemberArtworkCard = memo(
             size="sm"
           />
           <div
-            className="relative z-20"
+            className="absolute right-3 top-3 z-20"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >

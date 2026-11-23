@@ -1,66 +1,36 @@
+import { Calendar, Eye, Heart, SquareArrowOutUpRight, Trash2 } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import { formatCompactStatValue } from '@/components/data-display/AdminOverviewStatCard/AdminOverviewStatCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
-  ADMIN_PREMIUM_PHOTOS_ASSETS,
-  CARD_IMAGE_HEIGHT,
-  CARD_IMAGE_WIDTH,
   getPremiumPhotoDetailPath,
-  METRIC_ICON_SIZE,
   PREMIUM_PHOTOS_FILTERS,
   PREMIUM_PHOTOS_TYPE_KEYS,
 } from '@/portals/admin/data/adminPremiumPhotosData';
 import useAdminPremiumPhotosShowcase from '@/portals/admin/hooks/useAdminPremiumPhotosShowcase';
 import { ROUTES } from '@/shared/config';
+import { optimizeImageUrl } from '@/shared/utils/media';
 
-/** @param {{ icon: string, value: string, tone?: 'default' | 'accent' }} props */
-const MetricStat = memo(({ icon, value, tone = 'default' }) => (
+const MetricStat = memo(({ icon: Icon, value, tone = 'default' }) => (
   <span
-    className={`inline-flex items-center gap-1.5 text-[14px] leading-4 sm:text-[15px] ${
+    className={`inline-flex max-w-full items-center gap-0.5 truncate text-[10px] leading-3.5 sm:gap-1 sm:text-[13px] sm:leading-4 ${
       tone === 'accent' ? 'text-[#ee1c25]' : 'text-[#6b7280]'
     }`}
   >
-    <Image
-      src={icon}
-      alt=""
-      width={METRIC_ICON_SIZE}
-      height={METRIC_ICON_SIZE}
-      className={tone === 'accent' ? 'size-5' : 'size-5 opacity-80'}
-    />
-    {value}
+    {Icon ? (
+      <Icon size={12} aria-hidden="true" className="shrink-0 sm:size-[14px]" />
+    ) : null}
+    <span className="truncate">{value}</span>
   </span>
 ));
 
 MetricStat.displayName = 'MetricStat';
 
-/**
- * @param {{
- *   card: {
- *     id: string,
- *     type: string,
- *     kind?: string,
- *     title?: string,
- *     titleKey?: string,
- *     story?: string,
- *     description?: string,
- *     descriptionKey?: string,
- *     image?: string,
- *     coverImage?: string,
- *     views?: string,
- *     likes?: string,
- *     formattedDate?: string,
- *     dateKey?: string,
- *     price?: string | null,
- *     extraPhotos?: number | null,
- *   },
- *   onDelete?: (id: string) => void,
- *   isDeleting?: boolean,
- * }} props
- */
 const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
   const { t } = useTranslation();
   const detailPath = getPremiumPhotoDetailPath(
@@ -73,88 +43,161 @@ const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
     PREMIUM_PHOTOS_TYPE_KEYS[card.kind] ||
     PREMIUM_PHOTOS_TYPE_KEYS.single;
   const typeLabel = t(typeKey);
-
   const titleText = card.title || (card.titleKey ? t(card.titleKey) : '');
   const descriptionText =
     card.story ||
     card.description ||
     (card.descriptionKey ? t(card.descriptionKey) : '');
   const dateText = card.formattedDate || (card.dateKey ? t(card.dateKey) : '');
-  const imageSrc = card.image || card.coverImage || '';
+  let shortDateText = dateText;
+  if (card.createdAt) {
+    try {
+      const d = new Date(card.createdAt);
+      if (!Number.isNaN(d.getTime())) {
+        shortDateText = d.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        });
+      }
+    } catch {
+      shortDateText = dateText;
+    }
+  }
+  const imageSrc = optimizeImageUrl(card.image || card.coverImage || '', 480);
 
   return (
-    <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)]">
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-[rgba(203,195,213,0.25)] bg-white transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)] sm:rounded-2xl">
       <Link
         to={detailPath}
-        className="group relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
+        className="relative block aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]"
       >
-        <Image
-          src={imageSrc}
-          alt={titleText}
-          width={CARD_IMAGE_WIDTH}
-          height={CARD_IMAGE_HEIGHT}
-          className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-[1.02]"
-        />
-        <div className="absolute left-3 top-3 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-1.5">
-          <span className="rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
-            {typeLabel}
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt=""
+            width={480}
+            height={360}
+            sizes="(max-width:640px) 50vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw"
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
+          />
+        ) : null}
+        <span className="absolute top-1.5 left-1.5 max-w-[calc(100%-4.5rem)] truncate rounded-full bg-white/95 px-1.5 py-0.5 text-[8px] font-bold tracking-[0.3px] text-[#4048cd] uppercase sm:top-2.5 sm:left-2.5 sm:max-w-[calc(100%-5.5rem)] sm:px-2 sm:py-1 sm:text-[10px] sm:tracking-[0.4px]">
+          {typeLabel}
+        </span>
+        {card.price ? (
+          <span className="absolute top-1.5 right-1.5 rounded-full bg-[#ee1c25] px-2 py-0.5 text-[11px] font-extrabold tracking-wide text-white shadow-[0_2px_8px_rgba(238,28,37,0.45)] sm:top-2.5 sm:right-2.5 sm:px-2.5 sm:py-1 sm:text-[13px]">
+            {card.price}
           </span>
-          {card.price ? (
-            <span className="rounded-full bg-[#111827]/90 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
-              {card.price}
-            </span>
-          ) : null}
-        </div>
+        ) : null}
         {card.extraPhotos ? (
-          <span className="absolute bottom-3 right-3 rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
+          <span className="absolute right-1.5 bottom-1.5 rounded-full bg-black/65 px-1.5 py-0.5 text-[9px] font-semibold text-white sm:right-2.5 sm:bottom-2.5 sm:px-2 sm:py-1 sm:text-[11px]">
             {t('adminPremiumPhotos.extraPhotos', { count: card.extraPhotos })}
           </span>
         ) : null}
       </Link>
 
-      <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
-        <div className="flex flex-col gap-2">
-          <Link to={detailPath} className="transition hover:text-[#ee1c25]">
-            <h3 className="line-clamp-1 font-manrope text-[18px] font-semibold leading-6 text-[#111827] sm:text-[20px]">
-              {titleText}
-            </h3>
-          </Link>
-          <p className="line-clamp-2 font-manrope text-[14px] leading-5 text-[#6b7280] sm:text-[15px]">
+      <div className="flex flex-1 flex-col gap-1.5 p-2.5 sm:gap-2 sm:p-4">
+        <Link to={detailPath} className="transition hover:text-[#ee1c25]">
+          <h3 className="line-clamp-1 text-[13px] font-semibold leading-4 text-[#161c27] sm:text-[16px] sm:leading-5">
+            {titleText}
+          </h3>
+        </Link>
+        {descriptionText ? (
+          <p className="line-clamp-2 text-[11px] leading-3.5 text-[#494453] sm:text-[13px] sm:leading-4">
             {descriptionText}
           </p>
-        </div>
+        ) : null}
 
-        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#f0f1f4] pt-3">
-          <MetricStat
-            icon={ADMIN_PREMIUM_PHOTOS_ASSETS.heart}
-            value={card.likes || '0'}
-            tone="accent"
-          />
-          <MetricStat
-            icon={ADMIN_PREMIUM_PHOTOS_ASSETS.eye}
-            value={card.views || '0'}
-          />
-          {dateText ? (
-            <MetricStat
-              icon={ADMIN_PREMIUM_PHOTOS_ASSETS.calendar}
-              value={dateText}
-            />
+        <div className="mt-auto border-t border-[#f0f1f4] pt-1.5 sm:hidden">
+          <div className="flex items-center gap-1.5">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+              <MetricStat
+                icon={Heart}
+                value={formatCompactStatValue(
+                  card.likesCount ?? card.likes ?? 0,
+                )}
+                tone="accent"
+              />
+              <MetricStat
+                icon={Eye}
+                value={formatCompactStatValue(
+                  card.viewsCount ?? card.views ?? 0,
+                )}
+              />
+            </div>
+            <div className="flex shrink-0 items-center gap-1">
+              <Link
+                to={detailPath}
+                aria-label={t('adminPremiumPhotos.viewDetails', 'View details')}
+                title={t('adminPremiumPhotos.viewDetails', 'View details')}
+                className="inline-flex size-7 items-center justify-center rounded-md border border-[#e5e7eb] bg-white text-[#4048cd]"
+              >
+                <SquareArrowOutUpRight size={13} aria-hidden="true" />
+              </Link>
+              <Button
+                unstyled
+                type="button"
+                disabled={isDeleting}
+                aria-label={t('adminPremiumPhotos.delete')}
+                title={t('adminPremiumPhotos.delete')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete?.(card.id);
+                }}
+                className="inline-flex size-7 items-center justify-center rounded-md border border-[#fde8e9] bg-[#fef2f2] text-[#ee1c25] disabled:opacity-50"
+              >
+                <Trash2 size={13} aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+          {shortDateText || dateText ? (
+            <div className="mt-1.5">
+              <MetricStat icon={Calendar} value={shortDateText || dateText} />
+            </div>
           ) : null}
         </div>
 
-        <Button
-          unstyled
-          type="button"
-          disabled={isDeleting}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onDelete?.(card.id);
-          }}
-          className="w-full rounded-xl bg-[#ee1c25] px-4 py-3 text-[14px] font-bold leading-5 text-white transition hover:bg-[#d41921] disabled:opacity-50 sm:text-[15px]"
-        >
-          {t('adminPremiumPhotos.delete')}
-        </Button>
+        <div className="mt-auto hidden items-center gap-2 border-t border-[#f0f1f4] pt-2 sm:flex">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
+            <MetricStat
+              icon={Heart}
+              value={formatCompactStatValue(card.likesCount ?? card.likes ?? 0)}
+              tone="accent"
+            />
+            <MetricStat
+              icon={Eye}
+              value={formatCompactStatValue(card.viewsCount ?? card.views ?? 0)}
+            />
+            {dateText ? <MetricStat icon={Calendar} value={dateText} /> : null}
+          </div>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <Link
+              to={detailPath}
+              aria-label={t('adminPremiumPhotos.viewDetails', 'View details')}
+              title={t('adminPremiumPhotos.viewDetails', 'View details')}
+              className="inline-flex size-8 items-center justify-center rounded-lg border border-[#e5e7eb] bg-white text-[#4048cd] transition hover:border-[#4048cd] hover:bg-[#f5f6ff]"
+            >
+              <SquareArrowOutUpRight size={15} aria-hidden="true" />
+            </Link>
+            <Button
+              unstyled
+              type="button"
+              disabled={isDeleting}
+              aria-label={t('adminPremiumPhotos.delete')}
+              title={t('adminPremiumPhotos.delete')}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete?.(card.id);
+              }}
+              className="inline-flex size-8 items-center justify-center rounded-lg border border-[#fde8e9] bg-[#fef2f2] text-[#ee1c25] transition hover:border-[#ee1c25] hover:bg-[#ee1c25] hover:text-white disabled:opacity-50"
+            >
+              <Trash2 size={15} aria-hidden="true" />
+            </Button>
+          </div>
+        </div>
       </div>
     </article>
   );
@@ -162,12 +205,6 @@ const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
 
 ShowcaseCard.displayName = 'ShowcaseCard';
 
-/**
- * @param {{
- *   activeFilter: string,
- *   onFilterClick: (filterId: string) => void,
- * }} props
- */
 const PremiumPhotosTypeFilters = memo(({ activeFilter, onFilterClick }) => {
   const { t } = useTranslation();
 
@@ -175,12 +212,11 @@ const PremiumPhotosTypeFilters = memo(({ activeFilter, onFilterClick }) => {
     <div
       role="group"
       aria-label={t('adminPremiumPhotos.filters.aria')}
-      className="flex flex-wrap items-center gap-2 sm:gap-3"
+      className="flex w-full max-w-full items-center gap-2 overflow-x-auto overscroll-x-contain pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {PREMIUM_PHOTOS_FILTERS.map((filter) => {
-        const selected = activeFilter === filter.id;
-        const isAll = filter.id === 'all';
-
+        const selected =
+          filter.id === 'all' ? !activeFilter : activeFilter === filter.id;
         return (
           <Button
             unstyled
@@ -188,11 +224,9 @@ const PremiumPhotosTypeFilters = memo(({ activeFilter, onFilterClick }) => {
             type="button"
             aria-pressed={selected}
             onClick={() => onFilterClick(filter.id)}
-            className={`rounded-full px-4 py-2.5 text-[14px] font-semibold leading-5 transition sm:px-5 sm:text-[15px] ${
+            className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-semibold sm:px-3.5 sm:py-2 sm:text-[13px] ${
               selected
-                ? isAll
-                  ? 'bg-[#4048cd] text-white'
-                  : 'bg-[#dfe1f5] text-[#171717] ring-1 ring-[#c5cae9]'
+                ? 'bg-[#dfe1f5] text-[#171717] ring-1 ring-[#c5cae9]'
                 : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
             }`}
           >
@@ -206,20 +240,13 @@ const PremiumPhotosTypeFilters = memo(({ activeFilter, onFilterClick }) => {
 
 PremiumPhotosTypeFilters.displayName = 'PremiumPhotosTypeFilters';
 
-/**
- * @param {{
- *   cards: Array<{ id: string }>,
- *   onDelete?: (id: string) => void,
- *   isDeleting?: boolean,
- * }} props
- */
 const ShowcaseGrid = memo(({ cards, onDelete, isDeleting }) => {
   const { t } = useTranslation();
 
   return (
     <section
       aria-label={t('adminPremiumPhotos.gridAria')}
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 2xl:grid-cols-4"
+      className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
     >
       {cards.map((card) => (
         <ShowcaseCard
@@ -235,9 +262,6 @@ const ShowcaseGrid = memo(({ cards, onDelete, isDeleting }) => {
 
 ShowcaseGrid.displayName = 'ShowcaseGrid';
 
-/**
- * Admin Premium Photos — Figma premium photos list.
- */
 const AdminPremiumPhotosContent = memo(() => {
   const { t } = useTranslation();
   const {
@@ -256,25 +280,27 @@ const AdminPremiumPhotosContent = memo(() => {
   } = useAdminPremiumPhotosShowcase();
 
   return (
-    <div className="flex w-full flex-col gap-6 sm:gap-8">
-      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex w-full flex-col gap-5 sm:gap-7">
+      <header className="flex min-w-0 flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
         <AdminPageHeader title={t('adminPremiumPhotos.title')} />
-        <PremiumPhotosTypeFilters
-          activeFilter={activeFilter}
-          onFilterClick={handleFilterClick}
-        />
+        <div className="min-w-0 w-full lg:ml-auto lg:w-auto lg:max-w-none">
+          <PremiumPhotosTypeFilters
+            activeFilter={activeFilter}
+            onFilterClick={handleFilterClick}
+          />
+        </div>
       </header>
 
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center gap-2 py-20 text-center text-[#687186]">
-          <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
-          <span className="text-[14px] font-medium">
+        <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
+          <div className="size-7 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
+          <span className="text-[13px] font-medium">
             {t('adminPremiumPhotos.loading', 'Loading premium photos...')}
           </span>
         </div>
       ) : isError ? (
-        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center text-[#6b7280]">
-          <p className="text-[15px] font-medium text-[#ee1c25]">
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+          <p className="text-[14px] font-medium text-[#ee1c25]">
             {error?.message ||
               t(
                 'adminPremiumPhotos.error',
@@ -285,7 +311,7 @@ const AdminPremiumPhotosContent = memo(() => {
             unstyled
             type="button"
             onClick={() => refetch()}
-            className="rounded-lg bg-[#ee1c25] px-4 py-2 text-[14px] font-semibold text-white hover:bg-[#d41921]"
+            className="rounded-lg bg-[#ee1c25] px-4 py-2 text-[13px] font-semibold text-white hover:bg-[#d41921]"
           >
             {t('common.retry', 'Retry')}
           </Button>
@@ -298,14 +324,14 @@ const AdminPremiumPhotosContent = memo(() => {
         />
       ) : (
         <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
-          <p className="text-[16px] font-medium">
+          <p className="text-[14px] font-medium">
             {t('adminPremiumPhotos.empty')}
           </p>
         </div>
       )}
 
       {!isLoading && !isError && totalPages > 1 ? (
-        <div className="flex justify-center pt-2 sm:pt-4">
+        <div className="flex justify-center pt-1">
           <AdminPagination
             variant="competitions"
             page={page}

@@ -32,7 +32,10 @@ export const PREMIUM_PHOTOS_TYPE_KEYS = {
  */
 export const PREMIUM_PHOTOS_CARDS = [];
 
-export const PREMIUM_PHOTOS_PAGE_SIZE = 10;
+/** Desktop / tablet page size (matches competitions / gallery). */
+export const PREMIUM_PHOTOS_PAGE_SIZE = 8;
+/** Mobile page size (2-col grid). */
+export const PREMIUM_PHOTOS_PAGE_SIZE_MOBILE = 10;
 export const PREMIUM_PHOTOS_TOTAL_PAGES = 1;
 export const PAGINATION_LEADING_PAGES = [1, 2, 3];
 export const PAGINATION_ICON_SIZE = 16;

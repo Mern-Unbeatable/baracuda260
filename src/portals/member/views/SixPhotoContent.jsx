@@ -16,6 +16,7 @@ import {
   DEFAULT_THEME_ID,
   getSlotsForTheme,
   getThemeById,
+  THEME_IDS,
   THEMES,
 } from '@/portals/member/data/sixPhotoAssets';
 import { ROUTES } from '@/shared/config';
@@ -235,8 +236,9 @@ const SixPhotoContent = memo(
       return match?.subcategories || [];
     }, [categoriesList, selectedCategory]);
 
-    // Auto set initial category from API if available
+    // Auto set initial category from API if available (create mode only)
     useEffect(() => {
+      if (isEdit) return;
       if (categoriesList.length > 0 && !selectedCategory) {
         const first = categoriesList[0];
         const val = first.id || first.slug || '';
@@ -244,7 +246,7 @@ const SixPhotoContent = memo(
         setValue('category', val);
         setValue('subCategory', '');
       }
-    }, [categoriesList, selectedCategory, setValue]);
+    }, [categoriesList, selectedCategory, setValue, isEdit]);
 
     const theme = getThemeById(themeId);
     const slots = getSlotsForTheme(themeId);
@@ -311,18 +313,31 @@ const SixPhotoContent = memo(
         'story',
         existingArtwork.story || existingArtwork.description || '',
       );
-      if (existingArtwork.categoryId || existingArtwork.category?.id) {
-        setValue(
-          'category',
-          existingArtwork.categoryId || existingArtwork.category?.id,
-        );
+
+      const catId =
+        existingArtwork.categoryId ||
+        existingArtwork.categoryObject?.id ||
+        (typeof existingArtwork.category === 'object'
+          ? existingArtwork.category?.id
+          : null);
+      if (catId) {
+        setSelectedCategory(catId);
+        setValue('category', catId);
       }
-      if (existingArtwork.subcategoryId || existingArtwork.subCategoryId) {
-        setValue(
-          'subCategory',
-          existingArtwork.subcategoryId || existingArtwork.subCategoryId,
-        );
+
+      const subId =
+        existingArtwork.subcategoryId || existingArtwork.subCategoryId;
+      if (subId) {
+        setValue('subCategory', subId);
       }
+
+      const themeRaw = String(existingArtwork.theme || '').toUpperCase();
+      if (themeRaw === 'BLUE' || themeRaw === 'AUTUMN') {
+        setThemeId(THEME_IDS.AUTUMN);
+      } else if (themeRaw === 'RED' || themeRaw === 'SPRING') {
+        setThemeId(THEME_IDS.SPRING);
+      }
+
       if (existingArtwork.isAiGenerated !== undefined) {
         setAiCreated(existingArtwork.isAiGenerated ? 'yes' : 'no');
       }
@@ -333,27 +348,56 @@ const SixPhotoContent = memo(
             : 'competition',
         );
       }
-      const rawImages = existingArtwork.images;
-      if (rawImages && typeof rawImages === 'object') {
-        const initialPreviews = {};
-        slots.forEach((slot, idx) => {
-          const found =
-            rawImages[slot.id] ||
-            rawImages[idx] ||
-            (idx === 0 ? existingArtwork.featuredImage : null);
-          if (found) {
-            initialPreviews[slot.id] =
-              typeof found === 'string'
-                ? found
-                : found.url || found.thumbnailUrl;
-          }
+
+      const rawImages =
+        existingArtwork.images && typeof existingArtwork.images === 'object'
+          ? existingArtwork.images
+          : null;
+      const coverFallback =
+        existingArtwork.featuredImage ||
+        existingArtwork.image ||
+        existingArtwork.coverImage ||
+        null;
+
+      const initialPreviews = {};
+      slots.forEach((slot, idx) => {
+        const candidates = rawImages
+          ? [
+              rawImages[slot.id],
+              rawImages[String(slot.id || '').toLowerCase()],
+              rawImages[String(slot.id || '').toUpperCase()],
+              rawImages[idx],
+              rawImages[String(idx)],
+              rawImages[slot.number],
+              rawImages[String(slot.number)],
+              rawImages[slot.number - 1],
+              rawImages[String(slot.number - 1)],
+            ]
+          : [];
+        const found =
+          candidates.find(Boolean) || (idx === 0 ? coverFallback : null);
+        if (!found) return;
+        initialPreviews[slot.id] =
+          typeof found === 'string' ? found : found.url || found.thumbnailUrl;
+      });
+
+      if (Object.keys(initialPreviews).length > 0) {
+        setPreviews((prev) => {
+          const next = { ...prev };
+          Object.entries(initialPreviews).forEach(([key, url]) => {
+            if (!url) return;
+            const current = next[key];
+            if (
+              current &&
+              typeof current === 'string' &&
+              current.startsWith('blob:')
+            ) {
+              return;
+            }
+            next[key] = url;
+          });
+          return next;
         });
-        setPreviews((prev) => ({ ...initialPreviews, ...prev }));
-      } else if (existingArtwork.featuredImage) {
-        setPreviews((prev) => ({
-          [slots[0]?.id || 'slot-1']: existingArtwork.featuredImage,
-          ...prev,
-        }));
       }
     }, [existingArtwork, setValue, slots]);
 
@@ -461,7 +505,10 @@ const SixPhotoContent = memo(
           formData.append('title', data.title || 'Untitled Photo');
           formData.append('story', data.story || '');
           formData.append('price', formatPriceForMarketplace(data.price));
-          formData.append('theme', (themeId || 'red').toUpperCase());
+          formData.append(
+            'theme',
+            themeId === THEME_IDS.AUTUMN ? 'BLUE' : 'RED',
+          );
           formData.append('isAiGenerated', String(aiCreated === 'yes'));
           formData.append('copyrightConfirmed', String(Boolean(data.copyrightOk)));
           formData.append('resolution', data.resolution || '60000x60000');
@@ -536,7 +583,7 @@ const SixPhotoContent = memo(
       if (isSell) {
         createSellPhotoMutation.mutate({
           kind: 'SIX',
-          theme: (themeId || 'red').toUpperCase(),
+          theme: themeId === THEME_IDS.AUTUMN ? 'BLUE' : 'RED',
           title: data.title || 'Untitled Photo',
           price: data.price,
           isAiGenerated: aiCreated === 'yes',
@@ -552,7 +599,7 @@ const SixPhotoContent = memo(
 
       createArtworkMutation.mutate({
         kind: 'SIX',
-        theme: (themeId || 'red').toUpperCase(),
+        theme: themeId === THEME_IDS.AUTUMN ? 'BLUE' : 'RED',
         title: data.title || 'Untitled Artwork',
         story: data.story || '',
         competitionState:

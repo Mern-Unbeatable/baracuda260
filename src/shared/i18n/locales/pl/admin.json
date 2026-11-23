@@ -410,6 +410,7 @@
     "empty": "Brak wpisów pasujących do tego filtra.",
     "loading": "Ładowanie zdjęć premium...",
     "error": "Nie udało się załadować zdjęć premium.",
+    "viewDetails": "Zobacz szczegóły",
     "delete": "Usuń",
     "deleteSuccess": "Zdjęcie premium zostało pomyślnie usunięte.",
     "deleteError": "Nie udało się usunąć zdjęcia premium.",

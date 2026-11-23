@@ -61,7 +61,10 @@ export const PROMOTED_STAT_CARDS = [
   },
 ];
 
-export const PROMOTED_PAGE_SIZE = 12;
+/** Desktop / tablet page size (matches competitions / gallery). */
+export const PROMOTED_PAGE_SIZE = 8;
+/** Mobile page size (2-col grid). */
+export const PROMOTED_PAGE_SIZE_MOBILE = 10;
 export const CARD_IMAGE_WIDTH = 370;
 export const CARD_IMAGE_HEIGHT = 252;
 export const METRIC_ICON_SIZE = 24;

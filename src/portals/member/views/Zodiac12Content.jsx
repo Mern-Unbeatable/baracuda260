@@ -229,8 +229,9 @@ const Zodiac12Content = memo(
       return match?.subcategories || [];
     }, [categoriesList, selectedCategory]);
 
-    // Auto set initial category from API if available
+    // Auto set initial category from API if available (create mode only)
     useEffect(() => {
+      if (isEdit) return;
       if (categoriesList.length > 0 && !selectedCategory) {
         const first = categoriesList[0];
         const val = first.id || first.slug || '';
@@ -238,7 +239,7 @@ const Zodiac12Content = memo(
         setValue('category', val);
         setValue('subCategory', '');
       }
-    }, [categoriesList, selectedCategory, setValue]);
+    }, [categoriesList, selectedCategory, setValue, isEdit]);
 
     // Create Sell Photo Mutation (Marketplace)
     const createSellPhotoMutation = useMutation({
@@ -302,18 +303,24 @@ const Zodiac12Content = memo(
         'story',
         existingArtwork.story || existingArtwork.description || '',
       );
-      if (existingArtwork.categoryId || existingArtwork.category?.id) {
-        setValue(
-          'category',
-          existingArtwork.categoryId || existingArtwork.category?.id,
-        );
+
+      const catId =
+        existingArtwork.categoryId ||
+        existingArtwork.categoryObject?.id ||
+        (typeof existingArtwork.category === 'object'
+          ? existingArtwork.category?.id
+          : null);
+      if (catId) {
+        setSelectedCategory(catId);
+        setValue('category', catId);
       }
-      if (existingArtwork.subcategoryId || existingArtwork.subCategoryId) {
-        setValue(
-          'subCategory',
-          existingArtwork.subcategoryId || existingArtwork.subCategoryId,
-        );
+
+      const subId =
+        existingArtwork.subcategoryId || existingArtwork.subCategoryId;
+      if (subId) {
+        setValue('subCategory', subId);
       }
+
       if (existingArtwork.isAiGenerated !== undefined) {
         setAiCreated(existingArtwork.isAiGenerated ? 'yes' : 'no');
       }
@@ -324,27 +331,56 @@ const Zodiac12Content = memo(
             : 'competition',
         );
       }
-      const rawImages = existingArtwork.images;
-      if (rawImages && typeof rawImages === 'object') {
-        const initialPreviews = {};
-        ALL_SLOTS.forEach((slot, idx) => {
-          const found =
-            rawImages[slot.id] ||
-            rawImages[idx] ||
-            (idx === 0 ? existingArtwork.featuredImage : null);
-          if (found) {
-            initialPreviews[slot.id] =
-              typeof found === 'string'
-                ? found
-                : found.url || found.thumbnailUrl;
-          }
+
+      const rawImages =
+        existingArtwork.images && typeof existingArtwork.images === 'object'
+          ? existingArtwork.images
+          : null;
+      const coverFallback =
+        existingArtwork.featuredImage ||
+        existingArtwork.image ||
+        existingArtwork.coverImage ||
+        null;
+
+      const initialPreviews = {};
+      ALL_SLOTS.forEach((slot, idx) => {
+        const candidates = rawImages
+          ? [
+              rawImages[slot.id],
+              rawImages[String(slot.id || '').toLowerCase()],
+              rawImages[String(slot.id || '').toUpperCase()],
+              rawImages[idx],
+              rawImages[String(idx)],
+              rawImages[slot.number],
+              rawImages[String(slot.number)],
+              rawImages[slot.number - 1],
+              rawImages[String(slot.number - 1)],
+            ]
+          : [];
+        const found =
+          candidates.find(Boolean) || (idx === 0 ? coverFallback : null);
+        if (!found) return;
+        initialPreviews[slot.id] =
+          typeof found === 'string' ? found : found.url || found.thumbnailUrl;
+      });
+
+      if (Object.keys(initialPreviews).length > 0) {
+        setPreviews((prev) => {
+          const next = { ...prev };
+          Object.entries(initialPreviews).forEach(([key, url]) => {
+            if (!url) return;
+            const current = next[key];
+            if (
+              current &&
+              typeof current === 'string' &&
+              current.startsWith('blob:')
+            ) {
+              return;
+            }
+            next[key] = url;
+          });
+          return next;
         });
-        setPreviews((prev) => ({ ...initialPreviews, ...prev }));
-      } else if (existingArtwork.featuredImage) {
-        setPreviews((prev) => ({
-          [ALL_SLOTS[0].id]: existingArtwork.featuredImage,
-          ...prev,
-        }));
       }
     }, [existingArtwork, setValue]);
 

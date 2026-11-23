@@ -1,8 +1,8 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  filterPromotedCards,
   PROMOTED_PAGE_SIZE,
+  PROMOTED_PAGE_SIZE_MOBILE,
 } from '@/portals/admin/data/adminPromotedProductsData';
 import {
   ADMIN_PROMOTIONS_QUERY_KEY,
@@ -10,16 +10,36 @@ import {
 } from '@/shared/api/promotions.api';
 import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
+const MOBILE_MQ = '(max-width: 639px)';
+
+const readIsMobile = () => {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia(MOBILE_MQ).matches;
+};
+
 /**
  * Filter and pagination hook for Admin Promoted Products.
- * Connects to GET /api/v1/admin/promotions?type=ALL&status=ALL&page=1&limit=10
+ * Mobile 10/page; sm+ 8/page — matches competitions/gallery.
  */
-export default function useAdminPromotedProductsShowcase({
-  pageSize = PROMOTED_PAGE_SIZE,
-} = {}) {
+export default function useAdminPromotedProductsShowcase() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [page, setPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(readIsMobile);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const media = window.matchMedia(MOBILE_MQ);
+    const onChange = () => {
+      setIsMobile(media.matches);
+      setPage(1);
+    };
+    onChange();
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  const pageSize = isMobile ? PROMOTED_PAGE_SIZE_MOBILE : PROMOTED_PAGE_SIZE;
 
   const apiTypeParam = useMemo(() => {
     const val = String(activeFilter || 'all').toUpperCase();
@@ -54,7 +74,8 @@ export default function useAdminPromotedProductsShowcase({
         page,
         limit: pageSize,
       }),
-    placeholderData: keepPreviousData,
+    placeholderData: undefined,
+    staleTime: 30 * 1000,
   });
 
   const cards = useMemo(() => apiResult?.items ?? [], [apiResult?.items]);
@@ -70,19 +91,38 @@ export default function useAdminPromotedProductsShowcase({
     totalRevenue: 0,
   };
 
-  const visibleCards = useMemo(
-    () => filterPromotedCards(cards, activeFilter),
-    [cards, activeFilter],
-  );
+  // Server already filters by type for artwork/product/sell; album chips still refine client-side.
+  const visibleCards = useMemo(() => {
+    const normalized = String(activeFilter || 'all').toLowerCase();
+    if (
+      !normalized ||
+      normalized === 'all' ||
+      normalized === 'artwork' ||
+      normalized === 'product' ||
+      normalized === 'sell_photo' ||
+      normalized === 'sell'
+    ) {
+      return cards;
+    }
+    return cards.filter((card) => {
+      const type = String(card.type || '').toLowerCase();
+      if (normalized === 'single') return type === 'single';
+      if (normalized === 'six') return type === 'six';
+      if (normalized === 'zodiac') return type === 'zodiac' || type === 'twelve';
+      return type === normalized;
+    });
+  }, [cards, activeFilter]);
 
   const handleFilterClick = (filterId) => {
     setActiveFilter(filterId);
     setPage(1);
+    scrollToPageTop();
   };
 
   const handleStatusFilterClick = (statusId) => {
     setStatusFilter(statusId);
     setPage(1);
+    scrollToPageTop();
   };
 
   const handlePageChange = (nextPage) => {

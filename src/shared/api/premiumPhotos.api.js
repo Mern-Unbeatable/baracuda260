@@ -71,8 +71,8 @@ export const getAdminPremiumPhotosApi = async ({
     limit,
   };
 
-  if (kind && kind !== 'all') {
-    queryParams.kind = kind;
+  if (kind && kind !== 'all' && kind !== 'ALL') {
+    queryParams.kind = String(kind).toUpperCase();
   }
 
   const response = await apiClient.get('/v1/admin/premium-photos', {
