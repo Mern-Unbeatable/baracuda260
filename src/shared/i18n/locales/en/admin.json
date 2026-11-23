@@ -93,7 +93,7 @@
       "subtitle": "128 submissions need a decision",
       "reviewAll": "Review all",
       "badge": "Pending",
-      "openQueue": "Open Competition",
+      "openQueue": "Open review queue",
       "items": {
         "river": {
           "title": "When the river sleeps",
@@ -625,7 +625,25 @@
     "title": "Submission review",
     "subtitle": "Review, request changes, or publish every photograph before it reaches the public gallery.",
     "gridAria": "Submission review cards",
-    "empty": "No submissions match this filter.",
+    "empty": "No pending submissions right now.",
+    "loading": "Loading submissions...",
+    "error": "Failed to load submissions.",
+    "pendingCount": "{{count}} pending",
+    "approveSuccess": "Submission approved.",
+    "rejectSuccess": "Submission rejected.",
+    "statusError": "Failed to update submission.",
+    "confirmApprove": {
+      "title": "Approve submission?",
+      "text": "Publish \"{{title}}\" into the live competition.",
+      "confirm": "Approve",
+      "cancel": "Cancel"
+    },
+    "confirmReject": {
+      "title": "Reject submission?",
+      "text": "Reject \"{{title}}\"? The photographer will need to resubmit.",
+      "confirm": "Reject",
+      "cancel": "Cancel"
+    },
     "filters": {
       "aria": "Filter submissions by album type",
       "all": "All",

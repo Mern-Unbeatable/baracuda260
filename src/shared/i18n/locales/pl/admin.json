@@ -93,7 +93,7 @@
       "subtitle": "128 zgłoszeń wymaga decyzji",
       "reviewAll": "Przejrzyj wszystkie",
       "badge": "Oczekujące",
-      "openQueue": "Otwórz konkurs",
+      "openQueue": "Otwórz kolejkę przeglądu",
       "items": {
         "river": {
           "title": "When the river sleeps",
@@ -629,7 +629,25 @@
     "title": "Przegląd zgłoszeń",
     "subtitle": "Sprawdzaj, proś o poprawki lub publikuj każde zdjęcie, zanim trafi do publicznej galerii.",
     "gridAria": "Karty przeglądu zgłoszeń",
-    "empty": "Brak zgłoszeń pasujących do tego filtra.",
+    "empty": "Brak oczekujących zgłoszeń.",
+    "loading": "Ładowanie zgłoszeń...",
+    "error": "Nie udało się załadować zgłoszeń.",
+    "pendingCount": "{{count}} oczekujących",
+    "approveSuccess": "Zgłoszenie zatwierdzone.",
+    "rejectSuccess": "Zgłoszenie odrzucone.",
+    "statusError": "Nie udało się zaktualizować zgłoszenia.",
+    "confirmApprove": {
+      "title": "Zatwierdzić zgłoszenie?",
+      "text": "Opublikować \"{{title}}\" w aktywnym konkursie.",
+      "confirm": "Zatwierdź",
+      "cancel": "Anuluj"
+    },
+    "confirmReject": {
+      "title": "Odrzucić zgłoszenie?",
+      "text": "Odrzucić \"{{title}}\"? Fotograf będzie musiał zgłosić ponownie.",
+      "confirm": "Odrzuć",
+      "cancel": "Anuluj"
+    },
     "filters": {
       "aria": "Filtruj zgłoszenia według typu albumu",
       "all": "Wszystkie",

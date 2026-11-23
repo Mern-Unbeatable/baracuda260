@@ -45,6 +45,7 @@ export default function useAdminGalleryShowcase({
     queryFn: () =>
       getAdminArtworksApi({
         competitionState,
+        status: 'APPROVED',
         page,
         limit: pageSize,
       }),

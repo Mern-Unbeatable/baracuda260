@@ -179,7 +179,11 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_PROMOTED_PRODUCTS,
         icon: Megaphone,
       },
-      // { labelKey: 'adminOverview.nav.submissions', path: ROUTES.ADMIN_SUBMISSIONS, icon: Images },
+      {
+        labelKey: 'adminOverview.nav.submissions',
+        path: ROUTES.ADMIN_SUBMISSIONS,
+        icon: ClipboardList,
+      },
       {
         labelKey: 'adminOverview.nav.users',
         path: ROUTES.ADMIN_USERS,

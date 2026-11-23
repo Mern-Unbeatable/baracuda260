@@ -51,6 +51,7 @@ const MyCompetitions = lazy(
 const MyCompetitionDetails = lazy(
   () => import('@/portals/member/pages/MyCompetitionDetails'),
 );
+const Submissions = lazy(() => import('@/portals/admin/pages/Submissions'));
 const AdminProfile = lazy(() => import('@/portals/admin/pages/AdminProfile'));
 
 export const adminRoutes = (
@@ -64,6 +65,7 @@ export const adminRoutes = (
       path={seg(ROUTES.ADMIN_MY_COMPETITION_DETAIL)}
       element={<MyCompetitionDetails />}
     />
+    <Route path={seg(ROUTES.ADMIN_SUBMISSIONS)} element={<Submissions />} />
     <Route path={seg(ROUTES.ADMIN_PROFILE)} element={<AdminProfile />} />
     <Route
       path={seg(ROUTES.ADMIN_UPLOAD_PHOTOS)}

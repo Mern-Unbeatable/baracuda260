@@ -69,6 +69,7 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.USER_MY_COMPETITIONS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_MY_COMPETITIONS)}/`) ||
     currentPath.startsWith(`${normalizePath(ROUTES.USER_MY_COMPETITIONS)}/`) ||
+    currentPath === normalizePath(ROUTES.ADMIN_SUBMISSIONS) ||
     currentPath === normalizePath(ROUTES.ADMIN_GALLERY) ||
     currentPath === normalizePath(ROUTES.USER_GALLERY) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_GALLERY)}/`) ||

@@ -150,7 +150,7 @@ const PendingReviewCard = memo(({ data, isLoading }) => {
 
   const submissions = Array.isArray(data?.submissions) ? data.submissions : [];
   const pendingCount = data?.pendingDecisions ?? submissions.length;
-  const openCompetitions = () => navigate(ROUTES.ADMIN_MY_COMPETITIONS);
+  const openSubmissionsQueue = () => navigate(ROUTES.ADMIN_SUBMISSIONS);
 
   return (
     <article
@@ -170,7 +170,7 @@ const PendingReviewCard = memo(({ data, isLoading }) => {
         <Button
           unstyled
           type="button"
-          onClick={openCompetitions}
+          onClick={openSubmissionsQueue}
           className="inline-flex shrink-0 items-center gap-0.5 text-[13px] font-bold text-[#3068d3] transition hover:text-[#2454b0] sm:text-[14px]"
         >
           {t('adminOverview.pending.reviewAll')}
@@ -186,39 +186,41 @@ const PendingReviewCard = memo(({ data, isLoading }) => {
             const isVideo =
               typeof item.image === 'string' &&
               item.image.toLowerCase().endsWith('.mp4');
-
             return (
-              <li
-                key={item.id}
-                className="flex items-center gap-3 border-b border-[#f0f1f4] py-2.5 last:border-b-0 sm:gap-3"
-              >
-                <div className="relative size-11 shrink-0 overflow-hidden rounded-[9px] bg-[#dce4ed]">
-                  {isVideo ? (
-                    <video
-                      src={item.image}
-                      className="absolute inset-0 size-full object-cover"
-                      muted
-                      playsInline
-                    />
-                  ) : item.image ? (
-                    <Image
-                      src={item.image}
-                      alt=""
-                      width={44}
-                      height={44}
-                      className="absolute inset-0 size-full object-cover"
-                    />
-                  ) : null}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[14px] font-bold leading-5 text-[#172033] sm:text-[15px]">
-                    {title}
-                  </p>
-                  <p className="truncate text-[12px] leading-5 text-[#8590a1] sm:text-[13px]">
-                    {meta}
-                  </p>
-                </div>
-                <PendingBadge />
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={openSubmissionsQueue}
+                  className="flex w-full items-center gap-3 border-b border-[#f0f1f4] py-2.5 text-left last:border-b-0 sm:gap-3"
+                >
+                  <div className="relative size-11 shrink-0 overflow-hidden rounded-[9px] bg-[#dce4ed]">
+                    {isVideo ? (
+                      <video
+                        src={item.image}
+                        className="absolute inset-0 size-full object-cover"
+                        muted
+                        playsInline
+                      />
+                    ) : item.image ? (
+                      <Image
+                        src={item.image}
+                        alt=""
+                        width={44}
+                        height={44}
+                        className="absolute inset-0 size-full object-cover"
+                      />
+                    ) : null}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[14px] font-bold leading-5 text-[#172033] sm:text-[15px]">
+                      {title}
+                    </p>
+                    <p className="truncate text-[12px] leading-5 text-[#8590a1] sm:text-[13px]">
+                      {meta}
+                    </p>
+                  </div>
+                  <PendingBadge />
+                </button>
               </li>
             );
           })}
@@ -239,7 +241,7 @@ const PendingReviewCard = memo(({ data, isLoading }) => {
       <Button
         unstyled
         type="button"
-        onClick={openCompetitions}
+        onClick={openSubmissionsQueue}
         className="mt-4 w-full rounded-[9px] bg-[#ee1c25] px-4 py-3 text-[14px] font-bold text-white transition hover:bg-[#d41921]"
       >
         {t('adminOverview.pending.openQueue')}

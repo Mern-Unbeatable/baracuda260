@@ -34,16 +34,22 @@ export const resolveMediaUrl = (url) => {
  * }} [params]
  */
 export const getAdminArtworksApi = async ({
-  competitionState = 'IN_COMPETITION',
+  competitionState,
+  status,
   kind,
   page = 1,
   limit = 10,
 } = {}) => {
   const params = {
-    competitionState,
     page,
     limit,
   };
+  if (competitionState) {
+    params.competitionState = competitionState;
+  }
+  if (status) {
+    params.status = String(status).toUpperCase();
+  }
   if (kind && kind !== 'ALL') {
     params.kind = String(kind).toUpperCase();
   }
@@ -112,7 +118,11 @@ export const getAdminArtworksApi = async ({
           ? Number(item.additionalPhotos)
           : null,
       additionalPhotos: Number(item.additionalPhotos ?? 0),
-      competitionState: item.competitionState || competitionState,
+      competitionState: item.competitionState || competitionState || null,
+      status: item.status || status || null,
+      author: item.author || item.user?.name || '',
+      country: item.country || item.user?.country || '',
+      username: item.username || item.user?.username || '',
       createdAt: item.createdAt,
       formattedDate,
     };
@@ -122,6 +132,26 @@ export const getAdminArtworksApi = async ({
     data: normalizedData,
     meta,
   };
+};
+
+/**
+ * Approve or reject an admin artwork / submission.
+ * Endpoint: PATCH /v1/admin/artworks/:id/status
+ *
+ * @param {string} artworkId
+ * @param {'APPROVED' | 'REJECTED'} status
+ */
+export const updateAdminArtworkStatusApi = async (artworkId, status) => {
+  if (!artworkId) throw new Error('Artwork ID is required');
+  const nextStatus = String(status || '').toUpperCase();
+  if (!['APPROVED', 'REJECTED'].includes(nextStatus)) {
+    throw new Error('Status must be APPROVED or REJECTED');
+  }
+  const response = await apiClient.patch(
+    `/v1/admin/artworks/${artworkId}/status`,
+    { status: nextStatus },
+  );
+  return response?.data !== undefined ? response.data : response;
 };
 
 /**
