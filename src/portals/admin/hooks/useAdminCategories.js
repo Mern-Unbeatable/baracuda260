@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import {
   buildCategoryPayload,
-  flattenSubcategories,
   isCategoryNameValid,
 } from '@/portals/admin/data/adminCategoriesData';
 import {
@@ -16,7 +15,7 @@ import {
 import { getApiErrorMessage } from '@/shared/api/client';
 
 /**
- * Categories + subcategories from `/v1/categories`, and the Add modal state.
+ * Categories + nested subcategories from `/v1/categories`, and Add modal state.
  */
 export default function useAdminCategories() {
   const { t } = useTranslation();
@@ -24,6 +23,7 @@ export default function useAdminCategories() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddSubcategoryModalOpen, setIsAddSubcategoryModalOpen] =
     useState(false);
+  const [addSubcategoryParentId, setAddSubcategoryParentId] = useState('');
 
   const categoriesQuery = useQuery({
     queryKey: CATEGORIES_QUERY_KEY,
@@ -33,10 +33,6 @@ export default function useAdminCategories() {
   const categories = useMemo(
     () => categoriesQuery.data ?? [],
     [categoriesQuery.data],
-  );
-  const subcategories = useMemo(
-    () => flattenSubcategories(categories),
-    [categories],
   );
 
   const refreshCategories = () =>
@@ -87,7 +83,6 @@ export default function useAdminCategories() {
 
   return {
     categories,
-    subcategories,
     isLoading: categoriesQuery.isLoading,
     isError: categoriesQuery.isError,
     loadErrorMessage: getApiErrorMessage(
@@ -99,12 +94,19 @@ export default function useAdminCategories() {
     deletingId: deleteMutation.isPending ? deleteMutation.variables : null,
     isAddModalOpen,
     isAddSubcategoryModalOpen,
+    addSubcategoryParentId,
     handleRemoveCategory: handleRemove,
     handleRemoveSubcategory: handleRemove,
     handleOpenAddModal: () => setIsAddModalOpen(true),
     handleCloseAddModal: () => setIsAddModalOpen(false),
-    handleOpenAddSubcategoryModal: () => setIsAddSubcategoryModalOpen(true),
-    handleCloseAddSubcategoryModal: () => setIsAddSubcategoryModalOpen(false),
+    handleOpenAddSubcategoryModal: (categoryId = '') => {
+      setAddSubcategoryParentId(categoryId || '');
+      setIsAddSubcategoryModalOpen(true);
+    },
+    handleCloseAddSubcategoryModal: () => {
+      setIsAddSubcategoryModalOpen(false);
+      setAddSubcategoryParentId('');
+    },
     handleSaveCategory,
     handleSaveSubcategory,
   };

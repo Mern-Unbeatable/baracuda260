@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft,
   Calendar,
@@ -15,22 +15,26 @@ import {
   RefreshCw,
   Sparkles,
   Tag,
+  Trash2,
   User,
   Vote,
 } from 'lucide-react';
-import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { memo, useLayoutEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
   ADMIN_PROMOTIONS_QUERY_KEY,
   ADMIN_PROMOTION_DETAILS_QUERY_KEY,
+  deleteAdminPromotionApi,
   formatPromoDate,
   getAdminPromotionDetailsApi,
 } from '@/shared/api/promotions.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { optimizeImageUrl } from '@/shared/utils/media';
 import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
@@ -195,6 +199,51 @@ const AdminPromotedProductDetailContent = memo(() => {
     staleTime: 60 * 1000,
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteAdminPromotionApi(id),
+    onSuccess: () => {
+      toast.success(
+        t(
+          'adminPromoted.deleteSuccess',
+          'Expired promotion deleted successfully.',
+        ),
+      );
+      queryClient.invalidateQueries({ queryKey: ADMIN_PROMOTIONS_QUERY_KEY });
+      queryClient.removeQueries({
+        queryKey: ADMIN_PROMOTION_DETAILS_QUERY_KEY(id),
+      });
+      navigate(ROUTES.ADMIN_PROMOTED_PRODUCTS, { replace: true });
+      scrollToPageTop('auto');
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t(
+            'adminPromoted.deleteError',
+            'Failed to delete promotion. Only expired promotions can be deleted.',
+          ),
+        ),
+      );
+    },
+  });
+
+  const handleDelete = async () => {
+    const confirmed = await confirmDestructiveAction({
+      title: t('adminPromoted.confirmDelete.title', 'Delete Promotion?'),
+      text: t(
+        'adminPromoted.confirmDelete.text',
+        'This removes the expired promotion record. This action cannot be undone.',
+      ),
+      confirmButtonText: t('adminPromoted.confirmDelete.confirm', 'Delete'),
+      cancelButtonText: t('adminPromoted.confirmDelete.cancel', 'Cancel'),
+    });
+
+    if (confirmed) {
+      await deleteMutation.mutateAsync();
+    }
+  };
+
   if (isLoading && !promo) {
     return (
       <div className="flex w-full flex-col items-center justify-center gap-3 py-24 text-center text-[#687186]">
@@ -257,9 +306,25 @@ const AdminPromotedProductDetailContent = memo(() => {
           <ArrowLeft size={16} />
           {t('adminPromoted.backToList', 'Back to Promoted Products')}
         </Link>
-        {isFetching ? (
-          <RefreshCw size={16} className="animate-spin text-[#9ca3af]" />
-        ) : null}
+        <div className="flex items-center gap-2">
+          {isFetching ? (
+            <RefreshCw size={16} className="animate-spin text-[#9ca3af]" />
+          ) : null}
+          {promo.isExpired ? (
+            <Button
+              unstyled
+              type="button"
+              disabled={deleteMutation.isPending}
+              onClick={handleDelete}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#ee1c25] px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-[#d41921] disabled:opacity-50"
+            >
+              <Trash2 size={16} aria-hidden="true" />
+              {deleteMutation.isPending
+                ? t('adminPromoted.deleting', 'Deleting...')
+                : t('adminPromoted.delete', 'Delete')}
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       {/* Header with Title and Status Badges */}

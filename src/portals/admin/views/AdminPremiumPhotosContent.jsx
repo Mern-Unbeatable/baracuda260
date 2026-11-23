@@ -67,7 +67,7 @@ const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
   const imageSrc = optimizeImageUrl(card.image || card.coverImage || '', 480);
 
   return (
-    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-[rgba(203,195,213,0.25)] bg-white transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)] sm:rounded-2xl">
+    <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-xl border border-[rgba(203,195,213,0.25)] bg-white transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)] sm:rounded-2xl">
       <Link
         to={detailPath}
         className="relative block aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]"

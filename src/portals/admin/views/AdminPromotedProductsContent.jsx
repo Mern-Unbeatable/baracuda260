@@ -7,6 +7,7 @@ import {
   Heart,
   Megaphone,
   RefreshCw,
+  Trash2,
 } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,8 +18,6 @@ import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/Adm
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
-  CARD_IMAGE_HEIGHT,
-  CARD_IMAGE_WIDTH,
   getPromotedDetailPath,
   PROMOTED_FILTERS,
   PROMOTED_STAT_CARDS,
@@ -27,6 +26,10 @@ import {
 } from '@/portals/admin/data/adminPromotedProductsData';
 import useAdminPromotedProductsShowcase from '@/portals/admin/hooks/useAdminPromotedProductsShowcase';
 import { ROUTES } from '@/shared/config';
+import { optimizeImageUrl } from '@/shared/utils/media';
+
+const CARD_IMAGE_SIZES =
+  '(max-width:640px) 50vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw';
 
 const StatCardsStrip = memo(({ summary, isLoading }) => {
   return (
@@ -66,7 +69,7 @@ const StatCardsStrip = memo(({ summary, isLoading }) => {
 });
 StatCardsStrip.displayName = 'StatCardsStrip';
 
-const PromotedCard = memo(({ card }) => {
+const PromotedCard = memo(({ card, onDelete, isDeleting }) => {
   const { t } = useTranslation();
 
   const detailPath = getPromotedDetailPath(
@@ -99,25 +102,45 @@ const PromotedCard = memo(({ card }) => {
   const typeLabel = PROMOTED_TYPE_KEYS[card.type]
     ? t(PROMOTED_TYPE_KEYS[card.type])
     : String(card.type || 'PROMOTED').toUpperCase();
+  const imageSrc = optimizeImageUrl(card.image || card.coverImage || '', 480);
+  const avatarSrc = optimizeImageUrl(card.user?.avatar || '', 64);
 
   return (
     <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
-      <Link
-        to={detailPath}
-        className="relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
-      >
-        <Image
-          src={card.image}
-          alt={title}
-          width={CARD_IMAGE_WIDTH}
-          height={CARD_IMAGE_HEIGHT}
-          className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
-        />
-        <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
+      <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]">
+        <Link to={detailPath} className="absolute inset-0 block">
+          {imageSrc ? (
+            <Image
+              src={imageSrc}
+              alt=""
+              width={480}
+              height={360}
+              sizes={CARD_IMAGE_SIZES}
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
+            />
+          ) : null}
+        </Link>
+        <span className="pointer-events-none absolute left-3 top-3 z-[1] max-w-[calc(100%-3.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
           {typeLabel}
         </span>
+        {card.isExpired ? (
+          <Button
+            unstyled
+            type="button"
+            disabled={isDeleting}
+            aria-label={t('adminPromoted.delete', 'Delete')}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onDelete?.(card);
+            }}
+            className="absolute right-2.5 top-2.5 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-[#ee1c25] text-white shadow-sm transition hover:bg-[#d41921] disabled:opacity-60"
+          >
+            <Trash2 size={14} strokeWidth={2.25} aria-hidden="true" />
+          </Button>
+        ) : null}
         <span
-          className={`absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
+          className={`pointer-events-none absolute bottom-3 left-3 z-[1] rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
             card.isExpired ? 'bg-[#6b7280]' : 'bg-[#ee1c25]'
           }`}
         >
@@ -126,11 +149,11 @@ const PromotedCard = memo(({ card }) => {
             : t('adminPromoted.badge.promoted', 'Promoted')}
         </span>
         {card.extraPhotos ? (
-          <span className="absolute bottom-3 right-3 rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
+          <span className="pointer-events-none absolute bottom-3 right-3 z-[1] rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
             {t('adminPromoted.extraPhotos', { count: card.extraPhotos })}
           </span>
         ) : null}
-      </Link>
+      </div>
 
       <div className="flex flex-1 flex-col gap-2.5 p-4 sm:p-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-[#6b7280] sm:text-[13px]">
@@ -151,10 +174,12 @@ const PromotedCard = memo(({ card }) => {
 
         {card.user?.name ? (
           <div className="flex items-center gap-2 pt-0.5">
-            {card.user.avatar ? (
+            {avatarSrc ? (
               <Image
-                src={card.user.avatar}
-                alt={card.user.name}
+                src={avatarSrc}
+                alt=""
+                width={40}
+                height={40}
                 className="size-5 rounded-full object-cover"
               />
             ) : null}
@@ -202,7 +227,7 @@ const PromotedCard = memo(({ card }) => {
 });
 PromotedCard.displayName = 'PromotedCard';
 
-const SimpleCard = memo(({ card }) => {
+const SimpleCard = memo(({ card, onDelete, isDeleting }) => {
   const { t } = useTranslation();
 
   const detailPath = getPromotedDetailPath(
@@ -222,25 +247,45 @@ const SimpleCard = memo(({ card }) => {
   const typeLabel = PROMOTED_TYPE_KEYS[card.type]
     ? t(PROMOTED_TYPE_KEYS[card.type])
     : String(card.type || 'PRODUCT').toUpperCase();
+  const imageSrc = optimizeImageUrl(card.image || card.coverImage || '', 480);
+  const avatarSrc = optimizeImageUrl(card.user?.avatar || '', 64);
 
   return (
     <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
-      <Link
-        to={detailPath}
-        className="relative block h-52 shrink-0 overflow-hidden bg-[#f3f4f6] sm:h-60"
-      >
-        <Image
-          src={card.image}
-          alt={title}
-          width={CARD_IMAGE_WIDTH}
-          height={CARD_IMAGE_HEIGHT}
-          className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
-        />
-        <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
+      <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]">
+        <Link to={detailPath} className="absolute inset-0 block">
+          {imageSrc ? (
+            <Image
+              src={imageSrc}
+              alt=""
+              width={480}
+              height={360}
+              sizes={CARD_IMAGE_SIZES}
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
+            />
+          ) : null}
+        </Link>
+        <span className="pointer-events-none absolute left-3 top-3 z-[1] max-w-[calc(100%-3.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
           {typeLabel}
         </span>
+        {card.isExpired ? (
+          <Button
+            unstyled
+            type="button"
+            disabled={isDeleting}
+            aria-label={t('adminPromoted.delete', 'Delete')}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onDelete?.(card);
+            }}
+            className="absolute right-2.5 top-2.5 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-[#ee1c25] text-white shadow-sm transition hover:bg-[#d41921] disabled:opacity-60"
+          >
+            <Trash2 size={14} strokeWidth={2.25} aria-hidden="true" />
+          </Button>
+        ) : null}
         <span
-          className={`absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
+          className={`pointer-events-none absolute bottom-3 left-3 z-[1] rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
             card.isExpired ? 'bg-[#6b7280]' : 'bg-[#ee1c25]'
           }`}
         >
@@ -249,11 +294,11 @@ const SimpleCard = memo(({ card }) => {
             : t('adminPromoted.badge.promoted', 'Promoted')}
         </span>
         {card.extraPhotos ? (
-          <span className="absolute bottom-3 right-3 rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
+          <span className="pointer-events-none absolute bottom-3 right-3 z-[1] rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
             {t('adminPromoted.extraPhotos', { count: card.extraPhotos })}
           </span>
         ) : null}
-      </Link>
+      </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <Link to={detailPath} className="transition hover:text-[#ee1c25]">
@@ -264,10 +309,12 @@ const SimpleCard = memo(({ card }) => {
 
         {card.user?.name ? (
           <div className="flex items-center gap-2">
-            {card.user.avatar ? (
+            {avatarSrc ? (
               <Image
-                src={card.user.avatar}
-                alt={card.user.name}
+                src={avatarSrc}
+                alt=""
+                width={40}
+                height={40}
                 className="size-5 rounded-full object-cover"
               />
             ) : null}
@@ -308,9 +355,15 @@ const SimpleCard = memo(({ card }) => {
 });
 SimpleCard.displayName = 'SimpleCard';
 
-const ShowcaseCard = memo(({ card }) => {
-  if (card.variant === 'simple') return <SimpleCard card={card} />;
-  return <PromotedCard card={card} />;
+const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
+  if (card.variant === 'simple') {
+    return (
+      <SimpleCard card={card} onDelete={onDelete} isDeleting={isDeleting} />
+    );
+  }
+  return (
+    <PromotedCard card={card} onDelete={onDelete} isDeleting={isDeleting} />
+  );
 });
 ShowcaseCard.displayName = 'ShowcaseCard';
 
@@ -385,7 +438,7 @@ const PromotedStatusFilters = memo(({ statusFilter, onStatusFilterClick }) => {
 });
 PromotedStatusFilters.displayName = 'PromotedStatusFilters';
 
-const ShowcaseGrid = memo(({ cards }) => {
+const ShowcaseGrid = memo(({ cards, onDelete, deletingId }) => {
   const { t } = useTranslation();
 
   return (
@@ -394,7 +447,12 @@ const ShowcaseGrid = memo(({ cards }) => {
       className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
     >
       {cards.map((card) => (
-        <ShowcaseCard key={card.id} card={card} />
+        <ShowcaseCard
+          key={card.id}
+          card={card}
+          onDelete={onDelete}
+          isDeleting={deletingId === card.id}
+        />
       ))}
     </section>
   );
@@ -415,9 +473,11 @@ const AdminPromotedProductsContent = memo(() => {
     isError,
     error,
     refetch,
+    deletingId,
     handleFilterClick,
     handleStatusFilterClick,
     handlePageChange,
+    handleDelete,
   } = useAdminPromotedProductsShowcase();
 
   return (
@@ -478,7 +538,11 @@ const AdminPromotedProductsContent = memo(() => {
           </Button>
         </div>
       ) : visibleCards.length > 0 ? (
-        <ShowcaseGrid cards={visibleCards} />
+        <ShowcaseGrid
+          cards={visibleCards}
+          onDelete={handleDelete}
+          deletingId={deletingId}
+        />
       ) : (
         <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#6b7280]">
           <p className="text-[14px] font-medium">{t('adminPromoted.empty')}</p>

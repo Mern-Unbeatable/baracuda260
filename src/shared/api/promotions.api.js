@@ -137,7 +137,6 @@ export const normalizePromotionItem = (p) => {
           avatar: resolveMediaUrl(p.user.avatar),
         }
       : null,
-    raw: p,
   };
 };
 
@@ -263,4 +262,17 @@ export const getAdminPromotionDetailsApi = async (id) => {
   const response = await apiClient.get(`/v1/admin/promotions/${cleanId}`);
   const payload = response?.data !== undefined ? response.data : response;
   return normalizePromotionDetail(payload);
+};
+
+/**
+ * Delete an expired admin promotion.
+ * DELETE /api/v1/admin/promotions/:id
+ *
+ * @param {string} id
+ */
+export const deleteAdminPromotionApi = async (id) => {
+  if (!id) throw new Error('Promotion id is required');
+  const cleanId = String(id).trim();
+  const response = await apiClient.delete(`/v1/admin/promotions/${cleanId}`);
+  return response?.data !== undefined ? response.data : response;
 };

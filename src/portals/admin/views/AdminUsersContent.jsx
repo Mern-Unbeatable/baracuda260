@@ -1,4 +1,4 @@
-import { MoreVertical } from 'lucide-react';
+import { ChevronDown, MoreVertical } from 'lucide-react';
 import React, { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
@@ -13,20 +13,22 @@ import {
   TableRow,
 } from '@/components/data-display/Table';
 import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
 import SuspendUserModal from '@/portals/admin/components/admin-users/SuspendUserModal';
+import UserAvatar from '@/portals/admin/components/admin-users/UserAvatar';
 import UserDetailsModal from '@/portals/admin/components/admin-users/UserDetailsModal';
 import UserStatusBadge from '@/portals/admin/components/admin-users/UserStatusBadge';
 import {
-  ADMIN_USERS_ASSETS,
-  CHEVRON_ICON_SIZE,
   formatUserDate,
   STATUS_FILTERS,
   USER_STATUS,
 } from '@/portals/admin/data/adminUsersData';
 import useAdminUsers from '@/portals/admin/hooks/useAdminUsers';
 
-const SKELETON_ROW_COUNT = 6;
+const SKELETON_ROW_COUNT = 10;
+
+const TH_CLASS =
+  'px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#64748b] lg:px-4';
+const TD_CLASS = 'px-3 py-2.5 text-[13px] leading-4 text-[#0f172a] lg:px-4';
 
 /**
  * @typedef {{
@@ -79,8 +81,8 @@ const StatusSortSelect = memo(
     }, [sortOpen, onClose]);
 
     return (
-      <div className="flex flex-wrap items-center gap-5" ref={rootRef}>
-        <p className="text-[14px] leading-normal text-[#373737]">
+      <div className="flex flex-wrap items-center gap-2.5" ref={rootRef}>
+        <p className="text-[13px] font-medium text-[#64748b]">
           {t('adminUsers.sortBy')}
         </p>
         <div className="relative">
@@ -91,17 +93,17 @@ const StatusSortSelect = memo(
             aria-haspopup="listbox"
             aria-label={t('adminUsers.filters.aria')}
             onClick={onToggle}
-            className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-lg border border-[#e4e4e4] bg-white p-3 text-left"
+            className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-[#e2e8f0] bg-white px-3.5 text-left shadow-sm transition hover:border-[#c7cbf2] hover:bg-[#f8fafc]"
           >
-            <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
+            <span className="text-[14px] font-medium whitespace-nowrap text-[#0f172a]">
               {t(activeFilter.labelKey)}
             </span>
-            <Image
-              src={ADMIN_USERS_ASSETS.chevronDown}
-              alt=""
-              width={CHEVRON_ICON_SIZE}
-              height={CHEVRON_ICON_SIZE}
-              className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
+            <ChevronDown
+              size={16}
+              aria-hidden="true"
+              className={`shrink-0 text-[#64748b] transition ${
+                sortOpen ? 'rotate-180' : ''
+              }`}
             />
           </Button>
 
@@ -109,7 +111,7 @@ const StatusSortSelect = memo(
             <ul
               role="listbox"
               aria-label={t('adminUsers.filters.aria')}
-              className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-lg"
+              className="absolute right-0 top-full z-20 mt-1.5 min-w-full overflow-hidden rounded-xl border border-[#e2e8f0] bg-white py-1 shadow-[0_12px_28px_rgba(15,23,42,0.12)]"
             >
               {STATUS_FILTERS.map((filter) => {
                 const selected = filter.id === statusFilter;
@@ -121,10 +123,10 @@ const StatusSortSelect = memo(
                       role="option"
                       aria-selected={selected}
                       onClick={() => onSelect(filter.id)}
-                      className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] whitespace-nowrap transition hover:bg-[#f6fbff] ${
+                      className={`w-full cursor-pointer px-3.5 py-2.5 text-left text-[14px] font-medium whitespace-nowrap transition hover:bg-[#f1f5f9] ${
                         selected
-                          ? 'bg-[#f6fbff] text-[#4048cd]'
-                          : 'text-[#373737]'
+                          ? 'bg-[#eff1fe] text-[#4048cd]'
+                          : 'text-[#0f172a]'
                       }`}
                     >
                       {t(filter.labelKey)}
@@ -143,13 +145,9 @@ const StatusSortSelect = memo(
 StatusSortSelect.displayName = 'StatusSortSelect';
 
 const MENU_ITEM_CLASS =
-  'w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50';
+  'w-full cursor-pointer px-4 py-2.5 text-left text-[14px] font-medium leading-5 text-[#0f172a] transition hover:bg-[#eff1fe] hover:text-[#4048cd] disabled:cursor-default disabled:opacity-50';
 
 /**
- * The table row and the mobile card both render a menu for the same user, so
- * each needs its own key: the hidden copy's portal would otherwise treat clicks
- * on the visible menu as outside clicks and close it.
- *
  * @param {{ user: object, actions: UserRowActions, variant: 'table' | 'card' }} props
  */
 const UserActionMenu = memo(({ user, actions, variant }) => {
@@ -174,11 +172,11 @@ const UserActionMenu = memo(({ user, actions, variant }) => {
         aria-label={menuLabel}
         disabled={isUpdating}
         onClick={() => actions.onToggleActionMenu(menuKey)}
-        className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-wait disabled:opacity-50 ${
-          isOpen ? 'bg-[#f6fbff]' : ''
+        className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-lg border border-[#e2e8f0] bg-white text-[#475569] shadow-sm transition hover:border-[#c7cbf2] hover:bg-[#f8fafc] hover:text-[#4048cd] disabled:cursor-wait disabled:opacity-50 ${
+          isOpen ? 'border-[#c7cbf2] bg-[#eff1fe] text-[#4048cd]' : ''
         }`}
       >
-        <MoreVertical size={20} aria-hidden="true" />
+        <MoreVertical size={16} aria-hidden="true" />
       </Button>
 
       <PortalDropdown
@@ -186,11 +184,10 @@ const UserActionMenu = memo(({ user, actions, variant }) => {
         onClose={actions.onCloseActionMenu}
         buttonRef={buttonRef}
         buttonWrapRef={buttonWrapRef}
-        width={160}
+        width={168}
         aria-label={menuLabel}
-        className="overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
+        className="overflow-hidden rounded-xl border border-[#e2e8f0] bg-white py-1 shadow-[0_12px_28px_rgba(15,23,42,0.12)]"
       >
-        <span className="block h-0.75 w-full bg-[#4048cd]" aria-hidden="true" />
         <Button
           unstyled
           type="button"
@@ -216,7 +213,7 @@ const UserActionMenu = memo(({ user, actions, variant }) => {
           role="menuitem"
           disabled={user.status === USER_STATUS.SUSPENDED}
           onClick={() => actions.onSuspend(user.id)}
-          className={MENU_ITEM_CLASS}
+          className={`${MENU_ITEM_CLASS} text-[#ee1c25] hover:bg-[#fef2f2] hover:text-[#ee1c25]`}
         >
           {t('adminUsers.actions.suspendOption')}
         </Button>
@@ -234,17 +231,45 @@ const UserTableRow = memo(({ user, actions }) => {
   const { i18n } = useTranslation();
 
   return (
-    <TableRow>
-      <TableCell className="min-w-40">{user.name || '—'}</TableCell>
-      <TableCell className="min-w-45 break-all">{user.email}</TableCell>
-      <TableCell className="min-w-45">{user.phone || '—'}</TableCell>
-      <TableCell className="min-w-45">
+    <TableRow className="border-b border-[#f1f5f9] last:border-b-0 hover:bg-[#f8fafc]">
+      <TableCell className={TD_CLASS}>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <UserAvatar
+            src={user.avatar}
+            name={user.name || user.email}
+            className="size-8 text-[11px]"
+          />
+          <div className="min-w-0">
+            <p className="truncate font-semibold text-[#0f172a]">
+              {user.name || '—'}
+            </p>
+            {user.username ? (
+              <p className="truncate text-[11px] text-[#94a3b8]">
+                @{user.username}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className={`${TD_CLASS} text-[#475569]`}>
+        <span className="block truncate" title={user.email || undefined}>
+          {user.email || '—'}
+        </span>
+      </TableCell>
+      <TableCell
+        className={`${TD_CLASS} hidden text-[#475569] xl:table-cell`}
+      >
+        <span className="block truncate" title={user.phone || undefined}>
+          {user.phone || '—'}
+        </span>
+      </TableCell>
+      <TableCell className={`${TD_CLASS} whitespace-nowrap text-[#475569]`}>
         {formatUserDate(user.createdAt, i18n.language)}
       </TableCell>
-      <TableCell className="min-w-45">
+      <TableCell className={TD_CLASS}>
         <UserStatusBadge status={user.status} />
       </TableCell>
-      <TableCell className="min-w-25">
+      <TableCell className={TD_CLASS} align="right">
         <UserActionMenu user={user} actions={actions} variant="table" />
       </TableCell>
     </TableRow>
@@ -260,38 +285,45 @@ const UserMobileCard = memo(({ user, actions }) => {
   const { t, i18n } = useTranslation();
 
   return (
-    <article className="flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0">
+    <article className="border-b border-[#f1f5f9] px-4 py-4 last:border-b-0">
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
-            {user.name || '—'}
-          </p>
-          <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">
-            {user.email}
-          </p>
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <UserAvatar
+            src={user.avatar}
+            name={user.name || user.email}
+            className="size-10 text-[12px]"
+          />
+          <div className="min-w-0">
+            <p className="truncate text-[15px] font-semibold leading-5 text-[#0f172a]">
+              {user.name || '—'}
+            </p>
+            <p className="mt-0.5 break-all text-[13px] leading-5 text-[#64748b]">
+              {user.email}
+            </p>
+          </div>
         </div>
         <UserActionMenu user={user} actions={actions} variant="card" />
       </div>
 
-      <div className="grid grid-cols-1 gap-2">
+      <div className="mt-3 grid grid-cols-1 gap-2 rounded-xl bg-[#f8fafc] p-3">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-[13px] leading-5 text-[#7f8ba1]">
+          <span className="text-[12px] font-medium uppercase tracking-wide text-[#94a3b8]">
             {t('adminUsers.columns.phone')}
           </span>
-          <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+          <span className="text-right text-[13px] font-medium text-[#0f172a]">
             {user.phone || '—'}
           </span>
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span className="text-[13px] leading-5 text-[#7f8ba1]">
+          <span className="text-[12px] font-medium uppercase tracking-wide text-[#94a3b8]">
             {t('adminUsers.columns.registeredDate')}
           </span>
-          <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+          <span className="text-right text-[13px] font-medium text-[#0f172a]">
             {formatUserDate(user.createdAt, i18n.language)}
           </span>
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span className="text-[13px] leading-5 text-[#7f8ba1]">
+          <span className="text-[12px] font-medium uppercase tracking-wide text-[#94a3b8]">
             {t('adminUsers.columns.status')}
           </span>
           <UserStatusBadge status={user.status} />
@@ -310,17 +342,31 @@ const UsersTable = memo(({ users, actions }) => {
   const { t } = useTranslation();
 
   return (
-    <Table className="min-w-245" wrapperClassName="hidden md:block">
+    <Table
+      className="w-full table-fixed"
+      wrapperClassName="hidden overflow-hidden md:block"
+    >
       <TableHeader>
-        <TableRow isHeader>
-          <TableHead className="rounded-tl-xl">
+        <TableRow
+          isHeader
+          className="border-b border-[#e2e8f0] bg-[#f8fafc]"
+        >
+          <TableHead className={`${TH_CLASS} rounded-tl-2xl`}>
             {t('adminUsers.columns.name')}
           </TableHead>
-          <TableHead>{t('adminUsers.columns.email')}</TableHead>
-          <TableHead>{t('adminUsers.columns.phone')}</TableHead>
-          <TableHead>{t('adminUsers.columns.registeredDate')}</TableHead>
-          <TableHead>{t('adminUsers.columns.status')}</TableHead>
-          <TableHead className="rounded-tr-xl">
+          <TableHead className={TH_CLASS}>
+            {t('adminUsers.columns.email')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} hidden xl:table-cell`}>
+            {t('adminUsers.columns.phone')}
+          </TableHead>
+          <TableHead className={TH_CLASS}>
+            {t('adminUsers.columns.registeredDate')}
+          </TableHead>
+          <TableHead className={TH_CLASS}>
+            {t('adminUsers.columns.status')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} rounded-tr-2xl text-right`}>
             {t('adminUsers.columns.action')}
           </TableHead>
         </TableRow>
@@ -337,18 +383,25 @@ const UsersTable = memo(({ users, actions }) => {
 UsersTable.displayName = 'UsersTable';
 
 const UsersTableSkeleton = () => (
-  <div className="flex flex-col gap-3 px-5 py-6" aria-busy="true">
+  <div className="flex flex-col gap-0" aria-busy="true">
+    <div className="hidden h-11 animate-pulse bg-[#f1f5f9] md:block" />
     {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
       <div
         key={index}
-        className="h-12 w-full animate-pulse rounded-lg bg-[#f3f4f6]"
-      />
+        className="flex items-center gap-3 border-b border-[#f1f5f9] px-4 py-4 last:border-b-0 sm:px-5"
+      >
+        <div className="size-9 shrink-0 animate-pulse rounded-full bg-[#e2e8f0]" />
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="h-3.5 w-1/3 animate-pulse rounded bg-[#e2e8f0]" />
+          <div className="h-3 w-1/2 animate-pulse rounded bg-[#f1f5f9]" />
+        </div>
+      </div>
     ))}
   </div>
 );
 
 /**
- * Admin Users Management — Figma node 339:2960.
+ * Admin Users Management — polished tabular layout.
  */
 const AdminUsersContent = memo(() => {
   const { t } = useTranslation();
@@ -405,13 +458,15 @@ const AdminUsersContent = memo(() => {
     body = <UsersTableSkeleton />;
   } else if (isError) {
     body = (
-      <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
-        <p className="text-[16px] text-[#ee1c25]">{loadErrorMessage}</p>
+      <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
+        <p className="text-[15px] font-medium text-[#ee1c25]">
+          {loadErrorMessage}
+        </p>
         <Button
           unstyled
           type="button"
           onClick={() => refetch()}
-          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium text-[#4048cd] transition hover:bg-[#f6fbff]"
+          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[14px] font-semibold text-[#4048cd] transition hover:bg-[#eff1fe]"
         >
           {t('adminUsers.retry')}
         </Button>
@@ -419,7 +474,7 @@ const AdminUsersContent = memo(() => {
     );
   } else if (users.length === 0) {
     body = (
-      <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+      <p className="px-6 py-12 text-center text-[15px] text-[#64748b]">
         {t('adminUsers.empty')}
       </p>
     );
@@ -440,8 +495,8 @@ const AdminUsersContent = memo(() => {
   }
 
   return (
-    <div className="flex w-full flex-col gap-5">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+    <div className="flex w-full flex-col gap-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <AdminPageHeader
           eyebrow={t('adminUsers.eyebrow')}
           title={t('adminUsers.title')}
@@ -460,7 +515,7 @@ const AdminUsersContent = memo(() => {
       <section
         aria-label={t('adminUsers.tableAria')}
         aria-busy={isFetching}
-        className="overflow-hidden rounded-xl bg-white"
+        className="overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]"
       >
         <div
           className={`transition-opacity ${
@@ -470,25 +525,27 @@ const AdminUsersContent = memo(() => {
           {body}
         </div>
 
-        {!isLoading && !isError && (
-          <AdminPagination
-            variant="users"
-            from={range.from}
-            to={range.to}
-            total={range.total}
-            isFirstPage={isFirstPage || isFetching}
-            isLastPage={isLastPage || isFetching}
-            onPrevious={handlePreviousPage}
-            onNext={handleNextPage}
-            showingText={t('adminUsers.pagination.showing', {
-              from: range.from,
-              to: range.to,
-              total: range.total,
-            })}
-            previousLabel={t('adminUsers.pagination.previous')}
-            nextLabel={t('adminUsers.pagination.next')}
-          />
-        )}
+        {!isLoading && !isError ? (
+          <div className="border-t border-[#e2e8f0] bg-[#f8fafc]/60">
+            <AdminPagination
+              variant="users"
+              from={range.from}
+              to={range.to}
+              total={range.total}
+              isFirstPage={isFirstPage || isFetching}
+              isLastPage={isLastPage || isFetching}
+              onPrevious={handlePreviousPage}
+              onNext={handleNextPage}
+              showingText={t('adminUsers.pagination.showing', {
+                from: range.from,
+                to: range.to,
+                total: range.total,
+              })}
+              previousLabel={t('adminUsers.pagination.previous')}
+              nextLabel={t('adminUsers.pagination.next')}
+            />
+          </div>
+        ) : null}
       </section>
 
       <SuspendUserModal

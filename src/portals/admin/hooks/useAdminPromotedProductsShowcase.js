@@ -1,13 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import {
   PROMOTED_PAGE_SIZE,
   PROMOTED_PAGE_SIZE_MOBILE,
 } from '@/portals/admin/data/adminPromotedProductsData';
+import { getApiErrorMessage } from '@/shared/api/client';
 import {
   ADMIN_PROMOTIONS_QUERY_KEY,
+  deleteAdminPromotionApi,
   getAdminPromotionsApi,
 } from '@/shared/api/promotions.api';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
 const MOBILE_MQ = '(max-width: 639px)';
@@ -22,10 +32,13 @@ const readIsMobile = () => {
  * Mobile 10/page; sm+ 8/page — matches competitions/gallery.
  */
 export default function useAdminPromotedProductsShowcase() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [activeFilter, setActiveFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [page, setPage] = useState(1);
   const [isMobile, setIsMobile] = useState(readIsMobile);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return undefined;
@@ -74,8 +87,8 @@ export default function useAdminPromotedProductsShowcase() {
         page,
         limit: pageSize,
       }),
-    placeholderData: undefined,
-    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    staleTime: 60 * 1000,
   });
 
   const cards = useMemo(() => apiResult?.items ?? [], [apiResult?.items]);
@@ -131,6 +144,53 @@ export default function useAdminPromotedProductsShowcase() {
     scrollToPageTop();
   };
 
+  const deleteMutation = useMutation({
+    mutationFn: (promotionId) => deleteAdminPromotionApi(promotionId),
+    onMutate: (promotionId) => {
+      setDeletingId(promotionId);
+    },
+    onSuccess: () => {
+      toast.success(
+        t(
+          'adminPromoted.deleteSuccess',
+          'Expired promotion deleted successfully.',
+        ),
+      );
+      queryClient.invalidateQueries({ queryKey: ADMIN_PROMOTIONS_QUERY_KEY });
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(
+          err,
+          t(
+            'adminPromoted.deleteError',
+            'Failed to delete promotion. Only expired promotions can be deleted.',
+          ),
+        ),
+      );
+    },
+    onSettled: () => {
+      setDeletingId(null);
+    },
+  });
+
+  const handleDelete = async (card) => {
+    if (!card?.id || !card.isExpired) return;
+
+    const confirmed = await confirmDestructiveAction({
+      title: t('adminPromoted.confirmDelete.title', 'Delete Promotion?'),
+      text: t(
+        'adminPromoted.confirmDelete.text',
+        'This removes the expired promotion record. This action cannot be undone.',
+      ),
+      confirmButtonText: t('adminPromoted.confirmDelete.confirm', 'Delete'),
+      cancelButtonText: t('adminPromoted.confirmDelete.cancel', 'Cancel'),
+    });
+
+    if (!confirmed) return;
+    await deleteMutation.mutateAsync(card.id);
+  };
+
   return {
     activeFilter,
     statusFilter,
@@ -144,8 +204,10 @@ export default function useAdminPromotedProductsShowcase() {
     isError,
     error,
     refetch,
+    deletingId,
     handleFilterClick,
     handleStatusFilterClick,
     handlePageChange,
+    handleDelete,
   };
 }

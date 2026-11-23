@@ -195,8 +195,8 @@ const AdminPagination = memo((props) => {
     } = props;
 
     return (
-      <div className="flex flex-col items-center gap-3 px-4 py-4 text-center md:h-16.75 md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
-        <p className="px-2.5 text-[16px] leading-normal text-[#4048cd]">
+      <div className="flex flex-col items-center gap-2.5 px-3 py-3 text-center md:flex-row md:items-center md:justify-between md:gap-3 md:px-4 md:text-left">
+        <p className="text-[13px] leading-5 text-[#64748b]">
           {showingText}
         </p>
         <div className="flex items-center justify-center gap-2">
@@ -205,7 +205,7 @@ const AdminPagination = memo((props) => {
             type="button"
             disabled={isFirstPage}
             onClick={onPrevious}
-            className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium capitalize text-[#4048cd] transition hover:bg-[#f6fbff] disabled:cursor-not-allowed disabled:opacity-40"
+            className="cursor-pointer rounded-lg border border-[#cbd5e1] bg-white px-3 py-1.5 text-[13px] font-semibold capitalize text-[#475569] transition hover:border-[#4048cd] hover:bg-[#eff1fe] hover:text-[#4048cd] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {previousLabel}
           </Button>
@@ -214,7 +214,7 @@ const AdminPagination = memo((props) => {
             type="button"
             disabled={isLastPage}
             onClick={onNext}
-            className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium capitalize text-[#4048cd] transition hover:bg-[#f6fbff] disabled:cursor-not-allowed disabled:opacity-40"
+            className="cursor-pointer rounded-lg border border-[#4048cd] bg-white px-3 py-1.5 text-[13px] font-semibold capitalize text-[#4048cd] transition hover:bg-[#eff1fe] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {nextLabel}
           </Button>

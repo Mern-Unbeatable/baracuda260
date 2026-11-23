@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import {
   COMPETITIONS_PAGE_SIZE,
+  COMPETITIONS_PAGE_SIZE_MOBILE,
   toggleCompetitionFilter,
 } from '@/portals/admin/data/adminCompetitionsData';
 import {
@@ -21,20 +22,42 @@ const FILTER_TO_KIND = {
   zodiac: 'TWELVE',
 };
 
+const MOBILE_MQ = '(max-width: 639px)';
+
+const readIsMobile = () => {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia(MOBILE_MQ).matches;
+};
+
 const SUBMISSIONS_QUERY_KEY = [...ADMIN_ARTWORKS_QUERY_KEY, 'pending-review'];
 
 /**
  * Pending submission moderation queue.
+ * Matches gallery/competitions: mobile 10/page, sm+ 8/page.
  * GET /v1/admin/artworks?status=PENDING
  */
-export default function useAdminSubmissionsReview({
-  pageSize = COMPETITIONS_PAGE_SIZE,
-} = {}) {
+export default function useAdminSubmissionsReview() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [activeFilter, setActiveFilter] = useState(null);
   const [page, setPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(readIsMobile);
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const media = window.matchMedia(MOBILE_MQ);
+    const onChange = () => {
+      setIsMobile(media.matches);
+      setPage(1);
+    };
+    onChange();
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  const pageSize = isMobile
+    ? COMPETITIONS_PAGE_SIZE_MOBILE
+    : COMPETITIONS_PAGE_SIZE;
   const kind = activeFilter ? FILTER_TO_KIND[activeFilter] : undefined;
 
   const {
@@ -99,7 +122,8 @@ export default function useAdminSubmissionsReview({
     const confirmed = await confirmDestructiveAction({
       title: t('adminSubmissions.confirmReject.title', 'Reject submission?'),
       text: t('adminSubmissions.confirmReject.text', {
-        defaultValue: 'Reject "{{title}}"? The photographer will need to resubmit.',
+        defaultValue:
+          'Reject "{{title}}"? The photographer will need to resubmit.',
         title: title || 'this artwork',
       }),
       confirmButtonText: t('adminSubmissions.confirmReject.confirm', 'Reject'),

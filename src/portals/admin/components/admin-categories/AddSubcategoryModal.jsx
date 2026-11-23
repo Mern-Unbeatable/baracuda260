@@ -24,11 +24,19 @@ const EMPTY_FORM = { categoryId: '', name: '' };
  *   onClose: () => void,
  *   onSave: (values: { categoryId: string, name: string }) => void,
  *   categories: Array<{ id: string, name: string }>,
+ *   initialCategoryId?: string,
  *   isSaving?: boolean,
  * }} props
  */
 const AddSubcategoryModal = memo(
-  ({ open, onClose, onSave, categories, isSaving = false }) => {
+  ({
+    open,
+    onClose,
+    onSave,
+    categories,
+    initialCategoryId = '',
+    isSaving = false,
+  }) => {
     const { t, i18n } = useTranslation();
     const titleId = useId();
     const categoryFieldId = useId();
@@ -45,8 +53,13 @@ const AddSubcategoryModal = memo(
     });
 
     useEffect(() => {
-      if (open) reset(EMPTY_FORM);
-    }, [open, reset]);
+      if (open) {
+        reset({
+          categoryId: initialCategoryId || '',
+          name: '',
+        });
+      }
+    }, [open, initialCategoryId, reset]);
 
     const selectedCategoryId = watch('categoryId');
 

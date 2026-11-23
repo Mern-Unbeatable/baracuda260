@@ -44,6 +44,7 @@ export const USER_STATUS_STYLES = {
   },
 };
 
+/** Fit one viewport without page scroll (compact rows). */
 export const USERS_PAGE_SIZE = 10;
 export const ACTION_ICON_SIZE = 24;
 export const CHEVRON_ICON_SIZE = 24;
