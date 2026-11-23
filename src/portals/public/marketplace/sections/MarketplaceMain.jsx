@@ -101,93 +101,106 @@ const MarketplaceStoreCard = memo(({ store }) => {
   const { t } = useTranslation();
   const href = photographerStorePath(store.username);
   const storeProducts = useMemo(
-    () => (Array.isArray(store.products) ? store.products.slice(0, 12) : []),
+    () => (Array.isArray(store.products) ? store.products.slice(0, 3) : []),
     [store.products],
   );
+  const previewSlots = useMemo(() => {
+    const slots = [...storeProducts];
+    while (slots.length < 3) slots.push(null);
+    return slots;
+  }, [storeProducts]);
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] sm:p-5">
-      <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+    <article className="flex flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] sm:p-4">
+      <div className="flex items-start justify-between gap-3">
         <Link
           to={href}
-          className="group flex items-center gap-3.5 transition hover:opacity-80"
+          className="group flex min-w-0 flex-1 items-center gap-3 transition hover:opacity-80"
         >
           <Image
             src={store.authorImage || store.image}
             alt={store.storeName}
-            className="size-14 shrink-0 rounded-full border-2 border-white object-cover shadow-md ring-1 ring-[#e8eaef] transition-all group-hover:ring-[#4048cd] sm:size-16"
+            className="size-12 shrink-0 rounded-full border border-white object-cover shadow-sm ring-1 ring-[#e8eaef] transition-all group-hover:ring-[#4048cd] sm:size-14"
             loading="lazy"
             decoding="async"
           />
-          <div>
-            <h3 className="flex items-center gap-2 text-[17px] font-bold text-[#111827]">
-              {store.storeName}
+          <div className="min-w-0">
+            <h3 className="flex flex-wrap items-center gap-1.5 text-[15px] font-bold leading-tight text-[#111827] sm:text-[16px]">
+              <span className="truncate">{store.storeName}</span>
               {store.promoted ? (
-                <span className="shrink-0 rounded-md bg-[#ee1c25] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
+                <span className="shrink-0 rounded-md bg-[#ee1c25] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.35px] text-white">
                   {t('marketplace.promoted')}
                 </span>
               ) : null}
             </h3>
-            <p className="mt-0.5 line-clamp-1 text-[13px] text-[#6b7280]">
+            <p className="mt-0.5 line-clamp-1 text-[12px] text-[#6b7280] sm:text-[13px]">
               {store.description}
             </p>
           </div>
         </Link>
+        <Link
+          to={href}
+          className="shrink-0 whitespace-nowrap pt-1 text-[12px] font-semibold text-[#4048cd] hover:underline sm:text-[13px]"
+        >
+          See All
+        </Link>
+      </div>
 
-        <div className="flex shrink-0 flex-col">
-          <span className="mb-1 text-[11px] font-medium tracking-wide text-[#9ca3af]">
-            Artwork Appreciation:
-          </span>
-          <div className="scrollbar-hide flex items-center gap-3 overflow-x-auto">
-            <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#f3e5c8] bg-[#fdfaf2] px-2.5 py-1">
-              <CameraIcon className="h-4 w-4 text-[#d4af37]" />
-              <span className="text-[13px] font-bold text-[#927129]">
-                {store.scores?.gold || 0}
-              </span>
-            </div>
-            <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#e2e8f0] bg-[#f5f7f9] px-2.5 py-1">
-              <CameraIcon className="h-4 w-4 text-[#94a3b8]" />
-              <span className="text-[13px] font-bold text-[#475569]">
-                {store.scores?.silver || 0}
-              </span>
-            </div>
-            <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#eedfd5] bg-[#fdf7f4] px-2.5 py-1">
-              <CameraIcon className="h-4 w-4 text-[#cd7f32]" />
-              <span className="text-[13px] font-bold text-[#925c42]">
-                {store.scores?.bronze || 0}
-              </span>
-            </div>
-            <Link
-              to={href}
-              className="ml-1 whitespace-nowrap text-[13px] font-semibold text-[#4048cd] hover:underline"
-            >
-              See All
-            </Link>
+      <div className="mt-3 flex items-center gap-2">
+        <span className="hidden text-[11px] font-medium text-[#9ca3af] sm:inline">
+          Artwork Appreciation:
+        </span>
+        <div className="flex flex-1 items-center gap-1.5">
+          <div className="inline-flex items-center gap-1 rounded-full border border-[#f3e5c8] bg-[#fdfaf2] px-2 py-0.5">
+            <CameraIcon className="h-3.5 w-3.5 text-[#d4af37]" />
+            <span className="text-[12px] font-bold text-[#927129]">
+              {store.scores?.gold || 0}
+            </span>
+          </div>
+          <div className="inline-flex items-center gap-1 rounded-full border border-[#e2e8f0] bg-[#f5f7f9] px-2 py-0.5">
+            <CameraIcon className="h-3.5 w-3.5 text-[#94a3b8]" />
+            <span className="text-[12px] font-bold text-[#475569]">
+              {store.scores?.silver || 0}
+            </span>
+          </div>
+          <div className="inline-flex items-center gap-1 rounded-full border border-[#eedfd5] bg-[#fdf7f4] px-2 py-0.5">
+            <CameraIcon className="h-3.5 w-3.5 text-[#cd7f32]" />
+            <span className="text-[12px] font-bold text-[#925c42]">
+              {store.scores?.bronze || 0}
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-2">
+      <div className="mt-3 grid grid-cols-3 gap-2">
         {storeProducts.length === 0 ? (
-          <p className="py-6 text-[13px] text-[#9ca3af]">
+          <p className="col-span-3 rounded-[10px] border border-dashed border-[#e5e7eb] bg-[#fafafa] py-8 text-center text-[12px] text-[#9ca3af]">
             {t('marketplace.noProducts', 'No products yet')}
           </p>
         ) : (
-          storeProducts.map((product) => (
-            <Link
-              key={product.id}
-              to={href}
-              className="group block shrink-0 overflow-hidden rounded-[10px] border border-[#e8eaef] transition-all hover:border-[#4048cd] hover:shadow-md"
-            >
-              <div className="relative h-24 w-24 bg-[#f3f4f6] sm:h-28 sm:w-28">
-                <Image
-                  src={product.image}
-                  alt={product.title}
-                  className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-            </Link>
-          ))
+          previewSlots.map((product, index) =>
+            product ? (
+              <Link
+                key={product.id}
+                to={href}
+                className="group block overflow-hidden rounded-[10px] border border-[#e8eaef] bg-[#f3f4f6] transition hover:border-[#4048cd]"
+              >
+                <div className="aspect-square">
+                  <Image
+                    src={product.image}
+                    alt={product.title}
+                    className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+              </Link>
+            ) : (
+              <div
+                key={`empty-${store.id || store.storeName}-${index}`}
+                className="aspect-square rounded-[10px] border border-dashed border-[#e8eaef] bg-[#fafafa]"
+                aria-hidden="true"
+              />
+            ),
+          )
         )}
       </div>
     </article>
@@ -246,7 +259,7 @@ const MarketplaceMain = memo(() => {
             />
           </div>
 
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+          <div className="mb-6 flex items-center justify-end">
             <div className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#494453]">
               <Checkbox
                 id="promotedOnly"
