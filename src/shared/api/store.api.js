@@ -191,7 +191,7 @@ const normalizePublicStoreProductPreview = (item, store) => {
     image,
     store: store.name || store.username || 'Creator',
     username: store.username || '',
-    promoted: Boolean(store.isPromoted || item.isPromoted || item.promoted),
+    promoted: Boolean(item.isPromoted || item.promoted || store.isPromoted),
   };
 };
 
@@ -216,7 +216,7 @@ export const normalizePublicStore = (store) => {
     description: store.bio || '',
     image: resolveMediaUrl(store.avatar || products[0]?.image || ''),
     promoted: Boolean(store.isPromoted),
-      // Real gold/silver/bronze only — do not map premiumPhotos/submissions/followers.
+    // Real gold/silver/bronze only — do not map premiumPhotos/submissions/followers.
     scores: {
       gold: Number(appreciation.gold ?? 0),
       silver: Number(appreciation.silver ?? 0),

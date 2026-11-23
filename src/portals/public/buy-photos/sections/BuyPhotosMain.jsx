@@ -521,6 +521,7 @@ const BuyPhotosMain = memo(({ activeHref = ROUTES.BUY_PHOTOS }) => {
                       price={photo.price}
                       extraPhotosLabel={photo.extraPhotosLabel}
                       isAiGenerated={photo.isAiGenerated}
+                      promoted={Boolean(photo.promoted)}
                     />
                   ))}
                 </div>

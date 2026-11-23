@@ -87,6 +87,7 @@ const PhotoShowcaseCard = memo(
     winnerRank,
     extraPhotosLabel,
     isAiGenerated = false,
+    promoted = false,
     className = '',
     onMenuClick,
     topRightType = 'menu',
@@ -493,6 +494,12 @@ const PhotoShowcaseCard = memo(
                 <ImageOverlayBadge className="absolute left-3 top-3 max-w-[calc(100%-3.5rem)]">
                   {badge}
                 </ImageOverlayBadge>
+              ) : null}
+
+              {promoted ? (
+                <span className="absolute bottom-3 left-3 z-10 rounded-md bg-[#ee1c25] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white shadow-sm">
+                  {t('common.promoted', 'Promoted')}
+                </span>
               ) : null}
 
               <PhotoAiBadgeOverlay

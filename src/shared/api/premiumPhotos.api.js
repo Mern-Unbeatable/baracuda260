@@ -672,6 +672,8 @@ export const normalizePublicPremiumPhoto = (item, idx = 0) => {
       : null,
     photographer: item.user?.name || 'Photographer',
     isAiGenerated: Boolean(item.isAiGenerated),
+    promoted: Boolean(item.isPromoted || item.promoted),
+    totalSales: Number(item.totalSales ?? 0),
     raw: item,
   };
 };
