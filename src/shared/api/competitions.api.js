@@ -35,30 +35,42 @@ const resolveMediaUrl = (url) => {
 };
 
 const mapLeaderboardRows = (list = []) =>
-  (Array.isArray(list) ? list : []).map((item, idx) => ({
-    id: item.id || item.submissionId || `winner-${idx}`,
-    competitionId: item.competitionId,
-    submissionId: item.submissionId || item.submission?.id || item.id,
-    userId: item.userId || item.user?.id,
-    kind: item.kind,
-    place: item.place,
-    rank: item.rank ?? idx + 1,
-    isWinner: Boolean(item.isWinner),
-    name: item.user?.name || 'Photographer',
-    firstName: item.user?.name ? item.user.name.split(' ')[0] : '',
-    city: item.user?.country || '',
-    avatar: item.user?.avatar ? resolveMediaUrl(item.user.avatar) : null,
-    initial: item.user?.name ? item.user.name.charAt(0).toUpperCase() : '?',
-    votes: item.votes ?? 0,
-    points: item.points ?? 0,
-    photoId: item.submissionId || item.id,
-    submission: item.submission
-      ? {
-          ...item.submission,
-          featuredImage: resolveMediaUrl(item.submission.featuredImage),
-        }
-      : null,
-  }));
+  (Array.isArray(list) ? list : []).map((item, idx) => {
+    const fullName = String(item.user?.name || '').trim();
+    const avatarRaw = String(item.user?.avatar || '').trim();
+    const avatar =
+      avatarRaw &&
+      avatarRaw !== 'null' &&
+      avatarRaw !== 'undefined' &&
+      !avatarRaw.includes('placeholder')
+        ? resolveMediaUrl(avatarRaw)
+        : null;
+
+    return {
+      id: item.id || item.submissionId || `winner-${idx}`,
+      competitionId: item.competitionId,
+      submissionId: item.submissionId || item.submission?.id || item.id,
+      userId: item.userId || item.user?.id,
+      kind: item.kind,
+      place: item.place,
+      rank: item.rank ?? idx + 1,
+      isWinner: Boolean(item.isWinner),
+      name: fullName || 'Photographer',
+      firstName: fullName ? fullName.split(/\s+/)[0] : '',
+      city: item.user?.country || '',
+      avatar,
+      initial: fullName ? fullName.charAt(0).toUpperCase() : '?',
+      votes: item.votes ?? 0,
+      points: item.points ?? 0,
+      photoId: item.submissionId || item.id,
+      submission: item.submission
+        ? {
+            ...item.submission,
+            featuredImage: resolveMediaUrl(item.submission.featuredImage),
+          }
+        : null,
+    };
+  });
 
 /**
  * Live leaderboard for the currently OPEN (running) monthly competition.

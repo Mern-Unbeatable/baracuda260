@@ -66,6 +66,46 @@ const monthNameFromIndex = (month) => {
   return null;
 };
 
+/**
+ * Circular photographer avatar with initials fallback when URL is missing or fails.
+ */
+const PhotographerAvatar = memo(
+  ({ src, name, initial, size = 36, className = '', borderClassName = '' }) => {
+    const [failed, setFailed] = useState(false);
+    const letter =
+      initial ||
+      (typeof name === 'string' && name.trim() ? name.trim().charAt(0) : '?');
+    const showImage = Boolean(src) && !failed;
+
+    return (
+      <div
+        className={`overflow-hidden rounded-full bg-[#f3f4f6] ${borderClassName} ${className}`.trim()}
+        style={{ width: size, height: size }}
+      >
+        {showImage ? (
+          <Image
+            src={src}
+            alt=""
+            width={size}
+            height={size}
+            className="h-full w-full object-cover"
+            onError={() => setFailed(true)}
+          />
+        ) : (
+          <span
+            className="flex h-full w-full items-center justify-center bg-[rgba(227,24,55,0.1)] font-bold text-[#e31837]"
+            style={{ fontSize: Math.max(12, Math.round(size * 0.28)) }}
+          >
+            {String(letter).charAt(0).toUpperCase()}
+          </span>
+        )}
+      </div>
+    );
+  },
+);
+
+PhotographerAvatar.displayName = 'PhotographerAvatar';
+
 const LeaderboardPodium = memo(({ winners = [] }) => {
   const { t } = useTranslation();
 
@@ -77,7 +117,7 @@ const LeaderboardPodium = memo(({ winners = [] }) => {
     rank2
       ? {
           emoji: '🥈',
-          name: rank2.name,
+          name: rank2.firstName || rank2.name,
           city: rank2.city,
           votesCount: rank2.votes,
           avatar: rank2.avatar,
@@ -89,7 +129,7 @@ const LeaderboardPodium = memo(({ winners = [] }) => {
     rank1
       ? {
           emoji: '🥇',
-          name: rank1.name,
+          name: rank1.firstName || rank1.name,
           city: rank1.city,
           votesCount: rank1.votes,
           avatar: rank1.avatar,
@@ -102,7 +142,7 @@ const LeaderboardPodium = memo(({ winners = [] }) => {
     rank3
       ? {
           emoji: '🥉',
-          name: rank3.name,
+          name: rank3.firstName || rank3.name,
           city: rank3.city,
           votesCount: rank3.votes,
           avatar: rank3.avatar,
@@ -125,33 +165,23 @@ const LeaderboardPodium = memo(({ winners = [] }) => {
           }`}
         >
           <span className="text-[30px] leading-9">{p.emoji}</span>
-          <div
-            className={`mt-2 overflow-hidden rounded-full border-2 bg-[#f3f4f6] ${p.border}`}
-            style={{ width: p.size, height: p.size }}
-          >
-            {p.avatar ? (
-              <Image
-                src={p.avatar}
-                alt={p.name}
-                width={p.size}
-                height={p.size}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span className="flex h-full w-full items-center justify-center bg-[rgba(227,24,55,0.1)] text-[18px] font-bold text-[#e31837]">
-                {p.initial}
-              </span>
-            )}
-          </div>
+          <PhotographerAvatar
+            src={p.avatar}
+            name={p.name}
+            initial={p.initial}
+            size={p.size}
+            className="mt-2"
+            borderClassName={`border-2 ${p.border}`}
+          />
           <p
-            className={`mt-2 font-bold text-[#0d0d14] ${
+            className={`mt-2 truncate font-bold text-[#0d0d14] ${
               p.lift ? 'text-[16px]' : 'text-[14px]'
             }`}
           >
             {p.name}
           </p>
           {p.city ? (
-            <p className="text-[12px] text-[#6b7280]">{p.city}</p>
+            <p className="truncate text-[12px] text-[#6b7280]">{p.city}</p>
           ) : null}
           <p className="mt-1 text-[14px] font-bold text-[#e31837]">
             {t('home.winners.votesLabel', {
@@ -204,19 +234,13 @@ const LeaderboardStandings = memo(({ rows = [] }) => {
                 >
                   {rankDisplay}
                 </span>
-                {row.avatar ? (
-                  <Image
-                    src={row.avatar}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="size-10 shrink-0 rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
-                    {row.initial || row.name?.charAt(0) || '?'}
-                  </span>
-                )}
+                <PhotographerAvatar
+                  src={row.avatar}
+                  name={row.name}
+                  initial={row.initial}
+                  size={40}
+                  className="shrink-0"
+                />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[14px] font-bold text-[#0d0d14]">
                     {row.name}
@@ -301,19 +325,13 @@ const LeaderboardStandings = memo(({ rows = [] }) => {
                   </TableCell>
                   <TableCell>
                     <div className="flex min-w-0 items-center gap-3">
-                      {row.avatar ? (
-                        <Image
-                          src={row.avatar}
-                          alt=""
-                          width={36}
-                          height={36}
-                          className="size-9 shrink-0 rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[rgba(227,24,55,0.1)] text-[12px] font-bold text-[#e31837]">
-                          {row.initial || row.name?.charAt(0) || '?'}
-                        </span>
-                      )}
+                      <PhotographerAvatar
+                        src={row.avatar}
+                        name={row.name}
+                        initial={row.initial}
+                        size={36}
+                        className="shrink-0"
+                      />
                       <span className="truncate text-[14px] font-bold text-[#0d0d14]">
                         {row.name}
                       </span>
