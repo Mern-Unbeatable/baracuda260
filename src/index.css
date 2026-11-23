@@ -164,10 +164,8 @@
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #ffffff;
   -webkit-overflow-scrolling: touch;
-  overflow-anchor: none;
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
   scroll-behavior: auto !important;
-  touch-action: pan-y;
 }
 
 .scrollbar-white::-webkit-scrollbar {

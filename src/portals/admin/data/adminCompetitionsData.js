@@ -11,6 +11,7 @@ export const ADMIN_COMPETITIONS_ASSETS = {
 
 /** Album-type filter chip ids shown in the showcase header. */
 export const COMPETITION_FILTERS = [
+  { id: 'all', labelKey: 'adminCompetitions.filters.all' },
   { id: 'single', labelKey: 'adminCompetitions.filters.single' },
   { id: 'six', labelKey: 'adminCompetitions.filters.six' },
   { id: 'zodiac', labelKey: 'adminCompetitions.filters.zodiac' },
@@ -27,7 +28,7 @@ export const COMPETITION_TYPE_KEYS = {
 
 export const COMPETITION_CARDS = [];
 
-export const COMPETITIONS_PAGE_SIZE = 10;
+export const COMPETITIONS_PAGE_SIZE = 8;
 export const COMPETITIONS_TOTAL_PAGES = 1;
 /** Leading page numbers shown before the ellipsis in Figma pagination. */
 export const PAGINATION_LEADING_PAGES = [1, 2, 3];
@@ -72,9 +73,11 @@ export const paginateCompetitionCards = (cards, page, pageSize) => {
 };
 
 /**
- * Toggle album-type filter: same id clears the filter.
+ * Select album-type filter. `all` (or re-clicking active) clears to show everything.
  * @param {string | null} currentFilter
  * @param {string} nextFilterId
  */
-export const toggleCompetitionFilter = (currentFilter, nextFilterId) =>
-  currentFilter === nextFilterId ? null : nextFilterId;
+export const toggleCompetitionFilter = (currentFilter, nextFilterId) => {
+  if (!nextFilterId || nextFilterId === 'all') return null;
+  return currentFilter === nextFilterId ? null : nextFilterId;
+};

@@ -1,3 +1,4 @@
+import { optimizeImageUrl } from '@/shared/utils/media';
 import { apiClient } from './client';
 
 export const ARTWORKS_QUERY_KEY = ['artworks'];
@@ -34,15 +35,21 @@ export const resolveMediaUrl = (url) => {
  */
 export const getAdminArtworksApi = async ({
   competitionState = 'IN_COMPETITION',
+  kind,
   page = 1,
   limit = 10,
 } = {}) => {
+  const params = {
+    competitionState,
+    page,
+    limit,
+  };
+  if (kind && kind !== 'ALL') {
+    params.kind = String(kind).toUpperCase();
+  }
+
   const response = await apiClient.get('/v1/admin/artworks', {
-    params: {
-      competitionState,
-      page,
-      limit,
-    },
+    params,
   });
 
   const payload = response?.data !== undefined ? response.data : response;
@@ -82,7 +89,9 @@ export const getAdminArtworksApi = async ({
       }
     }
 
-    const coverUrl = resolveMediaUrl(item.coverImage) || '';
+    // Cap decode size — full-res covers freeze nested admin scroll.
+    const coverUrl =
+      optimizeImageUrl(resolveMediaUrl(item.coverImage), 480) || '';
 
     return {
       id: item.id,

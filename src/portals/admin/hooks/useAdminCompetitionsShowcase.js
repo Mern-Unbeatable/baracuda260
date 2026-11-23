@@ -1,10 +1,9 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import {
   COMPETITIONS_PAGE_SIZE,
-  filterCompetitionCards,
   toggleCompetitionFilter,
 } from '@/portals/admin/data/adminCompetitionsData';
 import {
@@ -16,9 +15,15 @@ import { getApiErrorMessage } from '@/shared/api/client';
 import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { scrollToPageTop } from '@/shared/utils/scrollToPageTop';
 
+const FILTER_TO_KIND = {
+  single: 'SINGLE',
+  six: 'SIX',
+  zodiac: 'TWELVE',
+};
+
 /**
  * Showcase filter + server pagination hook for Admin Competitions / Artworks.
- * Connects directly to GET /v1/admin/artworks?competitionState=IN_COMPETITION&page=1&limit=10.
+ * Connects directly to GET /v1/admin/artworks?competitionState=IN_COMPETITION&page=1&limit=6.
  */
 export default function useAdminCompetitionsShowcase({
   competitionState = 'IN_COMPETITION',
@@ -28,6 +33,8 @@ export default function useAdminCompetitionsShowcase({
   const queryClient = useQueryClient();
   const [activeFilter, setActiveFilter] = useState(null);
   const [page, setPage] = useState(1);
+
+  const kind = activeFilter ? FILTER_TO_KIND[activeFilter] : undefined;
 
   const {
     data: apiResult,
@@ -40,16 +47,20 @@ export default function useAdminCompetitionsShowcase({
     queryKey: [
       ...ADMIN_ARTWORKS_QUERY_KEY,
       competitionState,
+      kind || 'ALL',
       page,
       pageSize,
     ],
     queryFn: () =>
       getAdminArtworksApi({
         competitionState,
+        kind,
         page,
         limit: pageSize,
       }),
-    placeholderData: keepPreviousData,
+    // Avoid keeping previous heavy image cards mounted while fetching
+    placeholderData: undefined,
+    staleTime: 30 * 1000,
   });
 
   const deleteMutation = useMutation({
@@ -86,15 +97,10 @@ export default function useAdminCompetitionsShowcase({
     }
   };
 
-  const cards = useMemo(() => apiResult?.data ?? [], [apiResult?.data]);
+  const visibleCards = apiResult?.data ?? [];
   const meta = apiResult?.meta;
   const totalPages = Math.max(1, meta?.totalPages ?? 1);
   const totalRecords = meta?.totalRecords ?? 0;
-
-  const visibleCards = useMemo(
-    () => filterCompetitionCards(cards, activeFilter),
-    [cards, activeFilter],
-  );
 
   const handleFilterClick = (filterId) => {
     setActiveFilter((current) => toggleCompetitionFilter(current, filterId));
@@ -114,7 +120,7 @@ export default function useAdminCompetitionsShowcase({
     totalPages,
     totalRecords,
     visibleCards,
-    allCards: cards,
+    allCards: visibleCards,
     isLoading,
     isError,
     error,

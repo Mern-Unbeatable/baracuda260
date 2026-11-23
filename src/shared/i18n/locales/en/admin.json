@@ -136,6 +136,7 @@
     "loading": "Loading artworks...",
     "error": "Failed to load artworks.",
     "delete": "Delete",
+    "viewDetails": "View details",
     "deleteSuccess": "Artwork deleted successfully.",
     "deleteError": "Failed to delete artwork.",
     "confirmDelete": {
@@ -147,6 +148,7 @@
     "extraPhotos": "+{{count}} photos",
     "filters": {
       "aria": "Filter by album type",
+      "all": "All",
       "single": "Single Photo",
       "six": "6 Photos Story",
       "zodiac": "12 photos - full Zodiac Story"

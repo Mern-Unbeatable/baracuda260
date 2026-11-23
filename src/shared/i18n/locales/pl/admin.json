@@ -136,6 +136,7 @@
     "loading": "Ładowanie prac konkursowych...",
     "error": "Nie udało się załadować prac konkursowych.",
     "delete": "Usuń",
+    "viewDetails": "Zobacz szczegóły",
     "deleteSuccess": "Praca konkursowa została pomyślnie usunięta.",
     "deleteError": "Nie udało się usunąć pracy konkursowej.",
     "confirmDelete": {
@@ -147,6 +148,7 @@
     "extraPhotos": "+{{count}} zdjęć",
     "filters": {
       "aria": "Filtruj według typu albumu",
+      "all": "Wszystkie",
       "single": "Pojedyncze zdjęcie",
       "six": "Historia 6 zdjęć",
       "zodiac": "12 zdjęć — pełna historia zodiaku"

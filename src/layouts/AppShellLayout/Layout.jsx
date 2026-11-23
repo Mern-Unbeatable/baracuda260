@@ -29,6 +29,21 @@ const normalizePath = (pathname) => {
   return pathname.replace(/\/+$/, '') || '/';
 };
 
+/**
+ * Chat UIs need a locked viewport height (inner panes fill the screen).
+ * Image grids must use document scroll — nested overflow + full-res photos
+ * desyncs the scrollbar from the painted content.
+ */
+const isViewportLockedPath = (currentPath) => {
+  if (!currentPath) return false;
+  return (
+    currentPath === normalizePath(ROUTES.USER_CHAT) ||
+    currentPath === normalizePath(ROUTES.ADMIN_CHAT) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_CHAT)}/`) ||
+    currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_CHAT)}/`)
+  );
+};
+
 const Layout = memo(() => {
   const { t } = useTranslation();
   const location = useLocation();
@@ -46,6 +61,7 @@ const Layout = memo(() => {
 
   const isAdmin = isAdminRole(user?.role);
   const currentPath = normalizePath(location.pathname);
+  const lockViewport = isViewportLockedPath(currentPath);
   const isAdminReadyPage =
     currentPath === normalizePath(ROUTES.ADMIN_DASHBOARD) ||
     currentPath === normalizePath(ROUTES.USER_DASHBOARD) ||
@@ -65,8 +81,6 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.USER_PROMOTED_PRODUCTS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_PROMOTED_PRODUCTS)}/`) ||
     currentPath.startsWith(`${normalizePath(ROUTES.USER_PROMOTED_PRODUCTS)}/`) ||
-    // currentPath === normalizePath(ROUTES.ADMIN_SUBMISSIONS) ||
-    // currentPath === normalizePath(ROUTES.USER_SUBMISSIONS) ||
     currentPath === normalizePath(ROUTES.ADMIN_USERS) ||
     currentPath === normalizePath(ROUTES.USER_USERS) ||
     currentPath === normalizePath(ROUTES.ADMIN_CATEGORIES) ||
@@ -108,7 +122,9 @@ const Layout = memo(() => {
     currentPath === normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS) ||
     currentPath === normalizePath(ROUTES.USER_BUSINESS_PHOTOS) ||
     currentPath.startsWith(`${normalizePath(ROUTES.ADMIN_BUSINESS_PHOTOS)}/`) ||
-    currentPath.startsWith(`${normalizePath(ROUTES.USER_BUSINESS_PHOTOS)}/`);
+    currentPath.startsWith(`${normalizePath(ROUTES.USER_BUSINESS_PHOTOS)}/`) ||
+    currentPath === normalizePath(ROUTES.USER_CHAT) ||
+    currentPath === normalizePath(ROUTES.ADMIN_CHAT);
 
   useEffect(() => {
     const handleKey = (event) => {
@@ -133,73 +149,105 @@ const Layout = memo(() => {
     };
   }, [sidebarOpen]);
 
-  return (
-    <div className="fixed inset-0 flex overflow-hidden bg-[#f9fafb]">
-      <div
-        className={`fixed inset-0 z-20 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
-          sidebarOpen
-            ? 'pointer-events-auto opacity-100'
-            : 'pointer-events-none opacity-0'
-        }`}
-        onClick={() => setSidebarOpen(false)}
-        aria-hidden="true"
-      />
+  // Reset window scroll when leaving locked chat pages / changing routes
+  useEffect(() => {
+    if (!lockViewport) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentPath, lockViewport]);
 
-      <aside
-        id="sidebar"
-        aria-label={t('dashboard.sidebar.navAria')}
-        className={`
-          fixed inset-y-0 left-0 z-30 w-72 transform transition-all duration-300 ease-in-out
-          lg:relative lg:z-30 lg:shrink-0
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          ${desktopOpen ? 'lg:w-72 lg:translate-x-0' : 'lg:w-16 lg:translate-x-0'}
-        `}
+  const pageContent =
+    isAdmin && !isAdminReadyPage ? <AdminComingSoonContent /> : <Outlet />;
+
+  // Avoid `transform` on lg — it disables position:sticky and recreates nested-scroll jank.
+  const asideClassName = `
+    fixed inset-y-0 left-0 z-30 w-72 transition-[width,transform] duration-300 ease-in-out
+    max-lg:transform
+    lg:z-30 lg:shrink-0 lg:transform-none
+    ${sidebarOpen ? 'translate-x-0' : 'max-lg:-translate-x-full'}
+    ${desktopOpen ? 'lg:w-72' : 'lg:w-16'}
+    ${
+      lockViewport
+        ? 'lg:relative lg:inset-auto'
+        : 'lg:sticky lg:top-0 lg:h-screen lg:self-start lg:inset-auto'
+    }
+  `;
+
+  const mobileHeader = (
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-[#e2e2e2] bg-white px-4 lg:hidden">
+      <Button
+        unstyled
+        type="button"
+        onClick={() => setSidebarOpen(true)}
+        aria-expanded={sidebarOpen}
+        aria-controls="sidebar"
+        aria-label={t('dashboard.sidebar.open')}
+        className="-ml-1 rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
       >
-        <Sidebar
-          onClose={() => setSidebarOpen(false)}
-          onDesktopClose={() => setDesktopOpen(false)}
-          onAutoCollapse={() => setDesktopOpen(false)}
-          isCollapsed={!desktopOpen}
-          onExpand={() => setDesktopOpen(true)}
-        />
-      </aside>
+        <Menu size={20} aria-hidden="true" />
+      </Button>
+      <Image
+        src={DASHBOARD_ASSETS.logo}
+        alt="My12Photos"
+        width={120}
+        height={28}
+        className="h-7 w-auto object-contain"
+        onError={(event) => {
+          event.currentTarget.style.display = 'none';
+        }}
+      />
+    </header>
+  );
 
-      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <header className="flex h-14 shrink-0 items-center gap-3 border-b border-[#e2e2e2] bg-white px-4 lg:hidden">
-          <Button
-            unstyled
-            type="button"
-            onClick={() => setSidebarOpen(true)}
-            aria-expanded={sidebarOpen}
-            aria-controls="sidebar"
-            aria-label={t('dashboard.sidebar.open')}
-            className="-ml-1 rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
-          >
-            <Menu size={20} aria-hidden="true" />
-          </Button>
-          <Image
-            src={DASHBOARD_ASSETS.logo}
-            alt="My12Photos"
-            width={120}
-            height={28}
-            className="h-7 w-auto object-contain"
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
-            }}
-          />
-        </header>
+  const sidebarOverlay = sidebarOpen ? (
+    <div
+      className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+      onClick={() => setSidebarOpen(false)}
+      aria-hidden="true"
+    />
+  ) : null;
 
-        <div className="flex min-h-0 flex-1 flex-col bg-[#f9fafb]">
-          <div
-            className="scrollbar-white min-h-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8"
-            data-lenis-prevent
-          >
-            {isAdmin && !isAdminReadyPage ? (
-              <AdminComingSoonContent />
-            ) : (
-              <Outlet />
-            )}
+  const sidebar = (
+    <aside
+      id="sidebar"
+      aria-label={t('dashboard.sidebar.navAria')}
+      className={asideClassName}
+    >
+      <Sidebar
+        onClose={() => setSidebarOpen(false)}
+        onDesktopClose={() => setDesktopOpen(false)}
+        onAutoCollapse={() => setDesktopOpen(false)}
+        isCollapsed={!desktopOpen}
+        onExpand={() => setDesktopOpen(true)}
+      />
+    </aside>
+  );
+
+  if (lockViewport) {
+    return (
+      <div className="fixed inset-0 flex overflow-hidden bg-[#f9fafb]">
+        {sidebarOverlay}
+        {sidebar}
+        <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+          {mobileHeader}
+          <div className="flex min-h-0 flex-1 flex-col bg-[#f9fafb]">
+            <div className="scrollbar-white min-h-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
+              {pageContent}
+            </div>
           </div>
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen bg-[#f9fafb]">
+      {sidebarOverlay}
+      {sidebar}
+      <main className="flex min-w-0 flex-1 flex-col">
+        {mobileHeader}
+        <div className="w-full flex-1 bg-[#f9fafb] px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
+          {pageContent}
         </div>
       </main>
     </div>

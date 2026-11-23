@@ -7,8 +7,54 @@ import {
 import React, { memo } from 'react';
 import Button from '@/components/ui/Button';
 
-const PAGINATION_LEADING_PAGES = [1, 2, 3];
 const PAGINATION_ICON_SIZE = 16;
+
+/**
+ * Build a compact page list with ellipses, e.g. [1, 2, 3, '…', 12].
+ * Avoids the old hardcoded `1 2 3 … last` which duplicated the last page
+ * whenever totalPages ≤ 3.
+ *
+ * @param {number} current
+ * @param {number} total
+ * @returns {Array<number | '…'>}
+ */
+const buildPageItems = (current, total) => {
+  const safeTotal = Math.max(1, Number(total) || 1);
+  const safeCurrent = Math.min(Math.max(1, Number(current) || 1), safeTotal);
+
+  if (safeTotal <= 7) {
+    return Array.from({ length: safeTotal }, (_, i) => i + 1);
+  }
+
+  const items = new Set([1, safeTotal, safeCurrent]);
+  for (let delta = 1; delta <= 1; delta += 1) {
+    if (safeCurrent - delta > 1) items.add(safeCurrent - delta);
+    if (safeCurrent + delta < safeTotal) items.add(safeCurrent + delta);
+  }
+
+  // Keep a bit more context near the edges
+  if (safeCurrent <= 3) {
+    items.add(2);
+    items.add(3);
+    items.add(4);
+  }
+  if (safeCurrent >= safeTotal - 2) {
+    items.add(safeTotal - 1);
+    items.add(safeTotal - 2);
+    items.add(safeTotal - 3);
+  }
+
+  const sorted = [...items].sort((a, b) => a - b);
+  const result = [];
+  for (let i = 0; i < sorted.length; i += 1) {
+    const pageNumber = sorted[i];
+    if (i > 0 && pageNumber - sorted[i - 1] > 1) {
+      result.push('…');
+    }
+    result.push(pageNumber);
+  }
+  return result;
+};
 
 /**
  * @param {{
@@ -416,7 +462,6 @@ const AdminPagination = memo((props) => {
   }
 
   const {
-    variant,
     page,
     totalPages,
     onPageChange,
@@ -429,15 +474,14 @@ const AdminPagination = memo((props) => {
   } = props;
   const isFirstPage = page <= 1;
   const isLastPage = page >= totalPages;
+  const pageItems = buildPageItems(page, totalPages);
   const ellipsisClassName =
-    variant === 'competitions'
-      ? 'inline-flex size-8 items-center justify-center rounded-[8px] border border-[#f1f1f1] bg-white text-[14px] leading-none text-[#6b7280]'
-      : 'inline-flex size-8 items-center justify-center rounded-[8px] border border-[#f1f1f1] bg-white text-[13px] leading-none text-[#333333]';
+    'inline-flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[13px] leading-none text-[#6b7280]';
 
   return (
     <nav
       aria-label={navAriaLabel}
-      className="flex flex-wrap items-center justify-center gap-1.25"
+      className="flex flex-wrap items-center justify-center gap-1.5"
     >
       <PaginationControl
         label={firstLabel}
@@ -464,28 +508,26 @@ const AdminPagination = memo((props) => {
         />
       </PaginationControl>
 
-      {PAGINATION_LEADING_PAGES.map((pageNumber) => (
-        <PaginationControl
-          key={pageNumber}
-          label={pageLabel(pageNumber)}
-          active={page === pageNumber}
-          onClick={() => onPageChange(pageNumber)}
-        >
-          {pageNumber}
-        </PaginationControl>
-      ))}
-
-      <span className={ellipsisClassName} aria-hidden="true">
-        …
-      </span>
-
-      <PaginationControl
-        label={pageLabel(totalPages)}
-        active={page === totalPages}
-        onClick={() => onPageChange(totalPages)}
-      >
-        {totalPages}
-      </PaginationControl>
+      {pageItems.map((item, index) =>
+        item === '…' ? (
+          <span
+            key={`ellipsis-${index}`}
+            className={ellipsisClassName}
+            aria-hidden="true"
+          >
+            …
+          </span>
+        ) : (
+          <PaginationControl
+            key={item}
+            label={pageLabel(item)}
+            active={page === item}
+            onClick={() => onPageChange(item)}
+          >
+            {item}
+          </PaginationControl>
+        ),
+      )}
 
       <PaginationControl
         label={nextLabel}
