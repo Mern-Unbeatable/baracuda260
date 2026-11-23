@@ -28,7 +28,10 @@ export const COMPETITION_TYPE_KEYS = {
 
 export const COMPETITION_CARDS = [];
 
+/** Desktop / tablet page size (4-col / 3-col grids). */
 export const COMPETITIONS_PAGE_SIZE = 8;
+/** Mobile page size (2-col grid). */
+export const COMPETITIONS_PAGE_SIZE_MOBILE = 10;
 export const COMPETITIONS_TOTAL_PAGES = 1;
 /** Leading page numbers shown before the ellipsis in Figma pagination. */
 export const PAGINATION_LEADING_PAGES = [1, 2, 3];

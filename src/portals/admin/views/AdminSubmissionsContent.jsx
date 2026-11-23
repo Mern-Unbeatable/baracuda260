@@ -124,7 +124,7 @@ const SubmissionFilters = memo(({ activeFilter, onFilterClick }) => {
     <div
       role="group"
       aria-label={t('adminSubmissions.filters.aria')}
-      className="flex flex-wrap items-center gap-2"
+      className="flex w-full max-w-full items-center gap-2 overflow-x-auto overscroll-x-contain pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {COMPETITION_FILTERS.map((filter) => {
         const selected =
@@ -136,7 +136,7 @@ const SubmissionFilters = memo(({ activeFilter, onFilterClick }) => {
             type="button"
             aria-pressed={selected}
             onClick={() => onFilterClick(filter.id)}
-            className={`rounded-full px-3.5 py-2 text-[12px] font-semibold sm:text-[13px] ${
+            className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-semibold sm:px-3.5 sm:py-2 sm:text-[13px] ${
               selected
                 ? 'bg-[#dfe1f5] text-[#171717] ring-1 ring-[#c5cae9]'
                 : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
@@ -216,7 +216,7 @@ const AdminSubmissionsContent = memo(() => {
       ) : visibleCards.length > 0 ? (
         <section
           aria-label={t('adminSubmissions.gridAria')}
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
         >
           {visibleCards.map((card) => (
             <SubmissionCard

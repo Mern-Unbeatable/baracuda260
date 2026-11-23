@@ -18,12 +18,14 @@ import { optimizeImageUrl } from '@/shared/utils/media';
 
 const MetricStat = memo(({ icon: Icon, value, tone = 'default' }) => (
   <span
-    className={`inline-flex items-center gap-1 text-[12px] leading-4 sm:text-[13px] ${
+    className={`inline-flex max-w-full items-center gap-0.5 truncate text-[10px] leading-3.5 sm:gap-1 sm:text-[13px] sm:leading-4 ${
       tone === 'accent' ? 'text-[#ee1c25]' : 'text-[#6b7280]'
     }`}
   >
-    {Icon ? <Icon size={14} aria-hidden="true" className="shrink-0" /> : null}
-    {value}
+    {Icon ? (
+      <Icon size={12} aria-hidden="true" className="shrink-0 sm:size-[14px]" />
+    ) : null}
+    <span className="truncate">{value}</span>
   </span>
 ));
 
@@ -47,13 +49,28 @@ const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
     card.description ||
     (card.descriptionKey ? t(card.descriptionKey) : '');
   const dateText = card.formattedDate || (card.dateKey ? t(card.dateKey) : '');
+  let shortDateText = dateText;
+  if (card.createdAt) {
+    try {
+      const d = new Date(card.createdAt);
+      if (!Number.isNaN(d.getTime())) {
+        shortDateText = d.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        });
+      }
+    } catch {
+      shortDateText = dateText;
+    }
+  }
   const imageSrc = optimizeImageUrl(
     card.image || card.coverImage || '',
     480,
   );
 
   return (
-    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[rgba(203,195,213,0.25)] bg-white transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-[rgba(203,195,213,0.25)] bg-white transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)] sm:rounded-2xl">
       <Link
         to={detailPath}
         className="relative block aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]"
@@ -64,33 +81,85 @@ const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
             alt=""
             width={480}
             height={360}
-            sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw"
+            sizes="(max-width:640px) 50vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw"
             className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
           />
         ) : null}
-        <span className="absolute top-2.5 left-2.5 rounded-full bg-white/95 px-2 py-1 text-[10px] font-bold tracking-[0.4px] text-[#4048cd] uppercase">
+        <span className="absolute top-1.5 left-1.5 max-w-[calc(100%-0.75rem)] truncate rounded-full bg-white/95 px-1.5 py-0.5 text-[8px] font-bold tracking-[0.3px] text-[#4048cd] uppercase sm:top-2.5 sm:left-2.5 sm:px-2 sm:py-1 sm:text-[10px] sm:tracking-[0.4px]">
           {typeLabel}
         </span>
         {card.extraPhotos ? (
-          <span className="absolute right-2.5 bottom-2.5 rounded-full bg-black/65 px-2 py-1 text-[11px] font-semibold text-white">
+          <span className="absolute right-1.5 bottom-1.5 rounded-full bg-black/65 px-1.5 py-0.5 text-[9px] font-semibold text-white sm:right-2.5 sm:bottom-2.5 sm:px-2 sm:py-1 sm:text-[11px]">
             {t('adminCompetitions.extraPhotos', { count: card.extraPhotos })}
           </span>
         ) : null}
       </Link>
 
-      <div className="flex flex-1 flex-col gap-2 p-3.5 sm:p-4">
+      <div className="flex flex-1 flex-col gap-1.5 p-2.5 sm:gap-2 sm:p-4">
         <Link to={detailPath} className="transition hover:text-[#ee1c25]">
-          <h3 className="line-clamp-1 text-[15px] font-semibold leading-5 text-[#161c27] sm:text-[16px]">
+          <h3 className="line-clamp-1 text-[13px] font-semibold leading-4 text-[#161c27] sm:text-[16px] sm:leading-5">
             {titleText}
           </h3>
         </Link>
         {descriptionText ? (
-          <p className="line-clamp-2 text-[12px] leading-4 text-[#494453] sm:text-[13px]">
+          <p className="line-clamp-2 text-[11px] leading-3.5 text-[#494453] sm:text-[13px] sm:leading-4">
             {descriptionText}
           </p>
         ) : null}
 
-        <div className="mt-auto flex items-center gap-2 border-t border-[#f0f1f4] pt-2">
+        {/* Mobile-only footer: stats + actions, date under */}
+        <div className="mt-auto border-t border-[#f0f1f4] pt-1.5 sm:hidden">
+          <div className="flex items-center gap-1.5">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+              <MetricStat
+                icon={Heart}
+                value={formatCompactStatValue(
+                  card.likesCount ?? card.likes ?? 0,
+                )}
+                tone="accent"
+              />
+              <MetricStat
+                icon={Eye}
+                value={formatCompactStatValue(
+                  card.viewsCount ?? card.views ?? 0,
+                )}
+              />
+            </div>
+            <div className="flex shrink-0 items-center gap-1">
+              <Link
+                to={detailPath}
+                aria-label={t('adminCompetitions.viewDetails')}
+                title={t('adminCompetitions.viewDetails')}
+                className="inline-flex size-7 items-center justify-center rounded-md border border-[#e5e7eb] bg-white text-[#4048cd]"
+              >
+                <SquareArrowOutUpRight size={13} aria-hidden="true" />
+              </Link>
+              <Button
+                unstyled
+                type="button"
+                disabled={isDeleting}
+                aria-label={t('adminCompetitions.delete')}
+                title={t('adminCompetitions.delete')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete?.(card.id);
+                }}
+                className="inline-flex size-7 items-center justify-center rounded-md border border-[#fde8e9] bg-[#fef2f2] text-[#ee1c25] disabled:opacity-50"
+              >
+                <Trash2 size={13} aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+          {shortDateText || dateText ? (
+            <div className="mt-1.5">
+              <MetricStat icon={Calendar} value={shortDateText || dateText} />
+            </div>
+          ) : null}
+        </div>
+
+        {/* sm+ footer: original single-row layout */}
+        <div className="mt-auto hidden items-center gap-2 border-t border-[#f0f1f4] pt-2 sm:flex">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
             <MetricStat
               icon={Heart}
@@ -103,7 +172,6 @@ const ShowcaseCard = memo(({ card, onDelete, isDeleting }) => {
             />
             {dateText ? <MetricStat icon={Calendar} value={dateText} /> : null}
           </div>
-
           <div className="flex shrink-0 items-center gap-1.5">
             <Link
               to={detailPath}
@@ -144,7 +212,7 @@ const CompetitionTypeFilters = memo(({ activeFilter, onFilterClick }) => {
     <div
       role="group"
       aria-label={t('adminCompetitions.filters.aria')}
-      className="flex flex-wrap items-center gap-2"
+      className="flex w-full max-w-full items-center gap-2 overflow-x-auto overscroll-x-contain pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {COMPETITION_FILTERS.map((filter) => {
         const selected =
@@ -156,7 +224,7 @@ const CompetitionTypeFilters = memo(({ activeFilter, onFilterClick }) => {
             type="button"
             aria-pressed={selected}
             onClick={() => onFilterClick(filter.id)}
-            className={`rounded-full px-3.5 py-2 text-[12px] font-semibold sm:text-[13px] ${
+            className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-semibold sm:px-3.5 sm:py-2 sm:text-[13px] ${
               selected
                 ? 'bg-[#dfe1f5] text-[#171717] ring-1 ring-[#c5cae9]'
                 : 'bg-[#ecedfa] text-[#171717] hover:bg-[#e0e2f5]'
@@ -178,7 +246,7 @@ const ShowcaseGrid = memo(({ cards, onDelete, isDeleting }) => {
   return (
     <section
       aria-label={t('adminCompetitions.gridAria')}
-      className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
+      className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
     >
       {cards.map((card) => (
         <ShowcaseCard
@@ -213,12 +281,14 @@ const AdminCompetitionsContent = memo(() => {
 
   return (
     <div className="flex w-full flex-col gap-5 sm:gap-7">
-      <header className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <header className="flex min-w-0 flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
         <AdminPageHeader title={t('adminCompetitions.title')} />
-        <CompetitionTypeFilters
-          activeFilter={activeFilter}
-          onFilterClick={handleFilterClick}
-        />
+        <div className="min-w-0 w-full lg:ml-auto lg:w-auto lg:max-w-none">
+          <CompetitionTypeFilters
+            activeFilter={activeFilter}
+            onFilterClick={handleFilterClick}
+          />
+        </div>
       </header>
 
       {isLoading ? (

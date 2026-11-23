@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import {
   COMPETITIONS_PAGE_SIZE,
+  COMPETITIONS_PAGE_SIZE_MOBILE,
   toggleCompetitionFilter,
 } from '@/portals/admin/data/adminCompetitionsData';
 import {
@@ -21,18 +22,41 @@ const FILTER_TO_KIND = {
   zodiac: 'TWELVE',
 };
 
+const MOBILE_MQ = '(max-width: 639px)';
+
+const readIsMobile = () => {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia(MOBILE_MQ).matches;
+};
+
 /**
  * Showcase filter + server pagination hook for Admin Competitions / Artworks.
- * Connects directly to GET /v1/admin/artworks?competitionState=IN_COMPETITION&page=1&limit=6.
+ * Mobile uses 10/page; sm+ uses 8/page.
  */
 export default function useAdminCompetitionsShowcase({
   competitionState = 'IN_COMPETITION',
-  pageSize = COMPETITIONS_PAGE_SIZE,
 } = {}) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [activeFilter, setActiveFilter] = useState(null);
   const [page, setPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(readIsMobile);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const media = window.matchMedia(MOBILE_MQ);
+    const onChange = () => {
+      setIsMobile(media.matches);
+      setPage(1);
+    };
+    onChange();
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  const pageSize = isMobile
+    ? COMPETITIONS_PAGE_SIZE_MOBILE
+    : COMPETITIONS_PAGE_SIZE;
 
   const kind = activeFilter ? FILTER_TO_KIND[activeFilter] : undefined;
 
@@ -59,7 +83,6 @@ export default function useAdminCompetitionsShowcase({
         page,
         limit: pageSize,
       }),
-    // Avoid keeping previous heavy image cards mounted while fetching
     placeholderData: undefined,
     staleTime: 30 * 1000,
   });
