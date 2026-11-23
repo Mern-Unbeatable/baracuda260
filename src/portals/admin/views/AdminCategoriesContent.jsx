@@ -299,7 +299,7 @@ const AdminCategoriesContent = memo(() => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <AdminPageHeader
           eyebrow={t('adminCategories.eyebrow')}
@@ -319,12 +319,12 @@ const AdminCategoriesContent = memo(() => {
       </div>
 
       {!isLoading && !isError && categories.length > 0 ? (
-        <div className="flex flex-col gap-3 rounded-2xl border border-[#e2e8f0] bg-white p-3 shadow-[0_1px_3px_rgba(15,23,42,0.04)] sm:flex-row sm:items-center sm:justify-between sm:p-3.5">
+        <div className="flex flex-col gap-4 rounded-2xl border border-[#e2e8f0] bg-white p-4 shadow-[0_1px_3px_rgba(15,23,42,0.04)] sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:p-5">
           <div className="relative min-w-0 flex-1">
             <Search
               size={16}
               aria-hidden="true"
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#94a3b8]"
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94a3b8]"
             />
             <Input
               type="search"
@@ -336,7 +336,7 @@ const AdminCategoriesContent = memo(() => {
               aria-label={t('adminCategories.searchAria', {
                 defaultValue: 'Search taxonomy',
               })}
-              inputClassName="h-10 rounded-xl border-[#e2e8f0] bg-[#f8fafc] pl-9 pr-9 text-[14px]"
+              inputClassName="h-11 w-full rounded-xl border border-[#e2e8f0] bg-[#f8fafc] pl-10 pr-10 text-[14px] text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#4048cd] focus:ring-1 focus:ring-[#4048cd]"
             />
             {search ? (
               <Button
@@ -344,19 +344,19 @@ const AdminCategoriesContent = memo(() => {
                 type="button"
                 aria-label={t('common.clear', 'Clear')}
                 onClick={() => setSearch('')}
-                className="absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-[#94a3b8] hover:bg-[#eef2f7] hover:text-[#475569]"
+                className="absolute right-2.5 top-1/2 inline-flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-[#94a3b8] hover:bg-[#eef2f7] hover:text-[#475569]"
               >
                 <X size={14} aria-hidden="true" />
               </Button>
             ) : null}
           </div>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2.5">
             <Button
               unstyled
               type="button"
               onClick={expandAll}
               disabled={allExpanded || filteredGroups.length === 0}
-              className="cursor-pointer rounded-lg border border-[#e2e8f0] bg-white px-3 py-2 text-[12px] font-semibold text-[#475569] transition hover:border-[#c7cbf2] hover:text-[#4048cd] disabled:cursor-not-allowed disabled:opacity-40"
+              className="cursor-pointer rounded-lg border border-[#e2e8f0] bg-white px-3.5 py-2.5 text-[12px] font-semibold text-[#475569] transition hover:border-[#c7cbf2] hover:text-[#4048cd] disabled:cursor-not-allowed disabled:opacity-40"
             >
               {t('adminCategories.expandAll', 'Expand all')}
             </Button>
@@ -365,7 +365,7 @@ const AdminCategoriesContent = memo(() => {
               type="button"
               onClick={collapseAll}
               disabled={expandedIds.size === 0}
-              className="cursor-pointer rounded-lg border border-[#e2e8f0] bg-white px-3 py-2 text-[12px] font-semibold text-[#475569] transition hover:border-[#c7cbf2] hover:text-[#4048cd] disabled:cursor-not-allowed disabled:opacity-40"
+              className="cursor-pointer rounded-lg border border-[#e2e8f0] bg-white px-3.5 py-2.5 text-[12px] font-semibold text-[#475569] transition hover:border-[#c7cbf2] hover:text-[#4048cd] disabled:cursor-not-allowed disabled:opacity-40"
             >
               {t('adminCategories.collapseAll', 'Collapse all')}
             </Button>
@@ -399,7 +399,7 @@ const AdminCategoriesContent = memo(() => {
       ) : categories.length > 0 ? (
         filteredGroups.length > 0 ? (
           <div
-            className="flex flex-col gap-3"
+            className="flex flex-col gap-4"
             aria-label={t('adminCategories.panelAria')}
           >
             <p className="text-[12px] font-medium text-[#94a3b8]">
