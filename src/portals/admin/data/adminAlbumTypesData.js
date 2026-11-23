@@ -11,10 +11,10 @@ export const ADMIN_ALBUM_TYPES_ASSETS = {
   close: `${A}/icon-close.svg`,
 };
 
-export const ICON_BOX_SIZE = { width: 56, height: 57 };
-export const TYPE_ICON_SIZE = 32;
-export const CHECK_ICON_SIZE = 13;
-export const EDIT_ICON_SIZE = 20;
+export const ICON_BOX_SIZE = { width: 40, height: 40 };
+export const TYPE_ICON_SIZE = 22;
+export const CHECK_ICON_SIZE = 12;
+export const EDIT_ICON_SIZE = 16;
 export const CLOSE_ICON_SIZE = 18;
 
 export const ALBUM_TYPE_KINDS = ['SINGLE', 'SIX', 'TWELVE'];
