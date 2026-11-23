@@ -1,14 +1,15 @@
 import React, { memo, useMemo } from 'react';
-import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RefreshCw } from 'lucide-react';
 import Pagination from '@/components/common/Pagination/Pagination';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import MarketingSearchBar from '@/components/marketing/MarketingSearchBar/MarketingSearchBar';
 import SectionHeader from '@/components/marketing/SectionHeader/SectionHeader';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import Image from '@/components/ui/Image';
+import { publicStoreProductPath } from '@/portals/member/data/myStoreData';
 import { MARKETPLACE_PAGE_SIZE } from '@/portals/public/marketplace/data/marketplaceData';
 import { ROUTES } from '@/shared/config';
 import { Shell } from '@/shared/site-chrome';
@@ -23,10 +24,27 @@ const photographerStorePath = (username) => {
 
 const MarketplaceProductCard = memo(({ product }) => {
   const { t } = useTranslation();
-  const href = photographerStorePath(product.username);
+  const navigate = useNavigate();
+  const detailHref = publicStoreProductPath(product.username, product.id);
+
+  const openDetails = () => {
+    if (!detailHref || detailHref === ROUTES.MARKETPLACE) return;
+    navigate(detailHref);
+  };
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+    <article
+      role="link"
+      tabIndex={0}
+      onClick={openDetails}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openDetails();
+        }
+      }}
+      className="flex h-full cursor-pointer flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition hover:border-[#c7cbe8] hover:shadow-[0_4px_12px_rgba(15,23,42,0.06)]"
+    >
       <div className="relative aspect-4/3 overflow-hidden bg-[#f3f4f6]">
         <Image
           src={product.image}
@@ -46,11 +64,9 @@ const MarketplaceProductCard = memo(({ product }) => {
       </div>
       <div className="flex flex-1 flex-col gap-3 p-3.5 sm:p-4">
         <div>
-          <Link to={href}>
-            <h3 className="line-clamp-2 cursor-pointer text-[14px] font-bold leading-5 text-[#111827] transition hover:text-[#4048cd] hover:underline">
-              {product.title}
-            </h3>
-          </Link>
+          <h3 className="line-clamp-2 text-[14px] font-bold leading-5 text-[#111827] transition group-hover:text-[#4048cd]">
+            {product.title}
+          </h3>
           <p className="mt-1.5 line-clamp-2 text-[12px] leading-4 text-[#6b7280]">
             {product.description}
           </p>
@@ -63,18 +79,24 @@ const MarketplaceProductCard = memo(({ product }) => {
             {product.price}
           </p>
           <div className="flex items-center gap-1.5">
-            <Link to={href}>
-              <Button variant="outline" className="h-8 px-2.5 text-[12px]">
-                {t('marketplace.viewProduct')}
-              </Button>
-            </Link>
             <Button
-              onClick={() =>
-                toast.success(
-                  t('marketplace.buyStarted', { title: product.title }),
-                )
-              }
+              variant="outline"
               className="h-8 px-2.5 text-[12px]"
+              onClick={(event) => {
+                event.stopPropagation();
+                openDetails();
+              }}
+            >
+              {t('marketplace.viewProduct')}
+            </Button>
+            <Button
+              className="h-8 px-2.5 text-[12px]"
+              onClick={(event) => {
+                event.stopPropagation();
+                navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
+                  state: { product },
+                });
+              }}
             >
               {t('marketplace.buyNow')}
             </Button>
@@ -85,17 +107,6 @@ const MarketplaceProductCard = memo(({ product }) => {
   );
 });
 MarketplaceProductCard.displayName = 'MarketplaceProductCard';
-
-const CameraIcon = ({ className }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M4 7C2.89543 7 2 7.89543 2 9V19C2 20.1046 2.89543 21 4 21H20C21.1046 21 22 20.1046 22 19V9C22 7.89543 21.1046 7 20 7H16.83L15 4H9L7.17 7H4ZM12 18C9.23858 18 7 15.7614 7 13C7 10.2386 9.23858 8 12 8C14.7614 8 17 10.2386 17 13C17 15.7614 14.7614 18 12 18ZM12 16.5C13.933 16.5 15.5 14.933 15.5 13C15.5 11.067 13.933 9.5 12 9.5C10.067 9.5 8.5 11.067 8.5 13C8.5 14.933 10.067 16.5 12 16.5Z" />
-  </svg>
-);
 
 const MarketplaceStoreCard = memo(({ store }) => {
   const { t } = useTranslation();
@@ -127,6 +138,11 @@ const MarketplaceStoreCard = memo(({ store }) => {
           <div className="min-w-0">
             <h3 className="flex flex-wrap items-center gap-1.5 text-[15px] font-bold leading-tight text-[#111827] sm:text-[16px]">
               <span className="truncate">{store.storeName}</span>
+              {store.isOwn ? (
+                <span className="shrink-0 rounded-md bg-[#4048cd] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.35px] text-white">
+                  {t('marketplace.yourStore', 'You')}
+                </span>
+              ) : null}
               {store.promoted ? (
                 <span className="shrink-0 rounded-md bg-[#ee1c25] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.35px] text-white">
                   {t('marketplace.promoted')}
@@ -134,6 +150,10 @@ const MarketplaceStoreCard = memo(({ store }) => {
               ) : null}
             </h3>
             <p className="mt-0.5 line-clamp-1 text-[12px] text-[#6b7280] sm:text-[13px]">
+              {store.username
+                ? `@${String(store.username).replace(/^@/, '')}`
+                : null}
+              {store.username && store.description ? ' · ' : null}
               {store.description}
             </p>
           </div>
@@ -146,30 +166,11 @@ const MarketplaceStoreCard = memo(({ store }) => {
         </Link>
       </div>
 
-      <div className="mt-3 flex items-center gap-2">
-        <span className="hidden text-[11px] font-medium text-[#9ca3af] sm:inline">
-          Artwork Appreciation:
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="text-[11px] font-medium text-[#9ca3af]">
+          {t('marketplace.artworkAppreciation', 'Artwork Appreciation:')}
         </span>
-        <div className="flex flex-1 items-center gap-1.5">
-          <div className="inline-flex items-center gap-1 rounded-full border border-[#f3e5c8] bg-[#fdfaf2] px-2 py-0.5">
-            <CameraIcon className="h-3.5 w-3.5 text-[#d4af37]" />
-            <span className="text-[12px] font-bold text-[#927129]">
-              {store.scores?.gold || 0}
-            </span>
-          </div>
-          <div className="inline-flex items-center gap-1 rounded-full border border-[#e2e8f0] bg-[#f5f7f9] px-2 py-0.5">
-            <CameraIcon className="h-3.5 w-3.5 text-[#94a3b8]" />
-            <span className="text-[12px] font-bold text-[#475569]">
-              {store.scores?.silver || 0}
-            </span>
-          </div>
-          <div className="inline-flex items-center gap-1 rounded-full border border-[#eedfd5] bg-[#fdf7f4] px-2 py-0.5">
-            <CameraIcon className="h-3.5 w-3.5 text-[#cd7f32]" />
-            <span className="text-[12px] font-bold text-[#925c42]">
-              {store.scores?.bronze || 0}
-            </span>
-          </div>
-        </div>
+        <PhotographerAwardCounters awards={store.scores} size="sm" />
       </div>
 
       <div className="mt-3 grid grid-cols-3 gap-2">

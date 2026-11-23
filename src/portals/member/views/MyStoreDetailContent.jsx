@@ -60,15 +60,31 @@ const MyStoreDetailContent = memo(() => {
   }, [product, isOwner, isLoading, currentUser, navigate]);
   const gallery = useMemo(() => {
     if (!product) return [];
-    const images = Array.isArray(product.images)
+    const fromGallery = Array.isArray(product.gallery)
+      ? product.gallery.filter(Boolean)
+      : [];
+    const fromImages = Array.isArray(product.images)
       ? product.images.filter(Boolean)
       : [];
-    if (images.length) return images;
-    return product.image ? [product.image] : [];
+    const merged =
+      fromGallery.length > 0
+        ? fromGallery
+        : fromImages.length > 0
+          ? fromImages
+          : product.image
+            ? [product.image]
+            : [];
+    return merged.filter(
+      (url, index, list) => url && list.indexOf(url) === index,
+    );
   }, [product]);
 
   const [activeImage, setActiveImage] = useState(null);
   const displayImage = activeImage || gallery[0] || product?.image || '';
+
+  useEffect(() => {
+    setActiveImage(null);
+  }, [product?.id]);
 
   const backFrom = location.state?.from;
   const backFromPrizePayments =

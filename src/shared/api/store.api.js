@@ -96,24 +96,23 @@ export const normalizeStoreProduct = (item) => {
     STORE_CATEGORY_BADGE_MAP[primaryCategory.toUpperCase()] ||
     primaryCategory;
 
-  const image =
-    resolveMediaUrl(
-      item.bannerImage ||
-        (Array.isArray(item.images) ? item.images[0] : item.image) ||
-        '',
-    );
-
-  const images = (
+  const bannerImage = resolveMediaUrl(item.bannerImage || '');
+  const extraImages = (
     Array.isArray(item.images)
       ? item.images
-      : item.bannerImage
-        ? [item.bannerImage]
+      : item.image && !item.bannerImage
+        ? [item.image]
         : []
-  ).map((img) => resolveMediaUrl(typeof img === 'string' ? img : img?.url));
+  )
+    .map((img) => resolveMediaUrl(typeof img === 'string' ? img : img?.url))
+    .filter(Boolean);
 
+  // Cover + gallery images, de-duplicated (API stores banner separately from images[])
+  const gallery = [bannerImage, ...extraImages].filter(
+    (url, index, list) => url && list.indexOf(url) === index,
+  );
+  const image = gallery[0] || '';
   const description = item.description || '';
-  const gallery =
-    images.length > 0 ? images : image ? [image] : [];
 
   return {
     id: String(item.id),
@@ -217,12 +216,39 @@ export const normalizePublicStore = (store) => {
     description: store.bio || '',
     image: resolveMediaUrl(store.avatar || products[0]?.image || ''),
     promoted: Boolean(store.isPromoted),
+      // Real gold/silver/bronze only — do not map premiumPhotos/submissions/followers.
     scores: {
-      gold: Number(appreciation.premiumPhotos || 0),
-      silver: Number(appreciation.submissions || 0),
-      bronze: Number(appreciation.followers || 0),
+      gold: Number(appreciation.gold ?? 0),
+      silver: Number(appreciation.silver ?? 0),
+      bronze: Number(appreciation.bronze ?? 0),
     },
     products,
+  };
+};
+
+const hasLegacyAppreciationShape = (appreciation) => {
+  if (!appreciation || typeof appreciation !== 'object') return false;
+  const hasRealTier =
+    'gold' in appreciation || 'silver' in appreciation || 'bronze' in appreciation;
+  const hasLegacyCounts =
+    'premiumPhotos' in appreciation ||
+    'submissions' in appreciation ||
+    'followers' in appreciation;
+  return hasLegacyCounts && !hasRealTier;
+};
+
+/**
+ * Endpoint: GET /v1/appreciation/:userId
+ */
+export const getAppreciationStatsApi = async (userId) => {
+  if (!userId) return { gold: 0, silver: 0, bronze: 0 };
+  const response = await apiClient.get(`/v1/appreciation/${userId}`);
+  const payload = response?.data !== undefined ? response.data : response;
+  const stats = payload?.data && typeof payload.data === 'object' ? payload.data : payload;
+  return {
+    gold: Number(stats?.gold || 0),
+    silver: Number(stats?.silver || 0),
+    bronze: Number(stats?.bronze || 0),
   };
 };
 
@@ -257,8 +283,28 @@ export const getPublicStoresApi = async ({
     meta.totalPages || Math.max(1, Math.ceil(totalRecords / pageLimit) || 1),
   );
 
+  const stores = rawList.map(normalizePublicStore).filter(Boolean);
+
+  // Older APIs returned premiumPhotos/submissions/followers under
+  // artworkAppreciation. Enrich from /appreciation/:userId so marketplace
+  // counters match the public profile award badges.
+  const needsEnrichment = rawList.some((item) =>
+    hasLegacyAppreciationShape(item?.artworkAppreciation),
+  );
+  if (needsEnrichment && stores.length > 0) {
+    await Promise.all(
+      stores.map(async (store) => {
+        try {
+          store.scores = await getAppreciationStatsApi(store.id);
+        } catch {
+          store.scores = { gold: 0, silver: 0, bronze: 0 };
+        }
+      }),
+    );
+  }
+
   return {
-    data: rawList.map(normalizePublicStore).filter(Boolean),
+    data: stores,
     meta: {
       currentPage,
       totalPages,

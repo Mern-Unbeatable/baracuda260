@@ -33,6 +33,7 @@ import { getApiErrorMessage } from '@/shared/api/client';
 import {
   updateUserProfileApi,
   USER_PROFILE_ME_QUERY_KEY,
+  USER_PROFILE_USERNAME_QUERY_KEY,
 } from '@/shared/api/userProfile.api';
 import {
   ALL_COUNTRIES,
@@ -545,6 +546,17 @@ const SettingsContent = memo(() => {
       queryClient.invalidateQueries({ queryKey: USER_PROFILE_ME_QUERY_KEY });
 
       const updatedUser = response?.data || response;
+      const publicUsername = String(
+        updatedUser?.username || profileData?.username || '',
+      ).replace(/^@/, '');
+      if (publicUsername) {
+        queryClient.invalidateQueries({
+          queryKey: USER_PROFILE_USERNAME_QUERY_KEY(publicUsername),
+        });
+      }
+      // Also clear any cached public profile variants
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+
       if (updatedUser) {
         try {
           const stored = JSON.parse(localStorage.getItem('user') || '{}');
@@ -779,6 +791,25 @@ const SettingsContent = memo(() => {
             error={profileErrors.username}
             {...registerProfile('username', {
               required: t('memberSettings.errors.username'),
+              pattern: {
+                value: /^[a-zA-Z0-9._-]+$/,
+                message: t(
+                  'memberSettings.errors.usernameFormat',
+                  'Username can only use letters, numbers, dots, underscores, or hyphens — no spaces.',
+                ),
+              },
+              minLength: {
+                value: 3,
+                message: t(
+                  'memberSettings.errors.usernameMin',
+                  'Username must be at least 3 characters.',
+                ),
+              },
+              setValueAs: (value) =>
+                String(value || '')
+                  .trim()
+                  .replace(/^@/, '')
+                  .replace(/\s+/g, ''),
             })}
           />
           <SettingsField

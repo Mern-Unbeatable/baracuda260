@@ -255,6 +255,7 @@ const ProfileMainContent = memo(() => {
       twitter: socialObj.twitter || '',
       youtube: socialObj.youtube || '',
       tiktok: socialObj.tiktok || '',
+      appreciation: profileData.appreciation || null,
       socials:
         Array.isArray(profileData.socialLinks) && profileData.socialLinks.length
           ? profileData.socialLinks.map((url) => ({

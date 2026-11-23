@@ -2,7 +2,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft,
   Heart,
-  MapPin,
   Minus,
   Plus,
   RefreshCw,
@@ -17,6 +16,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { selectIsAuthenticated } from '@/app/store/slices/authSlice';
 import Pagination from '@/components/common/Pagination/Pagination';
 import CategoryFilterDropdown from '@/components/common/CategoryFilterDropdown/CategoryFilterDropdown';
+import MemberStoreProductCard from '@/components/data-display/MemberStoreProductCard/MemberStoreProductCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -32,133 +32,6 @@ import {
 } from '@/shared/api/store.api';
 import { ROUTES } from '@/shared/config';
 
-const StoreProductCard = memo(({ product, onView, isOwner = false }) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [isSaved, setIsSaved] = useState(Boolean(product.isSaved));
-
-  useEffect(() => {
-    setIsSaved(Boolean(product.isSaved));
-  }, [product.isSaved]);
-
-  const handleWatchlistToggle = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const nextSaved = !isSaved;
-    setIsSaved(nextSaved);
-    try {
-      await toggleWatchlistApi(product.id);
-      queryClient.invalidateQueries({ queryKey: [STORE_WATCHLIST_QUERY_KEY] });
-      toast.success(
-        nextSaved
-          ? t('myStore.watchlist.added', 'Added to Item Watchlist')
-          : t('myStore.watchlist.removed', 'Removed from Item Watchlist'),
-      );
-    } catch {
-      setIsSaved(!nextSaved);
-      toast.error(t('myStore.watchlist.failed', 'Failed to update watchlist'));
-    }
-  };
-
-  return (
-    <article className="overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-      <div className="relative aspect-4/3 overflow-hidden bg-[#f3f4f6]">
-        <Image
-          src={product.image}
-          alt={product.title}
-          className="size-full object-cover"
-          loading="lazy"
-        />
-        <span className="absolute left-2.5 top-2.5 rounded-full bg-[#111827]/85 px-2 py-1 text-[10px] font-bold tracking-[0.06em] text-white">
-          {t(product.badgeKey, product.category || 'Product')}
-        </span>
-        {!isOwner ? (
-          <Button
-            unstyled
-            type="button"
-            onClick={handleWatchlistToggle}
-            aria-label={t('myStore.watchlist.toggle', 'Save to Watchlist')}
-            aria-pressed={isSaved}
-            className="absolute right-2.5 top-2.5 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#161c27] shadow-sm backdrop-blur-[2px] transition hover:bg-white"
-          >
-            <Heart
-              size={16}
-              strokeWidth={2}
-              className={
-                isSaved
-                  ? 'fill-[#e53935] text-[#e53935]'
-                  : 'fill-transparent text-[#161c27] hover:text-[#e53935]'
-              }
-            />
-          </Button>
-        ) : null}
-      </div>
-      <div className="flex flex-col gap-3 p-3.5 sm:p-4">
-        <div>
-          <h3 className="line-clamp-2 text-[14px] font-bold leading-5 text-[#111827]">
-            {product.title}
-          </h3>
-          <p className="mt-1.5 line-clamp-2 text-[12px] leading-4 text-[#6b7280]">
-            {product.description}
-          </p>
-
-          {/* Location & Shipping Scope */}
-          {(product.city || product.country || product.shippingScope) ? (
-            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-[#6b7280]">
-              {(product.city || product.country) ? (
-                <span className="inline-flex items-center gap-1 text-[#4b5563]">
-                  <MapPin size={12} className="text-[#9ca3af]" />
-                  {[product.city, product.country].filter(Boolean).join(', ')}
-                </span>
-              ) : null}
-              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                product.shippingScope === 'NATIONAL'
-                  ? 'bg-[#fff7ed] text-[#c2410c]'
-                  : 'bg-[#ecfdf5] text-[#047857]'
-              }`}>
-                {product.shippingScope === 'NATIONAL'
-                  ? t('myStore.shipping.nationalOnly', 'Domestic Only')
-                  : t('myStore.shipping.worldwide', 'Worldwide')}
-              </span>
-            </div>
-          ) : null}
-        </div>
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[16px] font-bold text-[#111827]">
-            {product.price}
-          </p>
-          <div className="flex items-center gap-1.5">
-            <Button
-              unstyled
-              type="button"
-              onClick={() => onView(product.id)}
-              className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#4048cd] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#343bb0]"
-            >
-              {t('photographerProfile.store.viewProduct')}
-            </Button>
-            {!isOwner ? (
-              <Button
-                unstyled
-                type="button"
-                onClick={() =>
-                  navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
-                    state: { product },
-                  })
-                }
-                className="inline-flex h-8 cursor-pointer items-center rounded-lg bg-[#ee1c25] px-2.5 text-[12px] font-semibold text-white transition hover:bg-[#d01820]"
-              >
-                {t('photographerProfile.store.buyNow')}
-              </Button>
-            ) : null}
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-});
-StoreProductCard.displayName = 'StoreProductCard';
-
 const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -168,19 +41,32 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
   const [sizeId, setSizeId] = useState(product.sizes?.[0]?.id || '');
   const [qty, setQty] = useState(1);
   const [isSaved, setIsSaved] = useState(Boolean(product.isSaved));
-  const gallery =
-    product.gallery?.length > 0
-      ? product.gallery
-      : product.images?.length > 0
-        ? product.images
-        : product.image
-          ? [product.image]
-          : [];
-  const [activeImage, setActiveImage] = useState(gallery[0] || product.image);
+  const gallery = useMemo(() => {
+    const fromGallery = Array.isArray(product.gallery) ? product.gallery : [];
+    const fromImages = Array.isArray(product.images) ? product.images : [];
+    const fallback = product.image ? [product.image] : [];
+    const merged =
+      fromGallery.length > 0
+        ? fromGallery
+        : fromImages.length > 0
+          ? fromImages
+          : fallback;
+    return merged.filter(
+      (url, index, list) => url && list.indexOf(url) === index,
+    );
+  }, [product.gallery, product.images, product.image]);
+
+  const [activeImage, setActiveImage] = useState(
+    gallery[0] || product.image || '',
+  );
 
   useEffect(() => {
     setIsSaved(Boolean(product.isSaved));
   }, [product.isSaved, product.id]);
+
+  useEffect(() => {
+    setActiveImage(gallery[0] || product.image || '');
+  }, [product.id, gallery, product.image]);
 
   const handleWatchlistToggle = async () => {
     if (!isAuthenticated) {
@@ -280,7 +166,15 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
         </div>
 
         <div>
-          <h2 className="text-[24px] font-bold leading-snug text-[#111827] sm:text-[28px]">
+          <span className="inline-flex items-center rounded-md bg-[#3a3f4b] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white">
+            {t(product.badgeKey, product.category || 'Product')}
+          </span>
+          {product.promoted ? (
+            <span className="ml-2 inline-flex items-center rounded-md bg-[#ee1c25] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.35px] text-white">
+              {t('myStore.promoted', 'Promoted')}
+            </span>
+          ) : null}
+          <h2 className="mt-3 text-[24px] font-bold leading-snug text-[#111827] sm:text-[28px]">
             {product.title}
           </h2>
           <div className="mt-3 space-y-3 text-[14px] leading-6 text-[#6b7280]">
@@ -450,15 +344,15 @@ const PhotographerStoreSection = memo(
     const cleanUsername = String(username || '')
       .trim()
       .replace(/^@/, '');
-    const apiUsername = !cleanUserId && cleanUsername ? cleanUsername : '';
 
-    // Owner store: auth-scoped /v1/store (no username). Public: prefer userId.
-    const canFetchApi = Boolean(isOwner || cleanUserId || apiUsername);
-    const storeScopeKey = isOwner
-      ? `owner:${cleanUserId || 'me'}`
+    // Prefer username (URL identity) so public My Store matches marketplace
+    // "See All" for the same handle; fall back to userId / owner auth scope.
+    const canFetchApi = Boolean(isOwner || cleanUserId || cleanUsername);
+    const storeScopeKey = cleanUsername
+      ? `username:${cleanUsername}`
       : cleanUserId
         ? `user:${cleanUserId}`
-        : `username:${apiUsername}`;
+        : `owner:${cleanUserId || 'me'}`;
 
     const {
       data: apiResult,
@@ -475,13 +369,11 @@ const PhotographerStoreSection = memo(
       ],
       queryFn: () =>
         getStoreProductsApi({
-          ...(isOwner
-            ? cleanUserId
-              ? { userId: cleanUserId }
-              : {}
+          ...(cleanUsername
+            ? { username: cleanUsername }
             : cleanUserId
               ? { userId: cleanUserId }
-              : { username: apiUsername }),
+              : {}),
           category: category === 'all' ? undefined : category,
           page,
           limit: PHOTOGRAPHER_STORE_PAGE_SIZE,
@@ -499,14 +391,17 @@ const PhotographerStoreSection = memo(
       return products.find((p) => String(p.id) === String(selectedId)) || null;
     }, [products, selectedId]);
 
+    // Always fetch detail — list payload omits `images[]`, so multi-image
+    // gallery only appears after the product-details response.
     const { data: deepLinkProduct } = useQuery({
       queryKey: [STORE_PRODUCTS_QUERY_KEY, 'detail', selectedId],
       queryFn: () => getStoreProductDetailsApi(selectedId),
-      enabled: Boolean(selectedId) && !listSelectedProduct,
+      enabled: Boolean(selectedId),
       staleTime: 60 * 1000,
     });
 
-    const selectedProduct = listSelectedProduct || deepLinkProduct || null;
+    const selectedProduct =
+      deepLinkProduct || listSelectedProduct || null;
 
     const filterItems = useMemo(
       () =>
@@ -605,11 +500,11 @@ const PhotographerStoreSection = memo(
         ) : (
           <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {pagedItems.map((product) => (
-              <StoreProductCard
+              <MemberStoreProductCard
                 key={product.id}
                 product={product}
-                onView={openProductDetail}
-                isOwner={isOwner}
+                onView={(item) => openProductDetail(item.id)}
+                showWatchlist={!isOwner}
               />
             ))}
           </div>

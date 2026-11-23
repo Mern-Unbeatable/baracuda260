@@ -8,6 +8,7 @@ const STAT_KEYS = [
   'totalArtwork',
   'competitionEntries',
   'totalHearts',
+  'premiumPhotos',
 ];
 
 const PhotographerStatsBar = memo(({ stats }) => {

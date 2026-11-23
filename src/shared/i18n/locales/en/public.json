@@ -456,7 +456,8 @@
       "profileVisitors": "Profile Visitor",
       "totalArtwork": "Total Artwork",
       "competitionEntries": "Competition Entries",
-      "totalHearts": "Total Hearts"
+      "totalHearts": "Total Hearts",
+      "premiumPhotos": "Premium Photos"
     },
     "statsShort": {
       "followers": "Followers",
@@ -464,7 +465,8 @@
       "profileVisitors": "Visitors",
       "totalArtwork": "Artwork",
       "competitionEntries": "Entries",
-      "totalHearts": "Hearts"
+      "totalHearts": "Hearts",
+      "premiumPhotos": "Premium"
     },
     "featured": {
       "badge": "CURRENTLY IN COMPETITION",

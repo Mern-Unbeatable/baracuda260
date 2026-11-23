@@ -39,7 +39,7 @@ const TIER_STYLES = {
 };
 
 const normalizeAppreciation = (raw) => {
-  const defaultWeekly = { gold: 1, silver: 1, bronze: 1 };
+  const emptyWeekly = { gold: 0, silver: 0, bronze: 0 };
   const defaultTiers = [
     { id: 'gold', count: 0, awardedThisWeek: false },
     { id: 'silver', count: 0, awardedThisWeek: false },
@@ -49,7 +49,7 @@ const normalizeAppreciation = (raw) => {
   if (!raw) {
     return {
       tiers: defaultTiers,
-      weekly: defaultWeekly,
+      weekly: emptyWeekly,
       resetDays: getDaysUntilNextSundayMidnight(),
       weeklyArchive: [],
       monthlyArchive: [],
@@ -59,7 +59,7 @@ const normalizeAppreciation = (raw) => {
   if (Array.isArray(raw.tiers)) {
     return {
       tiers: raw.tiers,
-      weekly: raw.weekly || defaultWeekly,
+      weekly: raw.weekly || emptyWeekly,
       resetDays:
         typeof raw.resetInDays === 'number'
           ? raw.resetInDays
@@ -71,7 +71,8 @@ const normalizeAppreciation = (raw) => {
 
   const myAward = raw.myAward;
   const hasAwardedThisWeek = Boolean(raw.hasAwardedThisWeek);
-  const canAward = raw.canAward !== false;
+  // Must be explicitly true — own profile returns canAward: false
+  const canAward = Boolean(raw.canAward);
 
   const tiers = [
     {

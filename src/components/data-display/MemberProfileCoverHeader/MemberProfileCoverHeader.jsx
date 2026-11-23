@@ -2,6 +2,7 @@ import { MapPin, Pencil } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import PhotographerAwardCounters from '@/components/data-display/PhotographerAwardCounters/PhotographerAwardCounters';
 import Image from '@/components/ui/Image';
 import { DASHBOARD_ASSETS } from '@/portals/member/data/dashboardAssets';
 import { ROUTES } from '@/shared/config';
@@ -41,6 +42,10 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
             <h1 className="text-[22px] font-bold leading-tight text-[#111827] sm:text-[26px] lg:text-[28px]">
               {profile?.name || profile?.handle || ''}
             </h1>
+            <PhotographerAwardCounters
+              awards={profile?.appreciation?.tiers || profile?.appreciation}
+              size="md"
+            />
             <Link
               to={ROUTES.USER_SETTINGS}
               aria-label={t('memberProfile.editProfile')}

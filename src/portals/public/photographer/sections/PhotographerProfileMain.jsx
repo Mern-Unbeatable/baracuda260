@@ -224,6 +224,7 @@ const PhotographerProfileMain = memo(() => {
         totalArtwork: Number(raw.stats?.totalArtwork ?? 0),
         competitionEntries: Number(raw.stats?.competitionEntries ?? 0),
         totalHearts: Number(raw.stats?.totalHearts ?? 0),
+        premiumPhotos: Number(raw.stats?.premiumPhotos ?? 0),
       },
       standaloneVideos: raw.standaloneVideos || [],
       appreciation: raw.appreciation || null,

@@ -456,7 +456,8 @@
       "profileVisitors": "Odwiedziny profilu",
       "totalArtwork": "Wszystkie prace",
       "competitionEntries": "Zgłoszenia konkursowe",
-      "totalHearts": "Suma serduszek"
+      "totalHearts": "Suma serduszek",
+      "premiumPhotos": "Zdjęcia premium"
     },
     "statsShort": {
       "followers": "Obserwujący",
@@ -464,7 +465,8 @@
       "profileVisitors": "Odwiedziny",
       "totalArtwork": "Prace",
       "competitionEntries": "Konkursy",
-      "totalHearts": "Serduszka"
+      "totalHearts": "Serduszka",
+      "premiumPhotos": "Premium"
     },
     "featured": {
       "badge": "OBECNIE W KONKURSIE",

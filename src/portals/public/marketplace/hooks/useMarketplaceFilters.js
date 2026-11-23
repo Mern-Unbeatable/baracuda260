@@ -10,7 +10,7 @@ import {
 
 const SEARCH_DEBOUNCE_MS = 300;
 
-const isOwnStore = (store, currentUser) => {
+export const isOwnStore = (store, currentUser) => {
   if (!store || !currentUser) return false;
   if (currentUser.id && String(store.id) === String(currentUser.id)) return true;
   const storeUsername = String(store.username || '')
@@ -56,7 +56,6 @@ export function useMarketplaceFilters() {
       promotedOnly,
       page,
       MARKETPLACE_PAGE_SIZE,
-      currentUser?.id || 'guest',
     ],
     queryFn: () =>
       getPublicStoresApi({
@@ -69,13 +68,14 @@ export function useMarketplaceFilters() {
     placeholderData: keepPreviousData,
   });
 
-  const stores = useMemo(
-    () =>
-      (apiResult?.data || []).filter(
-        (store) => !isOwnStore(store, currentUser),
-      ),
-    [apiResult?.data, currentUser],
-  );
+  // Keep own store visible so searching your name still finds you.
+  const stores = useMemo(() => {
+    const list = apiResult?.data || [];
+    return list.map((store) => ({
+      ...store,
+      isOwn: isOwnStore(store, currentUser),
+    }));
+  }, [apiResult?.data, currentUser]);
 
   const searchProducts = useMemo(() => {
     if (!isSearchMode) return [];
@@ -85,25 +85,18 @@ export function useMarketplaceFilters() {
         store: store.storeName,
         username: store.username,
         promoted: store.promoted || product.promoted,
+        isOwn: store.isOwn,
       })),
     );
   }, [isSearchMode, stores]);
 
   const activeItems = isSearchMode ? searchProducts : stores;
-  const removedOwn = Boolean(
-    currentUser &&
-      (apiResult?.data || []).some((store) => isOwnStore(store, currentUser)),
-  );
   const totalPages = isSearchMode
     ? Math.max(1, Math.ceil(activeItems.length / MARKETPLACE_PAGE_SIZE) || 1)
     : Number(apiResult?.meta?.totalPages || 1);
   const totalRecords = isSearchMode
     ? activeItems.length
-    : Math.max(
-        0,
-        Number(apiResult?.meta?.totalRecords || activeItems.length) -
-          (removedOwn ? 1 : 0),
-      );
+    : Number(apiResult?.meta?.totalRecords || activeItems.length);
 
   const pagedItems = useMemo(() => {
     if (!isSearchMode) return stores;
