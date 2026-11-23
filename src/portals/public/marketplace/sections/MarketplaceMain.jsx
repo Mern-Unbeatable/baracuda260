@@ -94,7 +94,10 @@ const MarketplaceProductCard = memo(({ product }) => {
               onClick={(event) => {
                 event.stopPropagation();
                 navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
-                  state: { product },
+                  state: {
+                    product,
+                    username: product.username || undefined,
+                  },
                 });
               }}
             >

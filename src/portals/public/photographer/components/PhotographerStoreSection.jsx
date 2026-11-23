@@ -32,7 +32,7 @@ import {
 } from '@/shared/api/store.api';
 import { ROUTES } from '@/shared/config';
 
-const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
+const StoreProductDetail = memo(({ product, onBack, isOwner = false, username = '' }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -216,61 +216,88 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
             </div>
           ) : null}
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             {!isOwner ? (
               <>
-                <div className="inline-flex h-11 items-center rounded-[10px] border border-[#e5e7eb] bg-white">
+                <div className="grid grid-cols-[1fr_auto] gap-3 sm:flex sm:items-center">
+                  <div className="inline-flex h-12 w-full items-center justify-between rounded-[10px] border border-[#e5e7eb] bg-white sm:w-auto sm:justify-start">
+                    <Button
+                      unstyled
+                      type="button"
+                      aria-label={t('photographerProfile.store.decreaseQty')}
+                      onClick={() => setQty((value) => Math.max(1, value - 1))}
+                      className="inline-flex size-12 shrink-0 cursor-pointer items-center justify-center text-[#6b7280]"
+                    >
+                      <Minus size={16} aria-hidden="true" />
+                    </Button>
+                    <span className="min-w-10 text-center text-[15px] font-bold text-[#111827]">
+                      {String(qty).padStart(2, '0')}
+                    </span>
+                    <Button
+                      unstyled
+                      type="button"
+                      aria-label={t('photographerProfile.store.increaseQty')}
+                      onClick={() => setQty((value) => value + 1)}
+                      className="inline-flex size-12 shrink-0 cursor-pointer items-center justify-center text-[#6b7280]"
+                    >
+                      <Plus size={16} aria-hidden="true" />
+                    </Button>
+                  </div>
                   <Button
                     unstyled
                     type="button"
-                    aria-label={t('photographerProfile.store.decreaseQty')}
-                    onClick={() => setQty((value) => Math.max(1, value - 1))}
-                    className="inline-flex size-11 cursor-pointer items-center justify-center text-[#6b7280]"
+                    onClick={handleWatchlistToggle}
+                    aria-pressed={isSaved}
+                    aria-label={
+                      isSaved
+                        ? t('myStore.watchlist.saved', 'Saved')
+                        : t('myStore.watchlist.save', 'Watchlist')
+                    }
+                    className={`inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-[10px] border px-4 text-[14px] font-bold transition sm:min-w-[7.5rem] ${
+                      isSaved
+                        ? 'border-[#fecaca] bg-[#fef2f2] text-[#e53935]'
+                        : 'border-[#e5e7eb] bg-white text-[#161c27] hover:border-[#fca5a5] hover:text-[#e53935]'
+                    }`}
                   >
-                    <Minus size={16} aria-hidden="true" />
-                  </Button>
-                  <span className="min-w-8 text-center text-[14px] font-bold text-[#111827]">
-                    {String(qty).padStart(2, '0')}
-                  </span>
-                  <Button
-                    unstyled
-                    type="button"
-                    aria-label={t('photographerProfile.store.increaseQty')}
-                    onClick={() => setQty((value) => value + 1)}
-                    className="inline-flex size-11 cursor-pointer items-center justify-center text-[#6b7280]"
-                  >
-                    <Plus size={16} aria-hidden="true" />
+                    <Heart
+                      size={16}
+                      strokeWidth={2}
+                      className={
+                        isSaved ? 'fill-[#e53935]' : 'fill-transparent'
+                      }
+                    />
+                    <span className="hidden sm:inline">
+                      {isSaved
+                        ? t('myStore.watchlist.saved', 'Saved')
+                        : t('myStore.watchlist.save', 'Watchlist')}
+                    </span>
                   </Button>
                 </div>
                 <Button
                   unstyled
                   type="button"
-                  onClick={handleWatchlistToggle}
-                  aria-pressed={isSaved}
-                  className={`inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] border px-4 text-[14px] font-bold transition ${
-                    isSaved
-                      ? 'border-[#fecaca] bg-[#fef2f2] text-[#e53935]'
-                      : 'border-[#e5e7eb] bg-white text-[#161c27] hover:border-[#fca5a5] hover:text-[#e53935]'
-                  }`}
-                >
-                  <Heart
-                    size={16}
-                    strokeWidth={2}
-                    className={isSaved ? 'fill-[#e53935]' : 'fill-transparent'}
-                  />
-                  {isSaved
-                    ? t('myStore.watchlist.saved', 'Saved')
-                    : t('myStore.watchlist.save', 'Watchlist')}
-                </Button>
-                <Button
-                  unstyled
-                  type="button"
-                  onClick={() =>
+                  onClick={() => {
+                    const handle = String(
+                      username ||
+                        product.username ||
+                        product.user?.username ||
+                        '',
+                    )
+                      .trim()
+                      .replace(/^@/, '');
                     navigate(ROUTES.PHOTOGRAPHER_STORE_CHECKOUT, {
-                      state: { product: { ...product, qty, sizeId } },
-                    })
-                  }
-                  className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-5 text-[14px] font-bold text-white transition hover:bg-[#d01820] sm:min-w-55"
+                      state: {
+                        product: {
+                          ...product,
+                          qty,
+                          sizeId,
+                          username: handle || product.username,
+                        },
+                        username: handle || undefined,
+                      },
+                    });
+                  }}
+                  className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#ee1c25] px-5 text-[14px] font-bold whitespace-nowrap text-white transition hover:bg-[#d01820] sm:w-auto sm:min-w-55 sm:flex-1"
                 >
                   {t('photographerProfile.store.buyNow')}
                   <ShoppingCart size={16} aria-hidden="true" />
@@ -281,7 +308,7 @@ const StoreProductDetail = memo(({ product, onBack, isOwner = false }) => {
                 unstyled
                 type="button"
                 onClick={() => navigate(ROUTES.USER_MY_STORE)}
-                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#4048cd] px-6 text-[14px] font-bold text-white transition hover:bg-[#343bb0]"
+                className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#4048cd] px-6 text-[14px] font-bold text-white transition hover:bg-[#343bb0]"
               >
                 {t('myStore.title', 'My Store')}
               </Button>
@@ -428,6 +455,7 @@ const PhotographerStoreSection = memo(
           product={selectedProduct}
           onBack={clearSelectedProduct}
           isOwner={isOwner}
+          username={username}
         />
       );
     }

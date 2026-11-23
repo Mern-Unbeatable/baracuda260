@@ -28,6 +28,8 @@ export const ROUTES = {
   PHOTOGRAPHER_PROFILE: '/photographer',
   PHOTOGRAPHER_PROFILE_USERNAME: '/photographer/:username',
   PHOTOGRAPHER_STORE_CHECKOUT: '/photographer/store/checkout',
+  PAYMENT_SUCCESS: '/payment/success',
+  PAYMENT_CANCEL: '/payment/cancel',
   LEADERBOARD: '/leaderboard',
   WINNERS: '/winners',
   WINNERS_DETAIL: '/winners/:id',

@@ -88,10 +88,24 @@ const SearchableCombobox = memo(
       };
     }, [isOpen, allowCustom, options, query, value]);
 
-    // Filter options based on query
+    // Filter options based on query. When the query equals the currently
+    // selected value (user opened the dropdown without typing), show the
+    // full list so it behaves as dropdown + search, not "only exact match".
     const filteredOptions = useMemo(() => {
       const q = (query || '').trim().toLowerCase();
-      if (!q) return options.slice(0, maxResults);
+      const selected = (value || '').trim().toLowerCase();
+      const isBrowsingSelected =
+        !!q &&
+        !!selected &&
+        (q === selected ||
+          options.some(
+            (o) =>
+              (o?.label || '').toLowerCase() === q &&
+              ((o?.value || '').toLowerCase() === selected ||
+                (o?.label || '').toLowerCase() === selected),
+          ));
+
+      if (!q || isBrowsingSelected) return options.slice(0, maxResults);
 
       // Support common shortcuts like "UK" -> United Kingdom, "USA" -> United States
       const results = [];
@@ -116,7 +130,7 @@ const SearchableCombobox = memo(
         }
       }
       return results;
-    }, [options, query, maxResults]);
+    }, [options, query, value, maxResults]);
 
     // Find if the currently typed query has an exact match in the options
     const matchedOption = useMemo(() => {

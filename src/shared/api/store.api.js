@@ -543,6 +543,72 @@ export const captureStoreProductPromotionPaymentApi = async (payload) => {
   return response;
 };
 
+/**
+ * Creates a PayPal checkout for a store product purchase.
+ * Endpoint: POST /v1/store/:id/buy
+ *
+ * @param {string} productId
+ * @param {{
+ *   email: string,
+ *   fullName: string,
+ *   mobile: string,
+ *   country: string,
+ *   city: string,
+ *   state: string,
+ *   zipCode: string,
+ *   deliveryAddress: string,
+ *   quantity?: number,
+ *   size?: string,
+ * }} payload
+ */
+export const createStoreProductCheckoutApi = async (productId, payload) => {
+  if (!productId) throw new Error('Product ID is required');
+  const response = await apiClient.post(`/v1/store/${encodeURIComponent(productId)}/buy`, {
+    email: payload?.email,
+    fullName: payload?.fullName,
+    mobile: payload?.mobile,
+    country: payload?.country,
+    city: payload?.city,
+    state: payload?.state,
+    zipCode: payload?.zipCode,
+    deliveryAddress: payload?.deliveryAddress,
+    quantity: payload?.quantity ?? 1,
+    size: payload?.size || undefined,
+  });
+  if (response?.success === false) {
+    throw new Error(
+      response?.error ||
+        response?.message ||
+        'Failed to create store product checkout',
+    );
+  }
+  return response?.data !== undefined ? response.data : response;
+};
+
+/**
+ * Captures PayPal payment for a store product purchase.
+ * Endpoint: POST /v1/store/buy/capture
+ *
+ * @param {{ paymentId: string } | string} payload
+ */
+export const captureStoreProductPurchaseApi = async (payload) => {
+  const paymentId =
+    typeof payload === 'string'
+      ? payload
+      : payload?.paymentId || payload?.token;
+  if (!paymentId) throw new Error('Payment ID is required');
+
+  const response = await apiClient.post('/v1/store/buy/capture', { paymentId });
+  if (response?.success === false) {
+    throw new Error(
+      response?.error ||
+        response?.message ||
+        'Failed to capture store product payment',
+    );
+  }
+  return response?.data !== undefined ? response.data : response;
+};
+
 export const STORE_WATCHLIST_QUERY_KEY = 'store-watchlist';
 
 /**

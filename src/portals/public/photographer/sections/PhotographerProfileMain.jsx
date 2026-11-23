@@ -35,6 +35,7 @@ import {
   USER_PROFILE_USERNAME_QUERY_KEY,
 } from '@/shared/api/userProfile.api';
 import { SLIDESHOW_SEARCH_PARAM } from '@/shared/data/slideshows';
+import { useSEO } from '@/shared/hooks/useSEO';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { resolveMediaUrl } from '@/shared/utils/media';
 
@@ -238,6 +239,24 @@ const PhotographerProfileMain = memo(() => {
     if (profile.username && currentUser.username === profile.username) return true;
     return false;
   }, [currentUser, username, profile]);
+
+  const seoTitle = profile?.name
+    ? `${profile.name} — Photographer Profile`
+    : 'Photographer Profile';
+
+  useSEO({
+    title: seoTitle,
+    description: profile?.bio
+      ? String(profile.bio).slice(0, 160)
+      : 'View photography, premium albums, competition entries, and updates on My12Photos.',
+    keywords: [
+      'photographer',
+      'profile',
+      'my12photos',
+      profile?.name,
+      username,
+    ].filter(Boolean),
+  });
 
   const introVideo = useMemo(() => {
     const raw = profileResponse?.data || profileResponse;

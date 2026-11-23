@@ -1,4 +1,4 @@
-import { City, Country } from 'country-state-city';
+import { City, Country, State } from 'country-state-city';
 
 /**
  * Pre-sorted list of all countries in the world with flags and ISO codes.
@@ -14,22 +14,63 @@ export const ALL_COUNTRIES = (Country.getAllCountries() || [])
   .sort((a, b) => (a.label || '').localeCompare(b.label || ''));
 
 const cityCache = new Map();
+const stateCache = new Map();
+
+/**
+ * Get unique, sorted list of states/provinces for a country ISO code.
+ *
+ * @param {string} isoCode - e.g. "GB", "PL", "US"
+ * @returns {Array<{ value: string, label: string, isoCode: string }>}
+ */
+export function getStatesForCountry(isoCode) {
+  if (!isoCode) return [];
+  const upper = String(isoCode).trim().toUpperCase();
+  if (stateCache.has(upper)) {
+    return stateCache.get(upper);
+  }
+
+  const raw = State.getStatesOfCountry(upper) || [];
+  const formatted = raw
+    .map((s) => ({
+      value: s.name || '',
+      label: s.name || '',
+      isoCode: s.isoCode || '',
+    }))
+    .filter((s) => s.value)
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  stateCache.set(upper, formatted);
+  return formatted;
+}
 
 /**
  * Get unique, sorted list of cities for a given country ISO code.
  * Cached in memory so subsequent lookups are instantaneous.
  *
  * @param {string} isoCode - e.g. "GB", "PL", "US"
+ * @param {string} [stateIsoCode] - optional state filter, e.g. "CA"
  * @returns {Array<{ value: string, label: string }>}
  */
-export function getCitiesForCountry(isoCode) {
+export function getCitiesForCountry(isoCode, stateIsoCode) {
   if (!isoCode) return [];
   const upper = String(isoCode).trim().toUpperCase();
-  if (cityCache.has(upper)) {
-    return cityCache.get(upper);
+  const stateUpper = stateIsoCode
+    ? String(stateIsoCode).trim().toUpperCase()
+    : '';
+  const cacheKey = stateUpper ? `${upper}:${stateUpper}` : upper;
+  if (cityCache.has(cacheKey)) {
+    return cityCache.get(cacheKey);
   }
 
-  const raw = City.getCitiesOfCountry(upper) || [];
+  // Some packages list admin divisions that have no city rows (e.g. BD
+  // "Dhaka Division"). Fall back to country-level cities so the dropdown
+  // still has searchable options.
+  let raw = stateUpper
+    ? City.getCitiesOfState(upper, stateUpper) || []
+    : City.getCitiesOfCountry(upper) || [];
+  if (stateUpper && raw.length === 0) {
+    raw = City.getCitiesOfCountry(upper) || [];
+  }
   const uniqueNames = Array.from(
     new Set(raw.map((c) => (c.name || '').trim()).filter(Boolean)),
   ).sort((a, b) => a.localeCompare(b));
@@ -39,7 +80,7 @@ export function getCitiesForCountry(isoCode) {
     label: name,
   }));
 
-  cityCache.set(upper, formatted);
+  cityCache.set(cacheKey, formatted);
   return formatted;
 }
 

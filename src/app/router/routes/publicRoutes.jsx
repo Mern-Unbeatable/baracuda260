@@ -51,6 +51,9 @@ const PhotographerProfile = lazy(
 const StoreCheckout = lazy(
   () => import('@/portals/public/photographer/checkout/StoreCheckout'),
 );
+const PaymentReturn = lazy(
+  () => import('@/portals/public/payment/PaymentReturn'),
+);
 const Leaderboard = lazy(
   () => import('@/portals/public/leaderboard/Leaderboard'),
 );
@@ -110,16 +113,18 @@ export const publicRoutes = (
       />
       <Route path={ROUTES.GALLERY_DETAIL} element={<GalleryDetail />} />
       <Route
+        path={ROUTES.PHOTOGRAPHER_STORE_CHECKOUT}
+        element={<StoreCheckout />}
+      />
+      <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentReturn />} />
+      <Route path={ROUTES.PAYMENT_CANCEL} element={<PaymentReturn />} />
+      <Route
         path={ROUTES.PHOTOGRAPHER_PROFILE}
         element={<PhotographerProfile />}
       />
       <Route
         path={ROUTES.PHOTOGRAPHER_PROFILE_USERNAME}
         element={<PhotographerProfile />}
-      />
-      <Route
-        path={ROUTES.PHOTOGRAPHER_STORE_CHECKOUT}
-        element={<StoreCheckout />}
       />
       <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
       <Route path={ROUTES.WINNERS} element={<Winners />} />

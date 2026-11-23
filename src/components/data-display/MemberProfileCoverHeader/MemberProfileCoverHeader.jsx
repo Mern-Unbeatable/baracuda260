@@ -12,21 +12,17 @@ const MemberProfileCoverHeader = memo(({ profile }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="relative aspect-[2.4/1] min-h-[200px] w-full overflow-hidden rounded-2xl bg-[#111827] sm:min-h-[240px] lg:min-h-[280px]">
+      <div className="relative aspect-[2.4/1] min-h-[200px] w-full overflow-hidden rounded-2xl bg-[#e5e7eb] sm:min-h-[240px] lg:min-h-[280px]">
         {profile?.cover ? (
           <Image
             src={profile.cover}
             alt=""
             priority
-            className="h-full w-full object-contain object-center"
+            className="h-full w-full object-cover object-center"
           />
         ) : (
           <div className="h-full w-full bg-linear-to-r from-[#4048cd]/20 via-[#4048cd]/10 to-[#ee1c25]/15" />
         )}
-        <div
-          className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#111827]/25 to-transparent"
-          aria-hidden="true"
-        />
       </div>
 
       <div className="flex items-center gap-4 px-1 pt-3 sm:gap-5 sm:px-2">

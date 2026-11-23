@@ -2,13 +2,13 @@ import { Copy, Facebook, Twitter } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
+import SearchableCombobox from '@/components/forms/SearchableCombobox/SearchableCombobox';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Checkbox from '@/components/ui/Checkbox';
 import Image from '@/components/ui/Image';
 import Input from '@/components/ui/Input';
-import { ROUTES } from '@/shared/config';
 import { Shell, SitePageLayout } from '@/shared/site-chrome';
 import { PAGE_STACK } from '@/shared/ui/actionStyles';
 import { useCheckout } from '../hooks/useCheckout';
@@ -24,22 +24,55 @@ const StoreCheckoutMain = memo(() => {
     product,
     cartItems,
     subtotal,
-    delivery,
     total,
     register,
     handleSubmit,
     errors,
     formatPrice,
+    countryValue,
+    stateValue,
+    cityValue,
+    countryOptions,
+    stateOptions,
+    cityOptions,
+    selectedCountry,
+    handleCountryChange,
+    handleStateChange,
+    handleCityChange,
+    returnToStorePath,
+    submitting,
+    capturing,
+    isDomesticOnly,
+    domesticCountry,
+    isCountryLocked,
   } = useCheckout();
 
-  if (!product) {
+  if (capturing) {
     return (
-      <Navigate
-        to={ROUTES.PHOTOGRAPHER_PROFILE}
-        state={{ tab: 'store' }}
-        replace
-      />
+      <SitePageLayout
+        activeHref=""
+        rootClassName="store-checkout-page-root bg-white"
+        announcementTone="blue"
+        newsletterVariant="page"
+      >
+        <section className="section-py pt-8 sm:pt-12">
+          <Shell>
+            <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center">
+              <p className="text-[18px] font-semibold text-[#111827]">
+                Confirming your PayPal payment…
+              </p>
+              <p className="text-[14px] text-[#6b7280]">
+                Please wait while we finalize your order.
+              </p>
+            </div>
+          </Shell>
+        </section>
+      </SitePageLayout>
     );
+  }
+
+  if (!product) {
+    return <Navigate to={returnToStorePath} replace />;
   }
 
   return (
@@ -108,37 +141,153 @@ const StoreCheckoutMain = memo(() => {
                   </h2>
                   <Badge>REQUIRED</Badge>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
-                  <Input
-                    label="City"
-                    placeholder="enter city name"
-                    error={errors.city}
-                    {...register('city', { required: 'City is required' })}
-                  />
-                  <Input
-                    label="State"
-                    placeholder="state name"
-                    error={errors.state}
-                    {...register('state', { required: 'State is required' })}
-                  />
+                <div className="flex flex-col gap-5">
+                  {isDomesticOnly ? (
+                    <div className="rounded-[10px] border border-[#fed7aa] bg-[#fff7ed] px-4 py-3 text-[13px] text-[#9a3412]">
+                      Domestic shipping only
+                      {domesticCountry?.label || product?.country
+                        ? ` — delivery is limited to ${
+                            domesticCountry?.label || product.country
+                          }.`
+                        : ' — this seller only ships within their country.'}
+                    </div>
+                  ) : null}
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="checkout-country"
+                      className="text-[14px] font-medium text-[#111827]"
+                    >
+                      Country
+                    </label>
+                    <SearchableCombobox
+                      id="checkout-country"
+                      value={countryValue}
+                      onChange={handleCountryChange}
+                      options={countryOptions}
+                      placeholder="Search or select country..."
+                      emptyMessage="No matching country found"
+                      allowCustom={false}
+                      disabled={isCountryLocked}
+                      maxResults={100}
+                    />
+                    {isCountryLocked ? (
+                      <p className="text-[12px] text-[#6b7280]">
+                        Country is locked because this product is domestic-only.
+                      </p>
+                    ) : null}
+                    {errors.country ? (
+                      <p className="text-[13px] text-[#ee1c25]">
+                        {errors.country.message}
+                      </p>
+                    ) : null}
+                    <input
+                      type="hidden"
+                      {...register('country', {
+                        required: 'Country is required',
+                      })}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="checkout-state"
+                      className="text-[14px] font-medium text-[#111827]"
+                    >
+                      State
+                    </label>
+                    <SearchableCombobox
+                      id="checkout-state"
+                      value={stateValue}
+                      onChange={handleStateChange}
+                      options={stateOptions}
+                      placeholder={
+                        selectedCountry
+                          ? stateOptions.length
+                            ? 'Search or select state...'
+                            : 'No states for this country'
+                          : 'Select country first...'
+                      }
+                      emptyMessage={
+                        selectedCountry
+                          ? 'No matching state found'
+                          : 'Select country first...'
+                      }
+                      allowCustom={false}
+                      maxResults={100}
+                    />
+                    {errors.state ? (
+                      <p className="text-[13px] text-[#ee1c25]">
+                        {errors.state.message}
+                      </p>
+                    ) : null}
+                    <input
+                      type="hidden"
+                      {...register('state', {
+                        required: selectedCountry
+                          ? stateOptions.length
+                            ? 'State is required'
+                            : false
+                          : 'State is required',
+                      })}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="checkout-city"
+                      className="text-[14px] font-medium text-[#111827]"
+                    >
+                      City
+                    </label>
+                    <SearchableCombobox
+                      id="checkout-city"
+                      value={cityValue}
+                      onChange={handleCityChange}
+                      options={cityOptions}
+                      placeholder={
+                        selectedCountry
+                          ? 'Search or select city...'
+                          : 'Select country first...'
+                      }
+                      emptyMessage={
+                        selectedCountry
+                          ? 'No matching city — keep typing to use your own'
+                          : 'Select country first...'
+                      }
+                      allowCustom
+                      maxResults={100}
+                    />
+                    {errors.city ? (
+                      <p className="text-[13px] text-[#ee1c25]">
+                        {errors.city.message}
+                      </p>
+                    ) : null}
+                    <input
+                      type="hidden"
+                      {...register('city', { required: 'City is required' })}
+                    />
+                  </div>
+
                   <Input
                     label="Zip Code"
                     placeholder="zip code"
                     error={errors.zip}
                     {...register('zip', { required: 'Zip is required' })}
                   />
+                  <Input
+                    label="Delivery Address"
+                    placeholder="write delivery address"
+                    error={errors.address}
+                    {...register('address', {
+                      required: 'Address is required',
+                    })}
+                  />
                 </div>
-                <Input
-                  label="Delivery Address"
-                  placeholder="write delivery address"
-                  error={errors.address}
-                  {...register('address', { required: 'Address is required' })}
-                />
               </Card>
             </div>
 
             {/* Right Column: Order Summary */}
-            <div className="lg:sticky lg:top-[100px] self-start">
+            <div className="lg:sticky lg:top-[160px] self-start">
               <Card>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-[18px] sm:text-[20px] font-bold text-[#111827]">
@@ -177,12 +326,6 @@ const StoreCheckoutMain = memo(() => {
                       {formatPrice(subtotal)}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Delivery</span>
-                    <span className="text-[16px] font-bold text-[#111827]">
-                      {formatPrice(delivery)}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="flex justify-between items-center mb-6">
@@ -194,8 +337,12 @@ const StoreCheckoutMain = memo(() => {
                   </span>
                 </div>
 
-                <Button type="submit" className="w-full py-3.5 text-[13px]">
-                  Place Order
+                <Button
+                  type="submit"
+                  disabled={submitting || capturing}
+                  className="w-full py-3.5 text-[13px]"
+                >
+                  {submitting ? 'Redirecting to PayPal…' : 'Pay with PayPal'}
                 </Button>
 
                 <div className="mt-5">
