@@ -1264,11 +1264,23 @@ export const getPublicArtworksApi = async ({
   const normalizedData = rawList.map((item) => {
     const rawKind = String(item.kind || 'SINGLE').toUpperCase();
     let badge = 'Single Photo';
-    const isComp =
-      params.status === 'IN_COMPETITION' ||
-      item.competitionState === 'IN_COMPETITION' ||
-      item.status === 'IN_COMPETITION' ||
-      Boolean(item.competitionId);
+    // Honor the listing context first. Gallery (PROFILE_ONLY / ENDED) must stay
+    // on /gallery/* even if the artwork still has a historical competitionId.
+    const requestedStatus = String(params.status || '').toUpperCase();
+    const itemCompetitionState = String(
+      item.competitionState || '',
+    ).toUpperCase();
+    let isComp = false;
+    if (requestedStatus === 'IN_COMPETITION') {
+      isComp = true;
+    } else if (
+      requestedStatus === 'PROFILE_ONLY' ||
+      requestedStatus === 'ENDED'
+    ) {
+      isComp = false;
+    } else {
+      isComp = itemCompetitionState === 'IN_COMPETITION';
+    }
 
     let detailPath = isComp
       ? `/competitions/${item.id}`

@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Bookmark, Heart, Share2 } from 'lucide-react';
+import { Bookmark, Heart, Loader2, Share2 } from 'lucide-react';
 import React, {
   memo,
   useCallback,
@@ -108,6 +108,7 @@ const GalleryDetailView = memo(
       return hasLikedArtworkInSession(artworkId);
     });
     const [liking, setLiking] = useState(false);
+    const [downloading, setDownloading] = useState(false);
     const [likesCount, setLikesCount] = useState(
       () => Number(String(story.likes ?? '0').replace(/,/g, '')) || 0,
     );
@@ -587,7 +588,7 @@ const GalleryDetailView = memo(
                 {story.isAiGenerated ? (
                   <AiGeneratedDetailNotice className="mt-4" />
                 ) : null}
-                <p className="mt-3 max-w-3xl text-[16px] font-normal leading-6 text-(--primary-text-color) sm:mt-4 sm:text-[17px] sm:leading-6.75">
+                <p className="mt-3 w-full text-[16px] font-normal leading-6 text-(--primary-text-color) sm:mt-4 sm:text-[17px] sm:leading-6.75">
                   {story.description}
                 </p>
               </div>
@@ -736,8 +737,11 @@ const GalleryDetailView = memo(
 
                 <MarketingButton
                   type="button"
+                  disabled={downloading || !artworkId}
+                  aria-busy={downloading}
                   onClick={async () => {
-                    if (!artworkId) return;
+                    if (!artworkId || downloading) return;
+                    setDownloading(true);
                     try {
                       await triggerArtworkDownload(
                         artworkId,
@@ -753,11 +757,22 @@ const GalleryDetailView = memo(
                           t('common.errors.general', 'Download failed.'),
                         ),
                       );
+                    } finally {
+                      setDownloading(false);
                     }
                   }}
-                  className="bg-[#4048CD]! !hover:bg-[#333BB0] active:scale-[0.98]"
+                  className="bg-[#4048CD]! !hover:bg-[#333BB0] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {t('galleryDetail.downloadPhoto')}
+                  {downloading ? (
+                    <Loader2
+                      size={18}
+                      className="animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  {downloading
+                    ? t('common.downloading', 'Downloading...')
+                    : t('galleryDetail.downloadPhoto')}
                 </MarketingButton>
                 <MarketingButton
                   type="button"
