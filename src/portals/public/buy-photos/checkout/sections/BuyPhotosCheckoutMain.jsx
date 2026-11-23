@@ -35,8 +35,15 @@ const BuyPhotosCheckoutMain = memo(() => {
     }
   }, [searchParams, navigate]);
 
-  const { register, handleSubmit, errors, submitting, t, EMAIL_REGEX } =
-    useBuyPhotosCheckout(photo);
+  const {
+    register,
+    handleSubmit,
+    errors,
+    submitting,
+    isAuthenticated,
+    t,
+    EMAIL_REGEX,
+  } = useBuyPhotosCheckout(photo);
 
   if (!photo) {
     return <Navigate to={ROUTES.BUY_PHOTOS} replace />;
@@ -122,6 +129,14 @@ const BuyPhotosCheckoutMain = memo(() => {
                 <h2 className="text-[18px] font-bold text-[#0d0d14]">
                   {t('buyPhotos.checkout.buyer.title')}
                 </h2>
+                {isAuthenticated ? (
+                  <p className="mt-2 text-[14px] text-[#6b7280]">
+                    {t(
+                      'buyPhotos.checkout.buyer.usingAccount',
+                      'Using your account details for this purchase.',
+                    )}
+                  </p>
+                ) : null}
 
                 <div className="mt-5 flex flex-col gap-5">
                   <div>
@@ -134,13 +149,16 @@ const BuyPhotosCheckoutMain = memo(() => {
                       placeholder={t(
                         'buyPhotos.checkout.buyer.fullNamePlaceholder',
                       )}
+                      readOnly={isAuthenticated}
                       error={errors.fullName}
                       aria-invalid={Boolean(errors.fullName)}
-                      inputClassName={`${INPUT_CLASS} ${errors.fullName ? 'border-red-400' : ''}`}
+                      inputClassName={`${INPUT_CLASS} ${
+                        isAuthenticated ? 'bg-[#f8f7fa] text-[#494453]' : ''
+                      } ${errors.fullName ? 'border-red-400' : ''}`}
                       {...register('fullName', {
-                        required: t(
-                          'buyPhotos.checkout.buyer.fullNameRequired',
-                        ),
+                        required: !isAuthenticated
+                          ? t('buyPhotos.checkout.buyer.fullNameRequired')
+                          : false,
                       })}
                     />
                   </div>
@@ -155,20 +173,31 @@ const BuyPhotosCheckoutMain = memo(() => {
                       placeholder={t(
                         'buyPhotos.checkout.buyer.emailPlaceholder',
                       )}
+                      readOnly={isAuthenticated}
                       error={errors.email}
                       aria-invalid={Boolean(errors.email)}
-                      inputClassName={`${INPUT_CLASS} ${errors.email ? 'border-red-400' : ''}`}
+                      inputClassName={`${INPUT_CLASS} ${
+                        isAuthenticated ? 'bg-[#f8f7fa] text-[#494453]' : ''
+                      } ${errors.email ? 'border-red-400' : ''}`}
                       {...register('email', {
-                        required: t('buyPhotos.checkout.buyer.emailRequired'),
-                        pattern: {
-                          value: EMAIL_REGEX,
-                          message: t('buyPhotos.checkout.buyer.emailInvalid'),
-                        },
+                        required: !isAuthenticated
+                          ? t('buyPhotos.checkout.buyer.emailRequired')
+                          : false,
+                        pattern: isAuthenticated
+                          ? undefined
+                          : {
+                              value: EMAIL_REGEX,
+                              message: t(
+                                'buyPhotos.checkout.buyer.emailInvalid',
+                              ),
+                            },
                       })}
                     />
-                    <p className="mt-2 text-[13px] text-[#6b7280]">
-                      {t('buyPhotos.checkout.buyer.emailHint')}
-                    </p>
+                    {!isAuthenticated ? (
+                      <p className="mt-2 text-[13px] text-[#6b7280]">
+                        {t('buyPhotos.checkout.buyer.emailHint')}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </MarketingCard>
@@ -205,7 +234,7 @@ const BuyPhotosCheckoutMain = memo(() => {
                   type="submit"
                   unstyled
                   disabled={submitting}
-                  className="mt-5 w-full rounded-lg py-3.5 inline-flex items-center justify-center font-bold transition uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed bg-[#ee1c25] hover:bg-[#d01820] text-white gap-2 cursor-pointer"
+                  className="mt-5 w-full rounded-lg py-3.5 inline-flex items-center justify-center gap-2 text-[13px] sm:text-[15px] font-bold uppercase tracking-wide transition disabled:opacity-50 disabled:cursor-not-allowed bg-[#ee1c25] hover:bg-[#d01820] text-white cursor-pointer"
                 >
                   {submitting ? (
                     <>

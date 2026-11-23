@@ -11,7 +11,7 @@ import Checkbox from '@/components/ui/Checkbox';
 import Image from '@/components/ui/Image';
 import { MARKETPLACE_PAGE_SIZE } from '@/portals/public/marketplace/data/marketplaceData';
 import { ROUTES } from '@/shared/config';
-import { Shell, SitePageLayout } from '@/shared/site-chrome';
+import { Shell } from '@/shared/site-chrome';
 import { useMarketplaceFilters } from '../hooks/useMarketplaceFilters';
 
 const photographerStorePath = (username) => {
@@ -111,7 +111,7 @@ const MarketplaceStoreCard = memo(({ store }) => {
   }, [storeProducts]);
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] sm:p-4">
+    <article className="flex flex-col overflow-hidden rounded-[14px] border border-[#e8eaef] bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] [content-visibility:auto] [contain-intrinsic-size:auto_320px] sm:p-4">
       <div className="flex items-start justify-between gap-3">
         <Link
           to={href}
@@ -189,7 +189,9 @@ const MarketplaceStoreCard = memo(({ store }) => {
                   <Image
                     src={product.image}
                     alt={product.title}
-                    className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="size-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </Link>
@@ -228,118 +230,111 @@ const MarketplaceMain = memo(() => {
   } = useMarketplaceFilters();
 
   return (
-    <SitePageLayout
-      activeHref={ROUTES.MARKETPLACE}
-      rootClassName="marketplace-page-root"
-      announcementTone="navy"
-      newsletterVariant="page"
-    >
-      <section className="bg-white section-py">
-        <Shell>
-          <div className="mb-6 flex flex-col gap-4 lg:mb-8 lg:flex-row lg:items-end lg:justify-between">
-            <SectionHeader
-              className="min-w-0"
-              align="left"
-              badge={t('marketplace.eyebrow')}
-              badgeTone="indigo"
-              title={t('marketplace.title')}
+    <section className="bg-white section-py">
+      <Shell>
+        <div className="mb-6 flex flex-col gap-4 lg:mb-8 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeader
+            className="min-w-0"
+            align="left"
+            badge={t('marketplace.eyebrow')}
+            badgeTone="indigo"
+            title={t('marketplace.title')}
+          />
+          <p className="max-w-130 text-[14px] leading-6 text-[#6b7280] lg:text-right">
+            {t('marketplace.subtitle')}
+          </p>
+        </div>
+
+        <div className="mb-5">
+          <MarketingSearchBar
+            className="w-full"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={t('marketplace.searchPlaceholder')}
+            ariaLabel={t('marketplace.searchPlaceholder')}
+          />
+        </div>
+
+        <div className="mb-6 flex items-center justify-end">
+          <div className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#494453]">
+            <Checkbox
+              id="promotedOnly"
+              checked={promotedOnly}
+              onChange={(event) => setPromotedOnly(event.target.checked)}
+              label={t('marketplace.filters.promotedOnly')}
+              className="mt-0 font-semibold"
             />
-            <p className="max-w-130 text-[14px] leading-6 text-[#6b7280] lg:text-right">
-              {t('marketplace.subtitle')}
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="flex min-h-48 items-center justify-center">
+            <RefreshCw size={22} className="animate-spin text-[#4048cd]" />
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center gap-3 rounded-[14px] border border-dashed border-[#e4e4e4] bg-[#fafafa] px-6 py-14 text-center">
+            <p className="text-[16px] font-bold text-[#161c27]">
+              {t('marketplace.loadError', 'Failed to load stores.')}
+            </p>
+            <Button
+              unstyled
+              type="button"
+              onClick={() => refetch()}
+              className="rounded-lg bg-[#4048cd] px-4 py-2 text-[13px] font-semibold text-white"
+            >
+              {t('common.retry', 'Retry')}
+            </Button>
+          </div>
+        ) : pagedItems.length === 0 ? (
+          <div className="rounded-[14px] border border-dashed border-[#e4e4e4] bg-[#fafafa] px-6 py-14 text-center">
+            <p className="text-[18px] font-bold text-[#161c27]">
+              {t('marketplace.emptyTitle')}
+            </p>
+            <p className="mt-2 text-[14px] text-[#6b7280]">
+              {t('marketplace.emptyBody')}
             </p>
           </div>
+        ) : (
+          <section
+            aria-label={t('marketplace.gridAria')}
+            className={`grid gap-5 ${
+              isSearchMode
+                ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'
+                : 'grid-cols-1'
+            }`}
+          >
+            {pagedItems.map((item) =>
+              isSearchMode ? (
+                <MarketplaceProductCard key={item.id} product={item} />
+              ) : (
+                <MarketplaceStoreCard key={item.id} store={item} />
+              ),
+            )}
+          </section>
+        )}
 
-          <div className="mb-5">
-            <MarketingSearchBar
-              className="w-full"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={t('marketplace.searchPlaceholder')}
-              ariaLabel={t('marketplace.searchPlaceholder')}
-            />
-          </div>
-
-          <div className="mb-6 flex items-center justify-end">
-            <div className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#494453]">
-              <Checkbox
-                id="promotedOnly"
-                checked={promotedOnly}
-                onChange={(event) => setPromotedOnly(event.target.checked)}
-                label={t('marketplace.filters.promotedOnly')}
-                className="mt-0 font-semibold"
-              />
-            </div>
-          </div>
-
-          {isLoading ? (
-            <div className="flex min-h-48 items-center justify-center">
-              <RefreshCw size={22} className="animate-spin text-[#4048cd]" />
-            </div>
-          ) : isError ? (
-            <div className="flex flex-col items-center gap-3 rounded-[14px] border border-dashed border-[#e4e4e4] bg-[#fafafa] px-6 py-14 text-center">
-              <p className="text-[16px] font-bold text-[#161c27]">
-                {t('marketplace.loadError', 'Failed to load stores.')}
-              </p>
-              <Button
-                unstyled
-                type="button"
-                onClick={() => refetch()}
-                className="rounded-lg bg-[#4048cd] px-4 py-2 text-[13px] font-semibold text-white"
-              >
-                {t('common.retry', 'Retry')}
-              </Button>
-            </div>
-          ) : pagedItems.length === 0 ? (
-            <div className="rounded-[14px] border border-dashed border-[#e4e4e4] bg-[#fafafa] px-6 py-14 text-center">
-              <p className="text-[18px] font-bold text-[#161c27]">
-                {t('marketplace.emptyTitle')}
-              </p>
-              <p className="mt-2 text-[14px] text-[#6b7280]">
-                {t('marketplace.emptyBody')}
-              </p>
-            </div>
-          ) : (
-            <section
-              aria-label={t('marketplace.gridAria')}
-              className={`grid gap-5 ${
-                isSearchMode
-                  ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'
-                  : 'grid-cols-1'
-              }`}
-            >
-              {pagedItems.map((item) =>
-                isSearchMode ? (
-                  <MarketplaceProductCard key={item.id} product={item} />
-                ) : (
-                  <MarketplaceStoreCard key={item.id} store={item} />
+        {!isLoading && !isError && totalRecords > 0 ? (
+          <footer className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+            <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
+              {t('marketplace.showing', {
+                from: (currentPage - 1) * MARKETPLACE_PAGE_SIZE + 1,
+                to: Math.min(
+                  currentPage * MARKETPLACE_PAGE_SIZE,
+                  totalRecords,
                 ),
-              )}
-            </section>
-          )}
-
-          {!isLoading && !isError && totalRecords > 0 ? (
-            <footer className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-              <p className="text-[12px] font-medium tracking-[0.6px] text-[#494453]">
-                {t('marketplace.showing', {
-                  from: (currentPage - 1) * MARKETPLACE_PAGE_SIZE + 1,
-                  to: Math.min(
-                    currentPage * MARKETPLACE_PAGE_SIZE,
-                    totalRecords,
-                  ),
-                  total: totalRecords,
-                })}
-              </p>
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setPage}
-                ariaLabel={t('marketplace.paginationAria')}
-              />
-            </footer>
-          ) : null}
-        </Shell>
-      </section>
-    </SitePageLayout>
+                total: totalRecords,
+              })}
+            </p>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              ariaLabel={t('marketplace.paginationAria')}
+            />
+          </footer>
+        ) : null}
+      </Shell>
+    </section>
   );
 });
 

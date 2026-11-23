@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/app/store/slices/authSlice';
 import { MARKETPLACE_PAGE_SIZE } from '@/portals/public/marketplace/data/marketplaceData';
@@ -7,6 +7,8 @@ import {
   getPublicStoresApi,
   STORE_PUBLIC_STORES_QUERY_KEY,
 } from '@/shared/api/store.api';
+
+const SEARCH_DEBOUNCE_MS = 300;
 
 const isOwnStore = (store, currentUser) => {
   if (!store || !currentUser) return false;
@@ -23,12 +25,23 @@ const isOwnStore = (store, currentUser) => {
 export function useMarketplaceFilters() {
   const currentUser = useSelector(selectUser);
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [promotedOnly, setPromotedOnly] = useState(false);
   const [page, setPage] = useState(1);
 
-  const trimmedQuery = query.trim();
-  const isSearchMode = trimmedQuery.length > 0;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query.trim());
+    }, SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedQuery, promotedOnly]);
+
+  const isSearchMode = debouncedQuery.length > 0;
 
   const {
     data: apiResult,
@@ -39,7 +52,7 @@ export function useMarketplaceFilters() {
   } = useQuery({
     queryKey: [
       STORE_PUBLIC_STORES_QUERY_KEY,
-      trimmedQuery,
+      debouncedQuery,
       promotedOnly,
       page,
       MARKETPLACE_PAGE_SIZE,
@@ -49,10 +62,10 @@ export function useMarketplaceFilters() {
       getPublicStoresApi({
         page,
         limit: MARKETPLACE_PAGE_SIZE,
-        search: trimmedQuery || undefined,
+        search: debouncedQuery || undefined,
         promotedOnly,
       }),
-    staleTime: 30 * 1000,
+    staleTime: 60 * 1000,
     placeholderData: keepPreviousData,
   });
 
@@ -98,28 +111,25 @@ export function useMarketplaceFilters() {
     return searchProducts.slice(start, start + MARKETPLACE_PAGE_SIZE);
   }, [isSearchMode, stores, searchProducts, page]);
 
-  const setQueryAndReset = (value) => {
+  const setQueryValue = useCallback((value) => {
     setQuery(value);
-    setPage(1);
-  };
+  }, []);
 
-  const setPromotedOnlyAndReset = (value) => {
+  const setPromotedOnlyValue = useCallback((value) => {
     setPromotedOnly(value);
-    setPage(1);
-  };
+  }, []);
 
-  const setCategoryAndReset = (value) => {
+  const setCategoryValue = useCallback((value) => {
     setCategory(value);
-    setPage(1);
-  };
+  }, []);
 
   return {
     query,
-    setQuery: setQueryAndReset,
+    setQuery: setQueryValue,
     category,
-    setCategory: setCategoryAndReset,
+    setCategory: setCategoryValue,
     promotedOnly,
-    setPromotedOnly: setPromotedOnlyAndReset,
+    setPromotedOnly: setPromotedOnlyValue,
     isSearchMode,
     activeItems,
     currentPage: page,

@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
+import { ROUTES } from '@/shared/config';
 import { useSEO } from '@/shared/hooks/useSEO';
+import { SitePageLayout } from '@/shared/site-chrome';
 import MarketplaceMain from './sections/MarketplaceMain';
 
 const Marketplace = memo(() => {
@@ -16,7 +18,16 @@ const Marketplace = memo(() => {
     ],
   });
 
-  return <MarketplaceMain />;
+  return (
+    <SitePageLayout
+      activeHref={ROUTES.MARKETPLACE}
+      rootClassName="marketplace-page-root"
+      announcementTone="navy"
+      newsletterVariant="page"
+    >
+      <MarketplaceMain />
+    </SitePageLayout>
+  );
 });
 
 Marketplace.displayName = 'Marketplace';

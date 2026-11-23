@@ -159,28 +159,52 @@ export const normalizeStoreProduct = (item) => {
 };
 
 /**
+ * Lightweight product shape for marketplace list/search cards.
+ * Avoids full gallery/detail normalization on every public store fetch.
+ */
+const normalizePublicStoreProductPreview = (item, store) => {
+  if (!item) return null;
+  const rawCategories =
+    Array.isArray(item.categories) && item.categories.length > 0
+      ? item.categories
+      : item.category
+        ? [item.category]
+        : ['Other'];
+  const primaryCategory = rawCategories[0] || 'Other';
+  const catUpper = primaryCategory.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+  const badgeKey =
+    STORE_CATEGORY_BADGE_MAP[catUpper] ||
+    STORE_CATEGORY_BADGE_MAP[primaryCategory.toUpperCase()] ||
+    primaryCategory;
+  const image = resolveMediaUrl(
+    item.bannerImage ||
+      (Array.isArray(item.images) ? item.images[0] : item.image) ||
+      '',
+  );
+
+  return {
+    id: String(item.id),
+    title: item.title || 'Untitled Product',
+    description: item.description || '',
+    category: primaryCategory,
+    badgeKey,
+    price: formatProductPrice(item.price),
+    image,
+    store: store.name || store.username || 'Creator',
+    username: store.username || '',
+    promoted: Boolean(store.isPromoted || item.isPromoted || item.promoted),
+  };
+};
+
+/**
  * Normalizes a public marketplace store from GET /v1/store/public.
  */
 export const normalizePublicStore = (store) => {
   if (!store) return null;
   const products = Array.isArray(store.products)
-    ? store.products.map((item) => {
-        const normalized = normalizeStoreProduct({
-          ...item,
-          user: {
-            id: store.id,
-            name: store.name,
-            username: store.username,
-            avatar: store.avatar,
-          },
-        });
-        return {
-          ...normalized,
-          store: store.name || store.username || 'Creator',
-          username: store.username,
-          promoted: Boolean(store.isPromoted),
-        };
-      })
+    ? store.products
+        .map((item) => normalizePublicStoreProductPreview(item, store))
+        .filter(Boolean)
     : [];
 
   const appreciation = store.artworkAppreciation || {};
