@@ -433,6 +433,12 @@ export const triggerArtworkDownload = async (
   defaultFilename = 'artwork',
 ) => {
   const result = await downloadPublicArtworkApi(artworkId);
+  const safeBase =
+    String(defaultFilename || 'artwork')
+      .replace(/[^\w\-]+/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_|_$/g, '')
+      .slice(0, 60) || 'artwork';
 
   // Case 1: Backend returned parsed JSON directly (e.g. { data: { url: "..." } })
   if (result && typeof result === 'object' && !(result instanceof Blob)) {
@@ -444,7 +450,7 @@ export const triggerArtworkDownload = async (
     if (targetUrl) {
       const link = document.createElement('a');
       link.href = targetUrl;
-      link.download = defaultFilename;
+      link.download = `${safeBase}.zip`;
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();
@@ -455,37 +461,23 @@ export const triggerArtworkDownload = async (
 
   // Case 2: Backend returned Blob
   if (result instanceof Blob) {
-    // If the Blob is application/json
+    // Error payloads come back as JSON blobs when responseType is blob
     if (result.type.includes('application/json')) {
+      const text = await result.text();
+      let json = null;
       try {
-        const text = await result.text();
-        const json = JSON.parse(text);
-        const targetUrl =
-          json?.data?.url ||
-          json?.data?.downloadUrl ||
-          json?.url ||
-          json?.downloadUrl;
-        if (targetUrl) {
-          const link = document.createElement('a');
-          link.href = targetUrl;
-          link.download = defaultFilename;
-          link.target = '_blank';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          return;
-        }
+        json = JSON.parse(text);
       } catch {
-        // Not valid JSON, continue with direct blob download
+        throw new Error('Download failed.');
       }
+      throw new Error(json?.error || json?.message || 'Download failed.');
     }
 
-    // Direct binary blob (image, video, or stream)
+    // Public artwork download always returns a zip of image(s) + video.
     const blobUrl = window.URL.createObjectURL(result);
     const link = document.createElement('a');
     link.href = blobUrl;
-    const ext = defaultFilename.includes('.') ? '' : '.jpg';
-    link.download = `${defaultFilename}${ext}`;
+    link.download = `${safeBase}.zip`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -497,7 +489,7 @@ export const triggerArtworkDownload = async (
   if (typeof result === 'string' && result.startsWith('http')) {
     const link = document.createElement('a');
     link.href = result;
-    link.download = defaultFilename;
+    link.download = `${safeBase}.zip`;
     link.target = '_blank';
     document.body.appendChild(link);
     link.click();
