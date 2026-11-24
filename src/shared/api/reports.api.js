@@ -116,12 +116,14 @@ export const REPORT_ACTION_TYPES = {
   WARN: 'WARN',
   SUSPEND: 'SUSPEND',
   BAN: 'BAN',
+  UNSUSPEND: 'UNSUSPEND',
+  UNBAN: 'UNBAN',
   MARK_RESOLVED: 'MARK_RESOLVED',
 };
 
 /**
  * POST /api/v1/admin/reports/{{report_id}}/action
- * Body: { "action": "CONTENT_REMOVED" | "WARN" | "SUSPEND" | "BAN" | "MARK_RESOLVED" }
+ * Body: { "action": "CONTENT_REMOVED" | "WARN" | "SUSPEND" | "BAN" | "UNSUSPEND" | "UNBAN" | "MARK_RESOLVED" }
  */
 export const takeAdminReportActionApi = async (reportId, action) => {
   const response = await apiClient.post(

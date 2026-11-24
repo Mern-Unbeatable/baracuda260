@@ -39,6 +39,10 @@ const ACTION_MENU_WIDTH_PX = 176;
 const MD_MEDIA_QUERY = '(min-width: 768px)';
 const SKELETON_ROW_COUNT = 5;
 
+const TH_CLASS =
+  'px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#64748b] lg:px-4';
+const TD_CLASS = 'px-3 py-2.5 text-[13px] leading-4 text-[#0f172a] lg:px-4';
+
 const useIsMdUp = () => {
   const [isMdUp, setIsMdUp] = useState(() =>
     typeof window !== 'undefined'
@@ -153,7 +157,7 @@ const AdsActionMenu = memo(
               visibility: placement ? 'visible' : 'hidden',
               ...placement,
             }}
-            className="overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
+            className="overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
           >
             <span
               className="block h-[3px] w-full bg-[#4048cd]"
@@ -169,7 +173,7 @@ const AdsActionMenu = memo(
                   if (option.kind === 'details') onSeeDetails(row.id);
                   else onSelectStatus(row.id, option.id);
                 }}
-                className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff]"
+                className="w-full cursor-pointer px-4 py-2.5 text-left text-[14px] leading-normal text-[#373737] transition hover:bg-[#f6fbff]"
               >
                 {t(option.labelKey)}
               </Button>
@@ -191,8 +195,8 @@ const AdsActionMenu = memo(
           aria-busy={isUpdating}
           disabled={isUpdating}
           onClick={() => onToggle(row.id)}
-          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-[6px] text-[#373737] transition disabled:cursor-wait disabled:opacity-50 ${
-            isOpen ? 'bg-[#f6fbff]' : 'hover:bg-[#f6fbff]'
+          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#64748b] transition disabled:cursor-wait disabled:opacity-50 ${
+            isOpen ? 'bg-[#f1f5f9] text-[#0f172a]' : 'hover:bg-[#f1f5f9]'
           }`}
         >
           <MoreVertical size={MORE_ICON_SIZE} aria-hidden="true" />
@@ -206,7 +210,6 @@ const AdsActionMenu = memo(
 AdsActionMenu.displayName = 'AdsActionMenu';
 
 /**
- * Shared row props for the desktop table and the mobile cards.
  * @typedef {{
  *   openActionId: string | null,
  *   updatingId: string | null,
@@ -232,18 +235,6 @@ const AdsRowActionMenu = ({ row, actions }) => (
   />
 );
 
-const ADS_TABLE_COLUMNS = [
-  'name',
-  'email',
-  'phone',
-  'businessType',
-  'pageName',
-  'price',
-  'status',
-  'uploadedDate',
-  'actions',
-];
-
 /**
  * @param {{ rows: object[], actions: AdsRowActions }} props
  */
@@ -251,50 +242,81 @@ const AdsTable = memo(({ rows, actions }) => {
   const { t, i18n } = useTranslation();
 
   return (
-    <Table className="min-w-[1180px]">
+    <Table className="w-full min-w-[980px]" wrapperClassName="overflow-x-auto">
       <TableHeader>
-        <TableRow isHeader>
-          {ADS_TABLE_COLUMNS.map((column, index) => (
-            <TableHead
-              key={column}
-              className={`text-[16px] font-normal leading-6 text-black ${
-                index === 0 ? 'rounded-tl-[12px]' : ''
-              } ${index === ADS_TABLE_COLUMNS.length - 1 ? 'rounded-tr-[12px]' : ''}`}
-            >
-              {t(`adminAds.columns.${column}`)}
-            </TableHead>
-          ))}
+        <TableRow isHeader className="border-b border-[#f1f5f9] bg-[#fafbfc]">
+          <TableHead className={TH_CLASS}>{t('adminAds.columns.name')}</TableHead>
+          <TableHead className={`${TH_CLASS} hidden xl:table-cell`}>
+            {t('adminAds.columns.email')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} hidden lg:table-cell`}>
+            {t('adminAds.columns.phone')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} hidden lg:table-cell`}>
+            {t('adminAds.columns.businessType')}
+          </TableHead>
+          <TableHead className={TH_CLASS}>{t('adminAds.columns.pageName')}</TableHead>
+          <TableHead className={TH_CLASS}>{t('adminAds.columns.price')}</TableHead>
+          <TableHead className={TH_CLASS}>{t('adminAds.columns.status')}</TableHead>
+          <TableHead className={`${TH_CLASS} hidden sm:table-cell`}>
+            {t('adminAds.columns.uploadedDate')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} text-right`}>
+            {t('adminAds.columns.actions')}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {rows.map((row) => (
           <TableRow
             key={row.id}
-            className={row.status === ADS_STATUS.REJECTED ? 'opacity-50' : ''}
+            className={`border-b border-[#f1f5f9] last:border-b-0 hover:bg-[#f8fafc] ${
+              row.status === ADS_STATUS.REJECTED ? 'opacity-50' : ''
+            }`}
           >
-            <TableCell className="min-w-[160px]">{row.name}</TableCell>
-            <TableCell className="min-w-[180px] break-all">
-              {row.email}
+            <TableCell className={TD_CLASS}>
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-[#0f172a]">
+                  {row.name || '—'}
+                </p>
+                <p
+                  className="mt-0.5 truncate text-[11px] text-[#94a3b8] xl:hidden"
+                  title={row.email || undefined}
+                >
+                  {row.email || '—'}
+                </p>
+              </div>
             </TableCell>
-            <TableCell className="min-w-[160px] whitespace-nowrap">
-              {row.phone}
+            <TableCell className={`${TD_CLASS} hidden text-[#475569] xl:table-cell`}>
+              <span className="block truncate" title={row.email || undefined}>
+                {row.email || '—'}
+              </span>
             </TableCell>
-            <TableCell className="min-w-[160px]">
+            <TableCell
+              className={`${TD_CLASS} hidden whitespace-nowrap text-[#475569] lg:table-cell`}
+            >
+              {row.phone || '—'}
+            </TableCell>
+            <TableCell className={`${TD_CLASS} hidden text-[#475569] lg:table-cell`}>
               {getBusinessTypeLabel(t, row.businessType)}
             </TableCell>
-            <TableCell className="min-w-[140px]">
+            <TableCell className={`${TD_CLASS} text-[#475569]`}>
               {getPageNameLabel(t, row.selectPage)}
             </TableCell>
-            <TableCell className="min-w-[100px] whitespace-nowrap">
-              {formatAdAmount(row.amount, i18n.language)}
+            <TableCell className={`${TD_CLASS} whitespace-nowrap text-[#475569]`}>
+              {formatAdAmount(row.amount, i18n.language, {
+                durationDays: row.durationDays,
+              })}
             </TableCell>
-            <TableCell className="min-w-[110px]">
+            <TableCell className={TD_CLASS}>
               <AdsStatusBadge status={row.status} />
             </TableCell>
-            <TableCell className="min-w-[140px] whitespace-nowrap">
+            <TableCell
+              className={`${TD_CLASS} hidden whitespace-nowrap text-[#475569] sm:table-cell`}
+            >
               {formatAdDate(row.createdAt, i18n.language)}
             </TableCell>
-            <TableCell className="min-w-[100px]">
+            <TableCell className={TD_CLASS} align="right">
               <AdsRowActionMenu row={row} actions={actions} />
             </TableCell>
           </TableRow>
@@ -313,58 +335,72 @@ const AdsMobileCards = memo(({ rows, actions }) => {
   const { t, i18n } = useTranslation();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-3 bg-[#f8fafc] p-3 sm:p-4">
       {rows.map((row) => {
-        const details = [
-          { key: 'phone', value: row.phone },
-          {
-            key: 'businessType',
-            value: getBusinessTypeLabel(t, row.businessType),
-          },
-          { key: 'pageName', value: getPageNameLabel(t, row.selectPage) },
-          { key: 'price', value: formatAdAmount(row.amount, i18n.language) },
-          {
-            key: 'status',
-            value: <AdsStatusBadge status={row.status} />,
-          },
-          {
-            key: 'uploadedDate',
-            value: formatAdDate(row.createdAt, i18n.language),
-          },
-        ];
+        const pageLabel = getPageNameLabel(t, row.selectPage);
+        const businessLabel = getBusinessTypeLabel(t, row.businessType);
+        const priceLabel = formatAdAmount(row.amount, i18n.language, {
+          durationDays: row.durationDays,
+        });
+        const dateLabel = formatAdDate(row.createdAt, i18n.language);
 
         return (
           <article
             key={row.id}
-            className={`flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0 ${
+            className={`rounded-xl border border-[#edf0f5] bg-white p-3.5 shadow-[0px_1px_2px_rgba(15,23,42,0.04)] ${
               row.status === ADS_STATUS.REJECTED ? 'opacity-50' : ''
             }`}
           >
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2">
               <div className="min-w-0 flex-1">
-                <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
-                  {row.name}
+                <p
+                  className="line-clamp-2 text-[15px] font-semibold leading-5 text-[#0f172a]"
+                  title={row.name || undefined}
+                >
+                  {row.name || '—'}
                 </p>
-                <p className="mt-1 break-all text-[14px] leading-5 text-[#687186]">
-                  {row.email}
+                <p
+                  className="mt-0.5 truncate text-[12px] leading-4 text-[#64748b]"
+                  title={row.email || undefined}
+                >
+                  {row.email || '—'}
                 </p>
               </div>
-              <AdsRowActionMenu row={row} actions={actions} />
+              <div className="flex shrink-0 items-center gap-1.5">
+                <AdsStatusBadge status={row.status} />
+                <AdsRowActionMenu row={row} actions={actions} />
+              </div>
             </div>
-            <div className="grid grid-cols-1 gap-2">
-              {details.map(({ key, value }) => (
-                <div
-                  key={key}
-                  className="flex items-center justify-between gap-3"
-                >
-                  <span className="text-[13px] leading-5 text-[#7f8ba1]">
-                    {t(`adminAds.columns.${key}`)}
-                  </span>
-                  <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-                    {value}
-                  </span>
-                </div>
-              ))}
+
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex max-w-full truncate rounded-md bg-[#f1f5f9] px-2 py-1 text-[11px] font-semibold text-[#475569]">
+                {pageLabel}
+              </span>
+              <span className="inline-flex max-w-full truncate rounded-md bg-[#f1f5f9] px-2 py-1 text-[11px] font-semibold text-[#475569]">
+                {businessLabel}
+              </span>
+              <span className="inline-flex rounded-md bg-[#eef2ff] px-2 py-1 text-[11px] font-semibold text-[#4048cd]">
+                {priceLabel}
+              </span>
+            </div>
+
+            <div className="mt-3 space-y-1.5 border-t border-[#f1f5f9] pt-3">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[12px] text-[#94a3b8]">
+                  {t('adminAds.columns.phone')}
+                </span>
+                <span className="truncate text-right text-[13px] font-medium text-[#0f172a]">
+                  {row.phone || '—'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[12px] text-[#94a3b8]">
+                  {t('adminAds.columns.uploadedDate')}
+                </span>
+                <span className="text-right text-[13px] font-medium text-[#0f172a]">
+                  {dateLabel}
+                </span>
+              </div>
             </div>
           </article>
         );
@@ -376,18 +412,18 @@ const AdsMobileCards = memo(({ rows, actions }) => {
 AdsMobileCards.displayName = 'AdsMobileCards';
 
 const AdsTableSkeleton = () => (
-  <div className="flex flex-col gap-3 px-5 py-6" aria-busy="true">
+  <div className="flex flex-col gap-3 px-4 py-5 sm:px-5" aria-busy="true">
     {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
       <div
         key={index}
-        className="h-12 w-full animate-pulse rounded-lg bg-[#f3f4f6]"
+        className="h-11 w-full animate-pulse rounded-lg bg-[#f1f5f9]"
       />
     ))}
   </div>
 );
 
 /**
- * Admin Ads Management — server-paginated table with sidebar details drawer.
+ * Admin Ads Management — polished list with shared numbered pagination.
  */
 const AdminAdsContent = memo(() => {
   const { t } = useTranslation();
@@ -407,18 +443,17 @@ const AdminAdsContent = memo(() => {
     isDetailsError,
     detailsErrorMessage,
     refetchDetails,
+    page,
+    totalPages,
     total,
     from,
     to,
-    isFirstPage,
-    isLastPage,
     handleToggleAction,
     handleCloseAction,
     handleRowStatusChange,
     handleOpenDetails,
     handleCloseDetails,
-    handlePreviousPage,
-    handleNextPage,
+    handlePageChange,
   } = useAdminAds();
 
   /** @type {AdsRowActions} */
@@ -437,12 +472,12 @@ const AdminAdsContent = memo(() => {
   } else if (isError) {
     body = (
       <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
-        <p className="text-[16px] text-[#ee1c25]">{loadErrorMessage}</p>
+        <p className="text-[14px] text-[#ee1c25]">{loadErrorMessage}</p>
         <Button
           unstyled
           type="button"
           onClick={() => refetch()}
-          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium text-[#4048cd] transition hover:bg-[#f6fbff]"
+          className="cursor-pointer rounded-lg border border-[#4048cd] px-4 py-2 text-[14px] font-semibold text-[#4048cd] transition hover:bg-[#f6fbff]"
         >
           {t('adminAds.retry')}
         </Button>
@@ -450,7 +485,7 @@ const AdminAdsContent = memo(() => {
     );
   } else if (rows.length === 0) {
     body = (
-      <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+      <p className="px-6 py-10 text-center text-[15px] text-[#687186]">
         {t('adminAds.empty')}
       </p>
     );
@@ -461,17 +496,28 @@ const AdminAdsContent = memo(() => {
   }
 
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div className="flex w-full flex-col gap-5 py-2 sm:gap-6 sm:py-4">
       <AdminPageHeader
         title={t('adminAds.title')}
         description={t('adminAds.subtitle')}
+        titleClassName="text-[24px] tracking-tight sm:text-[28px] lg:text-[30px] lg:leading-9"
+        descriptionClassName="text-[13px] leading-5 sm:text-[14px]"
       />
 
       <section
         aria-label={t('adminAds.tableAria')}
         aria-busy={isFetching}
-        className="overflow-hidden rounded-[12px] bg-white"
+        className="overflow-hidden rounded-xl border border-[#f3f4f6] bg-white shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)]"
       >
+        <div className="border-b border-[#f3f4f6] px-4 py-3.5 sm:px-5">
+          <p className="text-[13px] font-bold leading-5 text-[#111827] sm:text-[14px]">
+            {t('adminAds.tableTitle', 'All Ads')}{' '}
+            <span className="text-[12px] font-medium text-[#9ca3af] sm:text-[13px]">
+              ({total})
+            </span>
+          </p>
+        </div>
+
         <div
           className={`transition-opacity ${
             isFetching && !isLoading ? 'opacity-60' : ''
@@ -480,25 +526,31 @@ const AdminAdsContent = memo(() => {
           {body}
         </div>
 
-        {!isLoading && !isError && (
-          <AdminPagination
-            variant="users"
-            from={from}
-            to={to}
-            total={total}
-            isFirstPage={isFirstPage || isFetching}
-            isLastPage={isLastPage || isFetching}
-            onPrevious={handlePreviousPage}
-            onNext={handleNextPage}
-            showingText={t('adminAds.pagination.showing', {
-              from,
-              to,
-              total,
-            })}
-            previousLabel={t('adminAds.pagination.previous')}
-            nextLabel={t('adminAds.pagination.next')}
-          />
-        )}
+        {!isLoading && !isError ? (
+          <div className="flex flex-col items-center gap-3 border-t border-[#f3f4f6] px-4 py-4 sm:flex-row sm:justify-between sm:px-5">
+            <p className="text-center text-[13px] leading-5 text-[#687186] sm:text-left">
+              {t('adminAds.pagination.showing', {
+                from,
+                to,
+                total,
+              })}
+            </p>
+            <AdminPagination
+              variant="competitions"
+              page={page}
+              totalPages={Math.max(1, totalPages)}
+              onPageChange={handlePageChange}
+              navAriaLabel={t('adminAds.pagination.aria')}
+              firstLabel={t('adminAds.pagination.first')}
+              prevLabel={t('adminAds.pagination.prev')}
+              nextLabel={t('adminAds.pagination.next')}
+              lastLabel={t('adminAds.pagination.last')}
+              pageLabel={(pageNumber) =>
+                t('adminAds.pagination.page', { page: pageNumber })
+              }
+            />
+          </div>
+        ) : null}
       </section>
 
       <AdvertiseDetailsDrawer

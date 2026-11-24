@@ -1233,6 +1233,7 @@
   "adminAds": {
     "title": "Ads Management",
     "subtitle": "Donor Advertisement Management Dashboard",
+    "tableTitle": "All Ads",
     "tableAria": "Ads management table",
     "empty": "No advertisements to display.",
     "retry": "Try again",
@@ -1252,7 +1253,8 @@
     },
     "status": {
       "pending": "Pending",
-      "active": "Active",
+      "active": "Approved",
+      "approved": "Approved",
       "rejected": "Rejected",
       "expired": "Expired"
     },
@@ -1273,7 +1275,8 @@
       "menu": "Actions for {{name}}",
       "menuAria": "Advertisement actions for {{name}}",
       "seeDetails": "See Details",
-      "publish": "Publish",
+      "publish": "Approve",
+      "approve": "Approve",
       "reject": "Reject"
     },
     "drawer": {
@@ -1298,13 +1301,18 @@
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
       "aria": "Ads pagination",
+      "first": "First page",
+      "prev": "Previous page",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {{page}}"
     }
   },
   "adminReports": {
     "title": "Reports & Moderation",
-    "subtitle": "Review reported content and users, take appropriate action, and manage moderation cases. Keep the community safe and compliant with platform policies.",
+    "subtitle": "Review reported content and users, take appropriate action, and manage moderation cases.",
+    "tableTitle": "All Reports",
     "tableAria": "Reports and moderation table",
     "loading": "Loading reports...",
     "loadingDetail": "Loading report details...",
@@ -1368,8 +1376,13 @@
     },
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
+      "aria": "Reports pagination",
+      "first": "First page",
+      "prev": "Previous page",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {{page}}"
     },
     "people": {
       "albert": "Albert Flores",
@@ -1433,12 +1446,16 @@
         "remove": "Remove Content",
         "warn": "Warn User",
         "suspend": "Suspend User",
+        "unsuspend": "Unsuspend User",
         "block": "Block User",
+        "unblock": "Unblock User",
         "resolve": "Mark Resolved",
         "removeSuccess": "Content marked for removal.",
         "warnSuccess": "Warning issued to user.",
         "suspendSuccess": "User suspended.",
+        "unsuspendSuccess": "User unsuspended.",
         "blockSuccess": "User blocked.",
+        "unblockSuccess": "User unblocked.",
         "resolveSuccess": "Report marked as resolved."
       }
     },

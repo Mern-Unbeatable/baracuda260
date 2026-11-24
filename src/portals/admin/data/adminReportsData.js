@@ -11,7 +11,7 @@ const THUMBS = [
   '/assets/admin-competition-detail/thumb-6.webp',
 ];
 
-export const REPORTS_PAGE_SIZE = 12;
+export const REPORTS_PAGE_SIZE = 10;
 export const MORE_ICON_SIZE = 20;
 
 export const REPORT_STATUS = {

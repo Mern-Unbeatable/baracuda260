@@ -115,6 +115,12 @@ export default function useAdminReports(
     setOpenActionId(null);
   };
 
+  const handlePageChange = (nextPage) => {
+    const safeNext = Math.min(Math.max(1, nextPage), Math.max(1, totalPages));
+    setPage(safeNext);
+    setOpenActionId(null);
+  };
+
   return {
     statusFilter,
     sortOpen,
@@ -122,6 +128,8 @@ export default function useAdminReports(
     updatingRowId,
     stats,
     visibleRows,
+    page: safePage,
+    totalPages,
     from,
     to,
     resultsTotal,
@@ -137,5 +145,6 @@ export default function useAdminReports(
     handleRowStatusChange,
     handlePreviousPage,
     handleNextPage,
+    handlePageChange,
   };
 }

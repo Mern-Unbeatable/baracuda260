@@ -1237,6 +1237,7 @@
   "adminAds": {
     "title": "Zarządzanie reklamami",
     "subtitle": "Panel zarządzania reklamami darczyńców",
+    "tableTitle": "Wszystkie reklamy",
     "tableAria": "Tabela zarządzania reklamami",
     "empty": "Brak reklam do wyświetlenia.",
     "retry": "Spróbuj ponownie",
@@ -1256,7 +1257,8 @@
     },
     "status": {
       "pending": "Oczekująca",
-      "active": "Aktywna",
+      "active": "Zatwierdzona",
+      "approved": "Zatwierdzona",
       "rejected": "Odrzucona",
       "expired": "Wygasła"
     },
@@ -1277,7 +1279,8 @@
       "menu": "Akcje dla {{name}}",
       "menuAria": "Akcje reklamy dla {{name}}",
       "seeDetails": "Zobacz szczegóły",
-      "publish": "Opublikuj",
+      "publish": "Zatwierdź",
+      "approve": "Zatwierdź",
       "reject": "Odrzuć"
     },
     "drawer": {
@@ -1304,14 +1307,20 @@
     "pagination": {
       "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
       "aria": "Paginacja reklam",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
       "previous": "Poprzednia",
-      "next": "Następna"
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
     }
   },
   "adminReports": {
     "title": "Zgłoszenia i moderacja",
-    "subtitle": "Przeglądaj zgłoszone treści i użytkowników, podejmuj odpowiednie działania i zarządzaj sprawami moderacyjnymi. Dbaj o bezpieczeństwo społeczności i zgodność z zasadami platformy.",
+    "subtitle": "Przeglądaj zgłoszone treści i użytkowników, podejmuj działania i zarządzaj sprawami moderacyjnymi.",
+    "tableTitle": "Wszystkie zgłoszenia",
     "tableAria": "Tabela zgłoszeń i moderacji",
+    "loading": "Ładowanie zgłoszeń...",
     "empty": "Brak zgłoszeń pasujących do filtra.",
     "reportCount": "{{count}} zgłoszeń",
     "columns": {
@@ -1372,8 +1381,13 @@
     },
     "pagination": {
       "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+      "aria": "Paginacja zgłoszeń",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
       "previous": "Poprzednia",
-      "next": "Następna"
+      "next": "Następna strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
     },
     "people": {
       "albert": "Albert Flores",
@@ -1437,12 +1451,16 @@
         "remove": "Usuń treść",
         "warn": "Ostrzeż użytkownika",
         "suspend": "Zawieś użytkownika",
+        "unsuspend": "Odwieś użytkownika",
         "block": "Zablokuj użytkownika",
+        "unblock": "Odblokuj użytkownika",
         "resolve": "Oznacz jako rozwiązane",
         "removeSuccess": "Treść oznaczona do usunięcia.",
         "warnSuccess": "Wystawiono ostrzeżenie użytkownikowi.",
         "suspendSuccess": "Użytkownik zawieszony.",
+        "unsuspendSuccess": "Zawieszenie użytkownika zniesione.",
         "blockSuccess": "Użytkownik zablokowany.",
+        "unblockSuccess": "Użytkownik odblokowany.",
         "resolveSuccess": "Zgłoszenie oznaczone jako rozwiązane."
       }
     },

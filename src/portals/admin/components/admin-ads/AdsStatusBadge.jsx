@@ -14,7 +14,7 @@ const AdsStatusBadge = memo(({ status }) => {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[12px] font-semibold leading-4 whitespace-nowrap ${
+      className={`inline-flex h-7 items-center rounded-md px-2.5 py-1 text-[12px] font-semibold leading-4 whitespace-nowrap ${
         ADS_STATUS_STYLES[status] ?? ADS_STATUS_STYLES[ADS_STATUS.EXPIRED]
       }`}
     >

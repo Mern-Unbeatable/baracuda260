@@ -111,6 +111,8 @@ export default function useAdminAds(pageSize = ADS_PAGE_SIZE) {
       t('adminAds.drawer.loadError'),
     ),
     refetchDetails: detailsQuery.refetch,
+    page,
+    totalPages,
     total,
     from,
     to,
@@ -123,5 +125,6 @@ export default function useAdminAds(pageSize = ADS_PAGE_SIZE) {
     handleCloseDetails,
     handlePreviousPage: () => goToPage(page - 1),
     handleNextPage: () => goToPage(page + 1),
+    handlePageChange: goToPage,
   };
 }

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 import {
   Table,
   TableBody,
@@ -20,11 +21,6 @@ import {
   TableRow,
 } from '@/components/data-display/Table/Table';
 import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
-import {
-  ADMIN_DEMO_PROFILES_ASSETS,
-  CHEVRON_ICON_SIZE,
-} from '@/portals/admin/data/adminDemoProfilesData';
 import {
   ACTION_MENU_OPTIONS,
   formatReportDate,
@@ -46,6 +42,10 @@ const ACTION_MENU_VIEWPORT_MARGIN_PX = 8;
 const ACTION_MENU_WIDTH_PX = 176;
 const MD_MEDIA_QUERY = '(min-width: 768px)';
 
+const TH_CLASS =
+  'px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#64748b] lg:px-4';
+const TD_CLASS = 'px-3 py-2.5 text-[13px] leading-4 text-[#0f172a] lg:px-4';
+
 const useIsMdUp = () => {
   const [isMdUp, setIsMdUp] = useState(() =>
     typeof window !== 'undefined'
@@ -64,138 +64,109 @@ const useIsMdUp = () => {
   return isMdUp;
 };
 
-import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
-
-const ReportStatCards = memo(({ stats }) => {
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {REPORT_STAT_CARDS.map((card) => (
-        <AdminBasicStatCard
-          key={card.id}
-          labelKey={card.labelKey}
-          value={stats[card.id]}
-          icon={card.icon}
-          iconBg={card.iconBg}
-          hintKey={card.hintKey}
-          borderClass={card.border || 'border-[#f3f4f6]'}
-          valueClass={card.valueClass || 'text-[#111827]'}
-        />
-      ))}
-    </div>
-  );
-});
-
+const ReportStatCards = memo(({ stats }) => (
+  <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+    {REPORT_STAT_CARDS.map((card) => (
+      <AdminBasicStatCard
+        key={card.id}
+        labelKey={card.labelKey}
+        value={stats[card.id] ?? 0}
+        icon={card.icon}
+        iconBg={card.iconBg}
+        hintKey={card.hintKey}
+        borderClass={card.border || 'border-[#f3f4f6]'}
+        cardClass="px-3 py-3.5 sm:px-5 sm:py-4.5"
+        valueClass={`pt-2 text-[22px] leading-7 sm:pt-2.5 sm:text-[26px] ${card.valueClass || 'text-[#111827]'}`}
+      />
+    ))}
+  </div>
+));
 ReportStatCards.displayName = 'ReportStatCards';
 
 const StatusBadge = memo(({ status }) => {
   const { t } = useTranslation();
   const style = STATUS_STYLES[status] || STATUS_STYLES[REPORT_STATUS.PENDING];
+  const labelKey =
+    STATUS_LABEL_KEYS[status] || STATUS_LABEL_KEYS[REPORT_STATUS.PENDING];
 
   return (
     <span
-      className={`inline-flex h-[30px] items-center gap-[5px] rounded-[8px] px-[9px] py-[5px] ${style.bg}`}
+      className={`inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 py-1 ${style.bg}`}
     >
       <span
-        className={`size-[6px] shrink-0 rounded-[3px] ${style.dot}`}
+        className={`size-1.5 shrink-0 rounded-full ${style.dot}`}
         aria-hidden="true"
       />
       <span
-        className={`text-[13px] font-bold leading-[19px] whitespace-nowrap ${style.text}`}
+        className={`text-[12px] font-semibold leading-4 whitespace-nowrap ${style.text}`}
       >
-        {t(STATUS_LABEL_KEYS[status])}
+        {t(labelKey)}
       </span>
     </span>
   );
 });
-
 StatusBadge.displayName = 'StatusBadge';
 
-const StatusSortSelect = memo(
-  ({ statusFilter, sortOpen, onToggle, onClose, onSelect }) => {
-    const { t } = useTranslation();
-    const rootRef = useRef(null);
-    const activeFilter =
-      STATUS_FILTERS.find((filter) => filter.id === statusFilter) ||
-      STATUS_FILTERS[0];
+const StatusFilterTabs = memo(({ statusFilter, onSelect }) => {
+  const { t } = useTranslation();
 
-    useEffect(() => {
-      if (!sortOpen) return undefined;
-
-      const handlePointerDown = (event) => {
-        if (rootRef.current && !rootRef.current.contains(event.target))
-          onClose();
-      };
-
-      const handleKeyDown = (event) => {
-        if (event.key === 'Escape') onClose();
-      };
-
-      document.addEventListener('mousedown', handlePointerDown);
-      document.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.removeEventListener('mousedown', handlePointerDown);
-        document.removeEventListener('keydown', handleKeyDown);
-      };
-    }, [sortOpen, onClose]);
-
-    return (
-      <div className="relative" ref={rootRef}>
-        <Button
-          unstyled
-          type="button"
-          aria-expanded={sortOpen}
-          aria-haspopup="listbox"
-          aria-label={t('adminReports.filters.aria')}
-          onClick={onToggle}
-          className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-[8px] border border-[#e4e4e4] bg-white p-3 text-left"
-        >
-          <span className="text-[16px] leading-normal whitespace-nowrap text-[#373737]">
-            {t(activeFilter.labelKey)}
-          </span>
-          <Image
-            src={ADMIN_DEMO_PROFILES_ASSETS.chevronDown}
-            alt=""
-            width={CHEVRON_ICON_SIZE}
-            height={CHEVRON_ICON_SIZE}
-            className={`size-6 shrink-0 transition ${sortOpen ? 'rotate-180' : ''}`}
-          />
-        </Button>
-
-        {sortOpen ? (
-          <ul
-            role="listbox"
-            aria-label={t('adminReports.filters.aria')}
-            className="absolute right-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
-          >
-            {STATUS_FILTERS.map((filter) => {
-              const selected = filter.id === statusFilter;
-              return (
-                <li key={filter.id}>
-                  <Button
-                    unstyled
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    onClick={() => onSelect(filter.id)}
-                    className={`w-full cursor-pointer px-3 py-2.5 text-left text-[16px] transition hover:bg-[#f6fbff] ${
-                      selected
-                        ? 'bg-[#f6fbff] text-[#4048cd]'
-                        : 'text-[#373737]'
-                    }`}
-                  >
-                    {t(filter.labelKey)}
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
-        ) : null}
+  return (
+    <div
+      className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
+      role="tablist"
+      aria-label={t('adminReports.filters.aria')}
+    >
+      <div className="flex w-max flex-nowrap items-center gap-1.5 sm:w-auto sm:flex-wrap">
+        {STATUS_FILTERS.map((filter) => {
+          const active = filter.id === statusFilter;
+          return (
+            <Button
+              unstyled
+              key={filter.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => onSelect(filter.id)}
+              className={`inline-flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-[7px] border px-3 py-1 text-[12px] font-semibold leading-4.5 transition ${
+                active
+                  ? 'border-[#4048cd] bg-[#4048cd] text-white'
+                  : 'border-[#e5e7eb] bg-white text-[#6b7280] hover:bg-[#f9fafb]'
+              }`}
+            >
+              {t(filter.labelKey)}
+            </Button>
+          );
+        })}
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
+StatusFilterTabs.displayName = 'StatusFilterTabs';
 
-StatusSortSelect.displayName = 'StatusSortSelect';
+const getReportedBy = (row, t) =>
+  row.reportedBy || (row.reportedByKey ? t(row.reportedByKey) : '') || '—';
+
+const getReportedItem = (row, t) =>
+  row.reportedItem || (row.reportedItemKey ? t(row.reportedItemKey) : '') || '—';
+
+const getReportType = (row, t) =>
+  row.type && TYPE_LABEL_KEYS[row.type]
+    ? t(TYPE_LABEL_KEYS[row.type])
+    : row.type || '—';
+
+const getReportReason = (row, t) =>
+  row.reason && REASON_LABEL_KEYS[row.reason]
+    ? t(REASON_LABEL_KEYS[row.reason])
+    : row.reason || '—';
+
+const getReportedUserName = (row, t) =>
+  row.reportedUser?.name ||
+  row.reportedUser?.username ||
+  (row.reportedUserKey ? t(row.reportedUserKey) : '') ||
+  '—';
+
+const getReportedUserCount = (row) =>
+  row.reportedUser?.reportsCount ?? row.reportedUserReportCount ?? 0;
 
 const ReportActionMenu = memo(
   ({ row, isOpen, onToggle, onClose, onViewReport, onSelectStatus }) => {
@@ -204,6 +175,7 @@ const ReportActionMenu = memo(
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
     const [placement, setPlacement] = useState(null);
+    const reportedBy = getReportedBy(row, t);
 
     useLayoutEffect(() => {
       if (!isOpen || !buttonRef.current) {
@@ -264,9 +236,7 @@ const ReportActionMenu = memo(
           <div
             ref={menuRef}
             role="menu"
-            aria-label={t('adminReports.actions.menu', {
-              name: t(row.reportedByKey),
-            })}
+            aria-label={t('adminReports.actions.menu', { name: reportedBy })}
             style={{
               position: 'fixed',
               zIndex: 50,
@@ -274,7 +244,7 @@ const ReportActionMenu = memo(
               visibility: placement ? 'visible' : 'hidden',
               ...placement,
             }}
-            className="overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
+            className="overflow-hidden rounded-lg border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
           >
             <span
               className="block h-[3px] w-full bg-[#4048cd]"
@@ -290,7 +260,7 @@ const ReportActionMenu = memo(
                   if (option.kind === 'navigate') onViewReport(row.id);
                   else onSelectStatus(row.id, option.id);
                 }}
-                className="w-full cursor-pointer px-4 py-2.5 text-left text-[16px] leading-normal text-[#373737] transition hover:bg-[#f6fbff]"
+                className="w-full cursor-pointer px-4 py-2.5 text-left text-[14px] leading-normal text-[#373737] transition hover:bg-[#f6fbff]"
               >
                 {t(option.labelKey)}
               </Button>
@@ -308,12 +278,10 @@ const ReportActionMenu = memo(
           type="button"
           aria-expanded={isOpen}
           aria-haspopup="menu"
-          aria-label={t('adminReports.actions.menu', {
-            name: t(row.reportedByKey),
-          })}
+          aria-label={t('adminReports.actions.menu', { name: reportedBy })}
           onClick={() => onToggle(row.id)}
-          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-[6px] text-[#373737] transition ${
-            isOpen ? 'bg-[#f6fbff]' : 'hover:bg-[#f6fbff]'
+          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#64748b] transition ${
+            isOpen ? 'bg-[#f1f5f9] text-[#0f172a]' : 'hover:bg-[#f1f5f9]'
           }`}
         >
           <MoreVertical size={MORE_ICON_SIZE} aria-hidden="true" />
@@ -323,43 +291,7 @@ const ReportActionMenu = memo(
     );
   },
 );
-
 ReportActionMenu.displayName = 'ReportActionMenu';
-
-const getReportedBy = (row, t) =>
-  row.reportedBy || (row.reportedByKey ? t(row.reportedByKey) : '');
-
-const getReportedItem = (row, t) =>
-  row.reportedItem || (row.reportedItemKey ? t(row.reportedItemKey) : '');
-
-const getReportType = (row, t) =>
-  row.type && TYPE_LABEL_KEYS[row.type]
-    ? t(TYPE_LABEL_KEYS[row.type])
-    : row.type || '';
-
-const getReportReason = (row, t) =>
-  row.reason && REASON_LABEL_KEYS[row.reason]
-    ? t(REASON_LABEL_KEYS[row.reason])
-    : row.reason || '';
-
-const getReportedUserName = (row, t) =>
-  row.reportedUser?.name ||
-  row.reportedUser?.username ||
-  (row.reportedUserKey ? t(row.reportedUserKey) : '');
-
-const getReportedUserCount = (row) =>
-  row.reportedUser?.reportsCount ?? row.reportedUserReportCount ?? 0;
-
-const TABLE_COLUMNS = [
-  'reportedBy',
-  'reportedItem',
-  'type',
-  'reason',
-  'reportedUser',
-  'reportedDate',
-  'status',
-  'action',
-];
 
 const ReportTableRow = memo(
   ({
@@ -371,38 +303,49 @@ const ReportTableRow = memo(
     onSelectStatus,
   }) => {
     const { t } = useTranslation();
+    const reportCount = getReportedUserCount(row);
 
     return (
-      <TableRow>
-        <TableCell className="min-w-[140px]">{getReportedBy(row, t)}</TableCell>
-        <TableCell className="min-w-[180px]">
-          {getReportedItem(row, t)}
+      <TableRow className="border-b border-[#f1f5f9] last:border-b-0 hover:bg-[#f8fafc]">
+        <TableCell className={TD_CLASS}>
+          <p className="truncate font-semibold text-[#0f172a]">
+            {getReportedBy(row, t)}
+          </p>
         </TableCell>
-        <TableCell className="min-w-[140px]">
+        <TableCell className={`${TD_CLASS} text-[#475569]`}>
+          <span className="line-clamp-2" title={getReportedItem(row, t)}>
+            {getReportedItem(row, t)}
+          </span>
+        </TableCell>
+        <TableCell className={`${TD_CLASS} hidden text-[#475569] xl:table-cell`}>
           {getReportType(row, t)}
         </TableCell>
-        <TableCell className="min-w-[180px]">
-          {getReportReason(row, t)}
+        <TableCell className={`${TD_CLASS} hidden text-[#475569] lg:table-cell`}>
+          <span className="line-clamp-2" title={getReportReason(row, t)}>
+            {getReportReason(row, t)}
+          </span>
         </TableCell>
-        <TableCell className="min-w-[180px]">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[16px] leading-6 text-[#0c0c0c]">
+        <TableCell className={TD_CLASS}>
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+            <span className="truncate font-medium text-[#0f172a]">
               {getReportedUserName(row, t)}
             </span>
-            <span className="rounded-full bg-[#fee2e2] px-2 py-0.5 text-[11px] font-bold text-[#991b1b]">
-              {t('adminReports.reportCount', {
-                count: getReportedUserCount(row),
-              })}
-            </span>
+            {reportCount > 0 ? (
+              <span className="shrink-0 rounded-md bg-[#fee2e2] px-1.5 py-0.5 text-[10px] font-bold text-[#991b1b]">
+                {t('adminReports.reportCount', { count: reportCount })}
+              </span>
+            ) : null}
           </div>
         </TableCell>
-        <TableCell className="min-w-[120px] whitespace-nowrap">
+        <TableCell
+          className={`${TD_CLASS} hidden whitespace-nowrap text-[#475569] sm:table-cell`}
+        >
           {formatReportDate(row.reportedDate)}
         </TableCell>
-        <TableCell className="min-w-[140px]">
+        <TableCell className={TD_CLASS}>
           <StatusBadge status={row.status} />
         </TableCell>
-        <TableCell className="min-w-[100px]">
+        <TableCell className={TD_CLASS} align="right">
           <ReportActionMenu
             row={row}
             isOpen={openActionId === row.id}
@@ -416,7 +359,6 @@ const ReportTableRow = memo(
     );
   },
 );
-
 ReportTableRow.displayName = 'ReportTableRow';
 
 const ReportMobileCard = memo(
@@ -429,72 +371,75 @@ const ReportMobileCard = memo(
     onSelectStatus,
   }) => {
     const { t } = useTranslation();
+    const reportCount = getReportedUserCount(row);
+    const typeLabel = getReportType(row, t);
+    const reasonLabel = getReportReason(row, t);
 
     return (
-      <article className="flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0">
-        <div className="flex items-start justify-between gap-3">
+      <article className="rounded-xl border border-[#edf0f5] bg-white p-3.5 shadow-[0px_1px_2px_rgba(15,23,42,0.04)]">
+        <div className="flex items-start gap-2">
           <div className="min-w-0 flex-1">
-            <p className="text-[16px] font-semibold leading-6 text-[#0c0c0c]">
+            <p className="truncate text-[15px] font-semibold leading-5 text-[#0f172a]">
               {getReportedBy(row, t)}
             </p>
-            <p className="mt-1 text-[14px] leading-5 text-[#687186]">
+            <p
+              className="mt-0.5 line-clamp-2 text-[12px] leading-4 text-[#64748b]"
+              title={getReportedItem(row, t)}
+            >
               {getReportedItem(row, t)}
             </p>
           </div>
-          <ReportActionMenu
-            row={row}
-            isOpen={openActionId === row.id}
-            onToggle={() => onToggleAction(row.id)}
-            onClose={onCloseAction}
-            onViewReport={onViewReport}
-            onSelectStatus={onSelectStatus}
-          />
+          <div className="flex shrink-0 items-center gap-1.5">
+            <StatusBadge status={row.status} />
+            <ReportActionMenu
+              row={row}
+              isOpen={openActionId === row.id}
+              onToggle={onToggleAction}
+              onClose={onCloseAction}
+              onViewReport={onViewReport}
+              onSelectStatus={onSelectStatus}
+            />
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-2">
+
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          <span className="inline-flex max-w-full truncate rounded-md bg-[#f1f5f9] px-2 py-1 text-[11px] font-semibold text-[#475569]">
+            {typeLabel}
+          </span>
+          <span className="inline-flex max-w-full truncate rounded-md bg-[#f1f5f9] px-2 py-1 text-[11px] font-semibold text-[#475569]">
+            {reasonLabel}
+          </span>
+        </div>
+
+        <div className="mt-3 space-y-1.5 border-t border-[#f1f5f9] pt-3">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
-              {t('adminReports.columns.type')}
-            </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {getReportType(row, t)}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
-              {t('adminReports.columns.reason')}
-            </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {getReportReason(row, t)}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+            <span className="text-[12px] text-[#94a3b8]">
               {t('adminReports.columns.reportedUser')}
             </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
-              {getReportedUserName(row, t)}
-            </span>
+            <div className="flex min-w-0 max-w-[65%] items-center justify-end gap-1.5">
+              <span className="truncate text-right text-[13px] font-medium text-[#0f172a]">
+                {getReportedUserName(row, t)}
+              </span>
+              {reportCount > 0 ? (
+                <span className="shrink-0 rounded-md bg-[#fee2e2] px-1.5 py-0.5 text-[10px] font-bold text-[#991b1b]">
+                  {reportCount}
+                </span>
+              ) : null}
+            </div>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
+            <span className="text-[12px] text-[#94a3b8]">
               {t('adminReports.columns.reportedDate')}
             </span>
-            <span className="text-right text-[14px] leading-5 text-[#0c0c0c]">
+            <span className="text-right text-[13px] font-medium text-[#0f172a]">
               {formatReportDate(row.reportedDate)}
             </span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] leading-5 text-[#7f8ba1]">
-              {t('adminReports.columns.status')}
-            </span>
-            <StatusBadge status={row.status} />
           </div>
         </div>
       </article>
     );
   },
 );
-
 ReportMobileCard.displayName = 'ReportMobileCard';
 
 const AdminReportsContent = memo(() => {
@@ -503,25 +448,20 @@ const AdminReportsContent = memo(() => {
   const isMdUp = useIsMdUp();
   const {
     statusFilter,
-    sortOpen,
     openActionId,
-    updatingRowId,
     stats,
     visibleRows,
+    page,
+    totalPages,
     from,
     to,
     resultsTotal,
     isLoading,
-    isFirstPage,
-    isLastPage,
     handleStatusFilterChange,
-    handleToggleSort,
-    handleCloseSort,
     handleToggleAction,
     handleCloseAction,
     handleRowStatusChange,
-    handlePreviousPage,
-    handleNextPage,
+    handlePageChange,
   } = useAdminReports();
 
   const handleViewReport = (reportId) => {
@@ -530,27 +470,33 @@ const AdminReportsContent = memo(() => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-5">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <AdminPageHeader
-          title={t('adminReports.title')}
-          description={t('adminReports.subtitle')}
-        />
-        <StatusSortSelect
-          statusFilter={statusFilter}
-          sortOpen={sortOpen}
-          onToggle={handleToggleSort}
-          onClose={handleCloseSort}
-          onSelect={handleStatusFilterChange}
-        />
-      </div>
+    <div className="flex w-full flex-col gap-5 py-2 sm:gap-6 sm:py-4">
+      <AdminPageHeader
+        title={t('adminReports.title')}
+        description={t('adminReports.subtitle')}
+        titleClassName="text-[24px] tracking-tight sm:text-[28px] lg:text-[30px] lg:leading-9"
+        descriptionClassName="max-w-3xl text-[13px] leading-5 sm:text-[14px]"
+      />
 
       <ReportStatCards stats={stats} />
 
       <section
         aria-label={t('adminReports.tableAria')}
-        className="overflow-hidden rounded-[12px] bg-white"
+        className="overflow-hidden rounded-xl border border-[#f3f4f6] bg-white shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)]"
       >
+        <div className="flex flex-col gap-3 border-b border-[#f3f4f6] px-4 py-3.5 sm:px-5 md:flex-row md:items-center md:justify-between">
+          <p className="text-[13px] font-bold leading-5 text-[#111827] sm:text-[14px]">
+            {t('adminReports.tableTitle', 'All Reports')}{' '}
+            <span className="text-[12px] font-medium text-[#9ca3af] sm:text-[13px]">
+              ({resultsTotal})
+            </span>
+          </p>
+          <StatusFilterTabs
+            statusFilter={statusFilter}
+            onSelect={handleStatusFilterChange}
+          />
+        </div>
+
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
             <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
@@ -560,17 +506,39 @@ const AdminReportsContent = memo(() => {
           </div>
         ) : visibleRows.length > 0 ? (
           isMdUp ? (
-            <Table className="min-w-[1280px]">
+            <Table
+              className="w-full min-w-[900px]"
+              wrapperClassName="overflow-x-auto"
+            >
               <TableHeader>
-                <TableRow isHeader>
-                  {TABLE_COLUMNS.map((column, index) => (
-                    <TableHead
-                      key={column}
-                      className={`${index === 0 ? 'rounded-tl-[12px]' : ''} ${index === TABLE_COLUMNS.length - 1 ? 'rounded-tr-[12px]' : ''}`}
-                    >
-                      {t(`adminReports.columns.${column}`)}
-                    </TableHead>
-                  ))}
+                <TableRow
+                  isHeader
+                  className="border-b border-[#f1f5f9] bg-[#fafbfc]"
+                >
+                  <TableHead className={TH_CLASS}>
+                    {t('adminReports.columns.reportedBy')}
+                  </TableHead>
+                  <TableHead className={TH_CLASS}>
+                    {t('adminReports.columns.reportedItem')}
+                  </TableHead>
+                  <TableHead className={`${TH_CLASS} hidden xl:table-cell`}>
+                    {t('adminReports.columns.type')}
+                  </TableHead>
+                  <TableHead className={`${TH_CLASS} hidden lg:table-cell`}>
+                    {t('adminReports.columns.reason')}
+                  </TableHead>
+                  <TableHead className={TH_CLASS}>
+                    {t('adminReports.columns.reportedUser')}
+                  </TableHead>
+                  <TableHead className={`${TH_CLASS} hidden sm:table-cell`}>
+                    {t('adminReports.columns.reportedDate')}
+                  </TableHead>
+                  <TableHead className={TH_CLASS}>
+                    {t('adminReports.columns.status')}
+                  </TableHead>
+                  <TableHead className={`${TH_CLASS} text-right`}>
+                    {t('adminReports.columns.action')}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -588,7 +556,7 @@ const AdminReportsContent = memo(() => {
               </TableBody>
             </Table>
           ) : (
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-3 bg-[#f8fafc] p-3 sm:p-4">
               {visibleRows.map((row) => (
                 <ReportMobileCard
                   key={row.id}
@@ -604,29 +572,33 @@ const AdminReportsContent = memo(() => {
           )
         ) : (
           <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
-            <p className="text-[16px] text-[#687186]">
-              {t('adminReports.empty')}
-            </p>
+            <p className="text-[15px] text-[#687186]">{t('adminReports.empty')}</p>
           </div>
         )}
 
-        <AdminPagination
-          variant="users"
-          from={from}
-          to={to}
-          total={resultsTotal}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-          showingText={t('adminReports.pagination.showing', {
-            from,
-            to,
-            total: resultsTotal,
-          })}
-          previousLabel={t('adminReports.pagination.previous')}
-          nextLabel={t('adminReports.pagination.next')}
-        />
+        <div className="flex flex-col items-center gap-3 border-t border-[#f3f4f6] px-4 py-4 sm:flex-row sm:justify-between sm:px-5">
+          <p className="text-center text-[13px] leading-5 text-[#687186] sm:text-left">
+            {t('adminReports.pagination.showing', {
+              from,
+              to,
+              total: resultsTotal,
+            })}
+          </p>
+          <AdminPagination
+            variant="competitions"
+            page={page}
+            totalPages={Math.max(1, totalPages)}
+            onPageChange={handlePageChange}
+            navAriaLabel={t('adminReports.pagination.aria')}
+            firstLabel={t('adminReports.pagination.first')}
+            prevLabel={t('adminReports.pagination.prev')}
+            nextLabel={t('adminReports.pagination.next')}
+            lastLabel={t('adminReports.pagination.last')}
+            pageLabel={(pageNumber) =>
+              t('adminReports.pagination.page', { page: pageNumber })
+            }
+          />
+        </div>
       </section>
     </div>
   );

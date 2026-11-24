@@ -75,12 +75,56 @@ export const getPublicAdvertisementsApi = async ({ page } = {}) => {
   }));
 };
 
+/**
+ * Prisma Decimal may arrive as a number, string, or { s, e, d } object.
+ * @param {unknown} amount
+ * @returns {number | null}
+ */
+const normalizeAmount = (amount) => {
+  if (amount == null || amount === '') return null;
+  if (typeof amount === 'number') {
+    return Number.isFinite(amount) ? amount : null;
+  }
+  if (typeof amount === 'string') {
+    const num = Number.parseFloat(amount.replace(/[^0-9.-]/g, ''));
+    return Number.isFinite(num) ? num : null;
+  }
+  if (typeof amount === 'object') {
+    if (typeof amount.toNumber === 'function') {
+      try {
+        const num = amount.toNumber();
+        return Number.isFinite(num) ? num : null;
+      } catch {
+        // ignore
+      }
+    }
+    if (Array.isArray(amount.d) && typeof amount.e === 'number') {
+      const sign = amount.s ?? 1;
+      const digitsStr = amount.d.join('');
+      const num =
+        sign * Number(digitsStr) * 10 ** (amount.e - digitsStr.length + 1);
+      return Number.isFinite(num) ? num : null;
+    }
+    if (amount.value != null) return normalizeAmount(amount.value);
+  }
+  return null;
+};
+
+const normalizeAdminAd = (ad) => {
+  if (!ad) return null;
+  return {
+    ...ad,
+    amount: normalizeAmount(ad.amount),
+  };
+};
+
 export const getAdminAdvertisementsApi = async ({ page, limit }) => {
   const response = await apiClient.get('/v1/advertisements/admin/all', {
     params: { page, limit },
   });
+  const rawItems = response?.data?.data ?? [];
   return {
-    items: response?.data?.data ?? [],
+    items: (Array.isArray(rawItems) ? rawItems : []).map(normalizeAdminAd),
     meta: response?.data?.meta ?? { total: 0, page, limit, totalPages: 1 },
   };
 };
@@ -89,7 +133,7 @@ export const getAdminAdvertisementApi = async (advertisementId) => {
   const response = await apiClient.get(
     `/v1/advertisements/admin/${advertisementId}`,
   );
-  return response?.data ?? null;
+  return normalizeAdminAd(response?.data ?? null);
 };
 
 export const updateAdvertisementStatusApi = async ({ id, status }) => {

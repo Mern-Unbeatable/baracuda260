@@ -14,7 +14,7 @@ export const ACTION_MENU_OPTIONS = [
   { id: 'details', labelKey: 'adminAds.actions.seeDetails', kind: 'details' },
   {
     id: ADS_STATUS.ACTIVE,
-    labelKey: 'adminAds.actions.publish',
+    labelKey: 'adminAds.actions.approve',
     kind: 'status',
   },
   {
@@ -93,19 +93,83 @@ export const formatAdDate = (isoDate, locale) => {
   });
 };
 
+/** Duration → package price used when creating ads. */
+export const AD_DURATION_PRICES = {
+  7: 35,
+  14: 60,
+  30: 100,
+};
+
 /**
- * Backend sends amount as a string, e.g. "60".
- * @param {string | number | null | undefined} amount
+ * Parse Prisma Decimal / number / string amounts (same shape as payouts).
+ * @param {unknown} amount
+ * @returns {number | null}
+ */
+export const parseAdAmount = (amount) => {
+  if (amount == null || amount === '') return null;
+  if (typeof amount === 'number') {
+    return Number.isFinite(amount) ? amount : null;
+  }
+  if (typeof amount === 'string') {
+    const num = Number.parseFloat(amount.replace(/[^0-9.-]/g, ''));
+    return Number.isFinite(num) ? num : null;
+  }
+  if (typeof amount === 'object') {
+    if (typeof amount.toNumber === 'function') {
+      try {
+        const num = amount.toNumber();
+        return Number.isFinite(num) ? num : null;
+      } catch {
+        // ignore
+      }
+    }
+    if (Array.isArray(amount.d) && typeof amount.e === 'number') {
+      const sign = amount.s ?? 1;
+      const digitsStr = amount.d.join('');
+      const num =
+        sign *
+        Number(digitsStr) *
+        10 ** (amount.e - digitsStr.length + 1);
+      return Number.isFinite(num) ? num : null;
+    }
+    if (typeof amount.value === 'number' || typeof amount.value === 'string') {
+      return parseAdAmount(amount.value);
+    }
+  }
+  return null;
+};
+
+/**
+ * Resolve display amount from `amount`, or fall back to duration package price.
+ * @param {{ amount?: unknown, durationDays?: number | string | null }} row
+ * @returns {number | null}
+ */
+export const resolveAdAmount = (row) => {
+  const fromAmount = parseAdAmount(row?.amount);
+  if (fromAmount != null) return fromAmount;
+  const days = Number(row?.durationDays);
+  if (Number.isFinite(days) && AD_DURATION_PRICES[days] != null) {
+    return AD_DURATION_PRICES[days];
+  }
+  return null;
+};
+
+/**
+ * @param {unknown} amount
  * @param {string} [locale]
- * @param {{ fixedDecimals?: boolean }} [options]
+ * @param {{ fixedDecimals?: boolean, durationDays?: number | string | null }} [options]
  */
 export const formatAdAmount = (
   amount,
   locale,
-  { fixedDecimals = false } = {},
+  { fixedDecimals = false, durationDays } = {},
 ) => {
-  const value = Number(amount);
-  if (amount == null || amount === '' || Number.isNaN(value)) return '—';
+  const value =
+    parseAdAmount(amount) ??
+    (durationDays != null
+      ? AD_DURATION_PRICES[Number(durationDays)] ?? null
+      : null);
+  if (value == null) return '—';
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: 'USD',

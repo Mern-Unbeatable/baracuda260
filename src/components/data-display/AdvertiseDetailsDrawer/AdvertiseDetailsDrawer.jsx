@@ -68,7 +68,10 @@ const AdvertiseDetailsBody = ({ ad }) => {
     { labelKey: 'adminAds.drawer.paymentId', value: ad.paymentId || '—' },
     {
       labelKey: 'adminAds.drawer.subtotal',
-      value: formatAdAmount(ad.amount, i18n.language, { fixedDecimals: true }),
+      value: formatAdAmount(ad.amount, i18n.language, {
+        fixedDecimals: true,
+        durationDays: ad.durationDays,
+      }),
     },
   ];
 
