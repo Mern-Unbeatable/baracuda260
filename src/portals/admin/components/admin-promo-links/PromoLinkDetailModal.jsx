@@ -117,38 +117,40 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
         className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-xl bg-white shadow-[0px_22px_70px_0px_rgba(14,20,35,0.25)]"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="flex items-start justify-between border-b border-[#edf0f3] px-5 pb-4 pt-5 sm:px-6">
-          <div>
+        <header className="flex shrink-0 items-start justify-between border-b border-[#edf0f3] px-4 pb-3.5 pt-4 sm:px-6 sm:pb-4 sm:pt-5">
+          <div className="min-w-0">
             <h2
               id={titleId}
-              className="font-manrope text-[22px] font-bold leading-8 tracking-[-0.5px] text-[#202838]"
+              className="font-manrope text-[18px] font-bold leading-7 tracking-[-0.5px] text-[#202838] sm:text-[22px] sm:leading-8"
             >
               {t('adminPromoLinks.detail.title')}
             </h2>
-            <p className="mt-1 text-[14px] text-[#687186]">{link.linkId}</p>
+            <p className="mt-1 truncate text-[13px] text-[#687186] sm:text-[14px]">
+              {link.linkId}
+            </p>
           </div>
           <Button
             unstyled
             type="button"
             onClick={onClose}
             aria-label={t('adminPromoLinks.detail.close')}
-            className="inline-flex cursor-pointer items-center justify-center rounded-full p-1 transition hover:bg-black/5"
+            className="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition hover:bg-black/5"
           >
             <X size={CLOSE_ICON_SIZE - 4} aria-hidden="true" />
           </Button>
         </header>
 
-        <div className="overflow-y-auto px-5 py-5 sm:px-6">
-          <div className="mb-5 flex flex-wrap items-center gap-2">
+        <div className="overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
             <span
-              className={`inline-flex h-[30px] items-center rounded-[8px] px-[9px] py-[5px] text-[13px] font-bold ${statusStyle.bg} ${statusStyle.text}`}
+              className={`inline-flex h-7 items-center rounded-md px-2.5 py-1 text-[12px] font-semibold ${statusStyle.bg} ${statusStyle.text}`}
             >
-              {t(STATUS_LABEL_KEYS[link.status])}
+              {t(STATUS_LABEL_KEYS[link.status] || STATUS_LABEL_KEYS.active)}
             </span>
           </div>
 
-          <div className="mb-5 flex items-start gap-3 rounded-[12px] border border-[#edf0f3] bg-[#fafbff] px-4 py-3">
-            <p className="min-w-0 flex-1 break-all text-[14px] leading-5 text-[#151e31]">
+          <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#edf0f3] bg-[#fafbff] px-3 py-3 sm:gap-3 sm:px-4">
+            <p className="min-w-0 flex-1 break-all text-[13px] leading-5 text-[#151e31] sm:text-[14px]">
               {absoluteUrl}
             </p>
             <Button
@@ -156,20 +158,22 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
               type="button"
               onClick={handleCopy}
               aria-label={t('adminPromoLinks.copyAria')}
-              className="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-[8px] text-[#ee1c25] transition hover:bg-[#fde8e9]"
+              className="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-[#ee1c25] transition hover:bg-[#fde8e9]"
             >
               <Copy size={16} aria-hidden="true" />
             </Button>
           </div>
 
-          <dl className="grid grid-cols-1 gap-3">
+          <dl className="grid grid-cols-1 gap-2.5 sm:gap-3">
             {rows.map((row) => (
               <div
                 key={row.label}
-                className="flex items-start justify-between gap-4 border-b border-[#f1f3f6] pb-3 last:border-b-0 last:pb-0"
+                className="flex items-start justify-between gap-3 border-b border-[#f1f3f6] pb-2.5 last:border-b-0 last:pb-0 sm:gap-4 sm:pb-3"
               >
-                <dt className="text-[13px] text-[#7f8ba1]">{row.label}</dt>
-                <dd className="text-right text-[14px] font-medium text-[#0c0c0c]">
+                <dt className="shrink-0 text-[12px] text-[#7f8ba1] sm:text-[13px]">
+                  {row.label}
+                </dt>
+                <dd className="min-w-0 break-words text-right text-[13px] font-medium text-[#0c0c0c] sm:text-[14px]">
                   {row.value}
                 </dd>
               </div>
@@ -177,7 +181,7 @@ const PromoLinkDetailModal = memo(({ open, link, onClose }) => {
           </dl>
         </div>
 
-        <footer className="border-t border-[#edf0f3] px-5 py-4 sm:px-6">
+        <footer className="shrink-0 border-t border-[#edf0f3] px-4 py-3.5 sm:px-6 sm:py-4">
           <Button
             unstyled
             type="button"

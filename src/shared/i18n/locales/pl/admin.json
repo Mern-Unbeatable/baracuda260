@@ -2060,8 +2060,14 @@
     "pagination": {
       "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
       "previous": "Poprzednia",
-      "next": "Następna"
+      "next": "Następna",
+      "aria": "Paginacja linków promocyjnych",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "last": "Ostatnia strona",
+      "page": "Strona {{page}}"
     },
+    "tableTitle": "Wszystkie linki promocyjne",
     "generate": {
       "title": "Wygeneruj link promocyjny",
       "subtitle": "Utwórz bezpieczne, jednorazowe zaproszenie dla nowego uczestnika.",

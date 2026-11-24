@@ -32,6 +32,24 @@ export const getCampaignStatsApi = async () => {
  *   limit?: number,
  * }} params
  */
+const DATE_CREATED_API_MAP = {
+  ALL: 'ALL',
+  LAST_7: 'LAST_7_DAYS',
+  LAST_7_DAYS: 'LAST_7_DAYS',
+  LAST_30: 'LAST_30_DAYS',
+  LAST_30_DAYS: 'LAST_30_DAYS',
+  LAST_90: 'LAST_90_DAYS',
+  LAST_90_DAYS: 'LAST_90_DAYS',
+  LAST_10_DAYS: 'LAST_10_DAYS',
+  LAST_15_DAYS: 'LAST_15_DAYS',
+};
+
+const toApiEnum = (value, fallback = 'ALL') => {
+  const raw = String(value || fallback).trim();
+  if (!raw) return fallback;
+  return raw.toUpperCase();
+};
+
 export const getCampaignLinksApi = async ({
   status = 'ALL',
   dateCreated = 'ALL',
@@ -40,11 +58,12 @@ export const getCampaignLinksApi = async ({
   page = 1,
   limit = 10,
 } = {}) => {
+  const normalizedDate = toApiEnum(dateCreated);
   const params = {
-    status: (status || 'ALL').toUpperCase(),
-    dateCreated: (dateCreated || 'ALL').toUpperCase(),
-    requirements: (requirements || 'ALL').toUpperCase(),
-    rewardStatus: (rewardStatus || 'ALL').toUpperCase(),
+    status: toApiEnum(status),
+    dateCreated: DATE_CREATED_API_MAP[normalizedDate] || 'ALL',
+    requirements: toApiEnum(requirements),
+    rewardStatus: toApiEnum(rewardStatus),
     page,
     limit,
   };

@@ -2053,8 +2053,14 @@
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "aria": "Promo links pagination",
+      "first": "First page",
+      "prev": "Previous page",
+      "last": "Last page",
+      "page": "Page {{page}}"
     },
+    "tableTitle": "All Promo Links",
     "generate": {
       "title": "Generate Promotional Link",
       "subtitle": "Create a secure, one-time invite for a new participant.",

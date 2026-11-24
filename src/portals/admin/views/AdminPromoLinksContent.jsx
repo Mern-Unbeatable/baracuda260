@@ -23,6 +23,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import AdminPageHeader from '@/components/common/AdminPageHeader/AdminPageHeader';
 import AdminPagination from '@/components/common/AdminPagination/AdminPagination';
+import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 import {
   Table,
   TableBody,
@@ -43,6 +44,7 @@ import {
   getRequirementStage,
   getValidityMeta,
   MORE_ICON_SIZE,
+  PROMO_LINK_REQUIREMENT,
   PROMO_LINKS_STAT_CARDS,
   REQUIREMENT_FILTERS,
   REWARD_ACTIONS,
@@ -61,6 +63,10 @@ const ACTION_MENU_FALLBACK_HEIGHT_PX = 220;
 const ACTION_MENU_VIEWPORT_MARGIN_PX = 8;
 const ACTION_MENU_WIDTH_PX = 188;
 const MD_MEDIA_QUERY = '(min-width: 768px)';
+
+const TH_CLASS =
+  'px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#64748b] lg:px-4';
+const TD_CLASS = 'px-3 py-2.5 text-[13px] leading-4 text-[#0f172a] lg:px-4';
 
 const STAT_ICONS = {
   Link2,
@@ -88,29 +94,25 @@ const useIsMdUp = () => {
   return isMdUp;
 };
 
-import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
-
-const PromoLinkStatCards = memo(({ stats }) => {
-  return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-      {PROMO_LINKS_STAT_CARDS.map((card) => {
-        const Icon = STAT_ICONS[card.Icon] || Link2;
-        return (
-          <AdminBasicStatCard
-            key={card.id}
-            labelKey={card.labelKey}
-            value={stats[card.id]}
-            icon={<Icon size={16} />}
-            iconBg={card.iconBg}
-            borderClass="border-[#f3f4f6]"
-            valueClass="text-[#111827] sm:text-[32px]"
-            cardClass="px-5 py-4"
-          />
-        );
-      })}
-    </div>
-  );
-});
+const PromoLinkStatCards = memo(({ stats }) => (
+  <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-5">
+    {PROMO_LINKS_STAT_CARDS.map((card) => {
+      const Icon = STAT_ICONS[card.Icon] || Link2;
+      return (
+        <AdminBasicStatCard
+          key={card.id}
+          labelKey={card.labelKey}
+          value={stats[card.id] ?? 0}
+          icon={<Icon size={16} strokeWidth={2.25} />}
+          iconBg={card.iconBg}
+          borderClass="border-[#f3f4f6]"
+          cardClass="px-3 py-3.5 sm:px-5 sm:py-4.5"
+          valueClass="pt-2 text-[22px] leading-7 text-[#111827] sm:pt-2.5 sm:text-[26px]"
+        />
+      );
+    })}
+  </div>
+));
 PromoLinkStatCards.displayName = 'PromoLinkStatCards';
 
 const StatusBadge = memo(({ status }) => {
@@ -119,13 +121,13 @@ const StatusBadge = memo(({ status }) => {
 
   return (
     <span
-      className={`inline-flex h-[30px] items-center gap-[6px] rounded-[8px] px-[9px] py-[5px] text-[13px] font-bold leading-[19px] whitespace-nowrap ${style.bg} ${style.text}`}
+      className={`inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 py-1 text-[12px] font-semibold leading-4 whitespace-nowrap ${style.bg} ${style.text}`}
     >
       <span
-        className={`size-[6px] shrink-0 rounded-full ${style.dot}`}
+        className={`size-1.5 shrink-0 rounded-full ${style.dot}`}
         aria-hidden="true"
       />
-      {t(STATUS_LABEL_KEYS[status])}
+      {t(STATUS_LABEL_KEYS[status] || STATUS_LABEL_KEYS.active)}
     </span>
   );
 });
@@ -134,17 +136,13 @@ StatusBadge.displayName = 'StatusBadge';
 const ChecklistBadge = memo(({ link }) => {
   const { t } = useTranslation();
   if (typeof link.checklist === 'string' && link.checklist.trim() === '------') {
-    return (
-      <span className="text-[14px] text-[#9aa3b5]">
-        ------
-      </span>
-    );
+    return <span className="text-[13px] text-[#9aa3b5]">——</span>;
   }
 
   const stage = getRequirementStage(link);
   if (stage === 'none') {
     return (
-      <span className="text-[14px] text-[#9aa3b5]">
+      <span className="text-[13px] text-[#9aa3b5]">
         {link.checklist || t('adminPromoLinks.checklist.none')}
       </span>
     );
@@ -168,7 +166,7 @@ const ChecklistBadge = memo(({ link }) => {
 
   return (
     <span
-      className={`inline-flex h-[30px] items-center gap-[5px] rounded-[8px] px-[9px] py-[5px] text-[13px] font-bold leading-[19px] whitespace-nowrap ${style.bg} ${style.text}`}
+      className={`inline-flex h-7 items-center gap-1 rounded-md px-2.5 py-1 text-[12px] font-semibold leading-4 whitespace-nowrap ${style.bg} ${style.text}`}
     >
       {stage === 'completed' ? (
         <Check size={12} strokeWidth={3} aria-hidden="true" />
@@ -187,15 +185,13 @@ const ValidityText = memo(({ link }) => {
 
   if (typeof link.validity === 'string' && link.validity) {
     return (
-      <span className="text-[14px] text-[#0c0c0c]">
-        {link.validity}
-      </span>
+      <span className="text-[13px] text-[#0c0c0c]">{link.validity}</span>
     );
   }
 
   if (validity.kind === 'used') {
     return (
-      <span className="text-[14px] text-[#687186]">
+      <span className="text-[13px] text-[#687186]">
         {t('adminPromoLinks.validity.used')}
       </span>
     );
@@ -203,23 +199,24 @@ const ValidityText = memo(({ link }) => {
 
   if (validity.kind === 'expired') {
     return (
-      <span className="text-[14px] text-[#687186]">
+      <span className="text-[13px] text-[#687186]">
         {t('adminPromoLinks.validity.expired')}
       </span>
     );
   }
 
   return (
-    <span className="text-[14px] text-[#0c0c0c]">
+    <span className="text-[13px] text-[#0c0c0c]">
       {t('adminPromoLinks.validity.daysLeft', { count: validity.daysLeft })}
     </span>
   );
 });
 ValidityText.displayName = 'ValidityText';
 
-const CopyUrlButton = memo(({ code, url }) => {
+const CopyUrlButton = memo(({ code, url, compact = false }) => {
   const { t } = useTranslation();
   const absoluteUrl = url || buildPromoJoinAbsoluteUrl(code);
+  const display = absoluteUrl.replace(/^https?:\/\//, '');
 
   const handleCopy = async () => {
     try {
@@ -231,16 +228,19 @@ const CopyUrlButton = memo(({ code, url }) => {
   };
 
   return (
-    <div className="flex min-w-0 items-center gap-2">
-      <span className="min-w-0 truncate text-[14px] leading-5 text-[#4048cd] sm:text-[15px]">
-        {truncatePromoUrl(absoluteUrl.replace(/^https?:\/\//, ''), 36)}
+    <div className="flex min-w-0 items-center gap-1.5">
+      <span
+        className="min-w-0 truncate text-[12px] leading-4 text-[#4048cd] sm:text-[13px]"
+        title={absoluteUrl}
+      >
+        {truncatePromoUrl(display, compact ? 28 : 36)}
       </span>
       <Button
         unstyled
         type="button"
         onClick={handleCopy}
         aria-label={t('adminPromoLinks.copyAria')}
-        className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[6px] text-[#ee1c25] transition hover:bg-[#fde8e9]"
+        className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#ee1c25] transition hover:bg-[#fde8e9]"
       >
         <Copy size={14} aria-hidden="true" />
       </Button>
@@ -252,13 +252,14 @@ CopyUrlButton.displayName = 'CopyUrlButton';
 const RewardLabel = memo(({ reward }) => {
   const { t } = useTranslation();
   if (reward === '------' || !reward) {
-    return <span className="text-[14px] text-[#9aa3b5]">------</span>;
+    return <span className="text-[13px] text-[#9aa3b5]">——</span>;
   }
-  const label =
-    REWARD_LABEL_KEYS[reward] ? t(REWARD_LABEL_KEYS[reward]) : reward;
+  const label = REWARD_LABEL_KEYS[reward]
+    ? t(REWARD_LABEL_KEYS[reward])
+    : reward;
   return (
     <span
-      className={`text-[14px] font-medium ${REWARD_STYLES[reward] || 'text-[#0c0c0c]'}`}
+      className={`text-[13px] font-medium ${REWARD_STYLES[reward] || 'text-[#0c0c0c]'}`}
     >
       {label}
     </span>
@@ -302,7 +303,7 @@ const FilterSelect = memo(
     }, [open, onClose]);
 
     return (
-      <div className="relative min-w-0 flex-1" ref={rootRef}>
+      <div className="relative min-w-0" ref={rootRef}>
         <Button
           unstyled
           type="button"
@@ -310,13 +311,13 @@ const FilterSelect = memo(
           aria-haspopup="listbox"
           aria-label={ariaLabel}
           onClick={() => onToggle(filterKey)}
-          className="inline-flex h-11 w-full cursor-pointer items-center justify-between gap-2 rounded-[8px] border border-[#e4e4e4] bg-white px-3 text-left sm:h-12"
+          className="inline-flex h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-[#e5e7eb] bg-white px-3 text-left sm:h-10"
         >
-          <span className="truncate text-[14px] leading-normal text-[#373737] sm:text-[15px]">
+          <span className="truncate text-[13px] leading-normal text-[#373737]">
             {t(active.labelKey)}
           </span>
           <ChevronDown
-            size={18}
+            size={16}
             className={`shrink-0 text-[#687186] transition ${open ? 'rotate-180' : ''}`}
             aria-hidden="true"
           />
@@ -326,7 +327,7 @@ const FilterSelect = memo(
           <ul
             role="listbox"
             aria-label={ariaLabel}
-            className="absolute left-0 top-full z-20 mt-1 max-h-60 w-full min-w-[180px] overflow-auto rounded-[8px] border border-[#e4e4e4] bg-white shadow-lg"
+            className="absolute left-0 top-full z-20 mt-1 max-h-60 w-full min-w-[160px] overflow-auto rounded-lg border border-[#e5e7eb] bg-white shadow-lg"
           >
             {options.map((option) => {
               const selected = option.id === value;
@@ -338,7 +339,7 @@ const FilterSelect = memo(
                     role="option"
                     aria-selected={selected}
                     onClick={() => onSelect(filterKey, option.id)}
-                    className={`w-full cursor-pointer px-3 py-2.5 text-left text-[15px] transition hover:bg-[#f6fbff] ${
+                    className={`w-full cursor-pointer px-3 py-2 text-left text-[13px] transition hover:bg-[#f6fbff] ${
                       selected
                         ? 'bg-[#f6fbff] text-[#4048cd]'
                         : 'text-[#373737]'
@@ -433,18 +434,18 @@ const PromoLinkActionMenu = memo(
               visibility: placement ? 'visible' : 'hidden',
               ...placement,
             }}
-            className="overflow-hidden rounded-[8px] border border-[#e4e4e4] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
+            className="overflow-hidden rounded-lg border border-[#e5e7eb] bg-white shadow-[0px_8px_24px_rgba(15,23,42,0.12)]"
           >
             <Button
               unstyled
               type="button"
               role="menuitem"
               onClick={onSeeDetails}
-              className="w-full cursor-pointer bg-[#4048cd] px-4 py-2.5 text-left text-[15px] font-semibold leading-normal text-white transition hover:bg-[#353cb0]"
+              className="w-full cursor-pointer bg-[#4048cd] px-4 py-2.5 text-left text-[13px] font-semibold leading-normal text-white transition hover:bg-[#353cb0]"
             >
               {t('adminPromoLinks.actions.seeDetails')}
             </Button>
-            <p className="px-4 pt-3 pb-1 text-[13px] font-bold text-[#151e31]">
+            <p className="px-4 pt-3 pb-1 text-[12px] font-bold text-[#151e31]">
               {t('adminPromoLinks.actions.reward')}
             </p>
             {REWARD_ACTIONS.map((reward) => (
@@ -455,7 +456,7 @@ const PromoLinkActionMenu = memo(
                 role="menuitem"
                 disabled={link.reward === reward}
                 onClick={() => onSetReward(reward)}
-                className="w-full cursor-pointer px-4 py-2 text-left text-[15px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
+                className="w-full cursor-pointer px-4 py-2 text-left text-[13px] leading-normal text-[#373737] transition hover:bg-[#f6fbff] disabled:cursor-default disabled:opacity-50"
               >
                 {t(REWARD_LABEL_KEYS[reward])}
               </Button>
@@ -475,7 +476,7 @@ const PromoLinkActionMenu = memo(
           aria-haspopup="menu"
           aria-label={menuLabel}
           onClick={onToggle}
-          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-[6px] text-[#373737] transition ${
+          className={`inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#373737] transition ${
             isOpen ? 'bg-[#f6fbff]' : 'hover:bg-[#f6fbff]'
           }`}
         >
@@ -497,29 +498,29 @@ const PromoLinkTableRow = memo(
     onSeeDetails,
     onSetReward,
   }) => (
-    <TableRow className="border-b border-[#e4e4e4]">
-      <TableCell className="min-w-[110px] text-[15px] font-semibold leading-6 text-[#4048cd]">
+    <TableRow className="border-b border-[#f1f5f9]">
+      <TableCell className={`${TD_CLASS} font-semibold text-[#4048cd]`}>
         {link.linkId}
       </TableCell>
-      <TableCell className="min-w-[220px]">
+      <TableCell className={`${TD_CLASS} min-w-[200px]`}>
         <CopyUrlButton code={link.code} url={link.promotionalUrl || link.url} />
       </TableCell>
-      <TableCell className="min-w-[140px] text-[14px] leading-6 whitespace-nowrap text-[#0c0c0c]">
+      <TableCell className={`${TD_CLASS} whitespace-nowrap text-[#475569]`}>
         {formatIssuedAt(link.issuedAt)}
       </TableCell>
-      <TableCell className="min-w-[110px]">
+      <TableCell className={TD_CLASS}>
         <ValidityText link={link} />
       </TableCell>
-      <TableCell className="min-w-[110px]">
+      <TableCell className={TD_CLASS}>
         <StatusBadge status={link.status} />
       </TableCell>
-      <TableCell className="min-w-[150px]">
+      <TableCell className={TD_CLASS}>
         <ChecklistBadge link={link} />
       </TableCell>
-      <TableCell className="min-w-[120px] text-[14px] leading-6 text-[#0c0c0c]">
+      <TableCell className={TD_CLASS}>
         <RewardLabel reward={link.reward} />
       </TableCell>
-      <TableCell className="min-w-[72px]">
+      <TableCell className={`${TD_CLASS} text-right`}>
         <PromoLinkActionMenu
           link={link}
           isOpen={openActionId === link.id}
@@ -546,60 +547,65 @@ const PromoLinkMobileCard = memo(
     const { t } = useTranslation();
 
     return (
-      <article className="flex flex-col gap-3 border-b border-[#e4e4e4] px-4 py-4 last:border-b-0">
-        <div className="flex items-start justify-between gap-3">
+      <article className="rounded-xl border border-[#edf0f5] bg-white p-3.5 shadow-[0px_1px_2px_rgba(15,23,42,0.04)]">
+        <div className="flex items-start gap-2">
           <div className="min-w-0 flex-1">
-            <p className="text-[16px] font-semibold leading-6 text-[#4048cd]">
+            <p className="truncate text-[15px] font-semibold leading-5 text-[#4048cd]">
               {link.linkId}
             </p>
-            <div className="mt-2">
-              <CopyUrlButton code={link.code} url={link.promotionalUrl || link.url} />
+            <div className="mt-1.5">
+              <CopyUrlButton
+                code={link.code}
+                url={link.promotionalUrl || link.url}
+                compact
+              />
             </div>
           </div>
-          <PromoLinkActionMenu
-            link={link}
-            isOpen={openActionId === link.id}
-            onToggle={() => onToggleAction(link.id)}
-            onClose={onCloseAction}
-            onSeeDetails={() => onSeeDetails(link.id)}
-            onSetReward={(reward) => onSetReward(link.id, reward)}
-          />
+          <div className="flex shrink-0 items-center gap-1.5">
+            <StatusBadge status={link.status} />
+            <PromoLinkActionMenu
+              link={link}
+              isOpen={openActionId === link.id}
+              onToggle={() => onToggleAction(link.id)}
+              onClose={onCloseAction}
+              onSeeDetails={() => onSeeDetails(link.id)}
+              onSetReward={(reward) => onSetReward(link.id, reward)}
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-2">
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] text-[#7f8ba1]">
+        <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2.5">
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#9ca3af]">
               {t('adminPromoLinks.columns.dateIssued')}
-            </span>
-            <span className="text-right text-[14px] text-[#0c0c0c]">
+            </p>
+            <p className="mt-0.5 truncate text-[13px] text-[#0f172a]">
               {formatIssuedAt(link.issuedAt)}
-            </span>
+            </p>
           </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] text-[#7f8ba1]">
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#9ca3af]">
               {t('adminPromoLinks.columns.validity')}
-            </span>
-            <ValidityText link={link} />
+            </p>
+            <div className="mt-0.5">
+              <ValidityText link={link} />
+            </div>
           </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] text-[#7f8ba1]">
-              {t('adminPromoLinks.columns.status')}
-            </span>
-            <StatusBadge status={link.status} />
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] text-[#7f8ba1]">
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#9ca3af]">
               {t('adminPromoLinks.columns.checklist')}
-            </span>
-            <ChecklistBadge link={link} />
+            </p>
+            <div className="mt-0.5">
+              <ChecklistBadge link={link} />
+            </div>
           </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] text-[#7f8ba1]">
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#9ca3af]">
               {t('adminPromoLinks.columns.reward')}
-            </span>
-            <span className="text-right text-[14px] text-[#0c0c0c]">
+            </p>
+            <div className="mt-0.5">
               <RewardLabel reward={link.reward} />
-            </span>
+            </div>
           </div>
         </div>
       </article>
@@ -625,11 +631,11 @@ const AdminPromoLinksContent = memo(() => {
     isError,
     errorMessage,
     refetch,
+    page,
+    totalPages,
     resultsFrom,
     resultsTo,
     resultsTotal,
-    isFirstPage,
-    isLastPage,
     patchFilter,
     handleToggleFilter,
     handleCloseFilter,
@@ -642,22 +648,23 @@ const AdminPromoLinksContent = memo(() => {
     handleCloseGenerate,
     handleConfirmGenerate,
     handleCloseCreated,
-    handlePreviousPage,
-    handleNextPage,
+    handlePageChange,
   } = useAdminPromoLinks();
 
   return (
-    <div className="flex w-full flex-col gap-5">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div className="flex w-full flex-col gap-5 py-2 sm:gap-6 sm:py-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
         <AdminPageHeader
           title={t('adminPromoLinks.title')}
           description={t('adminPromoLinks.subtitle')}
+          titleClassName="text-[24px] tracking-tight sm:text-[28px] lg:text-[30px] lg:leading-9"
+          descriptionClassName="max-w-3xl text-[13px] leading-5 sm:text-[14px]"
         />
         <Button
           unstyled
           type="button"
           onClick={handleOpenGenerate}
-          className="inline-flex w-fit cursor-pointer items-center justify-center gap-2 rounded-[50px] bg-[#ee1c25] px-5 py-3 text-[15px] font-bold leading-normal text-white transition hover:bg-[#d41921] sm:px-6 sm:text-[16px]"
+          className="inline-flex h-10 w-full shrink-0 cursor-pointer items-center justify-center gap-2 self-end rounded-full bg-[#ee1c25] px-5 text-[14px] font-bold text-white transition hover:bg-[#d41921] sm:h-11 sm:w-auto sm:px-6 sm:text-[15px]"
         >
           <Plus size={18} aria-hidden="true" />
           {t('adminPromoLinks.generateButton')}
@@ -666,53 +673,61 @@ const AdminPromoLinksContent = memo(() => {
 
       <PromoLinkStatCards stats={stats} />
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <FilterSelect
-          filterKey="status"
-          value={filters.status}
-          options={STATUS_FILTERS}
-          open={openFilter === 'status'}
-          onToggle={handleToggleFilter}
-          onClose={handleCloseFilter}
-          onSelect={patchFilter}
-          ariaLabel={t('adminPromoLinks.filters.status.aria')}
-        />
-        <FilterSelect
-          filterKey="dateRange"
-          value={filters.dateRange}
-          options={DATE_FILTERS}
-          open={openFilter === 'dateRange'}
-          onToggle={handleToggleFilter}
-          onClose={handleCloseFilter}
-          onSelect={patchFilter}
-          ariaLabel={t('adminPromoLinks.filters.date.aria')}
-        />
-        <FilterSelect
-          filterKey="requirements"
-          value={filters.requirements}
-          options={REQUIREMENT_FILTERS}
-          open={openFilter === 'requirements'}
-          onToggle={handleToggleFilter}
-          onClose={handleCloseFilter}
-          onSelect={patchFilter}
-          ariaLabel={t('adminPromoLinks.filters.requirements.aria')}
-        />
-        <FilterSelect
-          filterKey="reward"
-          value={filters.reward}
-          options={REWARD_FILTERS}
-          open={openFilter === 'reward'}
-          onToggle={handleToggleFilter}
-          onClose={handleCloseFilter}
-          onSelect={patchFilter}
-          ariaLabel={t('adminPromoLinks.filters.reward.aria')}
-        />
-      </div>
-
       <section
         aria-label={t('adminPromoLinks.tableAria')}
-        className="overflow-hidden rounded-[12px] bg-white"
+        className="overflow-hidden rounded-xl border border-[#f3f4f6] bg-white shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)]"
       >
+        <div className="flex flex-col gap-3 border-b border-[#f3f4f6] px-3 py-3.5 sm:px-5">
+          <p className="text-[13px] font-bold leading-5 text-[#111827] sm:text-[14px]">
+            {t('adminPromoLinks.tableTitle', 'All Promo Links')}{' '}
+            <span className="text-[12px] font-medium text-[#9ca3af] sm:text-[13px]">
+              ({resultsTotal})
+            </span>
+          </p>
+          <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+            <FilterSelect
+              filterKey="status"
+              value={filters.status}
+              options={STATUS_FILTERS}
+              open={openFilter === 'status'}
+              onToggle={handleToggleFilter}
+              onClose={handleCloseFilter}
+              onSelect={patchFilter}
+              ariaLabel={t('adminPromoLinks.filters.status.aria')}
+            />
+            <FilterSelect
+              filterKey="dateRange"
+              value={filters.dateRange}
+              options={DATE_FILTERS}
+              open={openFilter === 'dateRange'}
+              onToggle={handleToggleFilter}
+              onClose={handleCloseFilter}
+              onSelect={patchFilter}
+              ariaLabel={t('adminPromoLinks.filters.date.aria')}
+            />
+            <FilterSelect
+              filterKey="requirements"
+              value={filters.requirements}
+              options={REQUIREMENT_FILTERS}
+              open={openFilter === 'requirements'}
+              onToggle={handleToggleFilter}
+              onClose={handleCloseFilter}
+              onSelect={patchFilter}
+              ariaLabel={t('adminPromoLinks.filters.requirements.aria')}
+            />
+            <FilterSelect
+              filterKey="reward"
+              value={filters.reward}
+              options={REWARD_FILTERS}
+              open={openFilter === 'reward'}
+              onToggle={handleToggleFilter}
+              onClose={handleCloseFilter}
+              onSelect={patchFilter}
+              ariaLabel={t('adminPromoLinks.filters.reward.aria')}
+            />
+          </div>
+        </div>
+
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-2 py-16 text-center text-[#687186]">
             <div className="size-8 animate-spin rounded-full border-3 border-[#4048cd] border-t-transparent" />
@@ -736,23 +751,37 @@ const AdminPromoLinksContent = memo(() => {
           </div>
         ) : visibleLinks.length > 0 ? (
           isMdUp ? (
-            <Table className="min-w-[1100px]">
+            <Table
+              className="w-full min-w-[980px]"
+              wrapperClassName="overflow-x-auto"
+            >
               <TableHeader>
-                <TableRow isHeader>
-                  <TableHead className="rounded-tl-[12px]">
+                <TableRow
+                  isHeader
+                  className="border-b border-[#f1f5f9] bg-[#fafbfc]"
+                >
+                  <TableHead className={TH_CLASS}>
                     {t('adminPromoLinks.columns.linkId')}
                   </TableHead>
-                  <TableHead>{t('adminPromoLinks.columns.url')}</TableHead>
-                  <TableHead>
+                  <TableHead className={TH_CLASS}>
+                    {t('adminPromoLinks.columns.url')}
+                  </TableHead>
+                  <TableHead className={TH_CLASS}>
                     {t('adminPromoLinks.columns.dateIssued')}
                   </TableHead>
-                  <TableHead>{t('adminPromoLinks.columns.validity')}</TableHead>
-                  <TableHead>{t('adminPromoLinks.columns.status')}</TableHead>
-                  <TableHead>
+                  <TableHead className={TH_CLASS}>
+                    {t('adminPromoLinks.columns.validity')}
+                  </TableHead>
+                  <TableHead className={TH_CLASS}>
+                    {t('adminPromoLinks.columns.status')}
+                  </TableHead>
+                  <TableHead className={TH_CLASS}>
                     {t('adminPromoLinks.columns.checklist')}
                   </TableHead>
-                  <TableHead>{t('adminPromoLinks.columns.reward')}</TableHead>
-                  <TableHead className="rounded-tr-[12px]">
+                  <TableHead className={TH_CLASS}>
+                    {t('adminPromoLinks.columns.reward')}
+                  </TableHead>
+                  <TableHead className={`${TH_CLASS} text-right`}>
                     {t('adminPromoLinks.columns.action')}
                   </TableHead>
                 </TableRow>
@@ -773,7 +802,7 @@ const AdminPromoLinksContent = memo(() => {
             </Table>
           ) : (
             <div
-              className="flex flex-col"
+              className="flex flex-col gap-3 bg-[#f8fafc] p-3"
               data-testid="promo-links-mobile-cards"
             >
               {visibleLinks.map((link) => (
@@ -790,28 +819,34 @@ const AdminPromoLinksContent = memo(() => {
             </div>
           )
         ) : (
-          <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+          <p className="px-6 py-12 text-center text-[15px] text-[#687186]">
             {t('adminPromoLinks.empty')}
           </p>
         )}
 
-        <AdminPagination
-          variant="users"
-          from={resultsFrom}
-          to={resultsTo}
-          total={resultsTotal}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-          showingText={t('adminPromoLinks.pagination.showing', {
-            from: resultsFrom,
-            to: resultsTo,
-            total: resultsTotal,
-          })}
-          previousLabel={t('adminPromoLinks.pagination.previous')}
-          nextLabel={t('adminPromoLinks.pagination.next')}
-        />
+        <div className="flex flex-col items-center gap-3 border-t border-[#f3f4f6] px-3 py-4 sm:flex-row sm:justify-between sm:px-5">
+          <p className="text-center text-[13px] leading-5 text-[#687186] sm:text-left">
+            {t('adminPromoLinks.pagination.showing', {
+              from: resultsFrom,
+              to: resultsTo,
+              total: resultsTotal,
+            })}
+          </p>
+          <AdminPagination
+            variant="competitions"
+            page={page}
+            totalPages={Math.max(1, totalPages)}
+            onPageChange={handlePageChange}
+            navAriaLabel={t('adminPromoLinks.pagination.aria')}
+            firstLabel={t('adminPromoLinks.pagination.first')}
+            prevLabel={t('adminPromoLinks.pagination.prev')}
+            nextLabel={t('adminPromoLinks.pagination.next')}
+            lastLabel={t('adminPromoLinks.pagination.last')}
+            pageLabel={(pageNumber) =>
+              t('adminPromoLinks.pagination.page', { page: pageNumber })
+            }
+          />
+        </div>
       </section>
 
       <GeneratePromoLinkModal

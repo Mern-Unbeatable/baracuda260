@@ -45,22 +45,22 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm, isPending }) =>
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="flex w-full max-w-[560px] flex-col overflow-hidden rounded-[16px] bg-white shadow-[0px_22px_70px_0px_rgba(14,20,35,0.25)]"
+        className="flex max-h-[90vh] w-full max-w-[560px] flex-col overflow-hidden rounded-[16px] bg-white shadow-[0px_22px_70px_0px_rgba(14,20,35,0.25)]"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="flex items-start justify-between gap-4 px-5 pt-5 sm:px-6 sm:pt-6">
+        <header className="flex shrink-0 items-start justify-between gap-4 px-4 pt-4 sm:px-6 sm:pt-6">
           <div className="flex min-w-0 items-start gap-3">
-            <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-[#ecedfa] text-[#4048cd]">
-              <Link2 size={22} aria-hidden="true" />
+            <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-[12px] bg-[#ecedfa] text-[#4048cd] sm:size-11">
+              <Link2 size={20} aria-hidden="true" />
             </span>
             <div className="min-w-0">
               <h2
                 id={titleId}
-                className="font-manrope text-[20px] font-bold leading-7 tracking-[-0.3px] text-[#151e31] sm:text-[22px]"
+                className="font-manrope text-[18px] font-bold leading-7 tracking-[-0.3px] text-[#151e31] sm:text-[22px]"
               >
                 {t('adminPromoLinks.generate.title')}
               </h2>
-              <p className="mt-1 text-[14px] leading-5 text-[#687186]">
+              <p className="mt-1 text-[13px] leading-5 text-[#687186] sm:text-[14px]">
                 {t('adminPromoLinks.generate.subtitle')}
               </p>
             </div>
@@ -77,7 +77,7 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm, isPending }) =>
           </Button>
         </header>
 
-        <div className="flex flex-col gap-4 px-5 py-5 sm:px-6">
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
           <p className="text-[11px] font-bold tracking-[0.16em] text-[#9aa3b5]">
             {t('adminPromoLinks.generate.settingsLabel')}
           </p>
@@ -130,15 +130,15 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm, isPending }) =>
           </div>
         </div>
 
-        <footer className="flex flex-col gap-3 border-t border-[#edf0f3] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p className="inline-flex items-center gap-2 text-[13px] font-medium text-[#268262]">
+        <footer className="flex shrink-0 flex-col gap-3 border-t border-[#edf0f3] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
+          <p className="inline-flex items-center gap-2 text-[12px] font-medium text-[#268262] sm:text-[13px]">
             <span
               className="size-2 rounded-full bg-[#268262]"
               aria-hidden="true"
             />
             {t('adminPromoLinks.generate.ready')}
           </p>
-          <div className="flex items-center justify-end gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end">
             <Button
               unstyled
               type="button"
@@ -153,7 +153,7 @@ const GeneratePromoLinkModal = memo(({ open, onClose, onConfirm, isPending }) =>
               type="button"
               disabled={isPending}
               onClick={onConfirm}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#4048cd] px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-[#353cb0] disabled:opacity-50"
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#4048cd] px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-[#353cb0] disabled:opacity-50"
             >
               {isPending ? (
                 <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

@@ -249,6 +249,12 @@ export default function useAdminPromoLinks(pageSize = PROMO_LINKS_PAGE_SIZE) {
     setOpenActionId(null);
   };
 
+  const handlePageChange = (nextPage) => {
+    const safe = Math.min(Math.max(1, nextPage), totalPages);
+    setPage(safe);
+    setOpenActionId(null);
+  };
+
   const resultsFrom =
     resultsTotal === 0 ? 0 : (safePage - 1) * pageSize + 1;
   const resultsTo = Math.min(safePage * pageSize, resultsTotal);
@@ -294,5 +300,6 @@ export default function useAdminPromoLinks(pageSize = PROMO_LINKS_PAGE_SIZE) {
     handleCloseCreated,
     handlePreviousPage,
     handleNextPage,
+    handlePageChange,
   };
 }
