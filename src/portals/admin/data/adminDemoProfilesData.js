@@ -49,7 +49,7 @@ export const STATUS_STYLES = {
   },
 };
 
-export const DEMO_PROFILES_PAGE_SIZE = 10;
+export const DEMO_PROFILES_PAGE_SIZE = 7;
 export const DEMO_PROFILE_BIO_MAX_LENGTH = 250;
 export const DEMO_PROFILE_DEFAULT_AVATAR =
   '/assets/competition-details/avatar-1.webp';
@@ -83,19 +83,19 @@ export const DEMO_PROFILES_STAT_CARDS = [
   {
     id: 'total',
     labelKey: 'adminDemoProfiles.stats.total',
-    icon: '1',
+    icon: '👤',
     iconBg: 'bg-[#eef2ff] text-[#4048cd]',
   },
   {
     id: 'active',
     labelKey: 'adminDemoProfiles.stats.active',
-    icon: '9',
+    icon: '✓',
     iconBg: 'bg-[#eef7f3] text-[#268262]',
   },
   {
     id: 'inactive',
     labelKey: 'adminDemoProfiles.stats.inactive',
-    icon: '3',
+    icon: '–',
     iconBg: 'bg-[#f2f1f8] text-[#766f9a]',
   },
 ];

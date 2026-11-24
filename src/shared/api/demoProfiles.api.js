@@ -57,6 +57,10 @@ export const getDemoProfilesApi = async ({ page = 1, limit = 10, isActive } = {}
       phone: item.phoneNumber || item.phone || '',
       email: item.email || '',
       status: isProfileActive ? 'active' : 'inactive',
+      avatar:
+        resolveMediaUrl(
+          item.profilePhoto || item.avatar || item.profileImage || '',
+        ) || null,
       raw: item,
     };
   });

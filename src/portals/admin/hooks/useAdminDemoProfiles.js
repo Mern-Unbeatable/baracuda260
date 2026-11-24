@@ -145,6 +145,12 @@ export default function useAdminDemoProfiles(
     setOpenActionId(null);
   };
 
+  const handlePageChange = (nextPage) => {
+    const safeNext = Math.min(Math.max(1, nextPage), Math.max(1, totalPages));
+    setPage(safeNext);
+    setOpenActionId(null);
+  };
+
   return {
     profiles: visibleProfiles,
     stats,
@@ -173,5 +179,6 @@ export default function useAdminDemoProfiles(
     handleDeactivateProfile,
     handlePreviousPage,
     handleNextPage,
+    handlePageChange,
   };
 }
