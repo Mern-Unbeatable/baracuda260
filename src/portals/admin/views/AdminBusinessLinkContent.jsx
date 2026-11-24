@@ -1,3 +1,4 @@
+import { Trash2 } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -57,9 +58,61 @@ BusinessLinkViewLink.displayName = 'BusinessLinkViewLink';
 /**
  * @param {{
  *   row: object,
+ *   isDeleting: boolean,
+ *   onDelete: (row: object) => void,
  * }} props
  */
-const BusinessLinkTableRow = memo(({ row }) => {
+const BusinessLinkDeleteButton = memo(({ row, isDeleting, onDelete }) => {
+  const { t } = useTranslation();
+
+  return (
+    <Button
+      unstyled
+      type="button"
+      disabled={isDeleting}
+      onClick={() => onDelete(row)}
+      aria-label={t('adminBusinessLink.actions.delete', {
+        user: row.name || row.email,
+        defaultValue: `Delete submission for ${row.name || row.email}`,
+      })}
+      title={t('adminBusinessLink.detail.delete')}
+      className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#ee1c25] transition hover:bg-[#fef2f2] disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <Trash2 size={18} aria-hidden="true" />
+    </Button>
+  );
+});
+
+BusinessLinkDeleteButton.displayName = 'BusinessLinkDeleteButton';
+
+/**
+ * @param {{
+ *   row: object,
+ *   isDeleting: boolean,
+ *   onDelete: (row: object) => void,
+ * }} props
+ */
+const BusinessLinkRowActions = memo(({ row, isDeleting, onDelete }) => (
+  <div className="inline-flex items-center gap-2">
+    <BusinessLinkViewLink row={row} />
+    <BusinessLinkDeleteButton
+      row={row}
+      isDeleting={isDeleting}
+      onDelete={onDelete}
+    />
+  </div>
+));
+
+BusinessLinkRowActions.displayName = 'BusinessLinkRowActions';
+
+/**
+ * @param {{
+ *   row: object,
+ *   isDeleting: boolean,
+ *   onDelete: (row: object) => void,
+ * }} props
+ */
+const BusinessLinkTableRow = memo(({ row, isDeleting, onDelete }) => {
   const { i18n } = useTranslation();
 
   return (
@@ -72,7 +125,11 @@ const BusinessLinkTableRow = memo(({ row }) => {
         {formatBusinessLinkDate(row.createdAt, i18n.language)}
       </TableCell>
       <TableCell>
-        <BusinessLinkViewLink row={row} />
+        <BusinessLinkRowActions
+          row={row}
+          isDeleting={isDeleting}
+          onDelete={onDelete}
+        />
       </TableCell>
     </TableRow>
   );
@@ -83,9 +140,11 @@ BusinessLinkTableRow.displayName = 'BusinessLinkTableRow';
 /**
  * @param {{
  *   rows: object[],
+ *   deletingId: string | null,
+ *   onDelete: (row: object) => void,
  * }} props
  */
-const BusinessLinkTable = memo(({ rows }) => {
+const BusinessLinkTable = memo(({ rows, deletingId, onDelete }) => {
   const { t } = useTranslation();
 
   return (
@@ -106,7 +165,12 @@ const BusinessLinkTable = memo(({ rows }) => {
       </TableHeader>
       <TableBody>
         {rows.map((row) => (
-          <BusinessLinkTableRow key={row.id} row={row} />
+          <BusinessLinkTableRow
+            key={row.id}
+            row={row}
+            isDeleting={deletingId === row.id}
+            onDelete={onDelete}
+          />
         ))}
       </TableBody>
     </Table>
@@ -118,9 +182,11 @@ BusinessLinkTable.displayName = 'BusinessLinkTable';
 /**
  * @param {{
  *   rows: object[],
+ *   deletingId: string | null,
+ *   onDelete: (row: object) => void,
  * }} props
  */
-const BusinessLinkMobileCards = memo(({ rows }) => {
+const BusinessLinkMobileCards = memo(({ rows, deletingId, onDelete }) => {
   const { t, i18n } = useTranslation();
 
   return (
@@ -142,7 +208,11 @@ const BusinessLinkMobileCards = memo(({ rows }) => {
                 {row.email}
               </p>
             </div>
-            <BusinessLinkViewLink row={row} />
+            <BusinessLinkRowActions
+              row={row}
+              isDeleting={deletingId === row.id}
+              onDelete={onDelete}
+            />
           </div>
           <dl className="mt-4 grid grid-cols-1 gap-2 text-[14px] leading-5 sm:grid-cols-2">
             <div>
@@ -202,6 +272,8 @@ const AdminBusinessLinkContent = memo(() => {
     isLastPage,
     handlePreviousPage,
     handleNextPage,
+    handleDelete,
+    deletingId,
   } = useAdminBusinessLink();
 
   let body;
@@ -230,8 +302,16 @@ const AdminBusinessLinkContent = memo(() => {
   } else {
     body = (
       <>
-        <BusinessLinkMobileCards rows={rows} />
-        <BusinessLinkTable rows={rows} />
+        <BusinessLinkMobileCards
+          rows={rows}
+          deletingId={deletingId}
+          onDelete={handleDelete}
+        />
+        <BusinessLinkTable
+          rows={rows}
+          deletingId={deletingId}
+          onDelete={handleDelete}
+        />
       </>
     );
   }

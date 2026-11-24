@@ -1000,7 +1000,8 @@
       "action": "Action"
     },
     "actions": {
-      "view": "View submission for {{user}}"
+      "view": "View submission for {{user}}",
+      "delete": "Delete submission for {{user}}"
     },
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",
@@ -1010,6 +1011,15 @@
     },
     "detail": {
       "back": "Back to Business Link Photos",
+      "delete": "Delete",
+      "deleteSuccess": "Business link deleted successfully.",
+      "deleteError": "Failed to delete business link.",
+      "confirmDelete": {
+        "title": "Delete Business Link?",
+        "text": "Are you sure you want to delete this business link album? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
       "notFound": "This business link submission could not be found.",
       "phone": "Phone",
       "countryLabel": "Country",
@@ -1025,6 +1035,8 @@
       "copySuccess": "Business link copied",
       "copyFailed": "Could not copy the business link",
       "photographerLabel": "Photographer",
+      "visitProfile": "Visit profile",
+      "viewProfile": "View {{name}}'s profile",
       "loadError": "Could not load the business album.",
       "noPhotos": "This album has no photos yet.",
       "untitled": "Untitled album",
@@ -1035,8 +1047,9 @@
         "twelve": "12 Photos Zodiac Story"
       },
       "status": {
-        "published": "Published",
-        "unpublished": "Not Published"
+        "live": "Live",
+        "published": "Live",
+        "unpublished": "Live"
       }
     }
   },

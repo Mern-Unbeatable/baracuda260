@@ -33,6 +33,7 @@ export const ROUTES = {
   LEADERBOARD: '/leaderboard',
   WINNERS: '/winners',
   WINNERS_DETAIL: '/winners/:id',
+  BUSINESS_LINK: '/business-links/:albumId',
   PRIVACY: '/privacy',
   TERMS: '/terms',
   COOKIES: '/cookies',

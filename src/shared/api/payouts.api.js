@@ -70,7 +70,7 @@ const normalizeStatus = (raw) => {
  * Fetch payouts by tab: prize-money, donations, photo-sales, store
  * @param {{ tab: 'prize' | 'donation' | 'premium' | 'store', page?: number, limit?: number }} params
  */
-export const getAdminPayoutsApi = async ({ tab = 'prize', page = 1, limit = 10 } = {}) => {
+export const getAdminPayoutsApi = async ({ tab = 'prize', page = 1, limit = 8 } = {}) => {
   const endpoint = PAYOUT_TAB_ENDPOINTS[tab] || PAYOUT_TAB_ENDPOINTS.prize;
   const response = await apiClient.get(endpoint, {
     params: { page, limit },

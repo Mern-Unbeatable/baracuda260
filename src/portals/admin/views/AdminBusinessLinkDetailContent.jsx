@@ -1,7 +1,9 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Trash2 } from 'lucide-react';
 import React, { memo } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -11,7 +13,13 @@ import {
   getInitials,
 } from '@/portals/admin/data/adminBusinessLinkData';
 import useAdminBusinessLinkDetail from '@/portals/admin/hooks/useAdminBusinessLinkDetail';
+import {
+  ADMIN_BUSINESS_LINKS_QUERY_KEY,
+  deleteAdminBusinessLinkApi,
+} from '@/shared/api/businessLinks.api';
+import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 import { getLocalizedText } from '@/shared/utils/localizedText';
 import { resolveMediaUrl } from '@/shared/utils/media';
 
@@ -79,7 +87,7 @@ const ZodiacThumb = memo(({ slide, active, onSelect }) => {
         </span>
       )}
 
-      <span className="max-w-full truncate text-center text-[12px] leading-none text-[#2b2b2b] capitalize sm:text-[14px] lg:text-[16px] xl:text-[20px]">
+      <span className="max-w-full truncate text-center text-[12px] leading-none text-[#2b2b2b] capitalize sm:text-[14px] lg:text-[16px] xl:text-[18px]">
         {slide.sign}
       </span>
 
@@ -117,8 +125,8 @@ UserAvatar.displayName = 'UserAvatar';
 
 /** @param {{ children: React.ReactNode }} props */
 const DetailBadge = ({ children }) => (
-  <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-[5px]">
-    <div className="font-['Manrope'] text-base font-bold uppercase leading-6 tracking-wider text-indigo-700">
+  <div className="flex items-center justify-center gap-2.5 rounded-[50px] bg-violet-100 px-4 py-1.5">
+    <div className="font-manrope text-[13px] font-bold uppercase leading-5 tracking-wider text-indigo-700 sm:text-[14px]">
       {children}
     </div>
   </div>
@@ -171,6 +179,8 @@ const DetailMessage = ({ message, onRetry }) => {
 const AdminBusinessLinkDetailContent = memo(() => {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     detail,
     isLoading,
@@ -186,6 +196,34 @@ const AdminBusinessLinkDetailContent = memo(() => {
     goNext,
     selectSlide,
   } = useAdminBusinessLinkDetail(id);
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteAdminBusinessLinkApi(id),
+    onSuccess: () => {
+      toast.success(t('adminBusinessLink.detail.deleteSuccess'));
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_BUSINESS_LINKS_QUERY_KEY,
+      });
+      navigate(ROUTES.ADMIN_BUSINESS_PHOTOS, { replace: true });
+    },
+    onError: (err) => {
+      toast.error(
+        getApiErrorMessage(err, t('adminBusinessLink.detail.deleteError')),
+      );
+    },
+  });
+
+  const handleDelete = async () => {
+    const confirmed = await confirmDestructiveAction({
+      title: t('adminBusinessLink.detail.confirmDelete.title'),
+      text: t('adminBusinessLink.detail.confirmDelete.text'),
+      confirmButtonText: t('adminBusinessLink.detail.confirmDelete.confirm'),
+      cancelButtonText: t('adminBusinessLink.detail.confirmDelete.cancel'),
+    });
+    if (confirmed) {
+      await deleteMutation.mutateAsync();
+    }
+  };
 
   if (isLoading) return <DetailSkeleton />;
 
@@ -204,6 +242,12 @@ const AdminBusinessLinkDetailContent = memo(() => {
   const ownerName = detail.user?.name || detail.email || '—';
   const ownerEmail = detail.email || detail.user?.email || '—';
   const avatar = detail.user?.avatar;
+  const ownerUsername = String(detail.user?.username || '')
+    .trim()
+    .replace(/^@/, '');
+  const profileHref = ownerUsername
+    ? `/photographer/${encodeURIComponent(ownerUsername)}`
+    : null;
   const title = getLocalizedText(detail.title, i18n.language);
   const story = getLocalizedText(detail.story, i18n.language);
   const categoryName = getLocalizedText(detail.category?.name, i18n.language);
@@ -212,12 +256,9 @@ const AdminBusinessLinkDetailContent = memo(() => {
         defaultValue: detail.kind,
       })
     : '';
-  const statusLabel = detail.isPublished
-    ? t('adminBusinessLink.detail.status.published')
-    : t('adminBusinessLink.detail.status.unpublished');
-  const statusClass = detail.isPublished
-    ? 'bg-[#ecfdf5] text-[#059669]'
-    : 'bg-[#eff4ff] text-[#2563eb]';
+  // Business links are shareable as soon as uploaded — no approval gate.
+  const statusLabel = t('adminBusinessLink.detail.status.live', 'Live');
+  const statusClass = 'bg-[#ecfdf5] text-[#059669]';
 
   const isBlueTheme = activeSlide?.theme === 'blue';
   const badgeBg = isBlueTheme ? 'bg-[#4048cd]' : 'bg-[#ee1c25]';
@@ -233,66 +274,79 @@ const AdminBusinessLinkDetailContent = memo(() => {
 
   return (
     <div className="flex w-full flex-col gap-6 py-2 sm:gap-8 sm:py-4">
-      <div className="flex items-center gap-2 text-[14px] text-[#687186]">
-        <Link
-          to={ROUTES.ADMIN_BUSINESS_PHOTOS}
-          className="hover:text-[#4048cd] hover:underline"
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-[13px] text-[#687186]">
+          <Link
+            to={ROUTES.ADMIN_BUSINESS_PHOTOS}
+            className="hover:text-[#4048cd] hover:underline"
+          >
+            {t('adminBusinessLink.title')}
+          </Link>
+          <span aria-hidden="true">/</span>
+          <span className="text-[#111827]">{ownerName}</span>
+        </div>
+
+        <Button
+          unstyled
+          type="button"
+          disabled={deleteMutation.isPending}
+          onClick={handleDelete}
+          className="inline-flex items-center gap-2 rounded-xl bg-[#ee1c25] px-4 py-2.5 text-[13px] font-bold text-white transition hover:bg-[#d41921] disabled:opacity-50 sm:text-[14px]"
         >
-          {t('adminBusinessLink.title')}
-        </Link>
-        <span aria-hidden="true">/</span>
-        <span className="text-[#111827]">{ownerName}</span>
+          <Trash2 size={16} aria-hidden="true" />
+          {t('adminBusinessLink.detail.delete')}
+        </Button>
       </div>
 
       {/* Profile card */}
-      <section className="rounded-[24px] border border-[#f3f4f6] bg-white p-5 shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sm:p-8">
+      <section className="rounded-[20px] border border-[#f3f4f6] bg-white p-4 shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex min-w-0 items-center gap-4">
+          <div className="flex min-w-0 items-center gap-3">
             <UserAvatar
               src={avatar}
               name={ownerName}
-              className="size-14 text-[18px] sm:size-16 sm:text-[20px]"
+              className="size-12 text-[15px] sm:size-14 sm:text-[16px]"
             />
             <div className="min-w-0">
-              <h1 className="font-manrope text-[18px] font-bold tracking-[-0.5px] text-[#111827] sm:text-[20px] sm:leading-7">
+              <h1 className="font-manrope text-[16px] font-bold tracking-tight text-[#111827] sm:text-[18px] sm:leading-7">
                 {ownerName}
               </h1>
-              <p className="break-all text-[15px] leading-7 text-[#6b7280] sm:text-[18px]">
+              <p className="break-all text-[13px] leading-5 text-[#6b7280] sm:text-[14px]">
                 {ownerEmail}
               </p>
             </div>
           </div>
           <span
-            className={`inline-flex w-fit rounded-full px-4 py-1.5 text-[14px] font-semibold leading-5 ${statusClass}`}
+            className={`inline-flex w-fit rounded-full px-3 py-1 text-[12px] font-semibold leading-5 ${statusClass}`}
           >
             {statusLabel}
           </span>
         </div>
 
-        <div className="my-6 h-px w-full bg-[#f3f4f6]" />
+        <div className="my-5 h-px w-full bg-[#f3f4f6]" />
 
         <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           <div>
-            <dt className="text-[14px] font-medium leading-5 text-[#9ca3af]">
+            <dt className="text-[12px] font-medium leading-5 text-[#9ca3af] sm:text-[13px]">
               {t('adminBusinessLink.detail.phone')}
             </dt>
-            <dd className="text-[16px] font-medium leading-6 text-[#374151]">
+            <dd className="text-[14px] font-medium leading-6 text-[#374151] sm:text-[15px]">
               {detail.phone || '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-[14px] font-medium leading-5 text-[#9ca3af]">
+            <dt className="text-[12px] font-medium leading-5 text-[#9ca3af] sm:text-[13px]">
               {t('adminBusinessLink.detail.countryLabel')}
             </dt>
-            <dd className="text-[16px] font-medium leading-6 text-[#374151]">
+            <dd className="text-[14px] font-medium leading-6 text-[#374151] sm:text-[15px]">
               {detail.country || '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-[14px] font-medium leading-5 text-[#9ca3af]">
+            <dt className="text-[12px] font-medium leading-5 text-[#9ca3af] sm:text-[13px]">
               {t('adminBusinessLink.detail.uploadedLabel')}
             </dt>
-            <dd className="text-[16px] font-medium leading-6 text-[#374151]">
+            <dd className="text-[14px] font-medium leading-6 text-[#374151] sm:text-[15px]">
               {formatBusinessLinkDate(
                 detail.createdAt,
                 i18n.language,
@@ -301,10 +355,10 @@ const AdminBusinessLinkDetailContent = memo(() => {
             </dd>
           </div>
           <div>
-            <dt className="text-[14px] font-medium leading-5 text-[#9ca3af]">
+            <dt className="text-[12px] font-medium leading-5 text-[#9ca3af] sm:text-[13px]">
               {t('adminBusinessLink.detail.albumIdLabel')}
             </dt>
-            <dd className="text-[16px] font-bold leading-6 text-[#111827]">
+            <dd className="text-[14px] font-bold leading-6 text-[#111827] sm:text-[15px]">
               {detail.albumId || '—'}
             </dd>
           </div>
@@ -333,7 +387,7 @@ const AdminBusinessLinkDetailContent = memo(() => {
                 height={21}
                 className="h-[21px] w-6 object-contain"
               />
-              <span className="text-[16px] text-white sm:text-[20px]">
+              <span className="text-[14px] text-white sm:text-[16px]">
                 {activeSlide.sign}
               </span>
             </div>
@@ -401,14 +455,13 @@ const AdminBusinessLinkDetailContent = memo(() => {
         </p>
       )}
 
-      {/* Story + link — same text scale as /admin/my-competitions/zodiac */}
-      <div className="flex w-full flex-col gap-[36px]">
-        <div className="flex w-full flex-col gap-8">
+      <div className="flex w-full flex-col gap-8">
+        <div className="flex w-full flex-col gap-6">
           <section
-            className="inline-flex w-full flex-col items-start justify-start gap-4"
+            className="inline-flex w-full flex-col items-start justify-start gap-3"
             aria-labelledby="business-link-photo-title"
           >
-            <div className="inline-flex flex-wrap items-start justify-start gap-4 sm:gap-8">
+            <div className="inline-flex flex-wrap items-start justify-start gap-2 sm:gap-3">
               {kindLabel && <DetailBadge>{kindLabel}</DetailBadge>}
               {categoryName && <DetailBadge>{categoryName}</DetailBadge>}
               {detail.isAiGenerated && (
@@ -418,54 +471,53 @@ const AdminBusinessLinkDetailContent = memo(() => {
               )}
             </div>
 
-            <div className="flex w-full flex-col items-start justify-start gap-4 self-stretch">
+            <div className="flex w-full flex-col items-start justify-start gap-3 self-stretch">
               <h2
                 id="business-link-photo-title"
-                className="w-full self-stretch font-['Manrope'] text-4xl font-extrabold text-gray-900"
+                className="w-full self-stretch font-manrope text-[28px] font-semibold leading-tight text-[#111827] sm:text-[32px]"
               >
                 {title || t('adminBusinessLink.detail.untitled')}
               </h2>
               {story && (
-                <p className="w-full self-stretch whitespace-pre-line font-['Manrope'] text-xl font-medium leading-8 text-neutral-700">
+                <p className="w-full self-stretch whitespace-pre-line font-manrope text-[15px] font-medium leading-6 text-neutral-700 sm:text-[16px] sm:leading-7">
                   {story}
                 </p>
               )}
             </div>
           </section>
 
-          {/* Link generator card — Figma 345:1627 */}
           {detail.businessLink && (
-            <section className="flex w-full flex-col gap-6 rounded-[24px] border border-solid border-[#f3f4f6] bg-white p-[41px] shadow-[0px_8px_15px_rgba(0,0,0,0.04)] max-sm:p-5">
+            <section className="flex w-full flex-col gap-4 rounded-[20px] border border-solid border-[#f3f4f6] bg-white p-5 shadow-[0px_8px_15px_rgba(0,0,0,0.04)] sm:p-6">
               <div className="flex w-full items-center justify-between gap-3">
-                <h3 className="font-manrope text-[18px] font-bold leading-7 tracking-[-0.45px] text-[#111827]">
+                <h3 className="font-manrope text-[15px] font-bold leading-6 tracking-tight text-[#111827] sm:text-[16px]">
                   {t('adminBusinessLink.detail.linkLabel')}
                 </h3>
-                <span className="shrink-0 text-[14px] font-medium leading-5 text-[#6b7280]">
+                <span className="shrink-0 text-[12px] font-medium leading-5 text-[#6b7280] sm:text-[13px]">
                   {t('adminBusinessLink.detail.autoGenerated')}
                 </span>
               </div>
 
-              <div className="w-full rounded-[12px] border border-dashed border-[#d1d5db] bg-[#f9fafb] px-[25px] pb-[17px] pt-[19px] max-sm:px-4">
-                <p className="break-all font-mono text-[16px] leading-6 tracking-[-0.4px] text-[#1f2937] sm:truncate sm:whitespace-nowrap">
+              <div className="w-full rounded-[12px] border border-dashed border-[#d1d5db] bg-[#f9fafb] px-4 py-3 sm:px-5">
+                <p className="break-all font-mono text-[13px] leading-5 tracking-[-0.2px] text-[#1f2937] sm:truncate sm:whitespace-nowrap sm:text-[14px]">
                   {detail.businessLink}
                 </p>
               </div>
 
-              <div className="flex w-full items-center pt-2">
+              <div className="flex w-full items-center">
                 <Button
                   unstyled
                   type="button"
                   onClick={handleCopyLink}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#4048cd] px-5 py-2.5 shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition hover:bg-[#343aa8]"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-[12px] bg-[#4048cd] px-4 py-2.5 shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition hover:bg-[#343aa8]"
                 >
                   <Image
                     src={ADMIN_BUSINESS_LINK_ASSETS.copy}
                     alt=""
-                    width={18}
-                    height={18}
-                    className="size-[18px] shrink-0"
+                    width={16}
+                    height={16}
+                    className="size-4 shrink-0"
                   />
-                  <span className="text-[16px] font-semibold leading-6 text-white">
+                  <span className="text-[14px] font-semibold leading-5 text-white">
                     {t('adminBusinessLink.detail.copyLink')}
                   </span>
                 </Button>
@@ -482,21 +534,56 @@ const AdminBusinessLinkDetailContent = memo(() => {
           </div>
         </div>
 
-        {/* Photographer — same meta text sizes as zodiac competition detail */}
-        <section className="flex items-start gap-3">
-          <UserAvatar
-            src={avatar}
-            name={ownerName}
-            className="size-[57px] text-[18px]"
-          />
-          <div className="flex min-w-[139px] flex-col gap-1">
-            <p className="admin-detail-meta__photographer-label w-full">
-              {t('adminBusinessLink.detail.photographerLabel')}
-            </p>
-            <p className="admin-detail-meta__photographer-name w-full">
-              {ownerName}
-            </p>
-          </div>
+        <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {profileHref ? (
+            <Link
+              to={profileHref}
+              className="inline-flex items-center gap-3 rounded-xl transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4048cd]"
+              aria-label={t('adminBusinessLink.detail.viewProfile', {
+                name: ownerName,
+                defaultValue: `View ${ownerName}'s profile`,
+              })}
+            >
+              <UserAvatar
+                src={avatar}
+                name={ownerName}
+                className="size-12 text-[15px]"
+              />
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <p className="text-[12px] font-medium uppercase tracking-wide text-[#6b7280]">
+                  {t('adminBusinessLink.detail.photographerLabel')}
+                </p>
+                <p className="text-[15px] font-semibold text-[#111827] hover:text-[#4048cd] sm:text-[16px]">
+                  {ownerName}
+                </p>
+              </div>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-3">
+              <UserAvatar
+                src={avatar}
+                name={ownerName}
+                className="size-12 text-[15px]"
+              />
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <p className="text-[12px] font-medium uppercase tracking-wide text-[#6b7280]">
+                  {t('adminBusinessLink.detail.photographerLabel')}
+                </p>
+                <p className="text-[15px] font-semibold text-[#111827] sm:text-[16px]">
+                  {ownerName}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {profileHref ? (
+            <Link
+              to={profileHref}
+              className="inline-flex w-fit cursor-pointer items-center justify-center rounded-lg bg-[#4048cd] px-4 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#343aa8] sm:text-[14px]"
+            >
+              {t('adminBusinessLink.detail.visitProfile', 'Visit profile')}
+            </Link>
+          ) : null}
         </section>
       </div>
     </div>

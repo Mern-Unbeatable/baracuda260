@@ -6,12 +6,26 @@ import Image from '@/components/ui/Image';
 import {
   ADMIN_SUPPORT_ASSETS,
   ANSWER_MODAL_MODE,
-  applyEditorTool,
   CLOSE_ICON_SIZE,
   EDITOR_TOOLBAR,
   getTicketAnswerText,
   QUESTION_BADGE_SIZE,
 } from '@/portals/admin/data/adminSupportData';
+
+const EDITOR_COMMANDS = {
+  bold: 'bold',
+  italic: 'italic',
+  listUl: 'insertUnorderedList',
+  listOl: 'insertOrderedList',
+};
+
+const getPlainText = (html) =>
+  String(html || '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .trim();
 
 /**
  * Figma 339:4819 (compose) + 339:4863 (published).
@@ -29,15 +43,53 @@ const AnswerPublishModal = memo(
     const { t } = useTranslation();
     const titleId = useId();
     const answerId = useId();
-    const textareaRef = useRef(null);
+    const editorRef = useRef(null);
+    const savedRangeRef = useRef(null);
     const [answer, setAnswer] = useState('');
     const [attempted, setAttempted] = useState(false);
+
+    const syncAnswerFromEditor = () => {
+      const html = editorRef.current?.innerHTML || '';
+      setAnswer(html);
+    };
+
+    const saveSelection = () => {
+      const selection = window.getSelection();
+      if (
+        selection &&
+        selection.rangeCount > 0 &&
+        editorRef.current?.contains(selection.anchorNode)
+      ) {
+        savedRangeRef.current = selection.getRangeAt(0).cloneRange();
+      }
+    };
+
+    const restoreSelection = () => {
+      const editor = editorRef.current;
+      if (!editor) return;
+      editor.focus();
+      const selection = window.getSelection();
+      if (!selection) return;
+      selection.removeAllRanges();
+      if (savedRangeRef.current) {
+        selection.addRange(savedRangeRef.current);
+      } else {
+        const range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        selection.addRange(range);
+      }
+    };
 
     useEffect(() => {
       if (!open) return undefined;
 
       setAnswer('');
       setAttempted(false);
+      savedRangeRef.current = null;
+      if (editorRef.current) {
+        editorRef.current.innerHTML = '';
+      }
 
       const previousOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
@@ -62,32 +114,44 @@ const AnswerPublishModal = memo(
       (ticket.fullQuestionKey ? t(ticket.fullQuestionKey) : '') ||
       (ticket.previewKey ? t(ticket.previewKey) : '');
     const publishedAnswer = getTicketAnswerText(ticket, t);
-    const answerValid = answer.trim().length > 0;
+    const answerValid = getPlainText(answer).length > 0;
     const showAnswerError = attempted && !answerValid;
 
     const handleToolClick = (tool) => {
-      const el = textareaRef.current;
-      const selection = {
-        start: el?.selectionStart ?? answer.length,
-        end: el?.selectionEnd ?? answer.length,
-      };
-      const next = applyEditorTool(answer, selection, tool);
-      setAnswer(next.value);
-      requestAnimationFrame(() => {
-        if (!textareaRef.current) return;
-        textareaRef.current.focus();
-        textareaRef.current.setSelectionRange(
-          next.selection.start,
-          next.selection.end,
+      restoreSelection();
+
+      if (tool.id === 'link') {
+        const url = window.prompt(
+          t('adminSupport.modal.linkPrompt', 'Enter link URL'),
+          'https://',
         );
-      });
+        if (url) {
+          document.execCommand('createLink', false, url.trim());
+        }
+      } else if (tool.id === 'image') {
+        const url = window.prompt(
+          t('adminSupport.modal.imagePrompt', 'Enter image URL'),
+          'https://',
+        );
+        if (url) {
+          document.execCommand('insertImage', false, url.trim());
+        }
+      } else {
+        const command = EDITOR_COMMANDS[tool.id];
+        if (command) document.execCommand(command, false);
+      }
+
+      syncAnswerFromEditor();
+      saveSelection();
     };
 
     const handlePublish = (event) => {
       event.preventDefault();
+      syncAnswerFromEditor();
+      const html = editorRef.current?.innerHTML || answer;
       setAttempted(true);
-      if (!answerValid || isSubmitting) return;
-      onPublish(answer.trim());
+      if (!getPlainText(html) || isSubmitting) return;
+      onPublish(html.trim());
     };
 
     return createPortal(
@@ -239,6 +303,10 @@ const AnswerPublishModal = memo(
                               key={tool.id}
                               type="button"
                               aria-label={t(tool.labelKey)}
+                              onMouseDown={(event) => {
+                                event.preventDefault();
+                                saveSelection();
+                              }}
                               onClick={() => handleToolClick(tool)}
                               className="inline-flex cursor-pointer items-center justify-center rounded-sm p-1 transition hover:bg-black/5"
                             >
@@ -251,15 +319,30 @@ const AnswerPublishModal = memo(
                           );
                         })}
                       </div>
-                      <textarea
-                        ref={textareaRef}
-                        id={answerId}
-                        value={answer}
-                        onChange={(event) => setAnswer(event.target.value)}
-                        placeholder={t('adminSupport.modal.answerPlaceholder')}
-                        rows={8}
-                        className="min-h-55 w-full resize-y bg-white px-4 py-6 text-[16px] leading-6 text-[#1a1c1d] outline-none placeholder:text-[#6b7280] sm:px-6"
-                      />
+                      <div className="relative">
+                        {!answerValid ? (
+                          <span className="pointer-events-none absolute left-4 top-6 text-[16px] leading-6 text-[#6b7280] sm:left-6">
+                            {t('adminSupport.modal.answerPlaceholder')}
+                          </span>
+                        ) : null}
+                        <div
+                          ref={editorRef}
+                          id={answerId}
+                          role="textbox"
+                          aria-multiline="true"
+                          aria-label={t('adminSupport.modal.answerLabel')}
+                          aria-placeholder={t(
+                            'adminSupport.modal.answerPlaceholder',
+                          )}
+                          contentEditable={!isSubmitting}
+                          suppressContentEditableWarning
+                          onInput={syncAnswerFromEditor}
+                          onBlur={syncAnswerFromEditor}
+                          onKeyUp={saveSelection}
+                          onMouseUp={saveSelection}
+                          className="min-h-55 w-full overflow-y-auto bg-white px-4 py-6 text-[16px] leading-6 text-[#1a1c1d] outline-none sm:px-6 [&_a]:text-[#4048cd] [&_a]:underline [&_em]:italic [&_img]:max-h-48 [&_img]:rounded-md [&_li]:ml-5 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:font-bold [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5"
+                        />
+                      </div>
                     </div>
                     {showAnswerError ? (
                       <p className="text-[13px] text-[#ee1c25]">

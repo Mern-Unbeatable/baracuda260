@@ -1004,7 +1004,8 @@
       "action": "Akcja"
     },
     "actions": {
-      "view": "Zobacz zgłoszenie {{user}}"
+      "view": "Zobacz zgłoszenie {{user}}",
+      "delete": "Usuń zgłoszenie {{user}}"
     },
     "pagination": {
       "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
@@ -1014,6 +1015,15 @@
     },
     "detail": {
       "back": "Powrót do Zdjęć Business Link",
+      "delete": "Usuń",
+      "deleteSuccess": "Link biznesowy został usunięty.",
+      "deleteError": "Nie udało się usunąć linku biznesowego.",
+      "confirmDelete": {
+        "title": "Usunąć link biznesowy?",
+        "text": "Czy na pewno chcesz usunąć ten album Business Link? Tej operacji nie można cofnąć.",
+        "confirm": "Usuń",
+        "cancel": "Anuluj"
+      },
       "notFound": "Nie znaleziono tego zgłoszenia Business Link.",
       "phone": "Telefon",
       "countryLabel": "Kraj",
@@ -1029,6 +1039,8 @@
       "copySuccess": "Skopiowano link biznesowy",
       "copyFailed": "Nie udało się skopiować linku biznesowego",
       "photographerLabel": "Fotograf",
+      "visitProfile": "Zobacz profil",
+      "viewProfile": "Zobacz profil {{name}}",
       "loadError": "Nie udało się wczytać albumu biznesowego.",
       "noPhotos": "Ten album nie ma jeszcze zdjęć.",
       "untitled": "Album bez tytułu",
@@ -1039,8 +1051,9 @@
         "twelve": "Historia zodiaku z 12 zdjęć"
       },
       "status": {
-        "published": "Opublikowany",
-        "unpublished": "Nieopublikowany"
+        "live": "Aktywny",
+        "published": "Aktywny",
+        "unpublished": "Aktywny"
       }
     }
   },

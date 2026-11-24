@@ -61,6 +61,9 @@ const Winners = lazy(() => import('@/portals/public/winners/Winners'));
 const WinnerDetail = lazy(
   () => import('@/portals/public/winners/WinnerDetail'),
 );
+const BusinessLinkPublic = lazy(
+  () => import('@/portals/public/business-link/BusinessLinkPublic'),
+);
 const Privacy = lazy(() => import('@/portals/public/legal/privacy/Privacy'));
 const Terms = lazy(() => import('@/portals/public/legal/terms/Terms'));
 const Cookies = lazy(() => import('@/portals/public/legal/cookies/Cookies'));
@@ -129,6 +132,7 @@ export const publicRoutes = (
       <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
       <Route path={ROUTES.WINNERS} element={<Winners />} />
       <Route path={ROUTES.WINNERS_DETAIL} element={<WinnerDetail />} />
+      <Route path={ROUTES.BUSINESS_LINK} element={<BusinessLinkPublic />} />
       <Route path={ROUTES.PRIVACY} element={<Privacy />} />
       <Route path={ROUTES.TERMS} element={<Terms />} />
       <Route path={ROUTES.COOKIES} element={<Cookies />} />

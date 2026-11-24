@@ -27,6 +27,32 @@ export const getAdminBusinessLinkApi = async (businessAlbumId) => {
 };
 
 /**
+ * Delete a business album (admin).
+ * DELETE /v1/business-links/admin/:id
+ */
+export const deleteAdminBusinessLinkApi = async (businessAlbumId) => {
+  if (!businessAlbumId) return null;
+  const response = await apiClient.delete(
+    `/v1/business-links/admin/${encodeURIComponent(businessAlbumId)}`,
+  );
+  return response?.data ?? response ?? null;
+};
+
+export const PUBLIC_BUSINESS_LINK_QUERY_KEY = ['public-business-link'];
+
+/**
+ * Public share view by album code (ALB-xxxxx).
+ * GET /v1/business-links/public/:albumId
+ */
+export const getPublicBusinessLinkApi = async (albumId) => {
+  if (!albumId) return null;
+  const response = await apiClient.get(
+    `/v1/business-links/public/${encodeURIComponent(albumId)}`,
+  );
+  return response?.data ?? null;
+};
+
+/**
  * Submit a business link portfolio.
  * POST /api/v1/business-links
  * Payload (multipart/form-data):

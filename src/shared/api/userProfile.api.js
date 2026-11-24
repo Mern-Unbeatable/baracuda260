@@ -158,6 +158,33 @@ export const toggleFollowUserApi = async (username) => {
 };
 
 /**
+ * Resolve a public profile card by user id (for visit-profile links).
+ * GET /api/v1/users/card/:userId
+ *
+ * @param {string} userId
+ */
+export const getPublicUserCardApi = async (userId) => {
+  if (!userId) return null;
+  try {
+    const response = await apiClient.get(
+      `/v1/users/card/${encodeURIComponent(userId)}`,
+    );
+    let result = response?.data !== undefined ? response.data : response;
+    if (
+      result &&
+      result.data &&
+      typeof result.data === 'object' &&
+      !Array.isArray(result.data)
+    ) {
+      result = result.data;
+    }
+    return result;
+  } catch {
+    return null;
+  }
+};
+
+/**
  * Fetch a user profile by username.
  * GET /api/v1/users/profile/{{username}}
  *
