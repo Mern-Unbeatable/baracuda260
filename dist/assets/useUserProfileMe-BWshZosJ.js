@@ -1,0 +1,1 @@
+import{u as t}from"./useQuery-CSAuQGQb.js";import{i as u,c as a}from"./userProfile.api-DD3bpiI4.js";function E(){const{data:r,isLoading:e,isError:o,error:s,refetch:i}=t({queryKey:a,queryFn:u,staleTime:6e4});return{data:r,isLoading:e,isError:o,error:s,refetch:i}}export{E as u};
