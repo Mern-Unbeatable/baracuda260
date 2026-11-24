@@ -1,6 +1,21 @@
 import { apiClient } from './client';
 
 export const ADMIN_ANNOUNCEMENTS_QUERY_KEY = ['admin-announcements'];
+export const PUBLIC_ANNOUNCEMENTS_QUERY_KEY = ['public-announcements'];
+
+/**
+ * GET /api/v1/announcements
+ * Public active announcements for the site header marquee.
+ */
+export const getPublicAnnouncementsApi = async () => {
+  const response = await apiClient.get('/v1/announcements');
+  const items = Array.isArray(response?.data)
+    ? response.data
+    : Array.isArray(response)
+      ? response
+      : [];
+  return items;
+};
 
 export const getAdminAnnouncementsApi = async ({ page, limit }) => {
   const response = await apiClient.get('/v1/admin/announcements', {

@@ -255,17 +255,17 @@ const ADMIN_NAV_GROUPS = [
         path: ROUTES.ADMIN_PROMO_LINKS,
         icon: Ticket,
       },
+      {
+        labelKey: 'adminOverview.nav.announcements',
+        path: ROUTES.ADMIN_ANNOUNCEMENTS,
+        icon: Bell,
+      },
     ],
   },
   {
     id: 'system',
     labelKey: 'adminOverview.nav.groups.system',
     items: [
-      {
-        labelKey: 'adminOverview.nav.settings',
-        path: ROUTES.ADMIN_SETTINGS,
-        icon: Settings,
-      },
       {
         labelKey: 'adminOverview.nav.profile',
         path: ROUTES.ADMIN_PROFILE,

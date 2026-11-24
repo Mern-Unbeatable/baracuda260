@@ -29,6 +29,7 @@
       "demoProfile": "Demo Profile",
       "reportsResolved": "Reports Resolved",
       "promoLinks": "Promo Links",
+      "announcements": "Announcements",
       "settings": "Settings",
       "profile": "Profile"
     },
@@ -1636,11 +1637,14 @@
     }
   },
   "adminAnnouncements": {
-    "title": "Ads & Announcements",
+    "title": "Announcements",
     "subtitle": "Create and manage announcements displayed above the website navigation.",
     "createButton": "Create Announcement",
     "tableAria": "Announcements table",
+    "tableTitle": "All Announcements",
     "empty": "No announcements found.",
+    "retry": "Retry",
+    "loading": "Loading announcements...",
     "stats": {
       "total": {
         "label": "Total Announcements",
@@ -1707,10 +1711,13 @@
       "delete": "Delete"
     },
     "pagination": {
-      "showing": "Showing {{from}}-{{to}} of {{total}} announcements",
+      "showing": "Showing {{from}} to {{to}} of {{total}} announcements",
       "aria": "Announcements pagination",
       "previous": "Previous",
       "next": "Next",
+      "first": "First page",
+      "prev": "Previous page",
+      "last": "Last page",
       "page": "Page {{page}}"
     },
     "modal": {

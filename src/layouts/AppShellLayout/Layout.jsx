@@ -114,6 +114,7 @@ const Layout = memo(() => {
     currentPath.startsWith(`${normalizePath(ROUTES.USER_REPORTS)}/`) ||
     currentPath === normalizePath(ROUTES.ADMIN_MARKETING_STATISTICS) ||
     currentPath === normalizePath(ROUTES.USER_MARKETING_STATISTICS) ||
+    currentPath === normalizePath(ROUTES.ADMIN_ANNOUNCEMENTS) ||
     currentPath === normalizePath(ROUTES.ADMIN_SETTINGS) ||
     currentPath === normalizePath(ROUTES.USER_SETTINGS) ||
     currentPath === normalizePath(ROUTES.ADMIN_PROFILE) ||

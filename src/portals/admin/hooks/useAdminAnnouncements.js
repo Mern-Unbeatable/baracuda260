@@ -21,6 +21,7 @@ import {
   getAdminAnnouncementApi,
   getAdminAnnouncementStatsApi,
   getAdminAnnouncementsApi,
+  PUBLIC_ANNOUNCEMENTS_QUERY_KEY,
   updateAdminAnnouncementApi,
 } from '@/shared/api/announcements.api';
 import { getApiErrorMessage } from '@/shared/api/client';
@@ -67,8 +68,10 @@ export default function useAdminAnnouncements(
     if (listQuery.data && page > totalPages) setPage(totalPages);
   }, [listQuery.data, page, totalPages]);
 
-  const refreshAnnouncements = () =>
+  const refreshAnnouncements = () => {
     queryClient.invalidateQueries({ queryKey: ADMIN_ANNOUNCEMENTS_QUERY_KEY });
+    queryClient.invalidateQueries({ queryKey: PUBLIC_ANNOUNCEMENTS_QUERY_KEY });
+  };
 
   const closeModal = () => {
     setModalMode(null);
@@ -226,10 +229,12 @@ export default function useAdminAnnouncements(
     stats: statsQuery.data ?? null,
     isStatsLoading: statsQuery.isLoading,
     page,
+    totalPages,
     pageNumbers: getAnnouncementPageNumbers(page, totalPages),
     range: { from, to, total, count: rows.length },
     isFirstPage: page <= 1,
     isLastPage: page >= totalPages,
+    handlePageChange: goToPage,
     busyId,
     openActionId,
     handleToggleAction,

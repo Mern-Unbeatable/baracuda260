@@ -135,7 +135,9 @@ export const ROUTES = {
   ADMIN_PROFILE_FOLLOWING: '/admin/profile/following',
   ADMIN_PROFILE_FOLLOWERS: '/admin/profile/followers',
   ADMIN_PROFILE_SETTINGS: '/admin/profile/settings',
-  ADMIN_SETTINGS: '/admin/settings',
+  /** @deprecated Use ADMIN_ANNOUNCEMENTS — kept for old bookmarks */
+  ADMIN_SETTINGS: '/admin/announcements',
+  ADMIN_ANNOUNCEMENTS: '/admin/announcements',
   ADMIN_USERS: '/admin/users',
   ADMIN_CATEGORIES: '/admin/categories',
   ADMIN_ALBUM_TYPES: '/admin/album-types',

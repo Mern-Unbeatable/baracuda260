@@ -29,6 +29,7 @@
       "demoProfile": "Profil demo",
       "reportsResolved": "Rozwiązane zgłoszenia",
       "promoLinks": "Linki promocyjne",
+      "announcements": "Ogłoszenia",
       "settings": "Ustawienia",
       "profile": "Profil"
     },
@@ -1641,11 +1642,14 @@
     }
   },
   "adminAnnouncements": {
-    "title": "Reklamy i ogłoszenia",
+    "title": "Ogłoszenia",
     "subtitle": "Twórz i zarządzaj ogłoszeniami wyświetlanymi nad nawigacją strony.",
     "createButton": "Utwórz ogłoszenie",
     "tableAria": "Tabela ogłoszeń",
+    "tableTitle": "Wszystkie ogłoszenia",
     "empty": "Nie znaleziono ogłoszeń.",
+    "retry": "Spróbuj ponownie",
+    "loading": "Ładowanie ogłoszeń...",
     "stats": {
       "total": {
         "label": "Łączna liczba ogłoszeń",
@@ -1716,6 +1720,9 @@
       "aria": "Paginacja ogłoszeń",
       "previous": "Poprzednia",
       "next": "Następna",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "last": "Ostatnia strona",
       "page": "Strona {{page}}"
     },
     "modal": {

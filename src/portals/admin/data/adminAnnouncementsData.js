@@ -137,7 +137,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
     labelKey: 'adminAnnouncements.stats.total.label',
     hintKey: 'adminAnnouncements.stats.total.hint',
     hintClass: 'text-[#6b7280]',
-    icon: '▢',
     iconBg: 'bg-[#f3f4f6] text-[#6b7280]',
   },
   {
@@ -145,7 +144,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
     labelKey: 'adminAnnouncements.stats.active.label',
     hintKey: 'adminAnnouncements.stats.active.hint',
     hintClass: 'text-[#16a34a]',
-    icon: '●',
     iconBg: 'bg-[#ecfdf3] text-[#16a34a]',
   },
   {
@@ -153,7 +151,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
     labelKey: 'adminAnnouncements.stats.scheduled.label',
     hintKey: 'adminAnnouncements.stats.scheduled.hint',
     hintClass: 'text-[#2563eb]',
-    icon: '◷',
     iconBg: 'bg-[#eff6ff] text-[#2563eb]',
   },
   {
@@ -161,7 +158,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
     labelKey: 'adminAnnouncements.stats.expired.label',
     hintKey: 'adminAnnouncements.stats.expired.hint',
     hintClass: 'text-[#6b7280]',
-    icon: '✕',
     iconBg: 'bg-[#f3f4f6] text-[#6b7280]',
   },
   {
@@ -169,7 +165,6 @@ export const ANNOUNCEMENT_STAT_CARDS = [
     labelKey: 'adminAnnouncements.stats.inactive.label',
     hintKey: 'adminAnnouncements.stats.inactive.hint',
     hintClass: 'text-[#ca8a04]',
-    icon: '■',
     iconBg: 'bg-[#fefce8] text-[#ca8a04]',
   },
 ];
@@ -254,12 +249,77 @@ export const getAnnouncementTypeLabel = (t, type) =>
   t(`adminAnnouncements.types.${type}`, { defaultValue: humanize(type) });
 
 /**
- * @param {{ displayStatus?: string, activeState?: string }} announcement
+ * Combine a date (ISO / Date / yyyy-mm-dd) with "HH:mm" into a local Date.
+ * Uses UTC calendar parts from `@db.Date` values to avoid timezone day-shifts.
  */
-export const getAnnouncementStatus = (announcement) =>
-  String(announcement.displayStatus || announcement.activeState || '')
+export const combineAnnouncementDateAndTime = (dateValue, timeStr) => {
+  if (!dateValue) return null;
+  const raw = String(dateValue);
+  const day = raw.slice(0, 10);
+  const match = day.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    const fallback = new Date(dateValue);
+    return Number.isNaN(fallback.getTime()) ? null : fallback;
+  }
+
+  const year = Number(match[1]);
+  const month = Number(match[2]) - 1;
+  const date = Number(match[3]);
+  const [rawH = '0', rawM = '0'] = String(timeStr || '00:00').split(':');
+  const hours = Number.parseInt(rawH, 10) || 0;
+  const minutes = Number.parseInt(String(rawM).replace(/\D.*/, ''), 10) || 0;
+
+  return new Date(year, month, date, hours, minutes, 0, 0);
+};
+
+/**
+ * Live schedule status (preferred over a cached server displayStatus).
+ * @param {object} announcement
+ * @param {Date} [now]
+ */
+export const computeAnnouncementDisplayStatus = (
+  announcement,
+  now = new Date(),
+) => {
+  if (!announcement) return ANNOUNCEMENT_STATUS.EXPIRED;
+
+  const activeState = String(announcement.activeState || '')
     .trim()
     .toLowerCase();
+  if (activeState === ACTIVE_STATE.INACTIVE) {
+    return ANNOUNCEMENT_STATUS.INACTIVE;
+  }
+
+  const startDateTime = combineAnnouncementDateAndTime(
+    announcement.startDate,
+    announcement.startTime,
+  );
+  if (startDateTime && now < startDateTime) {
+    return ANNOUNCEMENT_STATUS.SCHEDULED;
+  }
+
+  if (
+    !announcement.noEndDate &&
+    announcement.endDate &&
+    announcement.endTime
+  ) {
+    const endDateTime = combineAnnouncementDateAndTime(
+      announcement.endDate,
+      announcement.endTime,
+    );
+    if (endDateTime && now > endDateTime) {
+      return ANNOUNCEMENT_STATUS.EXPIRED;
+    }
+  }
+
+  return ANNOUNCEMENT_STATUS.ACTIVE;
+};
+
+/**
+ * @param {{ displayStatus?: string, activeState?: string, startDate?: string, startTime?: string, endDate?: string, endTime?: string, noEndDate?: boolean }} announcement
+ */
+export const getAnnouncementStatus = (announcement) =>
+  computeAnnouncementDisplayStatus(announcement);
 
 /** `2026-10-01T00:00:00.000Z` → `2026-10-01` (the calendar day the admin picked). */
 const toDateInputValue = (value) => (value ? String(value).slice(0, 10) : '');
@@ -352,11 +412,13 @@ export const buildAnnouncementPayload = (values, { previousLink } = {}) => {
     type: values.type,
     ...(linkPayload !== undefined ? { link: linkPayload } : {}),
     startDate: values.startDate,
-    ...(values.startTime ? { startTime: values.startTime } : {}),
-    ...(!noEndDate && {
-      endDate: values.endDate,
-      ...(values.endTime ? { endTime: values.endTime } : {}),
-    }),
+    startTime: values.startTime || '00:00',
+    ...(noEndDate
+      ? { endDate: null, endTime: null }
+      : {
+          endDate: values.endDate,
+          endTime: values.endTime || '23:59',
+        }),
     noEndDate,
     activeState: values.activeState,
     priority: values.priority,

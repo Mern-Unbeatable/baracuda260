@@ -40,7 +40,7 @@ const DemoProfilesCreate = lazy(
   () => import('@/portals/admin/pages/DemoProfilesCreate'),
 );
 const PromoLinks = lazy(() => import('@/portals/admin/pages/PromoLinks'));
-const SettingsRoute = lazy(() => import('@/portals/admin/pages/SettingsRoute'));
+const Announcements = lazy(() => import('@/portals/admin/pages/Announcements'));
 const MarketingStatistics = lazy(
   () => import('@/portals/admin/pages/MarketingStatistics'),
 );
@@ -124,7 +124,14 @@ export const adminRoutes = (
       path={seg(ROUTES.ADMIN_BUSINESS_PHOTOS_DETAIL)}
       element={<BusinessLinkDetails />}
     />
-    <Route path={seg(ROUTES.ADMIN_SETTINGS)} element={<SettingsRoute />} />
+    <Route
+      path={seg(ROUTES.ADMIN_ANNOUNCEMENTS)}
+      element={<Announcements />}
+    />
+    <Route
+      path="settings"
+      element={<Navigate to={ROUTES.ADMIN_ANNOUNCEMENTS} replace />}
+    />
     <Route path={seg(ROUTES.ADMIN_NEWSLETTER)} element={<AdminNewsletter />} />
     <Route path={seg(ROUTES.ADMIN_COMMENT)} element={<AdminComment />} />
     <Route path={seg(ROUTES.ADMIN_ADS)} element={<AdsManagement />} />
