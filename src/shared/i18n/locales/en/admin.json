@@ -1744,9 +1744,22 @@
     "empty": "No subscribers yet.",
     "retry": "Try again",
     "loadError": "Could not load newsletter subscribers.",
+    "delete": "Delete",
+    "deleteSuccess": "Subscriber deleted successfully.",
+    "deleteError": "Failed to delete subscriber.",
+    "actions": {
+      "delete": "Delete subscriber {{email}}"
+    },
+    "confirmDelete": {
+      "title": "Delete subscriber?",
+      "text": "Remove {{email}} from the newsletter list? This cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
     "columns": {
       "email": "Email",
-      "subscribedDate": "Subscribed Date"
+      "subscribedDate": "Subscribed Date",
+      "action": "Action"
     },
     "pagination": {
       "showing": "Showing {{from}} to {{to}} of {{total}} results",

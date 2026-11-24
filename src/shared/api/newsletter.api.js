@@ -31,6 +31,18 @@ export const getNewsletterSubscribersApi = async ({ page, limit }) => {
 };
 
 /**
+ * Delete a newsletter subscriber (admin).
+ * DELETE /v1/newsletter/subscribers/:id
+ */
+export const deleteNewsletterSubscriberApi = async (subscriberId) => {
+  if (!subscriberId) return null;
+  const response = await apiClient.delete(
+    `/v1/newsletter/subscribers/${encodeURIComponent(subscriberId)}`,
+  );
+  return response?.data ?? response ?? null;
+};
+
+/**
  * @param {FormData} formData target, subject, title, content, ctaText, ctaUrl, banner
  */
 export const sendNewsletterCampaignApi = async (formData) => {

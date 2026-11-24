@@ -1747,9 +1747,22 @@
     "empty": "Brak subskrybentów.",
     "retry": "Spróbuj ponownie",
     "loadError": "Nie udało się wczytać subskrybentów newslettera.",
+    "delete": "Usuń",
+    "deleteSuccess": "Subskrybent został usunięty.",
+    "deleteError": "Nie udało się usunąć subskrybenta.",
+    "actions": {
+      "delete": "Usuń subskrybenta {{email}}"
+    },
+    "confirmDelete": {
+      "title": "Usunąć subskrybenta?",
+      "text": "Usunąć {{email}} z listy newslettera? Tej operacji nie można cofnąć.",
+      "confirm": "Usuń",
+      "cancel": "Anuluj"
+    },
     "columns": {
       "email": "E-mail",
-      "subscribedDate": "Data subskrypcji"
+      "subscribedDate": "Data subskrypcji",
+      "action": "Akcja"
     },
     "pagination": {
       "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",

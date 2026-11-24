@@ -1,4 +1,9 @@
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -12,15 +17,18 @@ import {
 import { getApiErrorMessage } from '@/shared/api/client';
 import {
   ADMIN_NEWSLETTER_SUBSCRIBERS_QUERY_KEY,
+  deleteNewsletterSubscriberApi,
   getNewsletterSubscribersApi,
   sendNewsletterCampaignApi,
 } from '@/shared/api/newsletter.api';
+import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
 /**
  * Admin Newsletter — server-paginated subscribers + campaign composer (Figma 346:1740).
  */
 const useAdminNewsletter = (pageSize = NEWSLETTER_PAGE_SIZE) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [banner, setBanner] = useState(null);
   const [bannerError, setBannerError] = useState('');
@@ -45,6 +53,40 @@ const useAdminNewsletter = (pageSize = NEWSLETTER_PAGE_SIZE) => {
   }, [meta, page, totalPages]);
 
   const sendMutation = useMutation({ mutationFn: sendNewsletterCampaignApi });
+
+  const deleteMutation = useMutation({
+    mutationFn: ({ id }) => deleteNewsletterSubscriberApi(id),
+    onSuccess: (_data, variables) => {
+      if (variables?.email) {
+        setSelectedEmails((current) =>
+          current.filter((email) => email !== variables.email),
+        );
+      }
+      toast.success(t('adminNewsletter.deleteSuccess'));
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_NEWSLETTER_SUBSCRIBERS_QUERY_KEY,
+      });
+    },
+    onError: (error) => {
+      toast.error(
+        getApiErrorMessage(error, t('adminNewsletter.deleteError')),
+      );
+    },
+  });
+
+  const handleDeleteSubscriber = async (row) => {
+    if (!row?.id || deleteMutation.isPending) return;
+
+    const confirmed = await confirmDestructiveAction({
+      title: t('adminNewsletter.confirmDelete.title'),
+      text: t('adminNewsletter.confirmDelete.text', { email: row.email }),
+      confirmButtonText: t('adminNewsletter.confirmDelete.confirm'),
+      cancelButtonText: t('adminNewsletter.confirmDelete.cancel'),
+    });
+    if (!confirmed) return;
+
+    await deleteMutation.mutateAsync({ id: row.id, email: row.email });
+  };
 
   const handleRecipientChange = (nextRecipientId) => {
     if (!getRecipientTarget(nextRecipientId)) return;
@@ -145,6 +187,10 @@ const useAdminNewsletter = (pageSize = NEWSLETTER_PAGE_SIZE) => {
     setRecipientId: handleRecipientChange,
     selectedEmails,
     handleToggleSubscriber,
+    handleDeleteSubscriber,
+    deletingId: deleteMutation.isPending
+      ? deleteMutation.variables?.id
+      : null,
     composerOpen,
     setComposerOpen,
     sending: sendMutation.isPending,

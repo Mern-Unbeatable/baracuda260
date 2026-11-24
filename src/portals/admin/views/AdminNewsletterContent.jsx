@@ -1,3 +1,4 @@
+import { Trash2 } from 'lucide-react';
 import React, { memo, useId } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -145,6 +146,8 @@ const AdminNewsletterContent = memo(() => {
     setRecipientId,
     selectedEmails,
     handleToggleSubscriber,
+    handleDeleteSubscriber,
+    deletingId,
     composerOpen,
     setComposerOpen,
     sending,
@@ -208,6 +211,9 @@ const AdminNewsletterContent = memo(() => {
             <div className="w-35 shrink-0 px-2.5 py-3 text-right text-[16px] leading-6 text-black sm:w-45 sm:text-left">
               {t('adminNewsletter.columns.subscribedDate')}
             </div>
+            <div className="w-12 shrink-0 px-1 py-3 text-right text-[14px] leading-6 text-black sm:w-14">
+              {t('adminNewsletter.columns.action')}
+            </div>
           </div>
           {isLoading ? (
             <SubscriberListSkeleton />
@@ -236,6 +242,7 @@ const AdminNewsletterContent = memo(() => {
             >
               {subscribers.map((row) => {
                 const isSelected = selectedEmails.includes(row.email);
+                const isDeleting = deletingId === row.id;
 
                 return (
                   <li
@@ -269,6 +276,21 @@ const AdminNewsletterContent = memo(() => {
                     )}
                     <div className="w-35 shrink-0 px-2.5 py-4 text-right text-[14px] leading-6 text-[#0c0c0c] sm:w-45 sm:py-6 sm:text-left sm:text-[16px]">
                       {formatSubscribedDate(row.subscribedAt, i18n.language)}
+                    </div>
+                    <div className="flex w-12 shrink-0 items-center justify-end px-1 py-4 sm:w-14 sm:py-6">
+                      <Button
+                        unstyled
+                        type="button"
+                        disabled={isDeleting}
+                        onClick={() => handleDeleteSubscriber(row)}
+                        aria-label={t('adminNewsletter.actions.delete', {
+                          email: row.email,
+                        })}
+                        title={t('adminNewsletter.delete')}
+                        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-[#ee1c25] transition hover:bg-[#fef2f2] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <Trash2 size={18} aria-hidden="true" />
+                      </Button>
                     </div>
                   </li>
                 );
