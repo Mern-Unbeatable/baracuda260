@@ -1060,15 +1060,16 @@
     "tableTitle": "All Comments",
     "empty": "No comments match this filter.",
     "selectAll": "Select all visible comments",
+    "selectAllVisible": "Select all",
     "selectRow": "Select comment {{code}}",
     "stats": {
       "total": {
         "label": "Total Comments",
-        "hint": "+12 today"
+        "hint": "+{{count}} today"
       },
       "approved": {
         "label": "Approved",
-        "hint": "50% rate"
+        "hint": "{{rate}}% rate"
       },
       "pending": {
         "label": "Pending Review",
@@ -1084,7 +1085,10 @@
       "all": "All",
       "approved": "Approved",
       "pending": "Pending",
-      "deleted": "Deleted"
+      "hidden": "Hidden"
+    },
+    "bulk": {
+      "hideSelected": "Hide Selected"
     },
     "columns": {
       "commentId": "Comment ID",
@@ -1112,6 +1116,7 @@
       "menuAria": "Comment actions for {{name}}",
       "seeDetails": "See Details",
       "hide": "Hide",
+      "delete": "Delete",
       "approved": "Approved",
       "pending": "Pending"
     },
@@ -1129,10 +1134,13 @@
       "delete": "🗑 Delete Comment"
     },
     "pagination": {
-      "showing": "Showing {{count}} of {{total}} comments",
+      "showing": "Showing {{from}} to {{to}} of {{total}} results",
       "aria": "Comment pagination",
-      "previous": "Previous page",
+      "first": "First page",
+      "prev": "Previous page",
+      "previous": "Previous",
       "next": "Next page",
+      "last": "Last page",
       "page": "Page {{page}}"
     },
     "rows": {

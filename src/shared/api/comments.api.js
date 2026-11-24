@@ -83,6 +83,24 @@ export const normalizeCommentDetail = (item) => {
 };
 
 /**
+ * Fetches comment dashboard stats for admin cards.
+ * GET /v1/admin/comments/stats
+ */
+export const getAdminCommentStatsApi = async () => {
+  const response = await apiClient.get('/v1/admin/comments/stats');
+  const data = response?.data ?? response ?? {};
+  return {
+    total: Number(data.total) || 0,
+    approved: Number(data.approved) || 0,
+    pending: Number(data.pending) || 0,
+    hidden: Number(data.hidden) || 0,
+    deleted: Number(data.deleted) || 0,
+    today: Number(data.today) || 0,
+    approvedRate: Number(data.approvedRate) || 0,
+  };
+};
+
+/**
  * Fetches admin comments list with status and pagination.
  * @param {{ status?: string, page?: number, limit?: number }} params
  */

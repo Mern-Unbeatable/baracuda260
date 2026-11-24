@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { cn } from '@/shared/utils/cn';
 
 const EYEBROW_CLASS =
   'text-[12px] font-extrabold uppercase leading-4 tracking-[1.2px] text-[#7f8ba1] sm:text-[13px] sm:tracking-[1.4px] lg:text-[14px] lg:tracking-[1.55px]';
@@ -19,23 +20,45 @@ const DESCRIPTION_SPACING = 'pt-1.5 sm:pt-2.5';
  *   description?: React.ReactNode,
  *   as?: 'header' | 'div',
  *   titleId?: string,
+ *   className?: string,
+ *   titleClassName?: string,
+ *   descriptionClassName?: string,
  * }} props
  */
 const AdminPageHeader = memo(
-  ({ eyebrow, title, description, as: Tag = 'header', titleId }) => {
+  ({
+    eyebrow,
+    title,
+    description,
+    as: Tag = 'header',
+    titleId,
+    className,
+    titleClassName,
+    descriptionClassName,
+  }) => {
     const hasEyebrow = eyebrow != null && eyebrow !== '';
 
     return (
-      <Tag className="flex flex-col">
+      <Tag className={cn('flex flex-col', className)}>
         {hasEyebrow ? <p className={EYEBROW_CLASS}>{eyebrow}</p> : null}
         <h1
           id={titleId}
-          className={`${TITLE_CLASS} ${hasEyebrow ? TITLE_AFTER_EYEBROW_SPACING : ''}`.trim()}
+          className={cn(
+            TITLE_CLASS,
+            hasEyebrow ? TITLE_AFTER_EYEBROW_SPACING : '',
+            titleClassName,
+          )}
         >
           {title}
         </h1>
         {description != null && description !== '' ? (
-          <p className={`${DESCRIPTION_CLASS} ${DESCRIPTION_SPACING}`.trim()}>
+          <p
+            className={cn(
+              DESCRIPTION_CLASS,
+              DESCRIPTION_SPACING,
+              descriptionClassName,
+            )}
+          >
             {description}
           </p>
         ) : null}

@@ -4,10 +4,30 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react';
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Button from '@/components/ui/Button';
 
 const PAGINATION_ICON_SIZE = 16;
+const SM_MEDIA_QUERY = '(min-width: 640px)';
+
+const useIsSmUp = () => {
+  const [isSmUp, setIsSmUp] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia
+      ? window.matchMedia(SM_MEDIA_QUERY).matches
+      : true,
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const media = window.matchMedia(SM_MEDIA_QUERY);
+    const onChange = () => setIsSmUp(media.matches);
+    onChange();
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  return isSmUp;
+};
 
 /**
  * Build a compact page list with ellipses, e.g. [1, 2, 3, '…', 12].
@@ -16,32 +36,40 @@ const PAGINATION_ICON_SIZE = 16;
  *
  * @param {number} current
  * @param {number} total
+ * @param {{ compact?: boolean }} [options]
  * @returns {Array<number | '…'>}
  */
-const buildPageItems = (current, total) => {
+const buildPageItems = (current, total, { compact = false } = {}) => {
   const safeTotal = Math.max(1, Number(total) || 1);
   const safeCurrent = Math.min(Math.max(1, Number(current) || 1), safeTotal);
 
-  if (safeTotal <= 7) {
+  if (safeTotal <= (compact ? 5 : 7)) {
     return Array.from({ length: safeTotal }, (_, i) => i + 1);
   }
 
   const items = new Set([1, safeTotal, safeCurrent]);
-  for (let delta = 1; delta <= 1; delta += 1) {
-    if (safeCurrent - delta > 1) items.add(safeCurrent - delta);
-    if (safeCurrent + delta < safeTotal) items.add(safeCurrent + delta);
-  }
 
-  // Keep a bit more context near the edges
-  if (safeCurrent <= 3) {
-    items.add(2);
-    items.add(3);
-    items.add(4);
-  }
-  if (safeCurrent >= safeTotal - 2) {
-    items.add(safeTotal - 1);
-    items.add(safeTotal - 2);
-    items.add(safeTotal - 3);
+  if (compact) {
+    // Mobile: keep the row short — current + ends only (plus one neighbor at edges)
+    if (safeCurrent <= 2) items.add(2);
+    if (safeCurrent >= safeTotal - 1) items.add(safeTotal - 1);
+  } else {
+    for (let delta = 1; delta <= 1; delta += 1) {
+      if (safeCurrent - delta > 1) items.add(safeCurrent - delta);
+      if (safeCurrent + delta < safeTotal) items.add(safeCurrent + delta);
+    }
+
+    // Keep a bit more context near the edges
+    if (safeCurrent <= 3) {
+      items.add(2);
+      items.add(3);
+      items.add(4);
+    }
+    if (safeCurrent >= safeTotal - 2) {
+      items.add(safeTotal - 1);
+      items.add(safeTotal - 2);
+      items.add(safeTotal - 3);
+    }
   }
 
   const sorted = [...items].sort((a, b) => a - b);
@@ -62,11 +90,12 @@ const buildPageItems = (current, total) => {
  *   onClick: () => void,
  *   disabled?: boolean,
  *   active?: boolean,
+ *   className?: string,
  *   children: React.ReactNode,
  * }} props
  */
 const PaginationControl = memo(
-  ({ label, onClick, disabled, children, active = false }) => (
+  ({ label, onClick, disabled, children, active = false, className = '' }) => (
     <Button
       unstyled
       type="button"
@@ -74,11 +103,11 @@ const PaginationControl = memo(
       aria-current={active ? 'page' : undefined}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border p-2.5 text-[13px] font-semibold leading-none transition ${
+      className={`inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg border p-1.5 text-[12px] font-semibold leading-none transition sm:size-8 sm:p-2.5 sm:text-[13px] ${
         active
           ? 'border-[#ee1c25] bg-[#ee1c25] text-white'
           : 'border-[#f1f1f1] bg-white text-[#333333] hover:border-[#e5e7eb] hover:bg-[#f9fafb]'
-      } disabled:cursor-not-allowed disabled:opacity-40`}
+      } disabled:cursor-not-allowed disabled:opacity-40 ${className}`}
     >
       {children}
     </Button>
@@ -183,6 +212,8 @@ PaginationControl.displayName = 'PaginationControl';
  * }} props
  */
 const AdminPagination = memo((props) => {
+  const isSmUp = useIsSmUp();
+
   if (props.variant === 'users') {
     const {
       isFirstPage,
@@ -474,27 +505,29 @@ const AdminPagination = memo((props) => {
   } = props;
   const isFirstPage = page <= 1;
   const isLastPage = page >= totalPages;
-  const pageItems = buildPageItems(page, totalPages);
+  const pageItems = buildPageItems(page, totalPages, { compact: !isSmUp });
   const ellipsisClassName =
-    'inline-flex size-8 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[13px] leading-none text-[#6b7280]';
+    'inline-flex size-7 items-center justify-center rounded-lg border border-[#f1f1f1] bg-white text-[12px] leading-none text-[#6b7280] sm:size-8 sm:text-[13px]';
 
   return (
     <nav
       aria-label={navAriaLabel}
-      className="flex flex-wrap items-center justify-center gap-1.5"
+      className="flex flex-nowrap items-center justify-center gap-1 sm:gap-1.5"
     >
-      <PaginationControl
-        label={firstLabel}
-        disabled={isFirstPage}
-        onClick={() => onPageChange(1)}
-      >
-        <ChevronsLeft
-          size={PAGINATION_ICON_SIZE}
-          strokeWidth={2}
-          aria-hidden="true"
-          className="text-[#333333]"
-        />
-      </PaginationControl>
+      {isSmUp ? (
+        <PaginationControl
+          label={firstLabel}
+          disabled={isFirstPage}
+          onClick={() => onPageChange(1)}
+        >
+          <ChevronsLeft
+            size={PAGINATION_ICON_SIZE}
+            strokeWidth={2}
+            aria-hidden="true"
+            className="text-[#333333]"
+          />
+        </PaginationControl>
+      ) : null}
       <PaginationControl
         label={prevLabel}
         disabled={isFirstPage}
@@ -541,18 +574,20 @@ const AdminPagination = memo((props) => {
           className="text-[#333333]"
         />
       </PaginationControl>
-      <PaginationControl
-        label={lastLabel}
-        disabled={isLastPage}
-        onClick={() => onPageChange(totalPages)}
-      >
-        <ChevronsRight
-          size={PAGINATION_ICON_SIZE}
-          strokeWidth={2}
-          aria-hidden="true"
-          className="text-[#333333]"
-        />
-      </PaginationControl>
+      {isSmUp ? (
+        <PaginationControl
+          label={lastLabel}
+          disabled={isLastPage}
+          onClick={() => onPageChange(totalPages)}
+        >
+          <ChevronsRight
+            size={PAGINATION_ICON_SIZE}
+            strokeWidth={2}
+            aria-hidden="true"
+            className="text-[#333333]"
+          />
+        </PaginationControl>
+      ) : null}
     </nav>
   );
 });

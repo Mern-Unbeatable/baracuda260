@@ -10,7 +10,7 @@ export const MORE_ICON_SIZE = 20;
 export const AVATAR_SIZE = 30;
 export const PHOTO_THUMB_SIZE = 36;
 export const DRAWER_WIDTH_PX = 480;
-export const COMMENTS_PAGE_SIZE = 12;
+export const COMMENTS_PAGE_SIZE = 7;
 /** Figma footer always shows pages 1–3 on the full list. */
 export const COMMENTS_PAGE_CHROME = 3;
 
@@ -31,7 +31,7 @@ export const STATUS_FILTERS = [
   { id: 'all', labelKey: 'adminComment.filters.all' },
   { id: COMMENT_STATUS.APPROVED, labelKey: 'adminComment.filters.approved' },
   { id: COMMENT_STATUS.PENDING, labelKey: 'adminComment.filters.pending' },
-  { id: COMMENT_STATUS.DELETED, labelKey: 'adminComment.filters.deleted' },
+  { id: COMMENT_STATUS.HIDDEN, labelKey: 'adminComment.filters.hidden' },
 ];
 
 export const ACTION_MENU_OPTIONS = [
@@ -99,13 +99,12 @@ export const TYPE_STYLES = {
   [COMMENT_TYPE.ZODIAC]: { bg: 'bg-[#fdf4ff]', text: 'text-[#7e22ce]' },
 };
 
-/** Stat cards — Figma values (static chrome). */
+/** Stat card chrome — values come from the live stats API. */
 export const COMMENT_STAT_CARDS = [
   {
     id: 'total',
     labelKey: 'adminComment.stats.total.label',
-    value: '12',
-    hintKey: 'adminComment.stats.total.hint',
+    valueKey: 'total',
     hintClass: 'text-[#2563eb]',
     icon: '💬',
     iconBg: 'bg-[#eff6ff]',
@@ -113,8 +112,7 @@ export const COMMENT_STAT_CARDS = [
   {
     id: 'approved',
     labelKey: 'adminComment.stats.approved.label',
-    value: '6',
-    hintKey: 'adminComment.stats.approved.hint',
+    valueKey: 'approved',
     hintClass: 'text-[#16a34a]',
     icon: '✓',
     iconBg: 'bg-[#dcfce7]',
@@ -122,8 +120,7 @@ export const COMMENT_STAT_CARDS = [
   {
     id: 'pending',
     labelKey: 'adminComment.stats.pending.label',
-    value: '2',
-    hintKey: 'adminComment.stats.pending.hint',
+    valueKey: 'pending',
     hintClass: 'text-[#d97706]',
     icon: '⏳',
     iconBg: 'bg-[#fef3c7]',
@@ -131,13 +128,22 @@ export const COMMENT_STAT_CARDS = [
   {
     id: 'hidden',
     labelKey: 'adminComment.stats.hidden.label',
-    value: '1',
-    hintKey: 'adminComment.stats.hidden.hint',
+    valueKey: 'hidden',
     hintClass: 'text-[#6b7280]',
     icon: '◉',
     iconBg: 'bg-[#f3f4f6]',
   },
 ];
+
+export const EMPTY_COMMENT_STATS = {
+  total: 0,
+  approved: 0,
+  pending: 0,
+  hidden: 0,
+  deleted: 0,
+  today: 0,
+  approvedRate: 0,
+};
 
 /** Mock rows matching Figma 390:2248. */
 export const ADMIN_COMMENT_ROWS = [

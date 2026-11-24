@@ -1064,15 +1064,16 @@
     "tableTitle": "Wszystkie komentarze",
     "empty": "Brak komentarzy dla tego filtra.",
     "selectAll": "Zaznacz wszystkie widoczne komentarze",
+    "selectAllVisible": "Zaznacz wszystkie",
     "selectRow": "Zaznacz komentarz {{code}}",
     "stats": {
       "total": {
         "label": "Wszystkie komentarze",
-        "hint": "+12 dziś"
+        "hint": "+{{count}} dziś"
       },
       "approved": {
         "label": "Zatwierdzone",
-        "hint": "50% wskaźnik"
+        "hint": "{{rate}}% wskaźnik"
       },
       "pending": {
         "label": "Do przeglądu",
@@ -1088,7 +1089,10 @@
       "all": "Wszystkie",
       "approved": "Zatwierdzone",
       "pending": "Oczekujące",
-      "deleted": "Usunięte"
+      "hidden": "Ukryte"
+    },
+    "bulk": {
+      "hideSelected": "Ukryj zaznaczone"
     },
     "columns": {
       "commentId": "ID komentarza",
@@ -1116,6 +1120,7 @@
       "menuAria": "Akcje komentarza dla {{name}}",
       "seeDetails": "Zobacz szczegóły",
       "hide": "Ukryj",
+      "delete": "Usuń",
       "approved": "Zatwierdzony",
       "pending": "Oczekujący"
     },
@@ -1133,10 +1138,13 @@
       "delete": "🗑 Usuń komentarz"
     },
     "pagination": {
-      "showing": "Wyświetlono {{count}} z {{total}} komentarzy",
+      "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
       "aria": "Paginacja komentarzy",
-      "previous": "Poprzednia strona",
+      "first": "Pierwsza strona",
+      "prev": "Poprzednia strona",
+      "previous": "Poprzednia",
       "next": "Następna strona",
+      "last": "Ostatnia strona",
       "page": "Strona {{page}}"
     },
     "rows": {

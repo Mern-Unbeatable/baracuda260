@@ -17,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/data-display/Table/Table';
+import { formatCompactStatValue } from '@/components/data-display/AdminOverviewStatCard/AdminOverviewStatCard';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import {
@@ -117,30 +118,32 @@ const StatusFilterTabs = memo(({ statusFilter, onSelect }) => {
 
   return (
     <div
-      className="flex flex-wrap items-center gap-1.5"
+      className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
       role="tablist"
       aria-label={t('adminComment.filters.aria')}
     >
-      {STATUS_FILTERS.map((filter) => {
-        const active = filter.id === statusFilter;
-        return (
-          <Button
-            unstyled
-            key={filter.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            onClick={() => onSelect(filter.id)}
-            className={`inline-flex h-7 cursor-pointer items-center justify-center rounded-[7px] border px-3.25 py-1.25 text-[12px] font-semibold leading-4.5 transition ${
-              active
-                ? 'border-[#4048cd] bg-[#4048cd] text-white'
-                : 'border-[#e5e7eb] bg-white text-[#6b7280] hover:bg-[#f9fafb]'
-            }`}
-          >
-            {t(filter.labelKey)}
-          </Button>
-        );
-      })}
+      <div className="flex w-max flex-nowrap items-center gap-1.5 sm:w-auto sm:flex-wrap">
+        {STATUS_FILTERS.map((filter) => {
+          const active = filter.id === statusFilter;
+          return (
+            <Button
+              unstyled
+              key={filter.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => onSelect(filter.id)}
+              className={`inline-flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-[7px] border px-3.25 py-1.25 text-[12px] font-semibold leading-4.5 transition ${
+                active
+                  ? 'border-[#4048cd] bg-[#4048cd] text-white'
+                  : 'border-[#e5e7eb] bg-white text-[#6b7280] hover:bg-[#f9fafb]'
+              }`}
+            >
+              {t(filter.labelKey)}
+            </Button>
+          );
+        })}
+      </div>
     </div>
   );
 });
@@ -155,10 +158,19 @@ StatusFilterTabs.displayName = 'StatusFilterTabs';
  *   onClose: () => void,
  *   onSeeDetails: (rowId: string) => void,
  *   onSelectStatus: (rowId: string, status: string) => void,
+ *   compact?: boolean,
  * }} props
  */
 const CommentActionMenu = memo(
-  ({ row, isOpen, onToggle, onClose, onSeeDetails, onSelectStatus }) => {
+  ({
+    row,
+    isOpen,
+    onToggle,
+    onClose,
+    onSeeDetails,
+    onSelectStatus,
+    compact = false,
+  }) => {
     const { t } = useTranslation();
     const buttonWrapRef = useRef(null);
     const buttonRef = useRef(null);
@@ -267,7 +279,7 @@ const CommentActionMenu = memo(
       : null;
 
     return (
-      <div className="relative inline-flex" ref={buttonWrapRef}>
+      <div className="relative inline-flex shrink-0" ref={buttonWrapRef}>
         <Button
           unstyled
           ref={buttonRef}
@@ -278,16 +290,16 @@ const CommentActionMenu = memo(
             name: row.name || (row.nameKey ? t(row.nameKey) : 'User'),
           })}
           onClick={() => onToggle(row.id)}
-          className={`inline-flex size-7 cursor-pointer items-center justify-center rounded-[7px] border border-[#e5e7eb] bg-white transition ${
-            isOpen ? 'bg-[#f3f4f6]' : 'hover:bg-[#f9fafb]'
-          }`}
+          className={`inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#e5e7eb] bg-white transition ${
+            compact ? 'size-8' : 'size-7 rounded-[7px]'
+          } ${isOpen ? 'bg-[#f3f4f6]' : 'hover:bg-[#f9fafb]'}`}
         >
           <Image
             src={ADMIN_COMMENT_ASSETS.more}
             alt=""
-            width={MORE_ICON_SIZE}
-            height={MORE_ICON_SIZE}
-            className="size-5"
+            width={compact ? 16 : MORE_ICON_SIZE}
+            height={compact ? 16 : MORE_ICON_SIZE}
+            className={compact ? 'size-4' : 'size-5'}
           />
         </Button>
         {menu}
@@ -349,7 +361,6 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
             >
               {t('adminComment.drawer.title')}
             </h2>
-            <p className="text-[12px] leading-4.5 text-[#6b7280]">{row.code}</p>
           </div>
           <div className="flex items-center gap-3">
             <StatusBadge status={row.status} />
@@ -467,14 +478,6 @@ const CommentDetailsDrawer = memo(({ row, onClose, onSelectStatus }) => {
                 {t('adminComment.drawer.hide')}
               </Button>
             </div>
-            <Button
-              unstyled
-              type="button"
-              onClick={() => onSelectStatus(row.id, COMMENT_STATUS.DELETED)}
-              className="mt-2 inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-[10px] border border-[#fecaca] bg-[#fef2f2] px-3 text-[14px] font-semibold text-[#991b1b] hover:bg-[#fee2e2]"
-            >
-              {t('adminComment.drawer.delete')}
-            </Button>
           </div>
         </div>
       </aside>
@@ -512,83 +515,79 @@ const CommentTableRow = memo(
 
     return (
       <TableRow className="border-b border-[#f9fafb]">
-        <TableCell className="w-10 px-3 py-3">
+        <TableCell className="overflow-hidden px-2 py-2.5 text-[14px] sm:px-3">
           <input
             type="checkbox"
             checked={selected}
             onChange={() => onToggleSelected(row.id)}
-            aria-label={t('adminComment.selectRow', { code: row.code })}
+            aria-label={t('adminComment.selectRow', {
+              code: row.name || row.code,
+            })}
             className="size-3.75 cursor-pointer rounded-xs border border-[#767676]"
           />
         </TableCell>
-        <TableCell className="w-24 px-3 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-1.5">
+        <TableCell className="overflow-hidden px-2 py-2.5 text-[14px] sm:px-3">
+          <div className="flex min-w-0 items-center gap-2">
             {row.pinned ? (
-              <span className="text-[11px] leading-[16.5px]" aria-hidden="true">
+              <span className="shrink-0 text-[11px] leading-4" aria-hidden="true">
                 📌
               </span>
             ) : null}
-            <span className="truncate text-[12px] font-medium leading-4.5 text-[#6b7280]">
-              {row.code}
-            </span>
-          </div>
-        </TableCell>
-        <TableCell className="w-38 px-3 py-3">
-          <div className="flex min-w-0 items-center gap-2">
             <Image
               src={row.avatar}
               alt=""
               width={AVATAR_SIZE}
               height={AVATAR_SIZE}
-              className="size-7.5 shrink-0 rounded-full border-2 border-[#f3f4f6] object-cover"
+              className="size-7 shrink-0 rounded-full border border-[#f3f4f6] object-cover"
             />
-            <div className="min-w-0">
-              <p className="truncate text-[13px] font-semibold leading-[19.5px] text-[#111827]">
+            <div className="min-w-0 overflow-hidden">
+              <p className="truncate text-[13px] font-semibold leading-5 text-[#111827]">
                 {row.name || (row.nameKey ? t(row.nameKey) : 'User')}
               </p>
-              <p className="truncate text-[11px] leading-[16.5px] text-[#9ca3af]">
+              <p className="truncate text-[11px] leading-4 text-[#9ca3af]">
                 {row.country || (row.countryKey ? t(row.countryKey) : '')}
               </p>
             </div>
           </div>
         </TableCell>
-        <TableCell className="w-38 px-3 py-3">
+        <TableCell className="overflow-hidden px-2 py-2.5 text-[14px] sm:px-3">
           <div className="flex min-w-0 items-center gap-2">
             <Image
               src={row.photo}
               alt=""
               width={PHOTO_THUMB_SIZE}
               height={PHOTO_THUMB_SIZE}
-              className="size-9 shrink-0 rounded-[7px] object-cover"
+              className="size-8 shrink-0 rounded-md object-cover"
             />
-            <div className="min-w-0">
-              <p className="truncate text-[12px] font-semibold leading-4.5 text-[#111827]">
-                {row.photoTitle || (row.photoTitleKey ? t(row.photoTitleKey) : 'Artwork')}
+            <div className="min-w-0 overflow-hidden">
+              <p className="truncate text-[12px] font-semibold leading-4 text-[#111827]">
+                {row.photoTitle ||
+                  (row.photoTitleKey ? t(row.photoTitleKey) : 'Artwork')}
               </p>
-              <p className="truncate text-[11px] leading-[16.5px] text-[#9ca3af]">
+              <p className="truncate text-[11px] leading-4 text-[#9ca3af]">
                 {row.category || (row.categoryKey ? t(row.categoryKey) : '')}
               </p>
             </div>
           </div>
         </TableCell>
-        <TableCell className="w-28 px-3 py-3 whitespace-nowrap">
+        <TableCell className="overflow-hidden px-2 py-2.5 text-[14px] sm:px-3">
           <TypeBadge type={row.type} />
         </TableCell>
-        <TableCell className="px-3 py-3">
+        <TableCell className="min-w-0 overflow-hidden px-2 py-2.5 text-[14px] sm:px-3">
           <p
-            className="truncate text-[13px] leading-[19.5px] text-[#374151]"
+            className="truncate text-[13px] leading-5 text-[#374151]"
             title={row.comment || (row.commentKey ? t(row.commentKey) : '')}
           >
             {row.comment || (row.commentKey ? t(row.commentKey) : '')}
           </p>
         </TableCell>
-        <TableCell className="w-24 px-3 py-3 text-[12px] leading-4.5 whitespace-nowrap text-[#9ca3af]">
-          {row.date}
+        <TableCell className="overflow-hidden px-2 py-2.5 text-[12px] leading-4 text-[#9ca3af] sm:px-3">
+          <span className="truncate block">{row.date}</span>
         </TableCell>
-        <TableCell className="w-24 px-3 py-3 whitespace-nowrap">
+        <TableCell className="overflow-hidden px-2 py-2.5 text-[14px] sm:px-3">
           <StatusBadge status={row.status} />
         </TableCell>
-        <TableCell className="w-12 px-3 py-3 text-right">
+        <TableCell className="overflow-hidden px-2 py-2.5 text-right text-[14px] sm:px-3">
           <CommentActionMenu
             row={row}
             isOpen={openActionId === row.id}
@@ -636,23 +635,22 @@ const CommentsTable = memo(
 
     return (
       <Table
-        className="w-full table-fixed min-w-[820px]"
-        wrapperClassName="overscroll-x-contain"
+        className="w-full table-fixed"
+        wrapperClassName="overflow-x-hidden overflow-y-visible"
       >
         <colgroup>
-          <col className="w-10" />
-          <col className="w-24" />
-          <col className="w-38" />
-          <col className="w-38" />
-          <col className="w-28" />
-          <col className="w-auto" />
-          <col className="w-24" />
-          <col className="w-24" />
-          <col className="w-12" />
+          <col className="w-[4%]" />
+          <col className="w-[16%]" />
+          <col className="w-[16%]" />
+          <col className="w-[9%]" />
+          <col className="w-[28%]" />
+          <col className="w-[10%]" />
+          <col className="w-[10%]" />
+          <col className="w-[7%]" />
         </colgroup>
         <TableHeader>
           <TableRow isHeader className="border-b border-[#f3f4f6]">
-            <TableHead className="w-10 px-3 py-3">
+            <TableHead className="px-2 py-2.5 text-[13px] sm:px-3">
               <input
                 type="checkbox"
                 checked={allVisibleSelected}
@@ -661,28 +659,25 @@ const CommentsTable = memo(
                 className="size-3.75 cursor-pointer rounded-xs border border-[#767676]"
               />
             </TableHead>
-            <TableHead className="w-24 px-3 py-3 text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
-              {t('adminComment.columns.commentId', 'ID')}
-            </TableHead>
-            <TableHead className="w-38 px-3 py-3 text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
+            <TableHead className="px-2 py-2.5 text-[12px] font-bold uppercase tracking-[0.4px] text-[#9ca3af] sm:px-3">
               {t('adminComment.columns.user', 'User')}
             </TableHead>
-            <TableHead className="w-38 px-3 py-3 text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
+            <TableHead className="px-2 py-2.5 text-[12px] font-bold uppercase tracking-[0.4px] text-[#9ca3af] sm:px-3">
               {t('adminComment.columns.photo', 'Photo')}
             </TableHead>
-            <TableHead className="w-28 px-3 py-3 text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
+            <TableHead className="px-2 py-2.5 text-[12px] font-bold uppercase tracking-[0.4px] text-[#9ca3af] sm:px-3">
               {t('adminComment.columns.type', 'Type')}
             </TableHead>
-            <TableHead className="px-3 py-3 text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
+            <TableHead className="px-2 py-2.5 text-[12px] font-bold uppercase tracking-[0.4px] text-[#9ca3af] sm:px-3">
               {t('adminComment.columns.comment', 'Comment')}
             </TableHead>
-            <TableHead className="w-24 px-3 py-3 text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
+            <TableHead className="px-2 py-2.5 text-[12px] font-bold uppercase tracking-[0.4px] text-[#9ca3af] sm:px-3">
               {t('adminComment.columns.date', 'Date')}
             </TableHead>
-            <TableHead className="w-24 px-3 py-3 text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
+            <TableHead className="px-2 py-2.5 text-[12px] font-bold uppercase tracking-[0.4px] text-[#9ca3af] sm:px-3">
               {t('adminComment.columns.status', 'Status')}
             </TableHead>
-            <TableHead className="w-12 px-3 py-3 text-right text-[11px] font-bold uppercase tracking-[0.55px] text-[#9ca3af] whitespace-nowrap">
+            <TableHead className="px-2 py-2.5 text-right text-[12px] font-bold uppercase tracking-[0.4px] text-[#9ca3af] sm:px-3">
               {t('adminComment.columns.actions', 'Action')}
             </TableHead>
           </TableRow>
@@ -735,75 +730,108 @@ const CommentsMobileCards = memo(
     const { t } = useTranslation();
 
     return (
-      <div className="flex flex-col" data-testid="comments-mobile-cards">
-        {rows.map((row) => (
-          <article
-            key={row.id}
-            className="flex flex-col gap-3 border-b border-[#f9fafb] px-4 py-4 last:border-b-0"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-2">
+      <ul
+        className="flex flex-col gap-3 bg-[#f3f4f6] p-3"
+        data-testid="comments-mobile-cards"
+      >
+        {rows.map((row) => {
+          const displayName =
+            row.name || (row.nameKey ? t(row.nameKey) : 'User');
+          const country =
+            row.country || (row.countryKey ? t(row.countryKey) : '');
+          const photoTitle =
+            row.photoTitle ||
+            (row.photoTitleKey ? t(row.photoTitleKey) : 'Artwork');
+          const category =
+            row.category || (row.categoryKey ? t(row.categoryKey) : '');
+          const comment =
+            row.comment || (row.commentKey ? t(row.commentKey) : '');
+
+          return (
+            <li
+              key={row.id}
+              className="rounded-2xl border border-[#e8ebf1] bg-white p-3 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+            >
+              <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={selectedIds.has(row.id)}
                   onChange={() => onToggleSelected(row.id)}
-                  aria-label={t('adminComment.selectRow', { code: row.code })}
-                  className="mt-1 size-3.75 cursor-pointer rounded-xs border border-[#767676]"
+                  aria-label={t('adminComment.selectRow', {
+                    code: displayName,
+                  })}
+                  className="size-4 shrink-0 cursor-pointer rounded border border-[#9ca3af]"
                 />
                 <Image
                   src={row.avatar}
                   alt=""
-                  width={AVATAR_SIZE}
-                  height={AVATAR_SIZE}
-                  className="size-7.5 shrink-0 rounded-full object-cover"
+                  width={36}
+                  height={36}
+                  className="size-9 shrink-0 rounded-full object-cover"
                 />
-                <div className="min-w-0">
-                  <p className="truncate text-[13px] font-semibold text-[#111827]">
-                    {row.name || (row.nameKey ? t(row.nameKey) : 'User')}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[14px] font-semibold leading-5 text-[#111827]">
+                    {row.pinned ? (
+                      <span className="mr-1" aria-hidden="true">
+                        📌
+                      </span>
+                    ) : null}
+                    {displayName}
                   </p>
-                  <p className="flex items-center gap-1 text-[11px] text-[#9ca3af]">
-                    {row.pinned ? <span aria-hidden="true">📌</span> : null}
-                    <span>{row.code}</span>
-                  </p>
+                  {country ? (
+                    <p className="truncate text-[12px] leading-4 text-[#6b7280]">
+                      {country}
+                    </p>
+                  ) : null}
                 </div>
+                <CommentActionMenu
+                  row={row}
+                  isOpen={openActionId === row.id}
+                  onToggle={onToggleAction}
+                  onClose={onCloseAction}
+                  onSeeDetails={onSeeDetails}
+                  onSelectStatus={onSelectStatus}
+                  compact
+                />
               </div>
-              <CommentActionMenu
-                row={row}
-                isOpen={openActionId === row.id}
-                onToggle={onToggleAction}
-                onClose={onCloseAction}
-                onSeeDetails={onSeeDetails}
-                onSelectStatus={onSelectStatus}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Image
-                src={row.photo}
-                alt=""
-                width={PHOTO_THUMB_SIZE}
-                height={PHOTO_THUMB_SIZE}
-                className="size-9 rounded-[7px] object-cover"
-              />
-              <div className="min-w-0">
-                <p className="truncate text-[12px] font-semibold text-[#111827]">
-                  {row.photoTitle || (row.photoTitleKey ? t(row.photoTitleKey) : 'Artwork')}
-                </p>
-                <p className="text-[11px] text-[#9ca3af]">
-                  {row.category || (row.categoryKey ? t(row.categoryKey) : '')}
-                </p>
+
+              <div className="mt-3 overflow-hidden rounded-xl bg-[#f8fafc]">
+                <div className="flex gap-3 p-2.5">
+                  <Image
+                    src={row.photo}
+                    alt=""
+                    width={64}
+                    height={64}
+                    className="size-16 shrink-0 rounded-lg object-cover"
+                  />
+                  <div className="min-w-0 flex-1 self-center">
+                    <p className="line-clamp-2 text-[13px] font-semibold leading-5 text-[#111827]">
+                      {photoTitle}
+                    </p>
+                    {category ? (
+                      <p className="mt-1 text-[12px] leading-4 text-[#6b7280]">
+                        {category}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                {comment ? (
+                  <p className="whitespace-pre-wrap break-words border-t border-[#eef2f7] px-3 py-2.5 text-[13px] leading-5 text-[#374151]">
+                    {comment}
+                  </p>
+                ) : null}
               </div>
-            </div>
-            <p className="line-clamp-2 text-[13px] leading-[19.5px] text-[#374151]">
-              {row.comment || (row.commentKey ? t(row.commentKey) : '')}
-            </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <TypeBadge type={row.type} />
-              <StatusBadge status={row.status} />
-              <span className="text-[12px] text-[#9ca3af]">{row.date}</span>
-            </div>
-          </article>
-        ))}
-      </div>
+
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <StatusBadge status={row.status} />
+                <span className="text-[12px] leading-4 text-[#6b7280]">
+                  {row.date}
+                </span>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     );
   },
 );
@@ -812,20 +840,46 @@ CommentsMobileCards.displayName = 'CommentsMobileCards';
 
 import AdminBasicStatCard from '@/components/data-display/AdminBasicStatCard/AdminBasicStatCard';
 
-const CommentStatCards = memo(() => {
+/**
+ * @param {{
+ *   stats: {
+ *     total: number,
+ *     approved: number,
+ *     pending: number,
+ *     hidden: number,
+ *     today: number,
+ *     approvedRate: number,
+ *   },
+ * }} props
+ */
+const CommentStatCards = memo(({ stats }) => {
+  const { t } = useTranslation();
+
+  const hints = {
+    total: t('adminComment.stats.total.hint', {
+      count: formatCompactStatValue(stats.today),
+    }),
+    approved: t('adminComment.stats.approved.hint', {
+      rate: stats.approvedRate,
+    }),
+    pending: t('adminComment.stats.pending.hint'),
+    hidden: t('adminComment.stats.hidden.hint'),
+  };
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
       {COMMENT_STAT_CARDS.map((card) => (
         <AdminBasicStatCard
           key={card.id}
           labelKey={card.labelKey}
-          value={card.value}
+          value={formatCompactStatValue(stats[card.valueKey] || 0)}
+          hint={hints[card.id]}
           icon={card.icon}
           iconBg={card.iconBg}
-          hintKey={card.hintKey}
           hintClass={card.hintClass}
           borderClass="border-[#f3f4f6]"
-          valueClass="text-[#111827]"
+          cardClass="px-3 py-3.5 sm:px-5 sm:py-4.5"
+          valueClass="pt-2 text-[22px] leading-7 text-[#111827] sm:pt-2.5 sm:text-[26px]"
         />
       ))}
     </div>
@@ -847,11 +901,10 @@ const AdminCommentContent = memo(() => {
     detailsRow,
     visibleRows,
     page,
-    pageNumbers,
-    resultsCount,
+    totalPages,
     resultsTotal,
-    isFirstPage,
-    isLastPage,
+    range,
+    stats,
     allVisibleSelected,
     isLoading,
     isUpdating,
@@ -864,31 +917,45 @@ const AdminCommentContent = memo(() => {
     handleCloseDetails,
     handleToggleRowSelected,
     handleToggleSelectAllVisible,
-    handlePreviousPage,
-    handleNextPage,
-    handleSelectPage,
+    handlePageChange,
   } = useAdminComment();
 
   return (
-    <div className="flex w-full flex-col gap-6 py-2 sm:py-4">
+    <div className="flex w-full flex-col gap-5 py-2 sm:gap-6 sm:py-4">
       <AdminPageHeader
         title={t('adminComment.title')}
         description={t('adminComment.subtitle')}
+        titleClassName="text-[24px] tracking-tight sm:text-[28px] lg:text-[30px] lg:leading-9 lg:tracking-tight"
+        descriptionClassName="text-[13px] leading-5 sm:text-[14px] lg:text-[14px] lg:leading-6"
       />
 
-      <CommentStatCards />
+      <CommentStatCards stats={stats} />
 
       <section
         aria-label={t('adminComment.tableAria')}
-        className="overflow-hidden rounded-2xl border border-[#f3f4f6] bg-white shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)]"
+        className="overflow-hidden rounded-xl border border-[#f3f4f6] bg-white shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)] lg:bg-white"
       >
-        <div className="flex flex-col gap-4 border-b border-[#f3f4f6] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-[14px] font-bold leading-5.25 text-[#111827]">
-            {t('adminComment.tableTitle')}{' '}
-            <span className="text-[13px] font-medium leading-[19.5px] text-[#9ca3af]">
-              ({resultsTotal})
-            </span>
-          </p>
+        <div className="flex flex-col gap-3 border-b border-[#f3f4f6] bg-white px-4 py-3.5 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[13px] font-bold leading-5 text-[#111827] sm:text-[14px]">
+              {t('adminComment.tableTitle')}{' '}
+              <span className="text-[12px] font-medium leading-5 text-[#9ca3af] sm:text-[13px]">
+                ({resultsTotal})
+              </span>
+            </p>
+            {!isLgUp && visibleRows.length > 0 ? (
+              <label className="inline-flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-[#4048cd]">
+                <input
+                  type="checkbox"
+                  checked={allVisibleSelected}
+                  onChange={handleToggleSelectAllVisible}
+                  aria-label={t('adminComment.selectAll')}
+                  className="size-4 cursor-pointer rounded border border-[#9ca3af]"
+                />
+                {t('adminComment.selectAllVisible', 'Select all')}
+              </label>
+            ) : null}
+          </div>
           <StatusFilterTabs
             statusFilter={statusFilter}
             onSelect={handleStatusFilterChange}
@@ -923,10 +990,10 @@ const AdminCommentContent = memo(() => {
                 unstyled
                 type="button"
                 disabled={isUpdating}
-                onClick={() => handleBulkStatusChange(COMMENT_STATUS.DELETED)}
-                className="cursor-pointer rounded-lg bg-[#dc2626] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#b91c1c] disabled:opacity-50"
+                onClick={() => handleBulkStatusChange(COMMENT_STATUS.HIDDEN)}
+                className="cursor-pointer rounded-lg bg-[#6b7280] px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#4b5563] disabled:opacity-50"
               >
-                Delete Selected
+                {t('adminComment.bulk.hideSelected', 'Hide Selected')}
               </Button>
             </div>
           </div>
@@ -969,28 +1036,31 @@ const AdminCommentContent = memo(() => {
           </p>
         )}
 
-        <AdminPagination
-          variant="comment"
-          count={resultsCount}
-          total={resultsTotal}
-          page={page}
-          pageNumbers={pageNumbers}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-          onSelectPage={handleSelectPage}
-          showingText={t('adminComment.pagination.showing', {
-            count: resultsCount,
-            total: resultsTotal,
-          })}
-          navAriaLabel={t('adminComment.pagination.aria')}
-          previousAriaLabel={t('adminComment.pagination.previous')}
-          nextAriaLabel={t('adminComment.pagination.next')}
-          pageAriaLabel={(pageNumber) =>
-            t('adminComment.pagination.page', { page: pageNumber })
-          }
-        />
+        <div className="flex flex-col items-center gap-3 border-t border-[#f3f4f6] px-4 py-4 sm:flex-row sm:justify-between sm:px-5">
+          <p className="text-center text-[13px] leading-5 text-[#687186] sm:text-left">
+            {t('adminComment.pagination.showing', {
+              from: range.from,
+              to: range.to,
+              total: range.total,
+            })}
+          </p>
+          {totalPages > 1 ? (
+            <AdminPagination
+              variant="competitions"
+              page={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              navAriaLabel={t('adminComment.pagination.aria')}
+              firstLabel={t('adminComment.pagination.first')}
+              prevLabel={t('adminComment.pagination.prev')}
+              nextLabel={t('adminComment.pagination.next')}
+              lastLabel={t('adminComment.pagination.last')}
+              pageLabel={(pageNumber) =>
+                t('adminComment.pagination.page', { page: pageNumber })
+              }
+            />
+          ) : null}
+        </div>
       </section>
 
       <CommentDetailsDrawer

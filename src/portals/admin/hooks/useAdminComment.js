@@ -5,12 +5,15 @@ import { useTranslation } from 'react-i18next';
 import {
   ADMIN_COMMENT_ROWS,
   COMMENTS_PAGE_SIZE,
+  EMPTY_COMMENT_STATS,
   filterCommentsByStatus,
   getCommentPageNumbers,
+  paginateComments,
 } from '@/portals/admin/data/adminCommentData';
 import {
   ADMIN_COMMENTS_QUERY_KEY,
   getAdminCommentDetailsApi,
+  getAdminCommentStatsApi,
   getAdminCommentsApi,
   updateAdminCommentsBulkStatusApi,
 } from '@/shared/api/comments.api';
@@ -44,6 +47,13 @@ export default function useAdminComment(
     staleTime: 30 * 1000,
   });
 
+  // 1b. Live dashboard stats (not hardcoded Figma placeholders)
+  const statsQuery = useQuery({
+    queryKey: [...ADMIN_COMMENTS_QUERY_KEY, 'stats'],
+    queryFn: getAdminCommentStatsApi,
+    staleTime: 30 * 1000,
+  });
+
   // 2. Fetch single comment detail when drawer is open
   const detailQuery = useQuery({
     queryKey: [...ADMIN_COMMENTS_QUERY_KEY, 'detail', detailsId],
@@ -58,23 +68,27 @@ export default function useAdminComment(
     [initialRows, statusFilter],
   );
 
-  const visibleRows =
-    commentsQuery.data?.items !== undefined
-      ? commentsQuery.data.items
-      : commentsQuery.isLoading
-        ? []
-        : fallbackFiltered;
-
-  const resultsTotal =
-    commentsQuery.data?.meta?.totalRecords ??
-    (commentsQuery.data?.items?.length || fallbackFiltered.length);
+  const usingApiList = commentsQuery.data?.items !== undefined;
+  const resultsTotal = usingApiList
+    ? (commentsQuery.data?.meta?.totalRecords ??
+      commentsQuery.data.items.length)
+    : commentsQuery.isLoading
+      ? 0
+      : fallbackFiltered.length;
 
   const totalPages = Math.max(
     1,
-    commentsQuery.data?.meta?.totalPages ??
-      Math.ceil(resultsTotal / pageSize) ??
-      1,
+    usingApiList
+      ? (commentsQuery.data?.meta?.totalPages ??
+        Math.ceil(resultsTotal / pageSize))
+      : Math.ceil(resultsTotal / pageSize) || 1,
   );
+
+  const visibleRows = commentsQuery.isLoading
+    ? []
+    : usingApiList
+      ? commentsQuery.data.items.slice(0, pageSize)
+      : paginateComments(fallbackFiltered, page, pageSize);
 
   const safePage = Math.min(page, totalPages);
   const pageNumbers = getCommentPageNumbers(safePage, totalPages);
@@ -91,7 +105,7 @@ export default function useAdminComment(
   const updateStatusMutation = useMutation({
     mutationFn: ({ commentIds, status }) =>
       updateAdminCommentsBulkStatusApi({ commentIds, status }),
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ADMIN_COMMENTS_QUERY_KEY,
       });
@@ -202,6 +216,13 @@ export default function useAdminComment(
   const allVisibleSelected =
     visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
 
+  const from =
+    resultsTotal === 0 ? 0 : (safePage - 1) * pageSize + 1;
+  const to =
+    resultsTotal === 0
+      ? 0
+      : Math.min(from + visibleRows.length - 1, resultsTotal);
+
   return {
     statusFilter,
     openActionId,
@@ -213,6 +234,8 @@ export default function useAdminComment(
     pageNumbers,
     resultsCount: visibleRows.length,
     resultsTotal,
+    range: { from, to, total: resultsTotal },
+    stats: statsQuery.data ?? EMPTY_COMMENT_STATS,
     isFirstPage: safePage <= 1,
     isLastPage: safePage >= totalPages,
     allVisibleSelected,
@@ -232,6 +255,7 @@ export default function useAdminComment(
     handlePreviousPage,
     handleNextPage,
     handleSelectPage,
+    handlePageChange: handleSelectPage,
     refetchComments: commentsQuery.refetch,
   };
 }
