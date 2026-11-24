@@ -532,7 +532,7 @@ const PhotoShowcaseCard = memo(
                   />
                 </Button>
               ) : topRightType === 'menu' ? (
-                <div className="relative">
+                <div className="absolute right-3 top-3 z-20">
                   <Button
                     unstyled
                     type="button"
@@ -540,7 +540,7 @@ const PhotoShowcaseCard = memo(
                     aria-label={t('gallery.moreActions', {
                       defaultValue: 'More actions',
                     })}
-                    className="absolute right-3 top-3 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/55 text-white transition hover:bg-black/70"
+                    className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/55 text-white transition hover:bg-black/70"
                   >
                     <MoreVertical
                       size={16}
@@ -550,7 +550,8 @@ const PhotoShowcaseCard = memo(
                   </Button>
                   {menuOpen && (
                     <div
-                      className="absolute right-3 top-12 z-30 min-w-40 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl transition animate-in fade-in"
+                      role="menu"
+                      className="absolute right-0 top-10 z-30 min-w-40 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl transition animate-in fade-in"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -558,13 +559,14 @@ const PhotoShowcaseCard = memo(
                     >
                       <button
                         type="button"
+                        role="menuitem"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           setMenuOpen(false);
                           setAwardOpen(true);
                         }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] font-semibold text-gray-700 hover:bg-gray-50 transition"
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] font-semibold text-gray-700 transition hover:bg-gray-50"
                       >
                         <Camera size={14} className="text-amber-500" />
                         <span>
@@ -576,13 +578,14 @@ const PhotoShowcaseCard = memo(
                       </button>
                       <button
                         type="button"
+                        role="menuitem"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           setMenuOpen(false);
                           setReportOpen(true);
                         }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] font-semibold text-red-600 hover:bg-red-50 transition"
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] font-semibold text-red-600 transition hover:bg-red-50"
                       >
                         <Flag size={14} className="text-red-500" />
                         <span>

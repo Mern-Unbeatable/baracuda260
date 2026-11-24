@@ -1,4 +1,10 @@
-import { MoreVertical } from 'lucide-react';
+import {
+  CircleCheck,
+  Hourglass,
+  MoreVertical,
+  Search,
+  Shield,
+} from 'lucide-react';
 import React, {
   memo,
   useEffect,
@@ -36,6 +42,13 @@ import {
 import useAdminReports from '@/portals/admin/hooks/useAdminReports';
 import { ROUTES } from '@/shared/config';
 
+const REPORT_STAT_ICONS = {
+  total: Shield,
+  pending: Hourglass,
+  underReview: Search,
+  resolved: CircleCheck,
+};
+
 const ACTION_MENU_OFFSET_PX = 6;
 const ACTION_MENU_FALLBACK_HEIGHT_PX = 148;
 const ACTION_MENU_VIEWPORT_MARGIN_PX = 8;
@@ -66,19 +79,22 @@ const useIsMdUp = () => {
 
 const ReportStatCards = memo(({ stats }) => (
   <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-    {REPORT_STAT_CARDS.map((card) => (
-      <AdminBasicStatCard
-        key={card.id}
-        labelKey={card.labelKey}
-        value={stats[card.id] ?? 0}
-        icon={card.icon}
-        iconBg={card.iconBg}
-        hintKey={card.hintKey}
-        borderClass={card.border || 'border-[#f3f4f6]'}
-        cardClass="px-3 py-3.5 sm:px-5 sm:py-4.5"
-        valueClass={`pt-2 text-[22px] leading-7 sm:pt-2.5 sm:text-[26px] ${card.valueClass || 'text-[#111827]'}`}
-      />
-    ))}
+    {REPORT_STAT_CARDS.map((card) => {
+      const Icon = REPORT_STAT_ICONS[card.id];
+      return (
+        <AdminBasicStatCard
+          key={card.id}
+          labelKey={card.labelKey}
+          value={stats[card.id] ?? 0}
+          icon={Icon ? <Icon size={16} strokeWidth={2.25} /> : null}
+          iconBg={card.iconBg}
+          hintKey={card.hintKey}
+          borderClass={card.border || 'border-[#f3f4f6]'}
+          cardClass="px-3 py-3.5 sm:px-5 sm:py-4.5"
+          valueClass={`pt-2 text-[22px] leading-7 sm:pt-2.5 sm:text-[26px] ${card.valueClass || 'text-[#111827]'}`}
+        />
+      );
+    })}
   </div>
 ));
 ReportStatCards.displayName = 'ReportStatCards';
