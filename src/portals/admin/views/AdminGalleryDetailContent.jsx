@@ -8,7 +8,10 @@ import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailIm
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import { resolveSlideMeta } from '@/portals/admin/data/adminDetailZodiac';
 import { ADMIN_DETAIL_ASSETS } from '@/portals/admin/data/adminGalleryDetailData';
+import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
+import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
 import {
   ADMIN_ARTWORKS_QUERY_KEY,
   deleteAdminArtworkApi,
@@ -21,32 +24,6 @@ import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
 /** Auto-advance interval for multi-photo story strip (ms). */
 const ADMIN_DETAIL_SLIDE_MS = 6000;
-
-const ZODIAC_ICONS = {
-  ARIES: '/assets/home/icon-aries.svg',
-  TAURUS: '/assets/home/icon-taurus.svg',
-  GEMINI: '/assets/home/icon-gemini.svg',
-  CANCER: '/assets/home/icon-cancer.svg',
-  LEO: '/assets/home/icon-leo.svg',
-  VIRGO: '/assets/home/icon-virgo.svg',
-  LIBRA: '/assets/home/icon-libra.svg',
-  SCORPIO: '/assets/home/icon-scorpio.svg',
-  SAGITTARIUS: '/assets/home/icon-sagittarius.svg',
-  CAPRICORN: '/assets/home/icon-capricorn.svg',
-  AQUARIUS: '/assets/home/icon-aquarius.svg',
-  PISCES: '/assets/home/icon-pisces.svg',
-};
-
-const getZodiacIcon = (sign) => {
-  if (!sign) return null;
-  return ZODIAC_ICONS[String(sign).toUpperCase()] || null;
-};
-
-const formatZodiacName = (sign) => {
-  if (!sign) return '';
-  const s = String(sign);
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-};
 
 const SignBadge = memo(({ slide, name }) => {
   const isBlue = slide.theme === 'blue';
@@ -323,37 +300,71 @@ const AdminGalleryDetailContent = memo(() => {
     const isTwelve = kind === 'TWELVE';
     const isSix = kind === 'SIX';
 
-    let slides = [];
-    if (Array.isArray(artwork.media) && artwork.media.length > 0) {
-      const imageMedia = artwork.media
-        .filter((m) => m.kind !== 'VIDEO')
-        .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0));
+    const toImageList = () => {
+      if (Array.isArray(artwork.media) && artwork.media.length > 0) {
+        return artwork.media
+          .filter((m) => String(m.kind || 'IMAGE').toUpperCase() !== 'VIDEO')
+          .slice()
+          .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0));
+      }
+      if (artwork.images && typeof artwork.images === 'object') {
+        const list = Array.isArray(artwork.images)
+          ? artwork.images
+          : Object.values(artwork.images);
+        return list
+          .filter(Boolean)
+          .slice()
+          .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0));
+      }
+      return [];
+    };
 
+    const imageMedia = toImageList();
+
+    // TWELVE/SIX: always label by strip position. Uploaded zodiacSign is often
+    // duplicated (e.g. every file stamped LEO), which must not drive the UI.
+    let slides = [];
+    if (isTwelve && imageMedia.length > 0) {
       slides = imageMedia.map((med, idx) => {
-        const currentSign = med.zodiacSign || artwork.zodiacSign;
-        const num = (med.slotIndex != null ? med.slotIndex : idx) + 1;
+        const catalog = TWELVE_STORY_SLIDES[idx] || TWELVE_STORY_SLIDES[0];
         return {
-          id: med.id || `media-${idx}`,
-          number: num,
-          name: currentSign ? formatZodiacName(currentSign) : `Photo ${num}`,
+          id: med.id || catalog.id || `media-${idx}`,
+          number: catalog.number,
+          name: catalog.sign,
           thumb: med.thumbnailUrl || med.url,
           hero: med.url,
-          theme: idx % 2 === 0 ? 'red' : 'blue',
-          icon: getZodiacIcon(currentSign),
+          theme: catalog.theme,
+          icon: catalog.icon,
+          iconBoxed: Boolean(catalog.iconBoxed),
         };
       });
-    } else if (artwork.images && typeof artwork.images === 'object') {
-      slides = Object.entries(artwork.images).map(([key, img], idx) => {
-        const currentSign = img.zodiacSign || artwork.zodiacSign;
-        const num = idx + 1;
+    } else if (isSix && imageMedia.length > 0) {
+      slides = imageMedia.map((med, idx) => {
+        const meta = resolveSlideMeta(med, idx, kind);
+        const catalog = SIX_STORY_SLIDES[idx];
         return {
-          id: img.id || `${key}-${idx}`,
-          number: num,
-          name: currentSign ? formatZodiacName(currentSign) : key || `Photo ${num}`,
-          thumb: img.thumbnailUrl || img.url,
-          hero: img.url,
-          theme: idx % 2 === 0 ? 'red' : 'blue',
-          icon: getZodiacIcon(currentSign),
+          id: med.id || catalog?.id || `media-${idx}`,
+          number: meta.number,
+          name: meta.name || catalog?.sign || `Photo ${idx + 1}`,
+          thumb: med.thumbnailUrl || med.url,
+          hero: med.url,
+          theme: meta.theme,
+          icon: meta.icon || catalog?.icon,
+          iconBoxed: meta.iconBoxed,
+        };
+      });
+    } else if (imageMedia.length > 0) {
+      slides = imageMedia.map((med, idx) => {
+        const meta = resolveSlideMeta(med, idx, kind);
+        return {
+          id: med.id || `media-${idx}`,
+          number: meta.number,
+          name: meta.name || `Photo ${meta.number}`,
+          thumb: med.thumbnailUrl || med.url,
+          hero: med.url,
+          theme: meta.theme,
+          icon: meta.icon,
+          iconBoxed: meta.iconBoxed,
         };
       });
     }

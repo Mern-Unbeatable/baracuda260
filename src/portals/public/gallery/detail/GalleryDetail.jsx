@@ -9,27 +9,10 @@ import { getGalleryPhotoById } from '@/shared/data/galleryPhotos';
 import { getGallerySixStoryById } from '@/shared/data/gallerySixStory';
 import { getGalleryTwelveStoryById } from '@/shared/data/galleryTwelveStory';
 import { useSEO } from '@/shared/hooks/useSEO';
-
-const ZODIAC_ICONS = {
-  ARIES: '/assets/home/icon-aries.svg',
-  TAURUS: '/assets/home/icon-taurus.svg',
-  GEMINI: '/assets/home/icon-gemini.svg',
-  CANCER: '/assets/home/icon-cancer.svg',
-  LEO: '/assets/home/icon-leo.svg',
-  VIRGO: '/assets/home/icon-virgo.svg',
-  LIBRA: '/assets/home/icon-libra.svg',
-  SCORPIO: '/assets/home/icon-scorpio.svg',
-  SAGITTARIUS: '/assets/home/icon-sagittarius.svg',
-  CAPRICORN: '/assets/home/icon-capricorn.svg',
-  AQUARIUS: '/assets/home/icon-aquarius.svg',
-  PISCES: '/assets/home/icon-pisces.svg',
-};
-
-const formatSignName = (sign) => {
-  if (!sign) return '';
-  const s = String(sign);
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-};
+import {
+  buildZodiacStorySlides,
+  collectStoryImageMedia,
+} from '@/shared/utils/buildZodiacStorySlides';
 
 const GalleryDetail = memo(({ variant: variantProp }) => {
   const { id } = useParams();
@@ -76,43 +59,12 @@ const GalleryDetail = memo(({ variant: variantProp }) => {
       liveData.kind || base.kind || 'SINGLE',
     ).toUpperCase();
 
-    // Normalize multi-photo story slides if 6 or 12 photo story
-    let slides = [];
-    if (Array.isArray(liveData.media) && liveData.media.length > 0) {
-      const imageMedia = liveData.media
-        .filter((m) => m.kind !== 'VIDEO')
-        .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0));
-
-      slides = imageMedia.map((med, idx) => {
-        const sign = med.zodiacSign || liveData.zodiacSign;
-        const num = (med.slotIndex != null ? med.slotIndex : idx) + 1;
-        return {
-          id: med.id || `media-${idx}`,
-          number: num,
-          sign: sign ? formatSignName(sign) : `Photo ${num}`,
-          thumb: med.thumbnailUrl || med.url,
-          hero: med.url,
-          theme: idx % 2 === 0 ? 'red' : 'blue',
-          icon: ZODIAC_ICONS[String(sign).toUpperCase()] || null,
-        };
-      });
-    } else if (liveData.images && typeof liveData.images === 'object') {
-      const entries = Object.entries(liveData.images);
-      entries.sort(([, a], [, b]) => (a?.slotIndex ?? 0) - (b?.slotIndex ?? 0));
-      slides = entries.map(([key, img], idx) => {
-        const sign = img.zodiacSign || liveData.zodiacSign;
-        const num = (img.slotIndex != null ? img.slotIndex : idx) + 1;
-        return {
-          id: img.id || `${key}-${idx}`,
-          number: num,
-          sign: sign ? formatSignName(sign) : key || `Photo ${num}`,
-          thumb: img.thumbnailUrl || img.url,
-          hero: img.url,
-          theme: idx % 2 === 0 ? 'red' : 'blue',
-          icon: ZODIAC_ICONS[String(sign).toUpperCase()] || null,
-        };
-      });
-    }
+    const imageMedia = collectStoryImageMedia(liveData.media, liveData.images);
+    let slides = buildZodiacStorySlides(
+      imageMedia,
+      rawKind,
+      liveData.theme || base.theme,
+    );
 
     if (
       slides.length === 0 &&

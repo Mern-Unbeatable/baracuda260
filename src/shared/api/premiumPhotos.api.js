@@ -323,8 +323,15 @@ export const extractImagesList = (rawImages) => {
     }));
   }
   if (typeof rawImages === 'object') {
+    const seen = new Set();
     return Object.values(rawImages)
       .filter(Boolean)
+      .filter((img) => {
+        const key = img.id || `${img.slotIndex ?? ''}:${img.url || ''}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
       .sort((a, b) => Number(a.slotIndex ?? 0) - Number(b.slotIndex ?? 0))
       .map((img, idx) => ({
         slotIndex: img?.slotIndex ?? idx,

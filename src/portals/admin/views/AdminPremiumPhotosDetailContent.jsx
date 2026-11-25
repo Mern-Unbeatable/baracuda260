@@ -8,6 +8,7 @@ import GalleryDetailImageDetails from '@/components/data-display/GalleryDetailIm
 import GalleryDetailVideo from '@/components/data-display/GalleryDetailVideo/GalleryDetailVideo';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import { resolveSlideMeta } from '@/portals/admin/data/adminDetailZodiac';
 import { ADMIN_DETAIL_ASSETS } from '@/portals/admin/data/adminPremiumPhotosDetailData';
 import {
   ADMIN_PREMIUM_PHOTOS_QUERY_KEY,
@@ -18,36 +19,12 @@ import {
 import { getApiErrorMessage } from '@/shared/api/client';
 import { ROUTES } from '@/shared/config';
 import { resolveGalleryImageDetails } from '@/shared/data/galleryDetail';
+import { SIX_STORY_SLIDES } from '@/shared/data/gallerySixStory';
+import { TWELVE_STORY_SLIDES } from '@/shared/data/galleryTwelveStory';
 import { confirmDestructiveAction } from '@/shared/utils/confirmDialog';
 
 /** Auto-advance interval for multi-photo story strip (ms). */
 const ADMIN_DETAIL_SLIDE_MS = 6000;
-
-const ZODIAC_ICONS = {
-  ARIES: '/assets/home/icon-aries.svg',
-  TAURUS: '/assets/home/icon-taurus.svg',
-  GEMINI: '/assets/home/icon-gemini.svg',
-  CANCER: '/assets/home/icon-cancer.svg',
-  LEO: '/assets/home/icon-leo.svg',
-  VIRGO: '/assets/home/icon-virgo.svg',
-  LIBRA: '/assets/home/icon-libra.svg',
-  SCORPIO: '/assets/home/icon-scorpio.svg',
-  SAGITTARIUS: '/assets/home/icon-sagittarius.svg',
-  CAPRICORN: '/assets/home/icon-capricorn.svg',
-  AQUARIUS: '/assets/home/icon-aquarius.svg',
-  PISCES: '/assets/home/icon-pisces.svg',
-};
-
-const getZodiacIcon = (sign) => {
-  if (!sign) return null;
-  return ZODIAC_ICONS[String(sign).toUpperCase()] || null;
-};
-
-const formatZodiacName = (sign) => {
-  if (!sign) return '';
-  const s = String(sign);
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-};
 
 const SignBadge = memo(({ slide, name }) => {
   const isBlue = slide.theme === 'blue';
@@ -296,23 +273,55 @@ const AdminPremiumPhotosDetailContent = memo(() => {
     const isTwelve = kind === 'TWELVE';
     const isSix = kind === 'SIX';
 
-    let slides = [];
-    if (Array.isArray(photo.media) && photo.media.length > 0) {
-      const imageMedia = photo.media
-        .filter((m) => m.kind !== 'VIDEO')
-        .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0));
+    const imageMedia = Array.isArray(photo.media)
+      ? photo.media
+          .filter((m) => String(m.kind || 'IMAGE').toUpperCase() !== 'VIDEO')
+          .slice()
+          .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0))
+      : [];
 
+    let slides = [];
+    if (isTwelve && imageMedia.length > 0) {
       slides = imageMedia.map((med, idx) => {
-        const currentSign = med.zodiacSign || photo.zodiacSign;
-        const num = (med.slotIndex != null ? med.slotIndex : idx) + 1;
+        const catalog = TWELVE_STORY_SLIDES[idx] || TWELVE_STORY_SLIDES[0];
         return {
-          id: med.id || `media-${idx}`,
-          number: num,
-          name: currentSign ? formatZodiacName(currentSign) : `Photo ${num}`,
+          id: med.id || catalog.id || `media-${idx}`,
+          number: catalog.number,
+          name: catalog.sign,
           thumb: resolveMediaUrl(med.thumbnailUrl || med.url),
           hero: resolveMediaUrl(med.url),
-          theme: idx % 2 === 0 ? 'red' : 'blue',
-          icon: getZodiacIcon(currentSign),
+          theme: catalog.theme,
+          icon: catalog.icon,
+          iconBoxed: Boolean(catalog.iconBoxed),
+        };
+      });
+    } else if (isSix && imageMedia.length > 0) {
+      slides = imageMedia.map((med, idx) => {
+        const meta = resolveSlideMeta(med, idx, kind);
+        const catalog = SIX_STORY_SLIDES[idx];
+        return {
+          id: med.id || catalog?.id || `media-${idx}`,
+          number: meta.number,
+          name: meta.name || catalog?.sign || `Photo ${idx + 1}`,
+          thumb: resolveMediaUrl(med.thumbnailUrl || med.url),
+          hero: resolveMediaUrl(med.url),
+          theme: meta.theme,
+          icon: meta.icon || catalog?.icon,
+          iconBoxed: meta.iconBoxed,
+        };
+      });
+    } else if (imageMedia.length > 0) {
+      slides = imageMedia.map((med, idx) => {
+        const meta = resolveSlideMeta(med, idx, kind);
+        return {
+          id: med.id || `media-${idx}`,
+          number: meta.number,
+          name: meta.name || `Photo ${meta.number}`,
+          thumb: resolveMediaUrl(med.thumbnailUrl || med.url),
+          hero: resolveMediaUrl(med.url),
+          theme: meta.theme,
+          icon: meta.icon,
+          iconBoxed: meta.iconBoxed,
         };
       });
     }
