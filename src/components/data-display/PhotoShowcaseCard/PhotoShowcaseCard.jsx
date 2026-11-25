@@ -10,7 +10,7 @@ import {
   MoreVertical,
   Play,
 } from 'lucide-react';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -118,6 +118,7 @@ const PhotoShowcaseCard = memo(
     const [reportOpen, setReportOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [awardOpen, setAwardOpen] = useState(false);
+    const menuWrapRef = useRef(null);
     const showPrice = price != null && price !== '';
 
     const isPremiumPhoto =
@@ -129,6 +130,28 @@ const PhotoShowcaseCard = memo(
         ? Boolean(isVideo)
         : String(kind || itemType || '').toUpperCase() === 'VIDEO' ||
           (!image && Boolean(videoUrl));
+
+    useEffect(() => {
+      if (!menuOpen) return undefined;
+
+      const handlePointerDown = (event) => {
+        if (menuWrapRef.current?.contains(event.target)) return;
+        setMenuOpen(false);
+      };
+
+      const handleKeyDown = (event) => {
+        if (event.key === 'Escape') setMenuOpen(false);
+      };
+
+      document.addEventListener('mousedown', handlePointerDown);
+      document.addEventListener('touchstart', handlePointerDown);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('mousedown', handlePointerDown);
+        document.removeEventListener('touchstart', handlePointerDown);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [menuOpen]);
 
     useEffect(() => {
       setSaved(initialSaved);
@@ -532,7 +555,7 @@ const PhotoShowcaseCard = memo(
                   />
                 </Button>
               ) : topRightType === 'menu' ? (
-                <div className="absolute right-3 top-3 z-20">
+                <div className="absolute right-3 top-3 z-20" ref={menuWrapRef}>
                   <Button
                     unstyled
                     type="button"
