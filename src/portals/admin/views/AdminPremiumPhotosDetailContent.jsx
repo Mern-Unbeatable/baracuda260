@@ -522,7 +522,7 @@ const AdminPremiumPhotosDetailContent = memo(() => {
         <>
           <section
             aria-label={t('adminPremiumPhotosDetail.heroAria')}
-            className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]"
+            className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl sm:aspect-[16/9] sm:rounded-[20px] lg:aspect-1536/653"
           >
             <Image
               src={heroSrc}
@@ -542,14 +542,14 @@ const AdminPremiumPhotosDetailContent = memo(() => {
                   type="button"
                   onClick={goPrev}
                   aria-label={t('adminPremiumPhotosDetail.previousPhoto')}
-                  className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-6 sm:size-12"
+                  className="absolute left-3 top-[58%] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-6 sm:top-1/2 sm:size-11"
                 >
                   <Image
                     src={ADMIN_DETAIL_ASSETS.arrow}
                     alt=""
                     width={16}
                     height={32}
-                    className="h-7 w-3.5 rotate-180 object-contain"
+                    className="h-4.5 w-2.5 rotate-180 object-contain sm:h-6 sm:w-3"
                   />
                 </Button>
                 <Button
@@ -557,14 +557,14 @@ const AdminPremiumPhotosDetailContent = memo(() => {
                   type="button"
                   onClick={goNext}
                   aria-label={t('adminPremiumPhotosDetail.nextPhoto')}
-                  className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-6 sm:size-12"
+                  className="absolute right-3 top-[58%] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-6 sm:top-1/2 sm:size-11"
                 >
                   <Image
                     src={ADMIN_DETAIL_ASSETS.arrow}
                     alt=""
                     width={16}
                     height={32}
-                    className="h-7 w-3.5 object-contain"
+                    className="h-4.5 w-2.5 object-contain sm:h-6 sm:w-3"
                   />
                 </Button>
               </>
@@ -630,29 +630,33 @@ const AdminPremiumPhotosDetailContent = memo(() => {
           ) : null}
 
           <section className="flex w-full flex-col gap-8 sm:gap-9">
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-              <span className="rounded-full bg-violet-100 px-4 py-1.5 text-[13px] font-bold uppercase tracking-wider text-indigo-700 sm:text-[14px]">
-                {detail.type}
-              </span>
-              <span className="rounded-full bg-violet-100 px-4 py-1.5 text-[13px] font-bold uppercase tracking-wider text-indigo-700 sm:text-[14px]">
-                {detail.category}
-              </span>
-            </div>
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                <span className="rounded-full bg-violet-100 px-4 py-1.5 text-[13px] font-bold uppercase tracking-wider text-indigo-700 sm:text-[14px]">
+                  {detail.type}
+                </span>
+                <span className="rounded-full bg-violet-100 px-4 py-1.5 text-[13px] font-bold uppercase tracking-wider text-indigo-700 sm:text-[14px]">
+                  {detail.category}
+                </span>
+              </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-              <article className="flex flex-col rounded-2xl border border-[#ececf0] bg-white p-5 sm:p-6">
-                <h1 className="font-manrope text-[28px] font-semibold leading-tight text-[#111827] sm:text-[32px]">
+              <div className="flex flex-col gap-4">
+                <h1 className="font-manrope break-words text-[22px] font-semibold leading-snug text-[#111827] sm:text-[28px] lg:text-[32px]">
                   {detail.title}
                 </h1>
-                <p className="mt-2 text-[15px] leading-6 text-[#6b7280] sm:text-[16px]">
-                  {detail.subtitle}
-                </p>
-                <p className="mt-auto pt-6 text-[32px] font-bold leading-none text-[#111827] sm:pt-8 sm:text-[36px]">
-                  {detail.price}
-                </p>
-              </article>
+                {detail.subtitle ? (
+                  <p className="font-manrope text-[18px] font-medium leading-8 text-neutral-700 sm:text-[20px]">
+                    {detail.subtitle}
+                  </p>
+                ) : null}
+                {detail.price ? (
+                  <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
+                    {detail.price}
+                  </p>
+                ) : null}
+              </div>
 
-              <article className="rounded-2xl border border-[#ececf0] bg-white p-5 sm:p-6">
+              <article className="rounded-2xl border border-[#ececf0] bg-white p-4 sm:p-5">
                 <h2 className="text-[18px] font-semibold leading-6 text-[#111827] sm:text-[20px]">
                   {t('adminPremiumPhotosDetail.detailsTitle')}
                 </h2>
@@ -667,35 +671,35 @@ const AdminPremiumPhotosDetailContent = memo(() => {
                   ))}
                 </div>
               </article>
-            </div>
 
-            <GalleryDetailImageDetails details={detail.imageDetails} />
+              <GalleryDetailImageDetails details={detail.imageDetails} />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
-              <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
-                <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
-                  {t('adminPremiumPhotosDetail.likesReceived')}
-                </p>
-                <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
-                  {detail.likes}
-                </p>
-              </article>
-              <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
-                <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
-                  {t('adminPremiumPhotosDetail.viewsCounted')}
-                </p>
-                <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
-                  {detail.views}
-                </p>
-              </article>
-              <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
-                <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
-                  {t('adminPremiumPhotosDetail.totalSell')}
-                </p>
-                <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
-                  {detail.totalSell}
-                </p>
-              </article>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
+                <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
+                  <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
+                    {t('adminPremiumPhotosDetail.likesReceived')}
+                  </p>
+                  <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
+                    {detail.likes}
+                  </p>
+                </article>
+                <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
+                  <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
+                    {t('adminPremiumPhotosDetail.viewsCounted')}
+                  </p>
+                  <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
+                    {detail.views}
+                  </p>
+                </article>
+                <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
+                  <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
+                    {t('adminPremiumPhotosDetail.totalSell')}
+                  </p>
+                  <p className="text-[28px] font-bold leading-none text-[#111827] sm:text-[32px]">
+                    {detail.totalSell}
+                  </p>
+                </article>
+              </div>
             </div>
 
             <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf0] bg-white p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">

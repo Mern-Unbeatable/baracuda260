@@ -536,7 +536,7 @@ const AdminCompetitionDetailContent = memo(() => {
         <>
           <section
             aria-label={t('adminCompetitionDetail.heroAria')}
-            className="relative aspect-1536/653 w-full overflow-hidden rounded-2xl sm:rounded-[20px]"
+            className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl sm:aspect-[16/9] sm:rounded-[20px] lg:aspect-1536/653"
           >
             <Image
               src={heroSrc}
@@ -559,14 +559,14 @@ const AdminCompetitionDetailContent = memo(() => {
                   type="button"
                   onClick={goPrev}
                   aria-label={t('adminCompetitionDetail.previousPhoto')}
-                  className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-6 sm:size-12"
+                  className="absolute left-3 top-[58%] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:left-6 sm:top-1/2 sm:size-11"
                 >
                   <Image
                     src={ADMIN_DETAIL_ASSETS.arrow}
                     alt=""
                     width={16}
                     height={32}
-                    className="h-7 w-3.5 rotate-180 object-contain"
+                    className="h-4.5 w-2.5 rotate-180 object-contain sm:h-6 sm:w-3"
                   />
                 </Button>
                 <Button
@@ -574,14 +574,14 @@ const AdminCompetitionDetailContent = memo(() => {
                   type="button"
                   onClick={goNext}
                   aria-label={t('adminCompetitionDetail.nextPhoto')}
-                  className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-6 sm:size-12"
+                  className="absolute right-3 top-[58%] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm sm:right-6 sm:top-1/2 sm:size-11"
                 >
                   <Image
                     src={ADMIN_DETAIL_ASSETS.arrow}
                     alt=""
                     width={16}
                     height={32}
-                    className="h-7 w-3.5 object-contain"
+                    className="h-4.5 w-2.5 object-contain sm:h-6 sm:w-3"
                   />
                 </Button>
               </>
@@ -657,7 +657,7 @@ const AdminCompetitionDetailContent = memo(() => {
               </div>
 
               <div className="flex flex-col gap-4">
-                <h1 className="font-manrope text-[32px] font-semibold leading-tight text-[#111827] sm:text-[36px]">
+                <h1 className="font-manrope break-words text-[22px] font-semibold leading-snug text-[#111827] sm:text-[28px] lg:text-[32px]">
                   {detail.title || (detail.titleKey ? t(detail.titleKey) : '')}
                 </h1>
                 <p className="font-manrope text-[18px] font-medium leading-8 text-neutral-700 sm:text-[20px]">
@@ -665,7 +665,7 @@ const AdminCompetitionDetailContent = memo(() => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
+              <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
                 <article className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-black/8 bg-[#f5f5f5] p-4 text-center sm:p-5">
                   <p className="text-[12px] font-semibold uppercase tracking-[1.2px] text-[#6b7280] sm:text-[13px]">
                     {t('adminCompetitionDetail.votesReceived')}

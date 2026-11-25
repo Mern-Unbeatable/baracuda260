@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -11,19 +11,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/data-display/Table/Table';
+} from '@/components/data-display/Table';
 import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
+import UserAvatar from '@/portals/admin/components/admin-users/UserAvatar';
 import {
-  ADMIN_BUSINESS_LINK_ASSETS,
-  EYE_ICON_SIZE,
   formatBusinessLinkDate,
   getBusinessLinkDetailPath,
 } from '@/portals/admin/data/adminBusinessLinkData';
 import useAdminBusinessLink from '@/portals/admin/hooks/useAdminBusinessLink';
 import { ROUTES } from '@/shared/config';
 
-const SKELETON_ROW_COUNT = 5;
+const SKELETON_ROW_COUNT = 10;
+
+const TH_CLASS =
+  'px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#64748b] lg:px-4';
+const TD_CLASS = 'px-3 py-2.5 text-[13px] leading-4 text-[#0f172a] lg:px-4';
+
+const ACTION_BTN_CLASS =
+  'inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#e2e8f0] bg-white text-[#475569] shadow-sm transition hover:border-[#c7cbf2] hover:bg-[#f8fafc] hover:text-[#4048cd] disabled:cursor-not-allowed disabled:opacity-50';
 
 /**
  * @param {{ row: object }} props
@@ -40,15 +45,9 @@ const BusinessLinkViewLink = memo(({ row }) => {
       aria-label={t('adminBusinessLink.actions.view', {
         user: row.name || row.email,
       })}
-      className="inline-flex size-6 shrink-0 items-center justify-center rounded-md transition hover:bg-[#f6fbff]"
+      className={ACTION_BTN_CLASS}
     >
-      <Image
-        src={ADMIN_BUSINESS_LINK_ASSETS.eye}
-        alt=""
-        width={EYE_ICON_SIZE}
-        height={EYE_ICON_SIZE}
-        className="size-6"
-      />
+      <Eye size={16} aria-hidden="true" />
     </Link>
   );
 });
@@ -76,9 +75,9 @@ const BusinessLinkDeleteButton = memo(({ row, isDeleting, onDelete }) => {
         defaultValue: `Delete submission for ${row.name || row.email}`,
       })}
       title={t('adminBusinessLink.detail.delete')}
-      className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#ee1c25] transition hover:bg-[#fef2f2] disabled:cursor-not-allowed disabled:opacity-50"
+      className={`${ACTION_BTN_CLASS} text-[#ee1c25] hover:border-[#fecaca] hover:bg-[#fef2f2] hover:text-[#ee1c25]`}
     >
-      <Trash2 size={18} aria-hidden="true" />
+      <Trash2 size={16} aria-hidden="true" />
     </Button>
   );
 });
@@ -93,7 +92,7 @@ BusinessLinkDeleteButton.displayName = 'BusinessLinkDeleteButton';
  * }} props
  */
 const BusinessLinkRowActions = memo(({ row, isDeleting, onDelete }) => (
-  <div className="inline-flex items-center gap-2">
+  <div className="inline-flex items-center justify-end gap-2">
     <BusinessLinkViewLink row={row} />
     <BusinessLinkDeleteButton
       row={row}
@@ -116,15 +115,42 @@ const BusinessLinkTableRow = memo(({ row, isDeleting, onDelete }) => {
   const { i18n } = useTranslation();
 
   return (
-    <TableRow>
-      <TableCell>{row.name || '—'}</TableCell>
-      <TableCell className="max-w-45 wrap-break-word">{row.email}</TableCell>
-      <TableCell className="whitespace-nowrap">{row.phone || '—'}</TableCell>
-      <TableCell>{row.country || '—'}</TableCell>
-      <TableCell className="whitespace-nowrap">
+    <TableRow className="border-b border-[#f1f5f9] last:border-b-0 hover:bg-[#f8fafc]">
+      <TableCell className={TD_CLASS}>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <UserAvatar
+            src={row.avatar}
+            name={row.name || row.email}
+            className="size-8 text-[11px]"
+          />
+          <p className="truncate font-semibold text-[#0f172a]">
+            {row.name || '—'}
+          </p>
+        </div>
+      </TableCell>
+      <TableCell className={`${TD_CLASS} text-[#475569]`}>
+        <span className="block truncate" title={row.email || undefined}>
+          {row.email || '—'}
+        </span>
+      </TableCell>
+      <TableCell
+        className={`${TD_CLASS} hidden whitespace-nowrap text-[#475569] xl:table-cell`}
+      >
+        <span className="block truncate" title={row.phone || undefined}>
+          {row.phone || '—'}
+        </span>
+      </TableCell>
+      <TableCell
+        className={`${TD_CLASS} hidden text-[#475569] lg:table-cell`}
+      >
+        <span className="block truncate" title={row.country || undefined}>
+          {row.country || '—'}
+        </span>
+      </TableCell>
+      <TableCell className={`${TD_CLASS} whitespace-nowrap text-[#475569]`}>
         {formatBusinessLinkDate(row.createdAt, i18n.language)}
       </TableCell>
-      <TableCell>
+      <TableCell className={TD_CLASS} align="right">
         <BusinessLinkRowActions
           row={row}
           isDeleting={isDeleting}
@@ -148,17 +174,31 @@ const BusinessLinkTable = memo(({ rows, deletingId, onDelete }) => {
   const { t } = useTranslation();
 
   return (
-    <Table className="min-w-245" wrapperClassName="hidden md:block">
+    <Table
+      className="w-full table-fixed"
+      wrapperClassName="hidden overflow-hidden md:block"
+    >
       <TableHeader>
-        <TableRow isHeader>
-          <TableHead className="rounded-tl-xl">
+        <TableRow
+          isHeader
+          className="border-b border-[#e2e8f0] bg-[#f8fafc]"
+        >
+          <TableHead className={`${TH_CLASS} rounded-tl-2xl`}>
             {t('adminBusinessLink.columns.user')}
           </TableHead>
-          <TableHead>{t('adminBusinessLink.columns.email')}</TableHead>
-          <TableHead>{t('adminBusinessLink.columns.phone')}</TableHead>
-          <TableHead>{t('adminBusinessLink.columns.country')}</TableHead>
-          <TableHead>{t('adminBusinessLink.columns.uploadDate')}</TableHead>
-          <TableHead className="rounded-tr-xl">
+          <TableHead className={TH_CLASS}>
+            {t('adminBusinessLink.columns.email')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} hidden xl:table-cell`}>
+            {t('adminBusinessLink.columns.phone')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} hidden lg:table-cell`}>
+            {t('adminBusinessLink.columns.country')}
+          </TableHead>
+          <TableHead className={TH_CLASS}>
+            {t('adminBusinessLink.columns.uploadDate')}
+          </TableHead>
+          <TableHead className={`${TH_CLASS} rounded-tr-2xl text-right`}>
             {t('adminBusinessLink.columns.action')}
           </TableHead>
         </TableRow>
@@ -190,23 +230,30 @@ const BusinessLinkMobileCards = memo(({ rows, deletingId, onDelete }) => {
   const { t, i18n } = useTranslation();
 
   return (
-    <ul
+    <div
       className="flex flex-col md:hidden"
       data-testid="business-link-mobile-cards"
     >
       {rows.map((row) => (
-        <li
+        <article
           key={row.id}
-          className="border-b border-[#e4e4e4] px-4 py-5 last:border-b-0"
+          className="border-b border-[#f1f5f9] px-4 py-4 last:border-b-0"
         >
           <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-[16px] font-medium leading-6 text-[#0c0c0c]">
-                {row.name || '—'}
-              </p>
-              <p className="mt-1 wrap-break-word text-[14px] leading-5 text-[#687186]">
-                {row.email}
-              </p>
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              <UserAvatar
+                src={row.avatar}
+                name={row.name || row.email}
+                className="size-10 text-[12px]"
+              />
+              <div className="min-w-0">
+                <p className="truncate text-[15px] font-semibold leading-5 text-[#0f172a]">
+                  {row.name || '—'}
+                </p>
+                <p className="mt-0.5 break-all text-[13px] leading-5 text-[#64748b]">
+                  {row.email}
+                </p>
+              </div>
             </div>
             <BusinessLinkRowActions
               row={row}
@@ -214,49 +261,61 @@ const BusinessLinkMobileCards = memo(({ rows, deletingId, onDelete }) => {
               onDelete={onDelete}
             />
           </div>
-          <dl className="mt-4 grid grid-cols-1 gap-2 text-[14px] leading-5 sm:grid-cols-2">
-            <div>
-              <dt className="text-[#8b95a5]">
+
+          <div className="mt-3 grid grid-cols-1 gap-2 rounded-xl bg-[#f8fafc] p-3">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-[12px] font-medium uppercase tracking-wide text-[#94a3b8]">
                 {t('adminBusinessLink.columns.phone')}
-              </dt>
-              <dd className="text-[#0c0c0c]">{row.phone || '—'}</dd>
+              </span>
+              <span className="text-right text-[13px] font-medium text-[#0f172a]">
+                {row.phone || '—'}
+              </span>
             </div>
-            <div>
-              <dt className="text-[#8b95a5]">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-[12px] font-medium uppercase tracking-wide text-[#94a3b8]">
                 {t('adminBusinessLink.columns.country')}
-              </dt>
-              <dd className="text-[#0c0c0c]">{row.country || '—'}</dd>
+              </span>
+              <span className="text-right text-[13px] font-medium text-[#0f172a]">
+                {row.country || '—'}
+              </span>
             </div>
-            <div>
-              <dt className="text-[#8b95a5]">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-[12px] font-medium uppercase tracking-wide text-[#94a3b8]">
                 {t('adminBusinessLink.columns.uploadDate')}
-              </dt>
-              <dd className="text-[#0c0c0c]">
+              </span>
+              <span className="text-right text-[13px] font-medium text-[#0f172a]">
                 {formatBusinessLinkDate(row.createdAt, i18n.language)}
-              </dd>
+              </span>
             </div>
-          </dl>
-        </li>
+          </div>
+        </article>
       ))}
-    </ul>
+    </div>
   );
 });
 
 BusinessLinkMobileCards.displayName = 'BusinessLinkMobileCards';
 
 const BusinessLinkTableSkeleton = () => (
-  <div className="flex flex-col gap-3 px-5 py-6" aria-busy="true">
+  <div className="flex flex-col gap-0" aria-busy="true">
+    <div className="hidden h-11 animate-pulse bg-[#f1f5f9] md:block" />
     {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
       <div
         key={index}
-        className="h-12 w-full animate-pulse rounded-lg bg-[#f3f4f6]"
-      />
+        className="flex items-center gap-3 border-b border-[#f1f5f9] px-4 py-4 last:border-b-0 sm:px-5"
+      >
+        <div className="size-9 shrink-0 animate-pulse rounded-full bg-[#e2e8f0]" />
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="h-3.5 w-1/3 animate-pulse rounded bg-[#e2e8f0]" />
+          <div className="h-3 w-1/2 animate-pulse rounded bg-[#f1f5f9]" />
+        </div>
+      </div>
     ))}
   </div>
 );
 
 /**
- * Admin Business Link Photos — Figma node 345:679.
+ * Admin Business Link Photos — table aligned with Admin Users.
  */
 const AdminBusinessLinkContent = memo(() => {
   const { t } = useTranslation();
@@ -281,13 +340,15 @@ const AdminBusinessLinkContent = memo(() => {
     body = <BusinessLinkTableSkeleton />;
   } else if (isError) {
     body = (
-      <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
-        <p className="text-[16px] text-[#ee1c25]">{loadErrorMessage}</p>
+      <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
+        <p className="text-[15px] font-medium text-[#ee1c25]">
+          {loadErrorMessage}
+        </p>
         <Button
           unstyled
           type="button"
           onClick={() => refetch()}
-          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[16px] font-medium text-[#4048cd] transition hover:bg-[#f6fbff]"
+          className="cursor-pointer rounded-xl border border-[#4048cd] px-4 py-2 text-[14px] font-semibold text-[#4048cd] transition hover:bg-[#eff1fe]"
         >
           {t('adminBusinessLink.retry')}
         </Button>
@@ -295,7 +356,7 @@ const AdminBusinessLinkContent = memo(() => {
     );
   } else if (rows.length === 0) {
     body = (
-      <p className="px-6 py-10 text-center text-[16px] text-[#687186]">
+      <p className="px-6 py-12 text-center text-[15px] text-[#64748b]">
         {t('adminBusinessLink.empty')}
       </p>
     );
@@ -317,7 +378,7 @@ const AdminBusinessLinkContent = memo(() => {
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 py-2 sm:py-4">
+    <div className="flex w-full flex-col gap-4">
       <AdminPageHeader
         title={t('adminBusinessLink.title')}
         description={t('adminBusinessLink.subtitle')}
@@ -326,7 +387,7 @@ const AdminBusinessLinkContent = memo(() => {
       <section
         aria-label={t('adminBusinessLink.tableAria')}
         aria-busy={isFetching}
-        className="overflow-hidden rounded-xl bg-white"
+        className="overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]"
       >
         <div
           className={`transition-opacity ${
@@ -336,26 +397,27 @@ const AdminBusinessLinkContent = memo(() => {
           {body}
         </div>
 
-        {!isLoading && !isError && (
-          <AdminPagination
-            variant="businessLink"
-            from={range.from}
-            to={range.to}
-            total={range.total}
-            isFirstPage={isFirstPage || isFetching}
-            isLastPage={isLastPage || isFetching}
-            onPrevious={handlePreviousPage}
-            onNext={handleNextPage}
-            showingText={t('adminBusinessLink.pagination.showing', {
-              from: range.from,
-              to: range.to,
-              total: range.total,
-            })}
-            previousLabel={t('adminBusinessLink.pagination.previous')}
-            nextLabel={t('adminBusinessLink.pagination.next')}
-            navAriaLabel={t('adminBusinessLink.pagination.aria')}
-          />
-        )}
+        {!isLoading && !isError ? (
+          <div className="border-t border-[#e2e8f0] bg-[#f8fafc]/60">
+            <AdminPagination
+              variant="users"
+              from={range.from}
+              to={range.to}
+              total={range.total}
+              isFirstPage={isFirstPage || isFetching}
+              isLastPage={isLastPage || isFetching}
+              onPrevious={handlePreviousPage}
+              onNext={handleNextPage}
+              showingText={t('adminBusinessLink.pagination.showing', {
+                from: range.from,
+                to: range.to,
+                total: range.total,
+              })}
+              previousLabel={t('adminBusinessLink.pagination.previous')}
+              nextLabel={t('adminBusinessLink.pagination.next')}
+            />
+          </div>
+        ) : null}
       </section>
     </div>
   );

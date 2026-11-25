@@ -69,8 +69,10 @@ export const CARD_IMAGE_WIDTH = 370;
 export const CARD_IMAGE_HEIGHT = 252;
 export const METRIC_ICON_SIZE = 24;
 
-export const getPromotedDetailPath = (id, detailRoutePattern) =>
-  detailRoutePattern.replace(':id', id);
+export const getPromotedDetailPath = (id, detailRoutePattern) => {
+  if (!id || !detailRoutePattern) return '#';
+  return detailRoutePattern.replace(':id', encodeURIComponent(String(id)));
+};
 
 /**
  * Filter promoted items on the client as a secondary layer if needed.

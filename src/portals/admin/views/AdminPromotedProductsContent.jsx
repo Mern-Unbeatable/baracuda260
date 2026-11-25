@@ -105,42 +105,51 @@ const PromotedCard = memo(({ card, onDelete, isDeleting }) => {
   const imageSrc = optimizeImageUrl(card.image || card.coverImage || '', 480);
   const avatarSrc = optimizeImageUrl(card.user?.avatar || '', 64);
 
+  const canOpenDetails = Boolean(card.id) && detailPath !== '#';
+
   return (
-    <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
-      <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]">
-        <Link to={detailPath} className="absolute inset-0 block">
-          {imageSrc ? (
-            <Image
-              src={imageSrc}
-              alt=""
-              width={480}
-              height={360}
-              sizes={CARD_IMAGE_SIZES}
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
-            />
-          ) : null}
-        </Link>
-        <span className="pointer-events-none absolute left-3 top-3 z-[1] max-w-[calc(100%-3.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
+    <article className="group relative flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
+      {canOpenDetails ? (
+        <Link
+          to={detailPath}
+          aria-label={title}
+          className="absolute inset-0 z-[1] rounded-2xl"
+        />
+      ) : null}
+
+      {card.isExpired ? (
+        <Button
+          unstyled
+          type="button"
+          disabled={isDeleting}
+          aria-label={t('adminPromoted.delete', 'Delete')}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onDelete?.(card);
+          }}
+          className="absolute right-2.5 top-2.5 z-[2] inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-[#ee1c25] text-white shadow-sm transition hover:bg-[#d41921] disabled:opacity-60"
+        >
+          <Trash2 size={14} strokeWidth={2.25} aria-hidden="true" />
+        </Button>
+      ) : null}
+
+      <div className="pointer-events-none relative z-0 aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]">
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt=""
+            width={480}
+            height={360}
+            sizes={CARD_IMAGE_SIZES}
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
+          />
+        ) : null}
+        <span className="absolute left-3 top-3 max-w-[calc(100%-3.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
           {typeLabel}
         </span>
-        {card.isExpired ? (
-          <Button
-            unstyled
-            type="button"
-            disabled={isDeleting}
-            aria-label={t('adminPromoted.delete', 'Delete')}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              onDelete?.(card);
-            }}
-            className="absolute right-2.5 top-2.5 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-[#ee1c25] text-white shadow-sm transition hover:bg-[#d41921] disabled:opacity-60"
-          >
-            <Trash2 size={14} strokeWidth={2.25} aria-hidden="true" />
-          </Button>
-        ) : null}
         <span
-          className={`pointer-events-none absolute bottom-3 left-3 z-[1] rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
+          className={`absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
             card.isExpired ? 'bg-[#6b7280]' : 'bg-[#ee1c25]'
           }`}
         >
@@ -149,13 +158,13 @@ const PromotedCard = memo(({ card, onDelete, isDeleting }) => {
             : t('adminPromoted.badge.promoted', 'Promoted')}
         </span>
         {card.extraPhotos ? (
-          <span className="pointer-events-none absolute bottom-3 right-3 z-[1] rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
+          <span className="absolute bottom-3 right-3 rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
             {t('adminPromoted.extraPhotos', { count: card.extraPhotos })}
           </span>
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2.5 p-4 sm:p-5">
+      <div className="pointer-events-none relative z-0 flex flex-1 flex-col gap-2.5 p-4 sm:p-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-[#6b7280] sm:text-[13px]">
           <span className="font-medium text-[#374151]">{category}</span>
           {uploadDate ? (
@@ -192,11 +201,9 @@ const PromotedCard = memo(({ card, onDelete, isDeleting }) => {
           </div>
         ) : null}
 
-        <Link to={detailPath} className="transition hover:text-[#ee1c25]">
-          <h3 className="line-clamp-1 font-manrope text-[16px] font-semibold leading-5 text-[#111827] sm:text-[18px] sm:leading-6">
-            {title}
-          </h3>
-        </Link>
+        <h3 className="line-clamp-1 font-manrope text-[16px] font-semibold leading-5 text-[#111827] transition group-hover:text-[#ee1c25] sm:text-[18px] sm:leading-6">
+          {title}
+        </h3>
         {description ? (
           <p className="line-clamp-2 font-manrope text-[13px] leading-5 text-[#6b7280] sm:text-[14px]">
             {description}
@@ -249,43 +256,51 @@ const SimpleCard = memo(({ card, onDelete, isDeleting }) => {
     : String(card.type || 'PRODUCT').toUpperCase();
   const imageSrc = optimizeImageUrl(card.image || card.coverImage || '', 480);
   const avatarSrc = optimizeImageUrl(card.user?.avatar || '', 64);
+  const canOpenDetails = Boolean(card.id) && detailPath !== '#';
 
   return (
-    <article className="group flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
-      <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]">
-        <Link to={detailPath} className="absolute inset-0 block">
-          {imageSrc ? (
-            <Image
-              src={imageSrc}
-              alt=""
-              width={480}
-              height={360}
-              sizes={CARD_IMAGE_SIZES}
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
-            />
-          ) : null}
-        </Link>
-        <span className="pointer-events-none absolute left-3 top-3 z-[1] max-w-[calc(100%-3.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
+    <article className="group relative flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_4px_8px_rgba(27,39,69,0.02)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c5cae9] hover:shadow-[0_10px_24px_rgba(27,39,69,0.08)]">
+      {canOpenDetails ? (
+        <Link
+          to={detailPath}
+          aria-label={title}
+          className="absolute inset-0 z-[1] rounded-2xl"
+        />
+      ) : null}
+
+      {card.isExpired ? (
+        <Button
+          unstyled
+          type="button"
+          disabled={isDeleting}
+          aria-label={t('adminPromoted.delete', 'Delete')}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onDelete?.(card);
+          }}
+          className="absolute right-2.5 top-2.5 z-[2] inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-[#ee1c25] text-white shadow-sm transition hover:bg-[#d41921] disabled:opacity-60"
+        >
+          <Trash2 size={14} strokeWidth={2.25} aria-hidden="true" />
+        </Button>
+      ) : null}
+
+      <div className="pointer-events-none relative z-0 aspect-[4/3] shrink-0 overflow-hidden bg-[#f3f4f6]">
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt=""
+            width={480}
+            height={360}
+            sizes={CARD_IMAGE_SIZES}
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
+          />
+        ) : null}
+        <span className="absolute left-3 top-3 max-w-[calc(100%-3.5rem)] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase leading-3.75 tracking-[0.4px] text-[#3f51b5] sm:text-[11px]">
           {typeLabel}
         </span>
-        {card.isExpired ? (
-          <Button
-            unstyled
-            type="button"
-            disabled={isDeleting}
-            aria-label={t('adminPromoted.delete', 'Delete')}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              onDelete?.(card);
-            }}
-            className="absolute right-2.5 top-2.5 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-[#ee1c25] text-white shadow-sm transition hover:bg-[#d41921] disabled:opacity-60"
-          >
-            <Trash2 size={14} strokeWidth={2.25} aria-hidden="true" />
-          </Button>
-        ) : null}
         <span
-          className={`pointer-events-none absolute bottom-3 left-3 z-[1] rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
+          className={`absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-bold leading-4 text-white ${
             card.isExpired ? 'bg-[#6b7280]' : 'bg-[#ee1c25]'
           }`}
         >
@@ -294,18 +309,16 @@ const SimpleCard = memo(({ card, onDelete, isDeleting }) => {
             : t('adminPromoted.badge.promoted', 'Promoted')}
         </span>
         {card.extraPhotos ? (
-          <span className="pointer-events-none absolute bottom-3 right-3 z-[1] rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
+          <span className="absolute bottom-3 right-3 rounded-full bg-black/65 px-2.5 py-1 text-[12px] font-semibold leading-4 text-white">
             {t('adminPromoted.extraPhotos', { count: card.extraPhotos })}
           </span>
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
-        <Link to={detailPath} className="transition hover:text-[#ee1c25]">
-          <h3 className="line-clamp-1 font-manrope text-[18px] font-semibold leading-6 text-[#111827] sm:text-[20px]">
-            {title}
-          </h3>
-        </Link>
+      <div className="pointer-events-none relative z-0 flex flex-1 flex-col gap-3 p-4 sm:p-5">
+        <h3 className="line-clamp-1 font-manrope text-[18px] font-semibold leading-6 text-[#111827] transition group-hover:text-[#ee1c25] sm:text-[20px]">
+          {title}
+        </h3>
 
         {card.user?.name ? (
           <div className="flex items-center gap-2">
